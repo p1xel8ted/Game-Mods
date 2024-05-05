@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>0.1.3</Version>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <FileVersion>$(Version)</FileVersion>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>C:\Users\Ben\AppData\Roaming\r2modmanPlus-local\OutwardDe\profiles\Main\BepInEx\plugins\Tweaks</OutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>C:\Users\Ben\AppData\Roaming\r2modmanPlus-local\OutwardDe\profiles\Main\BepInEx\plugins\Tweaks</OutputPath>
+    </PropertyGroup>
+<!--    <ItemGroup>-->
+<!--        <PackageReference Update="BepInEx.Core" Version="5.4.21"/>-->
+<!--        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all">-->
+<!--            <PrivateAssets>all</PrivateAssets>-->
+<!--            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->
+<!--        </PackageReference>-->
+<!--    </ItemGroup>-->
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp" publicize="true">
+          <HintPath>F:\Games\steamapps\common\Outward\Outward_Defed\Outward Definitive Edition_Data\Managed\Assembly-CSharp.dll</HintPath>
+        </Reference>
+<!--        <Reference Include="SideLoader" publicize="true">-->
+<!--          <HintPath>..\..\..\..\AppData\Roaming\r2modmanPlus-local\OutwardDe\profiles\Main\BepInEx\plugins\sinai-dev-SideLoader\SideLoader.dll</HintPath>-->
+<!--        </Reference>-->
+        <Reference Include="UnityEngine" publicize="true">
+          <HintPath>F:\Games\steamapps\common\Outward\Outward_Defed\Outward Definitive Edition_Data\Managed\UnityEngine.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule" publicize="true">
+          <HintPath>F:\Games\steamapps\common\Outward\Outward_Defed\Outward Definitive Edition_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+          <HintPath>F:\Games\steamapps\common\Outward\Outward_Defed\Outward Definitive Edition_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+          <HintPath>F:\Games\steamapps\common\Outward\Outward_Defed\Outward Definitive Edition_Data\Managed\UnityEngine.UI.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>

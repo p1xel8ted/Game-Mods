@@ -1,0 +1,451 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Description>Cuisineer Tweaks</Description>
+        <Version>0.2.0</Version>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <FileVersion>$(Version)</FileVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json;
+            https://nuget.samboy.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
+        <PackageId>CuisineerTweaks</PackageId>
+    </PropertyGroup>
+  
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile"/>
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Array2DEditor.Core">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Array2DEditor.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp-firstpass">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
+      <Reference Include="AstarPathfindingProject">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\AstarPathfindingProject.dll</HintPath>
+      </Reference>
+      <Reference Include="DoozyRuntime">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\DoozyRuntime.dll</HintPath>
+      </Reference>
+      <Reference Include="DOTween">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\DOTween.dll</HintPath>
+      </Reference>
+      <Reference Include="DOTween.Modules">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\DOTween.Modules.dll</HintPath>
+      </Reference>
+      <Reference Include="DOTweenPro">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\DOTweenPro.dll</HintPath>
+      </Reference>
+      <Reference Include="DOTweenPro.Scripts">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\DOTweenPro.Scripts.dll</HintPath>
+      </Reference>
+      <Reference Include="Drawing">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Drawing.dll</HintPath>
+      </Reference>
+      <Reference Include="Facepunch.Steamworks.Win64">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Facepunch.Steamworks.Win64.dll</HintPath>
+      </Reference>
+      <Reference Include="FMODUnity">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\FMODUnity.dll</HintPath>
+      </Reference>
+      <Reference Include="FMODUnityResonance">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\FMODUnityResonance.dll</HintPath>
+      </Reference>
+      <Reference Include="I2Loca.Core">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\I2Loca.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppMicrosoft.NET.StringTools">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppMicrosoft.NET.StringTools.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppMono.Security">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppMono.Security.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2Cppmscorlib">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Configuration">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.Configuration.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Core">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Net.Http">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.Net.Http.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Numerics">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.Numerics.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Runtime.CompilerServices.Unsafe">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Runtime.Serialization">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Xml">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Il2CppSystem.Xml.dll</HintPath>
+      </Reference>
+      <Reference Include="Lofelt.NiceVibrations">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Lofelt.NiceVibrations.dll</HintPath>
+      </Reference>
+      <Reference Include="Lofelt.NiceVibrations.Demo">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Lofelt.NiceVibrations.Demo.dll</HintPath>
+      </Reference>
+      <Reference Include="MessagePack">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MessagePack.dll</HintPath>
+      </Reference>
+      <Reference Include="MessagePack.Annotations">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MessagePack.Annotations.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks.Cinemachine">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.Cinemachine.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks.HDRP">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.HDRP.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks.MMTools">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.MMTools.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks.NiceVibrations">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.NiceVibrations.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks.PostProcessing">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.PostProcessing.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks.TextMeshPro">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.TextMeshPro.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Feedbacks.URP">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Feedbacks.URP.dll</HintPath>
+      </Reference>
+      <Reference Include="MoreMountains.Tools">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\MoreMountains.Tools.dll</HintPath>
+      </Reference>
+      <Reference Include="NaughtyAttributes.Core">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\NaughtyAttributes.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="NaughtyAttributes.Test">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\NaughtyAttributes.Test.dll</HintPath>
+      </Reference>
+      <Reference Include="PackageTools">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\PackageTools.dll</HintPath>
+      </Reference>
+      <Reference Include="Pathfinding.ClipperLib">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Pathfinding.ClipperLib.dll</HintPath>
+      </Reference>
+      <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+      </Reference>
+      <Reference Include="Pathfinding.Poly2Tri">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Pathfinding.Poly2Tri.dll</HintPath>
+      </Reference>
+      <Reference Include="Supyrb.Signals">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Supyrb.Signals.dll</HintPath>
+      </Reference>
+      <Reference Include="Tayx.Graphy">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Tayx.Graphy.dll</HintPath>
+      </Reference>
+      <Reference Include="TinyRoar.Core">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\TinyRoar.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="TinyRoar.Game">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\TinyRoar.Game.dll</HintPath>
+      </Reference>
+      <Reference Include="TinyRoar.PlatformManager.Runtime">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\TinyRoar.PlatformManager.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="TinyRoar.TinyStateMachine.Runtime">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\TinyRoar.TinyStateMachine.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="TinyRoar.UIParticles.Runtime">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\TinyRoar.UIParticles.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Addressables">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Addressables.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Burst.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst.Unsafe">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Burst.Unsafe.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Collections">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Collections.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Collections.LowLevel.ILSupport">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Entities">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Entities.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Entities.Hybrid">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Entities.Hybrid.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Entities.Hybrid.HybridComponents">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Entities.Hybrid.HybridComponents.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.InputSystem">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.InputSystem.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Mathematics">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Mathematics.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Mathematics.Extensions">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Mathematics.Extensions.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Profiling.Core">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Profiling.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipelines.Core.Runtime">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.ResourceManager">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.ResourceManager.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Scenes">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Scenes.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Serialization">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Serialization.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.TextMeshPro">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Timeline">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Timeline.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Transforms">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Transforms.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Transforms.Hybrid">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.Transforms.Hybrid.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.VisualEffectGraph.Runtime">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\Unity.VisualEffectGraph.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AccessibilityModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.AccessibilityModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AIModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.AIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AndroidJNIModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.AndroidJNIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AnimationModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.AnimationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AssetBundleModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.AssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AudioModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.AudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClothModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ClothModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterInputModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ClusterInputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterRendererModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ClusterRendererModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ContentLoadModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ContentLoadModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CrashReportingModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.CrashReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DirectorModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.DirectorModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DSPGraphModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.DSPGraphModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GameCenterModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.GameCenterModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GIModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.GIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GridModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.GridModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.HotReloadModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.HotReloadModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ImageConversionModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.InputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.JSONSerializeModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.JSONSerializeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.LocalizationModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.LocalizationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ParticleSystemModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ParticleSystemModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PerformanceReportingModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Physics2DModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.Physics2DModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PhysicsModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ProfilerModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ProfilerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PropertiesModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.PropertiesModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ScreenCaptureModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SharedInternalsModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.SharedInternalsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteMaskModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.SpriteMaskModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteShapeModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.SpriteShapeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.StreamingModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.StreamingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubstanceModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.SubstanceModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubsystemsModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.SubsystemsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.TerrainModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainPhysicsModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreFontEngineModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreTextEngineModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TilemapModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.TilemapModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TLSModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.TLSModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIElementsModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UIElementsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UmbraModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UmbraModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityConnectModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityConnectModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityCurlModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityCurlModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityTestProtocolModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VehiclesModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.VehiclesModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VFXModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.VFXModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VideoModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.VideoModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VirtualTexturingModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.VirtualTexturingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VRModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.VRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.WindModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.WindModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.XRModule">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\UnityEngine.XRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="__Generated">
+        <HintPath>H:\Games\steamapps\common\Wanderful Demo\BepInEx\interop\__Generated.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+</Project>

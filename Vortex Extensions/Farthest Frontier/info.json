@@ -1,0 +1,7 @@
+{
+  "name": "Game: Farthest Frontier",
+  "author": "p1xel8ted",
+  "version": "1.0.0",
+  "description": "Vortex support for Farthest Frontier (MelonLoader)",
+  "bundled": false
+}

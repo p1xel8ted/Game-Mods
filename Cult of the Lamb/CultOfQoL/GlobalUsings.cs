@@ -1,0 +1,35 @@
+﻿// Global using directives
+
+global using System;
+global using System.Collections;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Reflection;
+global using System.Reflection.Emit;
+global using BepInEx;
+global using BepInEx.Configuration;
+global using BepInEx.Logging;
+// global using COTL_API.CustomSettings;
+// global using COTL_API.CustomSettings.Elements;
+global using CultOfQoL.Patches;
+global using DG.Tweening;
+global using DG.Tweening.Core;
+global using HarmonyLib;
+global using I2.Loc;
+global using JetBrains.Annotations;
+global using Lamb.UI;
+global using Lamb.UI.FollowerInteractionWheel;
+global using Lamb.UI.FollowerSelect;
+global using Lamb.UI.MainMenu;
+global using Lamb.UI.PauseMenu;
+global using Map;
+global using MMTools;
+global using MonoMod.Utils;
+global using src.UI;
+global using src.UI.Menus;
+global using UnityEngine;
+// global using UnityEngine.InputSystem.Utilities;
+global using UnityEngine.SceneManagement;
+global using UnityEngine.UI;
+global using Object = UnityEngine.Object;
+global using Random = UnityEngine.Random;

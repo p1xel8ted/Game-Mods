@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>A collection of QoL modifications for Potion Permit</Description>
+    <TargetFramework>net481</TargetFramework>
+    <Version>0.1.9</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <Product>An Alchemical Collection</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Cinemachine" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\Cinemachine.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Potion Permit\Potion Permit_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+  <Import Project="..\zip.target" />
+</Project>

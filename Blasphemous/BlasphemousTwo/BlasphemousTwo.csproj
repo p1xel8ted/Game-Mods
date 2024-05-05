@@ -1,0 +1,433 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <AssemblyName>BlasphemousTwo</AssemblyName>
+        <Version>0.1.0</Version>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json;
+            https://nuget.samboy.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
+        <RootNamespace>BlasphemousTwo</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\plugins</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\plugins</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile"/>
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Assembly-CSharp">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp-firstpass">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
+      <Reference Include="AssemblyDefinitition">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\AssemblyDefinitition.dll</HintPath>
+      </Reference>
+      <Reference Include="Backtrace.Unity">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Backtrace.Unity.dll</HintPath>
+      </Reference>
+      <Reference Include="Cinemachine">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Cinemachine.dll</HintPath>
+      </Reference>
+      <Reference Include="clipper_library">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\clipper_library.dll</HintPath>
+      </Reference>
+      <Reference Include="com.fluid.adnc-utilities">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\com.fluid.adnc-utilities.dll</HintPath>
+      </Reference>
+      <Reference Include="com.fluid.simple-singleton">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\com.fluid.simple-singleton.dll</HintPath>
+      </Reference>
+      <Reference Include="com.fluid.unity-animator-helpers">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\com.fluid.unity-animator-helpers.dll</HintPath>
+      </Reference>
+      <Reference Include="com.rlabrecque.steamworks.net">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\com.rlabrecque.steamworks.net.dll</HintPath>
+      </Reference>
+      <Reference Include="ConditionalExpression">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\ConditionalExpression.dll</HintPath>
+      </Reference>
+      <Reference Include="Demigiant.DOTween">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Demigiant.DOTween.dll</HintPath>
+      </Reference>
+      <Reference Include="DOTween">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\DOTween.dll</HintPath>
+      </Reference>
+      <Reference Include="FMODUnity">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\FMODUnity.dll</HintPath>
+      </Reference>
+      <Reference Include="FMODUnityResonance">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\FMODUnityResonance.dll</HintPath>
+      </Reference>
+      <Reference Include="FullSerializer">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\FullSerializer.dll</HintPath>
+      </Reference>
+      <Reference Include="Hutonggames.Playmaker">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Hutonggames.Playmaker.dll</HintPath>
+      </Reference>
+      <Reference Include="I2Localization">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\I2Localization.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppMono.Security">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Il2CppMono.Security.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2Cppmscorlib">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Il2CppSystem.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Configuration">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Il2CppSystem.Configuration.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Core">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Numerics">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Il2CppSystem.Numerics.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Xml">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Il2CppSystem.Xml.dll</HintPath>
+      </Reference>
+      <Reference Include="Ludiq.Chronos">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Ludiq.Chronos.dll</HintPath>
+      </Reference>
+      <Reference Include="Malee.ReorderableList">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Malee.ReorderableList.dll</HintPath>
+      </Reference>
+      <Reference Include="mcs">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\mcs.dll</HintPath>
+      </Reference>
+      <Reference Include="MiniJSON">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\MiniJSON.dll</HintPath>
+      </Reference>
+      <Reference Include="NewAssembly">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\NewAssembly.dll</HintPath>
+      </Reference>
+      <Reference Include="PlayMaker">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\PlayMaker.dll</HintPath>
+      </Reference>
+      <Reference Include="PowerTools.PowerSprite">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\PowerTools.PowerSprite.dll</HintPath>
+      </Reference>
+      <Reference Include="QFSW.QC">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\QFSW.QC.dll</HintPath>
+      </Reference>
+      <Reference Include="QFSW.QC.Extras">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\QFSW.QC.Extras.dll</HintPath>
+      </Reference>
+      <Reference Include="QFSW.QC.Grammar">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\QFSW.QC.Grammar.dll</HintPath>
+      </Reference>
+      <Reference Include="QFSW.QC.Parsers">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\QFSW.QC.Parsers.dll</HintPath>
+      </Reference>
+      <Reference Include="QFSW.QC.Serializers">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\QFSW.QC.Serializers.dll</HintPath>
+      </Reference>
+      <Reference Include="QFSW.QC.UI">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\QFSW.QC.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="Rewired">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Rewired.dll</HintPath>
+      </Reference>
+      <Reference Include="Rewired_Core">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Rewired_Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Rewired_Windows">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Rewired_Windows.dll</HintPath>
+      </Reference>
+      <Reference Include="Rewired_Windows_Functions">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Rewired_Windows_Functions.dll</HintPath>
+      </Reference>
+      <Reference Include="T17">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\T17.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Common">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Common.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Containers">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Containers.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Input">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Input.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.Achievements">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.Achievements.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.EngagementService">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.EngagementService.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.Entitlements">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.Entitlements.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.OnScreenKeyboard">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.OnScreenKeyboard.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.RichPresence">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.RichPresence.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.SaveGame">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.SaveGame.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.User">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.User.dll</HintPath>
+      </Reference>
+      <Reference Include="Team17.Platform.UserService">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Team17.Platform.UserService.dll</HintPath>
+      </Reference>
+      <Reference Include="TGK.Framework">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\TGK.Framework.dll</HintPath>
+      </Reference>
+      <Reference Include="TGK.Game">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\TGK.Game.dll</HintPath>
+      </Reference>
+      <Reference Include="TGK.Game.Playmaker">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\TGK.Game.Playmaker.dll</HintPath>
+      </Reference>
+      <Reference Include="TGK.Test">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\TGK.Test.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.2D.PixelPerfect">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.2D.PixelPerfect.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Addressables">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.Addressables.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.Burst.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst.Unsafe">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.Burst.Unsafe.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Mathematics">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.Mathematics.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.ResourceManager">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.ResourceManager.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.TextMeshPro">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Timeline">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\Unity.Timeline.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AccessibilityModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.AccessibilityModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AIModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.AIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AndroidJNIModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.AndroidJNIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AnimationModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.AnimationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AssetBundleModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.AssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AudioModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.AudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClothModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.ClothModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterInputModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.ClusterInputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterRendererModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.ClusterRendererModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CrashReportingModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.CrashReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DirectorModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.DirectorModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DSPGraphModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.DSPGraphModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GameCenterModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.GameCenterModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GIModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.GIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GridModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.GridModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.HotReloadModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.HotReloadModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ImageConversionModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.InputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.JSONSerializeModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.JSONSerializeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.LocalizationModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.LocalizationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ParticleSystemModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.ParticleSystemModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PerformanceReportingModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Physics2DModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.Physics2DModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PhysicsModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ProfilerModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.ProfilerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ScreenCaptureModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SharedInternalsModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.SharedInternalsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteMaskModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.SpriteMaskModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteShapeModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.SpriteShapeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.StreamingModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.StreamingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubstanceModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.SubstanceModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubsystemsModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.SubsystemsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.TerrainModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainPhysicsModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreFontEngineModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreTextEngineModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TilemapModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.TilemapModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TLSModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.TLSModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIElementsModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UIElementsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIElementsNativeModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UIElementsNativeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UmbraModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UmbraModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UNETModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UNETModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityConnectModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityConnectModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityCurlModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityCurlModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityTestProtocolModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VehiclesModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.VehiclesModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VFXModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.VFXModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VideoModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.VideoModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VirtualTexturingModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.VirtualTexturingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VRModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.VRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.WindModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.WindModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.XRModule">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\UnityEngine.XRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="__Generated">
+        <HintPath>H:\Games\steamapps\common\Blasphemous 2\BepInEx\interop\__Generated.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+</Project>

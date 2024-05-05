@@ -1,0 +1,7 @@
+{
+  "Id": "SkipIntros",
+  "DisplayName": "Skip Intros",
+  "Author": "p1xel8ted",
+  "Version": "0.1.0",
+  "EntryMethod": "SkipIntros.Main.Load"
+}

@@ -1,0 +1,12 @@
+{
+  "AssemblyName": "MaxButton.dll",
+  "Author": "UrbanVibes",
+  "DisplayName": "MaxButton (Harmony2)",
+  "Description": "Adds a maximum button to crafting and trading.",
+  "Enable": true,
+  "EntryMethod": "MaxButton.MainPatcher.Patch",
+  "Id": "MaxButton",
+  "Config": "config.txt",
+  "LoadOrder": 15,
+  "Version": "1.405"
+}

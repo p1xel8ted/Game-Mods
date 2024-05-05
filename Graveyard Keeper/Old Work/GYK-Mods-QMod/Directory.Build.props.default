@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <SteamFolder>C:\Program Files (x86)\Steam</SteamFolder>
+    <GameFolder>$(SteamFolder)\steamapps\common\Graveyard Keeper\Graveyard Keeper_Data\Managed</GameFolder>
+    <ModFolder>$(SteamFolder)\steamapps\common\Graveyard Keeper\QMods</ModFolder>
+  </PropertyGroup>
+</Project>

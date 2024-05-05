@@ -1,0 +1,550 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Description>New Cycle Tweaks</Description>
+        <Version>0.1.0</Version>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <FileVersion>$(Version)</FileVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json;
+            https://nuget.samboy.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
+        <PackageId>CuisineerTweaks</PackageId>
+    </PropertyGroup>
+    <Import Project="..\zip.target"/>
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="AmazingAssets.TerrainToMesh">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\AmazingAssets.TerrainToMesh.dll</HintPath>
+      </Reference>
+      <Reference Include="AmplifyImpostors.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\AmplifyImpostors.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp-firstpass">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
+      <Reference Include="AstarPathfindingProject">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\AstarPathfindingProject.dll</HintPath>
+      </Reference>
+      <Reference Include="Beautify.Universal.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Beautify.Universal.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Boxophobic.AtmosphericHeightFog.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Boxophobic.AtmosphericHeightFog.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Boxophobic.TheVegetationEngine.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Boxophobic.TheVegetationEngine.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Boxophobic.TheVegetationEngine.Scripts">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Boxophobic.TheVegetationEngine.Scripts.dll</HintPath>
+      </Reference>
+      <Reference Include="Boxophobic.Utils.Scripts">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Boxophobic.Utils.Scripts.dll</HintPath>
+      </Reference>
+      <Reference Include="Coffee.UIParticle">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Coffee.UIParticle.dll</HintPath>
+      </Reference>
+      <Reference Include="com.alteregogames.aeg-dlss.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\com.alteregogames.aeg-dlss.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="com.alteregogames.aeg-dlss.Runtime.URP">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\com.alteregogames.aeg-dlss.Runtime.URP.dll</HintPath>
+      </Reference>
+      <Reference Include="com.rlabrecque.steamworks.net">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\com.rlabrecque.steamworks.net.dll</HintPath>
+      </Reference>
+      <Reference Include="Dracodec">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Dracodec.dll</HintPath>
+      </Reference>
+      <Reference Include="Drawing">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Drawing.dll</HintPath>
+      </Reference>
+      <Reference Include="fluxy">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\fluxy.dll</HintPath>
+      </Reference>
+      <Reference Include="FoliageRenderer">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\FoliageRenderer.dll</HintPath>
+      </Reference>
+      <Reference Include="GameAnalytics">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\GameAnalytics.dll</HintPath>
+      </Reference>
+      <Reference Include="Google.Api.CommonProtos">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Google.Api.CommonProtos.dll</HintPath>
+      </Reference>
+      <Reference Include="Google.Protobuf">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Google.Protobuf.dll</HintPath>
+      </Reference>
+      <Reference Include="Grpc.Core">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Grpc.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Grpc.Core.Api">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Grpc.Core.Api.dll</HintPath>
+      </Reference>
+      <Reference Include="GUPS.EasyPerformanceMonitor">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\GUPS.EasyPerformanceMonitor.dll</HintPath>
+      </Reference>
+      <Reference Include="HBAO.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\HBAO.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="HBAO.Universal.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\HBAO.Universal.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppMono.Data.Sqlite">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppMono.Data.Sqlite.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppMono.Security">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppMono.Security.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2Cppmscorlib">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Configuration">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Configuration.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Core">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Data">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Data.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Drawing">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Drawing.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Net.Http">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Net.Http.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Numerics">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Numerics.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Runtime.CompilerServices.Unsafe">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Runtime.Serialization">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Transactions">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Transactions.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Xml">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Xml.dll</HintPath>
+      </Reference>
+      <Reference Include="Il2CppSystem.Xml.Linq">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Il2CppSystem.Xml.Linq.dll</HintPath>
+      </Reference>
+      <Reference Include="InworldAI">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\InworldAI.dll</HintPath>
+      </Reference>
+      <Reference Include="InworldProto">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\InworldProto.dll</HintPath>
+      </Reference>
+      <Reference Include="io.sentry.unity.runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\io.sentry.unity.runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="JBooth.MicroSplat.Core">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\JBooth.MicroSplat.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="JBooth.MicroVerseCore">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\JBooth.MicroVerseCore.dll</HintPath>
+      </Reference>
+      <Reference Include="KWS">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\KWS.dll</HintPath>
+      </Reference>
+      <Reference Include="KWS.Mathematics">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\KWS.Mathematics.dll</HintPath>
+      </Reference>
+      <Reference Include="MeshAnimator">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\MeshAnimator.dll</HintPath>
+      </Reference>
+      <Reference Include="Newtonsoft.Json">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+      <Reference Include="OccaSoftware.HazeFX.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\OccaSoftware.HazeFX.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="PackageTools">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\PackageTools.dll</HintPath>
+      </Reference>
+      <Reference Include="Pathfinding.ClipperLib">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Pathfinding.ClipperLib.dll</HintPath>
+      </Reference>
+      <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+      </Reference>
+      <Reference Include="Pathfinding.Poly2Tri">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Pathfinding.Poly2Tri.dll</HintPath>
+      </Reference>
+      <Reference Include="RafireAssembly">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\RafireAssembly.dll</HintPath>
+      </Reference>
+      <Reference Include="RFLib_DotNet_2018">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\RFLib_DotNet_2018.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.Microsoft.Bcl.AsyncInterfaces">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Buffers">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Buffers.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Collections.Immutable">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Collections.Immutable.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Memory">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Memory.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Numerics.Vectors">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Numerics.Vectors.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Reflection.Metadata">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Reflection.Metadata.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Runtime.CompilerServices.Unsafe">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Text.Encodings.Web">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Text.Encodings.Web.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Text.Json">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Text.Json.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.System.Threading.Tasks.Extensions">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.System.Threading.Tasks.Extensions.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.Unity">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.Unity.dll</HintPath>
+      </Reference>
+      <Reference Include="Sentry.Unity.Native">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sentry.Unity.Native.dll</HintPath>
+      </Reference>
+      <Reference Include="Siccity.GLTFUtility">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Siccity.GLTFUtility.dll</HintPath>
+      </Reference>
+      <Reference Include="Sirenix.OdinInspector.Attributes">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Sirenix.OdinInspector.Attributes.dll</HintPath>
+      </Reference>
+      <Reference Include="UIEffect">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UIEffect.dll</HintPath>
+      </Reference>
+      <Reference Include="UniTask">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UniTask.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Addressables">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Addressables.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Burst.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Burst.Unsafe">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Burst.Unsafe.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.CastVisualizer.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.CastVisualizer.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Collections">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Collections.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Collections.LowLevel.ILSupport">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Localization">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Localization.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Mathematics">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Mathematics.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipelines.Core.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.ResourceManager">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.ResourceManager.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Analytics">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Analytics.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Configuration">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Configuration.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Device">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Device.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Environments.Internal">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Environments.Internal.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Internal">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Internal.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Registration">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Registration.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Scheduler">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Scheduler.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Telemetry">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Telemetry.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Services.Core.Threading">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Services.Core.Threading.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Splines">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Splines.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.TextMeshPro">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.Timeline">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.Timeline.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.VisualEffectGraph.Runtime">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\Unity.VisualEffectGraph.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AccessibilityModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.AccessibilityModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AIModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.AIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AndroidJNIModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.AndroidJNIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AnimationModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.AnimationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AssetBundleModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.AssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AudioModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.AudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClothModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ClothModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterInputModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ClusterInputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ClusterRendererModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ClusterRendererModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ContentLoadModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ContentLoadModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CrashReportingModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.CrashReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DirectorModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.DirectorModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.DSPGraphModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.DSPGraphModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GameCenterModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.GameCenterModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GIModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.GIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.GridModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.GridModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.HotReloadModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.HotReloadModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ImageConversionModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.InputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.JSONSerializeModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.JSONSerializeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.LocalizationModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.LocalizationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.NVIDIAModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.NVIDIAModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ParticleSystemModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ParticleSystemModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PerformanceReportingModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Physics2DModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.Physics2DModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PhysicsModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ProfilerModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ProfilerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PropertiesModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.PropertiesModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ScreenCaptureModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SharedInternalsModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.SharedInternalsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteMaskModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.SpriteMaskModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteShapeModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.SpriteShapeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.StreamingModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.StreamingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubstanceModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.SubstanceModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SubsystemsModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.SubsystemsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.TerrainModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainPhysicsModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreFontEngineModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreTextEngineModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TilemapModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.TilemapModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TLSModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.TLSModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIElementsModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UIElementsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UmbraModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UmbraModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityAnalyticsModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityConnectModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityConnectModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityCurlModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityCurlModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityTestProtocolModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VehiclesModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.VehiclesModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VFXModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.VFXModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VideoModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.VideoModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VirtualTexturingModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.VirtualTexturingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VRModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.VRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.WindModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.WindModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.XRModule">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\UnityEngine.XRModule.dll</HintPath>
+      </Reference>
+      <Reference Include="VisualDesignCafe.Memory">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\VisualDesignCafe.Memory.dll</HintPath>
+      </Reference>
+      <Reference Include="VisualDesignCafe.Nature">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\VisualDesignCafe.Nature.dll</HintPath>
+      </Reference>
+      <Reference Include="VisualDesignCafe.Packages">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\VisualDesignCafe.Packages.dll</HintPath>
+      </Reference>
+      <Reference Include="VisualDesignCafe.Rendering.Instancing">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\VisualDesignCafe.Rendering.Instancing.dll</HintPath>
+      </Reference>
+      <Reference Include="VisualDesignCafe.Rendering.Nature">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\VisualDesignCafe.Rendering.Nature.dll</HintPath>
+      </Reference>
+      <Reference Include="VisualDesignCafe.ShaderX">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\VisualDesignCafe.ShaderX.dll</HintPath>
+      </Reference>
+      <Reference Include="__Generated">
+        <HintPath>F:\Games\steamapps\common\New Cycle\BepInEx\interop\__Generated.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+   
+</Project>

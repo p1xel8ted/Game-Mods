@@ -1,0 +1,22 @@
+{
+  "name": "Sunite Scythe",
+  "description": "Reaps crops with ease and slices down the toughest of weeds.",
+  "helpDescription": "<sprite=\"attack_damage_icon\" index=0> 14-22 Damage\n<sprite=\"attack_speed_icon\" index=0> 15 Attack Speed",
+  "useDescription": "(Left click to swing)",
+  "id": 30030,
+  "stackSize": 1,
+  "canSell": 1,
+  "canTrade": 1,
+  "canTrash": 0,
+  "isForageable": 0,
+  "isGem": 0,
+  "isAnimalProduct": 0,
+  "sellPrice": 2250.0,
+  "orbsSellPrice": 0.0,
+  "ticketSellPrice": 0.0,
+  "category": 0,
+  "rarity": 4,
+  "hearts": 1,
+  "profession": 1,
+  "requiredLevel": 40
+}

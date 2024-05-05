@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>0.0.1</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Roots of Pacha\Roots of Pacha_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="MamboJamboStudios.UnityAtomsCore.Runtime" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Roots of Pacha\Roots of Pacha_Data\Managed\MamboJamboStudios.UnityAtomsCore.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonUnityNetworking" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Roots of Pacha\Roots of Pacha_Data\Managed\PhotonUnityNetworking.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Roots of Pacha\Roots of Pacha_Data\Managed\UniTask.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Roots of Pacha\Roots of Pacha_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Roots of Pacha\Roots of Pacha_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule" publicize="true">
+      <HintPath>F:\Games\steamapps\common\Roots of Pacha\Roots of Pacha_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

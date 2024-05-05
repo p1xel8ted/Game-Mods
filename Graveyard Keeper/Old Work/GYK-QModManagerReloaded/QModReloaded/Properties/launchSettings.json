@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "QModReloaded": {
+      "commandName": "Project",
+      "nativeDebugging": true,
+      "sqlDebugging": true,
+      "jsWebView2Debugging": true
+    }
+  }
+}

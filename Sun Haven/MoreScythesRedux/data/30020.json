@@ -1,0 +1,22 @@
+{
+  "name": "Mithril Scythe",
+  "description": "Reaps crops with ease and slices down the toughest of weeds.",
+  "helpDescription": "<sprite=\"attack_damage_icon\" index=0> 10-18 Damage\n<sprite=\"attack_speed_icon\" index=0> 14 Attack Speed",
+  "useDescription": "(Left click to swing)",
+  "id": 30020,
+  "stackSize": 1,
+  "canSell": 1,
+  "canTrade": 1,
+  "canTrash": 0,
+  "isForageable": 0,
+  "isGem": 0,
+  "isAnimalProduct": 0,
+  "sellPrice": 1000.0,
+  "orbsSellPrice": 0.0,
+  "ticketSellPrice": 0.0,
+  "category": 0,
+  "rarity": 3,
+  "hearts": 1,
+  "profession": 1,
+  "requiredLevel": 30
+}
