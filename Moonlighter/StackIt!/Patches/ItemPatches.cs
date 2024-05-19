@@ -1,53 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using HarmonyLib;
-
-namespace StackIt;
-
-/// <summary>
-/// A class that represents the modifications applied to items in the game.
-/// This class is used to alter the properties of items, specifically their stack sizes.
-/// </summary>
-[HarmonyPatch]
-public static class ItemPatches
+﻿namespace StackIt
 {
-
-    private readonly static Dictionary<string, int> ItemBackup = new();
-
-    /// <summary>
-    /// Applies modifications to all items in the game.
-    /// The modifications are applied based on the current game state and the settings of the StackIt plugin.
-    /// If the Wanderer DLC is not enabled, an error message is logged and the method returns false.
-    /// </summary>
-    /// <returns>True if the modifications were applied successfully, false if the Wanderer DLC is not enabled.</returns>
-    public static void ApplyModifications()
+    [HarmonyPatch]
+    public static class ItemPatches
     {
-        var text = new StringBuilder();
-        var stackIt = Plugin.StackIt.Value;
-        var customStackSizes = Plugin.CustomStackSizes.Value;
+        private readonly static Dictionary<string, int> ItemBackup = new();
 
-        foreach (var itemCollection in ItemDatabase.Instance.itemCollections)
+        private static void ApplyModifications(IEnumerable<ItemMaster> items)
         {
-            foreach (var item in itemCollection.items.Concat(itemCollection.createdItems))
-            {
-                if (!Modify(item)) continue;
+            var stackIt = Plugin.StackIt.Value;
+            var customStackSizes = Plugin.CustomStackSizes.Value;
 
-                // Backup and modify sizes
+            foreach (var item in items)
+            {
                 if (!ItemBackup.TryGetValue(item.nameKey, out var original))
                 {
                     ItemBackup[item.nameKey] = item.maxStack;
                     if (Plugin.Debug.Value)
                     {
-                        Plugin.LOG.LogWarning($"Item backed up: {item.nameKey}");
+                        Plugin.LOG.LogInfo($"BACKUP: '{GetName(item)}': {item.maxStack}");
                     }
                 }
                 else
                 {
-                    // Already backed up, now apply modifications
-                    text.AppendLine("\n\n------------------------------------------------------------")
-                        .AppendLine($"Name: {item.nameKey}\nOriginal Size: {original}");
+                    if (!Modify(item)) continue;
 
                     item.maxStack = original;
 
@@ -55,165 +30,111 @@ public static class ItemPatches
                     {
                         DoubleStacks(item, original);
                     }
-                    else if (customStackSizes && original < Plugin.MaxStackSize.Value)
+                    else if (customStackSizes)
                     {
                         CustomStackSizes(item, original);
                     }
-
-                    text.AppendLine($"New Size: {item.maxStack}");
+                    if (Plugin.Debug.Value)
+                    {
+                        Plugin.LOG.LogInfo($"MODIFY: '{GetName(item)}': {original} => {item.maxStack}");
+                    }
                 }
             }
         }
-        var finalText = text.ToString();
 
-        if (Plugin.Debug.Value)
+        internal static void ReProcessAll()
         {
-            Plugin.LOG.LogInfo("Total Items: " + ItemBackup.Count);
-            Plugin.LOG.LogInfo(finalText);
+            var allItems = ItemDatabase.Instance.itemCollections
+                .SelectMany(c => c.items.Concat(c.createdItems));
+            ApplyModifications(allItems);
         }
-    }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.LoadDLCItems), [])]
-    public static void ItemDatabase_LoadDLCItems()
-    {
-        ApplyModifications();
-        Plugin.LOG.LogWarning("ItemDatabase_LoadDLCItems");
-    }
-
-    // Patch for LoadDLCItems method with a string parameter
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.LoadDLCItems), [typeof(string)])]
-    public static void ItemDatabase_LoadDLCItems_String()
-    {
-        ApplyModifications();
-        Plugin.LOG.LogWarning("ItemDatabase_LoadDLCItems_String");
-    }
-
-    // Patch for ReadFromDLC method
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.ReadFromDLC))]
-    public static void ItemDatabase_ReadFromDLC()
-    {
-        ApplyModifications();
-        Plugin.LOG.LogWarning("ItemDatabase_ReadFromDLC");
-    }
-
-    // Patch for ReadDefaultFile method
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.ReadDefaultFile))]
-    public static void ItemDatabase_ReadDefaultFile()
-    {
-        ApplyModifications();
-        Plugin.LOG.LogWarning("ItemDatabase_ReadDefaultFile");
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.GetItems))]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.GetGeneratedItems))]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.GetDLCItems))]
-    public static void ItemDatabase_Get(ref List<ItemMaster> __result)
-    {
-        var text = new StringBuilder();
-        var stackIt = Plugin.StackIt.Value;
-        var customStackSizes = Plugin.CustomStackSizes.Value;
-
-
-        foreach (var item in __result)
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.LoadDLCItems), [])]
+        [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.LoadDLCItems), [typeof(string)])]
+        [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.ReadFromDLC))]
+        [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.ReadDefaultFile))]
+        private static void ItemDatabase_LoadOrReadMethods()
         {
-            if (!Modify(item)) continue;
-            // Backup and modify sizes
-            if (!ItemBackup.TryGetValue(item.nameKey, out var original))
+            ReProcessAll();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ItemStack), nameof(ItemStack.Init))]
+        private static void ItemStack_Init(ItemStack __instance)
+        {
+            if (!Plugin.Debug.Value) return;
+
+            Plugin.LOG.LogInfo(__instance.effect ? $"INIT: '{GetName(__instance)}' has a FixedStack: {__instance.MaxStack}" : $"INIT: '{GetName(__instance)}' has a MaxStack: {__instance.MaxStack}");
+        }
+ 
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.GetItems))]
+        [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.GetGeneratedItems))]
+        [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.GetDLCItems))]
+        private static void ItemDatabase_GetMethods(ref List<ItemMaster> __result)
+        {
+            ApplyModifications(__result);
+        }
+
+        private static void LogRejection(ItemMaster item, string reason)
+        {
+            if (!Plugin.Debug.Value) return;
+            Plugin.LOG.LogInfo($"REJECTION: '{GetName(item)}' was rejected because {reason}");
+        }
+
+        private static string GetName(ItemMaster item)
+        {
+            var displayName = DigitalSunGames.Languages.I2.Localization.Get(item.nameKey);
+            return string.IsNullOrWhiteSpace(displayName) ? item.nameKey : $"{displayName} ({item.nameKey})";
+        }
+        
+        private static string GetName(ItemStack item)
+        {
+            var displayName = DigitalSunGames.Languages.I2.Localization.Get(item.master.nameKey);
+            return string.IsNullOrWhiteSpace(displayName) ? item.master.nameKey : $"{displayName} ({item.master.nameKey})";
+        }
+
+
+        private static bool Modify(ItemMaster item)
+        {
+            if (!Plugin.CustomStackSizes.Value && !Plugin.StackIt.Value)
             {
-                ItemBackup[item.nameKey] = item.maxStack;
-
-                if (Plugin.Debug.Value)
-                {
-                    Plugin.LOG.LogInfo($"Item backed up: {item.nameKey}");
-                }
+                LogRejection(item, "Both StackIt and CustomStackSizes are disabled!");
+                return false;
             }
-            else
+
+            if (item.name.Equals("Coin", StringComparison.OrdinalIgnoreCase))
             {
-                // Already backed up, now apply modifications
-                text.AppendLine("\n\n------------------------------------------------------------")
-                    .AppendLine($"Name: {item.nameKey}\nOriginal Size: {original}");
+                LogRejection(item, "item is a coin");
+                return false;
+            }
 
-                item.maxStack = original;
+            var total = item.minChestStack + item.maxChestStack + item.maxStack + item.fixedChestStack;
+            var result = !(total <= 4) || Plugin.IncludeUniqueItems.Value;
 
-                if (stackIt)
-                {
-                    DoubleStacks(item, original);
-                }
-                else if (customStackSizes && original < Plugin.MaxStackSize.Value)
-                {
-                    CustomStackSizes(item, original);
-                }
+            if (!result)
+            {
+                LogRejection(item, "item is unique/quest item/etc.");
+            }
 
-                text.AppendLine($"New Size: {item.maxStack}");
+            return result;
+        }
+
+        private static void DoubleStacks(ItemMaster item, int original)
+        {
+            if (original > 0)
+            {
+                item.maxStack = original * 2;
             }
         }
 
-
-        var finalText = text.ToString();
-
-        if (Plugin.Debug.Value)
+        private static void CustomStackSizes(ItemMaster item, int original)
         {
-            Plugin.LOG.LogInfo("Total Items (GetMethods): " + __result.Count);
-            Plugin.LOG.LogInfo(finalText);
-        }
-    }
-
-
-    /// <summary>
-    /// Determines whether a given item should be modified.
-    /// This method ignores coins and items with a total stack size of 3 or 4.
-    /// </summary>
-    /// <param name="item">The <see cref="ItemMaster"/> object representing the item to check.</param>
-    /// <returns>True if the item should be modified, otherwise false.</returns>
-    private static bool Modify(ItemMaster item)
-    {
-        if (item is null) return false;
-        //ignores coin has it has a stack size of 999999999... and returns false for items that have 1 of each stack size as they are not stackable/unique
-        if (item.name.Equals("Coin", StringComparison.OrdinalIgnoreCase)) return false;
-
-        var a = item.minChestStack;
-        var b = item.maxChestStack;
-        var c = item.maxStack;
-        var d = item.fixedChestStack;
-        var total = a + b + c + d;
-        return total switch
-        {
-            3 or 4 => false,
-            _ => true
-        };
-    }
-
-    /// <summary>
-    /// Doubles the maximum stack size of a given item.
-    /// If the original stack size is greater than 0, the item's max stack size is set to twice the original value.
-    /// </summary>
-    /// <param name="item">The <see cref="ItemMaster"/> object representing the item to modify.</param>
-    /// <param name="original">The original maximum stack size of the item.</param>
-    private static void DoubleStacks(ItemMaster item, int original)
-    {
-        if (original > 0)
-        {
-            item.maxStack = original * 2;
-        }
-    }
-
-    /// <summary>
-    /// Applies custom stack sizes to a given item.
-    /// If the original stack size is greater than 0 and less than the maximum stack size specified by the StackIt plugin,
-    /// the item's max stack size is set to the plugin's maximum stack size.
-    /// </summary>
-    /// <param name="item">The <see cref="ItemMaster"/> object representing the item to modify.</param>
-    /// <param name="original">The original maximum stack size of the item.</param>
-    private static void CustomStackSizes(ItemMaster item, int original)
-    {
-        if (original > 0 && item.maxStack < Plugin.MaxStackSize.Value)
-        {
-            item.maxStack = Plugin.MaxStackSize.Value;
+            if (original > 0 && item.maxStack < Plugin.MaxStackSize.Value)
+            {
+                item.maxStack = Plugin.MaxStackSize.Value;
+            }
         }
     }
 }
