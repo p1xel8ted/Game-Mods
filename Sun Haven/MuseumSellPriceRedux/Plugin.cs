@@ -1,4 +1,7 @@
-﻿namespace MuseumSellPriceRedux;
+﻿using PSS;
+using UnityEngine.SceneManagement;
+
+namespace MuseumSellPriceRedux;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public class Plugin : BaseUnityPlugin
@@ -14,6 +17,7 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
+        Database.OnDataFinishedLoading += Patches.ItemData_Loaded;
         LOG = new ManualLogSource(PluginName);
         BepInEx.Logging.Logger.Sources.Add(LOG);
         Enabled = Config.Bind("01. General", "Enabled", true, new ConfigDescription("Toggle mod. Click 'Apply' to save changes.", null, new ConfigurationManagerAttributes
@@ -41,7 +45,7 @@ public class Plugin : BaseUnityPlugin
         if (!button) return;
         if (Enabled.Value)
         {
-            Patches.RestorePrices(Patches.ApplyPriceChanges);  
+            Patches.ApplyPriceChanges();  
         }
         else
         {

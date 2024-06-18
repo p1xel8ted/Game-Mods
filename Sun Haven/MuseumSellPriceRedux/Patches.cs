@@ -1,4 +1,7 @@
-﻿namespace MuseumSellPriceRedux;
+﻿using PSS;
+using UnityEngine.SceneManagement;
+
+namespace MuseumSellPriceRedux;
 
 [Harmony]
 public static class Patches
@@ -28,7 +31,7 @@ public static class Patches
     private static Dictionary<int, float> BackUpTicketPrices { get; } = new();
     private static Dictionary<int, float> BackUpOrbPrices { get; } = new();
 
-    private static readonly HashSet<string> ExcludedNames = new(StringComparer.OrdinalIgnoreCase)
+    private readonly static HashSet<string> ExcludedNames = new(StringComparer.OrdinalIgnoreCase)
     {
         AncientNelVarian,
         AncientWithergate,
@@ -47,155 +50,266 @@ public static class Patches
         AncientAngelQuill
     };
 
+    private static Dictionary<int, string> DescriptionCache { get; } = new();
 
-    internal static void ApplyPriceChanges()
+    public static void ItemData_Loaded(int itemId)
     {
-        Plugin.Log("Applying price changes...");
-        foreach (var item in ItemDatabase.items.Where(a => a != null))
+        var itemSellInfo = Utils.GetItemSellInfo(itemId);
+        var item = GetItemFromCache(Database.Instance, itemId);
+
+        DescriptionCache[itemId] = item.description;
+
+        var existsInItemSellList = Utils.GetItemSellInfo(itemId);
+        if (existsInItemSellList == null)
         {
-            if (item.description.Contains(WouldLookGoodInAMuseum,StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 11f)
-            {
-                if (ExcludedNames.Contains(item.name))
-                {
-                    AdjustSellPriceForExcludedNames(item);
-                }
-                else if (item.name.Equals(LeafieTrinket,StringComparison.OrdinalIgnoreCase))
-                {
-                    item.sellPrice *= Plugin.Multiplier.Value / 3;
-                    Plugin.Log($"Adjusted price for {item.name} to {item.sellPrice}", debug:true);
-                }
-                else
-                {
-                    item.sellPrice *= Plugin.Multiplier.Value;
-                    Plugin.Log($"Adjusted price for {item.name} to {item.sellPrice}", debug:true);
-                }
-            }
-
-            AdjustOtherConditions(item);
+            Plugin.Log($"ItemSellInfo for {itemId} does not exist!", error: true);
         }
+        
+        BackupItemPrices(itemSellInfo, itemId);
 
-        Plugin.SendNotification("Prices adjusted!");
+        ModifyItem(itemSellInfo, itemId);
     }
 
-    [HarmonyPostfix]
-    [HarmonyPriority(1)]
-    [HarmonyPatch(typeof(ItemDatabase), nameof(ItemDatabase.ConstructDatabase), typeof(ItemData[]))]
-    private static void ItemDatabase_ConstructDatabase()
+    private static bool IsMuseumItem(int id, float price)
     {
-        BackupPrices();
+        var description = GetDescription(id);
+        return description.Contains(WouldLookGoodInAMuseum, StringComparison.OrdinalIgnoreCase) && price <= 11f;
+    }
 
+    private static string GetDescription(int itemId)
+    {
+        return DescriptionCache.TryGetValue(itemId, out var description) ? description : string.Empty;
+    }
+
+    private static void BackupItemPrices(ItemSellInfo itemSellInfo, int item)
+    {
+        if (itemSellInfo is null)
+        {
+            Plugin.Log($"itemSellInfo for {item} is null!", debug: true);
+            return;
+        }
+
+        if (BackUpSellPrices.TryAdd(item, itemSellInfo.sellPrice))
+        {
+            Plugin.Log($"Backed up gold sell price for {itemSellInfo.name} to {itemSellInfo.sellPrice}", debug: true);
+        }
+        if (BackUpOrbPrices.TryAdd(item, itemSellInfo.orbSellPrice))
+        {
+            Plugin.Log($"Backed up orb sell price for {itemSellInfo.name} to {itemSellInfo.orbSellPrice}", debug: true);
+        }
+        if (BackUpTicketPrices.TryAdd(item, itemSellInfo.ticketSellPrice))
+        {
+            Plugin.Log($"Backed up ticket sell price for {itemSellInfo.name} to {itemSellInfo.ticketSellPrice}", debug: true);
+        }
+    }
+
+    // Method to get all items from the cache based on itemId
+    private static ItemData GetItemFromCache(Database database, int itemId)
+    {
+        foreach (var typeCache in database.cache.Values)
+        {
+            if (!typeCache.TryGetValue(itemId, out var cacheNode)) continue;
+
+            var cacheItem = cacheNode.Value;
+            return cacheItem.Data as ItemData;
+        }
+        return null;
+    }
+
+    private static float GetOriginalSellPrice(ItemSellInfo item, int id)
+    {
+        if (!BackUpSellPrices.TryGetValue(id, out var sellPrice))
+        {
+            Plugin.Log($"Failed to get original sell price for {item.name}!", error: true);
+            return 0;
+        }
+
+        return sellPrice;
+    }
+
+    private static float GetOriginalOrbSellPrice(ItemSellInfo item, int id)
+    {
+        if (!BackUpOrbPrices.TryGetValue(id, out var sellPrice))
+        {
+            Plugin.Log($"Failed to get original orb price for {item.name}!", error: true);
+            return 0;
+        }
+
+        return sellPrice;
+    }
+
+    private static float GetOriginalTicketSellPrice(ItemSellInfo item, int id)
+    {
+        if (!BackUpTicketPrices.TryGetValue(id, out var sellPrice))
+        {
+            Plugin.Log($"Failed to get original ticket price for {item.name}!", error: true);
+            return 0;
+        }
+
+        return sellPrice;
+    }
+
+    private static void ModifyItem(ItemSellInfo item, int id)
+    {
         if (!Plugin.Enabled.Value) return;
-
-        ApplyPriceChanges();
-    }
-
-    private static void BackupPrices()
-    {
-        Plugin.Log("Backing up prices...");
-        BackUpSellPrices.Clear();
-        foreach (var item in ItemDatabase.items.Where(a => a != null))
+        if (IsMuseumItem(id, item.sellPrice))
         {
-            BackUpSellPrices.TryAdd(item.id, item.sellPrice);
-            BackUpOrbPrices.TryAdd(item.id, item.orbsSellPrice);
-            BackUpTicketPrices.TryAdd(item.id, item.ticketSellPrice);
+            var originalSellPrice = GetOriginalSellPrice(item, id);
+            if (ExcludedNames.Contains(item.name))
+            {
+                AdjustSellPriceForExcludedNames(item, id);
+            }
+            else if (item.name.Equals(LeafieTrinket, StringComparison.OrdinalIgnoreCase))
+            {
+                item.sellPrice = originalSellPrice * Plugin.Multiplier.Value / 3;
+                Plugin.Log($"Adjusted gold sell price for {item.name} to {item.sellPrice}", debug: true);
+            }
+            else
+            {
+                item.sellPrice = originalSellPrice * Plugin.Multiplier.Value;
+                Plugin.Log($"Adjusted gold sell price for {item.name} to {item.sellPrice}", debug: true);
+            }
         }
+
+        AdjustOtherConditions(item, id);
     }
 
     internal static void RestorePrices(Action onComplete = null)
     {
         Plugin.Log("Restoring prices...");
-        foreach (var item in ItemDatabase.items.Where(a => a != null))
+        foreach (var item in SingletonBehaviour<ItemInfoDatabase>.Instance.allItemSellInfos)
         {
-            if (BackUpSellPrices.TryGetValue(item.id, out var sellPrice))
+            var itemName = Utils.GetNameByID(item.Key);
+            if (BackUpSellPrices.TryGetValue(item.Key, out var sellPrice))
             {
-                item.sellPrice = sellPrice;
-                Plugin.Log($"Restored price for {item.name} to {item.sellPrice}", debug:true);
+                item.Value.sellPrice = sellPrice;
+                Plugin.Log($"Restored gold sell price for {itemName} to {sellPrice}", debug: true);
             }
-            if (BackUpOrbPrices.TryGetValue(item.id, out var orbPrice))
+            if (BackUpOrbPrices.TryGetValue(item.Key, out var orbPrice))
             {
-                item.orbsSellPrice = orbPrice;
-                Plugin.Log($"Restored price for {item.name} to {item.orbsSellPrice}", debug:true);
-            } 
-            if (BackUpTicketPrices.TryGetValue(item.id, out var ticketPrice))
+                item.Value.orbSellPrice = orbPrice;
+                Plugin.Log($"Restored orb sell price for {itemName} to {orbPrice}", debug: true);
+            }
+            if (BackUpTicketPrices.TryGetValue(item.Key, out var ticketPrice))
             {
-                item.ticketSellPrice = ticketPrice;
-                Plugin.Log($"Restored price for {item.name} to {item.ticketSellPrice}", debug:true);
+                item.Value.ticketSellPrice = ticketPrice;
+                Plugin.Log($"Restored ticket sell price for {itemName} to {ticketPrice}", debug: true);
             }
         }
 
-        if (onComplete is null)
+        if (onComplete == null)
         {
+            Plugin.Log("Restoring completed...");
             Plugin.SendNotification("Prices restored to default!");
+            return;
         }
-        else
-        {
-            onComplete.Invoke();
-        }
-    }
-    
-    private static void AdjustSellPriceForExcludedNames(ItemData item)
-    {
 
-        if (item.name.Contains(FairyWings,StringComparison.OrdinalIgnoreCase) || item.name.Contains(ManaSap,StringComparison.OrdinalIgnoreCase) || item.name.Contains(MysteriousAntler,StringComparison.OrdinalIgnoreCase))
+        onComplete.Invoke();
+    }
+
+    private static void AdjustSellPriceForExcludedNames(ItemSellInfo item, int id)
+    {
+        if (!Plugin.Enabled.Value) return;
+        var originalSellPrice = GetOriginalSellPrice(item, id);
+        var originalOrbPrice = GetOriginalOrbSellPrice(item, id);
+        var originalTicketPrice = GetOriginalTicketSellPrice(item, id);
+
+        if (item.name.Contains(FairyWings, StringComparison.OrdinalIgnoreCase) || item.name.Contains(ManaSap, StringComparison.OrdinalIgnoreCase) || item.name.Contains(MysteriousAntler, StringComparison.OrdinalIgnoreCase))
         {
             item.sellPrice = 0f;
-            item.orbsSellPrice = Plugin.Multiplier.Value;
-            Plugin.Log($"Adjusted price for {item.name} to {item.orbsSellPrice}", debug:true);
+            item.orbSellPrice = Plugin.Multiplier.Value;
+            Plugin.Log($"Adjusted orb sell price for {item.name} to {item.orbSellPrice}", debug: true);
         }
-        else if (item.name.Contains(MonsterCandy,StringComparison.OrdinalIgnoreCase) || item.name.Contains(DragonFang,StringComparison.OrdinalIgnoreCase) || item.name.Contains(UnicornHairTuft,StringComparison.OrdinalIgnoreCase))
+        else if (item.name.Contains(MonsterCandy, StringComparison.OrdinalIgnoreCase) || item.name.Contains(DragonFang, StringComparison.OrdinalIgnoreCase) || item.name.Contains(UnicornHairTuft, StringComparison.OrdinalIgnoreCase))
         {
             item.sellPrice = 0f;
             item.ticketSellPrice = Plugin.Multiplier.Value;
-            Plugin.Log($"Adjusted price for {item.name} to {item.ticketSellPrice}", debug:true);   
+            Plugin.Log($"Adjusted ticket sell price for {item.name} to {item.ticketSellPrice}", debug: true);
         }
-        else if (item.name.Contains(NelVarianRunestone,StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientElvenHeaddress,StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientMagicStaff,StringComparison.OrdinalIgnoreCase))
+        else if (item.name.Contains(NelVarianRunestone, StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientElvenHeaddress, StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientMagicStaff, StringComparison.OrdinalIgnoreCase))
         {
             item.sellPrice = 0f;
-            item.orbsSellPrice = Plugin.Multiplier.Value;
-            Plugin.Log($"Adjusted price for {item.name} to {item.orbsSellPrice}", debug:true);
+            item.orbSellPrice = Plugin.Multiplier.Value;
+            Plugin.Log($"Adjusted orb sell price for {item.name} to {item.orbSellPrice}", debug: true);
         }
-        else if (item.name.Contains(TentacleMonsterEmblem,StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientNagaCrook,StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientAngelQuill,StringComparison.OrdinalIgnoreCase))
+        else if (item.name.Contains(TentacleMonsterEmblem, StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientNagaCrook, StringComparison.OrdinalIgnoreCase) || item.name.Contains(AncientAngelQuill, StringComparison.OrdinalIgnoreCase))
         {
             item.sellPrice = 0f;
             item.ticketSellPrice = Plugin.Multiplier.Value;
-            Plugin.Log($"Adjusted price for {item.name} to {item.ticketSellPrice}", debug:true);
+            Plugin.Log($"Adjusted ticket sell price for {item.name} to {item.ticketSellPrice}", debug: true);
         }
-        else if (item.name.Contains(AncientNelVarian,StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 101f)
+        else if (item.name.Contains(AncientNelVarian, StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 101f)
         {
-            item.orbsSellPrice *= Plugin.Multiplier.Value / 2;
-            Plugin.Log($"Adjusted price for {item.name} to {item.orbsSellPrice}", debug:true);
-                
+            item.orbSellPrice = originalOrbPrice * Plugin.Multiplier.Value / 2;
+            Plugin.Log($"Adjusted orb sell price for {item.name} to {item.orbSellPrice}", debug: true);
         }
-        else if (item.name.Contains(AncientWithergate,StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 101f)
+        else if (item.name.Contains(AncientWithergate, StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 101f)
         {
-            item.ticketSellPrice *= Plugin.Multiplier.Value / 2;
-            Plugin.Log($"Adjusted price for {item.name} to {item.ticketSellPrice}", debug:true);
+            item.ticketSellPrice = originalTicketPrice * Plugin.Multiplier.Value / 2;
+            Plugin.Log($"Adjusted ticket sell price for {item.name} to {item.ticketSellPrice}", debug: true);
         }
-        else if (item.name.Contains(AncientSunHaven,StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 101f)
+        else if (item.name.Contains(AncientSunHaven, StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 101f)
         {
-            item.sellPrice *= Plugin.Multiplier.Value / 3;
-            Plugin.Log($"Adjusted price for {item.name} to {item.sellPrice}", debug:true);
+            item.sellPrice = originalSellPrice * Plugin.Multiplier.Value / 3;
+            Plugin.Log($"Adjusted gold sell price for {item.name} to {item.sellPrice}", debug: true);
         }
     }
 
-    private static void AdjustOtherConditions(ItemData item)
+    private static void AdjustOtherConditions(ItemSellInfo item, int id)
     {
-        if (item.name.Contains(OriginsOfSunHavenAndElios,StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 2f)
+        if (!Plugin.Enabled.Value) return;
+        var originalSellPrice = GetOriginalSellPrice(item, id);
+        
+        if (item.name.Contains(OriginsOfSunHavenAndElios, StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 2f)
         {
-            item.sellPrice *= 10 * Plugin.Multiplier.Value / 2;
-            Plugin.Log($"Adjusted price for {item.name} to {item.sellPrice}", debug:true);
+            item.sellPrice = originalSellPrice * 10 * Plugin.Multiplier.Value / 2;
+            Plugin.Log($"Adjusted gold sell price for {item.name} to {item.sellPrice}", debug: true);
         }
-        else if (item.name.Contains(OriginsOfTheGrandTree,StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 2f)
+        else if (item.name.Contains(OriginsOfTheGrandTree, StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 2f)
         {
-            item.orbsSellPrice = Plugin.Multiplier.Value / 2;
-            item.sellPrice = 0f;
-            Plugin.Log($"Adjusted price for {item.name} to {item.orbsSellPrice}", debug:true);
+            item.sellPrice = originalSellPrice * 10 * Plugin.Multiplier.Value / 2;
+            Plugin.Log($"Adjusted gold sell price for {item.name} to {item.sellPrice}", debug: true);
         }
-        else if (item.name.Contains(OriginsOfDynus,StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 2f)
+        else if (item.name.Contains(OriginsOfDynus, StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 2f)
         {
-            item.ticketSellPrice = Plugin.Multiplier.Value / 2;
-            item.sellPrice = 0f;
-            Plugin.Log($"Adjusted price for {item.name} to {item.ticketSellPrice}", debug:true);
+            item.sellPrice = originalSellPrice * 10 * Plugin.Multiplier.Value / 2;
+            Plugin.Log($"Adjusted gold sell price for {item.name} to {item.sellPrice}", debug: true);
         }
     }
+
+    public static void BackUpPrices()
+    {
+        Plugin.Log("Backing up prices...");
+        foreach (var item in SingletonBehaviour<ItemInfoDatabase>.Instance.allItemSellInfos)
+        {
+            BackupItemPrices(item.Value, item.Key);
+        }
+        Plugin.Log("Prices backed up...");
+    }
+
+
+    public static void ApplyPriceChanges()
+    {
+        if (!Plugin.Enabled.Value) return;
+
+        Plugin.Log("Applying price changes...");
+        foreach (var item in SingletonBehaviour<ItemInfoDatabase>.Instance.allItemSellInfos)
+        {
+            ModifyItem(item.Value, item.Key);
+        }
+        Plugin.Log("Price changes applied...");
+
+        Plugin.SendNotification("Prices updated!");
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.LoadPlayerInventory))]
+    private static void Player_Initialize(PlayerInventory __instance)
+    {
+        Plugin.LOG.LogWarning("PlayerInventory.LoadPlayerInventory");
+
+        BackUpPrices();
+        ApplyPriceChanges();
+    }
+
 }

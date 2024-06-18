@@ -1,4 +1,6 @@
-﻿namespace NoTimeForFishing;
+﻿using PSS;
+
+namespace NoTimeForFishing;
 
 [HarmonyPatch]
 public static class Patches
@@ -141,10 +143,16 @@ public static class Patches
             ___spawnLimit = Plugin.FishSpawnLimit.Value;
         }
 
-        foreach (var itemData in FishingRod.fishingMuseumItems.Select(ItemDatabase.GetItemData))
+        foreach (var itemData in FishingRod.fishingMuseumItems)
         {
-            var caught = !GameSave.CurrentCharacter.Encylopdeia.ContainsKey((short) itemData.id);
-            Plugin.LOG.LogInfo($"Fishing Museum Items: {itemData.name} - Caught?: {caught}");
+            ItemData item = null;
+            Database.GetData(itemData, delegate(ItemData data)
+            {
+                item = data;
+            }, () => Plugin.LOG.LogError($"Failed to get item data for {itemData}"));
+            if (!item) continue;
+            var caught = !GameSave.CurrentCharacter.Encylopdeia.ContainsKey((short) item.id);
+            Plugin.LOG.LogInfo($"Fishing Museum Items: {item.name} - Caught?: {caught}");
         }
     }
 
@@ -295,8 +303,6 @@ public static class Patches
     }
 
 
-
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Bobber), nameof(Bobber.Bite))]
     [HarmonyPatch(typeof(Bobber), nameof(Bobber.SmallBite))]
@@ -309,7 +315,7 @@ public static class Patches
     [HarmonyPatch(typeof(Fish), nameof(Fish.BiteRoutine))]
     private static void Food_BiteRoutine(ref IEnumerator __result)
     {
-        if (Plugin.NibblingBehaviour.Value) return; 
+        if (Plugin.NibblingBehaviour.Value) return;
         __result = CustomBiteRoutine(__result);
     }
 

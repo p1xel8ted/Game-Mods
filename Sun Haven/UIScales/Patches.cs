@@ -3,7 +3,7 @@
 [HarmonyPatch]
 public static class Patches
 {
-   
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.Start))]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.HomeMenu))]
@@ -13,7 +13,7 @@ public static class Patches
         Utils.UpdateZoomLevel();
         Utils.UpdateCanvasScaleFactors();
 
-        if (__instance.logo != null)
+        if (__instance.logo)
         {
             __instance.logo.transform.localScale = __instance.logo.transform.localScale with {x = Shared.Utils.PositiveScaleFactor, y = Shared.Utils.PositiveScaleFactor};
         }
@@ -30,22 +30,22 @@ public static class Patches
         if (Plugin.CorrectEndOfDayScreen.Value)
         {
             var sf = Shared.Utils.PositiveScaleFactor;
-            if (overnight != null)
+            if (overnight)
             {
                 overnight.transform.localScale = overnight.transform.localScale with {x = sf, y = sf};
             }
-            if (eod != null)
+            if (eod)
             {
                 eod.transform.localScale = eod.transform.localScale with {x = sf, y = sf};
             }
         }
         else
         {
-            if (overnight != null)
+            if (overnight)
             {
                 overnight.transform.localScale = overnight.transform.localScale with {x = 1, y = 1};
             }
-            if (eod != null)
+            if (eod)
             {
                 eod.transform.localScale = eod.transform.localScale with {x = 1, y = 1};
             }
@@ -58,7 +58,7 @@ public static class Patches
     {
         var backupButton = GameObject.Find("Canvas/[LoadCharacterMenu]/SwitchPanelButton").transform;
         var loadMenu = GameObject.Find("Canvas/[LoadCharacterMenu]/CurrentSaves").transform;
-        if (backupButton == null || loadMenu == null)
+        if (!backupButton || !loadMenu)
         {
             return;
         }
@@ -131,6 +131,27 @@ public static class Patches
         Player.Instance.SetZoom(Plugin.ZoomLevel.Value, true);
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(DialogueController), nameof(DialogueController.LoadBust))]
+    public static void DialogueController_LoadBust(ref DialogueController __instance)
+    {
+        Plugin.Bust = __instance._bust.gameObject.transform;
+        __instance._bust.gameObject.transform.localScale = Vector3.one;
+        Plugin.OriginalPortraitPosition.Value = Plugin.Bust.localPosition.x;
+        Plugin.ScaleTransformWithBottomLeftPivot(Plugin.Bust, new Vector3(Plugin.PortraitScale.Value, Plugin.PortraitScale.Value, 1));
+        Plugin.MovePortrait();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(DialogueController), nameof(DialogueController.LateUpdate))]
+    public static void DialogueController_LateUpdate(ref DialogueController __instance)
+    {
+        Plugin.Bust = __instance._bust.gameObject.transform;
+        if (__instance._usingBust)
+        {
+            __instance._bust.gameObject.transform.localPosition = __instance._bust.gameObject.transform.localPosition with {x = Plugin.OriginalPortraitPosition.Value + Plugin.PortraitHorizontalPosition.Value};
+        }
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.InitializeAsOwner))]
@@ -139,8 +160,8 @@ public static class Patches
         Player.Instance.OverrideCameraZoomLevel = false;
         Player.Instance.SetZoom(Plugin.ZoomLevel.Value, true);
 
-        Plugin.PrepareDateTimeYearForCustomScales();
-        
+       // Plugin.PrepareDateTimeYearForCustomScales();
+
         if (Plugin.Debug.Value)
         {
             Plugin.LOG.LogInfo($"Player.InitializeAsOwner: Name:{__instance.name}");
@@ -153,6 +174,6 @@ public static class Patches
     public static void PlayerSettings_Start(ref PlayerSettings __instance)
     {
         __instance.zoomSlider.transform.parent.gameObject.SetActive(false);
-       //GameObject.Find("Player(Clone)/UI/Inventory/Settings/SettingsScroll View_Video/Viewport/Content/Setting_ZoomLevel").SetActive(false);
+        //GameObject.Find("Player(Clone)/UI/Inventory/Settings/SettingsScroll View_Video/Viewport/Content/Setting_ZoomLevel").SetActive(false);
     }
 }

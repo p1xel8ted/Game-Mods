@@ -43,7 +43,7 @@ public static class Transpilers
         var foundMatchingSequence = false;
         for (var i = 1; i < codes.Count; i++) // Start from index 1 since we check i-1
         {
-            if (codes[i].Calls(chanceMethod) && codes[i - 1].opcode == OpCodes.Ldc_R4 && Mathf.Approximately((float) codes[i - 1].operand, 0.04f))
+            if (codes[i].Calls(chanceMethod))
             {
                 foundMatchingSequence = true;
                 codes[i].operand = AccessTools.Method(typeof(TranspilerMethods), nameof(TranspilerMethods.MuseumChance));

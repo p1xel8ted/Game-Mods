@@ -107,13 +107,13 @@ public static class Patches
     /// <remarks>
     /// Updates the title text and popup text based on the current language setting. Relies on the <see cref="UI.UpdateTitleText"/> and <see cref="UI.UpdatePopupText"/> methods in the <see cref="UI"/> class.
     /// </remarks>
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(TranslationLayer), nameof(TranslationLayer.ChangeLanguage))]
-    private static void TranslationLayer_ChangeLanguage()
-    {
-        UI.UpdateTitleText(true);
-        UI.UpdatePopupText();
-    }
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(TranslationLayer), nameof(TranslationLayer.ChangeLanguage))]
+    // private static void TranslationLayer_ChangeLanguage()
+    // {
+    //     UI.UpdateTitleText(true);
+    //     UI.UpdatePopupText();
+    // }
 
     /// <summary>
     /// Harmony postfix patch for PlayerInventory's GetStat method.

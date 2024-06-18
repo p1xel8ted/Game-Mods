@@ -24,7 +24,7 @@ public static class Patches
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.PlayGame), new Type[] { })]
+    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.PlayGame), [])]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.PlayGame), typeof(int))]
     public static void MainMenuController_PlayGame()
     {
@@ -32,7 +32,7 @@ public static class Patches
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.FixedUpdate))]
+    [HarmonyPatch(typeof(Player), nameof(Player.FixedUpdateOLD))]
     public static void Player_FixedUpdate(ref Player __instance)
     {
         if (__instance == null || Player.Instance == null) return;
@@ -122,7 +122,7 @@ public static class Patches
     [HarmonyPatch(typeof(ScrollRect), nameof(ScrollRect.LateUpdate))]
     public static void ScrollRect_Initialize(ref ScrollRect __instance)
     {
-        if (GetGameObjectPath(__instance.gameObject) != "Player(Clone)/UI/QuestTracker/Scroll View") return;
+        if (GetGameObjectPath(__instance.gameObject) != "Player(Clone)/UI_Quests/QuestTracker/Scroll View/") return;
 
         if (!Plugin.EnableAdjustQuestTrackerHeightView.Value)
         {
@@ -173,19 +173,20 @@ public static class Patches
 
 
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.OpenMajorPanel))]
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.LoadPlayerInventory))]
     [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.OnEnable))]
     public static void PlayerSettings_OnEnable()
     {
-        var moneyInfo = GameObject.Find("Player(Clone)/UI/Inventory/Items/Money");
-        if (moneyInfo != null)
+        var moneyInfo = GameObject.Find("Player(Clone)/UI_Inventory/Inventory/Items/Money");
+        if (moneyInfo)
         {
             moneyInfo.SetActive(true);
             Plugin.LOG.LogInfo("Money info is now visible.");
         }
 
-        var characterBorder = GameObject.Find("Player(Clone)/UI/Inventory/Items/Slots/CharacterPanel/Border");
-        if (characterBorder != null)
+        var characterBorder = GameObject.Find("Player(Clone)/UI_Inventory/Inventory/Items/Slots/CharacterPanel/Border");
+        if (characterBorder)
         {
             characterBorder.SetActive(true);
             Plugin.LOG.LogInfo("Character border is now visible.");
@@ -194,7 +195,7 @@ public static class Patches
 
         if (!Plugin.AddQuitToDesktopButton.Value)
         {
-            if (_newButton != null)
+            if (_newButton)
             {
                 Object.Destroy(_newButton);
             }
@@ -202,8 +203,8 @@ public static class Patches
             return;
         }
 
-        var exitButton = GameObject.Find("Player(Clone)/UI/Inventory/ExitButton");
-        if (exitButton == null || _newButton != null) return;
+        var exitButton = GameObject.Find("Player(Clone)/UI_Inventory/Inventory/ExitButton");
+        if (!exitButton || _newButton) return;
 
         _newButton = Object.Instantiate(exitButton, exitButton.transform.parent);
         _newButton.name = "ExitToDesktopButton";
@@ -215,10 +216,10 @@ public static class Patches
         _newButton.GetComponent<Button>().onClick.RemoveAllListeners();
         _newButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            if (UIHandler.unloadingGame)
-            {
-                return;
-            }
+            // if (UIHandler.unloadingGame)
+            // {
+            //     return;
+            // }
 
             Time.timeScale = 1f;
             NotificationStack.Instance.SendNotification("Game Saved! Exiting...");
@@ -227,9 +228,9 @@ public static class Patches
             Application.Quit();
         });
 
-        var nav = exitButton.GetComponent<NavigationElement>();
-        nav.down = _newButton.GetComponent<NavigationElement>();
-        _newButton.GetComponent<NavigationElement>().up = nav;
+        // var nav = exitButton.GetComponent<NavigationElement>();
+        // nav.down = _newButton.GetComponent<NavigationElement>();
+        // _newButton.GetComponent<NavigationElement>().up = nav;
 
         var rectTransform = _newButton.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(265.5f, -147.5f);

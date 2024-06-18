@@ -29,12 +29,11 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-      
         LOG = new ManualLogSource(PluginName);
         BepInEx.Logging.Logger.Sources.Add(LOG);
         WateringCan.onWateringCanEmpty += FindNextWateringCan;
         WateringCan.onFillUpWateringCan += FillWateringCanProper;
-    
+
         EnableAutoTool = Config.Bind(CategoryGeneral, "Enable AutoTools", true, new ConfigDescription("Enable AutoTools.", null, new ConfigurationManagerAttributes {Order = 27}));
         EnableAutoToolOnFarmTiles = Config.Bind(CategoryFarm, "Enable AutoTools On Farm Tiles", false, new ConfigDescription("Enable AutoTools On Farm Tiles.", null, new ConfigurationManagerAttributes {Order = 26}));
         EnableEnemyDetection = Config.Bind(CategoryEnemies, "Enable Enemy Detection", true, new ConfigDescription("If enabled, tool switching will be disabled when enemies are in the area.", null, new ConfigurationManagerAttributes {Order = 25}));
@@ -65,8 +64,8 @@ public class Plugin : BaseUnityPlugin
     {
         if (!Player.Instance) return;
         if (Player.Instance.CurrentItem is not WateringCanItem item) return;
-        var maxWater = ItemDatabase.GetItemData<WateringCanData>(item).waterCapacity;
-        item.WaterAmount = maxWater;
+        var wc = ((WateringCanData) Utils.GetItemData(item.id)).waterCapacity;
+        item.WaterAmount = wc;
     }
 
     private void OnDestroy()

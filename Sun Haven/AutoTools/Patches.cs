@@ -22,7 +22,7 @@ public static class Patches
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.FixedUpdate))]
+    [HarmonyPatch(typeof(EnemyAI), nameof(EnemyAI.FixedUpdateOLD))]
     private static void EnemyAI_FixedUpdate(EnemyAI __instance)
     {
         if (__instance is NPCAI || !__instance.SameScene || __instance.freezeMovementAnimation) return;

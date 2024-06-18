@@ -1,6 +1,10 @@
+using System.Linq;
+using PSS;
 using UnityEngine;
 using UnityEngine.UI;
 using Wish;
+
+
 
 namespace Shared;
 
@@ -13,11 +17,35 @@ public static class Utils
     public static float NegativeScaleFactor => 1f / PositiveScaleFactor;
 
 
+    public static string GetNameByID(int id)
+    {
+        return Database.Instance.ids.FirstOrDefault(a=>a.Value == id).Key;
+    }
+
+    public static ItemSellInfo GetItemSellInfo(int itemId)
+    {
+        return SingletonBehaviour<ItemInfoDatabase>.Instance.allItemSellInfos.TryGetValue(itemId, out var itemSellInfo) ? itemSellInfo : null;
+    }
+    public static int GetItemIdByName(string itemName)
+    {
+        return Database.Instance.ids[itemName];
+    }
+
+    public static ItemData GetItemData(int itemId)
+    {
+        ItemData item = null;
+        Database.GetData(itemId, delegate(ItemData data)
+        {
+            item = data;
+        });
+        return item;
+    }
+
     public static bool CanUse(ToolData toolData)
     {
         return SingletonBehaviour<GameSave>.Instance.CurrentSave.characterData.Professions[toolData.profession].level >= toolData.requiredLevel;
     }
-    
+
     public static void DestroyChildren(Transform transform)
     {
         foreach (Transform child in transform)
@@ -37,7 +65,7 @@ public static class Utils
         canvasScaler.uiScaleMode = scaleMode;
         canvasScaler.scaleFactor = scaleFactor;
     }
-    
+
     public static void SendNotification(string message)
     {
         if (NotificationStack.Instance is not null)

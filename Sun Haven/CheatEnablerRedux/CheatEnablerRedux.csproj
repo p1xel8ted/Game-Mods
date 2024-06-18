@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.7</Version>
+        <Version>0.1.0</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -17,6 +17,9 @@
     <ItemGroup>
       <Reference Include="Assembly-CSharp">
         <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="PSS.Database">
+        <HintPath>..\libs\PSS.Database.dll</HintPath>
       </Reference>
       <Reference Include="QFSW.QC">
         <HintPath>..\libs\QFSW.QC.dll</HintPath>

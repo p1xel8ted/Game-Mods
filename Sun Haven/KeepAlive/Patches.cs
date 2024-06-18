@@ -1,7 +1,4 @@
-﻿using System;
-using Shared;
-
-namespace KeepAlive;
+﻿namespace KeepAlive;
 
 [HarmonyPatch]
 [HarmonyPriority(1)]

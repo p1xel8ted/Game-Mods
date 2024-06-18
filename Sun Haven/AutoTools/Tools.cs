@@ -1,6 +1,4 @@
-﻿
-
-// ReSharper disable SuggestBaseTypeForParameter
+﻿// ReSharper disable SuggestBaseTypeForParameter
 
 namespace AutoTools;
 
@@ -33,7 +31,8 @@ public static class Tools
         {
             foreach (var item in Player.Instance.PlayerInventory._actionBarIcons.Where(a => a.ItemImage is not null))
             {
-                var toolData = ItemDatabase.GetItemData(item.ItemImage.item) as ToolData;
+                // var toolData = ItemDatabase.GetItemData(item.ItemImage.item) as ToolData;
+                var toolData = Utils.GetItemData(item.ItemImage.item.ID()) as ToolData;
                 if (toolData == null || toolData.id != toolEntry.Key || !Utils.CanUse(toolData)) continue;
 
                 if (item.ItemImage.item is WateringCanItem wc)
@@ -55,7 +54,7 @@ public static class Tools
         {
             foreach (var item in Player.Instance.PlayerInventory._actionBarIcons.Where(a => a.ItemImage is not null))
             {
-                var toolData = ItemDatabase.GetItemData(item.ItemImage.item) as ToolData;
+                var toolData = Utils.GetItemData(item.ItemImage.item.ID()) as ToolData;
                 if (toolData == null || toolData.id != toolEntry.Key || !Utils.CanUse(toolData))
                     continue;
 
@@ -85,7 +84,7 @@ public static class Tools
             {
                 foreach (var item in Player.Instance.PlayerInventory._actionBarIcons.Where(a => a.ItemImage is not null))
                 {
-                    var toolData = ItemDatabase.GetItemData(item.ItemImage.item) as ToolData;
+                    var toolData = Utils.GetItemData(item.ItemImage.item.ID()) as ToolData;
                     if (toolData == null || toolData.id != toolEntry.Key || !Utils.CanUse(toolData))
                         continue;
 
@@ -156,11 +155,11 @@ public static class Tools
     internal static bool EnableToolSwaps(PlayerInteractions __instance, Collider2D collider)
     {
         Plugin.DebugLog("EnableToolSwaps called.");
-        
+
         if (Plugin.EnableEnemyDetection.Value)
         {
             Plugin.DebugLog("Enemy detection is enabled.");
-            
+
             if (Plugin.UseCombatRange.Value)
             {
                 var distance = Patches.ClosestDistance;
@@ -168,25 +167,25 @@ public static class Tools
                 if (distance <= limit)
                 {
                     Plugin.DebugLog($"Closest distance ({distance}) is within combat range ({limit}). Returning false.");
-                    
+
                     return false;
                 }
             }
             else
             {
                 Plugin.DebugLog("Not using combat range.");
-                
+
                 if (Patches.EnemyInArea)
                 {
                     Plugin.DebugLog("Enemy in area. Returning false.");
-                    
+
                     return false;
                 }
             }
         }
-        
+
         var isValid = __instance != null && collider != null && SceneSettingsManager.Instance != null && TileManager.Instance != null && !Player.Instance.InCombat;
-        
+
         Plugin.DebugLog($"Validity check: {isValid}. Returning {isValid}.");
         return isValid;
     }
@@ -206,7 +205,8 @@ public static class Tools
             return false;
         }
 
-        var maxWater = ItemDatabase.GetItemData<WateringCanData>(wc).waterCapacity;
+        // var maxWater = ItemDatabase.GetItemData<WateringCanData>(wc).waterCapacity;
+        var maxWater = ((WateringCanData) Utils.GetItemData(wc.id)).waterCapacity;
         var currentPercent = (float) wc.WaterAmount / maxWater * 100;
         //Plugin.LOG.LogWarning($"Watering can has {wc.WaterAmount}/{maxWater} water ({currentPercent}%). Threshold is {Plugin.WateringCanFillThreshold.Value}%.");
         if (refill && currentPercent <= Plugin.WateringCanFillThreshold.Value)

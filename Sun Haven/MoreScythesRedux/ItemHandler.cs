@@ -1,4 +1,7 @@
-﻿namespace MoreScythesRedux;
+﻿using PSS;
+using UnityEngine.ResourceManagement.Util;
+
+namespace MoreScythesRedux;
 
 public static class ItemHandler
 {
@@ -12,15 +15,15 @@ public static class ItemHandler
 
     private static void CreateAndConfigureItem(int id, int speed, int damage)
     {
-        var original = ItemDatabase.GetItemData(OriginalScytheId);
+        var original = Utils.GetItemData(id);
 
         var item = ScriptableObject.CreateInstance<ItemData>();
         JsonUtility.FromJsonOverwrite(
-            FileLoader.LoadFile(Assembly.GetExecutingAssembly(), $"data.{id}.json"), 
+            FileLoader.LoadFile(Assembly.GetExecutingAssembly(), $"data.{id}.json"),
             item);
 
         item.icon = SpriteUtil.CreateSprite(
-            FileLoader.LoadFileBytes(Assembly.GetExecutingAssembly(), $"img.{id}.png"), 
+            FileLoader.LoadFileBytes(Assembly.GetExecutingAssembly(), $"img.{id}.png"),
             $"Modded item icon {id}");
 
         var useItem = Object.Instantiate(original.useItem);
@@ -36,9 +39,13 @@ public static class ItemHandler
         useItem.gameObject.SetActive(false);
 
         Object.DontDestroyOnLoad(useItem);
-        ItemDatabase.items[item.id] = item;
-        ItemDatabase.ids[item.name.RemoveWhitespace().ToLower()] = item.id;
-        ItemDatabase.itemDatas[item.id] = item;
+
+        Database.Instance.validIDs.Add(item.id);
+        Database.Instance.ids.TryAdd(item.name.RemoveWhitespace().ToLower(), item.id);
+        Database.Instance.types.TryAdd(item.id, typeof(ToolItem));
+        var node = Database.Instance.lruList.AddFirst(new Database.CacheItem(item.id, item));
+        Database.Instance.cache[typeof(ToolItem)][item.id] = node;
+
 
         Plugin.LOG.LogInfo($"Created item {item.id} with name {item.name}");
     }
@@ -55,7 +62,7 @@ public static class ItemHandler
             }
 
             var recipe = ScriptableObject.CreateInstance<Recipe>();
-            recipe.output = new ItemInfo { item = ItemDatabase.GetItemData(itemId), amount = 1 };
+            recipe.output = new ItemInfo {item = Utils.GetItemData(itemId), amount = 1};
             recipe.input = inputs;
             recipe.worldProgressTokens = [];
             recipe.characterProgressTokens = [];
@@ -71,10 +78,10 @@ public static class ItemHandler
     {
         var scytheDefinitions = new List<(int id, int speed, int damage, string recipeList, List<ItemInfo> inputs, float craftingHours)>
         {
-            (AdamantScytheId, 13, 14, RecipeListAnvil, [new ItemInfo {item = ItemDatabase.GetItemData(ItemID.AdamantBar), amount = 10}], 6f),
-            (MithrilScytheId, 14, 18, RecipeListAnvil, [new ItemInfo {item = ItemDatabase.GetItemData(ItemID.MithrilBar), amount = 10}], 12f),
-            (SuniteScytheId, 15, 22, RecipeListAnvil, [new ItemInfo {item = ItemDatabase.GetItemData(ItemID.SuniteBar), amount = 10}], 24f),
-            (GloriteScytheId, 16, 26, RecipeListMonsterAnvil, [new ItemInfo {item = ItemDatabase.GetItemData(ItemID.GloriteBar), amount = 10}], 48f),
+            (AdamantScytheId, 13, 14, RecipeListAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.AdamantBar), amount = 10}], 6f),
+            (MithrilScytheId, 14, 18, RecipeListAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.MithrilBar), amount = 10}], 12f),
+            (SuniteScytheId, 15, 22, RecipeListAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.SuniteBar), amount = 10}], 24f),
+            (GloriteScytheId, 16, 26, RecipeListMonsterAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.GloriteBar), amount = 10}], 48f),
         };
 
         foreach (var (id, speed, damage, recipeList, inputs, craftingHours) in scytheDefinitions)

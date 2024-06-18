@@ -34,11 +34,11 @@
     </ItemDefinitionGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <OutputPath>F:\Games\steamapps\common\Sun Haven\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
+        <OutputPath>F:\SteamLibrary\steamapps\common\Sun Haven\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <OutputPath>F:\Games\steamapps\common\Sun Haven\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
+        <OutputPath>F:\SteamLibrary\steamapps\common\Sun Haven\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
     </PropertyGroup>
 
 

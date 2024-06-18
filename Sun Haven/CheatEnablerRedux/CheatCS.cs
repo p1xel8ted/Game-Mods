@@ -1,5 +1,7 @@
-﻿
-namespace CheatEnabler;
+﻿using Shared;
+using Object = UnityEngine.Object;
+
+namespace CheatEnablerRedux;
 
 [CommandPrefix("/")]
 public static class QuantumConsoleManager
@@ -18,15 +20,15 @@ public static class QuantumConsoleManager
         var manual = QuantumConsoleProcessor.GenerateCommandManual(commandName);
         if (string.IsNullOrWhiteSpace(manual))
         {
-            Shared.Utils.SendNotification($"Manual for command '{commandName}' not found!");
+            Utils.SendNotification($"Manual for command '{commandName}' not found!");
         }
         else
         {
             throw new ArgumentException(manual);
         }
     }
-    
-    
+
+
     [Command(Description = "Save the current game.")]
     public static void savegame()
     {
@@ -37,14 +39,8 @@ public static class QuantumConsoleManager
     [Command(Description = "Add item to the player inventory using the numeric item code.")]
     public static void additembyid(int itemId, int amount = 1)
     {
-        var item = ItemDatabase.ids.Where(a => a.Value == itemId).Select(a => a.Key).FirstOrDefault();
-        if (!item.IsNullOrWhiteSpace())
-        {
-            Player.Instance.Inventory.AddItem(itemId, amount, true);
-        }
-        else
-        {
-            Shared.Utils.SendNotification($"Item with itemID {itemId} not found!");
-        }
+        var item = Utils.GetNameByID(itemId);
+        var qcm = Object.FindObjectOfType<Wish.QuantumConsoleManager>();
+        qcm.additem(item,amount);
     }
 }

@@ -1,3 +1,5 @@
+using Object = UnityEngine.Object;
+
 namespace MoreJewelry;
 
 /// <summary>
@@ -106,11 +108,17 @@ public static class UI
     {
         var slideOutPanel = GameObject.Find(Const.EncyclopediaPanelPath);
         var slideOutPanelParent = GameObject.Find(Const.PlayerItemsPath);
-        if (slideOutPanel == null || slideOutPanelParent == null)
+        if (slideOutPanel == null)
         {
-            Plugin.LOG.LogError("'Encyclopedia' panel or its new parent (player items panel) not found. Please report this.");
+            Plugin.LOG.LogError("'Encyclopedia' panel not found. Please report this.");
             return;
         }
+        if (slideOutPanelParent == null)
+        {
+            Plugin.LOG.LogError("'player item' panel not found. Please report this.");
+            return;
+        }
+
 
         GearPanel = Object.Instantiate(slideOutPanel, slideOutPanelParent.transform);
         GearPanel.name = Const.GearPanelName;
@@ -333,21 +341,21 @@ public static class UI
 
         if (Plugin.ShowPanelToggle.Value)
         {
-            if (Plugin.IgnoreToggleWithController.Value)
-            {
-                originalKeepsakeSlot.left = gearSlotNavs[3];
-                originalAmuletSlot.left = gearSlotNavs[5];
-            }
-            else
-            {
-                originalKeepsakeSlot.left = GearPanel.activeSelf ? rightArrowNav[0] : leftArrowNav[0];
-                originalAmuletSlot.left = GearPanel.activeSelf ? rightArrowNav[0] : leftArrowNav[0];
-            }
+            // if (Plugin.IgnoreToggleWithController.Value)
+            // {
+            //     originalKeepsakeSlot.left = gearSlotNavs[3];
+            //     originalAmuletSlot.left = gearSlotNavs[5];
+            // }
+            // else
+            // {
+            //     originalKeepsakeSlot.left = GearPanel.activeSelf ? rightArrowNav[0] : leftArrowNav[0];
+            //     originalAmuletSlot.left = GearPanel.activeSelf ? rightArrowNav[0] : leftArrowNav[0];
+            // }
         }
         else
         {
-            originalKeepsakeSlot.left = gearSlotNavs[3];
-            originalAmuletSlot.left = gearSlotNavs[5];
+            // originalKeepsakeSlot.left = gearSlotNavs[3];
+            // originalAmuletSlot.left = gearSlotNavs[5];
         }
     }
 
@@ -363,11 +371,11 @@ public static class UI
     /// </remarks>
     private static void UpdateArrowNavigation(IEnumerable<NavigationElement> arrowNavs, NavigationElement right, NavigationElement left)
     {
-        foreach (var arrow in arrowNavs)
-        {
-            arrow.right = right;
-            arrow.left = left;
-        }
+        // foreach (var arrow in arrowNavs)
+        // {
+        //     arrow.right = right;
+        //     arrow.left = left;
+        // }
     }
 
     /// <summary>
@@ -411,21 +419,21 @@ public static class UI
     /// </remarks>
     private static void SetNavigation(this NavigationElement navElement, NavigationElement right, NavigationElement down, NavigationElement left, NavigationElement up)
     {
-        var giftPanel = GameObject.Find(Const.GiftPanelPath);
-        if (giftPanel != null && giftPanel.activeSelf)
-        {
-            navElement.findLeftElement = true;
-            navElement.findRightElement = true;
-        }
-        else
-        {
-            navElement.findLeftElement = false;
-            navElement.findRightElement = false;
-        }
-        navElement.right = right;
-        navElement.down = down;
-        navElement.left = left;
-        navElement.up = up;
+        // var giftPanel = GameObject.Find(Const.GiftPanelPath);
+        // if (giftPanel != null && giftPanel.activeSelf)
+        // {
+        //     navElement.findLeftElement = true;
+        //     navElement.findRightElement = true;
+        // }
+        // else
+        // {
+        //     navElement.findLeftElement = false;
+        //     navElement.findRightElement = false;
+        // }
+        // navElement.right = right;
+        // navElement.down = down;
+        // navElement.left = left;
+        // navElement.up = up;
     }
 
 

@@ -21,7 +21,7 @@ public class Plugin : BaseUnityPlugin
         Debug = Config.Bind("0. Debug", "Debug", false, new ConfigDescription("Enables debug logging.", null, new ConfigurationManagerAttributes {Order = 99}));
 
         StackIt = Config.Bind("1. Stack It!", "Stack It!", true, new ConfigDescription("Doubles the max stack size of eligible items.", null, new ConfigurationManagerAttributes {Order = 50}));
-        StackIt.SettingChanged += (sender, args) =>
+        StackIt.SettingChanged += (_, _) =>
         {
             if (StackIt.Value)
             {
@@ -31,13 +31,13 @@ public class Plugin : BaseUnityPlugin
         };
 
         IncludeUniqueItems = Config.Bind("1. Stack It!", "Include Unique Items", false, new ConfigDescription("Includes unique items in the stack size modification.", null, new ConfigurationManagerAttributes {Order = 49}));
-        IncludeUniqueItems.SettingChanged += (sender, args) =>
+        IncludeUniqueItems.SettingChanged += (_, _) =>
         {
             ItemPatches.ReProcessAll();
         };
             
         CustomStackSizes = Config.Bind("2. Custom", "Custom Stack Size", false, new ConfigDescription("Allows you to set custom stack sizes for eligible items.", null, new ConfigurationManagerAttributes {Order = 98}));
-        CustomStackSizes.SettingChanged += (sender, args) =>
+        CustomStackSizes.SettingChanged += (_, _) =>
         {
             if (CustomStackSizes.Value)
             {

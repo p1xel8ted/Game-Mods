@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>0.1.0</Version>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <FileVersion>$(Version)</FileVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DefineConstants>TRACE</DefineConstants>
+        <OutputPath>F:\Games\steamapps\common\Fabledom\BepInEx\plugins</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DefineConstants>TRACE</DefineConstants>
+        <OutputPath>F:\Games\steamapps\common\Fabledom\BepInEx\plugins</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="UnityEngine">
+        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.dll</HintPath>
+      </Reference>
+<!--      <Reference Include="UnityEngine.AnimationModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.AudioModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.AudioModule.dll</HintPath>-->
+<!--      </Reference>-->
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+<!--      <Reference Include="UnityEngine.IMGUIModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.InputLegacyModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.Physics2DModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.PhysicsModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.SharedInternalsModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.SpriteShapeModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.TextRenderingModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.TilemapModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>-->
+<!--      </Reference>-->
+      <Reference Include="UnityEngine.UI" publicize="true">
+        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.UI.dll</HintPath>
+      </Reference>
+<!--      <Reference Include="UnityEngine.UIElementsModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>-->
+<!--      </Reference>-->
+<!--      <Reference Include="UnityEngine.UIModule" publicize="true">-->
+<!--        <HintPath>F:\Games\steamapps\common\Fabledom\Fabledom_Data\Managed\UnityEngine.UIModule.dll</HintPath>-->
+<!--      </Reference>-->
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Fabledom.csproj.DotSettings" />
+    </ItemGroup>
+
+
+    <Import Project="..\zip.target"/>
+
+</Project>
