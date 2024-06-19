@@ -1,4 +1,4 @@
-﻿namespace CheatEnablerRedux;
+﻿namespace CheatEnabler;
 
 [HarmonyPatch]
 public partial class Plugin

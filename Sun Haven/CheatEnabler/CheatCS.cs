@@ -1,7 +1,7 @@
 ﻿using Shared;
 using Object = UnityEngine.Object;
 
-namespace CheatEnablerRedux;
+namespace CheatEnabler;
 
 [CommandPrefix("/")]
 public static class QuantumConsoleManager

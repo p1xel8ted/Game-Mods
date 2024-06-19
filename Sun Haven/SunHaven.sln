@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33513.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIScales", "UIScales\UIScales.csproj", "{F7754A48-0055-46E9-9037-9F765087B414}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheatEnablerRedux", "CheatEnablerRedux\CheatEnablerRedux.csproj", "{82AA2AD4-8264-4400-ACE3-401CE26764A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheatEnabler", "CheatEnabler\CheatEnabler.csproj", "{82AA2AD4-8264-4400-ACE3-401CE26764A5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoTimeForFishing", "NoTimeForFishing\NoTimeForFishing.csproj", "{CCB1B95A-1593-4B13-BEFC-EE95040FFE71}"
 EndProject
