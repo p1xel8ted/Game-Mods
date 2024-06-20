@@ -1,7 +1,4 @@
-﻿using PSS;
-using UnityEngine.SceneManagement;
-
-namespace MuseumSellPriceRedux;
+﻿namespace MuseumSellPriceRedux;
 
 [Harmony]
 public static class Patches
@@ -288,7 +285,7 @@ public static class Patches
     }
 
 
-    public static void ApplyPriceChanges()
+    public static void ApplyPriceChanges(bool notification = false)
     {
         if (!Plugin.Enabled.Value) return;
 
@@ -299,7 +296,11 @@ public static class Patches
         }
         Plugin.Log("Price changes applied...");
 
-        Plugin.SendNotification("Prices updated!");
+        if (notification)
+        {
+            Plugin.SendNotification("Prices updated!");    
+        }
+      
     }
 
     [HarmonyPostfix]

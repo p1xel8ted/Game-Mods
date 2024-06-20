@@ -32,9 +32,11 @@ public partial class Plugin : BaseUnityPlugin
 
     internal static Transform Bust { get; set; }
     internal static WriteOnce<float> OriginalPortraitPosition { get; } = new();
+    internal static ConfigFile ConfigFile { get; private set; }
 
     private void Awake()
     {
+        ConfigFile = Config;
         SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
         LOG = Logger;
         InitConfig();

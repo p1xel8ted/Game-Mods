@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using Wish;
 
 
-
 namespace Shared;
 
 public static class Utils
@@ -19,7 +18,7 @@ public static class Utils
 
     public static string GetNameByID(int id)
     {
-        return Database.Instance.ids.FirstOrDefault(a=>a.Value == id).Key;
+        return Database.Instance.ids.FirstOrDefault(a => a.Value == id).Key;
     }
 
     public static ItemSellInfo GetItemSellInfo(int itemId)
@@ -29,6 +28,17 @@ public static class Utils
     public static int GetItemIdByName(string itemName)
     {
         return Database.Instance.ids[itemName];
+    }
+
+    public static ItemData GetItemDataByName(string name)
+    {
+        var id = Database.GetID(name);
+        ItemData itemData = null;
+        Database.GetData(id, delegate(ItemData data)
+        {
+            itemData = data;
+        });
+        return itemData;
     }
 
     public static ItemData GetItemData(int itemId)

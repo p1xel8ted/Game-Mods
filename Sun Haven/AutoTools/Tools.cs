@@ -133,11 +133,11 @@ public static class Tools
 
         ToolAction(Tool.Axe, (Utilities.IsInFarmTile() && Tree is not null && !Tree.FullyGrown) || (Tree is not null && Tree.Axeable) || (Wood is not null && Wood.Axeable), Plugin.EnableAutoAxe.Value, NoAxeOnActionBar);
         ToolAction(Tool.Scythe, Plant is not null || (collider.name.Contains(Foliage) && !collider.name.Contains(Prop)) || (Crop is not null && Crop.FullyGrown), Plugin.EnableAutoScythe.Value, NoScytheOnActionBar);
-        ToolAction(Tool.FishingRod, Vector2.Distance(Player.Instance.ExactGraphicsPosition, Wish.Utilities.MousePositionFloat()) < Plugin.FishingRodWaterDetectionDistance.Value && SingletonBehaviour<GameManager>.Instance.HasWater(new Vector2Int((int) Wish.Utilities.MousePositionFloat().x, (int) Wish.Utilities.MousePositionFloat().y)), Plugin.EnableAutoFishingRod.Value, NoFishingRodOnActionBar);
+        ToolAction(Tool.FishingRod, TileHasWater(Plugin.FishingRodWaterDetectionDistance.Value), Plugin.EnableAutoFishingRod.Value, NoFishingRodOnActionBar);
         ToolAction(Tool.Hoe, TileManager.Instance.IsHoeable(new Vector2Int((int) Player.Instance.ExactGraphicsPosition.x, (int) Player.Instance.ExactGraphicsPosition.y)), Plugin.EnableAutoHoe.Value, NoHoeOnActionBar);
 
         FindBestTool(Tool.WateringCan); //this is here to update the watering can index prior to running the conditions below
-        ToolAction(Tool.WateringCan, !WateringCanHasWater(true) && (WateringCan.OverWaterSource || Vector2.Distance(Player.Instance.ExactGraphicsPosition, Wish.Utilities.MousePositionFloat()) < 10 && SingletonBehaviour<GameManager>.Instance.HasWater(new Vector2Int((int) Wish.Utilities.MousePositionFloat().x, (int) Wish.Utilities.MousePositionFloat().y))), Plugin.EnableAutoWateringCan.Value, NoWateringCanOnActionBar);
+        ToolAction(Tool.WateringCan, !WateringCanHasWater(true) && WateringCanOverWater(), Plugin.EnableAutoWateringCan.Value, NoWateringCanOnActionBar);
         ToolAction(Tool.WateringCan, WaterSlime != null || Crop is not null && Crop._seedItem != null && (!Crop.data.watered || Crop.data.onFire), Plugin.EnableAutoWateringCan.Value, NoWateringCanOnActionBar, () => WateringCanHasWater());
     }
 
@@ -190,6 +190,20 @@ public static class Tools
         return isValid;
     }
 
+    private static bool TileHasWater(int magnitude = 10)
+    {
+        var vector = Wish.Utilities.ExtendedMousePositionFloat();
+        return (vector - Player.Instance.ExactGraphicsPosition).magnitude < magnitude && SingletonBehaviour<GameManager>.Instance.HasWater(new Vector2Int((int) vector.x, (int) vector.y));
+    }
+
+    private static bool WateringCanOverWater()
+    {
+        if (WateringCan.OverWaterSource || TileHasWater())
+        {
+            return true;
+        }
+        return false;
+    }
 
     private static bool WateringCanHasWater(bool refill = false)
     {

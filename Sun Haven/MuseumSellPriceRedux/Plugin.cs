@@ -1,14 +1,11 @@
-﻿using PSS;
-using UnityEngine.SceneManagement;
-
-namespace MuseumSellPriceRedux;
+﻿namespace MuseumSellPriceRedux;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.museumsellpriceredux";
     private const string PluginName = "Museum Sell Price Redux";
-    private const string PluginVersion = "0.1.2";
+    private const string PluginVersion = "0.1.3";
 
     internal static ConfigEntry<bool> Enabled { get; private set; }
     private static ConfigEntry<bool> Debug { get; set; }
@@ -45,7 +42,7 @@ public class Plugin : BaseUnityPlugin
         if (!button) return;
         if (Enabled.Value)
         {
-            Patches.ApplyPriceChanges();  
+            Patches.ApplyPriceChanges(true);  
         }
         else
         {

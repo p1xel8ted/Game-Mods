@@ -1,4 +1,7 @@
-﻿using Shared;
+﻿using System.Diagnostics;
+using System.Text;
+using PSS;
+using Shared;
 using Object = UnityEngine.Object;
 
 namespace CheatEnabler;
@@ -41,6 +44,43 @@ public static class QuantumConsoleManager
     {
         var item = Utils.GetNameByID(itemId);
         var qcm = Object.FindObjectOfType<Wish.QuantumConsoleManager>();
-        qcm.additem(item,amount);
+        qcm.additem(item, amount);
+    }
+
+    [Command(Description = "Save all items to file.")]
+    public static void saveallitems()
+    {
+        var path = Path.Combine(Paths.GameRootPath, "items.txt");
+        var sb = new StringBuilder();
+
+     
+        var itemsWithLocalizedNames = ItemInfoDatabase.Instance.allItemSellInfos
+            .Select(item => new
+            {
+                item.Key,
+                Name = Utils.GetNameByID(item.Key),
+                LocalizedName = LocalizeText.TranslateText(item.Value.keyName, item.Value.name).Trim()
+            })
+            .ToList();
+
+      
+        var sortedItems = itemsWithLocalizedNames.OrderBy(item => item.LocalizedName, StringComparer.OrdinalIgnoreCase).ToList();
+
+     
+        foreach (var item in sortedItems)
+        {
+            sb.AppendLine($"{item.Key} - {item.Name} - {item.LocalizedName}");
+        }
+
+     
+        File.WriteAllText(path, sb.ToString());
+
+        var processStartInfo = new ProcessStartInfo
+        {
+            FileName = path,
+            UseShellExecute = true
+        };
+
+        Process.Start(processStartInfo);
     }
 }
