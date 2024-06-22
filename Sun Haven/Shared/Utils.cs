@@ -15,6 +15,15 @@ public static class Utils
     public static float PositiveScaleFactor => CurrentAspect / BaseAspect;
     public static float NegativeScaleFactor => 1f / PositiveScaleFactor;
 
+    public static void LogToPlayer(string message)
+    {
+        if (QuantumConsole.Instance is not null)
+        {
+            QuantumConsole.Instance._autoScroll = AutoScrollOptions.Never;
+            QuantumConsole.Instance._maxStoredLogs = 100000;
+            QuantumConsole.Instance.LogToConsoleAsync(message);
+        }
+    }
 
     public static string GetNameByID(int id)
     {
