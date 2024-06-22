@@ -55,7 +55,7 @@ public static class QuantumConsoleManager
         {7, ["TheMysteryOfNelvari1Quest"]},
         {8, ["TheMysteryOfNelvari2Quest"]}
     };
-    
+
     private readonly static Dictionary<int, string> questStartsWithergate = new()
     {
         { 1, "TheSunDragonsProtection8Quest" },
@@ -243,7 +243,7 @@ public static class QuantumConsoleManager
             throw new ArgumentException(manual);
         }
     }
-    
+
     [Command(Description = "Print out all scenes that can be used in other commands.")]
     public static void printallscenes()
     {
@@ -328,7 +328,7 @@ public static class QuantumConsoleManager
         var completedQuests = SingletonBehaviour<GameSave>.Instance.CurrentSave.characterData.QuestData;
         foreach (var quest in completedQuests)
         {
-           Utils.LogToPlayer($"{quest.Key}");
+            Utils.LogToPlayer($"{quest.Key}");
         }
     }
 
@@ -416,6 +416,4 @@ public static class QuantumConsoleManager
 
         Process.Start(processStartInfo);
     }
-
-
 }
