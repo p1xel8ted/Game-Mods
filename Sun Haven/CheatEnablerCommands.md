@@ -1,6 +1,81 @@
 ﻿# Cheat Enabler Commands User Manual
 
-## Commands
+## Tip
+
+Generate a manual of sorts using the `man` command. For example, to get information on the `additem` command you would enter `/man additem`
+
+### `man`
+**Description:** Display the manual for a specified command
+**Usage:** `/man command`
+
+## Custom Commands
+These are commands I've added to be used in conjunction with the built-in commands.
+
+### `additembyid`
+**Description:** Add a specified item to the player's inventory by item ID. Use `/finditemid` to find an items ID and name. i.e. `/finditemid albino` will return all items with the word albino in them.
+**Usage:** `/additembyid itemID [amount]`
+
+### `savegame`
+**Description:** Save the game.
+**Usage:** `/savegame`
+
+### `getworldquestskipwithergatebreakpoints`
+**Description:** Get the breakpoints for the `skiptoworldquestwithergate` command.
+**Usage:** `/getworldquestskipwithergatebreakpoints`
+
+### `getworldquestskipnelvaribreakpoints`
+**Description:** Get the breakpoints for the `skiptoworldquestnelvari` command.
+**Usage:** `/getworldquestskipnelvaribreakpoints`
+
+### `getworldquestskipbreakpoints`
+**Description:** Get the breakpoints for the `skiptoworldquest` command.
+**Usage:** `/getworldquestskipbreakpoints`
+
+### `getworldquestskipepiloguebreakpoints`
+**Description:** Get the breakpoints for the `skiptoworldepilogue` command.
+**Usage:** `/getworldquestskipepiloguebreakpoints`
+
+### `printallbbquests`
+**Description:** Print all bulletin board quests.
+**Usage:** `/printallbbquests`
+
+### `printallmail`
+**Description:** Print all mail.
+**Usage:** `/printallmail`
+
+### `printallnpcs`
+**Description:** Print all NPCs.
+**Usage:** `/printallnpcs`
+
+### `printallprofessions`
+**Description:** Print all professions.
+**Usage:** `/printallprofessions`
+
+### `printallquests`
+**Description:** Print all quests.
+**Usage:** `/printallquests`
+
+### `printallscenes`
+**Description:** Print all scenes.
+**Usage:** `/printallscenes`
+
+### `printallseasons`
+**Description:** Print all seasons.
+**Usage:** `/printallseasons`
+
+### `printallstats`
+**Description:** Print all stats.
+**Usage:** `/printallstats`
+
+### `printcompletedquests`
+**Description:** Print all completed quests.
+**Usage:** `/printcompletedquests`
+
+### `printromancenpcs`
+**Description:** Print all romance NPCs.
+**Usage:** `/printromancenpcs`
+
+## Built-in Commands
 
 ### `abandonquest`
 **Description:** Abandon a specified quest.This command will abandon the quest and remove it from the player's quest log. Use `/printcompletedquests` to see a list of completed quests.
