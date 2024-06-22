@@ -72,6 +72,7 @@ public static class Patcher
                 Trace.TraceError($"No description found for command: {alias}");
             }
         }
+        Trace.TraceInformation("Finished injecting descriptions to the built-in cheat commands.");
     }
 
     private static void InjectCommandDescriptionAttribute(ModuleDefinition module, MethodDefinition method, MethodReference descriptionConstructor, string description)
