@@ -10,11 +10,13 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        LOG = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(LOG);
+        SceneManager.sceneLoaded += (_, _) =>
+        {
+            ItemHandler.CreateScytheItems();
+        };
+        LOG = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Logger.LogInfo($"{PluginName} plugin has loaded successfully.");
     }
-
-
+    
 }

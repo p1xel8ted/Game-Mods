@@ -3,7 +3,9 @@ namespace NoTimeToStopAndEat;
 [Harmony]
 public static class Patches
 {
-    private const string EatFoodRoutineB = "<EatFoodRoutine>b__20_2";
+    private const string EatFoodRoutineA = "<EatFoodRoutine>b__20_0";
+    private const string EatFoodRoutineB = "<EatFoodRoutine>b__20_1";
+    private const string EatFoodRoutineC = "<EatFoodRoutine>b__20_2";
 
     /// <summary>
     /// Used to filter out certain types from an enumerator. For example, <see cref="WaitForSeconds"/> is used in the <see cref="Food.EatFoodRoutine"/> enumerator.
@@ -41,15 +43,15 @@ public static class Patches
     [HarmonyPatch(typeof(Food), nameof(Food.EatFoodRoutine), MethodType.Enumerator)]
     private static void Food_EatFoodRoutine(ref Food __instance)
     {
-        if (__instance == null) return;
+        if (!__instance) return;
 
         var itemGraphics = __instance._itemGraphics;
-        if (itemGraphics != null)
+        if (itemGraphics)
         {
             if (Plugin.HideFoodItemWhenEating.Value)
             {
                 var spriteRenderer = itemGraphics.GetComponent<SpriteRenderer>();
-                if (spriteRenderer != null && spriteRenderer.sprite != null)
+                if (spriteRenderer && spriteRenderer.sprite)
                 {
                     spriteRenderer.sprite = null;
                 }
@@ -58,7 +60,7 @@ public static class Patches
         }
 
 
-        if (Player.Instance == null) return;
+        if (!Player.Instance) return;
         Player.Instance._emoteTween?.Kill();
         Player.Instance.FreezeWalkAnimations = false;
     }
@@ -97,14 +99,14 @@ public static class Patches
 
 
     /// <summary>
-    /// Stops the player from emoting while eating food.
+    /// Stops the player from emoting/slowing down while eating food.
     /// </summary>
     [HarmonyPrefix]
+    [HarmonyPatch(typeof(Food), EatFoodRoutineA)]
     [HarmonyPatch(typeof(Food), EatFoodRoutineB)]
-    private static bool Food_EatFoodRoutine_Prefix(ref Food __instance)
+    [HarmonyPatch(typeof(Food), EatFoodRoutineC)]
+    private static bool Food_EatFoodRoutine_Prefix()
     {
         return false;
     }
-
-
 }

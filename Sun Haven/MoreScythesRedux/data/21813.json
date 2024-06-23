@@ -3,7 +3,7 @@
     "description": "Reaps crops with ease and slices down the toughest of weeds.",
     "helpDescription": "<sprite=\"attack_damage_icon\" index=0> 18-26 Damage\n<sprite=\"attack_speed_icon\" index=0> 16 Attack Speed",
     "useDescription": "(Left click to swing)",
-    "id": 30090,
+    "id": 21813,
     "stackSize": 1,
     "canSell": 1,
     "canTrade": 1,

@@ -1,93 +1,144 @@
-﻿using PSS;
-using UnityEngine.ResourceManagement.Util;
-
-namespace MoreScythesRedux;
+﻿namespace MoreScythesRedux;
 
 public static class ItemHandler
 {
     private const int OriginalScytheId = 3000;
-    private const int AdamantScytheId = 30000;
-    private const int MithrilScytheId = 30020;
-    private const int SuniteScytheId = 30030;
-    private const int GloriteScytheId = 30090;
-    private const string RecipeListAnvil = "RecipeList_Anvil";
-    private const string RecipeListMonsterAnvil = "RecipeList_Monster Anvil";
+    private const int AdamantScytheId = 21810;
+    private const int MithrilScytheId = 21811;
+    private const int SuniteScytheId = 21812;
+    private const int GloriteScytheId = 21813;
+    private const string RecipeListAnvil = "new_Anvil";
+    private const string RecipeListMonsterAnvil = "monster_anvil";
+    
+    internal readonly static List<(int id, int speed, int damage, string craftingStation, List<ItemInfo> inputs, float craftingHours, ItemData data)> CustomScythes = [];
 
-    private static void CreateAndConfigureItem(int id, int speed, int damage)
+    private static void CreateAndConfigureItem((int id, int speed, int damage, string craftingStation, List<ItemInfo> inputs, float craftingHours) scythe)
     {
-        var original = Utils.GetItemData(id);
-
-        var item = ScriptableObject.CreateInstance<ItemData>();
-        JsonUtility.FromJsonOverwrite(
-            FileLoader.LoadFile(Assembly.GetExecutingAssembly(), $"data.{id}.json"),
-            item);
-
-        item.icon = SpriteUtil.CreateSprite(
-            FileLoader.LoadFileBytes(Assembly.GetExecutingAssembly(), $"img.{id}.png"),
-            $"Modded item icon {id}");
-
-        var useItem = Object.Instantiate(original.useItem);
-        if (!useItem)
+        try
         {
-            Plugin.LOG.LogError("Original scythe has no useItem");
-            return;
-        }
+            if (Database.Instance.ids.ContainsValue(scythe.id)) return;
 
-        item.useItem = useItem;
-        useItem.gameObject.GetComponent<Weapon>()._frameRate = speed;
-        useItem.gameObject.GetComponent<DamageSource>()._damageRange.Set(damage - 8, damage);
-        useItem.gameObject.SetActive(false);
-
-        Object.DontDestroyOnLoad(useItem);
-
-        Database.Instance.validIDs.Add(item.id);
-        Database.Instance.ids.TryAdd(item.name.RemoveWhitespace().ToLower(), item.id);
-        Database.Instance.types.TryAdd(item.id, typeof(ToolItem));
-        var node = Database.Instance.lruList.AddFirst(new Database.CacheItem(item.id, item));
-        Database.Instance.cache[typeof(ToolItem)][item.id] = node;
-
-
-        Plugin.LOG.LogInfo($"Created item {item.id} with name {item.name}");
-    }
-
-    private static void ConfigureRecipe(int itemId, string recipeListName, List<ItemInfo> inputs, float craftingHours)
-    {
-        foreach (var rl in Resources.FindObjectsOfTypeAll<RecipeList>())
-        {
-            if (!rl.name.Equals(recipeListName)) continue;
-
-            if (rl.craftingRecipes.Exists(r => r.output.item.id == itemId))
+            Database.GetData(OriginalScytheId, delegate(ItemData data)
             {
-                continue;
-            }
+                if (!data)
+                {
+                    Plugin.LOG.LogError($"Original item with ID {OriginalScytheId} not found");
+                    return;
+                }
 
-            var recipe = ScriptableObject.CreateInstance<Recipe>();
-            recipe.output = new ItemInfo {item = Utils.GetItemData(itemId), amount = 1};
-            recipe.input = inputs;
-            recipe.worldProgressTokens = [];
-            recipe.characterProgressTokens = [];
-            recipe.questProgressTokens = [];
-            recipe.hoursToCraft = craftingHours;
+                var item = ScriptableObject.CreateInstance<ItemData>();
+                var jsonData = FileLoader.LoadFile(Assembly.GetExecutingAssembly(), $"data.{scythe.id}.json");
+                if (string.IsNullOrEmpty(jsonData))
+                {
+                    Plugin.LOG.LogError($"Failed to load JSON data for item {scythe.id}");
+                    return;
+                }
 
-            rl.craftingRecipes.Add(recipe);
-            Plugin.LOG.LogInfo($"Added item {itemId} to {recipeListName}");
+                JsonUtility.FromJsonOverwrite(jsonData, item);
+
+                var iconData = FileLoader.LoadFileBytes(Assembly.GetExecutingAssembly(), $"img.{scythe.id}.png");
+                if (iconData == null)
+                {
+                    Plugin.LOG.LogError($"Failed to load icon data for item {scythe.id}");
+                    return;
+                }
+
+                item.icon = SpriteUtil.CreateSprite(iconData, $"Modded item icon {scythe.id}");
+
+                var useItem = Object.Instantiate(data.useItem);
+                if (!useItem)
+                {
+                    Plugin.LOG.LogError("Original scythe has no useItem");
+                    return;
+                }
+
+                item.useItem = useItem;
+                var weaponComponent = useItem.gameObject.GetComponent<Weapon>();
+                var damageSourceComponent = useItem.gameObject.GetComponent<DamageSource>();
+
+                if (!weaponComponent || !damageSourceComponent)
+                {
+                    Plugin.LOG.LogError("Required components not found on useItem");
+                    return;
+                }
+
+                weaponComponent._frameRate = scythe.speed;
+                damageSourceComponent._damageRange.Set(scythe.damage - 8, scythe.damage);
+                useItem.gameObject.SetActive(false);
+
+                Object.DontDestroyOnLoad(useItem);
+
+                Database.Instance.ids[item.name.RemoveWhitespace().ToLower()] = item.id;
+                Database.Instance.types[item.id] = typeof(ItemData);
+                Database.Instance.validIDs.Add(item.id);
+
+                var node = Database.Instance.lruList.AddFirst(new Database.CacheItem(item.id, item));
+                if (!Database.Instance.cache.ContainsKey(item.GetType()))
+                {
+                    Database.Instance.cache[item.GetType()] = new Dictionary<object, LinkedListNode<Database.CacheItem>>();
+                }
+                Database.Instance.cache[item.GetType()][item.id] = node;
+
+                var originalSellInfo = Utils.GetItemSellInfo(data.id);
+                var itemSellInfo = new ItemSellInfo
+                {
+                    name = item.name,
+                    keyName = item.name,
+                    sellPrice = item.sellPrice,
+                    orbSellPrice = item.orbsSellPrice,
+                    ticketSellPrice = item.ticketSellPrice,
+                    stackSize = item.stackSize,
+                    isMeal = originalSellInfo.isMeal,
+                    isFruit = originalSellInfo.isFruit,
+                    isArtisanryItem = originalSellInfo.isArtisanryItem,
+                    isForageable = item.isForageable,
+                    isPotion = originalSellInfo.isPotion,
+                    isGem = item.isGem,
+                    isAnimalProduct = item.isAnimalProduct,
+                    itemType = originalSellInfo.itemType,
+                    rarity = item.rarity,
+                    decorationType = item.decorationType,
+                };
+
+                SingletonBehaviour<ItemInfoDatabase>.Instance.allItemSellInfos.Add(item.id, itemSellInfo);
+                var newScythe = (scythe.id, scythe.speed, scythe.damage, scythe.craftingStation, scythe.inputs, scythe.craftingHours, item);
+                CustomScythes.Add(newScythe);
+                Plugin.LOG.LogInfo($"Created item {item.id} with name {item.name}");
+                
+            });
+        }
+        catch (Exception ex)
+        {
+            Plugin.LOG.LogError($"Exception while creating item {scythe.id}: {ex.Message}\n{ex.StackTrace}");
         }
     }
 
     public static void CreateScytheItems()
     {
-        var scytheDefinitions = new List<(int id, int speed, int damage, string recipeList, List<ItemInfo> inputs, float craftingHours)>
-        {
-            (AdamantScytheId, 13, 14, RecipeListAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.AdamantBar), amount = 10}], 6f),
-            (MithrilScytheId, 14, 18, RecipeListAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.MithrilBar), amount = 10}], 12f),
-            (SuniteScytheId, 15, 22, RecipeListAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.SuniteBar), amount = 10}], 24f),
-            (GloriteScytheId, 16, 26, RecipeListMonsterAnvil, [new ItemInfo {item =  Utils.GetItemData(ItemID.GloriteBar), amount = 10}], 48f),
-        };
+        CustomScythes.Clear();
 
-        foreach (var (id, speed, damage, recipeList, inputs, craftingHours) in scytheDefinitions)
+        Database.GetData(ItemID.AdamantBar, delegate(ItemData data)
         {
-            CreateAndConfigureItem(id, speed, damage);
-            ConfigureRecipe(id, recipeList, inputs, craftingHours);
-        }
+            var adamantScythe = (AdamantScytheId, 13, 14, RecipeListAnvil, (List<ItemInfo>) [new ItemInfo {item = data, amount = 10}], 6f);
+            CreateAndConfigureItem(adamantScythe);
+        });
+
+        Database.GetData(ItemID.MithrilBar, delegate(ItemData data)
+        {
+            var mithrilScythe = (MithrilScytheId, 14, 18, RecipeListAnvil, (List<ItemInfo>) [new ItemInfo {item = data, amount = 10}], 12f);
+            CreateAndConfigureItem(mithrilScythe);
+        });
+
+        Database.GetData(ItemID.SuniteBar, delegate(ItemData data)
+        {
+            var suniteScythe = (SuniteScytheId, 15, 22, RecipeListAnvil, (List<ItemInfo>) [new ItemInfo {item = data, amount = 10}], 24f);
+            CreateAndConfigureItem(suniteScythe);
+        });
+
+        Database.GetData(ItemID.GloriteBar, delegate(ItemData data)
+        {
+            var gloriteScythe = (GloriteScytheId, 16, 26, RecipeListMonsterAnvil, (List<ItemInfo>) [new ItemInfo {item = data, amount = 10}], 48f);
+            CreateAndConfigureItem(gloriteScythe);
+        });
     }
 }

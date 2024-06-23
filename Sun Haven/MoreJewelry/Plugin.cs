@@ -53,10 +53,9 @@ public class Plugin : BaseUnityPlugin
     /// </summary>
     private void Awake()
     {
+        LOG = Logger;
         UIHandler.OnInventoryOpened += UI.UIHandler_OpenInventory;
         UIHandler.OnInventoryClosed += UI.UIHandler_CloseInventory;
-        LOG = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(LOG);
         Debug = Config.Bind("00. Debug", "Debug", false, new ConfigDescription("Enable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = false, Order = 99}));
         UseAdjustedEquipping = Config.Bind("01. General", "Use Adjusted Equipping", true, new ConfigDescription("Use adjusted equipping logic for rings, amulets, and keepsakes.", null, new ConfigurationManagerAttributes {Order = 0}));
         ShowPanelToggle = Config.Bind("01. General", "Show Panel Toggle", true, new ConfigDescription("Show the panel toggle in the character panel.", null, new ConfigurationManagerAttributes {Order = 1}));
@@ -85,21 +84,5 @@ public class Plugin : BaseUnityPlugin
         MakeSlotsStorageOnly = Config.Bind("01. General", "Make Slots Storage Only", false, new ConfigDescription("Make slots jewelry storage only, disabling the granting of stats.", null, new ConfigurationManagerAttributes {Order = 4}));
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         LOG.LogInfo($"Plugin {PluginName} is loaded!");
-    }
-
-    /// <summary>
-    /// Logic to execute when the plugin is disabled.
-    /// </summary>
-    private void OnDisable()
-    {
-        LOG.LogError($"{PluginName} has been disabled!");
-    }
-
-    /// <summary>
-    /// Cleanup logic for the plugin.
-    /// </summary>
-    private void OnDestroy()
-    {
-        LOG.LogError($"{PluginName} has been destroyed!");
     }
 }
