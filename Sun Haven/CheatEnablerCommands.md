@@ -5,163 +5,163 @@
 Generate a manual of sorts using the `man` command. For example, to get information on the `additem` command you would enter `/man additem`
 
 ### `man`
-**Description:** Display the manual for a specified command
+**Description:** Display the manual for a specified command<br>
 **Usage:** `/man command`
 
 ## Custom Commands
 These are commands I've added to be used in conjunction with the built-in commands.
 
 ### `additembyid`
-**Description:** Add a specified item to the player's inventory by item ID. Use `/finditemid` to find an items ID and name. i.e. `/finditemid albino` will return all items with the word albino in them.
+**Description:** Add a specified item to the player's inventory by item ID. Use `/finditemid` to find an items ID and name. i.e. `/finditemid albino` will return all items with the word albino in them.<br>
 **Usage:** `/additembyid itemID [amount]`
 
 ### `savegame`
-**Description:** Save the game.
+**Description:** Save the game.<br>
 **Usage:** `/savegame`
 
-### `getworldquestskipwithergatebreakpoints`
-**Description:** Get the breakpoints for the `skiptoworldquestwithergate` command.
-**Usage:** `/getworldquestskipwithergatebreakpoints`
+### `getworldquestskipwithergatebreakpoints`<br>
+**Description:** Get the breakpoints for the `skiptoworldquestwithergate` command.<br>
+**Usage:** `/getworldquestskipwithergatebreakpoints`<br>
 
-### `getworldquestskipnelvaribreakpoints`
-**Description:** Get the breakpoints for the `skiptoworldquestnelvari` command.
-**Usage:** `/getworldquestskipnelvaribreakpoints`
+### `getworldquestskipnelvaribreakpoints`<br>
+**Description:** Get the breakpoints for the `skiptoworldquestnelvari` command.<br>
+**Usage:** `/getworldquestskipnelvaribreakpoints`<br>
 
-### `getworldquestskipbreakpoints`
-**Description:** Get the breakpoints for the `skiptoworldquest` command.
-**Usage:** `/getworldquestskipbreakpoints`
+### `getworldquestskipbreakpoints`<br>
+**Description:** Get the breakpoints for the `skiptoworldquest` command.<br>
+**Usage:** `/getworldquestskipbreakpoints`<br>
 
-### `getworldquestskipepiloguebreakpoints`
-**Description:** Get the breakpoints for the `skiptoworldepilogue` command.
-**Usage:** `/getworldquestskipepiloguebreakpoints`
+### `getworldquestskipepiloguebreakpoints`<br>
+**Description:** Get the breakpoints for the `skiptoworldepilogue` command.<br>
+**Usage:** `/getworldquestskipepiloguebreakpoints`<br>
 
-### `printallbbquests`
-**Description:** Print all bulletin board quests.
-**Usage:** `/printallbbquests`
+### `printallbbquests`<br>
+**Description:** Print all bulletin board quests.<br>
+**Usage:** `/printallbbquests`<br>
 
-### `printallmail`
-**Description:** Print all mail.
-**Usage:** `/printallmail`
+### `printallmail`<br>
+**Description:** Print all mail.<br>
+**Usage:** `/printallmail`<br>
 
-### `printallnpcs`
-**Description:** Print all NPCs.
-**Usage:** `/printallnpcs`
+### `printallnpcs`<br>
+**Description:** Print all NPCs.<br>
+**Usage:** `/printallnpcs`<br>
 
-### `printallprofessions`
-**Description:** Print all professions.
-**Usage:** `/printallprofessions`
+### `printallprofessions`<br>
+**Description:** Print all professions.<br>
+**Usage:** `/printallprofessions`<br>
 
-### `printallquests`
-**Description:** Print all quests.
-**Usage:** `/printallquests`
+### `printallquests`<br>
+**Description:** Print all quests.<br>
+**Usage:** `/printallquests`<br>
 
-### `printallscenes`
-**Description:** Print all scenes.
-**Usage:** `/printallscenes`
+### `printallscenes`<br>
+**Description:** Print all scenes.<br>
+**Usage:** `/printallscenes`<br>
 
-### `printallseasons`
-**Description:** Print all seasons.
-**Usage:** `/printallseasons`
+### `printallseasons`<br>
+**Description:** Print all seasons.<br>
+**Usage:** `/printallseasons`<br>
 
-### `printallstats`
-**Description:** Print all stats.
-**Usage:** `/printallstats`
+### `printallstats`<br>
+**Description:** Print all stats.<br>
+**Usage:** `/printallstats`<br>
 
-### `printcompletedquests`
-**Description:** Print all completed quests.
+### `printcompletedquests`<br>
+**Description:** Print all completed quests.<br>
 **Usage:** `/printcompletedquests`
 
-### `printromancenpcs`
-**Description:** Print all romance NPCs.
-**Usage:** `/printromancenpcs`
+### `printromancenpcs`<br>
+**Description:** Print all romance NPCs.<br>
+**Usage:** `/printromancenpcs`<br>
 
 ## Built-in Commands
 
-### `abandonquest`
-**Description:** Abandon a specified quest.This command will abandon the quest and remove it from the player's quest log. Use `/printcompletedquests` to see a list of completed quests.
-**Usage:** `/abandonquest questName`
+### `abandonquest`<br>
+**Description:** Abandon a specified quest.This command will abandon the quest and remove it from the player's quest log. Use `/printcompletedquests` to see a list of completed quests.<br>
+**Usage:** `/abandonquest questName`<br>
 
-### `adddevitems`
-**Description:** Adds a full set of golden tools to the player's inventory.  
-**Usage:** `/adddevitems`
+### `adddevitems`<br>
+**Description:** Adds a full set of golden tools to the player's inventory.  <br>
+**Usage:** `/adddevitems`<br>
 
 ### `addexp`
-**Description:** Add experience points to a specified profession.
-**Valid Professions:** Use `/printallprofessions` to see a list of valid professions.
-**Usage:** `/addexp professionName amount`
+**Description:** Add experience points to a specified profession.<br>
+**Valid Professions:** Use `/printallprofessions` to see a list of valid professions.<br>
+**Usage:** `/addexp professionName amount`<br>
 
-### `additem`
-**Description:** Add a specified item to the player's inventory by item name. Use `/finditemid` to find an items ID and name. i.e. `/finditemid albino` will return all items with the word albino in them.
-**Usage:** `/additem itemName [amount]`
+### `additem`<br>
+**Description:** Add a specified item to the player's inventory by item name. Use `/finditemid` to find an items ID and name. i.e. `/finditemid albino` will return all items with the word albino in them.<br>
+**Usage:** `/additem itemName [amount]`<br>
 
-### `addmoney`
-**Description:** Add money to the player's inventory. The source of the money is recorded internally as `Exploration` 
-**Usage:** `/addmoney amount`
+### `addmoney`<br>
+**Description:** Add money to the player's inventory. The source of the money is recorded internally as `Exploration` <br>
+**Usage:** `/addmoney amount`<br>
 
-### `addpermenentstatbonus`
-**Description:** Add a permanent bonus to a player's stat.  
-**Valid Stats:** Use `/printallstats` to see a list of valid stats.
-**Usage:** `/addpermenentstatbonus statName amount`
+### `addpermenentstatbonus`<br>
+**Description:** Add a permanent bonus to a player's stat.  <br>
+**Valid Stats:** Use `/printallstats` to see a list of valid stats.<br>
+**Usage:** `/addpermenentstatbonus statName amount`<br>
 
-### `addrangeofitems`
-**Description:** Add a range of items to the player's inventory starting at the specified item name. For example if the item code of the entered item is `15324` and the range is 5, the player will receive items `15324`, `15325`, `15326`, `15327`, `15328`.
-**Usage:** `/addrangeofitems itemName range [amount]`
+### `addrangeofitems`<br>
+**Description:** Add a range of items to the player's inventory starting at the specified item name. For example if the item code of the entered item is `15324` and the range is 5, the player will receive items `15324`, `15325`, `15326`, `15327`, `15328`.<br>
+**Usage:** `/addrangeofitems itemName range [amount]`<br>
 
-### `addstat`
-**Description:** Add a specified amount to a player's stat temporarily.  
-**Valid Stats:** Use `/printallstats` to see a list of valid stats.
-**Usage:** `/addstat statName amount`
+### `addstat`<br>
+**Description:** Add a specified amount to a player's stat temporarily.  <br>
+**Valid Stats:** Use `/printallstats` to see a list of valid stats.<br>
+**Usage:** `/addstat statName amount`<br>
 
-### `addtime`
-**Description:** Add a specified amount of time to the current day.  
-**Usage:** `/addtime hours`
+### `addtime`<br>
+**Description:** Add a specified amount of time to the current day.  <br>
+**Usage:** `/addtime hours`<br>
 
-### `brinestonedeepssaved`
-**Description:** Set the 'Brinestone Deeps Saved' status.  
-**Usage:** `/brinestonedeepssaved true|false`
+### `brinestonedeepssaved`<br>
+**Description:** Set the 'Brinestone Deeps Saved' status.  <br>
+**Usage:** `/brinestonedeepssaved true|false`<br>
 
-### `despawnpet`
-**Description:** Despawn the current pet.  
-**Usage:** `/despawnpet`
+### `despawnpet`<br>
+**Description:** Despawn the current pet.  <br>
+**Usage:** `/despawnpet`<br>
 
-### `divorceNPC`
-**Description:** Divorce the currently married NPC.  
-**Notes:* The `npcName` parameter is currently not used by the code that executes this command.
-**Usage:** `/divorceNPC npcName`
+### `divorceNPC`<br>
+**Description:** Divorce the currently married NPC.  <br>
+**Notes:* The `npcName` parameter is currently not used by the code that executes this command.<br>
+**Usage:** `/divorceNPC npcName`<br>
 
-### `enabledaycycle`
-**Description:** Enable or disable the day cycle.  
-**Usage:** `/enabledaycycle true|false`
+### `enabledaycycle`<br>
+**Description:** Enable or disable the day cycle.  <br>
+**Usage:** `/enabledaycycle true|false`<br>
 
-### `FixPets`
-**Description:** Fix the pets. This command will bring all pets to the player's location.
-**Usage:** `/FixPets`
+### `FixPets`<br>
+**Description:** Fix the pets. This command will bring all pets to the player's location.<br>
+**Usage:** `/FixPets`<br>
 
-### `getrelationships`
-**Description:** Get all relationships in the game.  
-**Usage:** `/getrelationships`
+### `getrelationships`<br>
+**Description:** Get all relationships in the game.  <br>
+**Usage:** `/getrelationships`<br>
 
 ### `getstat`
-**Description:** Get the current value of a specified stat.  
-**Valid Stats:** Use `/printallstats` to see a list of valid stats.
-**Usage:** `/getstat statName`
+**Description:** Get the current value of a specified stat.  <br>
+**Valid Stats:** Use `/printallstats` to see a list of valid stats.<br>
+**Usage:** `/getstat statName`<br>
 
-### `godmode`
-**Description:** Enable or disable god mode. Sets noClip (move through walls etc.) to true, and increases move speed and jump height.
-**Usage:** `/godmode true|false`
+### `godmode`<br>
+**Description:** Enable or disable god mode. Sets noClip (move through walls etc.) to true, and increases move speed and jump height.<br>
+**Usage:** `/godmode true|false`<br>
 
-### `hidePlayer`
-**Description:** Hide the player.  
-**Usage:** `/hidePlayer`
+### `hidePlayer`<br>
+**Description:** Hide the player.  <br>
+**Usage:** `/hidePlayer`<br>
 
-### `lockmines`
-**Description:** Lock all mines in the game.  
-**Usage:** `/lockmines`
+### `lockmines`<br>
+**Description:** Lock all mines in the game.  <br>
+**Usage:** `/lockmines`<br>
 
 ### `marryNPC`
-**Description:** Marry a specified NPC.  
-**Valid NPCs:** Use `/printromancenpcs` to see a list of valid NPCs.
-**Usage:** `/marryNPC npcName`
+**Description:** Marry a specified NPC.  <br>
+**Valid NPCs:** Use `/printromancenpcs` to see a list of valid NPCs.<br>
+**Usage:** `/marryNPC npcName`<br>
 
 ### `noclip`
 **Description:** Enable or disable noClip (move through walls etc.) mode.  
@@ -426,4 +426,4 @@ These are commands I've added to be used in conjunction with the built-in comman
 
 ### `unpausetime`
 **Description:** Resume the progression of time in the game.  
-**Usage:** `/unpausetime`
+**Usage:** `/unpausetime`<br>
