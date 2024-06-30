@@ -1,11 +1,12 @@
 ﻿namespace MuseumSellPriceRedux;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+[BepInDependency("p1xel8ted.sunhaven.keepalive")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.museumsellpriceredux";
     private const string PluginName = "Museum Sell Price Redux";
-    private const string PluginVersion = "0.1.3";
+    private const string PluginVersion = "0.1.4";
 
     internal static ConfigEntry<bool> Enabled { get; private set; }
     private static ConfigEntry<bool> Debug { get; set; }
@@ -77,5 +78,15 @@ public class Plugin : BaseUnityPlugin
         {
             LOG.LogInfo(message);
         }
+    }
+    
+    private void OnDestroy()
+    {
+        OnDisable();
+    }
+    
+    private void OnDisable()
+    {
+        LOG.LogError($"Plugin {PluginName} was disabled/destroyed! Unless you are exiting the game, please install Keep Alive! - https://www.nexusmods.com/sunhaven/mods/31");
     }
 }

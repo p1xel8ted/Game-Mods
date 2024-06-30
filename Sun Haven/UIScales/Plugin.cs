@@ -1,21 +1,23 @@
 ﻿namespace UIScales;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-public partial class Plugin : BaseUnityPlugin
+[BepInDependency("p1xel8ted.sunhaven.keepalive")]
+public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.uiscales";
     private const string PluginName = "UI Scales";
-    private const string PluginVersion = "0.2.0";
+    private const string PluginVersion = "0.2.1";
 
     internal static ConfigEntry<bool> Debug;
+    
     internal static ConfigEntry<bool> ScaleAdjustments { get; private set; }
     private static ConfigEntry<bool> ZoomAdjustments { get; set; }
     internal static ConfigEntry<float> MainMenuUiScale { get; private set; }
-    internal static ConfigEntry<float> InGameUiScale { get; private set; }
+    internal static ConfigEntry<float> MainHudScale { get; private set; }
 
     // internal static ConfigEntry<float> DateTimeYearScale { get; private set; }
     internal static ConfigEntry<float> ZoomLevel { get; private set; }
-    internal static ConfigEntry<float> CheatConsoleScale { get; private set; }
+  
     internal static ConfigEntry<float> PortraitScale { get; private set; }
     internal static ConfigEntry<float> PortraitHorizontalPosition { get; private set; }
     internal static ConfigEntry<bool> Notifications { get; private set; }
@@ -24,6 +26,8 @@ public partial class Plugin : BaseUnityPlugin
     internal static ConfigEntry<KeyboardShortcut> UIKeyboardShortcutDecrease { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ZoomKeyboardShortcutIncrease { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ZoomKeyboardShortcutDecrease { get; private set; }
+
+    
     internal static ManualLogSource LOG { get; private set; }
     [CanBeNull] internal static CanvasScaler UIOneCanvas { get; set; }
     [CanBeNull] internal static CanvasScaler UITwoCanvas { get; set; }
@@ -33,6 +37,21 @@ public partial class Plugin : BaseUnityPlugin
     internal static Transform Bust { get; set; }
     internal static WriteOnce<float> OriginalPortraitPosition { get; } = new();
     internal static ConfigFile ConfigFile { get; private set; }
+    public static ConfigEntry<float> GenericDialogScale { get; set; }
+    public static ConfigEntry<float> TooltipScale { get; set; }
+    public static ConfigEntry<float> VirtualKeyboardScale { get; set; }
+    public static ConfigEntry<float> ToolbarScale { get; set; }
+    public static ConfigEntry<float> BackpackSettingsScale { get; set; }
+    public static ConfigEntry<float> QuestsScale { get; set; }
+    public static ConfigEntry<float> ItemIconsScale { get; set; }
+    public static ConfigEntry<float>  ShopCanvasScale { get; set; }
+    public static ConfigEntry<float> ChatConsoleScale { get; set; }
+    public static ConfigEntry<float> QuestIconScale { get; set; }
+    public static ConfigEntry<float> ChestCanvasScale { get; set; }
+    public static ConfigEntry<float> SnaccoonCanvasScale { get; set; }
+    public static ConfigEntry<float> DoubloonShopCanvasScale { get; set; }
+    public static ConfigEntry<float> CommunityTokenShopCanvasScale { get; set; }
+    public static ConfigEntry<float> AutoFeederCanvasScale { get; set; }
 
     private void Awake()
     {
@@ -44,18 +63,11 @@ public partial class Plugin : BaseUnityPlugin
         LOG.LogInfo($"Plugin {PluginName} is loaded!");
     }
 
-    private void OnDisable()
+    private void Update()
     {
-        SceneManager.sceneLoaded -= SceneManagerOnSceneLoaded;
-        LOG.LogError($"{PluginName} has been disabled!");
+        Utils.UpdateZoomLevel();
     }
 
-
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= SceneManagerOnSceneLoaded;
-        LOG.LogError($"{PluginName} has been destroyed!");
-    }
 
     private void InitConfig()
     {
@@ -64,60 +76,106 @@ public partial class Plugin : BaseUnityPlugin
 
         Notifications = Config.Bind("01. General Settings", "Enable Notifications", true, new ConfigDescription("Enable or disable in-game notifications.", null, new ConfigurationManagerAttributes {Order = 998}));
 
-        CorrectEndOfDayScreen = Config.Bind("01. General Settings", "Correct End of Day Screen", true, new ConfigDescription("Adjust the end-of-day screen if necessary. Test to ensure proper functionality.", null, new ConfigurationManagerAttributes {Order = 997}));
+        // CorrectEndOfDayScreen = Config.Bind("01. General Settings", "Correct End of Day Screen", true, new ConfigDescription("Adjust the end-of-day screen if necessary. Test to ensure proper functionality.", null, new ConfigurationManagerAttributes {Order = 997}));
 
-        // 02. User Interface Scale Settings
-        ScaleAdjustments = Config.Bind("02. User Interface Scale Settings", "Enable Scale Adjustments", true, new ConfigDescription("Allow modifications to the scale of various UI elements.", null, new ConfigurationManagerAttributes {Order = 996}));
-        ScaleAdjustments.SettingChanged += (_, _) =>
+        MainHudScale = Config.Bind("02. User Interface Scale Settings", "Main HUD", 3f, new ConfigDescription("Weather HUD, Currency HUD - this may effect other things.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 995}));
+        MainHudScale.SettingChanged += (_, _) =>
         {
-            if (!ScaleAdjustments.Value)
-            {
-                Utils.ResetCanvasScaleFactors();
-            }
+            Patches.UpdateAllScalers();
+        };
+        
+        ChestCanvasScale = Config.Bind("02. User Interface Scale Settings", "Chest Canvas Scale", 3f, new ConfigDescription("Unsure It's called ChestCanvas, but doesn't seem to be linked to anything.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 999}));
+        ChestCanvasScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        
+        SnaccoonCanvasScale = Config.Bind("02. User Interface Scale Settings", "Snaccoon Canvas Scale", 3f, new ConfigDescription("Adjust the scale of the snaccoon canvas.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 996}));
+        SnaccoonCanvasScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        
+        DoubloonShopCanvasScale = Config.Bind("02. User Interface Scale Settings", "Doubloon Shop Canvas Scale", 3f, new ConfigDescription("Adjust the scale of the doubloon shop canvas.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 995}));
+        DoubloonShopCanvasScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        
+        CommunityTokenShopCanvasScale = Config.Bind("02. User Interface Scale Settings", "Community Token Shop Canvas Scale", 3f, new ConfigDescription("Adjust the scale of the community token shop canvas.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 994}));
+        CommunityTokenShopCanvasScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        
+        AutoFeederCanvasScale = Config.Bind("02. User Interface Scale Settings", "Auto Feeder Canvas Scale", 3f, new ConfigDescription("Adjust the scale of the auto feeder canvas.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 993}));
+        AutoFeederCanvasScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        
+        QuestIconScale = Config.Bind("02. User Interface Scale Settings", "Quest Icon Scale", 3f, new ConfigDescription("Unsure", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 997}));
+        QuestIconScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        ChatConsoleScale = Config.Bind("02. User Interface Scale Settings", "Chat Scale", 3f, new ConfigDescription("Chat console, cheat window.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 996}));
+        ChatConsoleScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
         };
 
-        InGameUiScale = Config.Bind<float>("02. User Interface Scale Settings", "Game UI Scale", 3, new ConfigDescription("Adjust the scale of the game’s user interface.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 995}));
-        InGameUiScale.SettingChanged += (_, _) =>
+        GenericDialogScale = Config.Bind("02. User Interface Scale Settings", "Generic Dialog Scale", 3f, new ConfigDescription("Chests, NPC Dialog, Crafting UIs", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 994}));
+        GenericDialogScale.SettingChanged += (_, _) =>
         {
-            if (!ScaleAdjustments.Value) return;
-            Shared.Utils.ConfigureCanvasScaler(UIOneCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, InGameUiScale.Value);
-            Shared.Utils.ConfigureCanvasScaler(UITwoCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, InGameUiScale.Value);
+            Patches.UpdateAllScalers();
         };
-
-        MainMenuUiScale = Config.Bind<float>("02. User Interface Scale Settings", "Main Menu UI Scale", 2, new ConfigDescription("Adjust the scale of the main menu's user interface.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 994}));
-        MainMenuUiScale.SettingChanged += (_, _) =>
+        VirtualKeyboardScale = Config.Bind("02. User Interface Scale Settings", "Virtual Keyboard Scale", 3f, new ConfigDescription("Adjust the scale of the virtual keyboard.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 993}));
+        VirtualKeyboardScale.SettingChanged += (_, _) =>
         {
-            if (!ScaleAdjustments.Value) return;
-            Shared.Utils.ConfigureCanvasScaler(MainMenuCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, MainMenuUiScale.Value);
+            Patches.UpdateAllScalers();
         };
-
-        CheatConsoleScale = Config.Bind<float>("02. User Interface Scale Settings", "Cheat Console Scale", 3, new ConfigDescription("Adjust the scale of the cheat console UI.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 9933}));
-        CheatConsoleScale.SettingChanged += (_, _) =>
+        ToolbarScale = Config.Bind("02. User Interface Scale Settings", "Action Bar Scale", 3f, new ConfigDescription("Actionbar/Toolbar", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 992}));
+        ToolbarScale.SettingChanged += (_, _) =>
         {
-            if (!ScaleAdjustments.Value) return;
-            Shared.Utils.ConfigureCanvasScaler(QuantumCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, CheatConsoleScale.Value);
+            Patches.UpdateAllScalers();
         };
-
-        // DateTimeYearScale = Config.Bind<float>("02. User Interface Scale Settings", "Date Time Year Scale", 2, new ConfigDescription("Adjust the scale of the year in the date time display.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 992}));
-        // DateTimeYearScale.SettingChanged += (_, _) =>
-        // {
-        //     if (!ScaleAdjustments.Value) return;
-        //     ScaleDateTimeYear();
-        // };
-
+        BackpackSettingsScale = Config.Bind("02. User Interface Scale Settings", "Backpack Scale", 3f, new ConfigDescription("Backpack UI and all the other tabs.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 991}));
+        BackpackSettingsScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        QuestsScale = Config.Bind("02. User Interface Scale Settings", "Quests Scale", 3f, new ConfigDescription("Adjust the scale of the quest tracker UI.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 990}));
+        QuestsScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        ItemIconsScale = Config.Bind("02. User Interface Scale Settings", "Item Icons Scale", 3f, new ConfigDescription("Adjust the scale of item icons.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 989}));
+        ItemIconsScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        TooltipScale = Config.Bind("02. User Interface Scale Settings", "Tooltip Scale", 3f, new ConfigDescription("Adjust the scale of tooltips.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 988}));
+        TooltipScale.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateAllScalers();
+        };
+        
+        ShopCanvasScale = Config.Bind("02. User Interface Scale Settings", "Shop Canvas Scale", 3f, new ConfigDescription("Adjust the scale of the shop canvas.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 987}));
+        
         UIKeyboardShortcutIncrease = Config.Bind("02. User Interface Scale Settings", "UI Scale Increase", new KeyboardShortcut(KeyCode.Keypad8, KeyCode.LeftControl), new ConfigDescription("Keybind to increase the UI scale.", null, new ConfigurationManagerAttributes {Order = 991}));
 
         UIKeyboardShortcutDecrease = Config.Bind("02. User Interface Scale Settings", "UI Scale Decrease", new KeyboardShortcut(KeyCode.Keypad2, KeyCode.LeftControl), new ConfigDescription("Keybind to decrease the UI scale.", null, new ConfigurationManagerAttributes {Order = 990}));
 
         // 03. Character Portrait Settings
-        PortraitScale = Config.Bind<float>("03. Character Portrait Settings", "Portrait Scale", 1f, new ConfigDescription("Adjust the size of character portraits in dialogue.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 989}));
-        PortraitScale.SettingChanged += (_, _) =>
-        {
-            if (!ScaleAdjustments.Value) return;
-            ScalePortrait();
-        };
+        // PortraitScale = Config.Bind<float>("03. Character Portrait Settings", "Portrait Scale", 3f, new ConfigDescription("Adjust the size of character portraits in dialogue.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 989}));
+        // PortraitScale.SettingChanged += (_, _) =>
+        // {
+        //     if (!ScaleAdjustments.Value) return;
+        //     ScalePortrait();
+        // };
 
-        PortraitHorizontalPosition = Config.Bind<float>("03. Character Portrait Settings", "Portrait Position", 0, new ConfigDescription("Adjust the horizontal position of character portraits in dialogue.", new AcceptableValueRange<float>(-1500f, 1500f), new ConfigurationManagerAttributes {Order = 988}));
+        // PortraitHorizontalPosition = Config.Bind<float>("03. Character Portrait Settings", "Portrait Position", 0, new ConfigDescription("Adjust the horizontal position of character portraits in dialogue.", new AcceptableValueRange<float>(-1500f, 1500f), new ConfigurationManagerAttributes {Order = 988}));
 
         // 04. Zoom Settings
         ZoomAdjustments = Config.Bind("04. Zoom Settings", "Enable Zoom Adjustments", true, new ConfigDescription("Allow modifications to the zoom level.", null, new ConfigurationManagerAttributes {Order = 987}));
@@ -134,30 +192,60 @@ public partial class Plugin : BaseUnityPlugin
         ZoomKeyboardShortcutIncrease = Config.Bind("04. Zoom Settings", "Zoom Level Increase", new KeyboardShortcut(KeyCode.Keypad8), new ConfigDescription("Keybind to increase the zoom level.", null, new ConfigurationManagerAttributes {Order = 985}));
 
         ZoomKeyboardShortcutDecrease = Config.Bind("04. Zoom Settings", "Zoom Level Decrease", new KeyboardShortcut(KeyCode.Keypad2), new ConfigDescription("Keybind to decrease the zoom level.", null, new ConfigurationManagerAttributes {Order = 984}));
+        
+        
     }
 
-    internal static void MovePortrait()
+    // internal static void MovePortrait()
+    // {
+    //     if (Bust)
+    //     {
+    //         Bust.localPosition = Bust.localPosition with {x = OriginalPortraitPosition.Value + PortraitHorizontalPosition.Value};
+    //     }
+    // }
+    // private static void ScalePortrait()
+    // {
+    //     if (Bust)
+    //     {
+    //         ScaleTransformWithBottomLeftPivot(Bust, new Vector3(PortraitScale.Value, PortraitScale.Value, 1f));
+    //     }
+    // }
+    
+    private void OnDestroy()
     {
-        if (Bust)
-        {
-            Bust.localPosition = Bust.localPosition with {x = OriginalPortraitPosition.Value + PortraitHorizontalPosition.Value};
-        }
+        OnDisable();
     }
-    private static void ScalePortrait()
+    
+    private void OnDisable()
     {
-        if (Bust)
-        {
-            ScaleTransformWithBottomLeftPivot(Bust, new Vector3(PortraitScale.Value, PortraitScale.Value, 1f));
-        }
+        LOG.LogError($"Plugin {PluginName} was disabled/destroyed! Unless you are exiting the game, please install Keep Alive! - https://www.nexusmods.com/sunhaven/mods/31");
     }
-
+    
     private static void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        UIOneCanvas = GameObject.Find("Manager/UI")?.GetComponent<CanvasScaler>();
-        UITwoCanvas = GameObject.Find("Player(Clone)/UI")?.GetComponent<CanvasScaler>();
-        QuantumCanvas = GameObject.Find("SharedManager/Quantum Console")?.GetComponent<CanvasScaler>();
-        MainMenuCanvas = GameObject.Find("Canvas")?.GetComponent<CanvasScaler>();
-        Utils.UpdateCanvasScaleFactors();
+        var adaptiveScalers = Resources.FindObjectsOfTypeAll<AdaptiveUIScale>();
+        foreach(var scaler in adaptiveScalers)
+        {
+            scaler.enabled = false;
+        }
+        
+        var uiScaler = Resources.FindObjectsOfTypeAll<UIScaler>();
+        foreach(var scaler in uiScaler)
+        {
+            scaler.enabled = false;
+        }
+        
+        var csAdjustments = Resources.FindObjectsOfTypeAll<CanvasScalerAdjustment>();
+        foreach(var scaler in csAdjustments)
+        {
+            scaler.enabled = false;
+        }
+        
+        // UIOneCanvas = GameObject.Find("Manager/UI")?.GetComponent<CanvasScaler>();
+        // UITwoCanvas = GameObject.Find("Player(Clone)/UI")?.GetComponent<CanvasScaler>();
+        // QuantumCanvas = GameObject.Find("SharedManager/Quantum Console")?.GetComponent<CanvasScaler>();
+        // MainMenuCanvas = GameObject.Find("Canvas")?.GetComponent<CanvasScaler>();
+        // Utils.UpdateCanvasScaleFactors();
     }
 
     // private static RectTransform YearRect { get; set; }
@@ -190,20 +278,20 @@ public partial class Plugin : BaseUnityPlugin
     //     targetTransform.position = initialPosition - positionAdjustment;
     // }
 
-    internal static void ScaleTransformWithBottomLeftPivot(Transform targetTransform, Vector3 newScale)
-    {
-        var initialPosition = targetTransform.position;
-        var initialScale = targetTransform.localScale;
-
-        var positionAdjustment = new Vector3(
-            (initialScale.x - newScale.x) * 0.5f,
-            (initialScale.y - newScale.y) * 0.5f,
-            0
-        );
-
-        targetTransform.localScale = newScale;
-        targetTransform.position = initialPosition + positionAdjustment;
-    }
+    // internal static void ScaleTransformWithBottomLeftPivot(Transform targetTransform, Vector3 newScale)
+    // {
+    //     var initialPosition = targetTransform.position;
+    //     var initialScale = targetTransform.localScale;
+    //
+    //     var positionAdjustment = new Vector3(
+    //         (initialScale.x - newScale.x) * 0.5f,
+    //         (initialScale.y - newScale.y) * 0.5f,
+    //         0
+    //     );
+    //
+    //     targetTransform.localScale = newScale;
+    //     targetTransform.position = initialPosition + positionAdjustment;
+    // }
 
     // private static GameObject DateTimeYearParent { get; set; }
 

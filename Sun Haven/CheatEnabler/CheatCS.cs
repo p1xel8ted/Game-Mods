@@ -1,13 +1,7 @@
-﻿using System.Diagnostics;
-using System.Text;
-using PSS;
-using Shared;
-using Object = UnityEngine.Object;
-
-namespace CheatEnabler;
+﻿namespace CheatEnabler;
 
 [CommandPrefix("/")]
-public static class QuantumConsoleManager
+public static class CheatEnablerCommands
 {
     private readonly static Dictionary<int, string> questStarts = new()
     {
@@ -58,41 +52,42 @@ public static class QuantumConsoleManager
 
     private readonly static Dictionary<int, string> questStartsWithergate = new()
     {
-        { 1, "TheSunDragonsProtection8Quest" },
-        { 6, "ClearingTheRoad1Quest" },
-        { 7, "ClearingTheRoad2Quest" },
-        { 8, "JourneyToWithergate1Quest" },
-        { 9, "JourneyToWithergate2Quest" },
-        { 10, "JourneyToWithergate3Quest" },
-        { 11, "JourneyToWithergate4Quest" },
-        { 12, "JourneyToWithergate5Quest" },
-        { 13, "JourneyToWithergate6Quest" },
-        { 14, "ConfrontingDynus1Quest" },
-        { 15, "ConfrontingDynus2Quest" },
-        { 16, "ConfrontingDynus3Quest" },
-        { 17, "ConfrontingDynus4Quest" },
-        { 18, "ConfrontingDynus5Quest" },
-        { 19, "ConfrontingDynus6Quest" }
+        {1, "TheSunDragonsProtection8Quest"},
+        {6, "ClearingTheRoad1Quest"},
+        {7, "ClearingTheRoad2Quest"},
+        {8, "JourneyToWithergate1Quest"},
+        {9, "JourneyToWithergate2Quest"},
+        {10, "JourneyToWithergate3Quest"},
+        {11, "JourneyToWithergate4Quest"},
+        {12, "JourneyToWithergate5Quest"},
+        {13, "JourneyToWithergate6Quest"},
+        {14, "ConfrontingDynus1Quest"},
+        {15, "ConfrontingDynus2Quest"},
+        {16, "ConfrontingDynus3Quest"},
+        {17, "ConfrontingDynus4Quest"},
+        {18, "ConfrontingDynus5Quest"},
+        {19, "ConfrontingDynus6Quest"}
     };
 
     private readonly static Dictionary<int, string[]> progressFlagsWithergate = new()
     {
-        { 6, ["TheSunDragonsProtection8Quest", "TimeOfNeedCutscene1", "TimeOfNeedCutscene2", "NelvariTree", "CompleteNelvariTree0", "CompleteNelvariTree1", "CompleteNelvariTree2", "CompleteNelvariTree3"]},
-        { 7, ["NorthTownMonster", "ClearingTheRoad1Quest", "ClearingTheRoadCutscene1"]},
-        { 8, ["ClearingTheRoad2Quest", "ClearingTheRoadCutscene2"]},
-        { 9, ["JourneyToWithergate1Quest", "JourneyToWithergateCutscene1"]},
-        { 10, ["JourneyToWithergate2Quest", "JourneyToWithergateCutscene2"]},
-        { 11, ["JourneyToWithergate3Quest", "JourneyToWithergateCutscene3"]},
-        { 12, ["JourneyToWithergate4Quest", "JourneyToWithergateCutscene4"]},
-        { 13, ["Apartment", "JourneyToWithergate5Quest", "JourneyToWithergateCutscene5"]},
-        { 14, ["JourneyToWithergate6Quest"]},
-        { 15, ["ConfrontingDynus1Quest", "ConfrontingDynusCutscene1"]},
-        { 16, ["ConfrontingDynus2Quest", "ConfrontingDynusCutscene2"]},
-        { 17, ["ConfrontingDynus3Quest", "ConfrontingDynusCutscene3", "ConfrontingDynusCutscene4", "ConfrontingDynusCutscene5"]},
-        { 18, ["ConfrontingDynus4Quest", "DynusAltarCutscene"]},
-        { 19, ["ConfrontingDynus5Quest", "DynusIntroCutscene"]}
+        {6, ["TheSunDragonsProtection8Quest", "TimeOfNeedCutscene1", "TimeOfNeedCutscene2", "NelvariTree", "CompleteNelvariTree0", "CompleteNelvariTree1", "CompleteNelvariTree2", "CompleteNelvariTree3"]},
+        {7, ["NorthTownMonster", "ClearingTheRoad1Quest", "ClearingTheRoadCutscene1"]},
+        {8, ["ClearingTheRoad2Quest", "ClearingTheRoadCutscene2"]},
+        {9, ["JourneyToWithergate1Quest", "JourneyToWithergateCutscene1"]},
+        {10, ["JourneyToWithergate2Quest", "JourneyToWithergateCutscene2"]},
+        {11, ["JourneyToWithergate3Quest", "JourneyToWithergateCutscene3"]},
+        {12, ["JourneyToWithergate4Quest", "JourneyToWithergateCutscene4"]},
+        {13, ["Apartment", "JourneyToWithergate5Quest", "JourneyToWithergateCutscene5"]},
+        {14, ["JourneyToWithergate6Quest"]},
+        {15, ["ConfrontingDynus1Quest", "ConfrontingDynusCutscene1"]},
+        {16, ["ConfrontingDynus2Quest", "ConfrontingDynusCutscene2"]},
+        {17, ["ConfrontingDynus3Quest", "ConfrontingDynusCutscene3", "ConfrontingDynusCutscene4", "ConfrontingDynusCutscene5"]},
+        {18, ["ConfrontingDynus4Quest", "DynusAltarCutscene"]},
+        {19, ["ConfrontingDynus5Quest", "DynusIntroCutscene"]}
     };
 
+    [Command]
     [Command(Description = "Prints out all the quests that will be skipped when using the worldquestskipwithergatecommand. This command will print out all quests that will be skipped up to the breakpoint provided. For example, if you provide a breakpoint of 3, it will print out all quests that will be skipped up to the 3rd breakpoint.")]
     public static void getworldquestskipwithergatebreakpoints(int breakpoint)
     {
@@ -116,12 +111,13 @@ public static class QuantumConsoleManager
                 affectedQuests.AddRange(value.Select(flag => $"SetProgress: {flag}"));
             }
         }
-        
+
         foreach (var quest in affectedQuests)
         {
             Utils.LogToPlayer($"{quest}");
         }
     }
+    [Command]
     [Command(Description = "Prints out all the quests that will be initiated when using the worldquestskipwithergatecommand.")]
     public static void getworldquestskipepiloguebreakpoints(int breakpoint)
     {
@@ -148,13 +144,14 @@ public static class QuantumConsoleManager
                 affectedQuests.Add("StartQuest: AHerosHarvest1AQuest");
                 break;
         }
-        
+
         foreach (var quest in affectedQuests)
         {
             Utils.LogToPlayer($"{quest}");
         }
     }
 
+    [Command]
     [Command(Description = "Prints out all the quests that will be skipped when using the worldquestskipnelvari command. This command will print out all quests that will be skipped up to the breakpoint provided. For example, if you provide a breakpoint of 3, it will print out all quests that will be skipped up to the 3rd breakpoint.")]
     public static void getworldquestskipnelvaribreakpoints(int breakpoint)
     {
@@ -192,13 +189,14 @@ public static class QuantumConsoleManager
             }
             affectedQuests.Add("SetProgress: NelvariTree");
         }
-      
+
         foreach (var quest in affectedQuests)
         {
             Utils.LogToPlayer($"{quest}");
         }
     }
 
+    [Command]
     [Command(Description = "Prints out all the quests that will be skipped when using the worldquestskip command. This command will print out all quests that will be skipped up to the breakpoint provided. For example, if you provide a breakpoint of 3, it will print out all quests that will be skipped up to the 3rd breakpoint.")]
     public static void getworldquestskipbreakpoints(int breakpoint)
     {
@@ -216,7 +214,7 @@ public static class QuantumConsoleManager
                 affectedQuests.AddRange(progressFlag.Select(flag => $"SetProgress: {flag}"));
             }
         }
-        
+
         foreach (var quest in affectedQuests)
         {
             Utils.LogToPlayer($"{quest}");
@@ -244,6 +242,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Print out all scenes that can be used in other commands.")]
     public static void printallscenes()
     {
@@ -253,6 +252,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Print out all seasons that can be used in other commands.")]
     public static void printallseasons()
     {
@@ -262,6 +262,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Print out all professions that can be used in other commands.")]
     public static void printallprofessions()
     {
@@ -271,6 +272,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Print out all stats that can be used in other commands.")]
     public static void printallstats()
     {
@@ -280,6 +282,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Print out all mail that can be used in other commands. i.e. /sendmail")]
     public static void printallmail()
     {
@@ -291,6 +294,7 @@ public static class QuantumConsoleManager
     }
 
 
+    [Command]
     [Command(Description = "Print out all quests available to use in other commands. i.e. /setbulletinboardquest")]
     public static void printallbbquests()
     {
@@ -302,6 +306,7 @@ public static class QuantumConsoleManager
     }
 
 
+    [Command]
     [Command(Description = "Print out all NPCs that are romanceable in the game. i.e /marryNPC")]
     public static void printromancenpcs()
     {
@@ -312,6 +317,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Print out all NPCs in the game.")]
     public static void printallnpcs()
     {
@@ -322,6 +328,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Print out all completed quests.")]
     public static void printcompletedquests()
     {
@@ -332,6 +339,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Save the current game.")]
     public static void savegame()
     {
@@ -339,6 +347,7 @@ public static class QuantumConsoleManager
         SingletonBehaviour<NotificationStack>.Instance.SendNotification("Game Saved!");
     }
 
+    [Command]
     [Command(Description = "Add item to the player inventory using the numeric item code.")]
     public static void additembyid(int itemId, int amount = 1)
     {
@@ -346,8 +355,17 @@ public static class QuantumConsoleManager
         var qcm = Object.FindObjectOfType<Wish.QuantumConsoleManager>();
         try
         {
-            qcm.additem(item, amount);
-            Utils.LogToPlayer($"Added {amount} {item} to inventory.");
+            Database.GetData(itemId, delegate(ItemData data)
+            {
+                if (data.isDLCItem)
+                {
+                   Utils.LogToPlayer($"Unfortunately, {data.FormattedName} is a DLC item and cannot be added via Cheat Enabler.");
+                }
+                else
+                {
+                    qcm.additem(item, amount);  
+                }
+            }, () => throw new Exception());
         }
         catch (Exception)
         {
@@ -355,6 +373,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Search for an item by name. This will return all items that contain the search term.")]
     public static void finditemid(string itemName)
     {
@@ -378,6 +397,7 @@ public static class QuantumConsoleManager
         }
     }
 
+    [Command]
     [Command(Description = "Save all items to file.")]
     public static void saveallitems()
     {

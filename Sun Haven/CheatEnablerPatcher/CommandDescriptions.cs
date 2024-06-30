@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CheatEnablerPatcher;
+﻿namespace CheatEnablerPatcher;
 
 public static class CommandDescriptions
 {

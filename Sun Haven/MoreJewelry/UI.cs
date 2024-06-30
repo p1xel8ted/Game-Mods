@@ -1,3 +1,4 @@
+using Sirenix.Serialization.Utilities;
 using Object = UnityEngine.Object;
 
 namespace MoreJewelry;
@@ -83,7 +84,8 @@ public static class UI
         });
     }
 
-    
+    internal static Transform TitlePanel;
+
     /// <summary>
     /// Initializes the gear panel by finding and configuring the necessary GameObjects.
     /// </summary>
@@ -106,37 +108,46 @@ public static class UI
     /// <seealso cref="Const"/>
     internal static void InitializeGearPanel()
     {
-        var slideOutPanel = GameObject.Find(Const.EncyclopediaPanelPath);
-        var slideOutPanelParent = GameObject.Find(Const.PlayerItemsPath);
-        if (slideOutPanel == null)
-        {
-            Plugin.LOG.LogError("'Encyclopedia' panel not found. Please report this.");
-            return;
-        }
+        // var bg = CustomUI.CreateBg();
+        // var title = CustomUI.CreateTitle(bg.transform);
+        // CreateTitleText(title.transform, "Catchable fish");
+
+        // var slideOutPanel = GameObject.Find(Const.EncyclopediaPanelPath);
+        // var slideOutPanelParent = GameObject.Find(Const.PlayerItemsPath);
+        var slideOutPanelParent = Player.Instance.Inventory._inventoryPanel;
+        // if (slideOutPanel == null)
+        // {
+        //     Plugin.LOG.LogError("'Encyclopedia' panel not found. Please report this.");
+        //     return;
+        // }
         if (slideOutPanelParent == null)
         {
             Plugin.LOG.LogError("'player item' panel not found. Please report this.");
             return;
         }
+        GearPanel = CustomUI.CreateBg();
 
-
-        GearPanel = Object.Instantiate(slideOutPanel, slideOutPanelParent.transform);
+        //GearPanel = Object.Instantiate(slideOutPanel, slideOutPanelParent.transform);
         GearPanel.name = Const.GearPanelName;
 
-        var rectTransform = GearPanel.GetComponent<RectTransform>();
-        var sizeDelta = rectTransform.sizeDelta;
-
-        sizeDelta -= new Vector2(10, 0);
-        sizeDelta += new Vector2(0, 10);
-
-        rectTransform.sizeDelta = sizeDelta;
-
-
+        // var rectTransform = GearPanel.GetComponent<RectTransform>();
+        // var sizeDelta = rectTransform.sizeDelta;
+        //
+        // sizeDelta -= new Vector2(10, 0);
+        // sizeDelta += new Vector2(0, 10);
+        //
+        // rectTransform.sizeDelta = sizeDelta;
+        TitlePanel = CustomUI.CreateTitle(GearPanel.transform);
+        TitlePanel.localPosition = Const.TitlePosition;
+        TitlePanel.localScale = Const.TitleScale;
+        //
+        // var sp = CustomUI.CreateScrollView(GearPanel.transform);
+        
         // Destroy every child except the first one (the title text) as we don't need them
-        for (var i = 1; i < GearPanel.transform.childCount; i++)
-        {
-            Object.Destroy(GearPanel.transform.GetChild(i).gameObject);
-        }
+        // for (var i = 1; i < GearPanel.transform.childCount; i++)
+        // {
+        //     Object.Destroy(GearPanel.transform.GetChild(i).gameObject);
+        // }
 
         // Find and destroy the EncyclopediaSorting component as we don't need it.
         var encyclopediaSorting = GearPanel.GetComponentInChildren<EncylopdeiaSorting>();
@@ -519,7 +530,7 @@ public static class UI
 
             newSlot.name = $"{armorType}Slot ({i})";
             Patches.GearSlots.Add(newSlot);
-            inventory._slots = inventory._slots.Append(newSlot).ToArray();
+            inventory._slots = inventory._slots.Append([newSlot]).ToArray();
             inventory.maxSlots++;
         }
     }
@@ -543,19 +554,26 @@ public static class UI
             return existingContainer.gameObject;
         }
 
-        var gridContainer = new GameObject(Const.GridContainerName);
-        gridContainer.AddComponent<RectTransform>();
-        gridContainer.transform.SetParent(GearPanel.transform, false);
+        return CustomUI.CreateScrollView(GearPanel.transform);
 
-        var gridLayout = gridContainer.AddComponent<GridLayoutGroup>();
-        gridLayout.cellSize = new Vector2(32, 32);
-        gridLayout.spacing = new Vector2(10, 10);
-        gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-        gridLayout.constraintCount = 2;
-        gridLayout.childAlignment = TextAnchor.MiddleCenter;
-        gridLayout.padding = new RectOffset(5, 0, 20, 0);
 
-        return gridContainer;
+
+
+        //
+        // var gridContainer = new GameObject(Const.GridContainerName);
+        // gridContainer.AddComponent<RectTransform>();
+        // gridContainer.transform.SetParent(GearPanel.transform, false);
+        //
+        // var gridLayout = gridContainer.AddComponent<GridLayoutGroup>();
+        // gridLayout.cellSize = new Vector2(32, 32);
+        // gridLayout.spacing = new Vector2(10, 10);
+        // gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        // gridLayout.constraintCount = 2;
+        // gridLayout.childAlignment = TextAnchor.MiddleCenter;
+        // gridLayout.padding = new RectOffset(5, 0, 20, 0);
+        // gridLayout.gameObject.layer = LayerMask.NameToLayer("UI");
+        //
+        // return gridContainer;
     }
 
     /// <summary>
@@ -575,7 +593,7 @@ public static class UI
         LeftArrowPopup.description = Utils.GetLeftArrowPopupContent();
         RightArrowPopup.description = Utils.GetRightArrowPopupContent();
     }
-    
+
     /// <summary>
     /// Updates the title text of the GearPanel.
     /// </summary>
@@ -587,7 +605,7 @@ public static class UI
     /// </remarks>
     public static void UpdateTitleText(bool textOnly = false)
     {
-        var titleText = GearPanel.GetComponentInChildren<TextMeshProUGUI>();
+        var titleText = CustomUI.CreateTitleText(TitlePanel.transform, Utils.GetTitle());
         if (titleText == null) return;
 
         if (textOnly)
@@ -599,7 +617,7 @@ public static class UI
         titleText.fontSizeMin = 16;
         titleText.fontSizeMax = 20;
         titleText.fontSize = 16;
-        titleText.transform.localPosition = Const.TitlePosition;
+        // titleText.transform.localPosition = Const.TitlePosition;
         titleText.color = Const.TitleTextColor;
         titleText.name = Const.TitleTextName;
     }

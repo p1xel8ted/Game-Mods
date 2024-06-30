@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using BepInEx;
-using Mono.Cecil;
-
-// ReSharper disable once UnusedType.Global
+﻿// ReSharper disable once UnusedType.Global
 namespace CheatEnablerPatcher;
 
 public static class Patcher

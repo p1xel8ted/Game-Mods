@@ -1,11 +1,12 @@
 ﻿namespace AutoTools;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+[BepInDependency("p1xel8ted.sunhaven.keepalive")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.autotools";
     private const string PluginName = "Auto Tools";
-    private const string PluginVersion = "0.0.6";
+    private const string PluginVersion = "0.0.7";
     private const string CategoryGeneral = "01. General";
     private const string CategoryFarm = "02. Farm";
     private const string CategoryEnemies = "03. Enemies";
@@ -52,14 +53,7 @@ public class Plugin : BaseUnityPlugin
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         LOG.LogInfo($"Plugin {PluginName} is loaded!");
     }
-
-    private void OnDisable()
-    {
-        WateringCan.onWateringCanEmpty -= FindNextWateringCan;
-        WateringCan.onFillUpWateringCan -= FillWateringCanProper;
-        LOG.LogError($"{PluginName} has been disabled!");
-    }
-
+    
     private static void FillWateringCanProper()
     {
         if (!Player.Instance) return;
@@ -67,14 +61,20 @@ public class Plugin : BaseUnityPlugin
         var wc = ((WateringCanData) Utils.GetItemData(item.id)).waterCapacity;
         item.WaterAmount = wc;
     }
-
+    
     private void OnDestroy()
+    {
+        OnDisable();
+    }
+    
+    private void OnDisable()
     {
         WateringCan.onWateringCanEmpty -= FindNextWateringCan;
         WateringCan.onFillUpWateringCan -= FillWateringCanProper;
-        LOG.LogError($"{PluginName} has been destroyed!");
+        LOG.LogError($"Plugin {PluginName} was disabled/destroyed! Unless you are exiting the game, please install Keep Alive! - https://www.nexusmods.com/sunhaven/mods/31");
     }
 
+    
     internal static void DebugLog(string str)
     {
         if (!EnableDebug.Value) return;

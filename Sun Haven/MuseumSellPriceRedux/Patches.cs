@@ -307,8 +307,6 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.LoadPlayerInventory))]
     private static void Player_Initialize(PlayerInventory __instance)
     {
-        Plugin.LOG.LogWarning("PlayerInventory.LoadPlayerInventory");
-
         BackUpPrices();
         ApplyPriceChanges();
     }

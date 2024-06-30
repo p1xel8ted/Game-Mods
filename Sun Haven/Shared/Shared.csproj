@@ -15,9 +15,6 @@
     </PropertyGroup>
   
     <ItemGroup>
-        <Reference Include="Accessibility">
-          <HintPath>..\libs\Accessibility.dll</HintPath>
-        </Reference>
         <Reference Include="ImmersiveVRTools.Common.Runtime">
           <HintPath>..\libs\ImmersiveVRTools.Common.Runtime.dll</HintPath>
         </Reference>

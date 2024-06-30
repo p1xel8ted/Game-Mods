@@ -2,11 +2,11 @@
 
 public static class ItemHandler
 {
-    private const int OriginalScytheId = 3000;
-    private const int AdamantScytheId = 21810;
-    private const int MithrilScytheId = 21811;
-    private const int SuniteScytheId = 21812;
-    private const int GloriteScytheId = 21813;
+    internal const int OriginalScytheId = 3000;
+    internal const int AdamantScytheId = 21810;
+    internal const int MithrilScytheId = 21811;
+    internal const int SuniteScytheId = 21812;
+    internal const int GloriteScytheId = 21813;
     private const string RecipeListAnvil = "new_Anvil";
     private const string RecipeListMonsterAnvil = "monster_anvil";
     
@@ -51,6 +51,9 @@ public static class ItemHandler
                     Plugin.LOG.LogError("Original scythe has no useItem");
                     return;
                 }
+                
+                Object.DontDestroyOnLoad(useItem);
+                Object.DontDestroyOnLoad(item);
 
                 item.useItem = useItem;
                 var weaponComponent = useItem.gameObject.GetComponent<Weapon>();
@@ -66,7 +69,7 @@ public static class ItemHandler
                 damageSourceComponent._damageRange.Set(scythe.damage - 8, scythe.damage);
                 useItem.gameObject.SetActive(false);
 
-                Object.DontDestroyOnLoad(useItem);
+             
 
                 Database.Instance.ids[item.name.RemoveWhitespace().ToLower()] = item.id;
                 Database.Instance.types[item.id] = typeof(ItemData);
@@ -102,9 +105,12 @@ public static class ItemHandler
 
                 SingletonBehaviour<ItemInfoDatabase>.Instance.allItemSellInfos.Add(item.id, itemSellInfo);
                 var newScythe = (scythe.id, scythe.speed, scythe.damage, scythe.craftingStation, scythe.inputs, scythe.craftingHours, item);
-                CustomScythes.Add(newScythe);
-                Plugin.LOG.LogInfo($"Created item {item.id} with name {item.name}");
+
+                if (CustomScythes.Exists(a => a.id == newScythe.id)) return;
                 
+                CustomScythes.Add(newScythe);  
+                Plugin.LOG.LogInfo($"Created item {item.id} with name {item.name}");
+
             });
         }
         catch (Exception ex)
@@ -115,8 +121,6 @@ public static class ItemHandler
 
     public static void CreateScytheItems()
     {
-        CustomScythes.Clear();
-
         Database.GetData(ItemID.AdamantBar, delegate(ItemData data)
         {
             var adamantScythe = (AdamantScytheId, 13, 14, RecipeListAnvil, (List<ItemInfo>) [new ItemInfo {item = data, amount = 10}], 6f);

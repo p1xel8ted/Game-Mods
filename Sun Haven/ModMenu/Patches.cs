@@ -52,10 +52,10 @@ public static class Patches
         buttonComponent.onClick.RemoveAllListeners();
         buttonComponent.onClick.AddListener(() => OpenModMenu(instance));
 
-        var audioButtonNav = _audioButton.GetComponent<NavigationElement>();
-        var modButtonName = newButton.GetComponent<NavigationElement>();
-        audioButtonNav.right = modButtonName;
-        modButtonName.left = audioButtonNav;
+        // var audioButtonNav = _audioButton.GetComponent<NavigationElement>();
+        // var modButtonName = newButton.GetComponent<NavigationElement>();
+        // audioButtonNav.right = modButtonName;
+        // modButtonName.left = audioButtonNav;
     }
 
     private static Transform ModMenuButton { get; set; }
@@ -235,8 +235,8 @@ public static class Patches
 
         ConfigureInputBoxDescriptionText(newDescriptionText, configEntry.Key.Key);
 
-        Object.Destroy(newInputBox.FindChildRecursive("Icon").gameObject);
-        Object.Destroy(newInputBox.FindChildRecursive("Placeholder").gameObject);
+        Object.Destroy(newInputBox.FindFirstChildByName("Icon").gameObject);
+        Object.Destroy(newInputBox.FindFirstChildByName("Placeholder").gameObject);
 
         newInputBox.GetComponent<RectTransform>().anchoredPosition = new Vector2(48, 0);
         newParent.GetComponent<RectTransform>().anchoredPosition = new Vector2(245, 0);
@@ -409,9 +409,9 @@ public static class Patches
         DescriptionTextTemplate = newSlider.GetComponentInChildren<TextMeshProUGUI>();
         ConfigureText(DescriptionTextTemplate, configEntry.Key.Key, true);
         DescriptionTextTemplate.enableWordWrapping = true;
-        var sliderLeft = newSlider.FindChildRecursive("SliderLeft");
+        var sliderLeft = newSlider.FindFirstChildByName("SliderLeft");
         Object.Destroy(sliderLeft.gameObject);
-        var sliderRight = newSlider.FindChildRecursive("SliderRight");
+        var sliderRight = newSlider.FindFirstChildByName("SliderRight");
         Object.Destroy(sliderRight.gameObject);
         return newSlider;
     }
@@ -540,10 +540,10 @@ public static class Patches
             CreateModEntry(mod);
         }
 
-        foreach (var tt in _modMenuView.GetComponentsInChildren<TranslatedText>())
-        {
-            Object.Destroy(tt);
-        }
+        // foreach (var tt in _modMenuView.GetComponentsInChildren<TranslatedText>())
+        // {
+        //     Object.Destroy(tt);
+        // }
 
         foreach (var contentFitter in _modMenuView.GetComponentsInChildren<ContentSizeFitter>())
         {

@@ -2,7 +2,7 @@ namespace UIScales;
 
 public static class Utils
 {
-    
+
     internal static void UpdateUiScale(bool isMainMenu)
     {
         float scaleAdjustment = 0;
@@ -24,12 +24,12 @@ public static class Utils
                 Plugin.MainMenuUiScale.Value = Mathf.Max(Mathf.Round(Plugin.MainMenuUiScale.Value / 0.25f) * 0.25f, 0.5f);
             }
 
-            Plugin.InGameUiScale.Value += scaleAdjustment;
-            Plugin.InGameUiScale.Value = Mathf.Max(Mathf.Round(Plugin.InGameUiScale.Value / 0.25f) * 0.25f, 0.5f);
+            Plugin.MainHudScale.Value += scaleAdjustment;
+            Plugin.MainHudScale.Value = Mathf.Max(Mathf.Round(Plugin.MainHudScale.Value / 0.25f) * 0.25f, 0.5f);
 
             if (Plugin.Notifications.Value && NotificationStack.Instance is not null)
             {
-                SingletonBehaviour<NotificationStack>.Instance.SendNotification("UI Scale: " + Plugin.InGameUiScale.Value);
+                SingletonBehaviour<NotificationStack>.Instance.SendNotification("UI Scale: " + Plugin.MainHudScale.Value);
             }
         }
     }
@@ -54,22 +54,23 @@ public static class Utils
                 SingletonBehaviour<NotificationStack>.Instance.SendNotification("Zoom Level: " + Plugin.ZoomLevel.Value);
             }
         }
-    }
-    internal static void UpdateCanvasScaleFactors()
-    {
-        if (!Plugin.ScaleAdjustments.Value) return;
-        Shared.Utils.ConfigureCanvasScaler(Plugin.MainMenuCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.MainMenuUiScale.Value);
-        Shared.Utils.ConfigureCanvasScaler(Plugin.UIOneCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.InGameUiScale.Value);
-        Shared.Utils.ConfigureCanvasScaler(Plugin.UITwoCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.InGameUiScale.Value);
-        Shared.Utils.ConfigureCanvasScaler(Plugin.QuantumCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.CheatConsoleScale.Value);
-    }
-
-    internal static void ResetCanvasScaleFactors()
-    {
-        if (Plugin.ScaleAdjustments.Value) return;
-        Shared.Utils.ConfigureCanvasScaler(Plugin.MainMenuCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 3);
-        Shared.Utils.ConfigureCanvasScaler(Plugin.UIOneCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 2);
-        Shared.Utils.ConfigureCanvasScaler(Plugin.UITwoCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 2);
-        Shared.Utils.ConfigureCanvasScaler(Plugin.QuantumCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 2);
+        // }
+        // internal static void UpdateCanvasScaleFactors()
+        // {
+        //     if (!Plugin.ScaleAdjustments.Value) return;
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.MainMenuCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.MainMenuUiScale.Value);
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.UIOneCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.InGameUiScale.Value);
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.UITwoCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.InGameUiScale.Value);
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.QuantumCanvas, CanvasScaler.ScaleMode.ConstantPixelSize, Plugin.CheatConsoleScale.Value);
+        // }
+        //
+        // internal static void ResetCanvasScaleFactors()
+        // {
+        //     if (Plugin.ScaleAdjustments.Value) return;
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.MainMenuCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 3);
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.UIOneCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 2);
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.UITwoCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 2);
+        //     Shared.Utils.ConfigureCanvasScaler(Plugin.QuantumCanvas, CanvasScaler.ScaleMode.ScaleWithScreenSize, 2);
+        // }
     }
 }

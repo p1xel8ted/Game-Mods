@@ -1,19 +1,20 @@
 ﻿namespace KeepAlive;
 
-[HarmonyPatch]
-[HarmonyPriority(1)]
+[Harmony]
+[HarmonyPriority(0)]
 public static class Patches
 {
-    private const string BepInEx = "bepinex";
-    internal static int Counter;
 
     [HarmonyPostfix]
-    [HarmonyPriority(1)]
+    [HarmonyPriority(0)]
     [HarmonyPatch(typeof(Scene), nameof(Scene.GetRootGameObjects), [])]
     public static void Scene_GetRootGameObjects(ref GameObject[] __result)
     {
         var objectList = new List<GameObject>(__result);
-        Counter += objectList.RemoveAll(a => a.name.Contains(BepInEx, StringComparison.InvariantCultureIgnoreCase));
+        foreach (var noKill in Plugin.NoKillList)
+        {
+            objectList.RemoveAll(a => a.name.Contains(noKill, StringComparison.InvariantCultureIgnoreCase));
+        }
         __result = objectList.ToArray();
     }
 }

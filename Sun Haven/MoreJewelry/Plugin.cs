@@ -7,6 +7,7 @@
 /// This class handles the setup and teardown of the plugin, including configuration settings, event subscriptions, and Harmony patching.
 /// </remarks>
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+[BepInDependency("p1xel8ted.sunhaven.keepalive")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.morejewelry";

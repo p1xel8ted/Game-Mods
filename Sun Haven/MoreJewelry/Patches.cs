@@ -21,9 +21,11 @@ public static class Patches
     /// Initializes and sets up custom gear slots and panels if they haven't been created already.
     /// </remarks>
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.LoadPlayerInventory))]
-    private static void PlayerInventory_Initialize(PlayerInventory __instance)
+    [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.OpenMajorPanel))]
+    private static void PlayerInventory_Initialize(PlayerInventory __instance, int panelIndex)
     {
+        if(panelIndex != 0) return;
+        
         if (UI.SlotsCreated && UI.GearPanel != null)
         {
             Utils.Log("Slots already created. Skipping slot creation etc.");
@@ -31,6 +33,7 @@ public static class Patches
         }
 
         UI.InitializeGearPanel();
+        
         UI.CreateSlots(__instance, ArmorType.Ring, 2);
         UI.CreateSlots(__instance, ArmorType.Keepsake, 2);
         UI.CreateSlots(__instance, ArmorType.Amulet, 2);

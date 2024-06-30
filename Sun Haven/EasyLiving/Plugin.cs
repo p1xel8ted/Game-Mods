@@ -1,11 +1,12 @@
 ﻿namespace EasyLiving;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
+[BepInDependency("p1xel8ted.sunhaven.keepalive")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.easyliving";
     private const string PluginName = "Easy Living";
-    private const string PluginVersion = "0.1.1";
+    private const string PluginVersion = "0.1.2";
     private static ConfigEntry<KeyboardShortcut> SaveShortcut { get; set; }
     private static ConfigEntry<bool> EnableSaveShortcut { get; set; }
     public static ConfigEntry<bool> SkipMuseumMissingItemsDialogue { get; private set; }
@@ -100,11 +101,11 @@ public partial class Plugin : BaseUnityPlugin
 
     private void OnDestroy()
     {
-        LOG.LogError("I've been destroyed!");
+        OnDisable();
     }
-
+    
     private void OnDisable()
     {
-        LOG.LogError("I've been disabled!");
+        LOG.LogError($"Plugin {PluginName} was disabled/destroyed! Unless you are exiting the game, please install Keep Alive! - https://www.nexusmods.com/sunhaven/mods/31");
     }
 }
