@@ -88,7 +88,6 @@ public static class CheatEnablerCommands
     };
 
     [Command]
-    [Command(Description = "Prints out all the quests that will be skipped when using the worldquestskipwithergatecommand. This command will print out all quests that will be skipped up to the breakpoint provided. For example, if you provide a breakpoint of 3, it will print out all quests that will be skipped up to the 3rd breakpoint.")]
     public static void getworldquestskipwithergatebreakpoints(int breakpoint)
     {
         var affectedQuests = new List<string>();
@@ -118,7 +117,6 @@ public static class CheatEnablerCommands
         }
     }
     [Command]
-    [Command(Description = "Prints out all the quests that will be initiated when using the worldquestskipwithergatecommand.")]
     public static void getworldquestskipepiloguebreakpoints(int breakpoint)
     {
         List<string> affectedQuests = [];
@@ -152,7 +150,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Prints out all the quests that will be skipped when using the worldquestskipnelvari command. This command will print out all quests that will be skipped up to the breakpoint provided. For example, if you provide a breakpoint of 3, it will print out all quests that will be skipped up to the 3rd breakpoint.")]
     public static void getworldquestskipnelvaribreakpoints(int breakpoint)
     {
         var affectedQuests = new List<string>();
@@ -197,7 +194,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Prints out all the quests that will be skipped when using the worldquestskip command. This command will print out all quests that will be skipped up to the breakpoint provided. For example, if you provide a breakpoint of 3, it will print out all quests that will be skipped up to the 3rd breakpoint.")]
     public static void getworldquestskipbreakpoints(int breakpoint)
     {
         List<string> affectedQuests = [];
@@ -243,7 +239,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Print out all scenes that can be used in other commands.")]
     public static void printallscenes()
     {
         foreach (var scene in SingletonBehaviour<SceneSettingsManager>.Instance.sceneNameDictionary.Keys)
@@ -253,7 +248,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Print out all seasons that can be used in other commands.")]
     public static void printallseasons()
     {
         foreach (var season in Enum.GetNames(typeof(Season)))
@@ -263,7 +257,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Print out all professions that can be used in other commands.")]
     public static void printallprofessions()
     {
         foreach (var prof in Enum.GetNames(typeof(ProfessionType)))
@@ -273,7 +266,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Print out all stats that can be used in other commands.")]
     public static void printallstats()
     {
         foreach (var stat in Enum.GetNames(typeof(StatType)))
@@ -283,7 +275,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Print out all mail that can be used in other commands. i.e. /sendmail")]
     public static void printallmail()
     {
         var allMail = SingletonBehaviour<MailManager>.Instance.mailDictionary;
@@ -295,7 +286,6 @@ public static class CheatEnablerCommands
 
 
     [Command]
-    [Command(Description = "Print out all quests available to use in other commands. i.e. /setbulletinboardquest")]
     public static void printallbbquests()
     {
         var allQuests = SingletonBehaviour<QuestManager>.Instance.questDictionary;
@@ -307,7 +297,6 @@ public static class CheatEnablerCommands
 
 
     [Command]
-    [Command(Description = "Print out all NPCs that are romanceable in the game. i.e /marryNPC")]
     public static void printromancenpcs()
     {
         var allNpcs = SingletonBehaviour<NPCManager>.Instance._npcs;
@@ -318,18 +307,16 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Print out all NPCs in the game.")]
     public static void printallnpcs()
     {
         var allNpcs = SingletonBehaviour<NPCManager>.Instance._npcs;
         foreach (var npc in allNpcs)
         {
-            Utils.LogToPlayer($"{npc.Key} - {npc.Value.LocalizedActualNPCName} - Romanceable: {npc.Value.Romanceable}");
+            Utils.LogToPlayer($"{npc.Key} - {npc.Value.LocalizedActualNPCName}");
         }
     }
 
     [Command]
-    [Command(Description = "Print out all completed quests.")]
     public static void printcompletedquests()
     {
         var completedQuests = SingletonBehaviour<GameSave>.Instance.CurrentSave.characterData.QuestData;
@@ -340,7 +327,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Save the current game.")]
     public static void savegame()
     {
         SingletonBehaviour<GameSave>.Instance.SaveGame(true);
@@ -348,7 +334,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Add item to the player inventory using the numeric item code.")]
     public static void additembyid(int itemId, int amount = 1)
     {
         var item = Utils.GetNameByID(itemId);
@@ -374,7 +359,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Search for an item by name. This will return all items that contain the search term.")]
     public static void finditemid(string itemName)
     {
         List<KeyValuePair<string, int>> Exists = [];
@@ -398,7 +382,6 @@ public static class CheatEnablerCommands
     }
 
     [Command]
-    [Command(Description = "Save all items to file.")]
     public static void saveallitems()
     {
         var path = Path.Combine(Paths.GameRootPath, "items.txt");

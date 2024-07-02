@@ -48,9 +48,23 @@ public class Patches
     [HarmonyPatch(typeof(QuantumConsoleProcessor), nameof(QuantumConsoleProcessor.TryAddCommand))]
     public static void QuantumConsoleProcessor_TryAddCommand(CommandData command, bool __result)
     {
-        if (__result && Plugin.Debug.Value)
+        if (__result)
         {
-            Plugin.LOG.LogInfo($"Added Command: '{command.CommandSignature}' from '{command.MethodData.DeclaringType.GetDisplayName()}'");
+            if (!command.HasDescription)
+            {
+                if (CommandDescriptions.Commands.TryGetValue(command.CommandSignature, out var description))
+                {
+                    command.CommandDescription = description;
+                }
+                else
+                {
+                    Plugin.LOG.LogInfo($"Command '{command.CommandName}' - '{command.CommandSignature}' has no description.");
+                }
+            }
+            if (Plugin.Debug.Value)
+            {
+                Plugin.LOG.LogInfo($"Added Command: '{command.CommandSignature}' from '{command.MethodData.DeclaringType.GetDisplayName()}'");
+            }
         }
     }
 
