@@ -70,7 +70,7 @@ public static class Utils
     {
         foreach (Transform child in transform)
         {
-            UnityEngine.Object.Destroy(child.gameObject);
+            Object.Destroy(child.gameObject);
         }
     }
 

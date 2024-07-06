@@ -1,17 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.2.8</Version>
+        <Version>0.2.9</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <DefineConstants>TRACE;CE</DefineConstants>
+      <DebugType>full</DebugType>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DefineConstants>TRACE;CE</DefineConstants>
+      <DebugType>full</DebugType>
     </PropertyGroup>
     <Import Project="..\zip.target"/>
     <ItemGroup>
+      <Reference Include="I2Localization">
+        <HintPath>..\libs\I2Localization.dll</HintPath>
+      </Reference>
       <Reference Include="PSS.Database">
         <HintPath>..\libs\PSS.Database.dll</HintPath>
       </Reference>
@@ -78,6 +83,12 @@
       <Reference Include="UnityEngine.UIModule">
         <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestModule">
+        <HintPath>..\libs\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.VideoModule">
+        <HintPath>..\libs\UnityEngine.VideoModule.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <ItemGroup>
       <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
@@ -98,5 +109,78 @@
       <Compile Include="..\Shared\WriteOnce.cs">
         <Link>Shared\WriteOnce.cs</Link>
       </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="CheatEnablerLang\en.json" />
+      <AdditionalFiles Include="CheatEnablerLang\en.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnabler.csproj.DotSettings" />
+      <None Remove="CheatEnablerLang\da.json" />
+      <AdditionalFiles Include="CheatEnablerLang\da.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\de.json" />
+      <AdditionalFiles Include="CheatEnablerLang\de.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\es.json" />
+      <AdditionalFiles Include="CheatEnablerLang\es.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\fr.json" />
+      <AdditionalFiles Include="CheatEnablerLang\fr.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\it.json" />
+      <AdditionalFiles Include="CheatEnablerLang\it.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\ja.json" />
+      <AdditionalFiles Include="CheatEnablerLang\ja.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\ko.json" />
+      <AdditionalFiles Include="CheatEnablerLang\ko.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\nl.json" />
+      <AdditionalFiles Include="CheatEnablerLang\nl.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\pt.json" />
+      <AdditionalFiles Include="CheatEnablerLang\pt.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\pt-BR.json" />
+      <AdditionalFiles Include="CheatEnablerLang\pt-BR.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\ru.json" />
+      <AdditionalFiles Include="CheatEnablerLang\ru.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\sv.json" />
+      <AdditionalFiles Include="CheatEnablerLang\sv.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\uk.json" />
+      <AdditionalFiles Include="CheatEnablerLang\uk.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\zh-CN.json" />
+      <AdditionalFiles Include="CheatEnablerLang\zh-CN.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="CheatEnablerLang\zh-TW.json" />
+      <AdditionalFiles Include="CheatEnablerLang\zh-TW.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Costura.Fody" Version="5.7.0">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Include="System.Text.Json" Version="8.0.3" />
     </ItemGroup>
 </Project>

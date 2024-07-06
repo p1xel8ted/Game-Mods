@@ -13,52 +13,31 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DefineConstants>TRACE</DefineConstants>
     </PropertyGroup>
-  
+
     <ItemGroup>
-        <Reference Include="ImmersiveVRTools.Common.Runtime">
-          <HintPath>..\libs\ImmersiveVRTools.Common.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="Mono.Data.Sqlite">
-          <HintPath>..\libs\Mono.Data.Sqlite.dll</HintPath>
-        </Reference>
-        <Reference Include="Mono.WebBrowser">
-          <HintPath>..\libs\Mono.WebBrowser.dll</HintPath>
-        </Reference>
-        <Reference Include="Novell.Directory.Ldap">
-          <HintPath>..\libs\Novell.Directory.Ldap.dll</HintPath>
-        </Reference>
-        <Reference Include="PSS.Database">
-          <HintPath>..\libs\PSS.Database.dll</HintPath>
-        </Reference>
-        <Reference Include="Sirenix.Serialization">
-          <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
-        </Reference>
-        <Reference Include="SunHaven.Core">
-            <HintPath>..\libs\SunHaven.Core.dll</HintPath>
-        </Reference>
-        <Reference Include="Tayx.Graphy">
-          <HintPath>..\libs\Tayx.Graphy.dll</HintPath>
-        </Reference>
-        <Reference Include="TranslatorGerman">
-          <HintPath>..\libs\TranslatorGerman.dll</HintPath>
-        </Reference>
-        <Reference Include="TranslatorLanguage">
-          <HintPath>..\libs\TranslatorLanguage.dll</HintPath>
-        </Reference>
-        <Reference Include="TranslatorPlugin">
-            <HintPath>..\libs\TranslatorPlugin.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine">
-            <HintPath>..\libs\UnityEngine.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule">
-            <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.ImageConversionModule">
-            <HintPath>..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.UI">
-            <HintPath>..\libs\UnityEngine.UI.dll</HintPath>
-        </Reference>
+      <Reference Include="PSS.Database">
+        <HintPath>..\libs\PSS.Database.dll</HintPath>
+      </Reference>
+      <Reference Include="QFSW.QC">
+        <HintPath>..\libs\QFSW.QC.dll</HintPath>
+      </Reference>
+      <Reference Include="Sirenix.Serialization">
+        <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
+      </Reference>
+      <Reference Include="SunHaven.Core">
+        <HintPath>..\libs\SunHaven.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>..\libs\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ImageConversionModule">
+        <HintPath>..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>..\libs\UnityEngine.UI.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

@@ -297,6 +297,21 @@ public static class CheatEnablerCommands
 
 
     [Command]
+    public static void noclip()
+    {
+        var qsm = Object.FindObjectOfType<QuantumConsoleManager>();
+        qsm.noclip(!qsm.no_clip);
+    }
+    
+    [Command]
+    public static void godmode()
+    {
+        var qsm = Object.FindObjectOfType<QuantumConsoleManager>();
+        qsm.godmode(!qsm.god_mode);
+    }
+    
+    
+    [Command]
     public static void printromancenpcs()
     {
         var allNpcs = SingletonBehaviour<NPCManager>.Instance._npcs;
@@ -327,6 +342,26 @@ public static class CheatEnablerCommands
     }
 
     [Command]
+    public static void printallarenabosses()
+    {
+        var allBosses = SingletonBehaviour<BossManager>.Instance.bossDictionary;
+        foreach (var boss in allBosses)
+        {
+            Utils.LogToPlayer($"{boss.Key} - {boss.Value.LocalizedActualNPCName}");
+        }
+    }
+
+    [Command]
+    public static void printquestlog()
+    {
+        var questLog = Player.Instance.QuestList.questLog;
+        foreach (var quest in questLog)
+        {
+            Utils.LogToPlayer($"{quest.Key} - {quest.Value.quest.name}");
+        }
+    }
+
+    [Command]
     public static void savegame()
     {
         SingletonBehaviour<GameSave>.Instance.SaveGame(true);
@@ -337,18 +372,18 @@ public static class CheatEnablerCommands
     public static void additembyid(int itemId, int amount = 1)
     {
         var item = Utils.GetNameByID(itemId);
-        var qcm = Object.FindObjectOfType<Wish.QuantumConsoleManager>();
+        var qcm = Object.FindObjectOfType<QuantumConsoleManager>();
         try
         {
             Database.GetData(itemId, delegate(ItemData data)
             {
                 if (data.isDLCItem)
                 {
-                   Utils.LogToPlayer($"Unfortunately, {data.FormattedName} is a DLC item and cannot be added via Cheat Enabler.");
+                    Utils.LogToPlayer($"Unfortunately, {data.FormattedName} is a DLC item and cannot be added via Cheat Enabler.");
                 }
                 else
                 {
-                    qcm.additem(item, amount);  
+                    qcm.additem(item, amount);
                 }
             }, () => throw new Exception());
         }

@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Shared;
 
 public static class Extensions
 {
-
+    
     public static void SetAnchoredPosition(this Transform transform, Vector2 position)
     {
         if (transform == null) return;
@@ -206,4 +207,39 @@ public static class Extensions
         dictionary.Add(key, value);
         return true;
     }
+    
+    public static Dictionary<string, T> ToCaseInsensitiveDictionary<T>(this Dictionary<string, T> dictionary)
+    {
+        return new Dictionary<string, T>(dictionary, StringComparer.OrdinalIgnoreCase);
+    }
+    
+    // case-insensitive TryGetValue
+    public static bool TryGetValueIgnoreCase<TValue>(this Dictionary<string, TValue> dictionary, string key, out TValue value)
+    {
+        if (dictionary == null)
+        {
+            throw new ArgumentNullException(nameof(dictionary));
+        }
+
+        foreach (var pair in dictionary.Where(pair => pair.Key.Equals(key, StringComparison.OrdinalIgnoreCase)))
+        {
+            value = pair.Value;
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+    
+    public static string GetCaseSensitiveKey<TValue>(this Dictionary<string, TValue> dictionary, string key)
+    {
+        if (dictionary == null)
+        {
+            throw new ArgumentNullException(nameof(dictionary));
+        }
+
+        return dictionary.Where(pair => pair.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Select(pair => pair.Key).FirstOrDefault();
+    }
+    
+    
 }
