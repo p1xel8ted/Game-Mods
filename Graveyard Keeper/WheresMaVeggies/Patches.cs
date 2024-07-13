@@ -1,15 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using GYKHelper;
-using HarmonyLib;
-using NodeCanvas.BehaviourTrees;
-using UnityEngine;
-using WheresMaVeggies.lang;
+﻿namespace WheresMaVeggies;
 
-namespace WheresMaVeggies;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     private static void MyDoPreZero(WorldGameObject wgo)

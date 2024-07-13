@@ -1,9 +1,6 @@
-﻿using HarmonyLib;
-using UnityEngine;
+﻿namespace ShowMeMoar;
 
-namespace ShowMeMoar;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     internal static UIPanel HUD { get; private set; }

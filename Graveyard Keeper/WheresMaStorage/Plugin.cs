@@ -1,25 +1,14 @@
-﻿using System;
-using System.Reflection;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
-using GYKHelper;
-using HarmonyLib;
-
-namespace WheresMaStorage;
+﻿namespace WheresMaStorage;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.1")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmastorage";
     private const string PluginName = "Where's Ma' Storage!";
-    private const string PluginVer = "2.1.3";
+    private const string PluginVer = "2.1.4";
 
     internal static ManualLogSource Log { get; private set; }
-    private static Harmony Harmony { get; set; }
-
-    private static ConfigEntry<bool> ModEnabled { get; set; }
     internal static ConfigEntry<bool> ModifyInventorySize { get; private set; }
     internal static ConfigEntry<bool> EnableGraveItemStacking { get; private set; }
     internal static ConfigEntry<bool> EnablePenPaperInkStacking { get; private set; }
@@ -48,16 +37,17 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = Logger;
-        Harmony = new Harmony(PluginGuid);
         InitConfiguration();
-        ApplyPatches(this, null);
+        Actions.GameStartedPlaying += Helpers.RunWmsTasks;
+        Actions.GameBalanceLoad += Helpers.GameBalanceLoad;
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
 
     private void InitConfiguration()
     {
-        ModEnabled = Config.Bind("1. General", "Enabled", true, new ConfigDescription($"Enable or disable {PluginName}", null, new ConfigurationManagerAttributes {Order = 50}));
-        ModEnabled.SettingChanged += ApplyPatches;
-        Debug = Config.Bind("2. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 49}));
+
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 49}));
         SharedInventory = Config.Bind("3. Inventory", "Shared Inventory", true, new ConfigDescription("Enable or disable shared inventory when crafting.", null, new ConfigurationManagerAttributes {Order = 48}));
         ModifyInventorySize = Config.Bind("3. Inventory", "Modify Inventory Size", true, new ConfigDescription("Enable or disable modifying the inventory size.", null, new ConfigurationManagerAttributes {Order = 47}));
         AdditionalInventorySpace = Config.Bind("3. Inventory", "Additional Inventory Space", 20, new ConfigDescription("Set the number of additional inventory spaces.", null, new ConfigurationManagerAttributes {Order = 46}));
@@ -87,28 +77,10 @@ public class Plugin : BaseUnityPlugin
 
     public void Update()
     {
-        if (!ModEnabled.Value) return;
         if (!MainGame.game_started) return;
         if (Fields.InvsLoaded) return;
         Log.LogWarning("InvsLoaded set to False: Refreshing inventories...");
         Helpers.RunWmsTasks();
     }
 
-    private static void ApplyPatches(object sender, EventArgs e)
-    {
-        if (ModEnabled.Value)
-        {
-            Actions.GameStartedPlaying += Helpers.RunWmsTasks;
-            Actions.GameBalanceLoad += Helpers.GameBalanceLoad;
-            Log.LogInfo($"Applying patches for {PluginName}");
-            Harmony.PatchAll(Assembly.GetExecutingAssembly());
-        }
-        else
-        {
-            Actions.GameStartedPlaying -= Helpers.RunWmsTasks;
-            Actions.GameBalanceLoad -= Helpers.GameBalanceLoad;
-            Log.LogInfo($"Removing patches for {PluginName}");
-            Harmony.UnpatchSelf();
-        }
-    }
 }

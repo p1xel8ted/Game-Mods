@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
-using UnityEngine;
-using Display = UnityEngine.Display;
-
-namespace ShowMeMoar;
+﻿namespace ShowMeMoar;
 
 /// <summary>
 /// A Harmony patch to intercept Unity's Screen.resolutions method and add custom resolutions.

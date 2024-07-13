@@ -1,11 +1,6 @@
-﻿using System.Linq;
-using GYKHelper;
-using HarmonyLib;
-using IBuildWhereIWant.lang;
+﻿namespace IBuildWhereIWant;
 
-namespace IBuildWhereIWant;
-
-[HarmonyPatch]
+[Harmony]
 public partial class Plugin
 {
     private const string RefugeeZoneId = "refugee";

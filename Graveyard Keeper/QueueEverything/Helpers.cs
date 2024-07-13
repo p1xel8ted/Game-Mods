@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace QueueEverything;
+﻿namespace QueueEverything;
 
 public partial class Plugin
 {

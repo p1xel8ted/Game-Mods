@@ -1,11 +1,6 @@
-﻿using System.Linq;
-using GYKHelper;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace GerryFixer;
 
-namespace GerryFixer;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     internal static void FixGerry()

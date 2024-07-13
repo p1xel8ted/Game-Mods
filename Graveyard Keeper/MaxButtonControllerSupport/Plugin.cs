@@ -1,51 +1,22 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
-using GYKHelper;
-using HarmonyLib;
-using Rewired;
-
-namespace MaxButtonControllerSupport;
+﻿namespace MaxButtonControllerSupport;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.1")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.maxbuttoncontrollersupport";
     private const string PluginName = "Max Button Controller Support";
-    private const string PluginVer = "1.3.5";
+    private const string PluginVer = "1.3.6";
 
     private static ManualLogSource Log { get; set; }
-    private static Harmony Harmony { get; set; }
 
-    private static ConfigEntry<bool> ModEnabled { get; set; }
 
     private void Awake()
     {
         Log = Logger;
-        Harmony = new Harmony(PluginGuid);
-        ModEnabled = Config.Bind("General", "Enabled", true, $"Toggle {PluginName}");
-        ModEnabled.SettingChanged += ApplyPatches;
-        ApplyPatches(this, null);
-    }
-
-    private static void ApplyPatches(object sender, EventArgs eventArgs)
-    {
-        if (ModEnabled.Value)
-        {
-            Actions.WorldGameObjectInteractPrefix += WorldGameObject_Interact;
-            Log.LogInfo($"Applying patches for {PluginName}");
-            Harmony.PatchAll(Assembly.GetExecutingAssembly());
-        }
-        else
-        {
-            Actions.WorldGameObjectInteractPrefix -= WorldGameObject_Interact;
-            Log.LogInfo($"Removing patches for {PluginName}");
-            Harmony.UnpatchSelf();
-        }
+        Actions.WorldGameObjectInteractPrefix += WorldGameObject_Interact;
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
 
     private void Update()

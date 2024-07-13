@@ -1,14 +1,12 @@
-﻿using BepInEx.Configuration;
-
-namespace AppleTreesEnhanced;
+﻿namespace AppleTreesEnhanced;
 
 public partial class Plugin
 {
-    internal static ConfigEntry<bool> IncludeGardenBerryBushes = null!; 
-    internal static ConfigEntry<bool> IncludeGardenTrees = null!; 
-    internal static ConfigEntry<bool> IncludeWorldBerryBushes = null!; 
-    internal static ConfigEntry<bool> ShowHarvestReadyMessages = null!; 
-    internal static ConfigEntry<bool> RealisticHarvest = null!; 
-    internal static ConfigEntry<bool> IncludeGardenBeeHives = null!; 
-    internal static ConfigEntry<bool> BeeKeeperBuyback = null!;
+    internal static ConfigEntry<bool> IncludeGardenBerryBushes { get; private set; }
+    internal static ConfigEntry<bool> IncludeGardenTrees { get; private set; }
+    internal static ConfigEntry<bool> IncludeWorldBerryBushes { get; private set; }
+    internal static ConfigEntry<bool> ShowHarvestReadyMessages { get; private set; }
+    internal static ConfigEntry<bool> RealisticHarvest { get; private set; }
+    internal static ConfigEntry<bool> IncludeGardenBeeHives { get; private set; }
+    internal static ConfigEntry<bool> BeeKeeperBuyback { get; private set; }
 }

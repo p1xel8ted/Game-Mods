@@ -1,11 +1,6 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using HarmonyLib;
+﻿namespace MaxButtonControllerSupport;
 
-namespace MaxButtonControllerSupport;
-
-[HarmonyPatch]
+[Harmony]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public partial class Plugin
 {
@@ -20,8 +15,8 @@ public partial class Plugin
 
     private static bool _unsafeInteraction;
 
-    private static readonly string[] UnSafeCraftObjects =
-    {
+    private readonly static string[] UnSafeCraftObjects =
+    [
         "mf_crematorium_corp", "garden_builddesk", "tree_garden_builddesk", "mf_crematorium", "grave_ground",
         "tile_church_semicircle_2floors", "mf_grindstone_1", "zombie_garden_desk_1", "zombie_garden_desk_2",
         "zombie_garden_desk_3",
@@ -30,17 +25,17 @@ public partial class Plugin
         "blockage_H_high", "blockage_V_high", "wood_obstacle_v", "refugee_camp_garden_bed", "refugee_camp_garden_bed_1",
         "refugee_camp_garden_bed_2",
         "refugee_camp_garden_bed_3"
-    };
+    ];
 
-    private static readonly string[] UnSafeCraftZones =
-    {
+    private readonly static string[] UnSafeCraftZones =
+    [
         "church"
-    };
+    ];
 
-    private static readonly string[] UnSafePartials =
-    {
+    private readonly static string[] UnSafePartials =
+    [
         "blockage", "obstacle", "builddesk", "fix", "broken"
-    };
+    ];
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(VendorGUI), nameof(VendorGUI.OpenItemCountWidnow))]

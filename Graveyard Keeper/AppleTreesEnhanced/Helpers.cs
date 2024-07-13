@@ -1,23 +1,19 @@
-﻿using System.Linq;
-using System.Threading;
-using AppleTreesEnhanced.lang;
-using GYKHelper;
-using UnityEngine;
+﻿
 
 namespace AppleTreesEnhanced;
 
 public static class Helpers
 {
-    internal static readonly string[] WorldReadyHarvests =
-    {
+    internal readonly static string[] WorldReadyHarvests =
+    [
         Constants.HarvestReady.WorldBerryBush1, Constants.HarvestReady.WorldBerryBush2, Constants.HarvestReady.WorldBerryBush3
-    };
+    ];
 
 
-    internal static readonly string[] SellThesePlease =
-    {
+    internal readonly static string[] SellThesePlease =
+    [
         Constants.OutputItems.Bee, Constants.OutputItems.Wax, Constants.OutputItems.Honey
-    };
+    ];
 
     private static void ShowMessage(WorldGameObject obj, string message)
     {

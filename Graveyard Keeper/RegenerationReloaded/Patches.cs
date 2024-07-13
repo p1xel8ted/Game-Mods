@@ -1,9 +1,6 @@
-﻿using UnityEngine;
-using HarmonyLib;
+﻿namespace RegenerationReloaded;
 
-namespace RegenerationReloaded;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     internal static float EnergyRegen { get; set; }

@@ -1,6 +1,4 @@
-﻿using BeamMeUpGerry.lang;
-
-namespace BeamMeUpGerry;
+﻿namespace BeamMeUpGerry;
 
 public static class LocationLists
 {

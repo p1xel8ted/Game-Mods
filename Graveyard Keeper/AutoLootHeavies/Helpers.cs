@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using GYKHelper;
-using UnityEngine;
-using Random = UnityEngine.Random;
-
-namespace AutoLootHeavies;
+﻿namespace AutoLootHeavies;
 
 public partial class Plugin
 {

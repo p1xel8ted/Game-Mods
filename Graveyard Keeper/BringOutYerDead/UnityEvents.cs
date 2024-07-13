@@ -1,23 +1,10 @@
-﻿using System;
-using GYKHelper;
-
-namespace BringOutYerDead;
+﻿namespace BringOutYerDead;
 
 public partial class Plugin
 {
     internal static bool PrideDayLogged { get; set; }
     private static WorldGameObject Donkey { get; set; }
     private static bool StrikeDone { get; set; }
-
-    private void OnEnable()
-    {
-        Log.LogInfo($"Plugin {PluginName} has been enabled!");
-    }
-
-    private void OnDisable()
-    {
-        Log.LogError($"Plugin {PluginName} has been disabled!");
-    }
     
     private void Update()
     {
@@ -27,7 +14,7 @@ public partial class Plugin
         if (!Tools.TutorialDone() && !InternalTutMessageShown.Value)
         {
             InternalTutMessageShown.Value = true;
-            Helpers.Log("Need to complete all 'tutorial' quests first, upto and including the repair the sword quest.");
+            Helpers.Log("Need to complete all 'tutorial' quests first, up to and including the repair the sword quest.");
             return;
         }
         

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using GYKHelper;
-
-
-namespace WheresMaVeggies;
+﻿namespace WheresMaVeggies;
 
 public static class Helpers
 {

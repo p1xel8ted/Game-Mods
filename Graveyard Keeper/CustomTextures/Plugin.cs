@@ -1,19 +1,9 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using HarmonyLib;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using BepInEx.Logging;
-using GYKHelper;
-using UnityEngine;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.SceneManagement;
-using Debug = UnityEngine.Debug;
 
 
 namespace CustomTextures

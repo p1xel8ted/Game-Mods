@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using GerrysJunkTrunk.lang;
-using GYKHelper;
-using UnityEngine;
-
-namespace GerrysJunkTrunk;
+﻿namespace GerrysJunkTrunk;
 
 public partial class Plugin
 {

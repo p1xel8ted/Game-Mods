@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
-using UnityEngine;
-
-namespace AutoLootHeavies;
+﻿namespace AutoLootHeavies;
 
 [HarmonyPatch]
 [HarmonyPriority(1)]
@@ -18,7 +14,7 @@ public partial class Plugin
             return true;
         var item = __instance.overhead_item;
         
-        List<Item> insert = new() { item };
+        List<Item> insert = [item];
         var itemId = item.id;
 
         WriteLog($"Refreshing and re-sorting stockpile distances.");

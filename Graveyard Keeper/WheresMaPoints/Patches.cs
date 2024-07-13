@@ -1,10 +1,6 @@
-﻿using DarkTonic.MasterAudio;
-using GYKHelper;
-using HarmonyLib;
+﻿namespace WheresMaPoints;
 
-namespace WheresMaPoints;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     [HarmonyPrefix]

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.6.3</Version>
+        <Version>1.6.4</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -8,7 +8,15 @@
         <ProjectReference Include="..\GYKHelper\GYKHelper.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Update="GraveyardKeeper.GameLibs" Version="1.405.2" />
+      <Reference Include="Assembly-CSharp">
+        <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>..\libs\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <Import Project="..\zip.target" />
 </Project>

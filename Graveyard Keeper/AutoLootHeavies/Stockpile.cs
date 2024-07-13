@@ -1,21 +1,11 @@
-﻿using UnityEngine;
+﻿namespace AutoLootHeavies;
 
-namespace AutoLootHeavies;
-
-public class Stockpile
+public class Stockpile(Vector3 location, Stockpile.StockpileType type, float distanceFromPlayer, WorldGameObject wgo)
 {
-    public Vector3 Location { get; }
-    public StockpileType Type { get; }
-    public float DistanceFromPlayer { get; set; }
-    public WorldGameObject Wgo { get; }
-
-    public Stockpile(Vector3 location, StockpileType type, float distanceFromPlayer, WorldGameObject wgo)
-    {
-        Location = location;
-        Type = type;
-        DistanceFromPlayer = distanceFromPlayer;
-        Wgo = wgo;
-    }
+    public Vector3 Location { get; } = location;
+    public StockpileType Type { get; } = type;
+    public float DistanceFromPlayer { get; set; } = distanceFromPlayer;
+    public WorldGameObject Wgo { get; } = wgo;
 
     public enum StockpileType
     {

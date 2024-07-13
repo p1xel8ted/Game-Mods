@@ -1,24 +1,26 @@
-﻿using System.Threading;
+﻿using System.Net.Mime;
+using System.Reflection;
+using System.Threading;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using GYKHelper;
+using HarmonyLib;
 using ThoughtfulReminders.lang;
 using UnityEngine;
 
 namespace ThoughtfulReminders;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.1")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.thoughtfulreminders";
     private const string PluginName = "Thoughtful Reminders";
-    private const string PluginVer = "2.2.5";
+    private const string PluginVer = "2.2.6";
 
     private static int PrevDayOfWeek { get; set; }
-
-    private static ConfigEntry<bool> ModEnabled { get; set; }
+    
     internal static ConfigEntry<bool> SpeechBubblesConfig { get; private set; }
     private static ConfigEntry<bool> DaysOnlyConfig { get; set; }
 
@@ -26,42 +28,33 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        LOG = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(LOG);
-        ModEnabled = Config.Bind("1. General", "Enabled", true, new ConfigDescription($"Enable or disable {PluginName}", null, new ConfigurationManagerAttributes {Order = 3}));
-        SpeechBubblesConfig = Config.Bind("1. General", "Speech Bubbles", true, new ConfigDescription("Enable or disable speech bubbles", null, new ConfigurationManagerAttributes {Order = 2}));
-        DaysOnlyConfig = Config.Bind("1. General", "Days Only", false, new ConfigDescription("Enable or disable days only mode", null, new ConfigurationManagerAttributes {Order = 1}));
+        LOG = Logger;
+        SpeechBubblesConfig = Config.Bind("01. General", "Speech Bubbles", true, new ConfigDescription("Enable or disable speech bubbles", null, new ConfigurationManagerAttributes {Order = 2}));
+        DaysOnlyConfig = Config.Bind("01. General", "Days Only", false, new ConfigDescription("Enable or disable days only mode", null, new ConfigurationManagerAttributes {Order = 1}));
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        LOG.LogInfo($"Plugin {PluginName} is loaded!");
     }
 
     private void Update()
     {
-        if (!ModEnabled.Value)
-        {
-         
-            return;
-        }
 
         if (!MainGame.game_started)
         {
-         
             return;
         }
         var newDayOfWeek = MainGame.me.save.day_of_week;
         if (MainGame.me.player.is_dead)
         {
-           
             return;
         }
 
         if (!Application.isFocused)
         {
-        
             return;
         }
 
         if (PrevDayOfWeek == newDayOfWeek)
         {
-          
             return;
         }
 

@@ -1,25 +1,12 @@
-﻿using System;
-using System.Reflection;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
-using GYKHelper;
-using HarmonyLib;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace ShowMeMoar;
+﻿namespace ShowMeMoar;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.2")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.showmemoar";
     private const string PluginName = "Show Me Moar!";
-    private const string PluginVer = "0.1.5";
-    private static Harmony Harmony { get; set; }
-    private static ConfigEntry<bool> ModEnabled { get; set; }
-    
+    private const string PluginVer = "0.1.4";
     internal static ConfigEntry<bool> Ultrawide { get; private set; }
     private static ConfigEntry<KeyboardShortcut> ZoomIn { get; set; }
     private static ConfigEntry<KeyboardShortcut> ZoomOut { get; set; }
@@ -44,27 +31,30 @@ public class Plugin : BaseUnityPlugin
             smallFont.ChangeColor(new Color(0,0,0,0), 0f);
         };
         Actions.GameStartedPlaying += OnGameStartedPlaying;
-        Harmony = new Harmony(PluginGuid);
         InitConfiguration();
-        ApplyPatches(this, null);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
 
     private static void OnGameStartedPlaying()
     {
+        if (!MainGame.game_started) return;
+        
         Patches.ScreenSize = GameObject.Find("UI Root/Screen size panel").transform;
         if (Patches.ScreenSize == null)
         {
             Log.LogError("Screen size panel not found!");
         }
+        
+        var setting = Zoom.Value;
+        var defaultZoom = GameSettings.current_resolution.y / 2f;
+        Camera.main!.orthographicSize = defaultZoom + setting;
     }
 
     private void InitConfiguration()
     {
         var defaultZoom = Screen.currentResolution.height / 2f;
         var min = 0 - defaultZoom;
-
-        ModEnabled = Config.Bind("1. General", "Enabled", true, new ConfigDescription($"Enable or disable {PluginName}", null, new ConfigurationManagerAttributes {Order = 8}));
-        ModEnabled.SettingChanged += ApplyPatches;
 
         Ultrawide = Config.Bind("2. Ultrawide", "Ultrawide", false, new ConfigDescription("Enable or disable ultrawide support. You must restart the game after changing this setting.", null, new ConfigurationManagerAttributes {Order = 7}));
         
@@ -130,31 +120,6 @@ public class Plugin : BaseUnityPlugin
         if (Icons != null)
         {
             Icons.transform.localScale = new Vector3(scale, scale, 1);
-        }
-    }
-
-    private static void GameStartedPlaying()
-    {
-        if (!MainGame.game_started) return;
-        var setting = Zoom.Value;
-        var defaultZoom = GameSettings.current_resolution.y / 2f;
-        Camera.main!.orthographicSize = defaultZoom + setting;
-    }
-
-    private static void ApplyPatches(object sender, EventArgs eventArgs)
-    {
-        if (ModEnabled.Value)
-        {
-            Actions.GameStartedPlaying += GameStartedPlaying;
-            Log.LogInfo($"Applying patches for {PluginName}");
-            Harmony.PatchAll(Assembly.GetExecutingAssembly());
-        }
-        else
-        {
-            Actions.GameStartedPlaying -= GameStartedPlaying;
-            Camera.main!.orthographicSize = Screen.currentResolution.height / 2f;
-            Log.LogInfo($"Removing patches for {PluginName}");
-            Harmony.UnpatchSelf();
         }
     }
 }

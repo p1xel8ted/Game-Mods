@@ -1,8 +1,4 @@
-﻿using BringOutYerDead.lang;
-using GYKHelper;
-using HarmonyLib;
-
-namespace BringOutYerDead;
+﻿namespace BringOutYerDead;
 
 [HarmonyPatch]
 public static class Patches

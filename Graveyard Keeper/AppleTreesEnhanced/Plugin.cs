@@ -1,68 +1,40 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
-using GYKHelper;
-using HarmonyLib;
-
-namespace AppleTreesEnhanced;
+﻿namespace AppleTreesEnhanced;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.3")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5 ")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.appletreesenhanced";
     private const string PluginName = "Apple Tree's Enhanced!";
-    private const string PluginVer = "2.7.6";
+    private const string PluginVer = "2.7.7";
     private static ManualLogSource Log { get; set; }
-    private static Harmony Harmony { get; set; }
+ 
     private static ConfigEntry<bool> Debug { get; set; }
-    private static ConfigEntry<bool> ModEnabled { get; set; }
+
 
     private void Awake()
     {
         Log = Logger;
-        Harmony = new Harmony(PluginGuid);
         InitConfiguration();
-        ApplyPatches(this, null);
+        Actions.GameStartedPlaying += CleanUpTrees;
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
 
     private void InitConfiguration()
     {
-        ModEnabled = Config.Bind("1. General", "Enabled", true, new ConfigDescription($"Toggle {PluginName}", null, new ConfigurationManagerAttributes {Order = 10}));
-        ModEnabled.SettingChanged += ApplyPatches;
+        IncludeGardenBerryBushes = Config.Bind("1. Player Garden", "Include Garden Berry Bushes", true, new ConfigDescription("Enable enhancements for player garden berry bushes", null, new ConfigurationManagerAttributes {Order = 9}));
+        IncludeGardenTrees = Config.Bind("1. Player Garden", "Include Garden Trees", true, new ConfigDescription("Enable enhancements for player garden trees", null, new ConfigurationManagerAttributes {Order = 8}));
+        IncludeGardenBeeHives = Config.Bind("1. Player Garden", "Include Garden Bee Hives", false, new ConfigDescription("Enable enhancements for player garden bee hives", null, new ConfigurationManagerAttributes {Order = 7}));
 
-        IncludeGardenBerryBushes = Config.Bind("2. Player Garden", "Include Garden Berry Bushes", true, new ConfigDescription("Enable enhancements for player garden berry bushes", null, new ConfigurationManagerAttributes {Order = 9}));
-        IncludeGardenTrees = Config.Bind("2. Player Garden", "Include Garden Trees", true, new ConfigDescription("Enable enhancements for player garden trees", null, new ConfigurationManagerAttributes {Order = 8}));
-        IncludeGardenBeeHives = Config.Bind("2. Player Garden", "Include Garden Bee Hives", false, new ConfigDescription("Enable enhancements for player garden bee hives", null, new ConfigurationManagerAttributes {Order = 7}));
+        RealisticHarvest = Config.Bind("2. Harvesting", "Realistic Harvest", true, new ConfigDescription("Enable randomization of harvest amounts and drop time", null, new ConfigurationManagerAttributes {Order = 6}));
+        ShowHarvestReadyMessages = Config.Bind("2. Harvesting", "Show Harvest Ready Messages", true, new ConfigDescription("Display messages when harvest is ready", null, new ConfigurationManagerAttributes {Order = 5}));
 
-        RealisticHarvest = Config.Bind("3. Harvesting", "Realistic Harvest", true, new ConfigDescription("Enable randomization of harvest amounts and drop time", null, new ConfigurationManagerAttributes {Order = 6}));
-        ShowHarvestReadyMessages = Config.Bind("3. Harvesting", "Show Harvest Ready Messages", true, new ConfigDescription("Display messages when harvest is ready", null, new ConfigurationManagerAttributes {Order = 5}));
+        IncludeWorldBerryBushes = Config.Bind("3. World Environment", "Include World Berry Bushes", false, new ConfigDescription("Enable enhancements for world berry bushes (not recommended without Wheres Ma Storage)", null, new ConfigurationManagerAttributes {Order = 4}));
 
-        IncludeWorldBerryBushes = Config.Bind("4. World Environment", "Include World Berry Bushes", false, new ConfigDescription("Enable enhancements for world berry bushes (not recommended without Wheres Ma Storage)", null, new ConfigurationManagerAttributes {Order = 4}));
+        BeeKeeperBuyback = Config.Bind("4. Economy", "Bee Keeper Buyback", false, new ConfigDescription("Allow beekeeper to buy back bees", null, new ConfigurationManagerAttributes {Order = 3}));
 
-        BeeKeeperBuyback = Config.Bind("5. Economy", "Bee Keeper Buyback", false, new ConfigDescription("Allow beekeeper to buy back bees", null, new ConfigurationManagerAttributes {Order = 3}));
-
-        Debug = Config.Bind("6. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 2}));
-    }
-
-
-    private static void ApplyPatches(object sender, EventArgs eventArgs)
-    {
-        if (ModEnabled.Value)
-        {
-            Log.LogInfo($"Applying patches for {PluginName}");
-            Actions.GameStartedPlaying += CleanUpTrees;
-            Harmony.PatchAll(Assembly.GetExecutingAssembly());
-        }
-        else
-        {
-            Log.LogInfo($"Removing patches for {PluginName}");
-            Actions.GameStartedPlaying -= CleanUpTrees;
-            Harmony.UnpatchSelf();
-        }
+        Debug = Config.Bind("5. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 2}));
     }
 
     private static void CleanUpTrees()
