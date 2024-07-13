@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using GerrysJunkTrunk.lang;
-using GYKHelper;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace GerrysJunkTrunk;
 
-namespace GerrysJunkTrunk;
-
-[HarmonyPatch]
+[Harmony]
 public partial class Plugin
 {
     //should never need these, but will stop a 2nd being built
@@ -65,7 +56,6 @@ public partial class Plugin
         typeof(bool))]
     public static void ChestGUI_MoveItem(ref ChestGUI __instance)
     {
-        //
         if (__instance == null || !_usingShippingBox) return;
 
         UpdateItemStates(ref __instance);
@@ -76,7 +66,6 @@ public partial class Plugin
     [HarmonyPatch(typeof(ChestGUI), nameof(ChestGUI.OnPressedBack))]
     public static void ChestGUI_OnPressedBack(ref ChestGUI __instance)
     {
-        //
         ClearGerryFlag(ref __instance);
     }
 
@@ -436,6 +425,9 @@ public partial class Plugin
         __instance.data.drop_zone_id = ShippingBoxTag;
         __instance.custom_tag = ShippingBoxTag;
 
+        var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+        sbCraft.hidden = true;
+        
         var invSize = UnlockedShippingBoxExpansion() ? LargeInvSize : SmallInvSize;
         __instance.data.SetInventorySize(invSize);
         __instance.data.money = GetBoxEarnings(__instance);
@@ -474,33 +466,6 @@ public partial class Plugin
         }
     }
 
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(WorldMap), nameof(WorldMap.RescanWGOsList))]
-    // public static void WorldMap_RescanWGOsList()
-    // {
-    //     //
-    //     if (CrossModFields.WorldNpcs == null) return;
-    //     foreach (var npc in CrossModFields.WorldNpcs.Where(npc => npc.vendor != null))
-    //     {
-    //         var known =
-    //             MainGame.me.save.known_npcs.npcs.Exists(a => string.Equals(a.npc_id, npc.vendor.id));
-    //         if (known)
-    //         {
-    //             var newVendor = Instantiate(npc, npc.transform.parent, instantiateInWorldSpace: false) as WorldGameObject;
-    //             if (newVendor != null)
-    //             {
-    //                 newVendor.name = $"{npc.name}_GERRY";
-    //                 newVendor.vendor.id = $"{npc.vendor.id}_GERRY";
-    //                 newVendor.obj_id = $"{npc.name}_GERRY";
-    //                 Log.LogWarning(
-    //                     $"[WorldMap.RescanWGOsList] Found Vendor: {npc.name} - created GERRY version: {newVendor.name} // {newVendor.vendor.id}");
-    //                 KnownVendors.Add(newVendor);
-    //             }
-    //         }
-    //
-    //         KnownVendors.RemoveAll(a => a.vendor.id.ToLowerInvariant().Contains("hunchback"));
-    //     }
-    // }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(WorldZone), nameof(WorldZone.GetZoneWGOs))]
@@ -513,9 +478,26 @@ public partial class Plugin
         var count = __result.RemoveAll(a => a.custom_tag == ShippingBoxTag || a.data.drop_zone_id == ShippingBoxTag);
         if (count > 0)
         {
+            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+            sbCraft.hidden = true;
+            
             WriteLog($"[WorldZone.GetZoneWGOs] Removed Shipping Box From WorldMap Objects");
         }
 
         _interactedObject = null;
+    }
+    private static void FindJunkTrunk()
+    {
+        var trunks = WorldMap.GetWorldGameObjectsByCustomTag(ShippingBoxTag);
+        if (trunks.Count > 0)
+        {
+            _shippingBox = trunks[0];
+            InternalShippingBoxBuilt.Value = true;
+            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+            sbCraft.hidden = true;
+            
+            WriteLog($"Found Shipping Box!");
+            
+        }
     }
 }

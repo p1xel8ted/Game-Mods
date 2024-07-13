@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
+﻿namespace EconomyReloaded;
 
-namespace EconomyReloaded;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     private static bool GameBalanceAlreadyRun { get; set; }
-    private static readonly Dictionary<string, bool> BackedUpIsStaticCost = new();
-    private static readonly HashSet<string> StaticCostItemIds = new();
+    private readonly static Dictionary<string, bool> BackedUpIsStaticCost = new();
+    private readonly static HashSet<string> StaticCostItemIds = [];
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Trading), nameof(Trading.GetSingleItemCostInTraderInventory), typeof(Item), typeof(int))]

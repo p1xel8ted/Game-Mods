@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using GYKHelper;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace MiscBitsAndBobs;
 
-namespace MiscBitsAndBobs;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     [HarmonyPostfix]

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using UnityEngine;
-
-namespace GYKHelper;
+﻿namespace GYKHelper;
 
 public static class Tools
 {
@@ -118,9 +112,9 @@ public static class Tools
         "player_repairs_sword"
     ];
 
-    internal readonly static List<string> LoadedModsById = [];
-    internal readonly static List<string> LoadedModsByName = [];
-    internal readonly static List<string> LoadedModsByFileName = [];
+    private readonly static List<string> LoadedModsById = [];
+    private readonly static List<string> LoadedModsByName = [];
+    private readonly static List<string> LoadedModsByFileName = [];
 
     public static bool TutorialDone()
     {

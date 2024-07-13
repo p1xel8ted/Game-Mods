@@ -1,10 +1,6 @@
-﻿using Fishing;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace NoTimeForFishing;
 
-namespace NoTimeForFishing;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     [HarmonyPrefix]

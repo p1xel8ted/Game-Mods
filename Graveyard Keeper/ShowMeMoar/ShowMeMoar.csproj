@@ -1,14 +1,79 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.5</Version>
-        <AssemblyVersion>0.1.5</AssemblyVersion>
-        <FileVersion>0.1.5</FileVersion>
+        <Version>0.1.4</Version>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\GYKHelper\GYKHelper.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Update="GraveyardKeeper.GameLibs" Version="1.405.2" />
+      <Reference Include="Assembly-CSharp">
+        <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp-firstpass">
+        <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
+      <Reference Include="com.unity.multiplayer-hlapi.Runtime">
+        <HintPath>..\libs\com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>..\libs\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AIModule">
+        <HintPath>..\libs\UnityEngine.AIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AnimationModule">
+        <HintPath>..\libs\UnityEngine.AnimationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AudioModule">
+        <HintPath>..\libs\UnityEngine.AudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>..\libs\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>..\libs\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.JSONSerializeModule">
+        <HintPath>..\libs\UnityEngine.JSONSerializeModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ParticleSystemModule">
+        <HintPath>..\libs\UnityEngine.ParticleSystemModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Physics2DModule">
+        <HintPath>..\libs\UnityEngine.Physics2DModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PhysicsModule">
+        <HintPath>..\libs\UnityEngine.PhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SharedInternalsModule">
+        <HintPath>..\libs\UnityEngine.SharedInternalsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.SpriteMaskModule">
+        <HintPath>..\libs\UnityEngine.SpriteMaskModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TerrainModule">
+        <HintPath>..\libs\UnityEngine.TerrainModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>..\libs\UnityEngine.TextRenderingModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI">
+        <HintPath>..\libs\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UIModule">
+        <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestModule">
+        <HintPath>..\libs\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+        <HintPath>..\libs\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <Import Project="..\zip.target" />
 </Project>

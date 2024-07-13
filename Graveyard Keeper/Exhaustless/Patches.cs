@@ -1,10 +1,6 @@
-﻿using System.Linq;
-using Exhaustless.lang;
-using HarmonyLib;
+﻿namespace Exhaustless;
 
-namespace Exhaustless;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     private readonly static ItemDefinition.ItemType[] ToolItems =

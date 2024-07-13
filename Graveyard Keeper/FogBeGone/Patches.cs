@@ -1,10 +1,6 @@
-﻿using FlowCanvas;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace FogBeGone;
 
-namespace FogBeGone;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     private static bool IntroPlaying { get; set; }

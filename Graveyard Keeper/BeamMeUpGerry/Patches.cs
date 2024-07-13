@@ -8,7 +8,6 @@ public static class Patches
     [HarmonyPatch(typeof(Item), nameof(Item.GetGrayedCooldownPercent))]
     public static void Item_GetGrayedCooldownPercent(ref Item __instance, ref int __result)
     {
-        if (!Plugin.ModEnabled.Value) return;
         if (__instance is not {id: Constants.Hearthstone}) return;
 
         __result = 0;
@@ -18,7 +17,6 @@ public static class Patches
     [HarmonyPatch(typeof(Item), nameof(Item.UseItem))]
     public static bool Item_UseItem(ref Item __instance, ref GameRes __result)
     {
-        if (!Plugin.ModEnabled.Value) return true;
         if (!Plugin.EnableListExpansion.Value) return true;
         if (__instance is not {id: Constants.Hearthstone}) return true;
 
@@ -61,7 +59,7 @@ public static class Patches
         //     Plugin.Log.LogWarning($"Zone: {saveKnownWorldZone}");
         // }
         
-        if (!Plugin.ModEnabled.Value) return;
+     
         var playerRequest = MultiAnswerGUI.talker_wgo == MainGame.me.player;
         if (playerRequest && Plugin.IncreaseMenuAnimationSpeed.Value)
         {

@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using GYKHelper;
-
-namespace BringOutYerDead;
+﻿namespace BringOutYerDead;
 
 public static class Helpers
 {

@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace GYKHelper;
+﻿namespace GYKHelper;
 
 public static class Extensions
 {

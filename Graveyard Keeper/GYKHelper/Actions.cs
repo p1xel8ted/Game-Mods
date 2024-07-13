@@ -1,15 +1,10 @@
-﻿using System;
-using System.Linq;
-using HarmonyLib;
-using Object = UnityEngine.Object;
-
-namespace GYKHelper;
+﻿namespace GYKHelper;
 
 [HarmonyPatch]
 [HarmonyPriority(1)]
 public static class Actions
 {
-    internal readonly static string[] SafeGerryTags =
+    private readonly static string[] SafeGerryTags =
     [
         "tavern_skull",
         "talking_skull",

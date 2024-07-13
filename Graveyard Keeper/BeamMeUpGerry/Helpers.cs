@@ -1,8 +1,4 @@
-﻿using System.Collections.Specialized;
-using BeamMeUpGerry.lang;
-using UnityEngine.SocialPlatforms;
-
-namespace BeamMeUpGerry;
+﻿namespace BeamMeUpGerry;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class Helpers

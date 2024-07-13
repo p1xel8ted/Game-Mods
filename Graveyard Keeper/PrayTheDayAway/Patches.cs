@@ -1,13 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using GYKHelper;
-using HarmonyLib;
-using PrayTheDayAway.lang;
-using UnityEngine;
+﻿namespace PrayTheDayAway;
 
-namespace PrayTheDayAway;
-
-[HarmonyPatch]
+[Harmony]
 public partial class Plugin
 {
     private static bool LostPrayerItem { get; set; }
@@ -58,8 +51,8 @@ public partial class Plugin
         if (CheatModeConfig.Value) return;
         if (NotifyOnPrayerLoss.Value && LostPrayerItem)
         {
-            List<string> lostAnother = new()
-            {
+            List<string> lostAnother =
+            [
                 GetLocalizedString(strings.M1),
                 GetLocalizedString(strings.M2),
                 GetLocalizedString(strings.M3),
@@ -69,7 +62,7 @@ public partial class Plugin
                 GetLocalizedString(strings.M7),
                 GetLocalizedString(strings.M8),
                 GetLocalizedString(strings.M9)
-            };
+            ];
 
             Tools.ShowMessage(lostAnother.RandomElement(), MainGame.me.player_pos, EffectBubblesManager.BubbleColor.Red, speechBubbleType: SpeechBubbleGUI.SpeechBubbleType.InfoBox, sayAsPlayer: true);
         }

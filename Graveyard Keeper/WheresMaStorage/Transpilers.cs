@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using HarmonyLib;
-using JetBrains.Annotations;
-
-namespace WheresMaStorage;
+﻿namespace WheresMaStorage;
 
 [HarmonyPatch]
 public static class Transpilers
@@ -25,7 +17,6 @@ public static class Transpilers
         }
 
         [HarmonyTranspiler]
-        [CanBeNull]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -98,7 +89,6 @@ public static class Transpilers
         }
 
         [HarmonyTranspiler]
-        [CanBeNull]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var instructionsList = new List<CodeInstruction>(instructions);
@@ -125,7 +115,6 @@ public static class Transpilers
         }
 
         [HarmonyTranspiler]
-        [CanBeNull]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var instructionsList = new List<CodeInstruction>(instructions);

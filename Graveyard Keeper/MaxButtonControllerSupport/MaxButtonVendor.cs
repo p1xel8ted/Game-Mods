@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Object = UnityEngine.Object;
+﻿namespace MaxButtonControllerSupport;
 
-namespace MaxButtonControllerSupport;
-
-public class MaxButtonVendor
+public static class MaxButtonVendor
 {
     private const string MaxButtonName = "Max";
     private static string _caller = string.Empty;

@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using GYKHelper;
-using SaveNow.lang;
-using UnityEngine;
-
-namespace SaveNow;
+﻿namespace SaveNow;
 
 public partial class Plugin
 {

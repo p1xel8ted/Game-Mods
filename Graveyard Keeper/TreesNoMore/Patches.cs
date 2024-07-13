@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace TreesNoMore;
 
-namespace TreesNoMore;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     internal static void DestroyTress()
@@ -15,7 +9,7 @@ public static class Patches
         sw.Start();
 
         // Create a new list to hold the trees that you want to destroy.
-        List<WorldGameObject> treesToDestroy = new List<WorldGameObject>();
+        List<WorldGameObject> treesToDestroy = [];
 
         foreach (var tree in WorldMap.objs.Where(o => o.name.Contains("tree") && !o.name.Contains("bees") && !o.name.Contains("apple")))
         {

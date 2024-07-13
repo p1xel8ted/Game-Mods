@@ -1,8 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
-using GYKHelper;
-
-namespace TheSeedEqualizer;
+﻿namespace TheSeedEqualizer;
 
 public static class Helpers
 {

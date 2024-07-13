@@ -65,10 +65,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WheresMaVeggies", "WheresMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddStraightToTable", "AddStraightToTable\AddStraightToTable.csproj", "{7296159B-BB05-4472-8C94-C5577F886122}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayerJudderFix", "PlayerJudderFix\PlayerJudderFix.csproj", "{06F5F32A-070A-4B6C-BD44-44801E111681}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixCameraJudder", "FixCameraJudder\FixCameraJudder.csproj", "{33B20B75-4158-48FE-8BB1-8FC2D734EE6F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomTextures", "CustomTextures\CustomTextures.csproj", "{F5B89A54-BD24-455B-897A-D9566B2D9878}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeamMeUpGerry", "BeamMeUpGerry\BeamMeUpGerry.csproj", "{7E2A451A-45A5-4A36-A1B5-65ECB94C9FC0}"
@@ -203,14 +199,6 @@ Global
 		{7296159B-BB05-4472-8C94-C5577F886122}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7296159B-BB05-4472-8C94-C5577F886122}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7296159B-BB05-4472-8C94-C5577F886122}.Release|Any CPU.Build.0 = Release|Any CPU
-		{06F5F32A-070A-4B6C-BD44-44801E111681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{06F5F32A-070A-4B6C-BD44-44801E111681}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{06F5F32A-070A-4B6C-BD44-44801E111681}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{06F5F32A-070A-4B6C-BD44-44801E111681}.Release|Any CPU.Build.0 = Release|Any CPU
-		{33B20B75-4158-48FE-8BB1-8FC2D734EE6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33B20B75-4158-48FE-8BB1-8FC2D734EE6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33B20B75-4158-48FE-8BB1-8FC2D734EE6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33B20B75-4158-48FE-8BB1-8FC2D734EE6F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5B89A54-BD24-455B-897A-D9566B2D9878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5B89A54-BD24-455B-897A-D9566B2D9878}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5B89A54-BD24-455B-897A-D9566B2D9878}.Release|Any CPU.ActiveCfg = Release|Any CPU

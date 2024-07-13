@@ -1,8 +1,4 @@
-﻿using BeamMeUpGerry.lang;
-using Pathfinding.Ionic.Zlib;
-using UnityEngine.SceneManagement;
-
-namespace BeamMeUpGerry;
+﻿namespace BeamMeUpGerry;
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -13,8 +9,7 @@ public class Plugin : BaseUnityPlugin
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
     private const string PluginVer = "3.0.3";
-
-    internal static ConfigEntry<bool> ModEnabled { get; private set; }
+    
     internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }
     internal static ConfigEntry<bool> EnableListExpansion { get; private set; }
@@ -31,7 +26,7 @@ public class Plugin : BaseUnityPlugin
     private static ConfigEntry<string> SaveCustomLocationControllerButton { get; set; }
     
     internal static ManualLogSource Log { get; private set; }
-    private static Harmony Harmony { get; set; }
+
     private Player CachedPlayer { get; set; }
     private Item CachedHearthstone { get; set; }
 
@@ -39,15 +34,12 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
-        Harmony = new Harmony(PluginGuid);
-        Harmony.PatchAll(Assembly.GetExecutingAssembly());
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
 
     private void Update()
     {
-        if (!ModEnabled.Value) return;
-
-
         if (!Helpers.IsUpdateConditionsMet()) return;
 
         CachedPlayer ??= ReInput.players.GetPlayer(0);
@@ -99,20 +91,20 @@ public class Plugin : BaseUnityPlugin
         LocationLists.LoadCustomZones();
         
         DebugEnabled = Config.Bind("00. Debug", "Debug", false, new ConfigDescription("Toggle debug logging", null, new ConfigurationManagerAttributes {IsAdvanced = true,Order = 803}));
-        ModEnabled = Config.Bind("01. General", "Enabled", true, new ConfigDescription($"Toggle {PluginName}", null, new ConfigurationManagerAttributes {Order = 802}));
-        IncreaseMenuAnimationSpeed = Config.Bind("2. Features", "Increase Menu Animation Speed", true, new ConfigDescription("Toggle increased menu animation speed", null, new ConfigurationManagerAttributes {Order = 801}));
-        EnableListExpansion = Config.Bind("02. Features", "Enable List Expansion", true, new ConfigDescription("Toggle list expansion functionality", null, new ConfigurationManagerAttributes {Order = 799}));
-        GerryAppears = Config.Bind("02. Features", "Gerry Appears", false, new ConfigDescription("Toggle Gerry's presence", null, new ConfigurationManagerAttributes {Order = 798}));
-        GerryCharges = Config.Bind("02. Features", "Gerry Charges", false, new ConfigDescription("Toggle the cost of teleporting", null, new ConfigurationManagerAttributes {Order = 797}));
-        EnablePreviousPageChoices = Config.Bind("02. Features", "Enable Previous Page Choices", true, new ConfigDescription("Toggle the ability to go back to the previous page", null, new ConfigurationManagerAttributes {Order = 796}));
-        PreviousPageChoiceAtTop = Config.Bind("02. Features", "Previous Page Choice At Top", true, new ConfigDescription("Toggle the placement of the previous page choice at the top of the list", null, new ConfigurationManagerAttributes {Order = 795}));
-        TeleportMenuKeyBind = Config.Bind("03. Keybinds", "Teleport Menu Keybind", new KeyboardShortcut(KeyCode.Z), new ConfigDescription("Set the keybind for opening the teleport menu", null, new ConfigurationManagerAttributes {Order = 796}));
-        TeleportMenuControllerButton = Config.Bind("04. Controller", "Teleport Menu Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.RB), new ConfigDescription("Set the controller button for opening the teleport menu", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 795}));
-        LocationsPerPage = Config.Bind("05. Locations", "Locations Per Page", 8, new ConfigDescription("Set the number of locations to display per page", new AcceptableValueRange<int>(Mathf.CeilToInt(LocationLists.AllLocations.Count / Constants.MaxPages), (int) Constants.MaxPages), new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 794}));
-        SortAlphabetically = Config.Bind("05. Locations", "Sort Alphabetically", false, new ConfigDescription("Toggle alphabetical sorting of locations", null, new ConfigurationManagerAttributes {Order = 793}));
-        EnableCustomLocations = Config.Bind("06. Custom Locations", "Enable Custom Locations", false, new ConfigDescription("Toggle the ability to save & load custom locations.", null, new ConfigurationManagerAttributes {Order = 792}));
-        SaveCustomLocationKeybind = Config.Bind("06. Custom Locations", "Save Custom Location Keybind", new KeyboardShortcut(KeyCode.X), new ConfigDescription("Set the keybind for saving custom locations.", null, new ConfigurationManagerAttributes {Order = 791}));
-        SaveCustomLocationControllerButton = Config.Bind("06. Custom Locations", "Save Custom Location Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.None), new ConfigDescription("Set the controller button for saving custom locations.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 790}));
+        //ModEnabled = Config.Bind("01. General", "Enabled", true, new ConfigDescription($"Toggle {PluginName}", null, new ConfigurationManagerAttributes {Order = 802}));
+        IncreaseMenuAnimationSpeed = Config.Bind("01. Features", "Increase Menu Animation Speed", true, new ConfigDescription("Toggle increased menu animation speed", null, new ConfigurationManagerAttributes {Order = 801}));
+        EnableListExpansion = Config.Bind("01. Features", "Enable List Expansion", true, new ConfigDescription("Toggle list expansion functionality", null, new ConfigurationManagerAttributes {Order = 799}));
+        GerryAppears = Config.Bind("01. Features", "Gerry Appears", false, new ConfigDescription("Toggle Gerry's presence", null, new ConfigurationManagerAttributes {Order = 798}));
+        GerryCharges = Config.Bind("01. Features", "Gerry Charges", false, new ConfigDescription("Toggle the cost of teleporting", null, new ConfigurationManagerAttributes {Order = 797}));
+        EnablePreviousPageChoices = Config.Bind("01. Features", "Enable Previous Page Choices", true, new ConfigDescription("Toggle the ability to go back to the previous page", null, new ConfigurationManagerAttributes {Order = 796}));
+        PreviousPageChoiceAtTop = Config.Bind("01. Features", "Previous Page Choice At Top", true, new ConfigDescription("Toggle the placement of the previous page choice at the top of the list", null, new ConfigurationManagerAttributes {Order = 795}));
+        TeleportMenuKeyBind = Config.Bind("02. Keybinds", "Teleport Menu Keybind", new KeyboardShortcut(KeyCode.Z), new ConfigDescription("Set the keybind for opening the teleport menu", null, new ConfigurationManagerAttributes {Order = 796}));
+        TeleportMenuControllerButton = Config.Bind("03. Controller", "Teleport Menu Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.RB), new ConfigDescription("Set the controller button for opening the teleport menu", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 795}));
+        LocationsPerPage = Config.Bind("04. Locations", "Locations Per Page", 8, new ConfigDescription("Set the number of locations to display per page", new AcceptableValueRange<int>(Mathf.CeilToInt(LocationLists.AllLocations.Count / Constants.MaxPages), (int) Constants.MaxPages), new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 794}));
+        SortAlphabetically = Config.Bind("04. Locations", "Sort Alphabetically", false, new ConfigDescription("Toggle alphabetical sorting of locations", null, new ConfigurationManagerAttributes {Order = 793}));
+        EnableCustomLocations = Config.Bind("05. Custom Locations", "Enable Custom Locations", false, new ConfigDescription("Toggle the ability to save & load custom locations.", null, new ConfigurationManagerAttributes {Order = 792}));
+        SaveCustomLocationKeybind = Config.Bind("05. Custom Locations", "Save Custom Location Keybind", new KeyboardShortcut(KeyCode.X), new ConfigDescription("Set the keybind for saving custom locations.", null, new ConfigurationManagerAttributes {Order = 791}));
+        SaveCustomLocationControllerButton = Config.Bind("05. Custom Locations", "Save Custom Location Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.None), new ConfigDescription("Set the controller button for saving custom locations.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 790}));
         
         var originalLanguage = GameSettings._cur_lng;
         GJL.LoadLanguageResource("en");

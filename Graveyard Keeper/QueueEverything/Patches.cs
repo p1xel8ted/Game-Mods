@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using GYKHelper;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace QueueEverything;
 
-namespace QueueEverything;
-
-[HarmonyPatch]
+[Harmony]
 public partial class Plugin
 {
     [HarmonyAfter("p1xel8ted.gyk.gykhelper", "p1xel8ted.gyk.fastercraftreloaded")]
@@ -81,8 +73,8 @@ public partial class Plugin
 
     private static CraftInfo GetCraftInfo(CraftItemGUI __instance, MultiInventory multiInventory)
     {
-        List<int> craftable = new();
-        List<int> notCraftable = new();
+        List<int> craftable = [];
+        List<int> notCraftable = [];
         var isMultiQualCraft = false;
         var bCraftable = 0;
         var sCraftable = 0;

@@ -1,16 +1,13 @@
-﻿using System.Threading;
-using GYKHelper;
-
-namespace PrayTheDayAway;
+﻿namespace PrayTheDayAway;
 
 public partial class Plugin
 {
-    internal static string GetLocalizedString(string content)
+    private static string GetLocalizedString(string content)
     {
         Thread.CurrentThread.CurrentUICulture = CrossModFields.Culture;
         return content;
     }
-    internal static void WriteLog(string message, bool error = false)
+    private static void WriteLog(string message, bool error = false)
     {
         if (error)
         {
@@ -18,7 +15,7 @@ public partial class Plugin
         }
         else
         {
-            if (_debug.Value)
+            if (Debug.Value)
             {
                 Log.LogInfo($"{message}");
             }

@@ -1,12 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Reflection.Emit;
-using HarmonyLib;
-using UnityEngine;
+﻿namespace LongerDays;
 
-
-namespace LongerDays;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
 

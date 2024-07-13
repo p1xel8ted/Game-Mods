@@ -1,12 +1,9 @@
-﻿using System.Linq;
-
-namespace GerrysJunkTrunk;
+﻿namespace GerrysJunkTrunk;
 
 public partial class Plugin
 {
     private void Update()
     {
-        if (!ModEnabled.Value) return;
         if (!MainGame.game_started) return;
 
         _techCount = MainGame.me.save.unlocked_techs.Count;

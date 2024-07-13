@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GerrysJunkTrunk;
+﻿namespace GerrysJunkTrunk;
 
 public partial class Plugin
 {
@@ -16,14 +14,14 @@ public partial class Plugin
     
     private static int _techCount;
     private static int _oldTechCount;
-    private static readonly Dictionary<string, int> StackSizeBackups = new();
+    private readonly static Dictionary<string, int> StackSizeBackups = new();
     
     private static WorldGameObject _shippingBox;
     private static WorldGameObject _interactedObject;
     private static bool _shippingBuild;
     private static bool _usingShippingBox;
 
-    private static readonly List<BaseItemCellGUI> AlreadyDone = new();
+    private readonly static List<BaseItemCellGUI> AlreadyDone = [];
     internal static ObjectCraftDefinition NewItem { get; private set; }
     private const string ShippingBoxId = "mf_wood_builddesk:p:mf_shipping_box_place";  
 }

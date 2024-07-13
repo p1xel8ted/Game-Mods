@@ -1,27 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using GYKHelper;
-using HarmonyLib;
-using SaveNow.lang;
-using UnityEngine;
+﻿namespace SaveNow;
 
-namespace SaveNow;
-
-[HarmonyPatch]
+[Harmony]
 public partial class Plugin
 {
     private static Vector3 Pos { get; set; }
     private static string DataPath { get; set; }
     private static string SavePath { get; set; }
-    private static readonly List<SaveSlotData> AllSaveGames = new();
-    private static List<SaveSlotData> SortedTrimmedSaveGames { get; set; } = new();
+    private readonly static List<SaveSlotData> AllSaveGames = [];
+    private static List<SaveSlotData> SortedTrimmedSaveGames { get; set; } = [];
     private static bool CanSave { get; set; }
     private static string CurrentSave { get; set; }
-    private static readonly Dictionary<string, Vector3> SaveLocationsDictionary = new();
+    private readonly static Dictionary<string, Vector3> SaveLocationsDictionary = new();
 
 
     [HarmonyPrefix]

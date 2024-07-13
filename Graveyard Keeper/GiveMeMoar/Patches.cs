@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using DLCRefugees;
-using HarmonyLib;
-using UnityEngine;
-
-namespace GiveMeMoar;
+﻿namespace GiveMeMoar;
 
 [HarmonyPatch]
 public static class Patches
 {
-    private static readonly List<string> DropList = new()
-    {
+    private readonly static List<string> DropList =
+    [
         "fruit:berry", "fruit:apple_green_crop", "fruit:apple_red_crop", "honey", "beeswax", "ash", "shr_agaric",
         "shr_boletus", "bat_wing", "jelly_slug",
         "jelly_slug_blue", "jelly_slug_orange", "jelly_slug_black", "bee", "slime", "spider_web", "1h_ore_metal",
@@ -21,7 +16,7 @@ public static class Patches
         "onion_seed:3", "lentils_seed:1", "lentils_seed:2", "lentils_seed:3", "pumpkin_seed:1", "pumpkin_seed:2",
         "pumpkin_seed:3", "hop_seed:1", "hop_seed:2", "hop_seed:3",
         "hamp_seed:1", "hamp_seed:2", "hamp_seed:3", "grapes_seed:1", "grapes_seed:2", "grapes_seed:3"
-    };
+    ];
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(PrayLogics), nameof(PrayLogics.SpreadFaithIncome))]

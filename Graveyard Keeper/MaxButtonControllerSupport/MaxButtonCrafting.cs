@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Object = UnityEngine.Object;
-
-namespace MaxButtonControllerSupport;
+﻿namespace MaxButtonControllerSupport;
 
 public static class MaxButtonCrafting
 {
@@ -23,7 +18,7 @@ public static class MaxButtonCrafting
         parentButtonSprite.SetDimensions(26, 26);
         parentButtonCollider.size = new Vector2(29.4f, 26f);
 
-        var minMaxButton = Object.Instantiate(parentButtonTransform.gameObject, parentButtonTransform.parent);
+        var minMaxButton = UnityEngine.Object.Instantiate(parentButtonTransform.gameObject, parentButtonTransform.parent);
         minMaxButton.name = minMaxButtonName;
         minMaxButton.transform.localPosition = new Vector3(minMaxButton.transform.localPosition.x, -31f, minMaxButton.transform.localPosition.z);
 
@@ -31,7 +26,7 @@ public static class MaxButtonCrafting
         minMaxButtonUI.normalSprite2D = parentButtonUI.normalSprite2D;
         minMaxButtonUI.hoverSprite2D = parentButtonUI.hoverSprite2D;
         minMaxButtonUI.pressedSprite2D = parentButtonUI.pressedSprite2D;
-        minMaxButtonUI.onClick = new List<EventDelegate>();
+        minMaxButtonUI.onClick = [];
 
         if (isMaximum)
         {

@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using GYKHelper;
-
-namespace IBuildWhereIWant;
+﻿namespace IBuildWhereIWant;
 
 public partial class Plugin
 {

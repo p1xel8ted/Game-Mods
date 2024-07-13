@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using HarmonyLib;
+﻿namespace TheSeedEqualizer;
 
-namespace TheSeedEqualizer;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     [HarmonyPrefix]
@@ -16,7 +13,7 @@ public static class Patches
         if (!Plugin.BoostGrowSpeedWhenRaining.Value) return;
 
         if (!EnvironmentEngine.me.is_rainy) return;
-        string[] refugee = {"garden", "planting", "refugee", "grow"};
+        string[] refugee = ["garden", "planting", "refugee", "grow"];
         if (refugee.All(a => __instance.current_craft.id.Contains(a)) || __instance.current_craft.id.Contains("vineyard") || (__instance.current_craft.id.StartsWith("garden") && __instance.current_craft.id.EndsWith("growing")))
         {
             Plugin.Log.LogInfo($"It's raining! Boosting base grow speed of {__instance.current_craft.id} by 100%!");

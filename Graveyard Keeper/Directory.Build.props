@@ -30,17 +30,16 @@
     </PropertyGroup>
 
       <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>F:\Games\steamapps\common\Graveyard Keeper\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
+      <OutputPath>G:\SteamLibrary\steamapps\common\Graveyard Keeper\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>F:\Games\steamapps\common\Graveyard Keeper\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
+      <OutputPath>G:\SteamLibrary\steamapps\common\Graveyard Keeper\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
         <PackageReference Include="Resource.Embedder" Version="2.2.0" />
-        <PackageReference Include="GraveyardKeeper.GameLibs" Version="1.405.1" />
     </ItemGroup>
 
 </Project>

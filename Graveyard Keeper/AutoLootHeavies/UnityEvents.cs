@@ -1,8 +1,4 @@
-﻿using AutoLootHeavies.lang;
-using GYKHelper;
-
-
-namespace AutoLootHeavies;
+﻿namespace AutoLootHeavies;
 
 public partial class Plugin
 {

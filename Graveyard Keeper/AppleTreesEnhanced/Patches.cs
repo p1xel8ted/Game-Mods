@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
+﻿namespace AppleTreesEnhanced;
 
-namespace AppleTreesEnhanced;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
-    private static readonly HashSet<string> SellableItemIds = new(Helpers.SellThesePlease);
+    private readonly static HashSet<string> SellableItemIds = [..Helpers.SellThesePlease];
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Vendor), nameof(Vendor.CanBuyItem), typeof(ItemDefinition), typeof(bool))]

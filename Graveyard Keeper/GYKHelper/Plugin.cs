@@ -1,14 +1,4 @@
-﻿using System.Reflection;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
-using HarmonyLib;
-using LinqTools;
-using UnityEngine;
-using UnityEngine.Diagnostics;
-using UnityEngine.SceneManagement;
-
-namespace GYKHelper;
+﻿namespace GYKHelper;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
@@ -27,6 +17,7 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
         RegisterEventHandlers();
         PatchWithHarmony();
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {MonoMod.Utils.PlatformHelper.Current}.");
     }
 
     private void InitializeDisableUnityLogging()

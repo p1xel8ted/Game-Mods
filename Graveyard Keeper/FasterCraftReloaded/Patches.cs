@@ -1,17 +1,13 @@
-﻿using System.Linq;
-using GYKHelper;
-using HarmonyLib;
+﻿namespace FasterCraftReloaded;
 
-namespace FasterCraftReloaded;
-
+[Harmony]
 [HarmonyBefore("p1xel8ted.gyk.queueeverything")]
-[HarmonyPatch]
 public static class Patches
 {
-    private static readonly string[] Exclude =
-    {
+    private readonly static string[] Exclude =
+    [
         "zombie", "refugee", "bee", "tree", "berry", "bush", "pump", "compost", "peat", "slime", "candelabrum", "incense", "garden", "planting"
-    };
+    ];
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.ProcessRemovingCraft))]

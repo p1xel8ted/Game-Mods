@@ -1,9 +1,6 @@
-﻿using HarmonyLib;
-using LazyBearGames.Preloader;
+﻿namespace NoIntros;
 
-namespace NoIntros;
-
-[HarmonyPatch]
+[Harmony]
 public static class Patches
 {
     [HarmonyPrefix]

@@ -5,7 +5,21 @@
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Update="GraveyardKeeper.GameLibs" Version="1.405.2" />
+      <Reference Include="Assembly-CSharp">
+        <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp-firstpass">
+        <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine">
+        <HintPath>..\libs\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule">
+        <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>..\libs\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
     </ItemGroup>
     <Import Project="..\zip.target" />
 </Project>

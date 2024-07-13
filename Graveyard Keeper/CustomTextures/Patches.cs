@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using GYKHelper;
-using HarmonyLib;
-using UnityEngine;
-using UnityEngine.U2D;
+﻿using HarmonyLib;
 
 namespace CustomTextures;
 
