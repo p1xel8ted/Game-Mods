@@ -69,6 +69,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomTextures", "CustomTex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeamMeUpGerry", "BeamMeUpGerry\BeamMeUpGerry.csproj", "{7E2A451A-45A5-4A36-A1B5-65ECB94C9FC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeepersCandles", "KeepersCandles\KeepersCandles.csproj", "{C432C902-D776-4A73-B77A-166462DAE306}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LostToothUnlost", "LostToothUnlost\LostToothUnlost.csproj", "{F8BE7B00-6DE3-434B-9A8B-45FCB957CF18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -207,6 +211,14 @@ Global
 		{7E2A451A-45A5-4A36-A1B5-65ECB94C9FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E2A451A-45A5-4A36-A1B5-65ECB94C9FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E2A451A-45A5-4A36-A1B5-65ECB94C9FC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C432C902-D776-4A73-B77A-166462DAE306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C432C902-D776-4A73-B77A-166462DAE306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C432C902-D776-4A73-B77A-166462DAE306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C432C902-D776-4A73-B77A-166462DAE306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8BE7B00-6DE3-434B-9A8B-45FCB957CF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8BE7B00-6DE3-434B-9A8B-45FCB957CF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8BE7B00-6DE3-434B-9A8B-45FCB957CF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8BE7B00-6DE3-434B-9A8B-45FCB957CF18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

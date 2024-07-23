@@ -148,8 +148,8 @@ public partial class Plugin : BaseUnityPlugin
         if (!MainGame.game_started || !Tools.TutorialDone()) return;
 
         if (ManualSaveKeyBind.Value.IsUp() ||
-            (EnableManualSaveControllerButton.Value && LazyInput.gamepad_active &&
-             ReInput.players.GetPlayer(0).GetButtonDown(ManualSaveControllerButton.Value)))
+            EnableManualSaveControllerButton.Value && LazyInput.gamepad_active &&
+            ReInput.players.GetPlayer(0).GetButtonDown(ManualSaveControllerButton.Value))
         {
             StartCoroutine(PerformManualSave());
         }

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace BeamMeUpGerry;
 
@@ -54,6 +55,8 @@ internal class Location
     /// </summary>
     public EnvironmentEngine.State state;
 
+    public bool customZone;
+
     public Location()
     {
     }
@@ -75,30 +78,46 @@ internal class Location
         this.coords = coords;
         this.state = state;
         this.defaultLocation = defaultLocation;
+        customZone = false;
+    }
+
+    internal static string GetSavePath()
+    {
+        // Get the name of the current assembly this code is running in
+        var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+        // Strip special characters/spaces/etc. from assembly name as it's going to be used in a system path
+        assemblyName = Regex.Replace(assemblyName, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
+        // Get the folder assemblyName is in
+        var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        var returnPath = assemblyFolder != null ? Path.Combine(assemblyFolder, Locations) : Path.Combine(Paths.PluginPath, assemblyName, Locations);
+        return returnPath;
     }
 
     public void SaveJson()
     {
         var json = JsonUtility.ToJson(this, true);
-        //get name of current assembly this code is running in
-        var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-        //strip special characters/spaces/etc. from assembly name as it's going to be used in a system path
-        assemblyName = Regex.Replace(assemblyName, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
-        //get the folder assemblyName is in
-        var assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var path = assemblyFolder != null ? Path.Combine(assemblyFolder, Locations) : Path.Combine(Paths.PluginPath, assemblyName, Locations);
+        var path = GetSavePath();
 
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-        var fileName = $"{zone}.json";
+
+        var fileName = $"{zone}_{DateTime.Now:HH_mm_ss_dd_MM_yyyy}.json";
         if (zone.IsNullOrWhiteSpace())
         {
-            fileName = $"no_zone_{DateTime.Now.Hour}_{DateTime.Now.Minute}_{DateTime.Now.Second}_{DateTime.Now.Day}_{DateTime.Now.Month}_{DateTime.Now.Year}.json";
+            fileName = $"no_zone_{DateTime.Now:HH_mm_ss_dd_MM_yyyy}.json";
         }
 
         var saveLocation = Path.Combine(path, fileName);
         try
         {
             File.WriteAllText(saveLocation, json);
+            if (!Plugin.OpenNewLocationFileOnSave.Value) return;
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = saveLocation,
+                UseShellExecute = true,
+                CreateNoWindow = false
+            };
+            Process.Start(startInfo);
         }
         catch (Exception e)
         {

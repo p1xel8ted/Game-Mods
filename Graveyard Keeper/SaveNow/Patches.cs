@@ -55,12 +55,12 @@ public partial class Plugin
     private static List<SaveSlotData> SortSaveGames()
     {
         return SortByRealTime.Value
-            ? (AscendingSort.Value
+            ? AscendingSort.Value
                 ? AllSaveGames.OrderBy(o => o.real_time).ToList()
-                : AllSaveGames.OrderByDescending(o => o.real_time).ToList())
-            : (AscendingSort.Value
+                : AllSaveGames.OrderByDescending(o => o.real_time).ToList()
+            : AscendingSort.Value
                 ? AllSaveGames.OrderBy(o => o.game_time).ToList()
-                : AllSaveGames.OrderByDescending(o => o.game_time).ToList());
+                : AllSaveGames.OrderByDescending(o => o.game_time).ToList();
     }
 
     [HarmonyPatch(typeof(BaseMenuGUI), nameof(BaseMenuGUI.SetControllsActive))]

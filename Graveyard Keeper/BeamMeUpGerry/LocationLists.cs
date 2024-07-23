@@ -49,6 +49,16 @@ public static class LocationLists
 
     internal static void CreatePages()
     {
+        if (Plugin.DebugEnabled.Value && MainGame.me && MainGame.me.save != null)
+        {
+            Plugin.Log.LogInfo("|---------- Players Seen Zones:Start ----------|");
+            foreach (var z in MainGame.me.save.known_world_zones)
+            {
+                Plugin.Log.LogInfo(z);
+            }
+            Plugin.Log.LogInfo("|---------- Players Seen Zones:End ----------|");
+        }
+        
         Locations.Clear();
         
         var locations = AllLocations
@@ -123,10 +133,10 @@ public static class LocationLists
         };
     }
 
-
+ 
     internal static void LoadCustomZones()
     {
-        var path = Path.Combine(Paths.PluginPath, "BeamMeUpGerry", "Locations");
+        var path = Location.GetSavePath();
         Directory.CreateDirectory(path); // CreateDirectory does nothing if the directory already exists
 
         var files = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
@@ -135,6 +145,12 @@ public static class LocationLists
             var location = Location.LoadFromJson(file);
             if (!string.IsNullOrWhiteSpace(location.zone))
             {
+                var exists = AllLocations.Any(a => a.zone.Equals(location.zone, StringComparison.OrdinalIgnoreCase));
+                if (exists)
+                {
+                    Plugin.Log.LogWarning($"Custom location '{location.zone}' already exists in the list, skipping...");
+                    return;
+                }
                 AllLocations.Add(location);
             }
         }

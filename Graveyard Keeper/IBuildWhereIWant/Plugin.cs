@@ -44,7 +44,7 @@ public partial class Plugin : BaseUnityPlugin
     {
         if (!CanOpenCraftAnywhere()) return;
 
-        if ((LazyInput.gamepad_active && ReInput.players.GetPlayer(0).GetButtonDown(MenuControllerButton.Value)) ||
+        if (LazyInput.gamepad_active && ReInput.players.GetPlayer(0).GetButtonDown(MenuControllerButton.Value) ||
             MenuKeyBind.Value.IsUp())
         {
             OpenCraftAnywhere();

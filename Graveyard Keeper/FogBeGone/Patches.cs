@@ -17,14 +17,14 @@ public static class Patches
     [HarmonyPatch(typeof(SmartWeatherState), nameof(SmartWeatherState.Update))]
     public static void SmartWeatherState_Update(SmartWeatherState __instance)
     {
-        if (!MainGame.game_started || __instance == null || IntroPlaying) return;
+        // if (!MainGame.game_started || __instance == null || IntroPlaying) return;
         switch (__instance.type)
         {
             case SmartWeatherState.WeatherType.Fog:
-                __instance._previously_enabled = true;
-                __instance._enabled = false;
-                 __instance._cur_amount = 0;
-                 __instance.value = 0;
+                __instance._previously_enabled = false;
+                __instance._enabled = true;
+                 __instance._cur_amount = 1f;
+                 __instance.value = 1f;
                 break;
 
             case SmartWeatherState.WeatherType.Wind:

@@ -14,7 +14,7 @@ public static class Patches
 
         if (!EnvironmentEngine.me.is_rainy) return;
         string[] refugee = ["garden", "planting", "refugee", "grow"];
-        if (refugee.All(a => __instance.current_craft.id.Contains(a)) || __instance.current_craft.id.Contains("vineyard") || (__instance.current_craft.id.StartsWith("garden") && __instance.current_craft.id.EndsWith("growing")))
+        if (refugee.All(a => __instance.current_craft.id.Contains(a)) || __instance.current_craft.id.Contains("vineyard") || __instance.current_craft.id.StartsWith("garden") && __instance.current_craft.id.EndsWith("growing"))
         {
             Plugin.Log.LogInfo($"It's raining! Boosting base grow speed of {__instance.current_craft.id} by 100%!");
 

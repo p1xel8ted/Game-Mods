@@ -1,12 +1,14 @@
-﻿namespace MiscBitsAndBobs;
+﻿using UnityEngine.SceneManagement;
+
+namespace MiscBitsAndBobs;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.7")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.miscbitsandbobs";
     private const string PluginName = "Misc. Bits & Bobs";
-    private const string PluginVer = "2.2.7";
+    private const string PluginVer = "2.2.8";
 
     internal static ConfigEntry<bool> Debug { get; set; }
     internal static ConfigEntry<bool> QuietMusicInGuiConfig { get; private set; }
@@ -25,7 +27,9 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> AddCoalToTavernOvenConfig { get; private set; }
     internal static ConfigEntry<bool> AddZombiesToPyreAndCrematoriumConfig { get; private set; }
     private static ConfigEntry<bool> KeepGamingRunningInBackgroundConfig { get; set; }
-    internal static ConfigEntry<bool> OldEnglishThrowback { get; set; }
+    
+    private static ConfigEntry<bool> MuteWhenRunningInBackgroundConfig { get; set; }
+    internal static ConfigEntry<bool> OldEnglishThrowback { get; private set; }
     internal static ManualLogSource Log { get; private set; }
 
 
@@ -33,12 +37,29 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
+        SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
+        Application.focusChanged += ApplicationOnFocusChanged;
         Actions.GameStartedPlaying += Helpers.ActionsOnSpawnPlayer;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
-
-
+    private static void ApplicationOnFocusChanged(bool value)
+    {
+        Application.runInBackground = KeepGamingRunningInBackgroundConfig.Value;
+        if (MuteWhenRunningInBackgroundConfig.Value)
+        {
+            AudioListener.volume = Application.isFocused ? 1 : 0;
+        }
+        else
+        {
+            AudioListener.volume = 1;
+        }
+    }
+    private static void SceneManagerOnSceneLoaded(Scene __arg0, LoadSceneMode __arg1)
+    {
+        ApplicationOnFocusChanged(true);
+    }
+    
     private void InitConfiguration()
     {
         KeepGamingRunningInBackgroundConfig = Config.Bind("01. General", "Keep Game Running In Background", true, new ConfigDescription("Keep the game running when it is in the background.", null, new ConfigurationManagerAttributes {Order = 30}));
@@ -47,6 +68,18 @@ public class Plugin : BaseUnityPlugin
             Application.runInBackground = KeepGamingRunningInBackgroundConfig.Value;
         };
         
+        MuteWhenRunningInBackgroundConfig = Config.Bind("01. General", "Mute When Running In Background", true, new ConfigDescription("Mute the game when it is in the background.", null, new ConfigurationManagerAttributes {Order = 31}));
+        MuteWhenRunningInBackgroundConfig.SettingChanged += (_, _) =>
+        {
+            if (MuteWhenRunningInBackgroundConfig.Value)
+            {
+                AudioListener.volume = Application.isFocused ? 1 : 0;
+            }
+            else
+            {
+                AudioListener.volume = 1;
+            }
+        };
         QuietMusicInGuiConfig = Config.Bind("02. Audio", "Quiet Music In GUI", true, new ConfigDescription("Lower the music volume when in-game menus are open.", null, new ConfigurationManagerAttributes {Order = 29}));
 
         CondenseXpBarConfig = Config.Bind("03. UI", "Condense XP Bar", true, new ConfigDescription("Reduce the size of the XP bar in the user interface.", null, new ConfigurationManagerAttributes {Order = 28}));

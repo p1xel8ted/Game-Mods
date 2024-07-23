@@ -3,129 +3,136 @@
 public static class Invents
 {
 
-    
+    private readonly static string[] AlwaysSkip = ["refugees", "bee", "refugee", "npc_tavern_barman", "soul_container", "box_pallet"];
+
     internal static IEnumerator LoadInventories(Action callback = null)
     {
-        Helpers.Log("Loading inventories!");
         Fields.Mi = new MultiInventory();
         Fields.RefugeeMi = new MultiInventory();
-        Fields.Mi.all.Clear();
-        Fields.RefugeeMi.all.Clear();
-        // var playerInv = new Inventory(MainGame.me.player);
-        // playerInv.data.SetInventorySize(_invSize);
-        //
-        // _mi.AddInventory(playerInv);
-        
-        var inventory = new Inventory(MainGame.me.player);
-        Fields.Mi.AddInventory(inventory, 0);
-        inventory.data.SetInventorySize(Fields.InvSize);
 
-            var toolbelt = new Item()
-            {
-                inventory = MainGame.me.player.data.secondary_inventory,
-                inventory_size = 7
-            };
-            Fields.Mi.AddInventory(new Inventory(toolbelt));
-            
+        var playerInventory = new Inventory(MainGame.me.player);
+        Fields.Mi.AddInventory(playerInventory, 0);
+        playerInventory.data.SetInventorySize(Fields.PlayerInventorySize);
 
-        //var zones = (List<WorldZone>) AccessTools.Field(typeof(WorldZone), "_all_zones").GetValue(null);
+        var toolbelt = new Item
+        {
+            inventory = MainGame.me.player.data.secondary_inventory,
+            inventory_size = 7
+        };
+        Fields.Mi.AddInventory(new Inventory(toolbelt));
+
         var zones = WorldZone._all_zones;
         var watch = Stopwatch.StartNew();
 
-
         foreach (var zone in zones)
         {
-            var get = MainGame.me.save.known_world_zones.Exists(a => string.Equals(a, zone.id));
-            if (!get) continue;
-            var worldZoneMulti =
-                zone.GetMultiInventory(player_mi: MultiInventory.PlayerMultiInventory.ExcludePlayer,
-                    sortWGOS: true);
+            //if its' an inventory in the refugee zone, skip
+            if (AlwaysSkip.Any(a => a.Contains(zone.id.ToLowerInvariant()))) continue;
+
+            //if it's in a zone we haven't seen, skip
+            if (!MainGame.me.save.known_world_zones.Exists(a => string.Equals(a, zone.id))) continue;
+
+            var worldZoneMulti = zone.GetMultiInventory(player_mi: MultiInventory.PlayerMultiInventory.ExcludePlayer, sortWGOS: true);
             if (worldZoneMulti == null) continue;
-            foreach (var inv in worldZoneMulti) // && inv.data.inventory.Count != 0))
+
+            foreach (var inv in worldZoneMulti.Where(inv => !AlwaysSkip.Any(inv._obj_id.ToLowerInvariant().Contains)))
             {
-                Helpers.Log($"InventoryName: {inv._obj_id}");
-                if (inv._obj_id.Length <= 0)
-                    inv.data.sub_name = "Unknown" + "#" + zone.id;
-                else
-                    inv.data.sub_name = inv._obj_id + "#" + zone.id;
+                inv.data.sub_name = string.IsNullOrEmpty(inv._obj_id) ? $"Unknown#{zone.id}" : $"{inv._obj_id}#{zone.id}";
 
-
-                if (zone.id.ToLowerInvariant().Contains("refugee"))
-                {
-                    Fields.RefugeeMi.AddInventory(inv);
-                }
-                else
-                {
-                    Fields.Mi.AddInventory(inv);
-                }
+                Plugin.Log.LogInfo($"[LoadInventories] - Adding Inventory: {inv.data.sub_name}");
+                Fields.Mi.AddInventory(inv);
             }
         }
 
+        //adds bags to the inventory
         for (var i = 0; i < Fields.Mi.all.Count; i++)
         {
-            foreach (var data in Fields.Mi.all[i].data.inventory.Where(data => data != null && !data.IsEmpty() && data.is_bag))
+            var inventoriesToAdd = Fields.Mi.all[i].data.inventory
+                .Where(data => data != null && !data.IsEmpty() && data.is_bag)
+                .Select(data => new Inventory(data, data.id))
+                .ToList();
+
+            foreach (var inv in inventoriesToAdd)
             {
-                Fields.Mi.AddInventory(new Inventory(data, data.id), i + 1);
+                Fields.Mi.AddInventory(inv, i + 1);
             }
         }
-        
+
         watch.Stop();
-        Fields.InvsLoaded = true;
-        Helpers.Log($"Inventory Loading Complete! Completed in {watch.ElapsedMilliseconds}ms");
+        Fields.InventoriesLoaded = true;
         callback?.Invoke();
         yield return true;
     }
 
+
     internal static IEnumerator LoadWildernessInventories(Action callback = null)
     {
-        Helpers.Log("Loading wilderness inventories!");
-        var wgos = CrossModFields.WorldObjects.Where(a =>
-            a.data.inventory_size > 0 && string.IsNullOrEmpty(a.GetMyWorldZoneId()));
+        var wgos = CrossModFields.WorldObjects
+            .Where(a => a.data.inventory_size > 0 && string.IsNullOrEmpty(a.GetMyWorldZoneId()))
+            .ToList();
+
         var watch = Stopwatch.StartNew();
         Fields.WildernessMultiInventories.Clear();
         Fields.WildernessInventories.Clear();
 
+        var excludedInventories = Fields.ExcludeTheseWildernessInventories;
+        var additionalInventorySpace = Plugin.AdditionalInventorySpace.Value;
+        var modifyInventorySize = Plugin.ModifyInventorySize.Value;
+
         foreach (var wgo in wgos)
         {
-            if (wgo.obj_def.inventory_size <= 0 || Fields.ExcludeTheseWildernessInventories.Any(wgo.obj_id.Contains) || wgo.data.inventory_size == Plugin.AdditionalInventorySpace.Value) continue;
+            if (wgo.obj_def.inventory_size <= 0 || excludedInventories.Any(wgo.obj_id.Contains)) continue;
+
+            if (modifyInventorySize)
+            {
+                var size = Helpers.OriginalInventorySizes.TryGetValue(wgo.obj_id, out var originalSize)
+                    ? originalSize
+                    : wgo.obj_def.inventory_size;
+
+                size += additionalInventorySpace;
+
+                if (wgo.obj_def.inventory_size == size)
+                {
+                    continue;
+                }
+            }
 
             var zoneId = wgo.GetMyWorldZoneId();
-            wgo.data.sub_name = wgo.obj_id + "#" + zoneId;
+            wgo.data.sub_name = $"{wgo.obj_id}#{zoneId}";
 
-            if (!string.IsNullOrEmpty(zoneId)) continue;
-            if (wgo.unique_id.ToString().Length <= 5) continue;
+            if (!string.IsNullOrEmpty(zoneId) || wgo.unique_id.ToString().Length <= 5) continue;
 
             if (wgo.custom_tag.Equals(Fields.ShippingBoxTag) || wgo.data.drop_zone_id.Equals(Fields.ShippingBoxTag)) continue;
 
-            var exists = Fields.WildernessMultiInventories.ContainsKey(wgo);
-            if (!exists) Fields.WildernessMultiInventories.Add(wgo, wgo.GetMultiInventoryOfWGOWithoutWorldZone());
-
-            var invCount = 0;
-            foreach (var inv in wgo.GetMultiInventoryOfWGOWithoutWorldZone().all.Where(inv => !Fields.WildernessInventories.Contains(inv)))
+            if (!Fields.WildernessMultiInventories.ContainsKey(wgo))
             {
-                invCount++;
+                Fields.WildernessMultiInventories[wgo] = wgo.GetMultiInventoryOfWGOWithoutWorldZone();
+            }
+
+            var multiInventory = Fields.WildernessMultiInventories[wgo];
+
+            foreach (var inv in multiInventory.all.Where(inv => !Fields.WildernessInventories.Contains(inv)))
+            {
                 Fields.WildernessInventories.Add(inv);
-                Helpers.Log($"Added {wgo.obj_id}'s ({zoneId}, {wgo.pos3}) Inventory {inv._obj_id} (#{invCount}) - CurrentGD: {wgo.cur_gd_point}, Unique ID: {wgo.unique_id} to WildernessInventories.");
             }
         }
 
         watch.Stop();
-        Helpers.Log($"Wilderness Inventory Loading Complete! Completed in {watch.ElapsedMilliseconds}ms.");
         callback?.Invoke();
         yield break;
     }
 
+
     internal static void SetInventorySizeText(BaseInventoryWidget inventoryWidget)
     {
-        //Helpers.Log($"[Bag]: {inventoryWidget.inventory_data.is_bag}, ID: {inventoryWidget.inventory_data.id}");
         if (inventoryWidget.inventory_data.id.Contains(Fields.Writer)) return;
         if (inventoryWidget.header_label.text.Contains(Fields.Gerry)) return;
         if (!Plugin.ShowWorldZoneInTitles.Value && !Plugin.ShowUsedSpaceInTitles.Value) return;
 
-        string wzLabel;
         string objId;
         bool isPlayer;
         var subNameSplit = inventoryWidget.inventory_data.sub_name.Split('#');
+
         if (string.IsNullOrEmpty(subNameSplit[0]))
         {
             objId = Helpers.GetLocalizedString(strings.Player);
@@ -137,18 +144,8 @@ public static class Invents
             isPlayer = false;
         }
 
-        var zoneId = string.Empty;
-        if (subNameSplit.Length > 1) zoneId = subNameSplit[1].ToLowerInvariant().Trim();
-
-        if (inventoryWidget.inventory_data.sub_name.Length > 0)
-        {
-            var wzId = WorldZone.GetZoneByID(zoneId, false);
-            wzLabel = wzId != null ? GJL.L("zone_" + wzId.id) : Helpers.GetLocalizedString(strings.Wilderness);
-        }
-        else
-        {
-            wzLabel = Helpers.GetLocalizedString(strings.Wilderness);
-        }
+        var zoneId = subNameSplit.Length > 1 ? subNameSplit[1].ToLowerInvariant().Trim() : string.Empty;
+        var wzLabel = GetWorldZoneLabel(zoneId);
 
         var cultureInfo = CrossModFields.Culture;
         var textInfo = cultureInfo.TextInfo;
@@ -160,85 +157,142 @@ public static class Invents
 
         inventoryWidget.header_label.overflowMethod = UILabel.Overflow.ResizeFreely;
 
-        var header = objId;
+        var header = inventoryWidget.inventory_data.is_bag ? GJL.L(inventoryWidget.inventory_data.id) : objId;
 
-        if (inventoryWidget.inventory_data.is_bag) // || objId.StartsWith("bookcase_f_broken"))
-        {
-            header = GJL.L(inventoryWidget.inventory_data.id);
-        }
-
-        //failed to translate or something
+        // Fallback to inventory id if translation failed
         if (header.Contains("_"))
         {
             header = GJL.L(inventoryWidget.inventory_data.id);
         }
 
-        if (Plugin.ShowWorldZoneInTitles.Value && !isPlayer) header = string.Concat(header, $" ({wzLabel})");
+        var sb = new StringBuilder(header);
 
-        if (Plugin.ShowUsedSpaceInTitles.Value) header = string.Concat(header, $" - {used}/{cap}");
+        if (Plugin.ShowWorldZoneInTitles.Value && !isPlayer)
+        {
+            sb.Append($" ({wzLabel})");
+        }
 
-        inventoryWidget.header_label.text = header;
+        if (Plugin.ShowUsedSpaceInTitles.Value)
+        {
+            sb.Append($" - {used}/{cap}");
+        }
+
+        inventoryWidget.header_label.text = sb.ToString();
+        return;
+
+        string GetWorldZoneLabel(string zone)
+        {
+            if (string.IsNullOrEmpty(zone)) return Helpers.GetLocalizedString(strings.Wilderness);
+            var wzId = WorldZone.GetZoneByID(zone, false);
+            return wzId != null ? GJL.L("zone_" + wzId.id) : Helpers.GetLocalizedString(strings.Wilderness);
+        }
     }
 
-    internal static MultiInventory GetMiInventory(string requester)
+    internal static MultiInventory GetMiInventory(string requester, string zone)
     {
-        if (requester.Contains("refugee_builddesk") || requester.Contains("storage_builddesk"))
+        if (requester.Contains("refugee_builddesk") || requester.Contains("storage_builddesk") || zone.Contains("stone_workyard") || zone.Contains("marble_deposit"))
         {
-            Helpers.Log($"{requester} detected, refreshing inventories! Requester: {requester}");
             MainGame.me.StartCoroutine(LoadInventories());
             MainGame.me.StartCoroutine(LoadWildernessInventories());
-        }
-        
-        if (Fields.WildernessInventories.Count <= 0)
-        {
-            Helpers.Log($"WildernessInventory count <= 0! Requester: {requester}");
-           return Fields.Mi;
         }
 
         foreach (var inv in Fields.WildernessInventories.Where(inv => !Fields.Mi.all.Contains(inv)))
         {
-            Helpers.Log($"Added WildernessInventory to MultiInventory Request! Requester: {requester}");
             Fields.Mi.AddInventory(inv);
         }
 
-        if (!requester.Contains("zombie")) Helpers.Log($"MultiInventory Request! Requester: {requester}");
+        var tempList = Fields.Mi.all.ToList();
+        if (Plugin.ExcludeWellsFromSharedInventory.Value)
+        {
+            foreach (var inv in tempList)
+            {
+                if (inv.data.sub_name.Contains("well"))
+                {
+                    if (Fields.Mi.all.Remove(inv))
+                    {
+                        Plugin.Log.LogWarning($"[GetMiInventory] - Removed Well: {inv.data.sub_name}");
+                    }
+                }
+            }
+        }
 
+        if (Plugin.ExcludeQuarryFromSharedInventory.Value)
+        {
+            foreach (var inv in tempList)
+            {
+                if (inv.data.sub_name.Contains("stone_workyard") || inv.data.sub_name.Contains("marble_deposit"))
+                {
+                    if (inv.data.sub_name.Contains("mf_ore") || inv.data.sub_name.Contains("mf_stone"))
+                    {
+                        if (Fields.Mi.all.Remove(inv))
+                        {
+                            Plugin.Log.LogWarning($"[GetMiInventory] - Removed Quarry: {inv.data.sub_name}");
+                        }
+                    }
+                }
+            }
+        }
+
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value)
+        {
+            foreach (var inv in tempList)
+            {
+                if (inv.data.sub_name.Contains("sawmill"))
+                {
+                    if (Fields.Mi.all.Remove(inv))
+                    {
+                        Plugin.Log.LogWarning($"[GetMiInventory] - Removed Zombie Mill: {inv.data.sub_name}");
+                    }
+                }
+            }
+        }
 
         return Fields.Mi;
     }
 
-    //this method gets inserted into the CraftReally method using the transpiler below, overwriting any inventory the game sets during crafting
+    // This method gets inserted into the CraftReally method using the transpiler below, overwriting any inventory the game sets during crafting
     public static MultiInventory GetMi(CraftDefinition craft, MultiInventory orig, WorldGameObject otherGameObject)
     {
         if (!Plugin.SharedInventory.Value) return orig;
-        if (otherGameObject.GetMyWorldZoneId().Contains("refugee") || otherGameObject.obj_id.Contains("refugee"))
-        {
-            Helpers.Log($"[InvRedirect]: Original inventory sent back to requester! IsPlayer: {otherGameObject.is_player}, Object: {otherGameObject.obj_id}, Craft: {craft.id}, Gratitude: {Fields.GratitudeCraft}");
-            return orig;
-        }
 
-        if (otherGameObject.obj_id.Contains("storage_builddesk"))
+        var objId = otherGameObject.obj_id;
+        var worldZoneId = otherGameObject.GetMyWorldZoneId();
+        var isPlayer = otherGameObject.is_player;
+        var hasLinkedWorker = otherGameObject.has_linked_worker;
+        var linkedWorkerObjId = hasLinkedWorker ? otherGameObject.linked_worker.obj_id : string.Empty;
+        var isZombie = objId.Contains("zombie") || linkedWorkerObjId.Contains("zombie");
+        Fields.ZombieWorker = isZombie;
+
+        if (AlwaysSkip.Any(a => objId.Contains(a) || worldZoneId.Contains(a))) return orig;
+
+        // if (Plugin.ExcludeWellsFromSharedInventory.Value && (objId.Contains("well") || objId.Contains("well"))) return orig;
+        //
+        // if (Plugin.ExcludeQuarryFromSharedInventory.Value && (worldZoneId.Contains("stone_workyard") || worldZoneId.Contains("marble_deposit"))) return orig;
+        //
+        // if (Plugin.ExcludeZombieMillFromSharedInventory.Value && worldZoneId.Contains("zombie_mill")) return orig;
+        
+        
+        if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie) return orig;
+   
+
+        if (objId.Contains("storage_builddesk"))
         {
-            Helpers.Log($"{otherGameObject.obj_id} detected, refreshing inventories! Requester: {otherGameObject.obj_id}");
             MainGame.me.StartCoroutine(LoadInventories());
         }
-        
-        if ((otherGameObject.is_player && craft.id.Length > 0) || (otherGameObject.has_linked_worker && otherGameObject.linked_worker.obj_id.Contains("zombie")) || otherGameObject.obj_id.Contains("zombie") || otherGameObject.obj_id.StartsWith("mf_") || Fields.GratitudeCraft)
+
+
+        var isSpecialObject = isZombie || objId.StartsWith("mf_") || Fields.GratitudeCraft;
+
+        if (isPlayer && craft.id.Length > 0 || isSpecialObject)
         {
-            if ((otherGameObject.has_linked_worker && otherGameObject.linked_worker.obj_id.Contains("zombie")) || otherGameObject.obj_id.Contains("zombie")) Fields.ZombieWorker = true;
-
-            if (!(Time.time - Fields.TimeEight > Fields.LogGap))  return GetMiInventory($"Object: {otherGameObject.obj_id}, Craft: {craft.id}, Gratitude: {Fields.GratitudeCraft}");
-            Fields.TimeEight = Time.time;
-            Helpers.Log($"[InvRedirect]: Redirected craft inventory to player MultiInventory! Object: {otherGameObject.obj_id}, Craft: {craft.id}, Gratitude: {Fields.GratitudeCraft}");
-
-             return GetMiInventory($"Object: {otherGameObject.obj_id}, Craft: {craft.id}, Gratitude: {Fields.GratitudeCraft}");
+            Plugin.Log.LogWarning($"[CraftReally][GetMi] - objId:{objId}, worldZoneId:{worldZoneId}, isPlayer:{isPlayer}, hasLinkedWorker:{hasLinkedWorker}, linkedWorkerObjId:{linkedWorkerObjId}");
+            return GetMiInventory($"Object: {objId}", otherGameObject.GetMyWorldZoneId());
         }
 
-        Fields.ZombieWorker = false;
+        Plugin.Log.LogWarning($"[CraftReally][GetMi] - objId:{objId}, worldZoneId:{worldZoneId}, isPlayer:{isPlayer}, hasLinkedWorker:{hasLinkedWorker}, linkedWorkerObjId:{linkedWorkerObjId} - RETURNING ORIGINAL");
 
-        if (!(Time.time - Fields.TimeNine > Fields.LogGap))  return orig;
-        Fields.TimeNine = Time.time;
-        Helpers.Log($"[InvRedirect]: Original inventory sent back to requester! IsPlayer: {otherGameObject.is_player}, Object: {otherGameObject.obj_id}, Craft: {craft.id}, Gratitude: {Fields.GratitudeCraft}");
-         return orig;
+        Fields.ZombieWorker = false;
+        return orig;
     }
+
 }

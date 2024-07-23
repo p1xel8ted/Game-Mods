@@ -4,6 +4,30 @@
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class Patches
 {
+
+    [HarmonyPostfix]
+    [HarmonyWrapSafe]
+    [HarmonyPatch(typeof(MultiAnswerGUI), nameof(MultiAnswerGUI.Update))]
+    public static void MultiAnswerGUI_Update(MultiAnswerGUI __instance)
+    {
+        try
+        {
+            if (!MultiAnswerGUI.talker_wgo.is_player || !Helpers.MakingChoice) return;
+
+            Plugin.CachedPlayer ??= ReInput.players.GetPlayer(0);
+
+            var find = __instance._answers.Find(a => a._answer_id.ContainsByLanguage("cancel"));
+            if (find && (Input.GetKeyUp(KeyCode.Escape) || LazyInput.gamepad_active && (Plugin.CachedPlayer.GetButtonUp("B") || Plugin.CachedPlayer.GetButtonUp("Back"))))
+            {
+                find.OnChosen();
+            }
+        }
+        catch (Exception)
+        {
+            // ignored
+        }
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Item), nameof(Item.GetGrayedCooldownPercent))]
     public static void Item_GetGrayedCooldownPercent(ref Item __instance, ref int __result)
@@ -11,6 +35,29 @@ public static class Patches
         if (__instance is not {id: Constants.Hearthstone}) return;
 
         __result = 0;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnFinishedCraft))]
+    public static void GameSave_OnFinishedCraft(CraftDefinition craft)
+    {
+        if (craft.id.StartsWithByLanguage("steep_yellow_blockage"))
+        {
+            Plugin.Log.LogInfo("Steep Yellow Blockage Crafted (blockage to Quarry etc) - Refreshing List");
+            Plugin.InitConfiguration();
+        }
+    }
+
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnEnteredWorldZone))]
+    public static void GameSave_OnEnteredWorldZone(WorldZone z)
+    {
+        if (Array.IndexOf(Helpers.BlockageLocations, z.id) != -1)
+        {
+            Helpers.Log("Entered Blockage Location (meaning the blockage has been removed) - Refreshing List");
+            Plugin.InitConfiguration();
+        }
     }
 
     [HarmonyPrefix]
@@ -43,6 +90,18 @@ public static class Patches
         var gameRes = new GameRes(__instance.definition.params_on_use);
         __result = gameRes;
 
+        if (Plugin.DebugEnabled.Value)
+        {
+            for (var index = 0; index < LocationLists.Locations.Count; index++)
+            {
+                var loc = LocationLists.Locations[index];
+                Plugin.Log.LogInfo($"Page: {index + 1}");
+                foreach (var locItem in loc)
+                {
+                    Plugin.Log.LogInfo($"LocationItem: {locItem.id}");
+                }
+            }
+        }
 
         Menus.ShowMultiAnswer(LocationLists.Locations[0]);
 
@@ -58,8 +117,8 @@ public static class Patches
         // {
         //     Plugin.Log.LogWarning($"Zone: {saveKnownWorldZone}");
         // }
-        
-     
+
+
         var playerRequest = MultiAnswerGUI.talker_wgo == MainGame.me.player;
         if (playerRequest && Plugin.IncreaseMenuAnimationSpeed.Value)
         {

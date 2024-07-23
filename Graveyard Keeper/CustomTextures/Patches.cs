@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using UnityEngine;
+using UnityEngine.U2D;
 
 namespace CustomTextures;
 
@@ -27,49 +29,4 @@ public static class Patches
             Plugin.Log.LogWarning($"Replaced sprite {sprite.name} with {newSprite.name}");
         }
     }
-
-
-    // [HarmonyPrefix]
-    // [HarmonyPatch(typeof(EasySpritesCollection), nameof(EasySpritesCollection.OnAtlasLoaded))]
-    // private static bool EasySpritesCollection_OnAtlasLoaded(Object atlas)
-    // {
-    //     var spriteAtlas = atlas as SpriteAtlas;
-    //     if (spriteAtlas == null)
-    //     {
-    //         Debug.LogError("OnAtlasLoaded: atlas is null");
-    //         return true;
-    //     }
-    //     Debug.Log("OnAtlasLoaded " + spriteAtlas.name + ", sprites: " + spriteAtlas.spriteCount.ToString(), spriteAtlas);
-    //     var array = new Sprite[spriteAtlas.spriteCount];
-    //     spriteAtlas.GetSprites(array);
-    //     foreach (var sprite in array)
-    //     {
-    //         var text = sprite.name.Replace("(Clone)", "").ToLower();
-    //         if (EasySpritesCollection.hash.ContainsKey(text))
-    //         {
-    //             Debug.LogWarning("Error adding sprite to a library - duplicate name: " + text);
-    //         }
-    //         else
-    //         {
-    //             EasySpritesCollection.hash.Add(text, sprite);
-    //         }
-    //     }
-    //
-    //     return false;
-    // }
-
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(EasySpritesCollection), nameof(EasySpritesCollection.CreateHash))]
-    // private static void EasySpritesCollection_CreateHash()
-    // {
-    //     foreach (var sprite in EasySpritesCollection.hash)
-    //     {
-    //         Plugin.Log.LogWarning($"EasySpritesCollection hash: Key: {sprite.Key}, Name: {sprite.Value.name}, Name: {sprite.Value.texture.name}");   
-    //     }
-    //     
-    //     foreach (var sprite in EasySpritesCollection.hash_sub)
-    //     {
-    //         Plugin.Log.LogWarning($"EasySpritesCollection hash_sub: Key: {sprite.Key}, Int: {sprite.Value}");   
-    //     }
-    // }
 }

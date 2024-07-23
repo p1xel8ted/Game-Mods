@@ -30,10 +30,10 @@ public static class Fields
     ];
 
     internal readonly static ItemDefinition.ItemType[] GraveItems =
-    {
+    [
         ItemDefinition.ItemType.GraveStone, ItemDefinition.ItemType.GraveFence, ItemDefinition.ItemType.GraveCover,
         ItemDefinition.ItemType.GraveStoneReq, ItemDefinition.ItemType.GraveFenceReq, ItemDefinition.ItemType.GraveCoverReq
-    };
+    ];
 
     internal readonly static string[] PenPaperInkItems =
     [
@@ -46,25 +46,24 @@ public static class Fields
         "mf_stones", "mf_ore", "mf_timber"
     ];
 
-    internal readonly static ItemDefinition.ItemType[] ToolItems =
-    {
-        ItemDefinition.ItemType.Axe, ItemDefinition.ItemType.Shovel, ItemDefinition.ItemType.Hammer,
-        ItemDefinition.ItemType.Pickaxe, ItemDefinition.ItemType.FishingRod, ItemDefinition.ItemType.BodyArmor,
-        ItemDefinition.ItemType.HeadArmor, ItemDefinition.ItemType.Sword, ItemDefinition.ItemType.Preach
-    };
+    // internal readonly static ItemDefinition.ItemType[] ToolItems =
+    // [
+    //     ItemDefinition.ItemType.Axe, ItemDefinition.ItemType.Shovel, ItemDefinition.ItemType.Hammer,
+    //     ItemDefinition.ItemType.Pickaxe, ItemDefinition.ItemType.FishingRod, ItemDefinition.ItemType.BodyArmor,
+    //     ItemDefinition.ItemType.HeadArmor, ItemDefinition.ItemType.Sword
+    // ];
 
     internal static bool GameBalanceAlreadyRun { get; set; }
     internal static bool GratitudeCraft { get; set; }
-    internal static int InvSize { get; set; }
-
-    internal static MultiInventory Mi  { get; set; }= new();
-    internal static MultiInventory RefugeeMi  { get; set; }= new();
+    internal static int PlayerInventorySize => 20 + Plugin.AdditionalInventorySpace.Value;
+    internal static MultiInventory Mi { get; set; } = new();
+    internal static MultiInventory RefugeeMi { get; set; } = new();
     internal static float TimeSix { get; set; }
     internal static float TimeEight { get; set; }
     internal static float TimeNine { get; set; }
     internal static bool UsingBag { get; set; }
     internal static bool ZombieWorker { get; set; }
-    internal static List<Item> OldDrops  { get; set; }= [];
+    internal static List<Item> OldDrops { get; set; } = [];
 
     internal readonly static string[] ExcludeTheseWildernessInventories =
     [
@@ -74,6 +73,6 @@ public static class Fields
     internal readonly static Dictionary<WorldGameObject, MultiInventory> WildernessMultiInventories = new();
     internal readonly static List<Inventory> WildernessInventories = [];
 
-    internal static bool InvsLoaded { get; set; }
+    internal static bool InventoriesLoaded { get; set; }
     public static bool DropsCleaned { get; set; }
 }

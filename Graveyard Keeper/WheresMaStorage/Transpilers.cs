@@ -3,13 +3,13 @@
 [HarmonyPatch]
 public static class Transpilers
 {
+
     [HarmonyPatch(typeof(AutopsyGUI))]
     public static class AutopsyGuiTranspiler
     {
         internal static IEnumerable<MethodBase> TargetMethods()
         {
-            var inner = typeof(AutopsyGUI).GetNestedType("<>c__DisplayClass23_0", AccessTools.all)
-                        ?? throw new Exception("Inner Not Found");
+            var inner = typeof(AutopsyGUI).GetNestedType("<>c__DisplayClass23_0", AccessTools.all) ?? throw new Exception("Inner Not Found");
 
             foreach (var method in inner.GetMethods(AccessTools.all))
                 if (method.Name.Contains("<OnBodyItemPress>") && method.GetParameters().Length == 2)
@@ -40,7 +40,7 @@ public static class Transpilers
 
             var usedMultiField = AccessTools.Field(typeof(CraftComponent), nameof(CraftComponent.used_multi_inventory));
             var otherObj = AccessTools.Field(typeof(CraftComponent), nameof(CraftComponent.other_obj));
-            var miGetter = typeof(Invents).GetMethod(nameof(Invents.GetMi), AccessTools.all);
+            var miGetter = AccessTools.Method(typeof(Invents), nameof(Invents.GetMi));
             var insertIndex = -1;
             for (var i = 0; i < codes.Count; i++)
                 if (codes[i].opcode == OpCodes.Ldfld && codes[i].operand.ToString().Contains("item_needs") && codes[i - 1].opcode == OpCodes.Ldarg_1)
@@ -68,7 +68,7 @@ public static class Transpilers
             }
             else
             {
-                Helpers.Log("[CraftReally]: Insert range not found!",true);
+                Helpers.Log("[CraftReally]: Insert range not found!", true);
             }
 
             return codes.AsEnumerable();
@@ -80,8 +80,7 @@ public static class Transpilers
     {
         internal static IEnumerable<MethodBase> TargetMethods()
         {
-            var inner = typeof(OrganEnhancerGUI).GetNestedType("<>c", AccessTools.all)
-                        ?? throw new Exception("Inner Not Found");
+            var inner = typeof(OrganEnhancerGUI).GetNestedType("<>c", AccessTools.all) ?? throw new Exception("Inner Not Found");
 
             foreach (var method in inner.GetMethods(AccessTools.all))
                 if (method.Name.Contains("<OnItemSelect>") && method.GetParameters().Length == 2)
@@ -106,8 +105,7 @@ public static class Transpilers
     {
         internal static IEnumerable<MethodBase> TargetMethods()
         {
-            var inner = typeof(RatCellGUI).GetNestedType("<>c", AccessTools.all)
-                        ?? throw new Exception("Inner Not Found");
+            var inner = typeof(RatCellGUI).GetNestedType("<>c", AccessTools.all) ?? throw new Exception("Inner Not Found");
 
             foreach (var method in inner.GetMethods(AccessTools.all))
                 if (method.Name.Contains("<OnRatInsertionButtonPressed>") && method.GetParameters().Length == 2)

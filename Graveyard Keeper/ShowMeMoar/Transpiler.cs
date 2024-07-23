@@ -13,7 +13,7 @@ public static class ScreenResolutionsPatch
     /// <returns>A list of resolutions, including the custom one.</returns>
     public static Resolution[] MyResolutions()
     {
-        Plugin.Log.LogWarning("Unity Screen.resolutions intercepted!");
+        Plugin.Log.LogInfo("Unity Screen.resolutions intercepted!");
         var newRes = new Resolution
         {
             height = Display.main.systemHeight,
@@ -36,7 +36,7 @@ public static class ScreenResolutionsPatch
     {
         if (!Plugin.Ultrawide.Value)
         {
-            Plugin.Log.LogWarning("Transpiler: Screen.resolutions transpiler not applied!");
+            Plugin.Log.LogWarning("Ultra-wide resolutions are disabled!");
             return instructions.AsEnumerable();
         }
         var originalInstructions = instructions.ToList();
@@ -48,7 +48,7 @@ public static class ScreenResolutionsPatch
             t.operand = myResolutionsMethod;
         }
 
-        Plugin.Log.LogWarning("Screen.resolutions transpiler applied!");
+        Plugin.Log.LogInfo("Ultra-wide resolutions are enabled!.");
         return originalInstructions.AsEnumerable();
     }
 }

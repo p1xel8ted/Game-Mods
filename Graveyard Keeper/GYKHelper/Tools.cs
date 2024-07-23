@@ -2,6 +2,11 @@
 
 public static class Tools
 {
+
+    public static List<DropResGameObject> GetWorldDrops()
+    {
+        return MainGame.me.world_root.GetComponentsInChildren<DropResGameObject>(true).ToList();
+    }
     public static void ShowLootAddedIcon(Item item)
     {
         var originalSize = item.definition.item_size;
@@ -9,6 +14,11 @@ public static class Tools
         DropCollectGUI.OnDropCollected(item);
         item.definition.item_size = originalSize;
         Sounds.PlaySound("pickup", MainGame.me.player_pos, true);
+    }
+
+    public static bool CanCollectDrop(DropResGameObject drop)
+    {
+        return drop.res.definition is not {item_size: > 1};
     }
 
     public static bool WorkerHasBackpack(WorldGameObject workerWgo)

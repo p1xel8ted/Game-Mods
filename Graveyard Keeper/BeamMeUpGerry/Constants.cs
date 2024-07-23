@@ -11,5 +11,5 @@ public static class Constants
     internal const string ZoneWheatLand = "zone_wheat_land";
     internal const string Mystery = "Mystery";
     internal const string ZonePartial = "zone_";
-    internal const float MaxPages = 10f;
+    internal const int MaxPages = 10;
 }

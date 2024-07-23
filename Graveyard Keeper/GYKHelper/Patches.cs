@@ -1,4 +1,6 @@
-﻿namespace GYKHelper;
+﻿using MonoMod.Utils;
+
+namespace GYKHelper;
 
 [HarmonyPriority(1)]
 public static class Patches
@@ -23,6 +25,20 @@ public static class Patches
         MainGame.game_started = false;
 
         if (!Plugin.DisplayDuplicateHarmonyPatches.Value) return;
+
+        var originalMethods = GetAllPatchedMethodsManually();
+        var groupedMethods = originalMethods.GroupBy(method => new {method.DeclaringType, method.Name});
+
+        var sortedMethods = groupedMethods.Where(group => group.Count() > 1)
+            .SelectMany(group => group)
+            .OrderBy(method => method.DeclaringType!.ToString())
+            .ThenBy(method => method.Name);
+
+        foreach (var method in sortedMethods)
+        {
+            Plugin.Log.LogWarning($"Type: {method.DeclaringType}, Method: {method.Name}");
+        }
+        return;
 
         static IEnumerable<MethodInfo> GetAllPatchedMethodsManually()
         {
@@ -70,19 +86,6 @@ public static class Patches
                 }
             }
         }
-
-        var originalMethods = GetAllPatchedMethodsManually();
-        var groupedMethods = originalMethods.GroupBy(method => new {method.DeclaringType, method.Name});
-
-        var sortedMethods = groupedMethods.Where(group => group.Count() > 1)
-            .SelectMany(group => group)
-            .OrderBy(method => method.DeclaringType!.ToString())
-            .ThenBy(method => method.Name);
-
-        foreach (var method in sortedMethods)
-        {
-            Plugin.Log.LogWarning($"Type: {method.DeclaringType}, Method: {method.Name}");
-        }
     }
 
     [HarmonyPostfix]
@@ -91,8 +94,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSettings), nameof(GameSettings.Init))]
     public static void GameSettingsApplyLanguageChangePostfix()
     {
-        CrossModFields.Lang =
-            GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim();
+        CrossModFields.Lang = GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim();
         CrossModFields.Culture = CultureInfo.GetCultureInfo(CrossModFields.Lang);
         Thread.CurrentThread.CurrentUICulture = CrossModFields.Culture;
     }
@@ -125,29 +127,36 @@ public static class Patches
     [HarmonyPatch(typeof(MainMenuGUI), nameof(MainMenuGUI.Open))]
     public static void MainMenuGUI_Open_Postfix(ref MainMenuGUI __instance)
     {
-        if (__instance == null) return;
+        if (!__instance) return;
 
-        var pc1 = GameObject.Find("UI Root/Main menu/PC2PreorderBanner");
-        if (pc1 != null)
+
+        //disables opaque border around the menu buttons
+        var menuButtons = __instance.transform.Find("dark back (1)");
+        if (menuButtons) menuButtons.gameObject.SetActive(false);
+
+        //disables ads
+        var pc1 = __instance.transform.Find("PC2PreorderBanner");
+        if (pc1) pc1.gameObject.SetActive(false);
+
+        var pc2 = __instance.transform.Find("PC2AvailableBanner");
+        if (pc2) pc2.gameObject.SetActive(false);
+
+        //updates version text for GYK Helper
+        var version = __instance.transform.Find("ver txt");
+        if (version)
         {
-            pc1.SetActive(false);
-        }
-        var pc2 = GameObject.Find("UI Root/Main menu/PC2AvailableBanner");
-        if (pc2 != null)
-        {
-            pc2.SetActive(false);
-        }
-        
-        foreach (var comp in __instance.GetComponentsInChildren<UILabel>()
-                     .Where(x => x.name.Contains("ver txt")))
-        {
-            comp.text =
+            var versionLabel = version.GetComponent<UILabel>();
+            versionLabel.text =
                 $"[F7B000] BepInEx Modded[-] [F7B000]GYKHelper v{Assembly.GetExecutingAssembly().GetName().Version.Major}.{Assembly.GetExecutingAssembly().GetName().Version.Minor}.{Assembly.GetExecutingAssembly().GetName().Version.Build}[-]";
-            comp.overflowMethod = UILabel.Overflow.ResizeFreely;
-            comp.multiLine = true;
-            comp.MakePixelPerfect();
-            //labelToMimic = comp;
+            versionLabel.text += $"\n({LazyConsts.VERSION}-{PlatformHelper.Current})";
+            versionLabel.overflowMethod = UILabel.Overflow.ResizeFreely;
+#pragma warning disable CS0618 // Type or member is obsolete
+            versionLabel.lineHeight = 32;
+#pragma warning restore CS0618 // Type or member is obsolete
+            versionLabel.multiLine = true;
+            versionLabel.MakePixelPerfect();
         }
+        version.localPosition = new Vector3(0f, -355f, 0f);
     }
 
 

@@ -28,6 +28,7 @@ public static class Actions
     public static Action GameStatusUndefined;
     public static Action GameStartedPlaying;
 
+    
     public static Action EndOfDayPrefix;
     public static Action EndOfDayPostfix;
     

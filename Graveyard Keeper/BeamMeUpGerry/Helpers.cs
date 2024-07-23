@@ -3,12 +3,18 @@
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class Helpers
 {
-    private static bool MakingChoice { get; set; }
+    internal static bool MakingChoice { get; set; }
 
     private static WorldGameObject Gerry { get; set; }
     private static bool GerryRunning { get; set; }
 
 
+    private static bool RemovedQuarryBlockage()
+    {
+        return MainGame.me.save.completed_one_time_crafts.Any(craft => craft.StartsWithByLanguage("steep_yellow_blockage"));
+    }
+    
+    
     internal static void Log(string message)
     {
         if (Plugin.DebugEnabled.Value)
@@ -125,7 +131,7 @@ public static class Helpers
             return;
         }
 
-        var newMessage = message != string.Empty ? message : (money ? GetMoneyMessage() : GetMessage());
+        var newMessage = message != string.Empty ? message : money ? GetMoneyMessage() : GetMessage();
 
         Gerry.Say(newMessage, () => GJTimer.AddTimer(0.25f, () => FinalizeGerry(money)), null, SpeechBubbleGUI.SpeechBubbleType.Talk, SmartSpeechEngine.VoiceID.Skull);
     }
@@ -151,115 +157,123 @@ public static class Helpers
         }
     }
 
+    private readonly static Dictionary<string,string> UnusualMaps = new()
+    {
+        {"@lighthouse", "sealight"},
+        {"@quarry", "stone_workyard"},
+        {"@players_tavern", "players_tavern"},
+        {"@zone_nountain_fort", "camp"}, //no match, this is close enough
+        {"@zone_refugees_camp_tp", "refugees_camp"}
+    };
 
+    private static string[] LocationsToReturnFalse =>
+    [
+        "home",
+        "mf_wood",
+        "morgue_outside",
+        "morgue",
+        "garden",
+        "beegarden",
+        "graveyard",
+        "wheat_land",
+        "zombie_sawmill",
+        "flat_under_waterflow_3",
+        "vilage",
+        "tavern",
+        "flat_under_waterflow_2",
+        "flat_under_waterflow",
+        "marble_deposit",
+        "stone_workyard",
+        "@lighthouse",
+        "sealight",
+        "@quarry",
+        "tree_garden",
+        "stone_workyard",
+        "@players_tavern",
+        "players_tavern",
+        "@zone_nountain_fort",
+        "camp",
+        "@zone_refugees_camp_tp",
+        "refugees_camp",
+        Constants.Mystery,
+        strings.Clay,
+        strings.Sand,
+        strings.Page_1,
+        strings.Page_2,
+        strings.Page_3,
+        strings.Page_4,
+        strings.Page_5,
+        strings.Page_6,
+        strings.Page_7,
+        strings.Page_8,
+        strings.Page_9,
+        strings.Page_10,
+        strings.Custom_Locations,
+        Constants.Cancel
+    ];
+    
+    internal static string[] BlockageLocations =>
+    [
+        "@quarry",
+        "stone_workyard",
+        "@zone_refugees_camp_tp",
+        "refugees_camp",
+        "marble_deposit",
+        "zombie_sawmill",
+        strings.Coal,
+        Constants.ZoneFlatUnderWaterflow
+    ];
+    
     internal static bool RemoveZone(Location location)
     {
-        //
-        //     home
-        //     mf_wood
-        //     morgue_outside
-        //     morgue
-        //     graveyard
-        //     wheat_land
-        //     vilage
-        //     tavern
-        //     garden
-        //     cellar
-        //     tree_garden
-        //     cremation
-        //     hill
-        //     burned_house
-        //     vineyard
-        //     sealight
-        //     beatch
-        //     church
-        //     alchemy
-        //     refugees_camp
-        //     alarich_tent_inside
-        //     flat_under_waterflow_2
-        //     zombie_sawmill
-        //     beegarden
-        //     cellar_storage
-        //     souls
-        //     swamp
-        //     witch_hut
-        //     flat_under_waterflow
-        //     marble_deposit
-        //     stone_workyard
-        //     euric_room
-        //     storage
-        //     players_tavern
-        //     player_tavern_cellar
-        //     sacrifice
-        //     camp
-        //     cliff
-        
-        if (Plugin.DebugEnabled.Value && MainGame.me != null && MainGame.me.save != null)
+        if (location.customZone)
         {
-            Plugin.Log.LogInfo("Players Seen Zones - Start");
-            foreach (var z in MainGame.me.save.known_world_zones)
-            {
-                Plugin.Log.LogInfo(z);
-            }
-            Plugin.Log.LogInfo("Players Seen Zones - End");
+            Plugin.Log.LogInfo($"[RemoveZone] {location.zone} is a custom location. Not removing.");
+            return false;
         }
 
+        var removedBlockage = RemovedQuarryBlockage();
         var wheatExists = Tools.PlayerHasSeenZone(Constants.ZoneWheatLand);
-        var coalExists = Tools.PlayerHasSeenZone(Constants.ZoneFlatUnderWaterflow);
-
-        // Group similar conditions to reduce string operations
+        
+        if (!removedBlockage)
+        {
+            if (Array.IndexOf(BlockageLocations, location.zone) != -1)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone-Blockage] {location.zone} is blocked. Removing.");
+                return true;
+            }
+        }
+        
         if (location.zone.ContainsByLanguage(strings.Farmer))
         {
-            return wheatExists && Tools.PlayerKnowsNpcPartial(Constants.Farmer);
+            var farmer = wheatExists && Tools.PlayerKnowsNpcPartial(Constants.Farmer);
+            Plugin.Log.LogInfo($"[RemoveZone-Farmer] - {farmer} - {location.zone}");
+            return farmer;
         }
-
-        if (location.zone.ContainsByLanguage(strings.Mill))
+        
+        if (location.zone.ContainsByLanguage(strings.Mill) && !location.zone.ContainsByLanguage("zombie"))
         {
-            return wheatExists && Tools.PlayerKnowsNpcPartial(Constants.Miller);
+            var mill= wheatExists && Tools.PlayerKnowsNpcPartial(Constants.Miller);
+            Plugin.Log.LogInfo($"[RemoveZone-WheatMill] - {mill} - {location.zone}");
+            return mill;
         }
-
-        if (location.zone.ContainsByLanguage(strings.Coal))
+        
+        if (Array.IndexOf(LocationsToReturnFalse, location.zone) != -1)
         {
-            return coalExists;
-        }
-
-        //   @lighthouse -> sealight
-        //      @quarry -> stone_workyard
-        // @players_tavern -> players_tavern
-        //   @zone_nountain_fort -> @nountain_fort
-        //   @zone_refugees_camp_tp -> refugees_camp
-        var UnusualMaps = new Dictionary<string, string>()
-        {
-            {"@lighthouse", "sealight"},
-            {"@quarry", "stone_workyard"},
-            {"@players_tavern", "players_tavern"},
-            {"@zone_nountain_fort", "camp"}, //no match, this is close enough
-            {"@zone_refugees_camp_tp", "refugees_camp"}
-        };
-
-        string[] locationsToReturnFalse =
-        [
-            Constants.Mystery, strings.Clay, strings.Sand, strings.Page_1, strings.Page_2, strings.Page_3, strings.Page_4, strings.Page_5, strings.Page_6, strings.Page_7, strings.Page_8, strings.Page_9, strings.Page_10, strings.Custom_Locations, Constants.Cancel
-        ];
-
-        // Check for multiple conditions in a single if statement
-        if (Array.IndexOf(locationsToReturnFalse, location.zone) != -1)
-        {
-            Log($"[RemoveZone] {location.zone} is a special case. Returning false.");
+            Plugin.Log.LogInfo($"[RemoveZone-Special] {location.zone} is a special case (or default location). Not removing.");
             return false;
         }
 
         if (UnusualMaps.TryGetValue(location.zone, out var zone1))
         {
             var removeUnusualZone = !MainGame.me.save.known_world_zones.Exists(a => a.EqualsByLanguage(zone1));
-            Log($"[RemoveUnusualZone] - {removeUnusualZone} - {location.zone} -> {zone1}");
+            Plugin.Log.LogInfo($"[RemoveZone-UnusualMap] - {removeUnusualZone} - {location.zone} -> {zone1}");
             return removeUnusualZone;
         }
-
-        // Perform the replace operation only if necessary
+        
         var zone = location.zone.Replace(Constants.ZonePartial, string.Empty);
         var removeZone = !MainGame.me.save.known_world_zones.Exists(a => a.EqualsByLanguage(zone));
-        Log($"[RemoveZone] - {removeZone} - {location.zone} -> {zone}");
+        Plugin.Log.LogInfo($"[RemoveZone-KnownZones] - {removeZone} - {location.zone} -> {zone}");
         return removeZone;
     }
 
@@ -319,13 +333,13 @@ public static class Helpers
         var zone = myZone.IsNullOrWhiteSpace() ? string.Empty : $"zone_{MainGame.me.player.GetMyWorldZoneId()}";
         var preset = EnvironmentEngine.cur_preset;
         var teleportPoints = WorldMap.gd_points.Where(a => a.IsTPPoint()).OrderBy(a => Vector3.Distance(a.pos, MainGame.me.player.pos3)).ToList();
-        var distance = Vector3.Distance(teleportPoints[0].pos, MainGame.me.player.pos3);
         var coords = MainGame.me.player.grid_pos;
+        // Plugin.Log.LogWarning($"Local: {MainGame.me.player.transform.localPosition}, Global: {MainGame.me.player.transform.position} ");
         var state = EnvironmentEngine.me.data.state;
-
-        Plugin.Log.LogMessage(preset == null ? $"Zone: {zone}, Preset: {preset}, Closest TeleportPoint: {teleportPoints[0]} (Distance: {distance}), Coords: {coords}, State: {state.ToString()}" : $"Zone: {zone}, Preset: {preset.name}, Closest TeleportPoint: {teleportPoints[0]} (Distance: {distance}), Coords: {coords}, State: {state.ToString()}");
-
-        var location = new Location(zone, preset == null ? "" : preset.name, teleportPoints[0].gd_tag, coords, false, state);
+        var location = new Location($"custom_{zone}_rename_me", preset == null ? "" : preset.name, teleportPoints[0].gd_tag, coords, false, state)
+        {
+            customZone = true
+        };
         location.SaveJson();
         onComplete?.Invoke();
     }

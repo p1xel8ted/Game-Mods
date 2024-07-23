@@ -203,7 +203,7 @@ public partial class Plugin
                 return craft.craft_in.Any(craftIn =>
                     craftIn.Contains("grave") ||
                     craftIn.Contains("mf_preparation") ||
-                    (craftIn.Contains("cooking_table") && !craft.craft_in.Any(craftIn => craftIn.Contains("refugee"))));
+                    craftIn.Contains("cooking_table") && !craft.craft_in.Any(craftIn => craftIn.Contains("refugee")));
             }
 
             return false;
