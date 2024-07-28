@@ -1,4 +1,6 @@
-﻿namespace GYKHelper;
+﻿using MonoMod.Utils;
+
+namespace GYKHelper;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
@@ -17,7 +19,7 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
         RegisterEventHandlers();
         PatchWithHarmony();
-        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {LazyConsts.VERSION} on {MonoMod.Utils.PlatformHelper.Current}.\nInstalled DLC, Stories: {DLCEngine.IsDLCStoriesAvailable()}, Refugee: {DLCEngine.IsDLCRefugeesAvailable()}, Souls: {DLCEngine.IsDLCSoulsAvailable()} ");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {LazyConsts.VERSION} on {PlatformHelper.Current}.\nInstalled DLC, Stories: {DLCEngine.IsDLCStoriesAvailable()}, Refugee: {DLCEngine.IsDLCRefugeesAvailable()}, Souls: {DLCEngine.IsDLCSoulsAvailable()} ");
         
         
     }

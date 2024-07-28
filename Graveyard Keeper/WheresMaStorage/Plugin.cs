@@ -40,6 +40,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> HideWarehouseShopWidgets { get; private set; }
     internal static ConfigEntry<bool> CollectDropsOnGameLoad { get; private set; }
     public static ConfigEntry<bool> AllowZombiesAccessToSharedInventory { get; set; }
+    
 
     private void Awake()
     {
@@ -67,11 +68,8 @@ public class Plugin : BaseUnityPlugin
         ExcludeZombieMillFromSharedInventory.SettingChanged += (_, _) => Fields.InventoriesLoaded = false;
 
         ExcludeQuarryFromSharedInventory = Config.Bind("3. Inventory", "Exclude Quarry From Shared Inventory", true, new ConfigDescription("Enable or disable excluding the quarry from shared inventory.", null, new ConfigurationManagerAttributes {Order = 45}));
-        ExcludeQuarryFromSharedInventory.SettingChanged += (_, _) =>
-        {
-            Fields.InventoriesLoaded = false;
-        };
-
+        ExcludeQuarryFromSharedInventory.SettingChanged += (_, _) => Fields.InventoriesLoaded = false;
+        
         ModifyInventorySize = Config.Bind("3. Inventory", "Modify Inventory Size", true, new ConfigDescription("Enable or disable modifying the inventory size.", null, new ConfigurationManagerAttributes {Order = 47}));
         ModifyInventorySize.SettingChanged += (_, _) => Helpers.UpdateInventorySizes();
 

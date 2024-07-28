@@ -20,14 +20,21 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> VerticalHudPosition { get; private set; }
     private static ConfigEntry<float> Zoom { get; set; }
     private static ConfigEntry<float> CraftIconAboveStations { get; set; }
+
+    internal static ConfigEntry<bool> RemoveFog { get; private set; }
+
+    internal static ConfigEntry<bool> SetVsyncLimitToMaxRefreshRate { get; private set; }
+    internal static ConfigEntry<bool> ColorCorrection { get; private set; }
     private static GameObject Icons { get; set; }
     internal static ManualLogSource Log { get; private set; }
-    internal static CameraFilterPack_Atmosphere_Fog FogFilter { get; private set; }
+    
+    internal static float MaxRefreshRate => Screen.resolutions.Max(a => a.refreshRate);
+
     private void Awake()
     {
         Log = Logger;
         SceneManager.sceneLoaded += (_, _) =>
-        { 
+        {
             var smallFont = GameObject.Find("UI Root/Label size calculators/small_font");
             if (smallFont == null) return;
             Log.LogInfo("Hiding small font. We can't disable it as it breaks UI.");
@@ -98,8 +105,25 @@ public class Plugin : BaseUnityPlugin
 
         ZoomIn = Config.Bind("5. Zoom", "Zoom In", new KeyboardShortcut(KeyCode.KeypadPlus), new ConfigDescription("Zoom In", null, new ConfigurationManagerAttributes {Order = 1}));
         ZoomOut = Config.Bind("5. Zoom", "Zoom Out", new KeyboardShortcut(KeyCode.KeypadMinus), new ConfigDescription("Zoom Out", null, new ConfigurationManagerAttributes {Order = 0}));
+
+        RemoveFog = Config.Bind("6. Fog", "Remove Fog", true, new ConfigDescription("Remove fog from the game.", null, new ConfigurationManagerAttributes {Order = 0}));
+        ColorCorrection = Config.Bind("7. Color Correction", "Color Correction", true, new ConfigDescription("Enable or disable color correction.", null, new ConfigurationManagerAttributes {Order = 0}));
+        ColorCorrection.SettingChanged += (_, _) => UpdateCC();
+
+        SetVsyncLimitToMaxRefreshRate = Config.Bind("8. Vsync", "Set Vsync Limit To Max Refresh Rate", true, new ConfigDescription("Set Vsync limit to the maximum refresh rate of the monitor. Game default is 60fps with VSYNC enabled.", null, new ConfigurationManagerAttributes {Order = 0}));
+        SceneManager.sceneLoaded += (_, _) => UpdateCC();
     }
 
+    internal static void UpdateCC()
+    {
+        Time.fixedDeltaTime = 1f / 180f;
+        Plugin.Log.LogWarning($"Fixed Delta in FPS: {1f / Time.fixedDeltaTime}");
+        var cc = Resources.FindObjectsOfTypeAll<AmplifyColorEffect>();
+        foreach (var c in cc)
+        {
+            c.enabled = ColorCorrection.Value;
+        }
+    }
 
     private void Update()
     {

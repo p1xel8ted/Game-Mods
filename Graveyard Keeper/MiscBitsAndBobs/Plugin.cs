@@ -30,6 +30,7 @@ public class Plugin : BaseUnityPlugin
     
     private static ConfigEntry<bool> MuteWhenRunningInBackgroundConfig { get; set; }
     internal static ConfigEntry<bool> OldEnglishThrowback { get; private set; }
+    
     internal static ManualLogSource Log { get; private set; }
 
 

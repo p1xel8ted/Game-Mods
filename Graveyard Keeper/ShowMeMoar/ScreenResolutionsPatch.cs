@@ -3,7 +3,8 @@
 /// <summary>
 /// A Harmony patch to intercept Unity's Screen.resolutions method and add custom resolutions.
 /// </summary>
-[HarmonyPatch]
+[Harmony]
+[HarmonyPriority(0)]
 public static class ScreenResolutionsPatch
 {
     /// <summary>

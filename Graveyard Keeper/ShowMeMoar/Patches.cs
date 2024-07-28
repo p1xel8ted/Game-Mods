@@ -1,12 +1,12 @@
-﻿using FlowCanvas;
-
-namespace ShowMeMoar;
+﻿namespace ShowMeMoar;
 
 [Harmony]
 public static class Patches
 {
+    private readonly static WriteOnce<Vector3> SubPosition = new();
     internal static UIPanel HUD { get; private set; }
     internal static Transform ScreenSize { get; set; }
+    private static bool IntroPlaying { get; set; }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(TitleScreen), nameof(TitleScreen.Awake))]
@@ -18,6 +18,24 @@ public static class Patches
         var gfx = __instance.transform.Find("GFX");
         gfx.localScale = new Vector3(Plugin.ScaleFactor, Plugin.ScaleFactor, 1);
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.OnGameLoaded))]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.OnGameStartedPlaying))]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Awake))]
+    public static void MainGame_OnGameLoaded(MainGame __instance)
+    {
+        Plugin.UpdateCC();
+        
+        if (!Plugin.Ultrawide.Value) return;
+        if (!__instance) return;
+        var wind = __instance.transform.Find("Wind");
+        if (wind)
+        {
+            wind.localScale = new Vector3(Plugin.ScaleFactor, Plugin.ScaleFactor, 1);
+        }
+    }
+
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(UIPanel), nameof(UIPanel.Awake))]
@@ -55,19 +73,6 @@ public static class Patches
         __result = res;
     }
 
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(TitleScreenCamera), nameof(TitleScreenCamera.Update))]
-    // public static void TitleScreenCamera_Update(TitleScreenCamera __instance)
-    // {
-    //     if (__instance.name.Equals("Camera 2 (black frame)"))
-    //     {
-    //         Plugin.Log.LogWarning($"Camera 2: {__instance.name}");
-    //         __instance.gameObject.SetActive(false);
-    //     }
-    // }
-
-    private readonly static WriteOnce<Vector3> SubPosition = new();
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Intro), nameof(Intro.Awake))]
     [HarmonyPatch(typeof(Intro), nameof(Intro.ShowIntro))]
@@ -85,6 +90,28 @@ public static class Patches
         __instance.gameObject.TryAddComponent<AnimatorScaler>();
     }
 
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(CustomFlowScript), nameof(CustomFlowScript.Create), typeof(GameObject), typeof(FlowGraph), typeof(bool), typeof(CustomFlowScript.OnFinishedDelegate), typeof(string))]
+    public static void CustomFlowScript_Create(ref FlowGraph g)
+    {
+        IntroPlaying = string.Equals(g.name, "red_eye_talk_1");
+    }
+
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Fog), nameof(Fog.SpawnNewFog))]
+    [HarmonyPatch(typeof(Fog), nameof(Fog.ApplyCurrentAmount))]
+    [HarmonyPatch(typeof(Fog), nameof(Fog.OnNewFogObjectCreated))]
+    [HarmonyPatch(typeof(Fog), nameof(Fog.Update))]
+    [HarmonyPatch(typeof(Fog), nameof(Fog.Set))]
+    [HarmonyPatch(typeof(FogObject), nameof(FogObject.InitFog))]
+    [HarmonyPatch(typeof(FogObject), nameof(FogObject.Update))]
+    public static bool Fog_SpawnNewFog()
+    {
+        if (IntroPlaying) return true;
+        return !Plugin.RemoveFog.Value;
+    }
+
     private class AnimatorScaler : MonoBehaviour
     {
         private Animator _animator;
@@ -99,68 +126,4 @@ public static class Patches
             _animator.transform.localScale = new Vector3(0.75f + Plugin.ScaleFactor, 0.75f + Plugin.ScaleFactor, 1);
         }
     }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(CustomFlowScript), nameof(CustomFlowScript.Create), typeof(GameObject), typeof(FlowGraph), typeof(bool), typeof(CustomFlowScript.OnFinishedDelegate), typeof(string))]
-    public static void CustomFlowScript_Create(ref FlowGraph g)
-    {
-        IntroPlaying = string.Equals(g.name, "red_eye_talk_1");
-    }
-
-    private static bool IntroPlaying { get; set; }
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(CameraBounds), nameof(CameraBounds.Awake))]
-    [HarmonyPatch(typeof(CameraBounds), nameof(CameraBounds.Update))]
-    public static void CameraBounds_Awake(CameraBounds __instance)
-    {
-        var bounds = __instance.GetComponent<BoxCollider2D>();
-        if (bounds == null) return;
-        Plugin.Log.LogWarning($"CameraBounds: {bounds.size}");
-    }
-
-    private static CameraFilterPack_Atmosphere_Fog FogFilter { get; set; }
-
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
-    // public static void MainGame_OnGameLoaded()
-    // {
-    //     FogFilter ??= MainGame.me.gameObject.TryAddComponent<CameraFilterPack_Atmosphere_Fog>();
-    //     FogFilter._Far = 2.5f;
-    //     FogFilter.FogColor = Color.white;
-    //     FogFilter.FogColor.a = 0.5f;
-    // }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(SmartWeatherState), nameof(SmartWeatherState.Update))]
-    public static void SmartWeatherState_Update(SmartWeatherState __instance)
-    {
-        if (!MainGame.game_started || __instance == null || IntroPlaying) return;
-        FogFilter ??= MainGame.me.gameObject.TryAddComponent<CameraFilterPack_Atmosphere_Fog>();
-        if (__instance.type == SmartWeatherState.WeatherType.Fog && __instance._enabled)
-        {
-            FogFilter.enabled = true;
-            FogFilter._Far = 2.5f;
-            FogFilter.FogColor = Color.white;
-            FogFilter.FogColor.a = 0.5f;
-        }
-        else
-        {
-            FogFilter.enabled = false;
-        }
-    }
-
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Fog), nameof(Fog.SpawnNewFog))]
-    [HarmonyPatch(typeof(Fog), nameof(Fog.ApplyCurrentAmount))]
-    [HarmonyPatch(typeof(Fog), nameof(Fog.OnNewFogObjectCreated))]
-    [HarmonyPatch(typeof(Fog), nameof(Fog.Update))]
-    [HarmonyPatch(typeof(Fog), nameof(Fog.Set))]
-    [HarmonyPatch(typeof(FogObject), nameof(FogObject.InitFog))]
-    [HarmonyPatch(typeof(FogObject), nameof(FogObject.Update))]
-    public static bool Fog_SpawnNewFog()
-    {
-        return false;
-    }
-
 }

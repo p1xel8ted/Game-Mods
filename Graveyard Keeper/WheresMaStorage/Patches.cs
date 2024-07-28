@@ -40,7 +40,7 @@ public static class Patches
             include_bags: true, sortWGOS: true);
     }
 
-    private readonly static string[] AlwaysSkip = ["refugees", "refugee", "bush_berry", "tree_apple", "bee"];
+    private readonly static string[] AlwaysSkip = ["slime", "bat", "refugees", "refugee", "bush_berry", "tree_apple", "bee"];
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.GetMultiInventory))]
@@ -60,16 +60,17 @@ public static class Patches
         var objId = __instance.obj_id;
         var objDefId = __instance.obj_def.id;
         var worldZoneId = __instance.GetMyWorldZoneId();
+        var isQuarry = worldZoneId.Contains("stone_workyard") || worldZoneId.Contains("marble_deposit");
+        var isWell = objId.Contains("well");
+        var isZombieMill = worldZoneId.Contains("zombie_mill");
 
-        if (AlwaysSkip.Any(skipItem => objId.Contains(skipItem))) return true;
-        if (AlwaysSkip.Any(skipItem => objDefId.Contains(skipItem))) return true;
-        if (AlwaysSkip.Any(skipItem => worldZoneId.Contains(skipItem))) return true;
+        if (AlwaysSkip.Any(skipItem => objId.Contains(skipItem) || objDefId.Contains(skipItem) || worldZoneId.Contains(skipItem))) return true;
 
-        // if (Plugin.ExcludeWellsFromSharedInventory.Value && (objId.Contains("well") || objDefId.Contains("well"))) return true;
-        //
-        // if (Plugin.ExcludeQuarryFromSharedInventory.Value && (worldZoneId.Contains("stone_workyard") || worldZoneId.Contains("marble_deposit"))) return true;
-        //
-        // if (Plugin.ExcludeZombieMillFromSharedInventory.Value && worldZoneId.Contains("zombie_mill")) return true;
+        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return true;
+
+        if (Plugin.ExcludeQuarryFromSharedInventory.Value && isQuarry) return true;
+
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return true;
 
         var isZombieWorker = __instance.has_linked_worker && __instance.linked_worker.obj_id.Contains("zombie") || objDefId.Contains("zombie");
         Fields.ZombieWorker = isZombieWorker;
@@ -86,8 +87,6 @@ public static class Patches
                       objId.StartsWith("mf_");
 
         if (!proceed) return true;
-
-        Plugin.Log.LogWarning($"[WorldGameObject.GetMultiInventory (Prefix)]: objId:{objId}, objDefId:{objDefId}, worldZoneId:{worldZoneId}, zombie:{isZombieWorker}, isWorker:{__instance.IsWorker()}, IsInvisibleWorker:{__instance.IsInvisibleWorker()}, isPlayer:{__instance.is_player}");
 
         var inv = new MultiInventory();
         inv.SetInventories(Invents.GetMiInventory(objId, worldZoneId).all);
@@ -181,16 +180,22 @@ public static class Patches
 
         if (AlwaysSkip.Any(a => crafteryObjId.Contains(a) || crafteryObjDefId.Contains(a) || crafteryWzId.Contains(a))) return;
 
-        // if (Plugin.ExcludeWellsFromSharedInventory.Value && (crafteryObjId.Contains("well") || crafteryObjId.Contains("well"))) return;
-        //
-        // if (Plugin.ExcludeQuarryFromSharedInventory.Value && (crafteryWzId.Contains("stone_workyard") || crafteryWzId.Contains("marble_deposit"))) return;
-        //
-        // if (Plugin.ExcludeZombieMillFromSharedInventory.Value && crafteryWzId.Contains("zombie_mill")) return;
-        
-        if (!Plugin.AllowZombiesAccessToSharedInventory.Value)
-        {
-            if (Fields.ZombieWorker || crafteryObjId.ContainsByLanguage("zombie") || crafteryObjDefId.ContainsByLanguage("zombie")) return;
-        }
+        var isQuarry = crafteryWzId.Contains("stone_workyard") || crafteryWzId.Contains("marble_deposit");
+        var isWell = crafteryObjId.Contains("well") || crafteryObjDefId.Contains("well");
+        var isZombieMill = crafteryWzId.Contains("zombie_mill");
+
+        var isZombie = crafteryObjId.Contains("zombie") || crafteryObjDefId.Contains("zombie");
+        Fields.ZombieWorker = isZombie;
+
+        if (AlwaysSkip.Any(a => crafteryObjId.Contains(a) || crafteryObjDefId.Contains(a) || crafteryWzId.Contains(a))) return;
+
+        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return;
+
+        if (Plugin.ExcludeQuarryFromSharedInventory.Value && isQuarry) return;
+
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return;
+
+        if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie) return;
 
         __result = Invents.GetMiInventory($"[BaseCraftGUI.multi_inventory (Getter)]: {instanceName}, Craftery: {crafteryObjId}", crafteryWGO.GetMyWorldZoneId());
     }
@@ -515,7 +520,6 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.InitPlayersInventory))]
     public static void GameSave_InitPlayersInventory(GameSave __instance)
     {
-        var originalSize = __instance._inventory.inventory_size;
         __instance._inventory.inventory_size = Fields.PlayerInventorySize;
         __instance._inventory.SetInventorySize(Fields.PlayerInventorySize);
     }

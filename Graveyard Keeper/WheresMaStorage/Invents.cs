@@ -3,7 +3,7 @@
 public static class Invents
 {
 
-    private readonly static string[] AlwaysSkip = ["refugees", "bee", "refugee", "npc_tavern_barman", "soul_container", "box_pallet"];
+    private readonly static string[] AlwaysSkip = ["bat","slime","refugees", "bee", "refugee", "npc_tavern_barman", "soul_container", "box_pallet"];
 
     internal static IEnumerator LoadInventories(Action callback = null)
     {
@@ -38,8 +38,7 @@ public static class Invents
             foreach (var inv in worldZoneMulti.Where(inv => !AlwaysSkip.Any(inv._obj_id.ToLowerInvariant().Contains)))
             {
                 inv.data.sub_name = string.IsNullOrEmpty(inv._obj_id) ? $"Unknown#{zone.id}" : $"{inv._obj_id}#{zone.id}";
-
-                Plugin.Log.LogInfo($"[LoadInventories] - Adding Inventory: {inv.data.sub_name}");
+                
                 Fields.Mi.AddInventory(inv);
             }
         }
@@ -190,7 +189,8 @@ public static class Invents
 
     internal static MultiInventory GetMiInventory(string requester, string zone)
     {
-        if (requester.Contains("refugee_builddesk") || requester.Contains("storage_builddesk") || zone.Contains("stone_workyard") || zone.Contains("marble_deposit"))
+        var requesterInQuarry = zone.Contains("stone_workyard") || zone.Contains("marble_deposit");
+        if (requester.Contains("refugee_builddesk") || requester.Contains("storage_builddesk") || requesterInQuarry)
         {
             MainGame.me.StartCoroutine(LoadInventories());
             MainGame.me.StartCoroutine(LoadWildernessInventories());
@@ -202,51 +202,13 @@ public static class Invents
         }
 
         var tempList = Fields.Mi.all.ToList();
-        if (Plugin.ExcludeWellsFromSharedInventory.Value)
+        if (Plugin.ExcludeQuarryFromSharedInventory.Value && !requesterInQuarry)
         {
-            foreach (var inv in tempList)
+            foreach (var inv in tempList.Where(inv => inv.data.sub_name.Contains("stone_workyard") || inv.data.sub_name.Contains("marble_deposit")))
             {
-                if (inv.data.sub_name.Contains("well"))
-                {
-                    if (Fields.Mi.all.Remove(inv))
-                    {
-                        Plugin.Log.LogWarning($"[GetMiInventory] - Removed Well: {inv.data.sub_name}");
-                    }
-                }
+                Fields.Mi.all.Remove(inv);
             }
         }
-
-        if (Plugin.ExcludeQuarryFromSharedInventory.Value)
-        {
-            foreach (var inv in tempList)
-            {
-                if (inv.data.sub_name.Contains("stone_workyard") || inv.data.sub_name.Contains("marble_deposit"))
-                {
-                    if (inv.data.sub_name.Contains("mf_ore") || inv.data.sub_name.Contains("mf_stone"))
-                    {
-                        if (Fields.Mi.all.Remove(inv))
-                        {
-                            Plugin.Log.LogWarning($"[GetMiInventory] - Removed Quarry: {inv.data.sub_name}");
-                        }
-                    }
-                }
-            }
-        }
-
-        if (Plugin.ExcludeZombieMillFromSharedInventory.Value)
-        {
-            foreach (var inv in tempList)
-            {
-                if (inv.data.sub_name.Contains("sawmill"))
-                {
-                    if (Fields.Mi.all.Remove(inv))
-                    {
-                        Plugin.Log.LogWarning($"[GetMiInventory] - Removed Zombie Mill: {inv.data.sub_name}");
-                    }
-                }
-            }
-        }
-
         return Fields.Mi;
     }
 
@@ -260,20 +222,24 @@ public static class Invents
         var isPlayer = otherGameObject.is_player;
         var hasLinkedWorker = otherGameObject.has_linked_worker;
         var linkedWorkerObjId = hasLinkedWorker ? otherGameObject.linked_worker.obj_id : string.Empty;
+        
+        var isQuarry = worldZoneId.Contains("stone_workyard") || worldZoneId.Contains("marble_deposit");
+        var isWell = objId.Contains("well");
+        var isZombieMill = worldZoneId.Contains("zombie_mill");
+        
         var isZombie = objId.Contains("zombie") || linkedWorkerObjId.Contains("zombie");
         Fields.ZombieWorker = isZombie;
 
         if (AlwaysSkip.Any(a => objId.Contains(a) || worldZoneId.Contains(a))) return orig;
 
-        // if (Plugin.ExcludeWellsFromSharedInventory.Value && (objId.Contains("well") || objId.Contains("well"))) return orig;
-        //
-        // if (Plugin.ExcludeQuarryFromSharedInventory.Value && (worldZoneId.Contains("stone_workyard") || worldZoneId.Contains("marble_deposit"))) return orig;
-        //
-        // if (Plugin.ExcludeZombieMillFromSharedInventory.Value && worldZoneId.Contains("zombie_mill")) return orig;
-        
-        
+        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return orig;
+
+        if (Plugin.ExcludeQuarryFromSharedInventory.Value && isQuarry) return orig;
+
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return orig;
+
         if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie) return orig;
-   
+
 
         if (objId.Contains("storage_builddesk"))
         {
@@ -285,13 +251,9 @@ public static class Invents
 
         if (isPlayer && craft.id.Length > 0 || isSpecialObject)
         {
-            Plugin.Log.LogWarning($"[CraftReally][GetMi] - objId:{objId}, worldZoneId:{worldZoneId}, isPlayer:{isPlayer}, hasLinkedWorker:{hasLinkedWorker}, linkedWorkerObjId:{linkedWorkerObjId}");
-            return GetMiInventory($"Object: {objId}", otherGameObject.GetMyWorldZoneId());
+            return GetMiInventory($"{objId}", otherGameObject.GetMyWorldZoneId());
         }
-
-        Plugin.Log.LogWarning($"[CraftReally][GetMi] - objId:{objId}, worldZoneId:{worldZoneId}, isPlayer:{isPlayer}, hasLinkedWorker:{hasLinkedWorker}, linkedWorkerObjId:{linkedWorkerObjId} - RETURNING ORIGINAL");
-
-        Fields.ZombieWorker = false;
+        
         return orig;
     }
 
