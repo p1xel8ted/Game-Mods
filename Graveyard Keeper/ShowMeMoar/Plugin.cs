@@ -117,7 +117,7 @@ public class Plugin : BaseUnityPlugin
     internal static void UpdateCC()
     {
         Time.fixedDeltaTime = 1f / 180f;
-        Plugin.Log.LogWarning($"Fixed Delta in FPS: {1f / Time.fixedDeltaTime}");
+        Plugin.Log.LogInfo($"Fixed Delta in FPS: {1f / Time.fixedDeltaTime}");
         var cc = Resources.FindObjectsOfTypeAll<AmplifyColorEffect>();
         foreach (var c in cc)
         {

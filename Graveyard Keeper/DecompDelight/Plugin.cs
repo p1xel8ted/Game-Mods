@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.decompdelight";
     private const string PluginName = "Decomp Delight!";
-    private const string PluginVer = "0.1.0";
+    private const string PluginVer = "0.1.1";
     internal static ManualLogSource LOG { get; set; }
 
     private static ConfigEntry<Color> SlowingColor { get; set; }

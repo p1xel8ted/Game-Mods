@@ -60,9 +60,9 @@ public static class Utils
         return $"{r:X2}{g:X2}{b:X2}";
     }
 
-    internal static bool SurveyCompleted(ItemDefinition itemDefinition)
+    internal static bool SurveyCompleted(ItemDefinition itemDefinition, bool fullDetail)
     {
         var surveyCraft = itemDefinition.GetSurveyCraft();
-        return surveyCraft != null && MainGame.me.save.completed_one_time_crafts.Contains(surveyCraft.id);
+        return fullDetail && surveyCraft != null && MainGame.me.save.completed_one_time_crafts.Contains(surveyCraft.id);
     }
 }

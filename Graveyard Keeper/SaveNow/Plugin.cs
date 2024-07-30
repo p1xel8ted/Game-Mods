@@ -1,12 +1,12 @@
 ﻿namespace SaveNow;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.savenow";
     private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.2";
+    private const string PluginVer = "2.5.3";
 
     private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<int> SaveInterval { get; set; }
@@ -15,7 +15,6 @@ public partial class Plugin : BaseUnityPlugin
     private static ConfigEntry<bool> NewFileOnManualSave { get; set; }
     private static ConfigEntry<bool> NewFileOnNewDaySave { get; set; }
     private static ConfigEntry<bool> BackupSavesOnSave { get; set; }
-    private static ConfigEntry<bool> TravelMessages { get; set; }
     private static ConfigEntry<bool> SaveGameNotificationText { get; set; }
     private static ConfigEntry<bool> ExitToDesktop { get; set; }
     private static ConfigEntry<bool> SaveOnExit { get; set; }
@@ -67,6 +66,14 @@ public partial class Plugin : BaseUnityPlugin
         AutoSaveConfig = Config.Bind("01. Saving", "Auto Save", true,
             new ConfigDescription("Enable or disable automatic saving.", null,
                 new ConfigurationManagerAttributes {Order = 17}));
+        AutoSaveConfig.SettingChanged += (_, _) =>
+        {
+            KillTimers();
+            if (AutoSaveConfig.Value)
+            {
+                StartTimer();
+            }
+        };
 
         NewFileOnAutoSave = Config.Bind("01. Saving", "New File On Auto Save", true,
             new ConfigDescription("Create a new save file for each auto save.", null,
@@ -83,10 +90,7 @@ public partial class Plugin : BaseUnityPlugin
         BackupSavesOnSave = Config.Bind("01. Saving", "Backup Saves On Save", true,
             new ConfigDescription("Backup saves when saving the game.", null,
                 new ConfigurationManagerAttributes {Order = 14}));
-
-        TravelMessages = Config.Bind("02. Notifications", "Travel Messages", false,
-            new ConfigDescription("Toggle travel messages.", null, new ConfigurationManagerAttributes {Order = 13}));
-
+        
         SaveGameNotificationText = Config.Bind("02. Notifications", "Save Game Notification Text", false,
             new ConfigDescription("Disable save game notification text.", null,
                 new ConfigurationManagerAttributes {Order = 12}));
