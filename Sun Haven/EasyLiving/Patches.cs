@@ -11,9 +11,12 @@ public static class Patches
     private readonly static WriteOnce<Vector2> OriginalSize = new();
 
     private static float _regenerationTimer;
+
+    private static int InstalledDlcCount;
+    private static int TotalDlcCount;
     private static bool PlayerReturnedToMenu { get; set; }
 
-    internal static bool SkipAutoLoad { get; set; } = false;
+    internal static bool SkipAutoLoad { get; set; }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(UIHandler), nameof(UIHandler.ExitGame))]
@@ -168,7 +171,6 @@ public static class Patches
         {
             location = new Vector2(357.3f, 124.2f);
         }
-
     }
 
 
@@ -216,11 +218,6 @@ public static class Patches
         _newButton.GetComponent<Button>().onClick.RemoveAllListeners();
         _newButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            // if (UIHandler.unloadingGame)
-            // {
-            //     return;
-            // }
-
             Time.timeScale = 1f;
             NotificationStack.Instance.SendNotification("Game Saved! Exiting...");
             SingletonBehaviour<GameSave>.Instance.SaveGame();
@@ -228,9 +225,6 @@ public static class Patches
             Application.Quit();
         });
 
-        // var nav = exitButton.GetComponent<NavigationElement>();
-        // nav.down = _newButton.GetComponent<NavigationElement>();
-        // _newButton.GetComponent<NavigationElement>().up = nav;
 
         var rectTransform = _newButton.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(265.5f, -147.5f);
@@ -239,29 +233,145 @@ public static class Patches
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
     }
 
+    private static void UpdateDlcData()
+    {
+        InstalledDlcCount = 0;
+        TotalDlcCount = 0;
+
+        var scroller = GameObject.Find("Canvas_Home/[HomeMenu]/DLCBox/DLC_Scroller");
+        if (!scroller) return;
+
+        var sc = scroller.GetComponent<Scroller>();
+        if (!sc) return;
+
+        foreach (var data in sc.scrollerDatas)
+        {
+            if (data is not DLCScrollerData dlc) continue;
+
+            TotalDlcCount += dlc.steamPackIDs.Count;
+            InstalledDlcCount += dlc.steamPackIDs.Count(id => SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = id}));
+        }
+    }
+
+    internal static void UpdateMainMenu()
+    {
+        UpdateDlcData();
+
+        UpdateLogo();
+
+        UpdateSocialMedia();
+
+        UpdateDlcBox();
+
+        UpdatePatchNotes();
+
+        UpdateDlcShopButton();
+
+        UpdateMenuButtons();
+    }
+    private static void UpdateMenuButtons()
+    {
+        var menuBox = GameObject.Find("Canvas_Home/[HomeMenu]/PlayButtons");
+        if (!menuBox) return;
+
+        var border = menuBox.GetComponent<Image>();
+        if (border)
+        {
+            border.enabled = !Plugin.RemoveMenuButtonsBorder.Value;
+        }
+
+        var rectTransform = menuBox.GetComponent<RectTransform>();
+        if (!rectTransform) return;
+
+        var y = 280;
+        if (Plugin.RemoveDlcShopButton.Value)
+        {
+            y -= 50;
+        }
+        if (Plugin.RemoveSocialMediaButtons.Value)
+        {
+            y -= 50;
+        }
+
+        rectTransform.sizeDelta = rectTransform.sizeDelta with {y = y};
+    }
+    private static void UpdateDlcShopButton()
+    {
+        var dlcShopButton = GameObject.Find("Canvas_Home/[HomeMenu]/PlayButtons/DLCShopButton");
+        if (dlcShopButton)
+        {
+            dlcShopButton.SetActive(!Plugin.RemoveDlcShopButton.Value);
+        }
+    }
+    private static void UpdatePatchNotes()
+    {
+        var patchNotesBox = GameObject.Find("Canvas_Home/[HomeMenu]/PatchNotesBox");
+        if (patchNotesBox)
+        {
+            patchNotesBox.SetActive(!Plugin.RemovePatchNotes.Value);
+        }
+    }
+    private static void UpdateDlcBox()
+    {
+        var dlcBox = GameObject.Find("Canvas_Home/[HomeMenu]/DLCBox");
+        if (!dlcBox) return;
+
+        UpdateDlcData();
+        
+        if (InstalledDlcCount >= TotalDlcCount)
+        {
+            dlcBox.SetActive(false);
+        }
+        else
+        {
+            dlcBox.SetActive(!Plugin.RemoveDlcAds.Value);
+        }
+    }
+    private static void UpdateSocialMedia()
+    {
+        var socialMedia = GameObject.Find("Canvas_Home/[HomeMenu]/PlayButtons/SocialMediaButtons");
+        if (socialMedia)
+        {
+            socialMedia.SetActive(!Plugin.RemoveSocialMediaButtons.Value);
+        }
+    }
+    private static void UpdateLogo()
+    {
+        var ppStudios = GameObject.Find("Canvas_Home/[HomeMenu]/Image");
+        if (ppStudios)
+        {
+            ppStudios.SetActive(!Plugin.RemovePixelSproutStudiosLogo.Value);
+        }
+    }
+
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(DLCScrollerData), nameof(DLCScrollerData.Setup))]
+    public static void DLCScrollerData_Setup(ref DLCScrollerData __instance, ref Scroller scroller)
+    {
+        for (var i = 0; i < __instance.steamPackIDs.Count; i++)
+        {
+            var steamID = __instance.steamPackIDs[i];
+            var component = scroller.gameObjects[i];
+            var images = component.GetComponentsInChildren<Image>();
+            var text = component.GetComponentInChildren<TextMeshProUGUI>();
+            var button = component.GetComponent<Button>();
+
+            var isInstalled = SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = steamID});
+            
+            text.alpha = isInstalled ? 0.50f : 1f;
+            foreach (var image in images)
+            {
+                image.color = image.color with {a = isInstalled ? 0.25f : 1f};
+            }
+            button.interactable = !isInstalled;
+        }
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.EnableMenu))]
     public static void MainMenuController_EnableMenu(ref MainMenuController __instance)
     {
-        string[] objectNames =
-        [
-            "Canvas/[HomeMenu]/SmallPixelSproutButton",
-            "Canvas/[HomeMenu]/TwitterButton",
-            "Canvas/[HomeMenu]/DiscordButton",
-            "Canvas/[HomeMenu]/PixelSproutButton",
-            "Canvas/[HomeMenu]/Image",
-            "Canvas/[HomeMenu]/Image (1)",
-            "Canvas/[HomeMenu]/Buttons/PlayButton (2)"
-        ];
-
-        foreach (var name in objectNames)
-        {
-            var obj = GameObject.Find(name);
-            if (obj != null)
-            {
-                obj.SetActive(!Plugin.RemoveUnneededButtonsInMainMenu.Value);
-            }
-        }
+        UpdateMainMenu();
     }
 }

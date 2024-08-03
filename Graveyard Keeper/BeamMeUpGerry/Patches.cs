@@ -14,7 +14,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnMetNPC))]
     public static void BuildModeLogics_DoPlace_Prefix()
     {
-        OneTimeCraftCount = MainGame.me.save.completed_one_time_crafts.Count;
+        OneTimeCraftCount = MainGame.me.save.completed_one_time_crafts.Count(a => a.Contains("blockage"));
         KnownZoneCount = MainGame.me.save.known_world_zones.Count;
         KnownNpcCount = MainGame.me.save.known_npcs.npcs.Count;
     }
@@ -25,18 +25,13 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnMetNPC))]
     public static void BuildModeLogics_DoPlace_Postfix()
     {
-        var newCraftCount = MainGame.me.save.completed_one_time_crafts.Count;
+        var newCraftCount = MainGame.me.save.completed_one_time_crafts.Count(a => a.Contains("blockage"));
         var newZoneCount = MainGame.me.save.known_world_zones.Count;
         var newNpcCount = MainGame.me.save.known_npcs.npcs.Count;
 
         if (newCraftCount > OneTimeCraftCount || newZoneCount > KnownZoneCount || newNpcCount > KnownNpcCount)
         {
-            PlatformSpecific.SaveGame(MainGame.me.save_slot, MainGame.me.save, OnComplete);
-
-            void OnComplete(SaveSlotData __slot)
-            {
-                Plugin.InitConfiguration();
-            }
+            Plugin.InitConfiguration();
         }
     }
 
@@ -51,7 +46,7 @@ public static class Patches
 
             Plugin.CachedPlayer ??= ReInput.players.GetPlayer(0);
 
-            var find = __instance._answers.Find(a => a._answer_id.ContainsByLanguage("cancel"));
+            var find = __instance._answers.Find(a => a._answer_id.Contains("cancel"));
             if (find && (Input.GetKeyUp(KeyCode.Escape) || LazyInput.gamepad_active && (Plugin.CachedPlayer.GetButtonUp("B") || Plugin.CachedPlayer.GetButtonUp("Back"))))
             {
                 find.OnChosen();
@@ -60,6 +55,25 @@ public static class Patches
         catch (Exception)
         {
             // ignored
+        }
+    }
+
+    private static Bounds NorthCoalBounds = new(new Vector3(-834f, 6125f, 0), new Vector3(750f, 750f, 0f));
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerComponent), nameof(PlayerComponent.Update))]
+    public static void PlayerComponent_Update()
+    {
+        CheckNorthCoal();
+    }
+
+    private static void CheckNorthCoal()
+    {
+        if (MainGame.me.save.known_world_zones.Contains(Constants.NorthCoal)) return;
+        var player = MainGame.me.player;
+        if (player && NorthCoalBounds.Contains(player.transform.position))
+        {
+            MainGame.me.save.known_world_zones.Add(Constants.NorthCoal);
         }
     }
 
@@ -76,9 +90,9 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnFinishedCraft))]
     public static void GameSave_OnFinishedCraft(CraftDefinition craft)
     {
-        if (craft.id.StartsWithByLanguage("steep_yellow_blockage"))
+        if (craft.id.Contains("blockage"))
         {
-            Plugin.Log.LogInfo("Steep Yellow Blockage Crafted (blockage to Quarry etc) - Refreshing List");
+            Plugin.Log.LogInfo("Blockage Crafted (blockage to Quarry etc) - Refreshing List");
             Plugin.InitConfiguration();
         }
     }

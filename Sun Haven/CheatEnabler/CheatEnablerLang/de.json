@@ -105,5 +105,8 @@
   "printquestlog": "Drucke die aktuellen Quests in deinem Questlog aus.",
   "printallarenabosses": "Drucke alle Arena-Bossnamen aus.",
   "noclip": "Schaltet den Noclip-Modus je nach aktuellem Zustand ein/aus. Verwende /noclip true|false für spezifische Kontrolle.",
-  "godmode": "Schaltet den God-Mode je nach aktuellem Zustand ein/aus. Verwende /godmode true|false für spezifische Kontrolle."
+  "godmode": "Schaltet den God-Mode je nach aktuellem Zustand ein/aus. Verwende /godmode true|false für spezifische Kontrolle.",
+  "unlockteleport teleport": "Entsperre angegebene Teleport-Standorte. Verwenden Sie /printallteleportlocations, um gültige Teleport-Namen zu erhalten.",
+  "lockteleport teleport": "Sperre angegebene Teleport-Standorte. Verwenden Sie /printallteleportlocations, um gültige Teleport-Namen zu erhalten.",
+  "printallteleportlocations": "Gebe alle Teleport-Standorte aus."
 }

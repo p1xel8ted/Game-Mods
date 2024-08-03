@@ -105,5 +105,8 @@
   "printquestlog": "Imprimir las misiones actuales en tu diario de misiones.",
   "printallarenabosses": "Imprimir todos los nombres de los jefes de la arena.",
   "noclip": "Activar/desactivar el modo noclip dependiendo del estado actual. Usa /noclip true|false para un control específico.",
-  "godmode": "Activar/desactivar el modo dios dependiendo del estado actual. Usa /godmode true|false para un control específico."
+  "godmode": "Activar/desactivar el modo dios dependiendo del estado actual. Usa /godmode true|false para un control específico.",
+  "unlockteleport teleport": "Desbloquea ubicaciones de teletransporte especificadas. Usa /printallteleportlocations para obtener nombres de teletransporte válidos.",
+  "lockteleport teleport": "Bloquea ubicaciones de teletransporte especificadas. Usa /printallteleportlocations para obtener nombres de teletransporte válidos.",
+  "printallteleportlocations": "Imprime todas las ubicaciones de teletransporte."
 }

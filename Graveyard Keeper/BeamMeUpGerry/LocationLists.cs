@@ -47,20 +47,41 @@ public static class LocationLists
 
     internal readonly static List<List<AnswerVisualData>> Locations = [];
 
-    internal static void CreatePages()
+
+    internal static void LogData()
     {
         if (Plugin.DebugEnabled.Value && MainGame.me && MainGame.me.save != null)
         {
+            Plugin.Log.LogInfo("|---------- Players Known NPC:Start ----------|");
+            foreach (var z in MainGame.me.save.known_npcs.npcs)
+            {
+                Plugin.Log.LogInfo(z.npc_id);
+            }
+
+            Plugin.Log.LogInfo("|---------- Players Known NPC:End ----------|");
+
             Plugin.Log.LogInfo("|---------- Players Seen Zones:Start ----------|");
             foreach (var z in MainGame.me.save.known_world_zones)
             {
                 Plugin.Log.LogInfo(z);
             }
             Plugin.Log.LogInfo("|---------- Players Seen Zones:End ----------|");
+
+            Plugin.Log.LogInfo("|---------- One Time Crafts:Start ----------|");
+            foreach (var blockage in MainGame.me.save.completed_one_time_crafts)
+            {
+                Plugin.Log.LogInfo($"[Completed One Time Crafts] - {blockage}");
+            }
+            Plugin.Log.LogInfo("|---------- One Time Crafts:End ----------|");
         }
+    }
+    
+    internal static void CreatePages()
+    {
+        LogData();
         
         Locations.Clear();
-        
+
         var locations = AllLocations
             .Where(location => location.enabled)
             .ToList();
@@ -71,7 +92,7 @@ public static class LocationLists
                 .OrderBy(location => Helpers.RemoveCharacters(location.zone))
                 .ToList();
         }
-  
+
 
         if (MainGame.me != null && MainGame.me.save != null)
         {
@@ -133,7 +154,7 @@ public static class LocationLists
         };
     }
 
- 
+
     internal static void LoadCustomZones()
     {
         var path = Location.GetSavePath();

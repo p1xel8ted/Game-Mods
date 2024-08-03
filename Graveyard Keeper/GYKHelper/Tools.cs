@@ -197,57 +197,57 @@ public static class Tools
 
     public static bool RefugeeGardenCraft(string craftId)
     {
-        return craftId.StartsWithByLanguage("refugee_garden");
+        return craftId.StartsWith("refugee_garden");
     }
 
     public static bool RefugeeGardenCraft(WorldGameObject wgo, CraftComponent craftComponent = null)
     {
-        return wgo.obj_id.StartsWithByLanguage("refugee_camp_garden_");
+        return wgo.obj_id.StartsWith("refugee_camp_garden_");
     }
 
     public static bool PlayerGardenCraft(string craftId)
     {
-        return craftId.StartsWithByLanguage("garden") && craftId.ContainsByLanguage("planting") && !craftId.ContainsByLanguage("grow_desk_planting");
+        return craftId.StartsWith("garden") && craftId.Contains("planting") && !craftId.Contains("grow_desk_planting");
     }
 
     public static bool PlayerGardenCraft(WorldGameObject wgo, CraftComponent craftComponent = null)
     {
-        return wgo.obj_id.StartsWithByLanguage("garden_");
+        return wgo.obj_id.StartsWith("garden_");
     }
 
     public static bool ZombieSawmillCraft(WorldGameObject wgo, CraftComponent craftComponent = null)
     {
-        return wgo.obj_id.StartsWithByLanguage("zombie_sawmill_");
+        return wgo.obj_id.StartsWith("zombie_sawmill_");
     }
 
     public static bool ZombieMineCraft(WorldGameObject wgo, CraftComponent craftComponent = null)
     {
-        return wgo.obj_id.StartsWithByLanguage("zombie_mine_") || wgo.obj_id.StartsWithByLanguage("mine_zombie_");
+        return wgo.obj_id.StartsWith("zombie_mine_") || wgo.obj_id.StartsWith("mine_zombie_");
     }
 
     public static bool CompostCraft(WorldGameObject wgo, CraftComponent craftComponent = null)
     {
-        return wgo.obj_id.ContainsByLanguage("compost_heap");
+        return wgo.obj_id.Contains("compost_heap");
     }
 
     public static bool ZombieVineyardCraft(string craftId)
     {
-        return craftId.ContainsByLanguage("grow_vineyard_planting");
+        return craftId.Contains("grow_vineyard_planting");
     }
 
     public static bool ZombieGardenCraft(string craftId)
     {
-        return craftId.ContainsByLanguage("grow_desk_planting");
+        return craftId.Contains("grow_desk_planting");
     }
 
     public static bool ZombieGardenCraft(WorldGameObject wgo, CraftComponent craftComponent = null)
     {
-        return wgo.obj_id.ContainsByLanguage("zombie_garden_");
+        return wgo.obj_id.Contains("zombie_garden_");
     }
 
     public static bool ZombieVineyardCraft(WorldGameObject wgo, CraftComponent craftComponent = null)
     {
-        return wgo.obj_id.ContainsByLanguage("zombie_vineyard_");
+        return wgo.obj_id.Contains("zombie_vineyard_");
     }
 
     public static void ShowAlertDialog(string text1, string text2 = "", string text3 = "", bool separateWithStars = false)
@@ -276,17 +276,17 @@ public static class Tools
 
     public static bool PlayerHasSeenZone(string zoneId)
     {
-        return MainGame.me.save.known_world_zones.Exists(a => a.EqualsByLanguage(zoneId));
+        return MainGame.me.save.known_world_zones.Exists(a => a.Equals(zoneId));
     }
 
     public static bool PlayerKnowsNpcExact(string exactNpcId)
     {
-        return MainGame.me.save.known_npcs.npcs.Exists(a => a.npc_id.EqualsByLanguage(exactNpcId));
+        return MainGame.me.save.known_npcs.npcs.Exists(a => a.npc_id.Equals(exactNpcId));
     }
 
     public static bool PlayerKnowsNpcPartial(string partialNpcId)
     {
-        return MainGame.me.save.known_npcs.npcs.Exists(a => a.npc_id.ContainsByLanguage(partialNpcId));
+        return MainGame.me.save.known_npcs.npcs.Exists(a => a.npc_id.Contains(partialNpcId));
     }
 
 

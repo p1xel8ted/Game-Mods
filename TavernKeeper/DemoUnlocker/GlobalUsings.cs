@@ -1,7 +1,6 @@
 ﻿
 global using System.Reflection;
 global using BepInEx;
-global using BepInEx.Logging;
 global using BepInEx.Unity.IL2CPP;
 global using Gh;
 global using Gh.Tk;

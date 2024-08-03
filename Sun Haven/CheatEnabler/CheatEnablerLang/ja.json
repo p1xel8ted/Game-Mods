@@ -105,5 +105,8 @@
     "printquestlog": "クエスト ログの現在のクエストを印刷します。",
     "printallarenabosses": "すべてのアリーナボスの名前を印刷します。",
     "noclip": "現在の状態に応じてノークリップをオン/オフに切り替えます。 特定の制御には /noclip true|false を使用します。",
-    "godmode": "現在の状態に応じてゴッドモードをオン/オフに切り替えます。 特定の制御には /godmode true|false を使用します。"
+    "godmode": "現在の状態に応じてゴッドモードをオン/オフに切り替えます。 特定の制御には /godmode true|false を使用します。",
+    "unlockteleport teleport": "指定されたテレポート場所をアンロックします。 /printallteleportlocations を使用して有効なテレポート名を取得します。",
+    "lockteleport teleport": "指定されたテレポート場所をロックします。 /printallteleportlocations を使用して有効なテレポート名を取得します。",
+    "printallteleportlocations": "すべてのテレポート場所を印刷します。"
   }  

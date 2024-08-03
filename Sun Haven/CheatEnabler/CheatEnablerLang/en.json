@@ -105,5 +105,8 @@
   "printquestlog": "Print out the current quests in your quest log.",
   "printallarenabosses": "Print out all the arena boss names.",
   "noclip": "Toggles noclip on/off depending on the current state. Use /noclip true|false for specific control.",
-  "godmode": "Toggles godmode on/off depending on the current state. Use /godmode true|false for specific control."
+  "godmode": "Toggles godmode on/off depending on the current state. Use /godmode true|false for specific control.",
+  "unlockteleport teleport": "Unlock specified teleport locations. Use /printallteleportlocations to get valid teleport names.",
+  "lockteleport teleport": "Lock specified teleport locations. Use /printallteleportlocations to get valid teleport names.",
+  "printallteleportlocations": "Print out all teleport locations."
 }

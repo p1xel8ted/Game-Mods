@@ -105,5 +105,8 @@
   "printquestlog": "Print de aktuelle opgaver i din opgavelog.",
   "printallarenabosses": "Print alle arenabossers navne.",
   "noclip": "Aktiver/deaktiver noclip afhængigt af den aktuelle tilstand. Brug /noclip true|false for specifik kontrol.",
-  "godmode": "Aktiver/deaktiver gudemode afhængigt af den aktuelle tilstand. Brug /godmode true|false for specifik kontrol."
+  "godmode": "Aktiver/deaktiver gudemode afhængigt af den aktuelle tilstand. Brug /godmode true|false for specifik kontrol.",
+  "unlockteleport teleport": "Lås op for angivne teleportationssteder. Brug /printallteleportlocations for at få gyldige teleportnavne.",
+  "lockteleport teleport": "Lås angivne teleportationssteder. Brug /printallteleportlocations for at få gyldige teleportnavne.",
+  "printallteleportlocations": "Udskriv alle teleportationssteder."
 }

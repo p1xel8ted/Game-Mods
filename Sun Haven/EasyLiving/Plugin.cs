@@ -6,12 +6,12 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.easyliving";
     private const string PluginName = "Easy Living";
-    private const string PluginVersion = "0.1.2";
+    private const string PluginVersion = "0.1.4";
     private static ConfigEntry<KeyboardShortcut> SaveShortcut { get; set; }
     private static ConfigEntry<bool> EnableSaveShortcut { get; set; }
     public static ConfigEntry<bool> SkipMuseumMissingItemsDialogue { get; private set; }
     private static ConfigEntry<bool> UnityLogging { get; set; }
-    public static ConfigEntry<bool> RemoveUnneededButtonsInMainMenu { get; private set; }
+    public static ConfigEntry<bool> RemoveSocialMediaButtons { get; private set; }
     public static ConfigEntry<bool> AddQuitToDesktopButton { get; private set; }
     public static ConfigEntry<bool> EnableAdjustQuestTrackerHeightView { get; private set; }
     public static ConfigEntry<bool> AutoLoadMostRecentSave { get; private set; }
@@ -27,8 +27,13 @@ public partial class Plugin : BaseUnityPlugin
     public static ConfigEntry<bool> PlayerStartsAwayFromMailbox { get; private set; }
     public static ConfigEntry<bool> Emotes { get; private set; }
     public static ConfigEntry<bool> FastDialogue { get; set; }
+    public static ConfigEntry<bool> RemoveDlcAds { get; set; }
     internal static ConfigEntry<bool> ResolutionChange { get; private set; }
     internal static ManualLogSource LOG { get; private set; }
+    public static ConfigEntry<bool> RemovePatchNotes { get; set; }
+    public static ConfigEntry<bool> RemovePixelSproutStudiosLogo { get; set; }
+    public static ConfigEntry<bool> RemoveDlcShopButton { get; set; }
+    public static ConfigEntry<bool> RemoveMenuButtonsBorder { get; set; }
 
     private void Awake()
     {
@@ -41,10 +46,46 @@ public partial class Plugin : BaseUnityPlugin
             Debug.unityLogger.logEnabled = UnityLogging.Value;
         };
         Debug.unityLogger.logEnabled = UnityLogging.Value;
-        EnableSaveShortcut = Config.Bind("02. Keyboard Shortcuts", "Enable Quick Save", true, new ConfigDescription("Enable quick saving via the keybind below.", null, new ConfigurationManagerAttributes {Order = 20}));
-        SaveShortcut = Config.Bind("02. Keyboard Shortcuts", "Quick Save", new KeyboardShortcut(KeyCode.F5), new ConfigDescription("Keybind to press to manual save game. Note that it doesn't save location, just progress.", null, new ConfigurationManagerAttributes {Order = 19}));
-        SkipMuseumMissingItemsDialogue = Config.Bind("03. Museum", "Skip Missing Items Dialogue", true, new ConfigDescription("Skip the 'missing items' dialogue when you interact with a museum display.", null, new ConfigurationManagerAttributes {Order = 1}));
-        RemoveUnneededButtonsInMainMenu = Config.Bind("04. UI", "Remove Unneeded Buttons In Main Menu", true, new ConfigDescription("Remove the Discord/Twitter/etc buttons from  the main menu.", null, new ConfigurationManagerAttributes {Order = 17}));
+        
+        EnableSaveShortcut = Config.Bind("02. Keyboard Shortcuts", "Enable Quick Save", true, new ConfigDescription("Enable quick saving via the keybind below.", null, new ConfigurationManagerAttributes {Order = 25}));
+        SaveShortcut = Config.Bind("02. Keyboard Shortcuts", "Quick Save", new KeyboardShortcut(KeyCode.F5), new ConfigDescription("Keybind to press to manual save game. Note that it doesn't save location, just progress.", null, new ConfigurationManagerAttributes {Order = 24}));
+        SkipMuseumMissingItemsDialogue = Config.Bind("03. Museum", "Skip Missing Items Dialogue", true, new ConfigDescription("Skip the 'missing items' dialogue when you interact with a museum display.", null, new ConfigurationManagerAttributes {Order = 23}));
+       
+        RemoveMenuButtonsBorder = Config.Bind("04. UI", "Remove Menu Buttons Border", false, new ConfigDescription("Remove the border around the main menu buttons.", null, new ConfigurationManagerAttributes {Order = 22}));
+        RemoveMenuButtonsBorder.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateMainMenu();
+        };
+        
+        RemoveSocialMediaButtons = Config.Bind("04. UI", "Remove Social Media Buttons In Main Menu", true, new ConfigDescription("Remove the Discord/Twitter/etc buttons from  the main menu.", null, new ConfigurationManagerAttributes {Order = 21}));
+        RemoveSocialMediaButtons.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateMainMenu();
+        };
+        
+        RemoveDlcShopButton = Config.Bind("04. UI", "Remove DLC Shop Button", false, new ConfigDescription("Remove the DLC shop button from the main menu.", null, new ConfigurationManagerAttributes {Order = 20}));
+        RemoveDlcShopButton.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateMainMenu();
+        };
+        
+        RemoveDlcAds = Config.Bind("04. UI", "Remove DLC Ads", false, new ConfigDescription("Remove the DLC ads from the main menu.", null, new ConfigurationManagerAttributes {Order = 19}));
+        RemoveDlcAds.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateMainMenu();
+        };
+        
+        RemovePatchNotes = Config.Bind("04. UI", "Remove Patch Notes", true, new ConfigDescription("Remove the patch notes from the main menu.", null, new ConfigurationManagerAttributes {Order = 18}));
+        RemovePatchNotes.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateMainMenu();
+        };
+        
+        RemovePixelSproutStudiosLogo = Config.Bind("04. UI", "Remove Pixel Sprout Studios Logo", true, new ConfigDescription("Remove the PP Studios logo from the main menu.", null, new ConfigurationManagerAttributes {Order = 17}));
+        RemovePixelSproutStudiosLogo.SettingChanged += (_, _) =>
+        {
+            Patches.UpdateMainMenu();
+        };
         AddQuitToDesktopButton = Config.Bind("04. UI", "Add Quit To Desktop Button", true, new ConfigDescription("Add a 'Quit To Desktop' button to the main menu. Bottom right X.", null, new ConfigurationManagerAttributes {Order = 16}));
         EnableAdjustQuestTrackerHeightView = Config.Bind("04. UI", "Enable Adjust Quest Tracker Height", true, new ConfigDescription("Enable adjusting the height of the quest tracker.", null, new ConfigurationManagerAttributes {Order = 15}));
         AdjustQuestTrackerHeightView = Config.Bind("04. UI", "Adjust Quest Tracker Height", Display.main.systemHeight / 3, new ConfigDescription("Adjust the height of the quest tracker.", new AcceptableValueRange<int>(-2000, 2000), new ConfigurationManagerAttributes {Order = 14}));
@@ -56,7 +97,7 @@ public partial class Plugin : BaseUnityPlugin
         };
         MoveSpeedMultiplierIncrease = Config.Bind("05. Player", "Move Speed Multiplier Increase", new KeyboardShortcut(KeyCode.LeftBracket), new ConfigDescription("Keybind to increase the player's move speed multiplier.", null, new ConfigurationManagerAttributes {Order = 11}));
         MoveSpeedMultiplierDecrease = Config.Bind("05. Player", "Move Speed Multiplier Decrease", new KeyboardShortcut(KeyCode.RightBracket), new ConfigDescription("Keybind to decrease the player's move speed multiplier.", null, new ConfigurationManagerAttributes {Order = 10}));
-        AutoLoadMostRecentSave = Config.Bind("06. Saves", "Auto Load Most Recent Save", true, new ConfigDescription("Automatically load the most recent save when starting the game.", null, new ConfigurationManagerAttributes {Order = 9}));
+        AutoLoadMostRecentSave = Config.Bind("06. Saves", "Auto Load Most Recent Save", false, new ConfigDescription("Automatically load the most recent save when starting the game.", null, new ConfigurationManagerAttributes {Order = 9}));
         SkipAutoLoadMostRecentSaveShortcut = Config.Bind("06. Saves", "Skip Auto Load Most Recent Save Shortcut", new KeyboardShortcut(KeyCode.LeftShift), new ConfigDescription("Keybind to hold to skip auto loading the most recent save.", null, new ConfigurationManagerAttributes {Order = 8}));
         MaterialsOnlyDefault = Config.Bind("07. Crafting", "Materials Only Default", true, new ConfigDescription("Set the default crafting filter to 'Materials Only' when opening a crafting table.", null, new ConfigurationManagerAttributes {Order = 7}));
         IncreaseWateringCanFillRange = Config.Bind("08. Farming", "Increase Watering Can Fill Range", true, new ConfigDescription("Increase the watering can fill range.", null, new ConfigurationManagerAttributes {Order = 5}));

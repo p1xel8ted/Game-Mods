@@ -105,5 +105,8 @@
   "printquestlog": "Skriv ut de aktuella uppdragen i din uppdragslogg.",
   "printallarenabosses": "Skriv ut alla arenabossars namn.",
   "noclip": "Växla noclip beroende på det aktuella tillståndet. Använd /noclip true|false för specifik kontroll.",
-  "godmode": "Växla gudaläget beroende på det aktuella tillståndet. Använd /godmode true|false för specifik kontroll."
+  "godmode": "Växla gudaläget beroende på det aktuella tillståndet. Använd /godmode true|false för specifik kontroll.",
+  "unlockteleport teleport": "Lås upp angivna teleporteringsplatser. Använd /printallteleportlocations för att få giltiga teleporternamn.",
+  "lockteleport teleport": "Lås angivna teleporteringsplatser. Använd /printallteleportlocations för att få giltiga teleporternamn.",
+  "printallteleportlocations": "Skriv ut alla teleporteringsplatser."
 }

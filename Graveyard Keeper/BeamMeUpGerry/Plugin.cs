@@ -2,8 +2,7 @@
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
-[SuppressMessage("ReSharper", "InconsistentNaming")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
@@ -22,7 +21,6 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<int> LocationsPerPage { get; private set; }
     internal static ConfigEntry<bool> SortAlphabetically { get; private set; }
     private static ConfigEntry<bool> EnableCustomLocations { get; set; }
-
     internal static ConfigEntry<bool> OpenNewLocationFileOnSave { get; private set; }
     private static ConfigEntry<bool> CustomLocationMessage { get; set; }
     private static ConfigEntry<KeyboardShortcut> SaveCustomLocationKeybind { get; set; }
@@ -117,9 +115,15 @@ public class Plugin : BaseUnityPlugin
     }
     private static void PrintKnown(ConfigEntryBase __obj)
     {
-        var button = GUILayout.Button("Print Known Zones & One-Time Crafts", GUILayout.ExpandWidth(true));
+        var button = GUILayout.Button("Print Known Zones, NPC's & One-Time Crafts", GUILayout.ExpandWidth(true));
         if (button)
         {
+            Log.LogInfo("\n");
+            Log.LogInfo("Known NPC:");
+            foreach (var npc in MainGame.me.save.known_npcs.npcs)
+            {
+                Log.LogInfo(npc.npc_id);
+            }
             Log.LogInfo("\n");
             Log.LogInfo("Known Zones:");
             foreach (var zone in MainGame.me.save.known_world_zones)

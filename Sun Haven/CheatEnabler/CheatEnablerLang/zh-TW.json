@@ -105,5 +105,8 @@
   "printquestlog": "打印您的任務日誌中的當前任務。",
   "printallarenabosses": "打印所有競技場首領的名字。",
   "noclip": "根據當前狀態切換noclip。使用 /noclip true|false 進行特定控制。",
-  "godmode": "根據當前狀態切換上帝模式。使用 /godmode true|false 進行特定控制。"
+  "godmode": "根據當前狀態切換上帝模式。使用 /godmode true|false 進行特定控制。",
+  "unlockteleport teleport": "解鎖指定的傳送位置。 使用 /printallteleportlocations 獲取有效的傳送名稱。",
+  "lockteleport teleport": "鎖定指定的傳送位置。 使用 /printallteleportlocations 獲取有效的傳送名稱。",
+  "printallteleportlocations": "列出所有傳送位置。"
 }

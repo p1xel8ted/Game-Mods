@@ -11,10 +11,12 @@ public static class Helpers
 
     private static bool RemovedQuarryBlockage()
     {
+        if (!MainGame.game_started || !MainGame.me.player) return false;
+
         return MainGame.me.save.completed_one_time_crafts.Any(craft => craft.StartsWith("steep_yellow_blockage"));
     }
-    
-    
+
+
     internal static void Log(string message)
     {
         if (Plugin.DebugEnabled.Value)
@@ -157,7 +159,7 @@ public static class Helpers
         }
     }
 
-    private readonly static Dictionary<string,string> UnusualMaps = new()
+    private readonly static Dictionary<string, string> UnusualMaps = new()
     {
         {"@lighthouse", "sealight"},
         {"@quarry", "stone_workyard"},
@@ -211,7 +213,7 @@ public static class Helpers
         strings.Custom_Locations,
         Constants.Cancel
     ];
-    
+
     internal static string[] BlockageLocations =>
     [
         "@quarry",
@@ -221,9 +223,10 @@ public static class Helpers
         "marble_deposit",
         "zombie_sawmill",
         strings.Coal,
-        Constants.ZoneFlatUnderWaterflow
+        Constants.ZoneFlatUnderWaterflow,
+        Constants.NorthCoal
     ];
-    
+
     internal static bool RemoveZone(Location location)
     {
         if (location.customZone)
@@ -234,7 +237,7 @@ public static class Helpers
 
         var removedBlockage = RemovedQuarryBlockage();
         var wheatExists = Tools.PlayerHasSeenZone(Constants.ZoneWheatLand);
-        
+
         if (!removedBlockage)
         {
             if (Array.IndexOf(BlockageLocations, location.zone) != -1)
@@ -243,21 +246,51 @@ public static class Helpers
                 return true;
             }
         }
-        
-        if (location.zone.ContainsByLanguage(strings.Farmer))
+
+        if (location.zone.Contains("Coal"))
         {
-            var farmer = wheatExists && Tools.PlayerKnowsNpcPartial(Constants.Farmer);
-            Plugin.Log.LogInfo($"[RemoveZone-Farmer] - {farmer} - {location.zone}");
-            return farmer;
+            var seenNorthCoal = Tools.PlayerHasSeenZone(Constants.NorthCoal);
+            Plugin.Log.LogInfo($"[RemoveZone-Coal] - {seenNorthCoal} - {location.zone} - Seen North Coal?: {seenNorthCoal}");
+            return !seenNorthCoal;
         }
-        
-        if (location.zone.ContainsByLanguage(strings.Mill) && !location.zone.ContainsByLanguage("zombie"))
+
+        if (location.zone.Contains(strings.Farmer))
         {
-            var mill= wheatExists && Tools.PlayerKnowsNpcPartial(Constants.Miller);
-            Plugin.Log.LogInfo($"[RemoveZone-WheatMill] - {mill} - {location.zone}");
-            return mill;
+            var knowsFarmer = Tools.PlayerKnowsNpcPartial(Constants.Farmer);
+            bool remove;
+
+            if (wheatExists)
+            {
+                remove = !knowsFarmer;
+            }
+            else
+            {
+                remove = false;
+            }
+
+            Plugin.Log.LogInfo($"[RemoveZone-Farmer] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Farmer?: {knowsFarmer}");
+            return remove;
         }
-        
+
+        if (location.zone.Contains(strings.Mill) && !location.zone.Contains("zombie"))
+        {
+            var knowsMiller = Tools.PlayerKnowsNpcPartial(Constants.Miller);
+            bool remove;
+
+            if (wheatExists)
+            {
+                remove = !knowsMiller;
+            }
+            else
+            {
+                remove = false;
+            }
+
+            Plugin.Log.LogInfo($"[RemoveZone-Miller] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Miller?: {knowsMiller}");
+            return remove;
+        }
+
+
         if (Array.IndexOf(LocationsToReturnFalse, location.zone) != -1)
         {
             Plugin.Log.LogInfo($"[RemoveZone-Special] {location.zone} is a special case (or default location). Not removing.");
@@ -266,13 +299,13 @@ public static class Helpers
 
         if (UnusualMaps.TryGetValue(location.zone, out var zone1))
         {
-            var removeUnusualZone = !MainGame.me.save.known_world_zones.Exists(a => a.EqualsByLanguage(zone1));
+            var removeUnusualZone = !MainGame.me.save.known_world_zones.Exists(a => a.Equals(zone1));
             Plugin.Log.LogInfo($"[RemoveZone-UnusualMap] - {removeUnusualZone} - {location.zone} -> {zone1}");
             return removeUnusualZone;
         }
-        
+
         var zone = location.zone.Replace(Constants.ZonePartial, string.Empty);
-        var removeZone = !MainGame.me.save.known_world_zones.Exists(a => a.EqualsByLanguage(zone));
+        var removeZone = !MainGame.me.save.known_world_zones.Exists(a => a.Equals(zone));
         Plugin.Log.LogInfo($"[RemoveZone-KnownZones] - {removeZone} - {location.zone} -> {zone}");
         return removeZone;
     }

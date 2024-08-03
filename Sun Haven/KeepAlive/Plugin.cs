@@ -5,10 +5,11 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.keepalive";
     private const string PluginName = "Keep Alive";
-    private const string PluginVersion = "0.0.8";
+    private const string PluginVersion = "0.0.9";
+    
     private static ManualLogSource Log;
 
-    internal static List<string> NoKillList = [];
+    internal static List<string> NoKillList = ["UniverseLibBehaviour", "UniverseLib", "UniverseLibBehaviour(Clone)", "UniverseLib(Clone)", "ExplorerBehaviour", "Explorer", "ExplorerBehaviour(Clone)", "Explorer(Clone)"];
 
     private void Awake()
     {

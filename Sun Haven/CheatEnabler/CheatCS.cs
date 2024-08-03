@@ -295,6 +295,11 @@ public static class CheatEnablerCommands
         }
     }
 
+    [Command]
+    public static void printallteleportlocations()
+    {
+        Utils.LogToPlayer("SH, WG, NV, BSD");
+    }
 
     [Command]
     public static void noclip()
@@ -302,15 +307,15 @@ public static class CheatEnablerCommands
         var qsm = Object.FindObjectOfType<QuantumConsoleManager>();
         qsm.noclip(!qsm.no_clip);
     }
-    
+
     [Command]
     public static void godmode()
     {
         var qsm = Object.FindObjectOfType<QuantumConsoleManager>();
         qsm.godmode(!qsm.god_mode);
     }
-    
-    
+
+
     [Command]
     public static void printromancenpcs()
     {

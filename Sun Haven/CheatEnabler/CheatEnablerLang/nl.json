@@ -105,5 +105,8 @@
     "printquestlog": "Print de huidige quests in je questlog.",
     "printallarenabosses": "Print alle arenabaas namen.",
     "noclip": "Schakelt noclip in/uit afhankelijk van de huidige status. Gebruik /noclip true|false voor specifieke controle.",
-    "godmode": "Schakelt godmode in/uit afhankelijk van de huidige status. Gebruik /godmode true|false voor specifieke controle."
+    "godmode": "Schakelt godmode in/uit afhankelijk van de huidige status. Gebruik /godmode true|false voor specifieke controle.",
+    "unlockteleport teleport": "Ontgrendel opgegeven teleportlocaties. Gebruik /printallteleportlocations om geldige teleportnamen te krijgen.",
+    "lockteleport teleport": "Vergrendel opgegeven teleportlocaties. Gebruik /printallteleportlocations om geldige teleportnamen te krijgen.",
+    "printallteleportlocations": "Print alle teleportlocaties."
   }  

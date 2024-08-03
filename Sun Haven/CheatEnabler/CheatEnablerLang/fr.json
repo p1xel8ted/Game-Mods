@@ -105,5 +105,8 @@
   "printquestlog": "Imprimer les quêtes actuelles dans votre journal de quêtes.",
   "printallarenabosses": "Imprimer tous les noms des boss de l'arène.",
   "noclip": "Active/désactive le mode noclip selon l'état actuel. Utilisez /noclip true|false pour un contrôle spécifique.",
-  "godmode": "Active/désactive le mode dieu selon l'état actuel. Utilisez /godmode true|false pour un contrôle spécifique."
+  "godmode": "Active/désactive le mode dieu selon l'état actuel. Utilisez /godmode true|false pour un contrôle spécifique.",
+  "unlockteleport teleport": "Déverrouillez les emplacements de téléportation spécifiés. Utilisez /printallteleportlocations pour obtenir des noms de téléportation valides.",
+  "lockteleport teleport": "Verrouillez les emplacements de téléportation spécifiés. Utilisez /printallteleportlocations pour obtenir des noms de téléportation valides.",
+  "printallteleportlocations": "Imprimez tous les emplacements de téléportation."
 }
