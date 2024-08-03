@@ -11,7 +11,7 @@ public static class Helpers
 
     private static bool RemovedQuarryBlockage()
     {
-        return MainGame.me.save.completed_one_time_crafts.Any(craft => craft.StartsWithByLanguage("steep_yellow_blockage"));
+        return MainGame.me.save.completed_one_time_crafts.Any(craft => craft.StartsWith("steep_yellow_blockage"));
     }
     
     

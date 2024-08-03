@@ -4,6 +4,41 @@
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class Patches
 {
+    private static int OneTimeCraftCount;
+    private static int KnownZoneCount;
+    private static int KnownNpcCount;
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnEnteredWorldZone))]
+    [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.DoPlace))]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnMetNPC))]
+    public static void BuildModeLogics_DoPlace_Prefix()
+    {
+        OneTimeCraftCount = MainGame.me.save.completed_one_time_crafts.Count;
+        KnownZoneCount = MainGame.me.save.known_world_zones.Count;
+        KnownNpcCount = MainGame.me.save.known_npcs.npcs.Count;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnEnteredWorldZone))]
+    [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.DoPlace))]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnMetNPC))]
+    public static void BuildModeLogics_DoPlace_Postfix()
+    {
+        var newCraftCount = MainGame.me.save.completed_one_time_crafts.Count;
+        var newZoneCount = MainGame.me.save.known_world_zones.Count;
+        var newNpcCount = MainGame.me.save.known_npcs.npcs.Count;
+
+        if (newCraftCount > OneTimeCraftCount || newZoneCount > KnownZoneCount || newNpcCount > KnownNpcCount)
+        {
+            PlatformSpecific.SaveGame(MainGame.me.save_slot, MainGame.me.save, OnComplete);
+
+            void OnComplete(SaveSlotData __slot)
+            {
+                Plugin.InitConfiguration();
+            }
+        }
+    }
 
     [HarmonyPostfix]
     [HarmonyWrapSafe]

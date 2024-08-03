@@ -2,13 +2,13 @@
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.7")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.0.6";
+    private const string PluginVer = "3.0.7";
 
     internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }
@@ -110,10 +110,30 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-
     private void InitInternalConfiguration()
     {
         CustomLocationMessage = Config.Bind("Internal (Dont Touch)", "Custom Location Shown", false, new ConfigDescription("Internal use. Used for tracking if the custom location alert has been shown.", null, new ConfigurationManagerAttributes {Browsable = false, HideDefaultButton = true, IsAdvanced = true, ReadOnly = true, Order = 6}));
+        Config.Bind("Print Known", "Print Known", false, new ConfigDescription("Click to output known zones to log.", null, new ConfigurationManagerAttributes {CustomDrawer = PrintKnown, HideDefaultButton = true, Order = 5}));
+    }
+    private static void PrintKnown(ConfigEntryBase __obj)
+    {
+        var button = GUILayout.Button("Print Known Zones & One-Time Crafts", GUILayout.ExpandWidth(true));
+        if (button)
+        {
+            Log.LogInfo("\n");
+            Log.LogInfo("Known Zones:");
+            foreach (var zone in MainGame.me.save.known_world_zones)
+            {
+                Log.LogInfo(zone);
+            }
+            Log.LogInfo("\n");
+            Log.LogInfo("One-Time Crafts:");
+            foreach (var craft in MainGame.me.save.completed_one_time_crafts)
+            {
+                Log.LogInfo(craft);
+            }
+            Log.LogInfo("\n");
+        }
     }
 
     internal static void InitConfiguration()
