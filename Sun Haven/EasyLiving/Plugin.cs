@@ -6,7 +6,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.easyliving";
     private const string PluginName = "Easy Living";
-    private const string PluginVersion = "0.1.4";
+    private const string PluginVersion = "0.1.6";
     private static ConfigEntry<KeyboardShortcut> SaveShortcut { get; set; }
     private static ConfigEntry<bool> EnableSaveShortcut { get; set; }
     public static ConfigEntry<bool> SkipMuseumMissingItemsDialogue { get; private set; }
@@ -22,7 +22,7 @@ public partial class Plugin : BaseUnityPlugin
     private static ConfigEntry<KeyboardShortcut> MoveSpeedMultiplierIncrease { get; set; }
     private static ConfigEntry<KeyboardShortcut> MoveSpeedMultiplierDecrease { get; set; }
     public static ConfigEntry<bool> MaterialsOnlyDefault { get; private set; }
-    public static ConfigEntry<bool> IncreaseWateringCanFillRange { get; private set; }
+    // public static ConfigEntry<bool> IncreaseWateringCanFillRange { get; private set; }
 
     public static ConfigEntry<bool> PlayerStartsAwayFromMailbox { get; private set; }
     public static ConfigEntry<bool> Emotes { get; private set; }
@@ -100,7 +100,7 @@ public partial class Plugin : BaseUnityPlugin
         AutoLoadMostRecentSave = Config.Bind("06. Saves", "Auto Load Most Recent Save", false, new ConfigDescription("Automatically load the most recent save when starting the game.", null, new ConfigurationManagerAttributes {Order = 9}));
         SkipAutoLoadMostRecentSaveShortcut = Config.Bind("06. Saves", "Skip Auto Load Most Recent Save Shortcut", new KeyboardShortcut(KeyCode.LeftShift), new ConfigDescription("Keybind to hold to skip auto loading the most recent save.", null, new ConfigurationManagerAttributes {Order = 8}));
         MaterialsOnlyDefault = Config.Bind("07. Crafting", "Materials Only Default", true, new ConfigDescription("Set the default crafting filter to 'Materials Only' when opening a crafting table.", null, new ConfigurationManagerAttributes {Order = 7}));
-        IncreaseWateringCanFillRange = Config.Bind("08. Farming", "Increase Watering Can Fill Range", true, new ConfigDescription("Increase the watering can fill range.", null, new ConfigurationManagerAttributes {Order = 5}));
+       // IncreaseWateringCanFillRange = Config.Bind("08. Farming", "Increase Watering Can Fill Range", true, new ConfigDescription("Increase the watering can fill range.", null, new ConfigurationManagerAttributes {Order = 5}));
         Emotes = Config.Bind("09. Player Settings", "Emotes", true, new ConfigDescription("Enable emotes.", null, new ConfigurationManagerAttributes {Order = 4}));
         Emotes.SettingChanged += (_, _) =>
         {

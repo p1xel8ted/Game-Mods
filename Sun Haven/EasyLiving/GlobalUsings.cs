@@ -8,7 +8,6 @@ global using BepInEx;
 global using BepInEx.Configuration;
 global using BepInEx.Logging;
 global using HarmonyLib;
-global using JetBrains.Annotations;
 global using PSS;
 global using QFSW.QC;
 global using Shared;

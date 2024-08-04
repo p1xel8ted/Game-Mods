@@ -7,16 +7,16 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.keeperscandles";
     private const string PluginName = "Keeper's Candles!";
-    private const string PluginVer = "0.1.1";
+    private const string PluginVer = "0.1.2";
     private const string Remove = "remove";
     private const string Souls = "souls";
     private readonly static string[] Wicks = ["candelabrum"];
 
     private static ManualLogSource LOG { get; set; }
-    private static ConfigEntry<int> ExtinguishDistance { get; set; }
+    private static ConfigEntry<float> ExtinguishDistance { get; set; }
     private static ConfigEntry<KeyboardShortcut> ExtinguishKeyBind { get; set; }
     private static ConfigEntry<string> ExtinguishControllerButton { get; set; }
-
+    private static ConfigEntry<bool> DirectionalArrow { get; set; }
     private static Vector2 PlayerPosition => MainGame.me.player.grid_pos;
 
     private void Awake()
@@ -26,7 +26,15 @@ public class Plugin : BaseUnityPlugin
         Actions.GameBalanceLoad += OnGameBalanceLoaded;
         Actions.GameStartedPlaying += OnGameBalanceLoaded;
 
-        ExtinguishDistance = Config.Bind("01. Distance", "Extinguish Distance", 1, new ConfigDescription("Distance in units to extinguish a candle.", null, new ConfigurationManagerAttributes {Order = 19}));
+        ExtinguishDistance = Config.Bind("01. Distance", "Extinguish Distance", 1f, new ConfigDescription("Distance in units to extinguish a candle.", new AcceptableValueRange<float>(1, 5), new ConfigurationManagerAttributes {Order = 19}));
+        ExtinguishDistance.SettingChanged += (_, _) =>
+        {
+            //clamp to 0.25 increments
+            ExtinguishDistance.Value = Mathf.Round(ExtinguishDistance.Value * 4) / 4;
+        };
+
+        DirectionalArrow = Config.Bind("01. Distance", "Directional Arrow", true, new ConfigDescription("Display an arrow that will point to the nearest candle you can extinguish.", null, new ConfigurationManagerAttributes {Order = 20}));
+        DirectionalArrow.SettingChanged += (_, _) => ResetArrow();
         ExtinguishKeyBind = Config.Bind("02. Keybinds", "Extinguish Keybind", new KeyboardShortcut(KeyCode.C), new ConfigDescription("Keybind to extinguish a candle.", null, new ConfigurationManagerAttributes {Order = 18}));
         ExtinguishControllerButton = Config.Bind("02. Keybinds", "Extinguish Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.DUp), new ConfigDescription("Select the controller button used to extinguish a candle.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 17}));
 
@@ -61,20 +69,42 @@ public class Plugin : BaseUnityPlugin
                 if (unlitCandle.IsNullOrWhiteSpace())
                 {
                     LOG.LogError($"Could not find unlit candle for {closestCandle.obj_id}. Last craft ID: {closestCandle.components.craft.last_craft_id}. Please report this!");
+                    ResetArrow();
                     return;
                 }
-
+                ResetArrow();
                 ReplaceAndDrop(closestCandle, unlitCandle);
             }
             else
             {
-                Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.TooFar), PlayerPosition, sayAsPlayer: true);
+                SetArrow(closestCandle);
+                Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.TooFar), PlayerPosition, sayAsPlayer: true, time: 1.5f);
             }
         }
         else
         {
-            Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.NoneFound), PlayerPosition, sayAsPlayer: true);
+            Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.NoneFound), PlayerPosition, sayAsPlayer: true, time: 1.5f);
         }
+    }
+
+    private static void ResetArrow()
+    {
+        GUIElements.me.tutorial_arrow.SetActive(false);
+        GUIElements.me.tutorial_arrow._attached_wgo = null;
+        GUIElements.me.tutorial_arrow._visible = false;
+    }
+
+    private static void SetArrow(WorldGameObject wgo)
+    {
+        if (!DirectionalArrow.Value)
+        {
+            ResetArrow();
+            return;
+        }
+
+        GUIElements.me.tutorial_arrow.Init();
+        GUIElements.me.tutorial_arrow.AttachToWGO(wgo);
+        GUIElements.me.tutorial_arrow._visible = true;
     }
 
     private static void OnGameBalanceLoaded()
@@ -99,7 +129,7 @@ public class Plugin : BaseUnityPlugin
                 wgo.obj_def.durability_modificator = 0f;
                 wgo.obj_def.always_active = true;
             }
-            
+
             FixCandles();
         }
         catch (Exception)
@@ -166,7 +196,7 @@ public class Plugin : BaseUnityPlugin
             wgo.components.craft.is_crafting = true;
             var remove = $"{wgo.obj_id}_{Remove}";
             var craftDef = GameBalance.me.GetData<CraftDefinition>(remove);
-            if(craftDef == null)
+            if (craftDef == null)
             {
                 LOG.LogError($"Could not find craft definition for '{remove}' - Please report this.");
                 continue;

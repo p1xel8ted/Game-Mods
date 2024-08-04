@@ -1,6 +1,7 @@
 ﻿namespace EasyLiving;
 
 [HarmonyPatch]
+[HarmonyAfter("devopsdinosaur.sunhaven.continue_button")]
 public static class Patches
 {
     private const float BaseMoveSpeed = 4.5f;
@@ -251,6 +252,8 @@ public static class Patches
             TotalDlcCount += dlc.steamPackIDs.Count;
             InstalledDlcCount += dlc.steamPackIDs.Count(id => SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = id}));
         }
+
+        Canvas.ForceUpdateCanvases();
     }
 
     internal static void UpdateMainMenu()
@@ -264,45 +267,8 @@ public static class Patches
         UpdateDlcBox();
 
         UpdatePatchNotes();
-
-        UpdateDlcShopButton();
-
-        UpdateMenuButtons();
     }
-    private static void UpdateMenuButtons()
-    {
-        var menuBox = GameObject.Find("Canvas_Home/[HomeMenu]/PlayButtons");
-        if (!menuBox) return;
-
-        var border = menuBox.GetComponent<Image>();
-        if (border)
-        {
-            border.enabled = !Plugin.RemoveMenuButtonsBorder.Value;
-        }
-
-        var rectTransform = menuBox.GetComponent<RectTransform>();
-        if (!rectTransform) return;
-
-        var y = 280;
-        if (Plugin.RemoveDlcShopButton.Value)
-        {
-            y -= 50;
-        }
-        if (Plugin.RemoveSocialMediaButtons.Value)
-        {
-            y -= 50;
-        }
-
-        rectTransform.sizeDelta = rectTransform.sizeDelta with {y = y};
-    }
-    private static void UpdateDlcShopButton()
-    {
-        var dlcShopButton = GameObject.Find("Canvas_Home/[HomeMenu]/PlayButtons/DLCShopButton");
-        if (dlcShopButton)
-        {
-            dlcShopButton.SetActive(!Plugin.RemoveDlcShopButton.Value);
-        }
-    }
+    
     private static void UpdatePatchNotes()
     {
         var patchNotesBox = GameObject.Find("Canvas_Home/[HomeMenu]/PatchNotesBox");
@@ -310,6 +276,8 @@ public static class Patches
         {
             patchNotesBox.SetActive(!Plugin.RemovePatchNotes.Value);
         }
+
+        Canvas.ForceUpdateCanvases();
     }
     private static void UpdateDlcBox()
     {
@@ -317,7 +285,7 @@ public static class Patches
         if (!dlcBox) return;
 
         UpdateDlcData();
-        
+
         if (InstalledDlcCount >= TotalDlcCount)
         {
             dlcBox.SetActive(false);
@@ -326,6 +294,8 @@ public static class Patches
         {
             dlcBox.SetActive(!Plugin.RemoveDlcAds.Value);
         }
+
+        Canvas.ForceUpdateCanvases();
     }
     private static void UpdateSocialMedia()
     {
@@ -334,6 +304,8 @@ public static class Patches
         {
             socialMedia.SetActive(!Plugin.RemoveSocialMediaButtons.Value);
         }
+
+        Canvas.ForceUpdateCanvases();
     }
     private static void UpdateLogo()
     {
@@ -342,6 +314,8 @@ public static class Patches
         {
             ppStudios.SetActive(!Plugin.RemovePixelSproutStudiosLogo.Value);
         }
+
+        Canvas.ForceUpdateCanvases();
     }
 
 
@@ -358,7 +332,7 @@ public static class Patches
             var button = component.GetComponent<Button>();
 
             var isInstalled = SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = steamID});
-            
+
             text.alpha = isInstalled ? 0.50f : 1f;
             foreach (var image in images)
             {
@@ -369,9 +343,16 @@ public static class Patches
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.EnableMenu))]
-    public static void MainMenuController_EnableMenu(ref MainMenuController __instance)
+    [HarmonyAfter("devopsdinosaur.sunhaven.continue_button")]
+    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.HomeMenu))]
+    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.Start))]
+    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.SetBackgroundBlur))]
+    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.SetupButtons))]
+    public static void MainMenuController_HomeMenu(MainMenuController __instance)
     {
         UpdateMainMenu();
+        
+        if (__instance.homeMenu.GetComponent<MenuUpdater>()) return;
+        __instance.homeMenu.AddComponent<MenuUpdater>();
     }
 }
