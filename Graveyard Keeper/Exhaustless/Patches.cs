@@ -50,7 +50,7 @@ public static class Patches
 
         var matchingItems = playerInv.inventory
             .Where(item => item.definition.type == equippedTool.definition.type &&
-                           (item.durability_state == Item.DurabilityState.Full || item.durability_state == Item.DurabilityState.Used));
+                           item.durability_state is Item.DurabilityState.Full or Item.DurabilityState.Used);
 
         foreach (var item in matchingItems)
         {
@@ -67,7 +67,7 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerComponent), nameof(PlayerComponent.Update))]
     public static void PlayerComponent_Update(ref PlayerComponent __instance)
     {
-        if (!MainGame.game_started || MainGame.me.player == null || __instance == null) return;
+        if (!MainGame.game_started || !MainGame.me.player || !__instance) return;
         
         var maxEnergy = MainGame.me.save.max_energy;
         var maxHealth = MainGame.me.save.max_hp;
@@ -124,8 +124,7 @@ public static class Patches
     {
         if (!Plugin.SpeedUpSleep.Value) return;
 
-        MainGame.me.player.energy += 0.25f;
-        MainGame.me.player.hp += 0.25f;
+        RestoreVitamins();
     }
 
 
@@ -156,8 +155,25 @@ public static class Patches
             return;
         }
 
+        RestoreVitamins();
+    }
+    private static void RestoreVitamins()
+    {
+        var maxEnergy = MainGame.me.save.max_energy;
+        var maxHealth = MainGame.me.save.max_hp;
+        
         MainGame.me.player.energy += 0.25f;
         MainGame.me.player.hp += 0.25f;
+
+        if (MainGame.me.player.energy > maxEnergy)
+        {
+            MainGame.me.player.energy = maxEnergy;
+        }
+
+        if (MainGame.me.player.hp > maxHealth)
+        {
+            MainGame.me.player.hp = maxHealth;
+        }
     }
 
 

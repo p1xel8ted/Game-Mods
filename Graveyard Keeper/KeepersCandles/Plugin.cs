@@ -2,19 +2,22 @@
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.keeperscandles";
     private const string PluginName = "Keeper's Candles!";
-    private const string PluginVer = "0.1.0";
+    private const string PluginVer = "0.1.1";
     private const string Remove = "remove";
+    private const string Souls = "souls";
+    private readonly static string[] Wicks = ["candelabrum"];
 
     private static ManualLogSource LOG { get; set; }
-    private readonly static string[] Wicks = ["candelabrum", "candle"];
     private static ConfigEntry<int> ExtinguishDistance { get; set; }
     private static ConfigEntry<KeyboardShortcut> ExtinguishKeyBind { get; set; }
     private static ConfigEntry<string> ExtinguishControllerButton { get; set; }
+
+    private static Vector2 PlayerPosition => MainGame.me.player.grid_pos;
 
     private void Awake()
     {
@@ -29,6 +32,49 @@ public class Plugin : BaseUnityPlugin
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         LOG.LogInfo($"Plugin {PluginName} is loaded!");
+    }
+
+    private void Update()
+    {
+        if (!CanFindCandles()) return;
+
+        if ((!LazyInput.gamepad_active || !ReInput.players.GetPlayer(0).GetButtonDown(ExtinguishControllerButton.Value)) && !ExtinguishKeyBind.Value.IsUp()) return;
+
+        WorldGameObject closestCandle = null;
+        var closestDistance = float.MaxValue;
+
+        foreach (var candle in GetCandles())
+        {
+            var distance = Vector3.Distance(candle.grid_pos, PlayerPosition);
+
+            if (!(distance < closestDistance)) continue;
+
+            closestDistance = distance;
+            closestCandle = candle;
+        }
+
+        if (closestCandle)
+        {
+            if (closestDistance <= ExtinguishDistance.Value)
+            {
+                var unlitCandle = GetUnlitCandle(closestCandle.components.craft.last_craft_id);
+                if (unlitCandle.IsNullOrWhiteSpace())
+                {
+                    LOG.LogError($"Could not find unlit candle for {closestCandle.obj_id}. Last craft ID: {closestCandle.components.craft.last_craft_id}. Please report this!");
+                    return;
+                }
+
+                ReplaceAndDrop(closestCandle, unlitCandle);
+            }
+            else
+            {
+                Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.TooFar), PlayerPosition, sayAsPlayer: true);
+            }
+        }
+        else
+        {
+            Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.NoneFound), PlayerPosition, sayAsPlayer: true);
+        }
     }
 
     private static void OnGameBalanceLoaded()
@@ -53,6 +99,8 @@ public class Plugin : BaseUnityPlugin
                 wgo.obj_def.durability_modificator = 0f;
                 wgo.obj_def.always_active = true;
             }
+            
+            FixCandles();
         }
         catch (Exception)
         {
@@ -101,54 +149,30 @@ public class Plugin : BaseUnityPlugin
                !MainGame.paused &&
                BaseGUI.all_guis_closed;
     }
-
-    private static Vector2 PlayerPosition => MainGame.me.player.grid_pos;
-
-    private void Update()
-    {
-        if (!CanFindCandles()) return;
-
-        if ((!LazyInput.gamepad_active || !ReInput.players.GetPlayer(0).GetButtonDown(ExtinguishControllerButton.Value)) && !ExtinguishKeyBind.Value.IsUp()) return;
-
-        WorldGameObject closestCandle = null;
-        var closestDistance = float.MaxValue;
-
-        foreach (var candle in GetCandles())
-        {
-            var distance = Vector3.Distance(candle.grid_pos, PlayerPosition);
-
-            if (!(distance < closestDistance)) continue;
-
-            closestDistance = distance;
-            closestCandle = candle;
-        }
-
-        if (closestCandle)
-        {
-            if (closestDistance <= ExtinguishDistance.Value)
-            {
-                var unlitCandle = GetUnlitCandle(closestCandle.components.craft.last_craft_id);
-                if (unlitCandle.IsNullOrWhiteSpace())
-                {
-                    LOG.LogError($"Could not find unlit candle for {closestCandle.obj_id}. Last craft ID: {closestCandle.components.craft.last_craft_id}. Please report this!");
-                    return;
-                }
-
-                ReplaceAndDrop(closestCandle, unlitCandle);
-            }
-            else
-            {
-                Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.TooFar), PlayerPosition, sayAsPlayer: true);
-            }
-        }
-        else
-        {
-            Tools.ShowMessage(LangDicts.GetMessage(LangDicts.Messages.NoneFound), PlayerPosition, sayAsPlayer: true);
-        }
-    }
     private static bool ShouldProcess(string id)
     {
-        return Wicks.Any(id.Contains);
+        return !id.Contains(Souls) && Wicks.Any(id.Contains);
+    }
+
+    private static void FixCandles()
+    {
+        foreach (var wgo in WorldMap._objs.Where(wgo => ShouldProcess(wgo.obj_id) || ShouldProcess(wgo.obj_def.id)))
+        {
+            var split = wgo.obj_id.Split(["candelabrum"], StringSplitOptions.None);
+            var postfix = split.Last();
+            var underscoreCount = postfix.Count(c => c == '_');
+            if (underscoreCount < 2) continue;
+            LOG.LogInfo($"Correcting '{wgo.obj_id}' crafting status.");
+            wgo.components.craft.is_crafting = true;
+            var remove = $"{wgo.obj_id}_{Remove}";
+            var craftDef = GameBalance.me.GetData<CraftDefinition>(remove);
+            if(craftDef == null)
+            {
+                LOG.LogError($"Could not find craft definition for '{remove}' - Please report this.");
+                continue;
+            }
+            wgo.components.craft.current_craft = craftDef;
+        }
     }
 
     [HarmonyPostfix]
@@ -165,30 +189,11 @@ public class Plugin : BaseUnityPlugin
         OnGameBalanceLoaded();
     }
 
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.Craft))]
-    public static bool CraftComponent_Craft(CraftComponent __instance, CraftDefinition craft,
-        Item try_use_particular_item,
-        List<string> multiquality_ids,
-        List<Item> override_needs,
-        bool ignore_crafts_list,
-        int amount,
-        ref bool __result)
-    {
-        if (!ShouldProcess(__instance.wgo.obj_id) && !ShouldProcess(craft.id)) return true;
-        if (!craft.id.EndsWith(Remove)) return true;
-        __instance.wgo.components.craft.is_crafting = true;
-        __result = true;
-        return false;
-    }
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.ReallyUpdateComponent))]
     public static bool CraftComponent_ReallyUpdateComponent(CraftComponent __instance)
     {
         if (!__instance.other_obj || !__instance.other_obj.is_player || __instance.current_craft == null) return true;
-
         return !(ShouldProcess(__instance.wgo.obj_id) || ShouldProcess(__instance.current_craft.id));
     }
 }

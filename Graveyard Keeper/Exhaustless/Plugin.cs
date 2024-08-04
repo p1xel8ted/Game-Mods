@@ -1,12 +1,12 @@
 ﻿namespace Exhaustless;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.exhaustless";
     private const string PluginName = "Exhaust-less!";
-    private const string PluginVer = "3.4.7";
+    private const string PluginVer = "3.4.8";
 
     internal static ConfigEntry<bool> MakeToolsLastLonger { get;private set; }
     internal static ConfigEntry<bool> SpendHalfGratitude { get; private set; }
