@@ -6,8 +6,12 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.uiscales";
     private const string PluginName = "UI Scales";
-    private const string PluginVersion = "0.2.1";
+    private const string PluginVersion = "0.2.2";
 
+    internal static Transform Bust { get; set; }
+    internal static WriteOnce<float> OriginalPortraitPosition { get; } = new();
+    internal static ConfigEntry<float> PortraitScale { get; private set; }
+    internal static ConfigEntry<float> PortraitHorizontalPosition { get; private set; }
     private static ConfigEntry<bool> ZoomAdjustments { get; set; }
     internal static ConfigEntry<float> MainHudScale { get; private set; }
     internal static ConfigEntry<float> ZoomLevel { get; private set; }
@@ -33,7 +37,7 @@ public class Plugin : BaseUnityPlugin
     private static ConfigEntry<float> AutoFeederCanvasScale { get; set; }
     public static ConfigEntry<float> OptionsMenuScale { get; private set; }
     public static ConfigEntry<float> EverythingElseScale { get; private set; }
-
+    public static ConfigEntry<bool> ScalePortraitAdjustments { get; private set; }
     private void Awake()
     {
         SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
@@ -152,7 +156,22 @@ public class Plugin : BaseUnityPlugin
         {
             Patches.UpdateAllScalers();
         };
-            
+
+        // 03. Character Portrait Settings
+        ScalePortraitAdjustments = Config.Bind("03. Character Portrait Settings", "Enable Portrait Adjustments", false, new ConfigDescription("Allow modifications to the character portrait.", null, new ConfigurationManagerAttributes {Order = 990}));
+        ScalePortraitAdjustments.SettingChanged += (_, _) =>
+        {
+            ScalePortrait();
+        };
+        
+        PortraitScale = Config.Bind<float>("03. Character Portrait Settings", "Portrait Scale", 2f, new ConfigDescription("Adjust the size of character portraits in dialogue.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 989}));
+        PortraitScale.SettingChanged += (_, _) =>
+        {
+            ScalePortrait();
+        };
+
+        PortraitHorizontalPosition = Config.Bind<float>("03. Character Portrait Settings", "Portrait Position", 0, new ConfigDescription("Adjust the horizontal position of character portraits in dialogue.", new AcceptableValueRange<float>(-1500f, 1500f), new ConfigurationManagerAttributes {Order = 988}));
+
         // 04. Zoom Settings
         ZoomAdjustments = Config.Bind("04. Zoom Settings", "Enable Zoom Adjustments", true, new ConfigDescription("Allow modifications to the zoom level.", null, new ConfigurationManagerAttributes {Order = 987}));
 
@@ -170,6 +189,37 @@ public class Plugin : BaseUnityPlugin
         ZoomKeyboardShortcutDecrease = Config.Bind("04. Zoom Settings", "Zoom Level Decrease", new KeyboardShortcut(KeyCode.Keypad2), new ConfigDescription("Keybind to decrease the zoom level.", null, new ConfigurationManagerAttributes {Order = 984}));
     }
 
+    internal static void MovePortrait()
+    {
+        if (Bust)
+        {
+            Bust.localPosition = Bust.localPosition with {x = OriginalPortraitPosition.Value + PortraitHorizontalPosition.Value};
+        }
+    }
+    private static void ScalePortrait()
+    {
+        if (!ScalePortraitAdjustments.Value) return;
+        
+        if (Bust)
+        {
+            ScaleTransformWithBottomLeftPivot(Bust, new Vector3(PortraitScale.Value, PortraitScale.Value, 1f));
+        }
+    }
+    
+    internal static void ScaleTransformWithBottomLeftPivot(Transform targetTransform, Vector3 newScale)
+    {
+        var initialPosition = targetTransform.position;
+        var initialScale = targetTransform.localScale;
+
+        var positionAdjustment = new Vector3(
+            (initialScale.x - newScale.x) * 0.5f,
+            (initialScale.y - newScale.y) * 0.5f,
+            0
+        );
+
+        targetTransform.localScale = newScale;
+        targetTransform.position = initialPosition + positionAdjustment;
+    }
 
     private void OnDestroy()
     {
