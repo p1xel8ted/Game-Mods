@@ -1,13 +1,13 @@
 ﻿namespace DecompDelight;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.decompdelight";
     private const string PluginName = "Decomp Delight!";
-    private const string PluginVer = "0.1.1";
-    internal static ManualLogSource LOG { get; set; }
+    private const string PluginVer = "0.1.2";
+    internal static ManualLogSource LOG { get; private set; }
 
     private static ConfigEntry<Color> SlowingColor { get; set; }
     private static ConfigEntry<Color> AccelerationColor { get; set; }

@@ -6,7 +6,7 @@
     {
         private const string PluginGuid = "p1xel8ted.gyk.getouttamyway";
         private const string PluginName = "Get Outta My Way!";
-        private const string PluginVer = "0.1.0";
+        private const string PluginVer = "0.1.1";
         private const string Donkey = "donkey";
         private const string NpcPrefix = "[wgo] ";
         private static ManualLogSource LOG { get; set; }

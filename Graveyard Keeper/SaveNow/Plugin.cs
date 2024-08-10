@@ -1,12 +1,12 @@
 ﻿namespace SaveNow;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.savenow";
     private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.3";
+    private const string PluginVer = "2.5.4";
 
     private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<int> SaveInterval { get; set; }

@@ -7,7 +7,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.0.7";
+    private const string PluginVer = "3.0.8";
 
     internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }

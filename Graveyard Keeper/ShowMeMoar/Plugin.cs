@@ -1,12 +1,12 @@
 ﻿namespace ShowMeMoar;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.showmemoar";
     private const string PluginName = "Show Me Moar!";
-    private const string PluginVer = "0.1.6";
+    private const string PluginVer = "0.1.7";
     internal static ConfigEntry<bool> Ultrawide { get; private set; }
     private static ConfigEntry<KeyboardShortcut> ZoomIn { get; set; }
     private static ConfigEntry<KeyboardShortcut> ZoomOut { get; set; }

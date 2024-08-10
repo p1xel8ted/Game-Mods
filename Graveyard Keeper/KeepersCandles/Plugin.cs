@@ -7,16 +7,19 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.keeperscandles";
     private const string PluginName = "Keeper's Candles!";
-    private const string PluginVer = "0.1.2";
-    private const string Remove = "remove";
+    private const string PluginVer = "0.1.4";
     private const string Souls = "souls";
-    private readonly static string[] Wicks = ["candelabrum"];
-
+    private const string Candelabrum = "candelabrum";
+    private const string Column = "column";
+    private const string Church = "CHURCH";
+    
+    private readonly static List<GameObject> ChurchColumnsList = [];
     private static ManualLogSource LOG { get; set; }
     private static ConfigEntry<float> ExtinguishDistance { get; set; }
     private static ConfigEntry<KeyboardShortcut> ExtinguishKeyBind { get; set; }
     private static ConfigEntry<string> ExtinguishControllerButton { get; set; }
     private static ConfigEntry<bool> DirectionalArrow { get; set; }
+    private static ConfigEntry<bool> ChurchColumns { get; set; }
     private static Vector2 PlayerPosition => MainGame.me.player.grid_pos;
 
     private void Awake()
@@ -35,8 +38,12 @@ public class Plugin : BaseUnityPlugin
 
         DirectionalArrow = Config.Bind("01. Distance", "Directional Arrow", true, new ConfigDescription("Display an arrow that will point to the nearest candle you can extinguish.", null, new ConfigurationManagerAttributes {Order = 20}));
         DirectionalArrow.SettingChanged += (_, _) => ResetArrow();
-        ExtinguishKeyBind = Config.Bind("02. Keybinds", "Extinguish Keybind", new KeyboardShortcut(KeyCode.C), new ConfigDescription("Keybind to extinguish a candle.", null, new ConfigurationManagerAttributes {Order = 18}));
-        ExtinguishControllerButton = Config.Bind("02. Keybinds", "Extinguish Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.DUp), new ConfigDescription("Select the controller button used to extinguish a candle.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 17}));
+
+        ChurchColumns = Config.Bind("02. Features", "Church Columns", true, new ConfigDescription("Toggle church column visibility.", null, new ConfigurationManagerAttributes {Order = 16}));
+        ChurchColumns.SettingChanged += (_, _) => ChurchColumnsToggle();
+
+        ExtinguishKeyBind = Config.Bind("03. Keybinds", "Extinguish Keybind", new KeyboardShortcut(KeyCode.C), new ConfigDescription("Keybind to extinguish a candle.", null, new ConfigurationManagerAttributes {Order = 18}));
+        ExtinguishControllerButton = Config.Bind("03. Keybinds", "Extinguish Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.DUp), new ConfigDescription("Select the controller button used to extinguish a candle.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 17}));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         LOG.LogInfo($"Plugin {PluginName} is loaded!");
@@ -87,6 +94,14 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
+    private static void ChurchColumnsToggle()
+    {
+        foreach (var column in ChurchColumnsList.ToList().Where(column => column))
+        {
+            column.gameObject.SetActive(ChurchColumns.Value);
+        }
+    }
+
     private static void ResetArrow()
     {
         GUIElements.me.tutorial_arrow.SetActive(false);
@@ -131,6 +146,7 @@ public class Plugin : BaseUnityPlugin
             }
 
             FixCandles();
+            ChurchColumnsToggle();
         }
         catch (Exception)
         {
@@ -181,29 +197,47 @@ public class Plugin : BaseUnityPlugin
     }
     private static bool ShouldProcess(string id)
     {
-        return !id.Contains(Souls) && Wicks.Any(id.Contains);
+        return !id.Contains(Souls) && id.Contains(Candelabrum);
     }
 
     private static void FixCandles()
     {
         foreach (var wgo in WorldMap._objs.Where(wgo => ShouldProcess(wgo.obj_id) || ShouldProcess(wgo.obj_def.id)))
         {
-            var split = wgo.obj_id.Split(["candelabrum"], StringSplitOptions.None);
+            var split = wgo.obj_id.Split([Candelabrum], StringSplitOptions.None);
             var postfix = split.Last();
             var underscoreCount = postfix.Count(c => c == '_');
             if (underscoreCount < 2) continue;
             LOG.LogInfo($"Correcting '{wgo.obj_id}' crafting status.");
             wgo.components.craft.is_crafting = true;
-            var remove = $"{wgo.obj_id}_{Remove}";
-            var craftDef = GameBalance.me.GetData<CraftDefinition>(remove);
-            if (craftDef == null)
-            {
-                LOG.LogError($"Could not find craft definition for '{remove}' - Please report this.");
-                continue;
-            }
-            wgo.components.craft.current_craft = craftDef;
         }
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ChunkedGameObject), nameof(ChunkedGameObject.Init))]
+    public static void ChunkedGameObject_Init(ChunkedGameObject __instance)
+    {
+        var name = __instance.name;
+        var path = GetPath(__instance.transform);
+        if (name.Contains(Column) && path.Contains(Church))
+        {
+            ChurchColumnsList.Add(__instance.gameObject);
+        }
+        
+        ChurchColumnsToggle();
+    }
+
+    private static string GetPath(Transform transform)
+    {
+        var path = transform.name;
+        while (transform.parent)
+        {
+            transform = transform.parent;
+            path = $"{transform.name}/{path}";
+        }
+        return path;
+    }
+
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ChunkManager), nameof(ChunkManager.RescanAllObjects))]
@@ -223,7 +257,6 @@ public class Plugin : BaseUnityPlugin
     [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.ReallyUpdateComponent))]
     public static bool CraftComponent_ReallyUpdateComponent(CraftComponent __instance)
     {
-        if (!__instance.other_obj || !__instance.other_obj.is_player || __instance.current_craft == null) return true;
-        return !(ShouldProcess(__instance.wgo.obj_id) || ShouldProcess(__instance.current_craft.id));
+        return !__instance.wgo.obj_id.Contains(Candelabrum);
     }
 }

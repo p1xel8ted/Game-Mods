@@ -25,6 +25,11 @@ internal static class LangDicts
             {Messages.TooFar, "Eine brennende Kerze ist in der Nähe, aber ich kann sie nicht erreichen. Ich muss näher herangehen."},
             {Messages.NoneFound, "Keine brennenden Kerzen in der Nähe gefunden."},
         },
+        ["zh-cn"] = new Dictionary<Messages, string>
+        {
+            {Messages.TooFar, "附近有点燃的蜡烛，但我无法够到。需要靠近一些。"},
+            {Messages.NoneFound, "附近没有发现点燃的蜡烛。"},
+        },
         ["zh_cn"] = new Dictionary<Messages, string>
         {
             {Messages.TooFar, "附近有点燃的蜡烛，但我无法够到。需要靠近一些。"},
@@ -34,6 +39,11 @@ internal static class LangDicts
         {
             {Messages.TooFar, "Hay una vela encendida cerca, pero no puedo alcanzarla. Tendré que acercarme."},
             {Messages.NoneFound, "No se encontraron velas encendidas cerca."},
+        },
+        ["pt_br"] = new Dictionary<Messages, string>
+        {
+            {Messages.TooFar, "Há uma vela acesa por perto, mas não consigo alcançá-la. Preciso me aproximar."},
+            {Messages.NoneFound, "Nenhuma vela acesa encontrada nas proximidades."},
         },
         ["pt-br"] = new Dictionary<Messages, string>
         {

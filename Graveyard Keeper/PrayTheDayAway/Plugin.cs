@@ -1,12 +1,12 @@
 ﻿namespace PrayTheDayAway;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.praythedayaway";
     private const string PluginName = "Pray The Day Away!";
-    private const string PluginVer = "0.3.1";
+    private const string PluginVer = "0.3.2";
 
     private static ConfigEntry<bool> Debug { get; set; }
     private static ManualLogSource Log { get; set; }

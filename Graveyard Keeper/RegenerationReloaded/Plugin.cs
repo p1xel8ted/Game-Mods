@@ -1,12 +1,12 @@
 ﻿namespace RegenerationReloaded;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.regenerationreloaded";
     private const string PluginName = "Regeneration Reloaded";
-    private const string PluginVer = "1.1.6";
+    private const string PluginVer = "1.1.7";
 
     private static ManualLogSource Log { get; set; }
     internal static ConfigEntry<bool> ShowRegenUpdates { get; private set; }

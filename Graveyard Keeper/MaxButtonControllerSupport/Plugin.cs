@@ -1,12 +1,12 @@
 ﻿namespace MaxButtonControllerSupport;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.maxbuttoncontrollersupport";
     private const string PluginName = "Max Button Controller Support";
-    private const string PluginVer = "1.3.6";
+    private const string PluginVer = "1.3.7";
 
     private static ManualLogSource Log { get; set; }
 

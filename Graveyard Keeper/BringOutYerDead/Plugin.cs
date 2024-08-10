@@ -1,12 +1,12 @@
 ﻿namespace BringOutYerDead;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.bringoutyerdead";
     private const string PluginName = "Bring Out Yer Dead!";
-    private const string PluginVer = "0.1.9";
+    private const string PluginVer = "0.2.0";
 
     internal static ConfigEntry<bool> Debug;
     internal static ManualLogSource Log { get; private set; }

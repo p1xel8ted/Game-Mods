@@ -3,12 +3,12 @@
 namespace MiscBitsAndBobs;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.7")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.miscbitsandbobs";
     private const string PluginName = "Misc. Bits & Bobs";
-    private const string PluginVer = "2.2.8";
+    private const string PluginVer = "2.2.9";
 
     internal static ConfigEntry<bool> Debug { get; set; }
     internal static ConfigEntry<bool> QuietMusicInGuiConfig { get; private set; }

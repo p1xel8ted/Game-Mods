@@ -12,12 +12,12 @@ using UnityEngine;
 namespace ThoughtfulReminders;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.thoughtfulreminders";
     private const string PluginName = "Thoughtful Reminders";
-    private const string PluginVer = "2.2.6";
+    private const string PluginVer = "2.2.7";
 
     private static int PrevDayOfWeek { get; set; }
     

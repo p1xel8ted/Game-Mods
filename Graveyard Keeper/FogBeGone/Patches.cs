@@ -17,7 +17,7 @@ public static class Patches
     [HarmonyPatch(typeof(SmartWeatherState), nameof(SmartWeatherState.Update))]
     public static void SmartWeatherState_Update(SmartWeatherState __instance)
     {
-        // if (!MainGame.game_started || __instance == null || IntroPlaying) return;
+        if (!MainGame.game_started || !__instance || IntroPlaying) return;
         switch (__instance.type)
         {
             case SmartWeatherState.WeatherType.Fog:

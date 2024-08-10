@@ -1,12 +1,12 @@
 ﻿namespace WheresMaStorage;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.9")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmastorage";
     private const string PluginName = "Where's Ma' Storage!";
-    private const string PluginVer = "2.1.7";
+    private const string PluginVer = "2.1.8";
 
     internal static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<bool> ModifyInventorySize { get; private set; }

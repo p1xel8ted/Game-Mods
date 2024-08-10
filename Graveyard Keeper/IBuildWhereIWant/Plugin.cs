@@ -1,12 +1,12 @@
 ﻿namespace IBuildWhereIWant;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.ibuildwhereiwant";
     private const string PluginName = "I Build Where I Want!";
-    private const string PluginVer = "1.7.5";
+    private const string PluginVer = "1.7.6";
     
     private static ManualLogSource Log { get; set; }
     private static ConfigEntry<bool> Grid { get;set; }

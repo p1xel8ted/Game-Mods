@@ -1,12 +1,12 @@
 ﻿namespace WheresMaVeggies;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmaveggies";
     private const string PluginName = "Where's Ma' Veggies!";
-    private const string PluginVer = "0.1.3";
+    private const string PluginVer = "0.1.4";
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static ManualLogSource Log { get; private set; }
     

@@ -8,6 +8,11 @@ public static class Patches
         var sw = new System.Diagnostics.Stopwatch();
         sw.Start();
 
+        if(!Plugin.LoadTrees())
+        {
+            return;
+        }
+        
         // Create a new list to hold the trees that you want to destroy.
         List<WorldGameObject> treesToDestroy = [];
 

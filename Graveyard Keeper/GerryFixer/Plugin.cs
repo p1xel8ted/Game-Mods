@@ -1,12 +1,12 @@
 ﻿namespace GerryFixer;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.0.5")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gerryfixer";
     private const string PluginName = "Gerry Fixer...";
-    private const string PluginVer = "0.1.5";
+    private const string PluginVer = "0.1.6";
 
     internal static ConfigEntry<bool> Debug;
     internal static ConfigEntry<bool> AttemptToFixCutsceneGerrys { get; private set; }
