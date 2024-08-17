@@ -440,7 +440,7 @@ public class Patches
         }
 
         var lang = LocalizationManager.CurrentLanguageCode;
-        var descDict = CommandDescriptionsHelper.GetLanguageDictionary(lang);
+        var descDict = Lang.GetLangDictionary(lang);
         if (descDict == null)
         {
             Plugin.LOG.LogError($"No descriptions dictionary found for '{lang}'");
@@ -471,7 +471,7 @@ public class Patches
         if (!__result) return;
 
         var lang = LocalizationManager.CurrentLanguageCode;
-        var descDict = CommandDescriptionsHelper.GetLanguageDictionary(lang);
+        var descDict = Lang.GetLangDictionary(lang);
         if (descDict != null && descDict.TryGetValue(command.CommandSignature, out var description))
         {
             command.CommandDescription = description;

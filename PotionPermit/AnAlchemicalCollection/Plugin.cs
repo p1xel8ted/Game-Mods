@@ -1,25 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BepInEx;
-using BepInEx.Configuration;
-using BepInEx.Logging;
-using Cinemachine;
-using FastTravelEnum;
-using GlobalEnum;
-using HarmonyLib;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.potionpermit.alchemical_collection";
     private const string PluginName = "An Alchemical Collection";
-    private const string PluginVersion = "0.1.9";
+    private const string PluginVersion = "0.2.0";
     private const string Preload = "PreLoad";
     private const string MainMenu = "MainMenu";
 
@@ -33,8 +19,8 @@ public class Plugin : BaseUnityPlugin
         refreshRate = MaxRefreshRate
     };
 
-    internal readonly static List<CinemachineVirtualCamera> VirtualCameras = [];
-    internal readonly static Dictionary<string, float> OriginalCameraZoomValues = new();
+    private readonly static List<CinemachineVirtualCamera> VirtualCameras = [];
+    private readonly static Dictionary<string, float> OriginalCameraZoomValues = new();
     private static ManualLogSource Log { get; set; }
     public static ConfigEntry<float> RunSpeedMultiplier { get; private set; }
     public static ConfigEntry<bool> EnableRunSpeedMultiplier { get; private set; }
@@ -56,7 +42,7 @@ public class Plugin : BaseUnityPlugin
     private static ConfigEntry<KeyboardShortcut> QuickSaveKeybind { get; set; }
     private static ConfigEntry<KeyboardShortcut> NewsBoardKeybind { get; set; }
     private static ConfigEntry<KeyboardShortcut> ToggleHudKeybind { get; set; }
-    internal static ConfigEntry<bool> ModifyCamera { get; set; }
+    internal static ConfigEntry<bool> ModifyCamera { get; private set; }
     private static ConfigEntry<float> CameraZoomValue { get; set; }
     private static ConfigEntry<bool> TimeManipulation { get; set; }
     internal static ConfigEntry<float> TimeMultiplier { get; private set; }
@@ -71,24 +57,14 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> InstantDialogue { get; private set; }
     internal static ConfigEntry<bool> DialogueTypeWriterSound { get; private set; }
     internal static ConfigEntry<bool> DogBarkingSound { get; private set; }
-    internal static ConfigEntry<bool> DockStompingSoundWhenFishing { get; set; }
-    internal static ConfigEntry<bool> CleanUpMainMenuConfig { get; set; }
-
-    internal static ConfigEntry<bool> ExpandMainMenuToFit { get; set; }
+    internal static ConfigEntry<bool> DockStompingSoundWhenFishing { get; private set; }
+    private static ConfigEntry<bool> CleanUpMainMenuConfig { get; set; }
     internal static ConfigEntry<bool> AutoLoadSave { get; private set; }
     internal static ConfigEntry<int> AutoLoadSaveSlot { get; private set; }
-
     private static ConfigEntry<KeyboardShortcut> SkipAutoLoadMostRecentSaveShortcut { get; set; }
-
     private static TimePatches TimeInstance { get; set; }
-
     private static int MaxRefreshRate => Screen.resolutions.Max(a => a.refreshRate);
 
-    private static float AspectRatio169 => 16f / 9f;
-    private static float AspectRatioCurrent => (float) Screen.currentResolution.width / Screen.currentResolution.height;
-    private static bool WiderThan169 => AspectRatioCurrent > AspectRatio169;
-    private static float ReferenceWidth => Screen.currentResolution.height * AspectRatio169;
-    private static float NewScale => GetNewScale(ReferenceWidth);
 
     private void Awake()
     {
@@ -98,7 +74,7 @@ public class Plugin : BaseUnityPlugin
 
         // Display Resolution Configuration
         ModifyResolutions = Config.Bind("01. Display Settings", "Enable Custom Resolution", false,
-            new ConfigDescription("Toggle the usage of custom resolution settings.", null,
+            new ConfigDescription("Toggle the usage of custom resolution settings. You need to restart the game after changing this setting.", null,
                 new ConfigurationManagerAttributes {Order = 101}));
         Width = Config.Bind("01. Display Settings", "Custom Width", Display.main.systemWidth,
             new ConfigDescription("Define the custom display width.", null,
@@ -109,19 +85,16 @@ public class Plugin : BaseUnityPlugin
         Refresh = Config.Bind("01. Display Settings", "Custom Refresh Rate", Screen.resolutions.Max(a => a.refreshRate),
             new ConfigDescription("Define the custom display refresh rate.", null,
                 new ConfigurationManagerAttributes {Order = 98}));
+        
+        Resolution.height = Height.Value;
+        Resolution.width = Width.Value;
+        Resolution.refreshRate = Refresh.Value;
+        
         CustomTargetFramerate = Config.Bind("01. Display Settings", "Enable Custom Target Frame Rate", false,
             new ConfigDescription("Toggle the usage of custom target frame rate settings. May or may not do anything.",
                 null, new ConfigurationManagerAttributes {Order = 97}));
         FrameRate = Config.Bind("01. Display Settings", "Target Frame Rate", Screen.resolutions.Max(a => a.refreshRate),
             new ConfigDescription("Set the target frame rate.", null, new ConfigurationManagerAttributes {Order = 96}));
-        ExpandMainMenuToFit = Config.Bind("01. Display Settings", "Expand Main Menu To Fit", true,
-            new ConfigDescription("Enable the expansion of the main menu to fit the screen. Not recommended for wider than 21:9.", null,
-                new ConfigurationManagerAttributes {Order = 95}));
-        ExpandMainMenuToFit.SettingChanged += (_, _) => { CleanUpMainMenu(!ExpandMainMenuToFit.Value); };
-        
-        Resolution.width = Width.Value;
-        Resolution.height = Height.Value;
-        Resolution.refreshRate = Refresh.Value;
 
         // Tool Usage Configuration
         AutoChangeTool = Config.Bind("02. Tools Settings", "Automatic Tool Switching", true,
@@ -185,26 +158,41 @@ public class Plugin : BaseUnityPlugin
         ModifyCamera = Config.Bind("07. Camera Manipulation", "Enable Camera Manipulation", true,
             new ConfigDescription("Enable camera manipulation.", null,
                 new ConfigurationManagerAttributes {Order = 45}));
-        ModifyCamera.SettingChanged += (_, _) => { UpdateCameraZoom(!ModifyCamera.Value); };
+        ModifyCamera.SettingChanged += (_, _) =>
+        {
+            UpdateCameraZoom(!ModifyCamera.Value);
+        };
         CameraZoomValue = Config.Bind("07. Camera Manipulation", "Camera Zoom", 1f,
             new ConfigDescription("Set the camera zoom.", new AcceptableValueRange<float>(0.1f, 3f),
                 new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 44}));
-        CameraZoomValue.SettingChanged += (_, _) => { UpdateCameraZoom(); };
+        CameraZoomValue.SettingChanged += (_, _) =>
+        {
+            UpdateCameraZoom();
+        };
 
 
         //Scale manipulation
         ModifyHudScale = Config.Bind("08. Scale Manipulation", "Enable Scale Manipulation", true,
             new ConfigDescription("Enable scale manipulation.", null, new ConfigurationManagerAttributes {Order = 43}));
-        ModifyHudScale.SettingChanged += (_, _) => { ModifyHud(!ModifyHudScale.Value); };
+        ModifyHudScale.SettingChanged += (_, _) =>
+        {
+            ModifyHud(!ModifyHudScale.Value);
+        };
         ModifyHudScaleValue = Config.Bind("08. Scale Manipulation", "HUD Scale", 1.0f,
             new ConfigDescription("Set the HUD scale.", new AcceptableValueRange<float>(0.5f, 2.0f),
                 new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 42}));
-        ModifyHudScaleValue.SettingChanged += (_, _) => { ModifyHud(); };
+        ModifyHudScaleValue.SettingChanged += (_, _) =>
+        {
+            ModifyHud();
+        };
 
         //Time manipulation
         TimeManipulation = Config.Bind("09. Time Manipulation", "Enable Time Manipulation", true,
             new ConfigDescription("Enable time manipulation.", null, new ConfigurationManagerAttributes {Order = 43}));
-        TimeManipulation.SettingChanged += (_, _) => { TimeInstance.enabled = TimeManipulation.Value; };
+        TimeManipulation.SettingChanged += (_, _) =>
+        {
+            TimeInstance.enabled = TimeManipulation.Value;
+        };
         TimeMultiplier = Config.Bind("09. Time Manipulation", "Time Multiplier", 1.0f,
             new ConfigDescription("Set the time multiplier.", new AcceptableValueRange<float>(1, 10),
                 new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 41}));
@@ -244,11 +232,17 @@ public class Plugin : BaseUnityPlugin
         CleanUpMainMenuConfig = Config.Bind("12. Misc", "Clean Up Main Menu", true,
             new ConfigDescription("Remove Credits/Discord/Trademark buttons.", null,
                 new ConfigurationManagerAttributes {Order = 41}));
-        CleanUpMainMenuConfig.SettingChanged += (_, _) => { CleanUpMainMenu(!CleanUpMainMenuConfig.Value); };
+        CleanUpMainMenuConfig.SettingChanged += (_, _) =>
+        {
+            CleanUpMainMenu(!CleanUpMainMenuConfig.Value);
+        };
         IncreaseUpdateRate = Config.Bind("12. Misc", "Enable Increase Update Rate", true,
             new ConfigDescription("Enable the increase of the update rate.", null,
                 new ConfigurationManagerAttributes {Order = 40}));
-        IncreaseUpdateRate.SettingChanged += (_, _) => { UpdateFixedDeltaTime(); };
+        IncreaseUpdateRate.SettingChanged += (_, _) =>
+        {
+            UpdateFixedDeltaTime();
+        };
         IncreaseUpdateRateValue = Config.Bind("12. Misc", "Increase Update Rate",
             Helper.CalculateLowestMultiplierAbove50(MaxRefreshRate),
             new ConfigDescription(
@@ -286,7 +280,7 @@ public class Plugin : BaseUnityPlugin
     private void OnEnable()
     {
         Harmony.PatchAll(Assembly.GetExecutingAssembly());
-        L($"Plugin {PluginName} is loaded!",true);
+        L($"Plugin {PluginName} is loaded!", true);
     }
 
     private void OnDisable()
@@ -301,32 +295,10 @@ public class Plugin : BaseUnityPlugin
         Time.fixedDeltaTime = 1f / IncreaseUpdateRateValue.Value;
     }
 
-    private static float GetNewScale(float referenceWidth)
-    {
-        var displayWidth = Screen.currentResolution.width;
-        var scale = 1f / (referenceWidth / displayWidth);
-        return scale;
-    }
-
     private static void CleanUpMainMenu(bool restore = false)
     {
-        var sky = GameObject.Find("UI_CAMERA/MAIN_MENU/MAIN_MENU_BG/SKY");
-        if (sky != null && WiderThan169)
-        {
-            sky.transform.localScale = restore ? new Vector3(1, 1f, 1f) : new Vector3(NewScale, 1f, 1f);
-        }
-
-        if (ExpandMainMenuToFit.Value && WiderThan169)
-        {
-            var wholeMenu = GameObject.Find("UI_CAMERA/MAIN_MENU");
-            if (wholeMenu != null)
-            {
-                wholeMenu.transform.localScale = restore ? new Vector3(1, 1f, 1f) : new Vector3(NewScale, 1f, 1f);
-            }
-        }
-
         if (!CleanUpMainMenuConfig.Value) return;
-        
+
         var cleanUpObjects = new[]
         {
             "UI_CAMERA/MAIN_MENU/MAIN_MENU_LAYOUT/Anchor (MiddleCenter)/LIST_CONTAINER/CREDITS_BUTTON",
@@ -337,7 +309,7 @@ public class Plugin : BaseUnityPlugin
         foreach (var cleanUpObject in cleanUpObjects)
         {
             var cleanUp = GameObject.Find(cleanUpObject);
-            if (cleanUp != null)
+            if (cleanUp)
             {
                 cleanUp.SetActive(restore);
             }
@@ -347,7 +319,6 @@ public class Plugin : BaseUnityPlugin
 
     private static void ModifyHud(bool restore = false)
     {
-        // if (!ModifyHudScale.Value) return;
         if (UIManager.GAME_HUD is null) return;
         UIManager.GAME_HUD.transform.localScale = restore ? new Vector3(1, 1, 1) : new Vector3(ModifyHudScaleValue.Value, ModifyHudScaleValue.Value, 1);
     }
@@ -415,7 +386,7 @@ public class Plugin : BaseUnityPlugin
     {
         if (ModifyResolutions.Value)
         {
-            Screen.SetResolution(Resolution.width, Resolution.height, Screen.fullScreen, Resolution.refreshRate);
+            Screen.SetResolution(Resolution.width, Resolution.height, FullScreenMode.FullScreenWindow, Resolution.refreshRate);
         }
     }
 

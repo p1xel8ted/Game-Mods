@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using HarmonyLib;
-using UnityEngine;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 [HarmonyPatch]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -20,7 +16,7 @@ public static class ResolutionPatches
         if (!Plugin.ModifyResolutions.Value) return;
 
         SettingsManager.resolutionList.Add(Plugin.Resolution);
-        Screen.SetResolution(Plugin.Resolution.width, Plugin.Resolution.height, Screen.fullScreen, Plugin.Resolution.refreshRate);
+        Screen.SetResolution(Plugin.Resolution.width, Plugin.Resolution.height, FullScreenMode.FullScreenWindow, Plugin.Resolution.refreshRate);
     }
 
     [HarmonyPrefix]
@@ -35,6 +31,6 @@ public static class ResolutionPatches
         if (!Plugin.ModifyResolutions.Value) return;
 
         __instance.resolutionAr.AddItem(Plugin.Resolution);
-        Screen.SetResolution(Plugin.Resolution.width, Plugin.Resolution.height, Screen.fullScreen, Plugin.Resolution.refreshRate);
+        Screen.SetResolution(Plugin.Resolution.width, Plugin.Resolution.height, FullScreenMode.FullScreenWindow, Plugin.Resolution.refreshRate);
     }
 }

@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using GlobalEnum;
-using HarmonyLib;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 [HarmonyPatch]
 [SuppressMessage("ReSharper", "InconsistentNaming")]

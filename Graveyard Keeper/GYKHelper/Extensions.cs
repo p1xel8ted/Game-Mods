@@ -2,7 +2,15 @@
 
 public static class Extensions
 {
-
+    //list T tryAdd
+    public static bool TryAdd<T>(this List<T> list, T item)
+    {
+        if (list.Contains(item)) return false;
+        list.Add(item);
+        return true;
+    }
+    
+    
     //dictionary T tryAdd
     public static bool TryAdd<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
     {

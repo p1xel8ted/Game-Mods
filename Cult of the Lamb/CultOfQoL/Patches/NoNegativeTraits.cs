@@ -7,9 +7,9 @@ namespace CultOfQoL.Patches;
 public static class NoNegativeTraits
 {
 
-    private static HashSet<FollowerTrait.TraitType>? AllTraits;
+    private static HashSet<FollowerTrait.TraitType> AllTraits;
     private static bool? isNothingNegativePresentCache;
-    private static List<FollowerTraitBackup>? FollowerTraitBackups = [];
+    private static List<FollowerTraitBackup> FollowerTraitBackups = [];
 
     private static string DataPath => Path.Combine(Application.persistentDataPath, "saves", $"slot_{SaveAndLoad.SAVE_SLOT}_follower_trait_backups.json");
 
@@ -268,7 +268,7 @@ public static class NoNegativeTraits
     public class FollowerTraitBackup
     {
         public int ID;
-        public string? Name;
-        public List<string>? Traits;
+        public string Name;
+        public List<string> Traits;
     }
 }

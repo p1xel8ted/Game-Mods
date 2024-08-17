@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using HarmonyLib;
-using UnityEngine;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 [Harmony]
 [SuppressMessage("ReSharper", "InconsistentNaming")]

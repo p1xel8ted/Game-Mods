@@ -9,14 +9,6 @@ public static class Helpers
     private static bool GerryRunning { get; set; }
 
 
-    private static bool RemovedQuarryBlockage()
-    {
-        if (!MainGame.game_started || !MainGame.me.player) return false;
-
-        return MainGame.me.save.completed_one_time_crafts.Any(craft => craft.StartsWith("steep_yellow_blockage"));
-    }
-
-
     internal static void Log(string message)
     {
         if (Plugin.DebugEnabled.Value)
@@ -35,8 +27,10 @@ public static class Helpers
     {
         var messageList = new List<string>
         {
-            strings.M1, strings.M2, strings.M3, strings.M4, strings.M5,
-            strings.M6, strings.M7, strings.M8, strings.M9, strings.M10
+            Language.GetTranslation(Language.Terms.M1), Language.GetTranslation(Language.Terms.M2), Language.GetTranslation(Language.Terms.M3),
+            Language.GetTranslation(Language.Terms.M4), Language.GetTranslation(Language.Terms.M5), Language.GetTranslation(Language.Terms.M6),
+            Language.GetTranslation(Language.Terms.M7), Language.GetTranslation(Language.Terms.M8), Language.GetTranslation(Language.Terms.M9),
+            Language.GetTranslation(Language.Terms.M10)
         };
         return messageList.RandomElement();
     }
@@ -92,8 +86,8 @@ public static class Helpers
     {
         var messageList = new List<string>
         {
-            strings.M4, strings.M7,
-            strings.M8, strings.M9
+            Language.GetTranslation(Language.Terms.M4), Language.GetTranslation(Language.Terms.M7),
+            Language.GetTranslation(Language.Terms.M8), Language.GetTranslation(Language.Terms.M9)
         };
         return messageList.RandomElement();
     }
@@ -119,7 +113,10 @@ public static class Helpers
     {
         Gerry = WorldMap.SpawnWGO(MainGame.me.world_root.transform, Constants.GerryTalkingSkullID, location);
         Tools.NameSpawnedGerry(Gerry);
-        Tools.ShowCinematic(Gerry.transform);
+        if (Plugin.CinematicEffect.Value)
+        {
+            Tools.ShowCinematic(Gerry.transform);
+        }
         Gerry.ReplaceWithObject(Constants.GerryTalkingSkullID, true);
         Tools.NameSpawnedGerry(Gerry);
         GerryRunning = true;
@@ -159,8 +156,14 @@ public static class Helpers
         }
     }
 
-    private readonly static Dictionary<string, string> UnusualMaps = new()
+    private readonly static Dictionary<string, string> UnusualMaps = new(StringComparer.OrdinalIgnoreCase)
     {
+        {Constants.ZoneLSand, Constants.SandMoundZone},
+        {Constants.ZoneLClay, Constants.ClayPitZone},
+        {Constants.ZoneLLighthouse, "sealight"},
+        {Constants.ZoneLQuarry, "stone_workyard"},
+        {Constants.ZoneLFellingsite, "zombie_sawmill"},
+        {Constants.ZoneLCoal, Constants.NorthCoalZone},
         {"@lighthouse", "sealight"},
         {"@quarry", "stone_workyard"},
         {"@players_tavern", "players_tavern"},
@@ -168,64 +171,51 @@ public static class Helpers
         {"@zone_refugees_camp_tp", "refugees_camp"}
     };
 
-    private static string[] LocationsToReturnFalse =>
-    [
-        "home",
-        "mf_wood",
-        "morgue_outside",
-        "morgue",
-        "garden",
-        "beegarden",
-        "graveyard",
-        "wheat_land",
-        "zombie_sawmill",
-        "flat_under_waterflow_3",
-        "vilage",
-        "tavern",
-        "flat_under_waterflow_2",
-        "flat_under_waterflow",
-        "marble_deposit",
-        "stone_workyard",
-        "@lighthouse",
-        "sealight",
-        "@quarry",
-        "tree_garden",
-        "stone_workyard",
-        "@players_tavern",
-        "players_tavern",
-        "@zone_nountain_fort",
-        "camp",
-        "@zone_refugees_camp_tp",
-        "refugees_camp",
-        Constants.Mystery,
-        strings.Clay,
-        strings.Sand,
-        strings.Page_1,
-        strings.Page_2,
-        strings.Page_3,
-        strings.Page_4,
-        strings.Page_5,
-        strings.Page_6,
-        strings.Page_7,
-        strings.Page_8,
-        strings.Page_9,
-        strings.Page_10,
-        strings.Custom_Locations,
-        Constants.Cancel
-    ];
-
-    internal static string[] BlockageLocations =>
-    [
-        "@quarry",
-        "stone_workyard",
-        "@zone_refugees_camp_tp",
-        "refugees_camp",
-        "marble_deposit",
-        "zombie_sawmill",
-        strings.Coal,
-        Constants.ZoneFlatUnderWaterflow,
-        Constants.NorthCoal
-    ];
+    // private static string[] LocationsToReturnFalse =>
+    // [
+    //     "home",
+    //     "mf_wood",
+    //     "morgue_outside",
+    //     "morgue",
+    //     "garden",
+    //     "beegarden",
+    //     "graveyard",
+    //     "wheat_land",
+    //     // "zombie_sawmill",
+    //     "flat_under_waterflow_3",
+    //     "vilage",
+    //     "tavern",
+    //     "flat_under_waterflow_2",
+    //     "flat_under_waterflow",
+    //     "marble_deposit",
+    //     // "stone_workyard",
+    //     // "@lighthouse",
+    //     // "sealight",
+    //     // "@quarry",
+    //     "tree_garden",
+    //     // "stone_workyard",
+    //     "@players_tavern",
+    //     "players_tavern",
+    //     "@zone_nountain_fort",
+    //     "camp",
+    //     "@zone_refugees_camp_tp",
+    //     "refugees_camp",
+    //     Constants.Mystery,
+    //     Language.GetTerm(Constants.ZoneLClay),
+    //     strings.Sand,
+    //     strings.Page_1,
+    //     strings.Page_2,
+    //     strings.Page_3,
+    //     strings.Page_4,
+    //     strings.Page_5,
+    //     strings.Page_6,
+    //     strings.Page_7,
+    //     strings.Page_8,
+    //     strings.Page_9,
+    //     strings.Page_10,
+    //     strings.Custom_Locations,
+    //     Constants.Cancel
+    // ];
 
     internal static bool RemoveZone(Location location)
     {
@@ -235,26 +225,9 @@ public static class Helpers
             return false;
         }
 
-        var removedBlockage = RemovedQuarryBlockage();
         var wheatExists = Tools.PlayerHasSeenZone(Constants.ZoneWheatLand);
 
-        if (!removedBlockage)
-        {
-            if (Array.IndexOf(BlockageLocations, location.zone) != -1)
-            {
-                Plugin.Log.LogInfo($"[RemoveZone-Blockage] {location.zone} is blocked. Removing.");
-                return true;
-            }
-        }
-
-        if (location.zone.Contains("Coal"))
-        {
-            var seenNorthCoal = Tools.PlayerHasSeenZone(Constants.NorthCoal);
-            Plugin.Log.LogInfo($"[RemoveZone-Coal] - {seenNorthCoal} - {location.zone} - Seen North Coal?: {seenNorthCoal}");
-            return !seenNorthCoal;
-        }
-
-        if (location.zone.Contains(strings.Farmer))
+        if (location.zone.Contains("farmer"))
         {
             var knowsFarmer = Tools.PlayerKnowsNpcPartial(Constants.Farmer);
             bool remove;
@@ -272,7 +245,7 @@ public static class Helpers
             return remove;
         }
 
-        if (location.zone.Contains(strings.Mill) && !location.zone.Contains("zombie"))
+        if (location.zone.Contains("mill") && !location.zone.Contains("zombie"))
         {
             var knowsMiller = Tools.PlayerKnowsNpcPartial(Constants.Miller);
             bool remove;
@@ -291,11 +264,11 @@ public static class Helpers
         }
 
 
-        if (Array.IndexOf(LocationsToReturnFalse, location.zone) != -1)
-        {
-            Plugin.Log.LogInfo($"[RemoveZone-Special] {location.zone} is a special case (or default location). Not removing.");
-            return false;
-        }
+        // if (LocationsToReturnFalse.Contains(location.zone))
+        // {
+        //     Plugin.Log.LogInfo($"[RemoveZone-Special] {location.zone} is a special case (or default location). Not removing.");
+        //     return false;
+        // }
 
         if (UnusualMaps.TryGetValue(location.zone, out var zone1))
         {
@@ -321,13 +294,13 @@ public static class Helpers
     internal static void EnablePlayerControl()
     {
         MakingChoice = false;
-        GS.SetPlayerEnable(true, true);
+        GS.SetPlayerEnable(true, Plugin.CinematicEffect.Value);
     }
 
     internal static void DisablePlayerControl()
     {
         MakingChoice = true;
-        GS.SetPlayerEnable(false, true);
+        GS.SetPlayerEnable(false, Plugin.CinematicEffect.Value);
     }
 
     internal static Vector3 MessagePositioning()
@@ -344,7 +317,7 @@ public static class Helpers
 
         if (MainGame.me.player.data.money >= GenerateFee()) return true;
 
-        SpawnGerry(strings.MoreCoin, MessagePositioning());
+        SpawnGerry(Language.GetTranslation(Language.Terms.MoreCoin), MessagePositioning());
         return false;
     }
 

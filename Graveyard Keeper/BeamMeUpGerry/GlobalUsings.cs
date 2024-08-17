@@ -9,7 +9,6 @@ global using System.IO;
 global using System.Linq;
 global using System.Reflection;
 global using System.Threading;
-global using BeamMeUpGerry.lang;
 global using BepInEx;
 global using BepInEx.Configuration;
 global using BepInEx.Logging;

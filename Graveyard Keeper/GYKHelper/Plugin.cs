@@ -7,7 +7,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gykhelper";
     private const string PluginName = "GYK Helper Library";
-    private const string PluginVer = "3.1.0";
+    private const string PluginVer = "3.1.1";
     public static ManualLogSource Log { get; private set; }
 
     internal static ConfigEntry<bool> DisplayDuplicateHarmonyPatches { get; private set; }

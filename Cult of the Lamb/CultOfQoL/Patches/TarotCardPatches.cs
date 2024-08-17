@@ -14,25 +14,24 @@ public static class TarotCardPatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(TarotCards), nameof(TarotCards.DrawRandomCard))]
-    public static bool TarotCards_DrawRandomCard(ref TarotCards.TarotCard? __result)
+    public static bool TarotCards_DrawRandomCard(PlayerFarming playerFarming, bool canBeCorrupted, ref TarotCards.TarotCard __result)
     {
         if (!Plugin.ThriceMultiplyTarotCardLuck.Value) return true;
-
-        var unusedFoundTrinkets = TarotCards.GetUnusedFoundTrinkets();
+        
+        var unusedFoundTrinkets = TarotCards.GetUnusedFoundTrinkets(playerFarming, canBeCorrupted);
         if (unusedFoundTrinkets.Count <= 0)
         {
-            __result = null;
+            return true;
         }
-
         var card = unusedFoundTrinkets[Random.Range(0, unusedFoundTrinkets.Count)];
         var num = 0;
-
-        while (Random.Range(0f, 1f) < 0.275f * DataManager.Instance.GetLuckMultiplier() * 3)
+        if (DataManager.Instance.dungeonRun >= 5)
         {
-            num++;
+            while (Random.Range(0f, 1f) < 0.275f * DataManager.Instance.GetLuckMultiplier() * 3)
+            {
+                num++;
+            }
         }
-
-
         num = Mathf.Min(num, TarotCards.GetMaxTarotCardLevel(card));
         __result = new TarotCards.TarotCard(card, num);
         return false;

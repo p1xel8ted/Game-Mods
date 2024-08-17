@@ -2,12 +2,14 @@
 
 public static class LocationLists
 {
-    internal readonly static List<Location> AllLocations =
+
+
+    internal static List<Location> AllLocations =>
     [
         new Location("zone_home", "house", "tp_house_b", new Vector2(29.5f, -68.4f), true, EnvironmentEngine.State.Inside), //tp_house_b
         new Location("zone_tavern", "tavern", "tp_tavern_b", new Vector2(52.5f, -87.5f), true, EnvironmentEngine.State.Inside), //tp_tavern_b
-        new Location("@lighthouse", string.Empty, "tp_lighthouse_a", new Vector2(268.0f, -23.0f), true), //tp_lighthouse_a
-        new Location("@quarry", "mining", "tp_mining_hut_b", new Vector2(49.0f, -122.9f), true, EnvironmentEngine.State.Inside), //tp_mining_hut_b
+        new Location(Constants.ZoneLLighthouse, string.Empty, "tp_lighthouse_a", new Vector2(268.0f, -23.0f), true), //tp_lighthouse_a
+        new Location(Constants.ZoneLQuarry, "mining", "tp_mining_hut_b", new Vector2(49.0f, -122.9f), true, EnvironmentEngine.State.Inside), //tp_mining_hut_b
         new Location("@players_tavern", "players", "tp_players_tavern_front_b", new Vector2(203.5f, -97.5f), true, EnvironmentEngine.State.Inside), //tp_players_tavern_front_b
         new Location("@zone_nountain_fort", string.Empty, "tp_mountain_fort_point_a", new Vector2(203.0f, 39.0f), true), //tp_mountain_fort_point_a
         new Location("@zone_refugees_camp_tp", string.Empty, "tp_refugee_point_a", new Vector2(25.0f, 59.0f), true), //tp_refugee_point_a
@@ -25,27 +27,41 @@ public static class LocationLists
         new Location("zone_graveyard", string.Empty, string.Empty, new Vector2(17.0f, -15.7f)),
         new Location("zone_euric_room", "euric", string.Empty, new Vector2(209.5f, -120.8f), false, EnvironmentEngine.State.Inside),
         new Location("zone_church", "church", string.Empty, new Vector2(1.9f, -85.6f), false, EnvironmentEngine.State.Inside),
-        new Location("zone_zombie_sawmill", string.Empty, string.Empty, new Vector2(23.0f, 35.5f)),
-        new Location(strings.Coal, string.Empty, string.Empty, new Vector2(-5.3f, 63.5f)),
-        new Location(strings.Clay, string.Empty, string.Empty, new Vector2(6.2f, -33.2f)),
-        new Location(strings.Sand, string.Empty, string.Empty, new Vector2(3.5f, 9.1f)),
-        new Location(strings.Mill, string.Empty, string.Empty, new Vector2(123.0f, -8.0f)),
-        new Location(strings.Farmer, string.Empty, string.Empty, new Vector2(122.9f, -33.9f))
+        new Location(Constants.ZoneLFellingsite, string.Empty, string.Empty, new Vector2(23.0f, 35.5f)),
+        new Location(Constants.ZoneLCoal, string.Empty, string.Empty, new Vector2(-5.3f, 63.5f)),
+        new Location(Constants.ZoneLClay, string.Empty, string.Empty, new Vector2(6.2f, -33.2f)),
+        new Location(Constants.ZoneLSand, string.Empty, string.Empty, new Vector2(3.5f, 9.1f)),
+        new Location(Constants.ZoneLMill, string.Empty, string.Empty, new Vector2(123.0f, -8.0f)),
+        new Location(Constants.ZoneLFarmer, string.Empty, string.Empty, new Vector2(122.9f, -33.9f))
     ];
 
-    private readonly static AnswerVisualData Page1Answer = new() {id = strings.Page_1};
-    private readonly static AnswerVisualData Page2Answer = new() {id = strings.Page_2};
-    private readonly static AnswerVisualData Page3Answer = new() {id = strings.Page_3};
-    private readonly static AnswerVisualData Page4Answer = new() {id = strings.Page_4};
-    private readonly static AnswerVisualData Page5Answer = new() {id = strings.Page_5};
-    private readonly static AnswerVisualData Page6Answer = new() {id = strings.Page_6};
-    private readonly static AnswerVisualData Page7Answer = new() {id = strings.Page_7};
-    private readonly static AnswerVisualData Page8Answer = new() {id = strings.Page_8};
-    private readonly static AnswerVisualData Page9Answer = new() {id = strings.Page_9};
-    private readonly static AnswerVisualData Page10Answer = new() {id = strings.Page_10};
-    private readonly static AnswerVisualData CancelAnswer = new() {id = Constants.Cancel};
+    private static AnswerVisualData Page1Answer => new() {id = Language.GetTranslation(Language.Terms.Page1)};
+    private  static AnswerVisualData Page2Answer => new() {id = Language.GetTranslation(Language.Terms.Page2)};
+    private  static AnswerVisualData Page3Answer => new() {id = Language.GetTranslation(Language.Terms.Page3)};
+    private  static AnswerVisualData Page4Answer => new() {id = Language.GetTranslation(Language.Terms.Page4)};
+    private  static AnswerVisualData Page5Answer => new() {id = Language.GetTranslation(Language.Terms.Page5)};
+    private  static AnswerVisualData Page6Answer => new() {id  = Language.GetTranslation(Language.Terms.Page6)};
+    private  static AnswerVisualData Page7Answer => new() {id  = Language.GetTranslation(Language.Terms.Page7)};
+    private  static AnswerVisualData Page8Answer => new() {id  = Language.GetTranslation(Language.Terms.Page8)};
+    private  static AnswerVisualData Page9Answer => new() {id  = Language.GetTranslation(Language.Terms.Page9)};
+    private  static AnswerVisualData Page10Answer => new() {id  = Language.GetTranslation(Language.Terms.Page10)};
+    private  static AnswerVisualData CancelAnswer => new() {id = Constants.Cancel};
 
     internal readonly static List<List<AnswerVisualData>> Locations = [];
+
+    
+    // internal static Dictionary<string, string> LocationTranslationMap => new(StringComparer.OrdinalIgnoreCase)
+    // {
+    //     {Constants.ZoneLLighthouse, strings.Lighthouse},
+    //     {Constants.ZoneLQuarry, strings.Quarry},
+    //     {Constants.ZoneLFellingsite, strings.FellingSite},
+    //     {Constants.ZoneLCoal, strings.Coal},
+    //     {Constants.ZoneLClay, strings.Clay},
+    //     {Constants.ZoneLSand, strings.Sand},
+    //     {Constants.ZoneLMill, strings.Mill},
+    //     {Constants.ZoneLFarmer, strings.Farmer}
+    //     
+    // };
 
 
     internal static void LogData()
@@ -73,18 +89,41 @@ public static class LocationLists
                 Plugin.Log.LogInfo($"[Completed One Time Crafts] - {blockage}");
             }
             Plugin.Log.LogInfo("|---------- One Time Crafts:End ----------|");
+            
+            Plugin.Log.LogInfo("|---------- Unlocked Phrases:Start ----------|");
+            foreach (var phrase in MainGame.me.save.unlocked_phrases)
+            {
+                Plugin.Log.LogInfo($"[Unlocked Phrase] - {phrase}");
+            }
+            Plugin.Log.LogInfo("|---------- Unlocked Phrases:End ----------|");
+            
+            Plugin.Log.LogInfo("|---------- Blacklist Phrases:Start ----------|");
+            foreach (var phrase in MainGame.me.save.black_list_of_phrases)
+            {
+                Plugin.Log.LogInfo($"[Blacklist Phrase] - {phrase}");
+            }
+            Plugin.Log.LogInfo("|---------- Blacklist Phrases:End ----------|");
         }
     }
-    
+
     internal static void CreatePages()
     {
         LogData();
-        
+
         Locations.Clear();
 
-        var locations = AllLocations
+        var locationsList = AllLocations;
+
+        foreach (var loc in locationsList)
+        {
+            Plugin.LocationSettings.TryGetValue(loc.zone, out var settings);
+            loc.enabled = settings == null || settings.Value;
+        }
+
+        var locations = locationsList
             .Where(location => location.enabled)
             .ToList();
+
 
         if (Plugin.SortAlphabetically.Value)
         {
@@ -94,7 +133,7 @@ public static class LocationLists
         }
 
 
-        if (MainGame.me != null && MainGame.me.save != null)
+        if (MainGame.me && MainGame.me.save != null)
         {
             locations = locations.Where(a => !Helpers.RemoveZone(a)).ToList();
         }
@@ -107,10 +146,11 @@ public static class LocationLists
                 .Take(Plugin.LocationsPerPage.Value)
                 .Select(location => new AnswerVisualData {id = location.zone})
                 .ToList();
-
+            
             AddNavigationAnswers(page, pageIndex, pageCount);
             Locations.Add(page);
         }
+        
     }
 
     private static void AddNavigationAnswers(IList<AnswerVisualData> page, int pageIndex, int pageCount)

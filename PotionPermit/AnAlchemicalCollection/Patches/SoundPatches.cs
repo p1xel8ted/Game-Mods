@@ -1,10 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using AudioEnum;
-using CharacterChemist.Animation;
-using GlobalEnum;
-using HarmonyLib;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 [Harmony]
 [SuppressMessage("ReSharper", "InconsistentNaming")]

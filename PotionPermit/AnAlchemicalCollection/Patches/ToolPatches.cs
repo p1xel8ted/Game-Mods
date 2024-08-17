@@ -1,13 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using CharacterChemist;
-using CharacterIDEnum;
-using GlobalEnum;
-using HarmonyLib;
-using TutorialEnum;
-using UnityEngine;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 [HarmonyPatch]
 [SuppressMessage("ReSharper", "InconsistentNaming")]

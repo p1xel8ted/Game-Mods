@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Namify;
 
 public static class Data
@@ -84,7 +82,7 @@ public static class Data
         UserNameReadWriter.Write(UserNames.ToList(), UserDataPath, false);
     }
 
-    internal static void GetNamifyNames(Action? onFail = null, Action? onComplete = null)
+    internal static void GetNamifyNames(Action onFail = null, Action onComplete = null)
     {
         var primaryError = false;
         if (NamifyNames.Count > 0)
@@ -120,7 +118,7 @@ public static class Data
         GameManager.GetInstance().StartCoroutine(GetNamifyNamesBackupRequest(onFail, onComplete));
     }
 
-    private static IEnumerator GetNamifyNamesBackupRequest(Action? onFail = null, Action? onComplete = null)
+    private static IEnumerator GetNamifyNamesBackupRequest(Action onFail = null, Action onComplete = null)
     {
         for (var i = 0; i < 10; i++)
         {

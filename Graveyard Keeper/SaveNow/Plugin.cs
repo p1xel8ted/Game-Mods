@@ -1,12 +1,12 @@
 ﻿namespace SaveNow;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.1")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.savenow";
     private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.4";
+    private const string PluginVer = "2.5.5";
 
     private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<int> SaveInterval { get; set; }
@@ -21,7 +21,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static ConfigEntry<bool> SaveOnNewDay { get; set; }
     private static ConfigEntry<int> MaximumSavesVisible { get; set; }
-    private static ConfigEntry<bool> SortByRealTime { get; set; }
+    private static ConfigEntry<bool> SortByLastModified { get; set; }
     private static ConfigEntry<bool> AscendingSort { get; set; }
     private static ConfigEntry<bool> EnableManualSaveControllerButton { get; set; }
     private static ConfigEntry<KeyboardShortcut> ManualSaveKeyBind { get; set; }
@@ -107,7 +107,7 @@ public partial class Plugin : BaseUnityPlugin
             new ConfigDescription("Maximum number of save files visible in the UI.", null,
                 new ConfigurationManagerAttributes {Order = 9}));
 
-        SortByRealTime = Config.Bind("04. UI", "Sort By Real Time", false,
+        SortByLastModified = Config.Bind("04. UI", "Sort By Real Time", false,
             new ConfigDescription("Sort save files by real time instead of in-game time.", null,
                 new ConfigurationManagerAttributes {Order = 8}));
 

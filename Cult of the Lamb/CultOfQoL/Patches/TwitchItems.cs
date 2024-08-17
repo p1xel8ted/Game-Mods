@@ -40,6 +40,7 @@ internal static class TwitchItems
         private const string Heretic = "Heretic";
         private const string Cultist = "Cultist";
         private const string Sinful = "Sinful";
+        private const string Pilgrim = "Pilgrim";
 
         [UsedImplicitly]
         [HarmonyTargetMethods]
@@ -59,6 +60,12 @@ internal static class TwitchItems
                 {
                     continue;
                 }
+                
+                if (method.Name.Contains(Pilgrim, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                
                 if (!method.Name.StartsWith(AuthenticateMethod)) continue;
 
                 Plugin.L($"[Unlock Twitch Items] Unlocking {method.Name}");

@@ -1,13 +1,11 @@
-﻿using UnityEngine;
-
-namespace Namify;
+﻿namespace Namify;
 
 internal class PopupManager : MonoBehaviour
 {
     private bool showPopup;
     private string popupMessage = "";
     private Rect popupRect = new(Screen.width / 2f - 150, Screen.height / 2f - 75, 300, 100);
-    private GUIStyle? messageStyle;
+    private GUIStyle messageStyle;
 
     private void Start()
     {

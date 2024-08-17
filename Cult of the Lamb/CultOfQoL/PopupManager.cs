@@ -5,9 +5,9 @@ internal class PopupManager : MonoBehaviour
     internal bool showPopup;
     private string popupMessage = "";
     private Rect popupRect = new(Screen.width / 2f - 150, Screen.height / 2f - 75, 500, 300);
-    private GUIStyle? messageStyle;
-    private GUIStyle? windowStyle;
-    private GUIStyle? titleStyle;
+    private GUIStyle messageStyle;
+    private GUIStyle windowStyle;
+    private GUIStyle titleStyle;
     private void Start()
     {
         titleStyle = new GUIStyle

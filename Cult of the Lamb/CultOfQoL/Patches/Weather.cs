@@ -3,7 +3,7 @@ namespace CultOfQoL.Patches;
 [HarmonyPatch]
 public static class Weather
 {
-    private static WeatherSystemController? WeatherSystemController { get; set; }
+    private static WeatherSystemController WeatherSystemController { get; set; }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(TimeManager), nameof(TimeManager.StartNewPhase))]
@@ -37,7 +37,7 @@ public static class Weather
     [HarmonyPostfix]
     [HarmonyPatch(typeof(WeatherSystemController), nameof(WeatherSystemController.Awake))]
     [HarmonyPatch(typeof(WeatherSystemController), nameof(WeatherSystemController.Start))]
-    public static void WeatherSystemController_Assign(ref WeatherSystemController? __instance)
+    public static void WeatherSystemController_Assign(ref WeatherSystemController __instance)
     {
         WeatherSystemController = __instance;
     }

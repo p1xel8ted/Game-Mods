@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 public class TimePatches : MonoBehaviour
 {

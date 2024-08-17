@@ -1,9 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CharacterChemist.Animation;
-using GlobalEnum;
-using HarmonyLib;
-
-namespace AnAlchemicalCollection;
+﻿namespace AnAlchemicalCollection;
 
 [Harmony]
 [SuppressMessage("ReSharper", "InconsistentNaming")]

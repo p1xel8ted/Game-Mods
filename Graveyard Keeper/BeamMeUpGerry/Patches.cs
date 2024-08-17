@@ -4,6 +4,7 @@
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class Patches
 {
+
     private static int OneTimeCraftCount;
     private static int KnownZoneCount;
     private static int KnownNpcCount;
@@ -14,7 +15,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnMetNPC))]
     public static void BuildModeLogics_DoPlace_Prefix()
     {
-        OneTimeCraftCount = MainGame.me.save.completed_one_time_crafts.Count(a => a.Contains("blockage"));
+        OneTimeCraftCount = MainGame.me.save.completed_one_time_crafts.Count(a => a.Contains("blockage") || a.Contains("fix_bridge"));
         KnownZoneCount = MainGame.me.save.known_world_zones.Count;
         KnownNpcCount = MainGame.me.save.known_npcs.npcs.Count;
     }
@@ -25,7 +26,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnMetNPC))]
     public static void BuildModeLogics_DoPlace_Postfix()
     {
-        var newCraftCount = MainGame.me.save.completed_one_time_crafts.Count(a => a.Contains("blockage"));
+        var newCraftCount = MainGame.me.save.completed_one_time_crafts.Count(a => a.Contains("blockage") || a.Contains("fix_bridge"));
         var newZoneCount = MainGame.me.save.known_world_zones.Count;
         var newNpcCount = MainGame.me.save.known_npcs.npcs.Count;
 
@@ -34,6 +35,37 @@ public static class Patches
             Plugin.InitConfiguration();
         }
     }
+
+    internal static void UpdateZoneUpdaters()
+    {
+        if (!MainGame.me || MainGame.me.save == null) return;
+
+        MainGame.me.save.completed_one_time_crafts = MainGame.me.save.completed_one_time_crafts.Distinct().ToList();
+
+        var steepCoals = WorldMap._objs.Where(a => a.obj_id == "steep_coal").ToList();
+        foreach (var steepCoal in steepCoals)
+        {
+            if (steepCoal.GetMyWorldZoneId() != "flat_under_waterflow") continue;
+
+            var kzu = steepCoal.gameObject.TryAddComponent<KnownZoneUpdater>();
+            kzu.Initialize(Constants.NorthCoalZone);
+        }
+
+        var zombieTrees = WorldMap._objs.Where(a => a.obj_id == "tree_big_sawmill").ToList();
+        foreach (var zombieTree in zombieTrees)
+        {
+            if (zombieTree.GetMyWorldZoneId() != "flat_under_waterflow_2") continue;
+
+            var kzu = zombieTree.gameObject.TryAddComponent<KnownZoneUpdater>();
+            kzu.Initialize(Constants.ZombieSawmill);
+        }
+
+        MainGame.me.save.known_world_zones.TryAdd(Constants.SandMoundZone);
+        MainGame.me.save.known_world_zones.TryAdd(Constants.ClayPitZone);
+
+        MainGame.me.save.known_world_zones = MainGame.me.save.known_world_zones.Distinct().ToList();
+    }
+
 
     [HarmonyPostfix]
     [HarmonyWrapSafe]
@@ -58,24 +90,6 @@ public static class Patches
         }
     }
 
-    private static Bounds NorthCoalBounds = new(new Vector3(-834f, 6125f, 0), new Vector3(750f, 750f, 0f));
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerComponent), nameof(PlayerComponent.Update))]
-    public static void PlayerComponent_Update()
-    {
-        CheckNorthCoal();
-    }
-
-    private static void CheckNorthCoal()
-    {
-        if (MainGame.me.save.known_world_zones.Contains(Constants.NorthCoal)) return;
-        var player = MainGame.me.player;
-        if (player && NorthCoalBounds.Contains(player.transform.position))
-        {
-            MainGame.me.save.known_world_zones.Add(Constants.NorthCoal);
-        }
-    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Item), nameof(Item.GetGrayedCooldownPercent))]
@@ -84,29 +98,6 @@ public static class Patches
         if (__instance is not {id: Constants.Hearthstone}) return;
 
         __result = 0;
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnFinishedCraft))]
-    public static void GameSave_OnFinishedCraft(CraftDefinition craft)
-    {
-        if (craft.id.Contains("blockage"))
-        {
-            Plugin.Log.LogInfo("Blockage Crafted (blockage to Quarry etc) - Refreshing List");
-            Plugin.InitConfiguration();
-        }
-    }
-
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.OnEnteredWorldZone))]
-    public static void GameSave_OnEnteredWorldZone(WorldZone z)
-    {
-        if (Array.IndexOf(Helpers.BlockageLocations, z.id) != -1)
-        {
-            Helpers.Log("Entered Blockage Location (meaning the blockage has been removed) - Refreshing List");
-            Plugin.InitConfiguration();
-        }
     }
 
     [HarmonyPrefix]
@@ -158,32 +149,35 @@ public static class Patches
         return false;
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSettings), nameof(GameSettings.Init))]
+    [HarmonyPatch(typeof(GameSettings), nameof(GameSettings.ApplyLanguageChange))]
+    public static void GameSettings_Init()
+    {
+        Plugin.UpdateLists(true);
+    }
+    
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(SpeechBubbleGUI), nameof(SpeechBubbleGUI.SpeechText), typeof(string))]
+    public static void SpeechBubbleGUI_SpeechText(string s, ref string __result)
+    {
+        var term = Language.GetTerm(s);
+ 
+        if (term is Language.Terms.None) return;
+        
+        __result = Language.GetTranslation(term);
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(MultiAnswerGUI), nameof(MultiAnswerGUI.ShowAnswers), typeof(List<AnswerVisualData>), typeof(bool))]
     public static void MultiAnswerGUI_ShowAnswers(MultiAnswerGUI __instance, ref List<AnswerVisualData> answers)
     {
-        // foreach (var saveKnownWorldZone in MainGame.me.save.known_world_zones)
-        // {
-        //     Plugin.Log.LogWarning($"Zone: {saveKnownWorldZone}");
-        // }
-
-
         var playerRequest = MultiAnswerGUI.talker_wgo == MainGame.me.player;
+
         if (playerRequest && Plugin.IncreaseMenuAnimationSpeed.Value)
         {
             __instance.anim_delay /= 3f;
             __instance.anim_time /= 3f;
         }
-
-        // var pageTwo = answers.Count == LocationLists.AnswersPageTwo.Count &&
-        //               answers.All(l1Item => LocationLists.AnswersPageTwo.Any(l2Item => l1Item.id == l2Item.id));
-        //
-        // var pageThree = answers.Count == LocationLists.AnswersPageThree.Count &&
-        //                 answers.All(l1Item => LocationLists.AnswersPageThree.Any(l2Item => l1Item.id == l2Item.id));
-
-        // if (pageTwo || pageThree)
-        // {
-        //     answers = Helpers.ValidateAnswerList(answers);
-        // }
     }
 }

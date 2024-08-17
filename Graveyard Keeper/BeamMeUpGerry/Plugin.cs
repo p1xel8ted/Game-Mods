@@ -2,18 +2,20 @@
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.0")]
+[BepInDependency("p1xel8ted.gyk.gykhelper", "3.1.1")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.0.8";
+    private const string PluginVer = "3.0.9";
 
     internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }
     internal static ConfigEntry<bool> EnableListExpansion { get; private set; }
     internal static ConfigEntry<bool> GerryAppears { get; private set; }
     internal static ConfigEntry<bool> GerryCharges { get; private set; }
+
+    internal static ConfigEntry<bool> CinematicEffect { get; private set; }
     internal static ConfigEntry<bool> EnablePreviousPageChoices { get; private set; }
     internal static ConfigEntry<bool> PreviousPageChoiceAtTop { get; private set; }
     private static ConfigEntry<KeyboardShortcut> TeleportMenuKeyBind { get; set; }
@@ -40,6 +42,7 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
         InitConfiguration();
         InitInternalConfiguration();
+        Actions.GameStartedPlaying += Patches.UpdateZoneUpdaters;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
@@ -90,7 +93,7 @@ public class Plugin : BaseUnityPlugin
         {
             if (CrossModFields.IsInDungeon)
             {
-                Helpers.SpawnGerry(strings.CantUseHere, Vector3.zero);
+                Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.CantUseHere), Vector3.zero);
             }
             else
             {
@@ -104,7 +107,7 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            Helpers.SpawnGerry(strings.WhereIsIt, Vector3.zero);
+            Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.WhereIsIt), Vector3.zero);
         }
     }
 
@@ -115,7 +118,7 @@ public class Plugin : BaseUnityPlugin
     }
     private static void PrintKnown(ConfigEntryBase __obj)
     {
-        var button = GUILayout.Button("Print Known Zones, NPC's & One-Time Crafts", GUILayout.ExpandWidth(true));
+        var button = GUILayout.Button("Print Save Data", GUILayout.ExpandWidth(true));
         if (button)
         {
             Log.LogInfo("\n");
@@ -137,6 +140,18 @@ public class Plugin : BaseUnityPlugin
                 Log.LogInfo(craft);
             }
             Log.LogInfo("\n");
+            Log.LogInfo("Unlocked Phrases:");
+            foreach (var phrase in MainGame.me.save.unlocked_phrases)
+            {
+                Log.LogInfo(phrase);
+            }
+            Log.LogInfo("\n");
+            Log.LogInfo("Blacklisted Phrases:");
+            foreach (var phrase in MainGame.me.save.black_list_of_phrases)
+            {
+                Log.LogInfo(phrase);
+            }
+            Log.LogInfo("\n");
         }
     }
 
@@ -149,6 +164,7 @@ public class Plugin : BaseUnityPlugin
         IncreaseMenuAnimationSpeed = ConfigInstance.Bind("01. Features", "Increase Menu Animation Speed", true, new ConfigDescription("Toggle increased menu animation speed", null, new ConfigurationManagerAttributes {Order = 801}));
         EnableListExpansion = ConfigInstance.Bind("01. Features", "Enable List Expansion", true, new ConfigDescription("Toggle list expansion functionality", null, new ConfigurationManagerAttributes {Order = 799}));
         GerryAppears = ConfigInstance.Bind("01. Features", "Gerry Appears", false, new ConfigDescription("Toggle Gerry's presence", null, new ConfigurationManagerAttributes {Order = 798}));
+        CinematicEffect = ConfigInstance.Bind("01. Features", "Cinematic Effect", true, new ConfigDescription("Toggle cinematic effect.", null, new ConfigurationManagerAttributes {Order = 797}));
         GerryCharges = ConfigInstance.Bind("01. Features", "Gerry Charges", false, new ConfigDescription("Toggle the cost of teleporting", null, new ConfigurationManagerAttributes {Order = 797}));
         EnablePreviousPageChoices = ConfigInstance.Bind("01. Features", "Enable Previous Page Choices", true, new ConfigDescription("Toggle the ability to go back to the previous page", null, new ConfigurationManagerAttributes {Order = 796}));
         PreviousPageChoiceAtTop = ConfigInstance.Bind("01. Features", "Previous Page Choice At Top", true, new ConfigDescription("Toggle the placement of the previous page choice at the top of the list", null, new ConfigurationManagerAttributes {Order = 795}));
@@ -176,18 +192,21 @@ public class Plugin : BaseUnityPlugin
         UpdateLists();
     }
 
+    internal readonly static Dictionary<string, ConfigEntry<bool>> LocationSettings = [];
+
 
     internal static void UpdateLists(bool forceReload = false)
     {
         if (forceReload)
         {
             Plugin.Log.LogInfo("Force reloading custom locations.");
+            LocationLists.LoadCustomZones();
         }
         var originalLanguage = GameSettings._cur_lng;
         GJL.LoadLanguageResource("en");
         foreach (var location in LocationLists.AllLocations.OrderByDescending(a => Helpers.RemoveCharacters(a.zone)))
         {
-            if (location.zone.Equals(strings.Page_1) || location.zone.Equals(strings.Page_2) || location.zone.Equals(strings.Page_3) || location.zone.Equals(strings.Custom_Locations) || location.zone.Equals(Constants.Cancel)) continue;
+            //if (location.zone.Equals(strings.Page_1) || location.zone.Equals(strings.Page_2) || location.zone.Equals(strings.Page_3) || location.zone.Equals(strings.Custom_Locations) || location.zone.Equals(Constants.Cancel)) continue;
             var key = Helpers.RemoveCharacters(location.zone);
             var configEntry = ConfigInstance.Bind("5. Locations", key, true, $"Toggle visibility of {key} in the menu.");
             location.enabled = configEntry.Value;
@@ -196,6 +215,8 @@ public class Plugin : BaseUnityPlugin
                 LocationLists.CreatePages();
                 LocationLists.AllLocations.Find(a => a.zone == location.zone).enabled = configEntry.Value;
             };
+
+            LocationSettings[location.zone] = configEntry;
         }
 
         if (!originalLanguage.IsNullOrWhiteSpace())

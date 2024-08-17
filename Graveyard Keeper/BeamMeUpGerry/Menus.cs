@@ -2,18 +2,18 @@
 
 public static class Menus
 {
-    private readonly static Dictionary<string, Action> MenuActions = new()
+    private static Dictionary<string, Action> MenuActions => new()
     {
-        {strings.Page_1, () => ShowMultiAnswer(LocationLists.Locations[0])},
-        {strings.Page_2, () => ShowMultiAnswer(LocationLists.Locations[1])},
-        {strings.Page_3, () => ShowMultiAnswer(LocationLists.Locations[2])},
-        {strings.Page_4, () => ShowMultiAnswer(LocationLists.Locations[3])},
-        {strings.Page_5, () => ShowMultiAnswer(LocationLists.Locations[4])},
-        {strings.Page_6, () => ShowMultiAnswer(LocationLists.Locations[5])},
-        {strings.Page_7, () => ShowMultiAnswer(LocationLists.Locations[6])},
-        {strings.Page_8, () => ShowMultiAnswer(LocationLists.Locations[7])},
-        {strings.Page_9, () => ShowMultiAnswer(LocationLists.Locations[8])},
-        {strings.Page_10, () => ShowMultiAnswer(LocationLists.Locations[9])},
+        {Language.GetTranslation(Language.Terms.Page1), () => ShowMultiAnswer(LocationLists.Locations[0])},
+        {Language.GetTranslation(Language.Terms.Page2), () => ShowMultiAnswer(LocationLists.Locations[1])},
+        {Language.GetTranslation(Language.Terms.Page3), () => ShowMultiAnswer(LocationLists.Locations[2])},
+        {Language.GetTranslation(Language.Terms.Page4), () => ShowMultiAnswer(LocationLists.Locations[3])},
+        {Language.GetTranslation(Language.Terms.Page5), () => ShowMultiAnswer(LocationLists.Locations[4])},
+        {Language.GetTranslation(Language.Terms.Page6), () => ShowMultiAnswer(LocationLists.Locations[5])},
+        {Language.GetTranslation(Language.Terms.Page7), () => ShowMultiAnswer(LocationLists.Locations[6])},
+        {Language.GetTranslation(Language.Terms.Page8), () => ShowMultiAnswer(LocationLists.Locations[7])},
+        {Language.GetTranslation(Language.Terms.Page9), () => ShowMultiAnswer(LocationLists.Locations[8])},
+        {Language.GetTranslation(Language.Terms.Page10), () => ShowMultiAnswer(LocationLists.Locations[9])},
         {Constants.Cancel, Helpers.EnablePlayerControl}
     };
 

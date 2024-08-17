@@ -16,7 +16,7 @@ public static class PlayerPatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Health), nameof(Health.DealDamage))]
-    public static void Health_DealDamage(ref Health? __instance, ref float Damage, ref GameObject Attacker)
+    public static void Health_DealDamage(ref Health __instance, ref float Damage, ref GameObject Attacker)
     {
         if (__instance is null) return;
 

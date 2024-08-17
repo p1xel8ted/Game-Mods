@@ -21,7 +21,7 @@ public static class FollowerPatches
         yield return new WaitForSeconds(0.25f);
     }
 
-    private static IEnumerator RunEnumerator(bool run, IEnumerator enumerator, Action? onComplete = null)
+    private static IEnumerator RunEnumerator(bool run, IEnumerator enumerator, Action onComplete = null)
     {
         if (!run) yield break;
         yield return enumerator;
@@ -332,7 +332,7 @@ public static class FollowerPatches
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
-    public static void interaction_FollowerInteraction_LevelUpRoutine(ref Action? Callback, ref bool GoToAndStop, ref bool onFinishClose)
+    public static void interaction_FollowerInteraction_LevelUpRoutine(ref Action Callback, ref bool GoToAndStop, ref bool onFinishClose)
     {
         Callback = null;
         GoToAndStop = false;

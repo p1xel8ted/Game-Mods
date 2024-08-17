@@ -2,12 +2,12 @@
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("io.github.xhayper.COTL_API", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.2")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.1.9";
+    private const string PluginVer = "2.2.0";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -35,15 +35,14 @@ public partial class Plugin : BaseUnityPlugin
     private const string TraitsSection = "19. Traits";
 
     internal static ManualLogSource Log = null!;
-    internal static CanvasScaler? GameCanvasScaler { get; set; }
-    internal static CanvasScaler? DungeonCanvasScaler { get; set; }
+    internal static CanvasScaler GameCanvasScaler { get; set; }
+    internal static CanvasScaler DungeonCanvasScaler { get; set; }
     internal static PopupManager PopupManager = null!;
     private void Awake()
     {
         HideBepInEx();
 
-        Log = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(Log);
+        Log = Logger;
 
         PopupManager = gameObject.AddComponent<PopupManager>();
 
@@ -60,7 +59,11 @@ public partial class Plugin : BaseUnityPlugin
         RemoveHelpButtonInPauseMenu = Config.Bind(MenuCleanupSection, "Remove Help Button In Pause Menu", true, new ConfigDescription("Removes the help button in the pause menu.", null, new ConfigurationManagerAttributes {Order = 3}));
         RemoveTwitchButtonInPauseMenu = Config.Bind(MenuCleanupSection, "Remove Twitch Button In Pause Menu", true, new ConfigDescription("Removes the twitch button in the pause menu.", null, new ConfigurationManagerAttributes {Order = 2}));
         RemovePhotoModeButtonInPauseMenu = Config.Bind(MenuCleanupSection, "Remove Photo Mode Button In Pause Menu", true, new ConfigDescription("Removes the photo mode button in the pause menu.", null, new ConfigurationManagerAttributes {Order = 1}));
-
+        MainMenuGlitch = Config.Bind(MenuCleanupSection, "Main Menu Glitch", false, new ConfigDescription("Disables the sudden dark-mode switch effect.", null, new ConfigurationManagerAttributes {Order = 0}));
+        MainMenuGlitch.SettingChanged += (_, _) =>
+        {
+            UpdateMenuGlitch();
+        };
         //Player Damage
         EnableBaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Enable Base Damage Multiplier", false, new ConfigDescription("Enable/disable the base damage multiplier.", null, new ConfigurationManagerAttributes {Order = 6}));
         BaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Base Damage Multiplier", 1.5f, new ConfigDescription("The base damage multiplier to use.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes {Order = 5}));
@@ -101,20 +104,13 @@ public partial class Plugin : BaseUnityPlugin
         EnableCustomUiScale = Config.Bind(ScalingSection, "Enable Custom UI Scale", false, new ConfigDescription("Enable/disable the custom UI scale.", null, new ConfigurationManagerAttributes {Order = 2}));
         EnableCustomUiScale.SettingChanged += (_, _) =>
         {
-            if (EnableCustomUiScale.Value)
-            {
-                Scales.UpdateScale();
-            }
-            else
-            {
-                Scales.RestoreScale();
-            }
+            UpdateScale();
         };
 
         CustomUiScale = Config.Bind(ScalingSection, "Custom UI Scale", 50, new ConfigDescription("The custom UI scale to use.", new AcceptableValueRange<int>(1, 101), new ConfigurationManagerAttributes {Order = 1}));
         CustomUiScale.SettingChanged += (_, _) =>
         {
-            Scales.UpdateScale();
+            UpdateScale();
         };
 
         NotificationsScale = Config.Bind(ScalingSection, "Notifications Scale", 100, new ConfigDescription("The scale to use for notifications. This setting is independent of Custom UI Scale", new AcceptableValueRange<int>(1, 101), new ConfigurationManagerAttributes {Order = 0}));
@@ -282,20 +278,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         NoNegativeTraits.SettingChanged += (_, _) =>
         {
-            if (IsNoNegativePresent())
-            {
-                NoNegativeTraits.Value = false;
-                return;
-            }
-
-            if (NoNegativeTraits.Value)
-            {
-                Patches.NoNegativeTraits.UpdateAllFollowerTraits();
-            }
-            else
-            {
-                Patches.NoNegativeTraits.RestoreOriginalTraits();
-            }
+            UpdateNoNegativeTraits();
         };
         UseUnlockedTraitsOnly = Config.Bind(TraitsSection, "Use Unlocked Traits Only", true, new ConfigDescription("Only use unlocked traits when replacing negative traits.", null, new ConfigurationManagerAttributes
         {
@@ -303,8 +286,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         UseUnlockedTraitsOnly.SettingChanged += (_, _) =>
         {
-            if (IsNoNegativePresent()) return;
-            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            GenerateAvailableTraits();
         };
         IncludeImmortal = Config.Bind(TraitsSection, "Include Immortal", false, new ConfigDescription("Include the Immortal trait when replacing negative traits.", null, new ConfigurationManagerAttributes
         {
@@ -312,8 +294,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         IncludeImmortal.SettingChanged += (_, _) =>
         {
-            if (IsNoNegativePresent()) return;
-            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            GenerateAvailableTraits();
         };
         IncludeDisciple = Config.Bind(TraitsSection, "Include Disciple", false, new ConfigDescription("Include the Disciple trait when replacing negative traits.", null, new ConfigurationManagerAttributes
         {
@@ -321,8 +302,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         IncludeDisciple.SettingChanged += (_, _) =>
         {
-            if (IsNoNegativePresent()) return;
-            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            GenerateAvailableTraits();
         };
 
         ShowNotificationsWhenRemovingTraits = Config.Bind(TraitsSection, "Show Notifications When Removing Traits", false, new ConfigDescription("Show notifications when removing negative traits.", null, new ConfigurationManagerAttributes
@@ -449,18 +429,6 @@ public partial class Plugin : BaseUnityPlugin
         }));
         MassReeducate.SettingChanged += (_, _) => ShowRestartMessage();
 
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-
-        SceneManager.sceneLoaded += (_, _) =>
-        {
-            var buttons = Resources.FindObjectsOfTypeAll<MMButton>();
-            foreach (var button in buttons)
-            {
-                button.Selectable.navigation = button.Selectable.navigation with {mode = Navigation.Mode.Automatic};
-            }
-        };
-
-
         //Loot
         AllLootMagnets = Config.Bind("20. Loot", "All Loot Magnets", true, new ConfigDescription("All loot is magnetized to you.", null, new ConfigurationManagerAttributes
         {
@@ -468,14 +436,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         AllLootMagnets.SettingChanged += (_, _) =>
         {
-            if (AllLootMagnets.Value)
-            {
-                PickUps.UpdateAllPickUps();
-            }
-            else
-            {
-                PickUps.RestoreMagnets();
-            }
+            UpdateAllMagnets();
         };
         DoubleMagnetRange = Config.Bind("20. Loot", "Double Magnet Range", true, new ConfigDescription("Doubles the magnet range.", null, new ConfigurationManagerAttributes
         {
@@ -483,17 +444,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         DoubleMagnetRange.SettingChanged += (_, _) =>
         {
-            if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
-            {
-                PickUps.RestoreMagnetRange();
-            }
-
-            if (DoubleMagnetRange.Value)
-            {
-                PickUps.UpdateAllPickUps();
-                TripleMagnetRange.Value = false;
-                UseCustomMagnetRange.Value = false;
-            }
+            UpdateDoubleMagnet();
         };
 
         TripleMagnetRange = Config.Bind("20. Loot", "Triple Magnet Range", false, new ConfigDescription("Triples the magnet range.", null, new ConfigurationManagerAttributes
@@ -502,16 +453,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         TripleMagnetRange.SettingChanged += (_, _) =>
         {
-            if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
-            {
-                PickUps.RestoreMagnetRange();
-            }
-            if (TripleMagnetRange.Value)
-            {
-                PickUps.UpdateAllPickUps();
-                DoubleMagnetRange.Value = false;
-                UseCustomMagnetRange.Value = false;
-            }
+            UpdateTripleMagnet();
         };
 
         UseCustomMagnetRange = Config.Bind("20. Loot", "Use Custom Magnet Range", false, new ConfigDescription("Use a custom magnet range instead of the default or increased range.", null, new ConfigurationManagerAttributes
@@ -520,16 +462,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         UseCustomMagnetRange.SettingChanged += (_, _) =>
         {
-            if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
-            {
-                PickUps.RestoreMagnetRange();
-            }
-            if (UseCustomMagnetRange.Value)
-            {
-                PickUps.UpdateAllPickUps();
-                DoubleMagnetRange.Value = false;
-                TripleMagnetRange.Value = false;
-            }
+            UpdatePickups();
         };
         CustomMagnetRange = Config.Bind("20. Loot", "Custom Magnet Range", 7, new ConfigDescription("Quadruples the magnet range.", new AcceptableValueRange<int>(7, 50), new ConfigurationManagerAttributes
         {
@@ -537,19 +470,140 @@ public partial class Plugin : BaseUnityPlugin
         }));
         CustomMagnetRange.SettingChanged += (_, _) =>
         {
-            if (!UseCustomMagnetRange.Value)
-            {
-                return;
-            }
-            UseCustomMagnetRange.Value = true;
-            DoubleMagnetRange.Value = false;
-            TripleMagnetRange.Value = false;
-            PickUps.UpdateAllPickUps();
+            UpdateCustomMagnet();
         };
+
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        
+        SceneManager.sceneLoaded += OnSceneLoaded;
         // if (!SoftDepend.Enabled) return;
         //
         // SoftDepend.AddSettingsMenus();
         // Log.LogInfo("API detected - You can configure mod settings in the settings menu."));
+    }
+    private static void UpdateScale()
+    {
+        if (EnableCustomUiScale.Value)
+        {
+            Scales.UpdateScale();
+        }
+        else
+        {
+            Scales.RestoreScale();
+        }
+    }
+    private static void UpdateNoNegativeTraits()
+    {
+        if (IsNoNegativePresent())
+        {
+            NoNegativeTraits.Value = false;
+            return;
+        }
+
+        if (NoNegativeTraits.Value)
+        {
+            Patches.NoNegativeTraits.UpdateAllFollowerTraits();
+        }
+        else
+        {
+            Patches.NoNegativeTraits.RestoreOriginalTraits();
+        }
+    }
+    private static void GenerateAvailableTraits()
+    {
+        if (IsNoNegativePresent()) return;
+        Patches.NoNegativeTraits.GenerateAvailableTraits();
+    }
+    private static void UpdateNavigationMode()
+    {
+        var buttons = Resources.FindObjectsOfTypeAll<MMButton>();
+        foreach (var button in buttons)
+        {
+            button.Selectable.navigation = button.Selectable.navigation with {mode = Navigation.Mode.Automatic};
+        }
+    }
+    private static void UpdateAllMagnets()
+    {
+        if (AllLootMagnets.Value)
+        {
+            PickUps.UpdateAllPickUps();
+        }
+        else
+        {
+            PickUps.RestoreMagnets();
+        }
+    }
+    private static void UpdateDoubleMagnet()
+    {
+        if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
+        {
+            PickUps.RestoreMagnetRange();
+        }
+
+        if (DoubleMagnetRange.Value)
+        {
+            PickUps.UpdateAllPickUps();
+            TripleMagnetRange.Value = false;
+            UseCustomMagnetRange.Value = false;
+        }
+    }
+    private static void UpdateTripleMagnet()
+    {
+        if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
+        {
+            PickUps.RestoreMagnetRange();
+        }
+        if (TripleMagnetRange.Value)
+        {
+            PickUps.UpdateAllPickUps();
+            DoubleMagnetRange.Value = false;
+            UseCustomMagnetRange.Value = false;
+        }
+    }
+    private static void UpdateCustomMagnet()
+    {
+        if (!UseCustomMagnetRange.Value)
+        {
+            return;
+        }
+        UseCustomMagnetRange.Value = true;
+        DoubleMagnetRange.Value = false;
+        TripleMagnetRange.Value = false;
+        PickUps.UpdateAllPickUps();
+    }
+    private static void UpdatePickups()
+    {
+        if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
+        {
+            PickUps.RestoreMagnetRange();
+        }
+        if (UseCustomMagnetRange.Value)
+        {
+            PickUps.UpdateAllPickUps();
+            DoubleMagnetRange.Value = false;
+            TripleMagnetRange.Value = false;
+        }
+    }
+    private static void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        UpdateMenuGlitch();
+        //  UpdateScale();
+        UpdateNavigationMode();
+        // UpdateAllMagnets();
+        // UpdateDoubleMagnet();
+        // UpdateTripleMagnet();
+        // UpdateCustomMagnet();
+        // UpdatePickups();
+        // UpdateNoNegativeTraits();
+    }
+
+    private static void UpdateMenuGlitch()
+    {
+        var mmc = FindObjectOfType<MainMenuController>();
+        if (mmc)
+        {
+            mmc.doIntroGlitch = Plugin.MainMenuGlitch.Value;
+        }
     }
 
     public static void L(string message)

@@ -8,8 +8,8 @@ public static class GameSpeedManipulationPatches
     private static bool _timeMessageShown;
     
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(TimeManager), nameof(TimeManager.Simulate), typeof(float))]
-    public static void TimeManager_Simulate(ref float deltaGameTime)
+    [HarmonyPatch(typeof(TimeManager), nameof(TimeManager.Simulate), typeof(float), typeof(bool))]
+    public static void TimeManager_Simulate(ref float deltaGameTime, ref bool skippingTime)
     {
         if (Plugin.SlowDownTime.Value)
             //4 is SUPER slow. 
@@ -18,7 +18,7 @@ public static class GameSpeedManipulationPatches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameManager), nameof(GameManager.Update))]
-    public static void GameManager_Update(GameManager? __instance)
+    public static void GameManager_Update(GameManager __instance)
     {
         if (__instance is null) return;
         if (Plugin.SlowDownTime.Value && !_timeMessageShown)

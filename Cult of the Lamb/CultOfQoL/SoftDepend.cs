@@ -1,9 +1,11 @@
+// using COTL_API.CustomSettings;
+//
 // namespace CultOfQoL;
 //
 // public static class SoftDepend
 // {
 //     private static bool? _enabled;
-//     private const string Version = "0.2.1";
+//     private const string Version = "0.2.3";
 //     private const string CotlAPI = "COTL_API";
 //
 //     public static bool Enabled
@@ -26,20 +28,6 @@
 //
 //     public static void AddSettingsMenus()
 //     {
-//         CustomSettingsManager.AddBepInExConfig("Cult of QoL", Plugin.ModEnabled.Definition.Key, Plugin.ModEnabled, b =>
-//         {
-//             if (!b)
-//             {
-//                 Plugin.L("Unpatching QoL all patches.");
-//                 Plugin.Harmony.UnpatchSelf();
-//             }
-//             else
-//             {
-//                 Plugin.L("Patching QoL all patches.");
-//                 Plugin.Harmony.PatchAll();
-//             }
-//         });
-//
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Player", Plugin.EnableBaseDamageMultiplier.Definition.Key, Plugin.EnableBaseDamageMultiplier);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Player", Plugin.BaseDamageMultiplier.Definition.Key, Plugin.BaseDamageMultiplier, 1, MMSlider.ValueDisplayFormat.RawValue);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Player", Plugin.EnableRunSpeedMulti.Definition.Key, Plugin.EnableRunSpeedMulti);
@@ -52,8 +40,8 @@
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Skip Crown Video", Plugin.SkipCrownVideo);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Remove Extra Menu Buttons", Plugin.RemoveMenuClutter);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Remove Twitch Buttons", Plugin.RemoveTwitchButton);
-//         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Unlock Twitch Stuff", Plugin.UnlockTwitchStuff);
-//         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Remove Ad", Plugin.DisableAd);
+//         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Unlock Twitch Stuff", Plugin.UnlockTwitchItems);
+//         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Remove Ad", Plugin.DisableAds);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Remove Help Button In Pause Menu", Plugin.RemoveHelpButtonInPauseMenu);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Remove Twitch Button In Pause Menu", Plugin.RemoveTwitchButtonInPauseMenu);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - General", "Remove Photo Button In Pause Menu", Plugin.RemovePhotoModeButtonInPauseMenu);

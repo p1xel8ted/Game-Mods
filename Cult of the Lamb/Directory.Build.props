@@ -9,11 +9,12 @@
       <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
        <IsPackable>false</IsPackable>
            <Authors>p1xel8ted</Authors>
-      <Nullable>enable</Nullable>
+      <Nullable>disable</Nullable>
     <Company>$(Authors)</Company>
     <Product>$(MSBuildProjectName)</Product>
     <PackageId>$(MSBuildProjectName)</PackageId>
-        
+        <DebugSymbols>true</DebugSymbols>
+      <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <!--Default all references to CopyLocal False.-->
@@ -24,16 +25,19 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>I:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>I:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
   </PropertyGroup>
 
   
   <ItemGroup>
     <PackageReference Include="BepInEx.Core" Version="5.*" />
+      <PackageReference Include="Costura.Fody" Version="5.7.*">
+          <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
   </ItemGroup>
 
 </Project>

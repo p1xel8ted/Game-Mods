@@ -6,8 +6,10 @@ public partial class Plugin
     private static Vector3 Pos { get; set; }
     private static string DataPath { get; set; }
     private static string SavePath { get; set; }
-    private readonly static List<SaveSlotData> AllSaveGames = [];
-    private static List<SaveSlotData> SortedTrimmedSaveGames { get; set; } = [];
+
+    // private readonly static List<SaveSlotData> AllSaveGames = [];
+
+    // private static List<SaveSlotData> SortedTrimmedSaveGames { get; set; } = [];
     private static bool CanSave { get; set; }
     private static string CurrentSave { get; set; }
     private readonly static Dictionary<string, Vector3> SaveLocationsDictionary = new();
@@ -17,50 +19,57 @@ public partial class Plugin
     [HarmonyPatch(typeof(SaveSlotsMenuGUI), nameof(SaveSlotsMenuGUI.RedrawSlots))]
     public static void SaveSlotsMenuGUI_RedrawSlots(ref List<SaveSlotData> slot_datas, ref bool focus_on_first)
     {
-       
-        AllSaveGames.Clear();
-        SortedTrimmedSaveGames.Clear();
-
-        LoadSaveGames();
+        // AllSaveGames.Clear();
+        //
+        // LoadSaveGames();
+        //
+        // if (AllSaveGames.Count <= 0) return;
         
-        if (AllSaveGames.Count <= 0) return;
-        
-        slot_datas.Clear();
+        SortSaveGames(ref slot_datas);
 
-        SortedTrimmedSaveGames = SortSaveGames();
-
-        if (SortedTrimmedSaveGames.Count > MaximumSavesVisible.Value)
+        if (slot_datas.Count > MaximumSavesVisible.Value)
         {
-            Resize(SortedTrimmedSaveGames, MaximumSavesVisible.Value);
+            Resize(slot_datas, MaximumSavesVisible.Value);
         }
-
-        slot_datas = SortedTrimmedSaveGames;
+        
         focus_on_first = true;
     }
 
-    private static void LoadSaveGames()
-    {
-        var saveFiles = Directory.GetFiles(PlatformSpecific.GetSaveFolder(), "*.info",
-            SearchOption.TopDirectoryOnly);
+    // private static void LoadSaveGames()
+    // {
+    //     var saveFiles = Directory.GetFiles(PlatformSpecific.GetSaveFolder(), "*.info",
+    //         SearchOption.TopDirectoryOnly);
+    //
+    //     foreach (var text in saveFiles)
+    //     {
+    //         var data = SaveSlotData.FromJSON(File.ReadAllText(text));
+    //         if (data == null) continue;
+    //         data.filename_no_extension = Path.GetFileNameWithoutExtension(text);
+    //         AllSaveGames.Add(data);
+    //     }
+    // }
 
-        foreach (var text in saveFiles)
+    private static void SortSaveGames(ref List<SaveSlotData> saveGames)
+    {
+        var path = PlatformSpecific.GetSaveFolder();
+        var files = Directory.GetFiles(path, "*.dat", SearchOption.TopDirectoryOnly);
+
+        var sortedDict = new SortedDictionary<DateTime, SaveSlotData>();
+
+        foreach (var save in saveGames)
         {
-            var data = SaveSlotData.FromJSON(File.ReadAllText(text));
-            if (data == null) continue;
-            data.filename_no_extension = Path.GetFileNameWithoutExtension(text);
-            AllSaveGames.Add(data);
+            var saveFile = files.FirstOrDefault(f => f.Contains(save.filename_no_extension));
+            if (saveFile == null) continue;
+            var lastModified = File.GetLastWriteTime(saveFile);
+            sortedDict.Add(lastModified, save);
         }
-    }
 
-    private static List<SaveSlotData> SortSaveGames()
-    {
-        return SortByRealTime.Value
-            ? AscendingSort.Value
-                ? AllSaveGames.OrderBy(o => o.real_time).ToList()
-                : AllSaveGames.OrderByDescending(o => o.real_time).ToList()
-            : AscendingSort.Value
-                ? AllSaveGames.OrderBy(o => o.game_time).ToList()
-                : AllSaveGames.OrderByDescending(o => o.game_time).ToList();
+        if (SortByLastModified.Value)
+        {
+            saveGames = AscendingSort.Value
+                ? sortedDict.Values.ToList()
+                : sortedDict.Values.Reverse().ToList();
+        }
     }
 
     [HarmonyPatch(typeof(BaseMenuGUI), nameof(BaseMenuGUI.SetControllsActive))]
@@ -126,36 +135,39 @@ public partial class Plugin
             WriteLog("Exit to desktop and save on exit are both disabled. Letting original method run.");
             return true;
         }
-    
+
         if (!Tools.TutorialDone()) return true;
         Thread.CurrentThread.CurrentUICulture = CrossModFields.Culture;
-    
+
         __instance._stored_focus = null;
         BaseMenuGUI_SetControllsActive(__instance, false);
         __instance.OnClosePressed();
-    
+
         var messageText = CreateMessageText();
-    
+
         var dialog = GUIElements.me.dialog;
         var gui = __instance;
-        dialog.OpenYesNo(messageText, delegate { SaveAndExit(gui); }, null, delegate
+        dialog.OpenYesNo(messageText, delegate
+        {
+            SaveAndExit(gui);
+        }, null, delegate
         {
             WriteLog("Save Cancelled");
             BaseMenuGUI_SetControllsActive(gui, true);
         });
-    
+
         return false;
-    
+
         string CreateMessageText()
         {
             var baseMessage = ExitToDesktop.Value ? strings.SaveAreYouSureDesktop : strings.SaveAreYouSureMenu;
             var progressMessage = !SaveOnExit.Value || CrossModFields.IsInDungeon
                 ? strings.SaveProgressNotSaved
                 : strings.SaveProgressSaved;
-    
+
             return $"{baseMessage}?\n\n{progressMessage}.";
         }
-    
+
         void SaveAndExit(InGameMenuGUI instance)
         {
             if (!SaveOnExit.Value || CrossModFields.IsInDungeon)
@@ -167,11 +179,14 @@ public partial class Plugin
                 if (SaveLocation(true, MainGame.me.save_slot.filename_no_extension))
                 {
                     PlatformSpecific.SaveGame(MainGame.me.save_slot, MainGame.me.save,
-                        delegate { PerformExit(instance); });
+                        delegate
+                        {
+                            PerformExit(instance);
+                        });
                 }
             }
         }
-    
+
         void PerformExit(InGameMenuGUI instance)
         {
             if (ExitToDesktop.Value)
@@ -188,7 +203,7 @@ public partial class Plugin
     }
 
 
-    // if this isn't here, when you sleep, it teleport you back to where the mod saved you last
+    // if this isn't here, when you sleep, it teleports you back to where the mod saved you last
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SleepGUI), nameof(SleepGUI.WakeUp))]
     public static void SleepGUI_WakeUp()
@@ -204,7 +219,6 @@ public partial class Plugin
         var contentTable = GameObject.Find("UI Root/Ingame menu/content table");
         var widgets = contentTable.GetComponent<SimpleUITable>();
         widgets._widgets[5].GetComponentInChildren<UILabel>().text = strings.ExitButtonText;
-
     }
 
     [HarmonyPostfix]

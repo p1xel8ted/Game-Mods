@@ -1,16 +1,12 @@
-using System.IO;
-using System.Reflection;
-using UnityEngine;
-
 namespace Namify;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.2")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.1.3";
+    private const string PluginVer = "0.1.4";
     private const string NamesSection = "Names";
     private const string ApiSection = "API";
 
@@ -20,8 +16,8 @@ public class Plugin : BaseUnityPlugin
 
     private static bool _showGetNewConfirmationDialog;
     private static bool _showReloadConfirmationDialog;
-    private static string? _namifyNamesFilePath;
-    private static string? _userDataFilePath;
+    private static string _namifyNamesFilePath;
+    private static string _userDataFilePath;
     private static string NamifyNamesFilePath => _namifyNamesFilePath ??= Path.Combine(Application.persistentDataPath, "saves", Data.NamifyDataPath);
     private static string UserNameFilePath => _userDataFilePath ??= Path.Combine(Application.persistentDataPath, "saves", Data.UserDataPath);
 

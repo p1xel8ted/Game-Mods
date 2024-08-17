@@ -9,7 +9,7 @@ public static class ReflectionHelper
     /// </summary>
     /// <param name="framesToSkip">Number of frames to skip. Default is 2 (caller of caller).</param>
     /// <returns>The full name of the calling class, or "Unknown" if it cannot be determined.</returns>
-    public static string? GetCallingClassName(int framesToSkip = 2)
+    public static string GetCallingClassName(int framesToSkip = 2)
     {
         var stackTrace = new StackTrace();
         var frame = stackTrace.GetFrame(framesToSkip);

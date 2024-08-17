@@ -28,6 +28,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> UseCustomMagnetRange = null!;
     internal static ConfigEntry<int> CustomMagnetRange = null!;
     
+    internal static ConfigEntry<bool> MainMenuGlitch = null!;
     
     internal static ConfigEntry<bool> ReverseGoldenFleeceDamageChange = null!;
     internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate = null!;
@@ -140,5 +141,5 @@ public partial class Plugin
 
     internal static WriteOnce<float> RunSpeed { get; } = new();
     internal static WriteOnce<float> DodgeSpeed { get; } = new();
-    internal static UIMainMenuController? UIMainMenuController = null!;
+    internal static UIMainMenuController UIMainMenuController = null!;
 }
