@@ -1,3 +1,8 @@
+### 2.2.2 - 22/08/2024
+
+* Fix for black screen and resulting chaos on loading a save game [Nexus Bug Report #5](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs)
+* Adjustments to the lumber station
+
 ### 2.2.1 - 22/08/2024
 
 * Fixed healing bay ignoring normal followers that werent exhausted. [Nexus Bug Report #1](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs)

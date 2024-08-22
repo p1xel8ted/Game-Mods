@@ -244,24 +244,22 @@ public static class FastCollectingPatches
     [HarmonyPatch(typeof(LumberjackStation), nameof(LumberjackStation.GiveItem))]
     private static bool LumberjackStation_GiveItem(ref LumberjackStation __instance, InventoryItem.ITEM_TYPE type)
     {
+        if (!__instance) return true;
+        
         foreach (var item in __instance.StructureInfo.Inventory.ToList().Where(item => item.type == (int) type))
         {
-            ResourceCustomTarget.Create(__instance.playerFarming.gameObject, __instance.transform.position, type, Callback);
-
+            Inventory.AddItem((int) type, item.quantity);
             __instance.StructureInfo.Inventory.Remove(item);
-
-            continue;
-
-            void Callback()
-            {
-                Inventory.AddItem((int) type, item.quantity);
-            }
         }
 
-        __instance.UpdateChest();
-        __instance.ExhaustedCheck();
+        if (__instance)
+        {
+            __instance.UpdateChest(false);
+            __instance.ExhaustedCheck();
+        }
 
         return false;
+
     }
 
     [HarmonyPrefix]

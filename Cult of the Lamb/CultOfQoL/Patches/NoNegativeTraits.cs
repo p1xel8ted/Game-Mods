@@ -222,10 +222,15 @@ public static class NoNegativeTraits
 
     private static FollowerTrait.TraitType FindPositiveReplacement(FollowerBrain brain)
     {
+        if (AllTraits == null)
+        {
+            GenerateAvailableTraits();
+        }
+        
         FollowerTrait.TraitType newTrait;
         do
         {
-            newTrait = AllTraits.ElementAt(Random.Range(0, AllTraits.Count));
+            newTrait = AllTraits!.ElementAt(Random.Range(0, AllTraits!.Count));
         } while (!FollowerTrait.IsPositiveTrait(newTrait) || brain.HasTrait(newTrait));
 
         return newTrait;
