@@ -4,7 +4,18 @@ namespace CultOfQoL.Patches;
 public static class Save
 {
     
- 
+    static Save()
+    {
+        Application.quitting += GameSpeedManipulationPatches.ResetTime;
+        SaveAndLoad.OnLoadComplete += GameSpeedManipulationPatches.ResetTime;
+    }
+    
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save))]
+    public static void SaveAndLoad_Save()
+    {
+        GameSpeedManipulationPatches.ResetTime();
+    }
     
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LoadMenu), nameof(LoadMenu.Start))]
@@ -34,6 +45,7 @@ public static class Save
         var instance = __instance;
         saveAndQuit.OnConfirm += delegate
         {
+            GameSpeedManipulationPatches.ResetTime();
             SaveAndLoad.Save();
             instance.LoadMainMenu();
         };
@@ -50,6 +62,7 @@ public static class Save
         saveAndQuit.Configure("Save & Quit", "Are you sure you want to quit to desktop? Your progress will be saved.");
         saveAndQuit.OnConfirm += delegate
         {
+            GameSpeedManipulationPatches.ResetTime();
             SaveAndLoad.Save();
             Application.Quit();
         };

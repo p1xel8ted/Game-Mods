@@ -12,68 +12,6 @@ public static class FastCollectingPatches
 
     private static bool CollectAllHarvestTotemsRunning { get; set; }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.Update))]
-    public static void Interaction_CollectResourceChest_Update(ref Interaction_CollectResourceChest __instance)
-    {
-        if (__instance.StructureInfo?.Inventory == null)
-        {
-            return;
-        }
-
-        var triggerExists = __instance.StructureInfo.Inventory.Exists(a => a.quantity >= Mathf.Abs(Plugin.TriggerAmount.Value));
-        __instance.AutomaticallyInteract = false;
-        if (Plugin.EnableAutoInteract.Value && (__instance.StructureInfo.Inventory.Count >= Mathf.Abs(Plugin.TriggerAmount.Value) || triggerExists))
-        {
-            __instance.Activating = true;
-            if (Plugin.UseCustomRange.Value)
-            {
-                Plugin.OtherFastCollect.Value = __instance.DistanceToTriggerDeposits;
-
-
-                __instance.DistanceToTriggerDeposits = Plugin.OtherFastCollect.Value * Mathf.Abs(Plugin.CustomRangeMulti.Value);
-            }
-            else
-            {
-                __instance.DistanceToTriggerDeposits = Plugin.IncreaseRange.Value ? 10f : 5f;
-            }
-
-            __instance.AutomaticallyInteract = true;
-        }
-    }
-
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(LumberjackStation), nameof(LumberjackStation.Update))]
-    public static void LumberjackStation_Update(ref LumberjackStation __instance)
-    {
-        if (__instance.StructureInfo?.Inventory == null)
-        {
-            return;
-        }
-
-        var triggerExists = __instance.StructureInfo.Inventory.Exists(a => a.quantity >= Mathf.Abs(Plugin.TriggerAmount.Value));
-        __instance.AutomaticallyInteract = false;
-        if (Plugin.EnableAutoInteract.Value && (__instance.StructureInfo.Inventory.Count >= Mathf.Abs(Plugin.TriggerAmount.Value) || triggerExists))
-        {
-            __instance.Activating = true;
-            if (Plugin.UseCustomRange.Value)
-            {
-                Plugin.LumberFastCollect.Value = __instance.DistanceToTriggerDeposits;
-
-
-                __instance.DistanceToTriggerDeposits = Plugin.LumberFastCollect.Value * Mathf.Abs(Plugin.CustomRangeMulti.Value);
-            }
-            else
-            {
-                __instance.DistanceToTriggerDeposits = Plugin.IncreaseRange.Value ? 10f : 5f;
-            }
-
-            __instance.AutomaticallyInteract = true;
-        }
-    }
-
-    [HarmonyPrefix]
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.Update))]
     public static void BuildingShrine_Update(ref float ___ReduceDelay, ref float ___Delay)
@@ -107,9 +45,9 @@ public static class FastCollectingPatches
     {
         CollectBedsRunning = true;
         var beds = Interaction.interactions.OfType<Interaction_Bed>().ToList();
-        foreach (var bed in beds.Where(a => a != null && a.StructureBrain?.SoulCount > 0))
+        foreach (var bed in beds.Where(a => a && a.StructureBrain?.SoulCount > 0))
         {
-            if (bed == null || bed == bedInteraction) continue;
+            if (!bed || bed == bedInteraction) continue;
             bed.StartCoroutine(bed.GiveReward());
         }
         yield return new WaitForSeconds(0.10f);
@@ -134,7 +72,7 @@ public static class FastCollectingPatches
         var shrines = Interaction.interactions.OfType<BuildingShrinePassive>().ToList();
         foreach (var shrine in shrines.Where(a => a.StructureBrain?.SoulCount > 0))
         {
-            if (shrine == null || shrine == __instance) continue;
+            if (!shrine || shrine == __instance) continue;
             shrine.OnInteract(state);
             yield return new WaitForSeconds(0.10f);
         }
@@ -159,7 +97,7 @@ public static class FastCollectingPatches
         var outhouses = Interaction.interactions.OfType<Interaction_Outhouse>().ToList();
         foreach (var outhouse in outhouses.Where(a => a.StructureBrain?.GetPoopCount() > 0))
         {
-            if (outhouse == null || outhouse == __instance) continue;
+            if (!outhouse || outhouse == __instance) continue;
             outhouse.OnInteract(state);
             yield return new WaitForSeconds(0.10f);
         }
@@ -184,7 +122,7 @@ public static class FastCollectingPatches
         var composts = Interaction.interactions.OfType<Interaction_CompostBinDeadBody>().ToList();
         foreach (var cbd in composts.Where(a => a.StructureBrain?.PoopCount > 0))
         {
-            if (cbd == null || cbd == __instance) continue;
+            if (!cbd || cbd == __instance) continue;
             cbd.OnInteract(state);
             yield return new WaitForSeconds(0.10f);
         }
@@ -207,7 +145,7 @@ public static class FastCollectingPatches
         CollectAllHarvestTotemsRunning = true;
         foreach (var t in HarvestTotem.HarvestTotems.Where(a => a != null && a.StructureBrain?.SoulCount > 0))
         {
-            if (t == null || t == totem) continue;
+            if (!t || t == totem) continue;
             t.OnInteract(state);
         }
         yield return new WaitForSeconds(0.10f);
@@ -231,7 +169,7 @@ public static class FastCollectingPatches
         var shrines = Interaction.interactions.OfType<Interaction_OfferingShrine>().ToList();
         foreach (var shrine in shrines.Where(a => a.StructureInfo?.Inventory?.Count > 0))
         {
-            if (shrine == null || shrine == __instance) continue;
+            if (!shrine || shrine == __instance) continue;
             yield return new WaitForSeconds(0.10f);
             shrine.OnInteract(state);
         }
@@ -248,53 +186,154 @@ public static class FastCollectingPatches
         __result = Helpers.FilterEnumerator(__result, [typeof(WaitForSeconds)]);
     }
 
-    [HarmonyPatch]
-    public static class LootDelayTranspilers
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.Update))]
+    private static void Interaction_CollectResourceChest_Update(ref Interaction_CollectResourceChest __instance)
     {
-        //collection speed for Interaction_CollectResourceChest - default speed is 0.1f
-        [HarmonyTranspiler]
-        [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.Update))]
-        [HarmonyPatch(typeof(LumberjackStation), nameof(LumberjackStation.Update))]
-        public static IEnumerable<CodeInstruction> InteractionCollectResourceChestTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
+        if (!__instance.playerFarming)
         {
-            if (!Plugin.FastCollecting.Value) return instructions;
-            var delayField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Delay");
-            var codes = new List<CodeInstruction>(instructions);
-            for (var i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i + 1].StoresField(delayField))
-                {
-                    Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found Delay at {i}");
-                    codes[i].operand = originalMethod.GetRealDeclaringType().Name.Contains("Lumber") ? 0.025f : 0.01f;
-                }
-            }
-
-            return codes.AsEnumerable();
+            return;
         }
 
-
-        //collection speed for Interaction_EntranceShrine (dungeon shrines) - default speed is 0.1f
-        [HarmonyTranspiler]
-        [HarmonyPatch(typeof(Interaction_RatauShrine), nameof(Interaction_RatauShrine.Update))]
-        [HarmonyPatch(typeof(Interaction_EntranceShrine), nameof(Interaction_EntranceShrine.Update))]
-        [HarmonyPatch(typeof(Interaction_Outhouse), nameof(Interaction_Outhouse.Update))]
-        public static IEnumerable<CodeInstruction> InteractionEntranceShrineTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
+        if (Plugin.EnableAutoInteract.Value && !InputManager.Gameplay.GetInteractButtonHeld())
         {
-            if (!Plugin.FastCollecting.Value) return instructions;
-            var delayField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Delay");
-
-            var codes = new List<CodeInstruction>(instructions);
-            for (var i = 0; i < codes.Count; i++)
+            if (__instance.StructureBrain is Structures_FarmerStation && !Plugin.AutoCollectFromFarmStationChests.Value)
             {
-                if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i + 1].StoresField(delayField))
-                {
-                    Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found Delay at {i}");
-                    codes[i].operand = originalMethod.GetRealDeclaringType().Name.Contains("Outhouse") ? 0.025f : 0f;
-                }
+                return;
+            }
+            
+            var range = 5f;
+
+            if (Plugin.IncreaseAutoCollectRange.Value)
+            {
+                range = 10f;
+            }
+            if (Plugin.UseCustomAutoInteractRange.Value)
+            {
+                range *= Plugin.CustomAutoInteractRangeMulti.Value;
             }
 
-            return codes.AsEnumerable();
+            __instance.DistanceToTriggerDeposits = range;
+            __instance.Activating = true;
+
+            var activating = __instance.Activating;
+            var emptyInventory = __instance.StructureInfo.Inventory.Sum(item => item.quantity) < Plugin.TriggerAmount.Value;
+            var distance = Vector3.Distance(__instance.transform.position, __instance.playerFarming.transform.position);
+            var tooFarAway = distance > __instance.DistanceToTriggerDeposits;
+
+
+            if (!activating) return;
+
+            if (emptyInventory || tooFarAway)
+            {
+                __instance.Activating = false;
+            }
+
+            return;
+        }
+
+        __instance.DistanceToTriggerDeposits = 5f;
+
+        if (__instance.Activating && (__instance.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp() || Vector3.Distance(__instance.transform.position, __instance.playerFarming.transform.position) > __instance.DistanceToTriggerDeposits))
+        {
+            __instance.Activating = false;
         }
     }
 
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LumberjackStation), nameof(LumberjackStation.GiveItem))]
+    private static bool LumberjackStation_GiveItem(ref LumberjackStation __instance, InventoryItem.ITEM_TYPE type)
+    {
+        foreach (var item in __instance.StructureInfo.Inventory.ToList().Where(item => item.type == (int) type))
+        {
+            ResourceCustomTarget.Create(__instance.playerFarming.gameObject, __instance.transform.position, type, Callback);
+
+            __instance.StructureInfo.Inventory.Remove(item);
+
+            continue;
+
+            void Callback()
+            {
+                Inventory.AddItem((int) type, item.quantity);
+            }
+        }
+
+        __instance.UpdateChest();
+        __instance.ExhaustedCheck();
+
+        return false;
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LumberjackStation), nameof(LumberjackStation.Update))]
+    private static void LumberjackStation_Update(ref LumberjackStation __instance)
+    {
+        if (!__instance.Player)
+        {
+            if (!__instance.playerFarming) return;
+
+            __instance.Player = PlayerFarming.Instance.gameObject;
+        }
+
+        if (Plugin.EnableAutoInteract.Value && !InputManager.Gameplay.GetInteractButtonHeld())
+        {
+            var range = 5f;
+
+            if (Plugin.IncreaseAutoCollectRange.Value)
+            {
+                range = 10f;
+            }
+            if (Plugin.UseCustomAutoInteractRange.Value)
+            {
+                range *= Plugin.CustomAutoInteractRangeMulti.Value;
+            }
+
+            __instance.DistanceToTriggerDeposits = range;
+            __instance.Activating = true;
+
+            var activating = __instance.Activating;
+            var emptyInventory = __instance.StructureInfo.Inventory.Sum(item => item.quantity) < Plugin.TriggerAmount.Value;
+            var distance = Vector3.Distance(__instance.transform.position, __instance.Player.transform.position);
+            var tooFarAway = distance > __instance.DistanceToTriggerDeposits;
+
+            if (!activating) return;
+
+            if (emptyInventory || tooFarAway)
+            {
+                __instance.Activating = false;
+            }
+
+            return;
+        }
+
+        __instance.DistanceToTriggerDeposits = 5f;
+
+        if (__instance.Activating && (__instance.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp() || Vector3.Distance(__instance.transform.position, __instance.Player.transform.position) > __instance.DistanceToTriggerDeposits))
+        {
+            __instance.Activating = false;
+        }
+    }
+
+    //collection speed for Interaction_EntranceShrine (dungeon shrines) - default speed is 0.1f
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(Interaction_RatauShrine), nameof(Interaction_RatauShrine.Update))]
+    [HarmonyPatch(typeof(Interaction_EntranceShrine), nameof(Interaction_EntranceShrine.Update))]
+    [HarmonyPatch(typeof(Interaction_Outhouse), nameof(Interaction_Outhouse.Update))]
+    public static IEnumerable<CodeInstruction> InteractionEntranceShrineTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
+    {
+        if (!Plugin.FastCollecting.Value) return instructions;
+        var delayField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Delay");
+
+        var codes = new List<CodeInstruction>(instructions);
+        for (var i = 0; i < codes.Count; i++)
+        {
+            if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i + 1].StoresField(delayField))
+            {
+                Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found Delay at {i}");
+                codes[i].operand = originalMethod.GetRealDeclaringType().Name.Contains("Outhouse") ? 0.025f : 0f;
+            }
+        }
+
+        return codes.AsEnumerable();
+    }
 }

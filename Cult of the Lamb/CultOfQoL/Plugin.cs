@@ -7,7 +7,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.2.0";
+    private const string PluginVer = "2.2.1";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -15,8 +15,10 @@ public partial class Plugin : BaseUnityPlugin
     private const string GameMechanicsSection = "03. Game Mechanics";
     private const string PlayerDamageSection = "05. Player Damage";
     private const string PlayerSpeedSection = "06. Player Speed";
+
     private const string SavesSection = "07. Saves";
-    private const string ScalingSection = "08. Scale";
+
+    // private const string ScalingSection = "08. Scale";
     private const string WeatherSection = "09. Weather";
     private const string NotificationsSection = "10. Notifications";
 
@@ -34,10 +36,11 @@ public partial class Plugin : BaseUnityPlugin
     private const string StructureSection = "04. Structures";
     private const string TraitsSection = "19. Traits";
 
-    internal static ManualLogSource Log = null!;
-    internal static CanvasScaler GameCanvasScaler { get; set; }
-    internal static CanvasScaler DungeonCanvasScaler { get; set; }
-    internal static PopupManager PopupManager = null!;
+    internal static ManualLogSource Log { get; private set; }
+
+    // internal static CanvasScaler GameCanvasScaler { get; set; }
+    // internal static CanvasScaler DungeonCanvasScaler { get; set; }
+    internal static PopupManager PopupManager { get; private set; }
     private void Awake()
     {
         HideBepInEx();
@@ -66,21 +69,39 @@ public partial class Plugin : BaseUnityPlugin
         };
         //Player Damage
         EnableBaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Enable Base Damage Multiplier", false, new ConfigDescription("Enable/disable the base damage multiplier.", null, new ConfigurationManagerAttributes {Order = 6}));
-        BaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Base Damage Multiplier", 1.5f, new ConfigDescription("The base damage multiplier to use.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes {Order = 5}));
+        BaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Base Damage Multiplier", 1.5f, new ConfigDescription("The base damage multiplier to use.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 5}));
+        BaseDamageMultiplier.SettingChanged += (_, _) =>
+        {
+            BaseDamageMultiplier.Value = Mathf.Round(BaseDamageMultiplier.Value * 4) / 4;
+        };
         ReverseGoldenFleeceDamageChange = Config.Bind(GameMechanicsSection, "Reverse Golden Fleece Change", true, new ConfigDescription("Reverts the default damage increase to 10% instead of 5%.", null, new ConfigurationManagerAttributes {Order = 4}));
         IncreaseGoldenFleeceDamageRate = Config.Bind(GameMechanicsSection, "Increase Golden Fleece Rate", true, new ConfigDescription("Doubles the damage increase.", null, new ConfigurationManagerAttributes {Order = 3}));
         UseCustomDamageValue = Config.Bind(GameMechanicsSection, "Use Custom Damage Value", false, new ConfigDescription("Use a custom damage value instead of the default 10%.", null, new ConfigurationManagerAttributes {Order = 2}));
-        CustomDamageMulti = Config.Bind(GameMechanicsSection, "Custom Damage Multiplier", 2.0f, new ConfigDescription("The custom damage multiplier to use. Based off the games default 5%.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes {Order = 1}));
-
+        CustomDamageMulti = Config.Bind(GameMechanicsSection, "Custom Damage Multiplier", 2.0f, new ConfigDescription("The custom damage multiplier to use. Based off the games default 5%.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 1}));
+        CustomDamageMulti.SettingChanged += (_, _) =>
+        {
+            CustomDamageMulti.Value = Mathf.Round(CustomDamageMulti.Value * 4) / 4;
+        };
 
         //Player Speed
         EnableRunSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Run Speed Multiplier", true, new ConfigDescription("Enable/disable the run speed multiplier.", null, new ConfigurationManagerAttributes {Order = 6}));
-        RunSpeedMulti = Config.Bind(PlayerSpeedSection, "Run Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player runs.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes {Order = 5}));
+        RunSpeedMulti = Config.Bind(PlayerSpeedSection, "Run Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player runs.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 5}));
+        RunSpeedMulti.SettingChanged += (_, _) =>
+        {
+            RunSpeedMulti.Value = Mathf.Round(RunSpeedMulti.Value * 4) / 4;
+        };
         EnableDodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Dodge Speed Multiplier", true, new ConfigDescription("Enable/disable the dodge speed multiplier.", null, new ConfigurationManagerAttributes {Order = 4}));
-        DodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Dodge Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player dodges.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes {Order = 3}));
+        DodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Dodge Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player dodges.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 3}));
+        DodgeSpeedMulti.SettingChanged += (_, _) =>
+        {
+            DodgeSpeedMulti.Value = Mathf.Round(DodgeSpeedMulti.Value * 4) / 4;
+        };
         EnableLungeSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Lunge Speed Multiplier", true, new ConfigDescription("Enable/disable the lunge speed multiplier.", null, new ConfigurationManagerAttributes {Order = 2}));
-        LungeSpeedMulti = Config.Bind(PlayerSpeedSection, "Lunge Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player lunges.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes {Order = 1}));
-
+        LungeSpeedMulti = Config.Bind(PlayerSpeedSection, "Lunge Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player lunges.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 1}));
+        LungeSpeedMulti.SettingChanged += (_, _) =>
+        {
+            LungeSpeedMulti.Value = Mathf.Round(LungeSpeedMulti.Value * 4) / 4;
+        };
         //Save
         SaveOnQuitToDesktop = Config.Bind(SavesSection, "Save On Quit To Desktop", true, new ConfigDescription("Modify the confirmation dialog to save the game when you quit to desktop.", null, new ConfigurationManagerAttributes {Order = 8}));
         SaveOnQuitToMenu = Config.Bind(SavesSection, "Save On Quit To Menu", true, new ConfigDescription("Modify the confirmation dialog to save the game when you quit to menu.", null, new ConfigurationManagerAttributes {Order = 7}));
@@ -101,19 +122,19 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         //Scale
-        EnableCustomUiScale = Config.Bind(ScalingSection, "Enable Custom UI Scale", false, new ConfigDescription("Enable/disable the custom UI scale.", null, new ConfigurationManagerAttributes {Order = 2}));
-        EnableCustomUiScale.SettingChanged += (_, _) =>
-        {
-            UpdateScale();
-        };
-
-        CustomUiScale = Config.Bind(ScalingSection, "Custom UI Scale", 50, new ConfigDescription("The custom UI scale to use.", new AcceptableValueRange<int>(1, 101), new ConfigurationManagerAttributes {Order = 1}));
-        CustomUiScale.SettingChanged += (_, _) =>
-        {
-            UpdateScale();
-        };
-
-        NotificationsScale = Config.Bind(ScalingSection, "Notifications Scale", 100, new ConfigDescription("The scale to use for notifications. This setting is independent of Custom UI Scale", new AcceptableValueRange<int>(1, 101), new ConfigurationManagerAttributes {Order = 0}));
+        // EnableCustomUiScale = Config.Bind(ScalingSection, "Enable Custom UI Scale", false, new ConfigDescription("Enable/disable the custom UI scale.", null, new ConfigurationManagerAttributes {Order = 2}));
+        // EnableCustomUiScale.SettingChanged += (_, _) =>
+        // {
+        //   Scales.ChangeAllScalers();
+        // };
+        //
+        // CustomUiScale = Config.Bind(ScalingSection, "Custom UI Scale", 1f, new ConfigDescription("The custom UI scale to use.", new AcceptableValueRange<float>(0.10f, 101f), new ConfigurationManagerAttributes {Order = 1}));
+        // CustomUiScale.SettingChanged += (_, _) =>
+        // {
+        //     Scales.ChangeAllScalers();
+        // };
+        //
+        // NotificationsScale = Config.Bind(ScalingSection, "Notifications Scale", 100, new ConfigDescription("The scale to use for notifications. This setting is independent of Custom UI Scale", new AcceptableValueRange<int>(1, 101), new ConfigurationManagerAttributes {Order = 0}));
 
         //Weather
         ChangeWeatherOnPhaseChange = Config.Bind(WeatherSection, "Change Weather On Phase Change", true, new ConfigDescription("By default, the game changes weather when you exit a structure, or on a new day. Enabling this makes the weather change on each phase i.e. morning, noon, evening, night.", null, new ConfigurationManagerAttributes {Order = 2}));
@@ -165,7 +186,11 @@ public partial class Plugin : BaseUnityPlugin
         FastCollecting = Config.Bind(GameSpeedSection, "Speed Up Collection", true, new ConfigDescription("Increases the rate you can collect from the shrines, and other structures.", null, new ConfigurationManagerAttributes {DispName = "Speed Up Collection**", Order = 3}));
         FastCollecting.SettingChanged += (_, _) => ShowRestartMessage();
         SlowDownTime = Config.Bind(GameSpeedSection, "Slow Down Time", false, new ConfigDescription("Enables the ability to slow down time. This is different to the increase speed implementation. This will make the days longer, but not slow down animations.", null, new ConfigurationManagerAttributes {Order = 2}));
-        SlowDownTimeMultiplier = Config.Bind(GameSpeedSection, "Slow Down Time Multiplier", 2f, new ConfigDescription("The multiplier to use for slow down time. For example, the default value of 2 is making the day twice as long.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes {Order = 1}));
+        SlowDownTimeMultiplier = Config.Bind(GameSpeedSection, "Slow Down Time Multiplier", 2f, new ConfigDescription("The multiplier to use for slow down time. For example, the default value of 2 is making the day twice as long.", new AcceptableValueRange<float>(1.25f, 100f), new ConfigurationManagerAttributes {Order = 1}));
+        SlowDownTimeMultiplier.SettingChanged += (_, _) =>
+        {
+            SlowDownTimeMultiplier.Value = Mathf.Round(SlowDownTimeMultiplier.Value * 4) / 4;
+        };
         FastRitualSermons = Config.Bind(GameSpeedSection, "Fast Rituals & Sermons", true, new ConfigDescription("Speeds up rituals and sermons.", null, new ConfigurationManagerAttributes {Order = 0}));
         FastRitualSermons.SettingChanged += (_, _) =>
         {
@@ -179,22 +204,30 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 5
         }));
-        TriggerAmount = Config.Bind(AutoInteractSection, "Resource Trigger Amount", 5, new ConfigDescription("How many items you want in the chest before triggering auto collect.", new AcceptableValueRange<int>(0, 1000), new ConfigurationManagerAttributes
+        AutoCollectFromFarmStationChests = Config.Bind(AutoInteractSection, "Auto Collect From Farm Station Chests", true, new ConfigDescription("Automatically collect from farm station chests.", null, new ConfigurationManagerAttributes
         {
             Order = 4
         }));
-        IncreaseRange = Config.Bind(AutoInteractSection, "Double Activation Range", true, new ConfigDescription("The default range is 5. This will increase it to 10.", null, new ConfigurationManagerAttributes
+        TriggerAmount = Config.Bind(AutoInteractSection, "Trigger Amount", 5, new ConfigDescription("The amount of resources needed to trigger the auto-interact.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes
+        {
+            Order = 4, ShowRangeAsPercent = false
+        }));
+        IncreaseAutoCollectRange = Config.Bind(AutoInteractSection, "Double Activation Range", true, new ConfigDescription("The default range is 5. This will increase it to 10.", null, new ConfigurationManagerAttributes
         {
             Order = 3
         }));
-        UseCustomRange = Config.Bind(AutoInteractSection, "Use Custom Range", false, new ConfigDescription("Use a custom range instead of the default or increased range.", null, new ConfigurationManagerAttributes
+        UseCustomAutoInteractRange = Config.Bind(AutoInteractSection, "Use Custom Range", false, new ConfigDescription("Use a custom range instead of the default or increased range.", null, new ConfigurationManagerAttributes
         {
             Order = 2
         }));
-        CustomRangeMulti = Config.Bind(AutoInteractSection, "Custom Range Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for auto-collect range when using custom range.", new AcceptableValueRange<float>(0, 100), new ConfigurationManagerAttributes
+        CustomAutoInteractRangeMulti = Config.Bind(AutoInteractSection, "Custom Range Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for auto-collect range when using custom range.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes
         {
             Order = 1
         }));
+        CustomAutoInteractRangeMulti.SettingChanged += (_, _) =>
+        {
+            CustomAutoInteractRangeMulti.Value = Mathf.Round(CustomAutoInteractRangeMulti.Value * 4) / 4;
+        };
 
         //Capacity
         UseMultiplesOf32 = Config.Bind(CapacitySection, "Use Multiples of 32", true, new ConfigDescription("Use multiples of 32 for silo capacity.", null, new ConfigurationManagerAttributes
@@ -209,10 +242,14 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 5
         }));
-        CustomSiloCapacityMulti = Config.Bind(CapacitySection, "Custom Silo Capacity Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for silo capacity when using custom capacity.", new AcceptableValueRange<float>(0, 1000), null, new ConfigurationManagerAttributes
+        CustomSiloCapacityMulti = Config.Bind(CapacitySection, "Custom Silo Capacity Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for silo capacity when using custom capacity.", new AcceptableValueRange<float>(1.25f, 1000), null, new ConfigurationManagerAttributes
         {
             Order = 4
         }));
+        CustomSiloCapacityMulti.SettingChanged += (_, _) =>
+        {
+            CustomSiloCapacityMulti.Value = Mathf.Round(CustomSiloCapacityMulti.Value * 4) / 4;
+        };
         DoubleSoulCapacity = Config.Bind(CapacitySection, "Double Soul Capacity", true, new ConfigDescription("Doubles the soul capacity of applicable structures.", null, new ConfigurationManagerAttributes
         {
             Order = 3
@@ -221,10 +258,14 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 2
         }));
-        CustomSoulCapacityMulti = Config.Bind(CapacitySection, "Custom Soul Capacity Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for soul capacity when using custom capacity.", new AcceptableValueRange<float>(0, 1000), null, new ConfigurationManagerAttributes
+        CustomSoulCapacityMulti = Config.Bind(CapacitySection, "Custom Soul Capacity Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for soul capacity when using custom capacity.", new AcceptableValueRange<float>(1.25f, 1000f), null, new ConfigurationManagerAttributes
         {
             Order = 1
         }));
+        CustomSoulCapacityMulti.SettingChanged += (_, _) =>
+        {
+            CustomSoulCapacityMulti.Value = Mathf.Round(CustomSoulCapacityMulti.Value * 4) / 4;
+        };
 
         //Notifications
         NotifyOfScarecrowTraps = Config.Bind(NotificationsSection, "Notify of Scarecrow Traps", true, new ConfigDescription("Display a notification when the farm scarecrows have caught a trap!", null, new ConfigurationManagerAttributes
@@ -331,7 +372,10 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 16
         }));
-
+        // MassHarvest = Config.Bind(MassSection, "Mass Harvest", true, new ConfigDescription("When harvesting a plot, all farm plots are harvested at once.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 15
+        // }));
 
         MassBribe = Config.Bind(MassSection, "Mass Bribe", true, new ConfigDescription("When bribing a follower, all followers are bribed at once.", null, new ConfigurationManagerAttributes
         {
@@ -474,23 +518,14 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        
+
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {MonoMod.Utils.PlatformHelper.Current}.");
         // if (!SoftDepend.Enabled) return;
         //
         // SoftDepend.AddSettingsMenus();
         // Log.LogInfo("API detected - You can configure mod settings in the settings menu."));
-    }
-    private static void UpdateScale()
-    {
-        if (EnableCustomUiScale.Value)
-        {
-            Scales.UpdateScale();
-        }
-        else
-        {
-            Scales.RestoreScale();
-        }
     }
     private static void UpdateNoNegativeTraits()
     {
@@ -595,6 +630,7 @@ public partial class Plugin : BaseUnityPlugin
         // UpdateCustomMagnet();
         // UpdatePickups();
         // UpdateNoNegativeTraits();
+        // Scales.ChangeAllScalers();
     }
 
     private static void UpdateMenuGlitch()

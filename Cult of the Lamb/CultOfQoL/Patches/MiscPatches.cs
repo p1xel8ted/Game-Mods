@@ -1,3 +1,7 @@
+using Socket.Newtonsoft.Json.Utilities.LinqBridge;
+using Debug = UnityEngine.Debug;
+using Debugger = DG.Tweening.Core.Debugger;
+
 namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
@@ -11,14 +15,14 @@ public class MiscPatches
     {
         if (__instance._extraText is {Length: > 0})
         {
-            foreach (var s in __instance._extraText)
-            {
-                Plugin.L($"ExtraText: {s}");
-            }
+            // foreach (var s in __instance._extraText)
+            // {
+            //     Plugin.L($"ExtraText: {s}");
+            // }
         }
         else
         {
-            __instance._extraText ??= Array.Empty<string>();
+            __instance._extraText ??= [];
         }
     }
 
@@ -28,12 +32,17 @@ public class MiscPatches
     {
         return false;
     }
-    
+
     [HarmonyPrefix]
+    [HarmonyPatch(typeof(Debug), nameof(Debug.LogWarning), typeof(object),  typeof(Object))]
+    [HarmonyPatch(typeof(Debug), nameof(Debug.LogWarning), typeof(object))]
+    [HarmonyPatch(typeof(Debug), nameof(Debug.Log), typeof(object),  typeof(Object))]
     [HarmonyPatch(typeof(Debug), nameof(Debug.Log), typeof(object))]
     public static bool Debug_Log(object message)
     {
         if (message is not string s) return true;
+        if (s.Contains("Skeleton AnimationState")) return false;
+        if (s.Contains("called during processing")) return false;
         if (s.Contains("Steam informs us the controller is a")) return false;
         if (float.TryParse(s, out _) || int.TryParse(s, out _)) return false;
         if (s.Contains("connected")) return false;

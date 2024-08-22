@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace CultOfQoL;
+﻿namespace CultOfQoL;
 
 public static class ReflectionHelper
 {

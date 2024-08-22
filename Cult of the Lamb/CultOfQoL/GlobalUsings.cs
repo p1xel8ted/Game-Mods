@@ -3,6 +3,9 @@
 global using System;
 global using System.Collections;
 global using System.Collections.Generic;
+global using System.Diagnostics;
+global using System.Diagnostics.CodeAnalysis;
+global using System.IO;
 global using System.Linq;
 global using System.Reflection;
 global using System.Reflection.Emit;
@@ -25,6 +28,7 @@ global using Lamb.UI.PauseMenu;
 global using Map;
 global using MMTools;
 global using MonoMod.Utils;
+global using Newtonsoft.Json;
 global using src.UI;
 global using src.UI.Menus;
 global using UnityEngine;

@@ -7,7 +7,7 @@ public static class HealingBay
     private const string InteractionHealingBay = "Interaction_HealingBay";
     private static FollowerBrainInfo _followerBrainInfo;
     private static float t;
-    
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(NotificationFaith), nameof(NotificationFaith.Configure), typeof(string), typeof(float), typeof(FollowerInfo), typeof(bool), typeof(NotificationBase.Flair), typeof(string[]))]
     public static void NotificationFaith_Configure(NotificationFaith __instance, float faithDelta)
@@ -25,12 +25,14 @@ public static class HealingBay
 
         var isHealingBay = ReflectionHelper.GetCallingClassName(3)!.Equals(InteractionHealingBay, StringComparison.OrdinalIgnoreCase);
         if (!isHealingBay) return;
-        followerSelectEntries.Clear();
+        // followerSelectEntries.Clear();
         followerSelectEntries.AddRange(from follower in Helpers.AllFollowers
             where IsExhausted(follower.Brain)
             select new FollowerSelectEntry(follower));
     }
 
+    
+    
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.GetCost))]
     public static void Interaction_HealingBay_GetCost(ref List<InventoryItem> __result, FollowerBrain brain)
@@ -39,9 +41,9 @@ public static class HealingBay
 
         _followerBrainInfo = brain.Info;
 
-        if (IsExhausted(brain))
+        if (IsExhausted(brain) || __result.Count <= 0)
         {
-            __result = [new InventoryItem(InventoryItem.ITEM_TYPE.FLOWER_RED, 10)];
+            __result = [new InventoryItem(InventoryItem.ITEM_TYPE.FLOWER_RED, 5)];
         }
     }
 
@@ -85,7 +87,7 @@ public static class HealingBay
         }
 
         if (_followerBrainInfo._brain.Stats.Exhaustion != 0) return;
-        
+
         FollowerBrainStats.OnExhaustionStateChanged.Invoke(_followerBrainInfo._brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
         NotificationCentre.Instance.PlayFaithNotification($"{_followerBrainInfo._brain.Info.Name} is no longer exhausted!", 0.001f, NotificationBase.Flair.None, _followerBrainInfo._brain.Info.ID, [_followerBrainInfo._brain.Info.Name]);
     }

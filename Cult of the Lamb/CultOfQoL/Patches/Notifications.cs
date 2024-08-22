@@ -5,13 +5,13 @@ public static class Notifications
 {
     private readonly static List<int> StructureID = [];
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.Show))]
-    public static void NotificationCentre_Show(ref NotificationCentre __instance)
-    {
-        var scale = Plugin.NotificationsScale.Value / 100f;
-        __instance._rectTransform.transform.localScale = new Vector3(scale, scale, 1f);
-    }
+    // [HarmonyPrefix]
+    // [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.Show))]
+    // public static void NotificationCentre_Show(ref NotificationCentre __instance)
+    // {
+    //     var scale = Plugin.NotificationsScale.Value / 100f;
+    //     __instance._rectTransform.transform.localScale = new Vector3(scale, scale, 1f);
+    // }
 
 
     [HarmonyPostfix]

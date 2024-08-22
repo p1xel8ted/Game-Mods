@@ -1,7 +1,4 @@
-﻿using System.IO;
-using Newtonsoft.Json;
-
-namespace CultOfQoL.Patches;
+﻿namespace CultOfQoL.Patches;
 
 [Harmony]
 public static class NoNegativeTraits
@@ -228,7 +225,7 @@ public static class NoNegativeTraits
         FollowerTrait.TraitType newTrait;
         do
         {
-            newTrait = AllTraits!.ElementAt(Random.Range(0, AllTraits!.Count));
+            newTrait = AllTraits.ElementAt(Random.Range(0, AllTraits.Count));
         } while (!FollowerTrait.IsPositiveTrait(newTrait) || brain.HasTrait(newTrait));
 
         return newTrait;

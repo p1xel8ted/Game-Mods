@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Runtime.CompilerServices;
 
 namespace CultOfQoL.Patches;
 
@@ -9,8 +9,6 @@ public static class InteractionPatches
     private static GameManager GI => GameManager.GetInstance();
 
 
-    
-    
     [HarmonyPrefix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract), typeof(StateMachine))]
     public static bool Interaction_Follower_OnInteract(ref interaction_FollowerInteraction __instance)
@@ -35,14 +33,32 @@ public static class InteractionPatches
     private static IEnumerator LevelUpAllFollowers()
     {
         yield return new WaitForEndOfFrame();
-        foreach (var follower in Follower.Followers.Where(follower => follower != null && follower.Brain != null && follower.Brain.CanLevelUp()))
+        foreach (var follower in Follower.Followers.Where(follower => follower && follower.Brain != null && follower.Brain.CanLevelUp()))
         {
             if (!FollowerPatches.IsFollowerAvailable(follower.Brain) || FollowerPatches.IsFollowerImprisoned(follower.Brain)) continue;
             yield return new WaitForSeconds(0.15f);
-            var interaction = follower.Interaction_FollowerInteraction;
-            GI.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false));
+            try
+            {
+                var interaction = follower.Interaction_FollowerInteraction;
+                GI.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, true, false));
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.LogError($"Error leveling up follower: {e.Message}");
+            }
         }
     }
+
+    // private static IEnumerator PickAllPlants()
+    // {
+    //     yield return new WaitForEndOfFrame();
+    //     foreach (var plot in FarmPlot.FarmPlots.Where(p => p.StructureBrain is {IsFullyGrown: true}))
+    //     {
+    //         yield return new WaitForSeconds(0.10f);
+    //         Plugin.Log.LogWarning($"Picking crop from {plot.name}");
+    //         plot.Harvested();
+    //     }
+    // }
 
     private static IEnumerator WaterAllPlants()
     {
@@ -57,13 +73,35 @@ public static class InteractionPatches
             plot.UpdateCropImage();
         }
     }
+    
+    // [HarmonyReversePatch]
+    // [HarmonyPatch(typeof(Interaction), nameof(Interaction.OnInteract), typeof(StateMachine))]
+    // [MethodImpl(MethodImplOptions.NoInlining)]
+    // public static void BaseOnInteract(Interaction_Berries instance, StateMachine state)
+    // {
+    //     // This will be replaced with the original method's body at runtime
+    // }
+    //
+    // //Interaction_Berries : Interaction
+    // [HarmonyPrefix]
+    // [HarmonyPatch(typeof(Interaction_Berries), nameof(Interaction_Berries.OnInteract), typeof(StateMachine))]
+    // public static void Interaction_Berries_OnInteract(ref Interaction_Berries __instance, StateMachine state)
+    // {
+    //     foreach (var berry in Interaction_Berries.Berries.Where(berry => berry.StructureBrain.IsCrop))
+    //     {
+    //         Plugin.Log.LogWarning($"Picking berries from {berry.name}");
+    //         BaseOnInteract(__instance, state);
+    //       
+    //         berry.activatingPlayers.Add(berry._playerFarming);
+    //         GI.StartCoroutine(berry.PickBerries(berry._playerFarming));
+    //     }
+    // }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(FarmPlot), nameof(FarmPlot.OnInteract), typeof(StateMachine))]
     public static void FarmPlot_OnInteract(ref FarmPlot __instance)
     {
-        if (!Plugin.MassWater.Value) return;
-        if (__instance.StructureBrain.CanWater())
+        if (Plugin.MassWater.Value && __instance.StructureBrain.CanWater())
         {
             GI.StartCoroutine(WaterAllPlants());
         }

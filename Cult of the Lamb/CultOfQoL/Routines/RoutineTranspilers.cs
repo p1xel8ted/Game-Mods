@@ -40,7 +40,8 @@ public static class RoutinesTranspilers
         [PetDogRoutine] = () => Plugin.MassPetDog,
         [LevelUpRoutine] = () => Plugin.MassLevelUp,
         [RomanceRoutine] = () => Plugin.MassRomance,
-        [ExtortMoneyRoutine] = () => Plugin.MassExtort
+        [ExtortMoneyRoutine] = () => Plugin.MassExtort,
+        ["GivePoem"] = () => Plugin.MassBribe
     };
 
     private static bool RunThisTranspiler => routineChecks.Any(pair => pair.Value.Invoke().Value);
@@ -51,8 +52,11 @@ public static class RoutinesTranspilers
     {
         if (!RunThisTranspiler) return instructions;
 
-        var declaringType = original.DeclaringType!.ToString();
-        LogOnce(declaringType, $"Patching {declaringType}:{original.Name}");
+        if (original.DeclaringType != null)
+        {
+            var declaringType = original.DeclaringType.ToString();
+            LogOnce(declaringType, $"Patching {declaringType}:{original.Name}");
+        }
 
 
         var codes = new List<CodeInstruction>(instructions);
@@ -77,19 +81,22 @@ public static class RoutinesTranspilers
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ExtortMoneyRoutine), MethodType.Enumerator)]
     private static IEnumerable<CodeInstruction> interaction_FollowerInteraction_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
-        var declaringType = original.DeclaringType!.ToString();
-
-        var routineCheckResults = routineChecks
-            .Where(pair => declaringType.Contains(pair.Key, StringComparison.OrdinalIgnoreCase) && !pair.Value.Invoke().Value)
-            .ToList();
-
-        foreach (var pair in routineCheckResults)
+        if (original.DeclaringType != null)
         {
-            Plugin.Log.LogWarning($"Not patching {declaringType}:{original.Name} as {pair.Value.Invoke().Definition.Key} is false!");
-            return instructions;
-        }
+            var declaringType = original.DeclaringType.ToString();
 
-        LogOnce(declaringType, $"Patching {declaringType}:{original.Name}");
+            var routineCheckResults = routineChecks
+                .Where(pair => declaringType.Contains(pair.Key, StringComparison.OrdinalIgnoreCase) && !pair.Value.Invoke().Value)
+                .ToList();
+
+            foreach (var pair in routineCheckResults)
+            {
+                Plugin.Log.LogWarning($"Not patching {declaringType}:{original.Name} as {pair.Value.Invoke().Definition.Key} is false!");
+                return instructions;
+            }
+
+            LogOnce(declaringType, $"Patching {declaringType}:{original.Name}");
+        }
 
 
         var codes = new List<CodeInstruction>(instructions);

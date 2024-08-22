@@ -2,144 +2,146 @@ namespace CultOfQoL;
 
 public partial class Plugin
 {
-    internal static ConfigEntry<bool> EnableLogging = null!;
-    internal static ConfigEntry<bool> EnableQuickSaveShortcut = null!;
-    internal static ConfigEntry<KeyboardShortcut> SaveKeyboardShortcut = null!;
-    internal static ConfigEntry<bool> SaveOnQuitToDesktop = null!;
-    internal static ConfigEntry<bool> SaveOnQuitToMenu = null!;
-    internal static ConfigEntry<bool> DirectLoadSave = null!;
-    internal static ConfigEntry<int> SaveSlotToLoad = null!;
-    internal static ConfigEntry<KeyboardShortcut> DirectLoadSkipKey = null!;
-    internal static ConfigEntry<bool> DisableAds = null!;
-    internal static ConfigEntry<bool> HideNewGameButtons = null!;
-    internal static ConfigEntry<bool> EnableCustomUiScale = null!;
-    internal static ConfigEntry<int> CustomUiScale = null!;
-    internal static ConfigEntry<int> NotificationsScale = null!;
-    internal static ConfigEntry<bool> SkipDevIntros = null!;
-    internal static ConfigEntry<bool> SkipCrownVideo = null!;
-    internal static ConfigEntry<bool> EasyFishing = null!;
-    internal static ConfigEntry<bool> FastCollecting = null!;
-    internal static ConfigEntry<bool> RemoveMenuClutter = null!;
-    internal static ConfigEntry<bool> RemoveTwitchButton = null!;
+    internal static ConfigEntry<bool> EnableLogging{ get; set;}
+    internal static ConfigEntry<bool> EnableQuickSaveShortcut{ get; set;}
+    internal static ConfigEntry<KeyboardShortcut> SaveKeyboardShortcut{ get; set;}
+    internal static ConfigEntry<bool> SaveOnQuitToDesktop{ get; set;}
+    internal static ConfigEntry<bool> SaveOnQuitToMenu{ get; set;}
+    internal static ConfigEntry<bool> DirectLoadSave{ get; set;}
+    internal static ConfigEntry<int> SaveSlotToLoad{ get; set;}
+    internal static ConfigEntry<KeyboardShortcut> DirectLoadSkipKey{ get; set;}
+    internal static ConfigEntry<bool> DisableAds{ get; set;}
+    internal static ConfigEntry<bool> HideNewGameButtons{ get; set;}
+    // internal static ConfigEntry<bool> EnableCustomUiScale{ get; set;}
+    // internal static ConfigEntry<float> CustomUiScale{ get; set;}
+    // internal static ConfigEntry<int> NotificationsScale{ get; set;}
+    internal static ConfigEntry<bool> SkipDevIntros{ get; set;}
+    internal static ConfigEntry<bool> SkipCrownVideo{ get; set;}
+    internal static ConfigEntry<bool> EasyFishing{ get; set;}
+    internal static ConfigEntry<bool> FastCollecting{ get; set;}
+    internal static ConfigEntry<bool> RemoveMenuClutter{ get; set;}
+    internal static ConfigEntry<bool> RemoveTwitchButton{ get; set;}
 
-    internal static ConfigEntry<bool> AllLootMagnets = null!;
-    internal static ConfigEntry<bool> DoubleMagnetRange = null!;
-    internal static ConfigEntry<bool> TripleMagnetRange = null!;
-    internal static ConfigEntry<bool> UseCustomMagnetRange = null!;
-    internal static ConfigEntry<int> CustomMagnetRange = null!;
+    internal static ConfigEntry<bool> AllLootMagnets{ get; set;}
+    internal static ConfigEntry<bool> DoubleMagnetRange{ get; set;}
+    internal static ConfigEntry<bool> TripleMagnetRange{ get; set;}
+    internal static ConfigEntry<bool> UseCustomMagnetRange{ get; set;}
+    internal static ConfigEntry<int> CustomMagnetRange{ get; set;}
     
-    internal static ConfigEntry<bool> MainMenuGlitch = null!;
+    internal static ConfigEntry<bool> MainMenuGlitch{ get; set;}
     
-    internal static ConfigEntry<bool> ReverseGoldenFleeceDamageChange = null!;
-    internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate = null!;
-    internal static ConfigEntry<bool> AdjustRefineryRequirements = null!;
+    internal static ConfigEntry<bool> ReverseGoldenFleeceDamageChange{ get; set;}
+    internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate{ get; set;}
+    internal static ConfigEntry<bool> AdjustRefineryRequirements{ get; set;}
     
-    internal static ConfigEntry<bool> NoNegativeTraits = null!;
-    internal static ConfigEntry<bool> UseUnlockedTraitsOnly = null!;   
-    internal static ConfigEntry<bool> IncludeImmortal = null!;
-    internal static ConfigEntry<bool> IncludeDisciple = null!;
-    internal static ConfigEntry<bool> ShowNotificationsWhenRemovingTraits = null!;
-    internal static ConfigEntry<bool> ShowNotificationsWhenAddingTraits = null!;
+    internal static ConfigEntry<bool> NoNegativeTraits{ get; set;}
+    internal static ConfigEntry<bool> UseUnlockedTraitsOnly{ get; set;}   
+    internal static ConfigEntry<bool> IncludeImmortal{ get; set;}
+    internal static ConfigEntry<bool> IncludeDisciple{ get; set;}
+    internal static ConfigEntry<bool> ShowNotificationsWhenRemovingTraits{ get; set;}
+    internal static ConfigEntry<bool> ShowNotificationsWhenAddingTraits{ get; set;}
     
-    internal static ConfigEntry<bool> CleanseIllnessAndExhaustionOnLevelUp = null!;
-    internal static ConfigEntry<bool> UnlockTwitchItems = null!;
-    internal static ConfigEntry<bool> LumberAndMiningStationsDontAge = null!;
-    internal static ConfigEntry<bool> CollectTitheFromOldFollowers = null!;
-    internal static ConfigEntry<bool> IntimidateOldFollowers = null!;
-    internal static ConfigEntry<bool> EnableGameSpeedManipulation = null!;
+    internal static ConfigEntry<bool> CleanseIllnessAndExhaustionOnLevelUp{ get; set;}
+    internal static ConfigEntry<bool> UnlockTwitchItems{ get; set;}
+    internal static ConfigEntry<bool> LumberAndMiningStationsDontAge{ get; set;}
+    internal static ConfigEntry<bool> CollectTitheFromOldFollowers{ get; set;}
+    internal static ConfigEntry<bool> IntimidateOldFollowers{ get; set;}
+    internal static ConfigEntry<bool> EnableGameSpeedManipulation{ get; set;}
 
-    internal static ConfigEntry<bool> DoubleSoulCapacity = null!;
-    internal static ConfigEntry<bool> ShortenGameSpeedIncrements = null!;
-    internal static ConfigEntry<bool> SlowDownTime = null!;
-    internal static ConfigEntry<float> SlowDownTimeMultiplier = null!;
-    internal static ConfigEntry<bool> DoubleLifespanInstead = null!;
-    internal static ConfigEntry<bool> DisableGameOver = null!;
+    internal static ConfigEntry<bool> DoubleSoulCapacity{ get; set;}
+    internal static ConfigEntry<bool> ShortenGameSpeedIncrements{ get; set;}
+    internal static ConfigEntry<bool> SlowDownTime{ get; set;}
+    internal static ConfigEntry<float> SlowDownTimeMultiplier{ get; set;}
+    internal static ConfigEntry<bool> DoubleLifespanInstead{ get; set;}
+    internal static ConfigEntry<bool> DisableGameOver{ get; set;}
     
-    internal static ConfigEntry<bool> FastRitualSermons = null!;
+    internal static ConfigEntry<bool> FastRitualSermons{ get; set;}
 
-    internal static ConfigEntry<bool> TurnOffSpeakersAtNight = null!;
-    internal static ConfigEntry<bool> ThriceMultiplyTarotCardLuck = null!;
-    internal static ConfigEntry<bool> RareTarotCardsOnly = null!;
-    internal static ConfigEntry<bool> FiftyPercentIncreaseToLifespanInstead = null!;
+    internal static ConfigEntry<bool> TurnOffSpeakersAtNight{ get; set;}
+    internal static ConfigEntry<bool> ThriceMultiplyTarotCardLuck{ get; set;}
+    internal static ConfigEntry<bool> RareTarotCardsOnly{ get; set;}
+    internal static ConfigEntry<bool> FiftyPercentIncreaseToLifespanInstead{ get; set;}
 
-    internal static ConfigEntry<bool> EnableAutoInteract = null!;
-    internal static ConfigEntry<int> TriggerAmount = null!;
-    internal static ConfigEntry<bool> IncreaseRange = null!;
-    internal static ConfigEntry<bool> UseCustomRange = null!;
-    internal static ConfigEntry<float> CustomRangeMulti = null!;
+    internal static ConfigEntry<bool> EnableAutoInteract{ get; set;}
+    internal static ConfigEntry<int> TriggerAmount { get; set;}
+    internal static ConfigEntry<bool> IncreaseAutoCollectRange{ get; set;}
+    internal static ConfigEntry<bool> UseCustomAutoInteractRange{ get; set;}
+    internal static ConfigEntry<float> CustomAutoInteractRangeMulti{ get; set;}
+    internal static ConfigEntry<bool> AutoCollectFromFarmStationChests{ get; set;}
+    internal static ConfigEntry<bool> AddExhaustedToHealingBay{ get; set;}
+    internal static ConfigEntry<bool> NotifyOfScarecrowTraps{ get; set;}
+    internal static ConfigEntry<bool> NotifyOfNoFuel{ get; set;}
+    internal static ConfigEntry<bool> NotifyOfBedCollapse{ get; set;}
 
-    internal static ConfigEntry<bool> AddExhaustedToHealingBay = null!;
-    internal static ConfigEntry<bool> NotifyOfScarecrowTraps = null!;
-    internal static ConfigEntry<bool> NotifyOfNoFuel = null!;
-    internal static ConfigEntry<bool> NotifyOfBedCollapse = null!;
-
-    internal static ConfigEntry<bool> GiveFollowersNewNecklaces = null!;
+    internal static ConfigEntry<bool> GiveFollowersNewNecklaces{ get; set;}
 
 
-    internal static ConfigEntry<bool> RandomWeatherChangeWhenExitingArea = null!;
-    internal static ConfigEntry<bool> ChangeWeatherOnPhaseChange = null!;
-    internal static ConfigEntry<bool> ShowPhaseNotifications = null!;
-    internal static ConfigEntry<bool> ShowWeatherChangeNotifications = null!;
+    internal static ConfigEntry<bool> RandomWeatherChangeWhenExitingArea{ get; set;}
+    internal static ConfigEntry<bool> ChangeWeatherOnPhaseChange{ get; set;}
+    internal static ConfigEntry<bool> ShowPhaseNotifications{ get; set;}
+    internal static ConfigEntry<bool> ShowWeatherChangeNotifications{ get; set;}
 
-    internal static ConfigEntry<float> CustomSoulCapacityMulti = null!;
-    internal static ConfigEntry<float> CustomSiloCapacityMulti = null!;
+    internal static ConfigEntry<float> CustomSoulCapacityMulti{ get; set;}
+    internal static ConfigEntry<float> CustomSiloCapacityMulti{ get; set;}
     
-    internal static ConfigEntry<bool> DoubleSiloCapacity = null!;
-    internal static ConfigEntry<bool> UseCustomSoulCapacity = null!;
-    internal static ConfigEntry<bool> UseCustomSiloCapacity = null!;
-    internal static ConfigEntry<bool> UseMultiplesOf32 = null!;
+    internal static ConfigEntry<bool> DoubleSiloCapacity{ get; set;}
+    internal static ConfigEntry<bool> UseCustomSoulCapacity{ get; set;}
+    internal static ConfigEntry<bool> UseCustomSiloCapacity{ get; set;}
+    internal static ConfigEntry<bool> UseMultiplesOf32{ get; set;}
 
-    internal static ConfigEntry<bool> EnableBaseDamageMultiplier = null!;
-    internal static ConfigEntry<float> BaseDamageMultiplier = null!;
+    internal static ConfigEntry<bool> EnableBaseDamageMultiplier{ get; set;}
+    internal static ConfigEntry<float> BaseDamageMultiplier{ get; set;}
 
-    internal static ConfigEntry<float> CustomDamageMulti = null!;
-
-
-    internal static ConfigEntry<bool> RemoveHelpButtonInPauseMenu = null!;
-    internal static ConfigEntry<bool> RemoveTwitchButtonInPauseMenu = null!;
-    internal static ConfigEntry<bool> RemovePhotoModeButtonInPauseMenu = null!;
-
-    internal static ConfigEntry<bool> EnableRunSpeedMulti = null!;
-    internal static ConfigEntry<bool> EnableDodgeSpeedMulti = null!;
-    internal static ConfigEntry<bool> EnableLungeSpeedMulti = null!;
-    internal static ConfigEntry<float> RunSpeedMulti = null!;
-    internal static ConfigEntry<float> DodgeSpeedMulti = null!;
-    internal static ConfigEntry<float> LungeSpeedMulti = null!;
-
-    internal static ConfigEntry<bool> OnlyShowDissenters = null!;
-
-    internal static ConfigEntry<bool> DisablePropagandaSpeakerAudio = null!;
-
-    internal static ConfigEntry<bool> UseCustomDamageValue = null!;
+    internal static ConfigEntry<float> CustomDamageMulti{ get; set;}
 
 
-    internal static ConfigEntry<bool> RemoveLevelLimit = null!;
+    internal static ConfigEntry<bool> RemoveHelpButtonInPauseMenu{ get; set;}
+    internal static ConfigEntry<bool> RemoveTwitchButtonInPauseMenu{ get; set;}
+    internal static ConfigEntry<bool> RemovePhotoModeButtonInPauseMenu{ get; set;}
 
-    internal static WriteOnce<float> LumberFastCollect { get; } = new();
+    internal static ConfigEntry<bool> EnableRunSpeedMulti{ get; set;}
+    internal static ConfigEntry<bool> EnableDodgeSpeedMulti{ get; set;}
+    internal static ConfigEntry<bool> EnableLungeSpeedMulti{ get; set;}
+    internal static ConfigEntry<float> RunSpeedMulti{ get; set;}
+    internal static ConfigEntry<float> DodgeSpeedMulti{ get; set;}
+    internal static ConfigEntry<float> LungeSpeedMulti{ get; set;}
+
+    internal static ConfigEntry<bool> OnlyShowDissenters{ get; set;}
+
+    internal static ConfigEntry<bool> DisablePropagandaSpeakerAudio{ get; set;}
+
+    internal static ConfigEntry<bool> UseCustomDamageValue{ get; set;}
+
+
+    internal static ConfigEntry<bool> RemoveLevelLimit{ get; set;}
+
+    internal static WriteOnce<float> DefaultLumberFastCollect { get; } = new();
     internal static WriteOnce<float> OtherFastCollect { get; } = new();
 
-    internal static ConfigEntry<bool> MassBribe = null!;
-    internal static ConfigEntry<bool> MassFertilize = null!;
-    internal static ConfigEntry<bool> MassBless = null!;
-    internal static ConfigEntry<bool> MassRomance = null!;
-    internal static ConfigEntry<bool> MassBully = null!;
-    internal static ConfigEntry<bool> MassReassure = null!;
-    internal static ConfigEntry<bool> MassReeducate = null!;
-    internal static ConfigEntry<bool> MassExtort = null!;
-    internal static ConfigEntry<bool> MassPetDog = null!;
-    internal static ConfigEntry<bool> MassIntimidate = null!;
-    internal static ConfigEntry<bool> MassInspire = null!;
-    internal static ConfigEntry<bool> MassWater = null!;
-    internal static ConfigEntry<bool> MassLevelUp = null!;
+    internal static ConfigEntry<bool> MassBribe{ get; set;}
+    internal static ConfigEntry<bool> MassFertilize{ get; set;}
+    internal static ConfigEntry<bool> MassBless{ get; set;}
+    internal static ConfigEntry<bool> MassRomance{ get; set;}
+    internal static ConfigEntry<bool> MassBully{ get; set;}
+    internal static ConfigEntry<bool> MassReassure{ get; set;}
+    internal static ConfigEntry<bool> MassReeducate{ get; set;}
+    internal static ConfigEntry<bool> MassExtort{ get; set;}
+    internal static ConfigEntry<bool> MassPetDog{ get; set;}
+    internal static ConfigEntry<bool> MassIntimidate{ get; set;}
+    internal static ConfigEntry<bool> MassInspire{ get; set;}
+    internal static ConfigEntry<bool> MassWater{ get; set;}
+    
+    // internal static ConfigEntry<bool> MassHarvest{ get; set;}
+    internal static ConfigEntry<bool> MassLevelUp{ get; set;}
 
-    internal static ConfigEntry<bool> MassCollectFromBeds = null!;
-    internal static ConfigEntry<bool> MassCollectFromOuthouses = null!;
-    internal static ConfigEntry<bool> MassCollectFromOfferingShrines = null!;
-    internal static ConfigEntry<bool> MassCollectFromPassiveShrines = null!;
-    internal static ConfigEntry<bool> MassCollectFromCompost = null!;
-    internal static ConfigEntry<bool> MassCollectFromHarvestTotems = null!;
+    internal static ConfigEntry<bool> MassCollectFromBeds{ get; set;}
+    internal static ConfigEntry<bool> MassCollectFromOuthouses{ get; set;}
+    internal static ConfigEntry<bool> MassCollectFromOfferingShrines{ get; set;}
+    internal static ConfigEntry<bool> MassCollectFromPassiveShrines{ get; set;}
+    internal static ConfigEntry<bool> MassCollectFromCompost{ get; set;}
+    internal static ConfigEntry<bool> MassCollectFromHarvestTotems{ get; set;}
 
     internal static WriteOnce<float> RunSpeed { get; } = new();
     internal static WriteOnce<float> DodgeSpeed { get; } = new();
-    internal static UIMainMenuController UIMainMenuController = null!;
+    internal static UIMainMenuController UIMainMenuController{ get; set;}
 }

@@ -1,3 +1,9 @@
+### 2.2.1 - 22/08/2024
+
+* Fixed healing bay ignoring normal followers that werent exhausted. [Nexus Bug Report #1](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs)
+* Fixed lumber/mines/farmer station chest Auto Interact/Collect behaviour. [Nexus Bug Report #2](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs)
+* Potential fix for time stopped [Nexus Bug Report #4](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs)
+
 ### 2.2.0 - 17/08/2024
 
 * Maintennance update for Unholy Alliance
