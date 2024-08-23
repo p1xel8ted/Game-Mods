@@ -11,7 +11,7 @@ public static class RoutinesTranspilers
     private const string BlessRoutine = "BlessRoutine";
     private const string DanceRoutine = "DanceRoutine";
     private const string PetDogRoutine = "PetDogRoutine";
-    private const string LevelUpRoutine = "LevelUpRoutine";
+    // private const string LevelUpRoutine = "LevelUpRoutine";
     private const string RomanceRoutine = "RomanceRoutine";
     private const string ExtortMoneyRoutine = "ExtortMoneyRoutine";
     private readonly static MethodInfo GetInstance = AccessTools.Method(typeof(GameManager), nameof(GameManager.GetInstance));
@@ -21,9 +21,9 @@ public static class RoutinesTranspilers
     private readonly static MethodInfo CameraSetOffset = AccessTools.Method(typeof(GameManager), nameof(GameManager.CameraSetOffset));
     private readonly static MethodInfo HudManagerHide = AccessTools.Method(typeof(HUD_Manager), nameof(HUD_Manager.Hide));
     private readonly static FieldInfo HudManagerInstance = AccessTools.Field(typeof(HUD_Manager), nameof(HUD_Manager.Instance));
-    private readonly static FieldInfo PlayerInstance = AccessTools.Field(typeof(PlayerFarming), nameof(PlayerFarming.Instance));
-    private readonly static MethodInfo setStateMachine = AccessTools.Property(typeof(StateMachine), nameof(StateMachine.CURRENT_STATE)).SetMethod;
-    private readonly static MethodInfo simpleAnimatorAnimate = AccessTools.Method(typeof(SimpleSpineAnimator), nameof(SimpleSpineAnimator.Animate), [typeof(string), typeof(int), typeof(bool)]);
+    // private readonly static FieldInfo PlayerInstance = AccessTools.Field(typeof(PlayerFarming), nameof(PlayerFarming.Instance));
+    // private readonly static MethodInfo setStateMachine = AccessTools.Property(typeof(StateMachine), nameof(StateMachine.CURRENT_STATE)).SetMethod;
+    // private readonly static MethodInfo simpleAnimatorAnimate = AccessTools.Method(typeof(SimpleSpineAnimator), nameof(SimpleSpineAnimator.Animate), [typeof(string), typeof(int), typeof(bool)]);
     private readonly static FieldInfo BiomeConstantsInstance = AccessTools.Field(typeof(BiomeConstants), nameof(BiomeConstants.Instance));
     private readonly static MethodInfo DepthOfFieldTween = AccessTools.Method(typeof(BiomeConstants), nameof(BiomeConstants.DepthOfFieldTween));
     private readonly static List<string> AlreadyLogged = [];
@@ -41,7 +41,7 @@ public static class RoutinesTranspilers
         [BlessRoutine] = () => Plugin.MassBless,
         [DanceRoutine] = () => Plugin.MassInspire,
         [PetDogRoutine] = () => Plugin.MassPetDog,
-        [LevelUpRoutine] = () => Plugin.MassLevelUp,
+        // [LevelUpRoutine] = () => Plugin.MassLevelUp,
         [RomanceRoutine] = () => Plugin.MassRomance,
         [ExtortMoneyRoutine] = () => Plugin.MassExtort
     };
@@ -78,7 +78,7 @@ public static class RoutinesTranspilers
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.BlessRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.DanceRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.PetDogRoutine), MethodType.Enumerator)]
-    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine), MethodType.Enumerator)]
+    // [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.RomanceRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ExtortMoneyRoutine), MethodType.Enumerator)]
     private static IEnumerable<CodeInstruction> interaction_FollowerInteraction_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)

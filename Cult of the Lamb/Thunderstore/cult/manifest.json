@@ -5,7 +5,6 @@
     "description": "Collect tithe/inspire all at once, game speed manipulation, skip intros, speed up collections, cheese fishing mini-game....and more.",
     "dependencies": [
         "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
-        "p1xel8ted-BepInEx_Configuration_Manager-18.3.0",
-        "LethalCompanyModding-UnityDebuggerAssistant-1.2.1"
+        "p1xel8ted-BepInEx_Configuration_Manager-18.3.0"
     ]
 }

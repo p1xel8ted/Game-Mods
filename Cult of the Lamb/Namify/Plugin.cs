@@ -2,12 +2,11 @@ namespace Namify;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
-[BepInDependency("dev.mamallama.lcm.dbgasst", "1.2.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.1.5";
+    private const string PluginVer = "0.1.6";
     private const string NamesSection = "Names";
     private const string ApiSection = "API";
 

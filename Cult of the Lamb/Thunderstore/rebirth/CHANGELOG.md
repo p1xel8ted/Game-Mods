@@ -1,33 +1,40 @@
-### 1.0.6 - 23/08/2024 - You must update COTL_API to 0.2.5!
+### 1.0.7 
+
+* Maintenance update for 1.4.4.592
+* Reverted/removed UnityDebuggerAssistant requirement
+
+### 1.0.6 - 23/08/2024
 
 * Maintenance update for 1.4.4.590
-* API version dependency update
+* API version dependency update to 0.2.5
 * Implemented hard dependency UnityDebuggerAssistant
 
-### 1.0.5 - 17/08/2024 - You must update COTL_API to 0.2.3!
+### 1.0.5 - 17/08/2024
 
 * Maintenance update for Unholy Alliance
 
-### 1.0.4 - 25/01/2024 - You must update COTL_API to 0.2.2!
+### 1.0.4 - 25/01/2024
 
 * Maintenance update for Sins of The Flesh
 
-### 1.0.3 - 20/01/2024 - You must update COTL_API to 0.2.1!
+### 1.0.3 - 20/01/2024
 
 * Maintenance update for Sins of The Flesh
 
-### 1.0.3 - 9/5/2023 - You must update COTL_API to 0.1.22!
+### 1.0.3 - 9/5/2023
 
-### 1.0.2 - 3/12/2022 - You must update COTL_API to 0.1.12!
+* ???
+
+### 1.0.2 - 3/12/2022
 
 * Added support for changing config options from within the Cult of the Lamb Mod settings menu.
 
-### 1.0.1 - 25/11/2022 - You must update COTL_API to 0.1.10!
+### 1.0.1 - 25/11/2022
 
 * Compatibility update for COTL API 0.1.10
 * Added ability to rebirth elderly followers. Default is off. Can be changed in the config file.
 
-### 1.0.0 - 17/10/2022 - You must update COTL_API to 0.1.6!
+### 1.0.0 - 17/10/2022
 
 * Moved the token from the common to rare pool of the offering shrine.
 * Added token as a refinery item to the refinery. 15 bones for 1 token.
@@ -35,7 +42,7 @@
 * Re-activated the custom quest. Will be expanded a little (different zones) provided there is no further issues.
 * Fixed followers being reset to level 1 on Rebirth. They now keep their level and XP provided they're lucky enough to not trigger the 10% chance of losing half their XP and 1 level.
 
-### 0.1.3 - 25/09/2022 - You must update COTL_API to 0.1.4!
+### 0.1.3 - 25/09/2022
 
 * Disabled the quest until I get a chance to look at what broke (if the follower comes to you with it, it softlocks. Pressing ESC/B (on controller) appears to resolve it.)
 

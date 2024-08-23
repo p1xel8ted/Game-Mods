@@ -20,32 +20,41 @@ public static class InteractionPatches
             }
             return false;
         }
-
-        if (__instance.follower.Brain.CanLevelUp() && Plugin.MassLevelUp.Value)
-        {
-            GI.StartCoroutine(LevelUpAllFollowers(__instance));
-        }
+        
         return true;
     }
+    
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
+    // public static void Interaction_Follower_OnConversationEnd(ref interaction_FollowerInteraction __instance)
+    // {
+    //     Plugin.Log.LogWarning("LevelUpRoutine");
+    //     if (__instance.follower.Brain.CanLevelUp() && Plugin.MassLevelUp.Value)
+    //     {
+    //         GI.StartCoroutine(LevelUpAllFollowers());
+    //     }
+    // }
 
-    private static IEnumerator LevelUpAllFollowers(interaction_FollowerInteraction interactionFollowerInteraction)
-    {
-        yield return new WaitForEndOfFrame();
-        foreach (var follower in Follower.Followers.Where(follower => follower && follower.Brain != null && follower.Brain.CanLevelUp()))
-        {
-            if (!FollowerPatches.IsFollowerAvailable(follower.Brain) || FollowerPatches.IsFollowerImprisoned(follower.Brain)) continue;
-            yield return new WaitForSeconds(0.15f);
-            try
-            {
-                Plugin.L($"Attempting to level up follower {follower.name}");
-                GI.StartCoroutine(interactionFollowerInteraction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, true, false));
-            }
-            catch (Exception e)
-            {
-                Plugin.Log.LogError($"Error leveling up follower: {e.Message}");
-            }
-        }
-    }
+    // // ReSharper disable Unity.PerformanceAnalysis
+    // private static IEnumerator LevelUpAllFollowers()
+    // {
+    //     yield return new WaitForEndOfFrame();
+    //     foreach (var follower in Follower.Followers.Where(follower => follower && follower.Brain != null && follower.Brain.CanLevelUp()))
+    //     {
+    //         if (!FollowerPatches.IsFollowerAvailable(follower.Brain) || FollowerPatches.IsFollowerImprisoned(follower.Brain)) continue;
+    //         yield return new WaitForSeconds(0.15f);
+    //         try
+    //         {
+    //             var interaction = Resources.FindObjectsOfTypeAll<interaction_FollowerInteraction>().First();
+    //             Plugin.L($"Attempting to level up follower {follower.name}");
+    //             GI.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, true, false));
+    //         }
+    //         catch (Exception e)
+    //         {
+    //             Plugin.Log.LogError($"Error leveling up follower: {e.Message}");
+    //         }
+    //     }
+    // }
 
     // private static IEnumerator PickAllPlants()
     // {

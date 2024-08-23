@@ -1,9 +1,8 @@
 ﻿namespace CultOfQoL;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("io.github.xhayper.COTL_API", BepInDependency.DependencyFlags.SoftDependency)]
+// [BepInDependency("io.github.xhayper.COTL_API", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
-[BepInDependency("dev.mamallama.lcm.dbgasst", "1.2.0")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
@@ -362,12 +361,12 @@ public partial class Plugin : BaseUnityPlugin
             Order = 0
         }));
 
-        //Mass Section
-        MassLevelUp = Config.Bind(MassSection, "Mass Level Up", true, new ConfigDescription("When interacting with a follower than can level, all eligible followers will be leveled up.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Level Up**", Order = 18
-        }));
-        MassLevelUp.SettingChanged += (_, _) => ShowRestartMessage();
+        // //Mass Section
+        // MassLevelUp = Config.Bind(MassSection, "Mass Level Up", true, new ConfigDescription("When interacting with a follower than can level, all eligible followers will be leveled up.", null, new ConfigurationManagerAttributes
+        // {
+        //     DispName = "Mass Level Up**", Order = 18
+        // }));
+        // MassLevelUp.SettingChanged += (_, _) => ShowRestartMessage();
 
         MassFertilize = Config.Bind(MassSection, "Mass Fertilize", true, new ConfigDescription("When fertilizing a plot, all farm plots are fertilized at once.", null, new ConfigurationManagerAttributes
         {

@@ -23,7 +23,6 @@ If you enjoy the mod, please consider a donating [here](https://ko-fi.com/p1xel8
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
 * Install [COLT API](https://thunderstore.io/c/cult-of-the-lamb/p/xhayper/COTL_API/)
 * Install [Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/)
-* Install [Unity Debugger Assistant](https://thunderstore.io/c/cult-of-the-lamb/p/LethalCompanyModding/UnityDebuggerAssistant/)
 * Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder. Either run the game, or create it if it doesn't exist.
 
 ## Configuration

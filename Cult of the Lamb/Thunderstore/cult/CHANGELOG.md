@@ -1,5 +1,10 @@
 ### 2.2.5 - 23/08/2024
 
+* Maintenance update for 1.4.4.592
+* Make old followers work!
+* Removed Mass Level Up. Might revisit it later.
+* Reverted/removed UnityDebuggerAssistant requirement
+
 ### 2.2.4 - 23/08/2024
 
 * Implemented hard dependency UnityDebuggerAssistant

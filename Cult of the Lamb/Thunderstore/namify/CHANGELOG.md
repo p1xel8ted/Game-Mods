@@ -1,3 +1,8 @@
+### 0.1.6 - 23/08/2024
+
+* Maintenance update for 1.4.4.592
+* Reverted/removed UnityDebuggerAssistant requirement
+
 ### 0.1.5 - 23/08/2024
 
 * Maintenance update for 1.4.4.590
