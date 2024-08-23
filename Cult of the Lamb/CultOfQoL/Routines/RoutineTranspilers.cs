@@ -28,6 +28,9 @@ public static class RoutinesTranspilers
     private readonly static MethodInfo DepthOfFieldTween = AccessTools.Method(typeof(BiomeConstants), nameof(BiomeConstants.DepthOfFieldTween));
     private readonly static List<string> AlreadyLogged = [];
 
+    
+    internal static bool AnyMassActionsEnabled => routineChecks.Any(pair => pair.Value.Invoke().Value);
+    
     private readonly static Dictionary<string, Func<ConfigEntry<bool>>> routineChecks = new()
     {
         [BribeRoutine] = () => Plugin.MassBribe,
@@ -40,8 +43,7 @@ public static class RoutinesTranspilers
         [PetDogRoutine] = () => Plugin.MassPetDog,
         [LevelUpRoutine] = () => Plugin.MassLevelUp,
         [RomanceRoutine] = () => Plugin.MassRomance,
-        [ExtortMoneyRoutine] = () => Plugin.MassExtort,
-        ["GivePoem"] = () => Plugin.MassBribe
+        [ExtortMoneyRoutine] = () => Plugin.MassExtort
     };
 
     private static bool RunThisTranspiler => routineChecks.Any(pair => pair.Value.Invoke().Value);

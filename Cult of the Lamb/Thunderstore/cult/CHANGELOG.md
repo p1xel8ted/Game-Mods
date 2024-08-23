@@ -1,3 +1,15 @@
+### 2.2.5 - 23/08/2024
+
+### 2.2.4 - 23/08/2024
+
+* Implemented hard dependency UnityDebuggerAssistant
+* When using the healing bay, exhausted followers will now show the cost next to their name in the selection window.
+* Added option to disable move speed increase when in dungeons and/or when in-combat.
+
+### 2.2.3 - 23/08/2024
+
+* Maintenance update for 1.4.4.590
+
 ### 2.2.2 - 22/08/2024
 
 * Fix for black screen and resulting chaos on loading a save game [Nexus Bug Report #5](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs)
@@ -11,7 +23,7 @@
 
 ### 2.2.0 - 17/08/2024
 
-* Maintennance update for Unholy Alliance
+* Maintenance update for Unholy Alliance
 * There will be bugs.
 * In-game settings menu via the API has been disabled. Use ConfigurationManager (default is F1)
 * Added setting to turn off the main menu dark mode flash.

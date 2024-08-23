@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace CultOfQoL.Patches;
+﻿namespace CultOfQoL.Patches;
 
 [Harmony]
 [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
@@ -25,12 +23,12 @@ public static class InteractionPatches
 
         if (__instance.follower.Brain.CanLevelUp() && Plugin.MassLevelUp.Value)
         {
-            GI.StartCoroutine(LevelUpAllFollowers());
+            GI.StartCoroutine(LevelUpAllFollowers(__instance));
         }
         return true;
     }
 
-    private static IEnumerator LevelUpAllFollowers()
+    private static IEnumerator LevelUpAllFollowers(interaction_FollowerInteraction interactionFollowerInteraction)
     {
         yield return new WaitForEndOfFrame();
         foreach (var follower in Follower.Followers.Where(follower => follower && follower.Brain != null && follower.Brain.CanLevelUp()))
@@ -39,8 +37,8 @@ public static class InteractionPatches
             yield return new WaitForSeconds(0.15f);
             try
             {
-                var interaction = follower.Interaction_FollowerInteraction;
-                GI.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, true, false));
+                Plugin.L($"Attempting to level up follower {follower.name}");
+                GI.StartCoroutine(interactionFollowerInteraction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, true, false));
             }
             catch (Exception e)
             {

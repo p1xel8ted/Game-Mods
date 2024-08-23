@@ -1,4 +1,4 @@
-![Rebirth Logo](https://raw.githubusercontent.com/p1xel8ted/Cult-of-the-Lamb-Mod-Collection/dd8e32aed18a1d789ff8e24e59a21f786620bc94/thunderstore/rebirth/icon.png?raw=true)
+![Rebirth Logo](https://i.ibb.co/mtd9My7/nexus-main-logo.png)
 
 # Rebirth
 
@@ -18,20 +18,19 @@ If you enjoy the mod, please consider a donating [here](https://ko-fi.com/p1xel8
 
 [![KoFiLogo](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/p1xel8ted)
 
-## Community
-
-Feel free to reach out to me on the Cult of the Lamb Modding Discord.
-
-* [Cult of the Lamb Modding Discord](https://discord.gg/R73vhh8Q2F)
-
 ## Installation
 
-* Install [BepInExPack CultOfTheLamb](https://cult-of-the-lamb.thunderstore.io/package/BepInEx/BepInExPack_CultOfTheLamb/)
-* Install [COTL API](https://cult-of-the-lamb.thunderstore.io/package/xhayper/COTL_API/)
-* Extract the contents of Rebirth & COTL API into your BepInEx folder "...\Cult of the Lamb\BepInEx\" folder.
-
-If done correctly, you should have a Rebirth folder inside your plugins folder alongside the API DLL and its Assets folder.
+* Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
+* Install [COLT API](https://thunderstore.io/c/cult-of-the-lamb/p/xhayper/COTL_API/)
+* Install [Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/)
+* Install [Unity Debugger Assistant](https://thunderstore.io/c/cult-of-the-lamb/p/LethalCompanyModding/UnityDebuggerAssistant/)
+* Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder. Either run the game, or create it if it doesn't exist.
 
 ## Configuration
 
-Apart from On/Off, there is no configuration required.
+* The configuration file is generated when you first run the game with the mod enabled. It can be found in the "...\Cult of the Lamb\BepInEx\config" folder.
+* Press F1 in game to open the configuration manager. If you're in a dungeon, pause the game first otherwise the cursor doesn't work.
+
+## Issues
+
+* Please use the Bug tab on the page over at [Nexus Mods](https://www.nexusmods.com/cultofthelamb/mods/8?tab=bugs).

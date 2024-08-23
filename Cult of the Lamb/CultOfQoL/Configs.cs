@@ -93,7 +93,8 @@ public partial class Plugin
     internal static ConfigEntry<float> BaseDamageMultiplier{ get; set;}
 
     internal static ConfigEntry<float> CustomDamageMulti{ get; set;}
-
+    internal static ConfigEntry<bool> DisableRunSpeedInDungeons{ get; set;}
+    internal static ConfigEntry<bool> DisableRunSpeedInCombat{ get; set;}
 
     internal static ConfigEntry<bool> RemoveHelpButtonInPauseMenu{ get; set;}
     internal static ConfigEntry<bool> RemoveTwitchButtonInPauseMenu{ get; set;}
@@ -134,6 +135,8 @@ public partial class Plugin
     // internal static ConfigEntry<bool> MassHarvest{ get; set;}
     internal static ConfigEntry<bool> MassLevelUp{ get; set;}
 
+    internal static ConfigEntry<bool> MakeOldFollowersWork{ get; set;}
+    
     internal static ConfigEntry<bool> MassCollectFromBeds{ get; set;}
     internal static ConfigEntry<bool> MassCollectFromOuthouses{ get; set;}
     internal static ConfigEntry<bool> MassCollectFromOfferingShrines{ get; set;}

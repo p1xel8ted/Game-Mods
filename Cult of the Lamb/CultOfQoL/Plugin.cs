@@ -3,11 +3,12 @@
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("io.github.xhayper.COTL_API", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
+[BepInDependency("dev.mamallama.lcm.dbgasst", "1.2.0")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.2.2";
+    private const string PluginVer = "2.2.5";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -84,12 +85,15 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         //Player Speed
-        EnableRunSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Run Speed Multiplier", true, new ConfigDescription("Enable/disable the run speed multiplier.", null, new ConfigurationManagerAttributes {Order = 6}));
-        RunSpeedMulti = Config.Bind(PlayerSpeedSection, "Run Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player runs.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 5}));
+        EnableRunSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Run Speed Multiplier", true, new ConfigDescription("Enable/disable the run speed multiplier.", null, new ConfigurationManagerAttributes {Order = 8}));
+        RunSpeedMulti = Config.Bind(PlayerSpeedSection, "Run Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player runs.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 7}));
         RunSpeedMulti.SettingChanged += (_, _) =>
         {
             RunSpeedMulti.Value = Mathf.Round(RunSpeedMulti.Value * 4) / 4;
         };
+        DisableRunSpeedInDungeons = Config.Bind(PlayerSpeedSection, "Disable Run Speed In Dungeons", true, new ConfigDescription("Disables the run speed multiplier in dungeons.", null, new ConfigurationManagerAttributes {Order = 6}));
+        DisableRunSpeedInCombat = Config.Bind(PlayerSpeedSection, "Disable Run Speed In Combat", true, new ConfigDescription("Disables the run speed multiplier in combat.", null, new ConfigurationManagerAttributes {Order = 5}));
+        
         EnableDodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Dodge Speed Multiplier", true, new ConfigDescription("Enable/disable the dodge speed multiplier.", null, new ConfigurationManagerAttributes {Order = 4}));
         DodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Dodge Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player dodges.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes {Order = 3}));
         DodgeSpeedMulti.SettingChanged += (_, _) =>
@@ -310,7 +314,10 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 1
         }));
-
+        MakeOldFollowersWork = Config.Bind(FollowersSection, "Make Old Followers Work", true, new ConfigDescription("Enable the elderly to work.", null, new ConfigurationManagerAttributes
+        {
+            Order = 0
+        }));
 
         //Traits
         NoNegativeTraits = Config.Bind(TraitsSection, "No Negative Traits", true, new ConfigDescription("Negative traits will be replaced based on the configuration here.", null, new ConfigurationManagerAttributes

@@ -3,6 +3,34 @@
 [HarmonyPatch]
 public static class FollowerPatches
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetPersonalTask))]
+    public static void FollowerBrain_GetTask(FollowerBrain __instance, FollowerLocation location, ref FollowerTask __result)
+    {
+        if (!Plugin.MakeOldFollowersWork.Value) return;
+
+        if (__result is not FollowerTask_OldAge) return;
+
+        var scheduledActivity = TimeManager.GetScheduledActivity(location);
+        var found = false;
+        if (scheduledActivity == ScheduledActivity.Work)
+        {
+            var task = FollowerBrain.GetDesiredTask_Work(location);
+            task.RemoveAll(a => a is FollowerTask_OldAge);
+            var workTask = task.Random();
+            if (workTask != null)
+            {
+                __result = workTask;
+                found = true;
+            }
+        }
+
+        if (found)
+        {
+            Plugin.L($"Elderly follower {__instance.Info.Name} set to work on {__result} instead of an old age task!");
+        }
+    }
+
     private static IEnumerator ExtortMoneyRoutine(interaction_FollowerInteraction interaction)
     {
         yield return new WaitForEndOfFrame();
@@ -254,11 +282,10 @@ public static class FollowerPatches
 
         if (cmd == FollowerCommands.Intimidate && ShouldMassIntimidate(followerCommands[0]))
         {
-
             foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
             {
                 var run = FollowerCommandItems.Intimidate().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.IntimidateRoutine(false), delegate
+                interaction.StartCoroutine(RunEnumerator(run, interaction.IntimidateRoutine(false, PlayerFarming.Instance), delegate
                 {
                     interaction.follower.Brain.Stats.Intimidated = true;
                     Plugin.L($"Intimidated {interaction.follower.name}!");
@@ -272,7 +299,7 @@ public static class FollowerPatches
             foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
             {
                 var run = FollowerCommandItems.Bless().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.BlessRoutine(false), delegate
+                interaction.StartCoroutine(RunEnumerator(run, interaction.BlessRoutine(false, PlayerFarming.Instance), delegate
                 {
                     interaction.follower.Brain.Stats.ReceivedBlessing = true;
                     interaction.follower.Brain.Stats.LastBlessing = DataManager.Instance.CurrentDayIndex;
@@ -325,6 +352,8 @@ public static class FollowerPatches
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.Close), typeof(bool), typeof(bool), typeof(bool))]
     public static void interaction_FollowerInteraction_Close(ref bool DoResetFollower, ref bool unpause, ref bool reshowMenu)
     {
+        if (!Routines.RoutinesTranspilers.AnyMassActionsEnabled) return;
+        
         DoResetFollower = true;
         unpause = true;
         reshowMenu = false;
@@ -333,7 +362,9 @@ public static class FollowerPatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
     public static void interaction_FollowerInteraction_LevelUpRoutine(ref Action Callback, ref bool GoToAndStop, ref bool onFinishClose)
-    {
+    { 
+        if (!Routines.RoutinesTranspilers.AnyMassActionsEnabled) return;
+        
         Callback = null;
         GoToAndStop = false;
         onFinishClose = true;
@@ -341,7 +372,7 @@ public static class FollowerPatches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerCommandGroups), nameof(FollowerCommandGroups.OldAgeCommands), typeof(Follower))]
-    public static void FollowerCommandGroups_OldAgeCommands(ref List<CommandItem> __result)
+    public static void FollowerCommandGroups_OldAgeCommands(ref List<CommandItem> __result, Follower follower)
     {
         if (Plugin.CollectTitheFromOldFollowers.Value)
         {
@@ -356,6 +387,11 @@ public static class FollowerPatches
             {
                 __result.Add(FollowerCommandItems.Intimidate());
             }
+        }
+
+        if (Plugin.MakeOldFollowersWork.Value)
+        {
+            __result.Add(FollowerCommandItems.GiveWorkerCommand(follower));
         }
     }
 }

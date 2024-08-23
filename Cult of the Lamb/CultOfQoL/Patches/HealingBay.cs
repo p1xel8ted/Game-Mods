@@ -7,6 +7,7 @@ public static class HealingBay
     private const string InteractionHealingBay = "Interaction_HealingBay";
     private static FollowerBrainInfo _followerBrainInfo;
     private static float t;
+    private static bool usingHealingBay;
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(NotificationFaith), nameof(NotificationFaith.Configure), typeof(string), typeof(float), typeof(FollowerInfo), typeof(bool), typeof(NotificationBase.Flair), typeof(string[]))]
@@ -17,22 +18,52 @@ public static class HealingBay
         __instance._faithDeltaText.gameObject.SetActive(false);
     }
 
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(UIFollowerSelectMenuController), nameof(UIFollowerSelectMenuController.Show), typeof(List<FollowerSelectEntry>), typeof(bool), typeof(UpgradeSystem.Type), typeof(bool), typeof(bool), typeof(bool), typeof(bool))]
-    public static void UIFollowerSelectMenuController_Show(ref List<FollowerSelectEntry> followerSelectEntries)
+    public static void UIFollowerSelectMenuController_Show_Prefix(UIFollowerSelectMenuController __instance, ref List<FollowerSelectEntry> followerSelectEntries)
     {
         if (!Plugin.AddExhaustedToHealingBay.Value) return;
 
         var isHealingBay = ReflectionHelper.GetCallingClassName(3)!.Equals(InteractionHealingBay, StringComparison.OrdinalIgnoreCase);
         if (!isHealingBay) return;
-        // followerSelectEntries.Clear();
+
         followerSelectEntries.AddRange(from follower in Helpers.AllFollowers
             where IsExhausted(follower.Brain)
             select new FollowerSelectEntry(follower));
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerInformationBox), nameof(FollowerInformationBox.ConfigureImpl))]
+    public static void FollowerInformationBox_ConfigureImpl(FollowerInformationBox __instance)
+    {
+        if (!Plugin.AddExhaustedToHealingBay.Value) return;
+        if (!usingHealingBay) return;
+
+        var hb = Resources.FindObjectsOfTypeAll<Interaction_HealingBay>().First();
+        var costs = hb.GetCost(__instance.followBrain);
+
+        if (__instance._unavailableContainer.activeSelf) return;
+
+        __instance.ShowItemCostValue(costs);
+    }
     
-    
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.OnFollowerChosenForConversion))]
+    [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.OnHidden))]
+    public static void Interaction_HealingBay_OnHidden(Interaction_HealingBay __instance)
+    {
+        usingHealingBay = false;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.OnInteract))]
+    public static void Interaction_HealingBay_OnInteract(Interaction_HealingBay __instance, StateMachine state)
+    {
+        usingHealingBay = true;
+    }
+
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.GetCost))]
     public static void Interaction_HealingBay_GetCost(ref List<InventoryItem> __result, FollowerBrain brain)

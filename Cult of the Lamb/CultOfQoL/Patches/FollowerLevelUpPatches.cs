@@ -3,7 +3,7 @@
 [Harmony]
 public static class FollowerLevelUpPatches
 {
-
+ 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.CanLevelUp))]
     public static void FollowerBrain_CanLevelUp(ref FollowerBrain __instance, ref bool __result)

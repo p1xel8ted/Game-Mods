@@ -1,10 +1,11 @@
 {
     "name": "Rebirth",
-    "version_number": "1.0.5",
+    "version_number": "1.0.7",
     "website_url": "https://www.nexusmods.com/cultofthelamb/mods/8?tab=description",
     "description": "Collect Rebirth tokens while out on crusades, allowing followers to be born again so that you may change their name, looks and more.",
     "dependencies": [
         "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
-        "xhayper-COTL_API-0.2.3"
+        "xhayper-COTL_API-0.2.5",
+        "LethalCompanyModding-UnityDebuggerAssistant-1.2.1"
     ]
 }

@@ -1,3 +1,9 @@
+### 1.0.6 - 23/08/2024 - You must update COTL_API to 0.2.5!
+
+* Maintenance update for 1.4.4.590
+* API version dependency update
+* Implemented hard dependency UnityDebuggerAssistant
+
 ### 1.0.5 - 17/08/2024 - You must update COTL_API to 0.2.3!
 
 * Maintenance update for Unholy Alliance

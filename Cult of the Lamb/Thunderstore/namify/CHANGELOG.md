@@ -1,3 +1,8 @@
+### 0.1.5 - 23/08/2024
+
+* Maintenance update for 1.4.4.590
+* Implemented hard dependency UnityDebuggerAssistant
+
 ### 0.1.4 - 17/08/2024
 
 * Maintenance update for Unholy Alliance

@@ -1,6 +1,6 @@
-![QoL Logo](https://github.com/p1xel8ted/Cult-of-the-Lamb-Mod-Collection/blob/fbebe80a7ff41c6d88df421b1ea31e5c34454084/thunderstore/qol/icon.png?raw=true)
+![QoL Logo](https://i.ibb.co/5W3HT7j/nexus-main-logo.png)
 
-# Cult of QoL - A Collection
+# Features
 
 * Removes intros.
 * Cheese the fishing mini-game. (No need to press anything apart from the initial cast). The reeling UI is also hidden. Compatible with Auto-Fish accessability settings.
@@ -36,11 +36,11 @@
 * Reworked weather mod to work with the new weather system in game.
 * Few developer orientated changes to reduce junk log spam from the game.
 * Disable the new ads and developer/publisher logos on the main menu.
-* Customizable UI scale.
+~~* Customizable UI scale.~~
 * Adjustments to the mass-bless/bribe etc. Still a little wonky, but better than before.
-* Support for modifying settings in game via the mod menu if have the API installed.
+~~* Support for modifying settings in game via the mod menu if you have the API installed.~~
 * Load straight into a specified save game after menu splash.
-* And much more....
+* **And much more....**
 
 Each mod can be enabled/disabled individually from within the config. There might be stuff I've missed.
 
@@ -52,11 +52,16 @@ If you enjoy the mod, please consider a donating [here](https://ko-fi.com/p1xel8
 
 ## Installation
 
-* Install [BepInExPack CultOfTheLamb](https://cult-of-the-lamb.thunderstore.io/package/BepInEx/BepInExPack_CultOfTheLamb/)
-* Install [Configuration Manager](https://cult-of-the-lamb.thunderstore.io/package/p1xel8ted/BepInEx_Configuration_Manager/)
-* Place the plugin DLLs (CultOfQoL.dll & ConfigurationManager.dll) into your "...\Cult of the Lamb\BepInEx\plugins" folder.
+* Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
+* Install [Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/)
+* Install [Unity Debugger Assistant](https://thunderstore.io/c/cult-of-the-lamb/p/LethalCompanyModding/UnityDebuggerAssistant/)
+* Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder. Either run the game, or create it if it doesn't exist.
 
 ## Configuration
 
 * The configuration file is generated when you first run the game with the mod enabled. It can be found in the "...\Cult of the Lamb\BepInEx\config" folder.
-* Press F1 in game to open the configuration manager.
+* Press F1 in game to open the configuration manager. If you're in a dungeon, pause the game first otherwise the cursor doesn't work.
+
+## Issues
+
+* Please use the Bug tab on the page over at [Nexus Mods](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs).
