@@ -1,3 +1,5 @@
+using Shared;
+
 namespace Namify;
 
 public static class Data

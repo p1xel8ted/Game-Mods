@@ -1,14 +1,39 @@
-﻿namespace CultOfQoL.Patches;
+﻿using Shared;
+
+namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
 public static class FollowerPatches
 {
+
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetPersonalOverrideTask))]
+    // public static void FollowerBrain_GetPersonalOverrideTask(FollowerBrain __instance, ref FollowerTask __result)
+    // {
+    //     if (Plugin.MakeOldFollowersWork.Value && __instance.Info.CursedState == Thought.OldAge)
+    //     {
+    //         __instance.CurrentOverrideTaskType = __instance.CurrentTaskType;
+    //         Plugin.Log.LogWarning($"FollowerBrain.GetPersonalOverrideTask: {__instance.Info.Name} is doing {__result}");
+    //     }
+    // }
+    //
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.SetPersonalOverrideTask))]
+    // public static void FollowerBrain_SetPersonalOverrideTask(FollowerBrain __instance, FollowerTaskType Type, StructureBrain.TYPES OverrideStructureType)
+    // {
+    //     if (Plugin.MakeOldFollowersWork.Value && __instance.Info.CursedState == Thought.OldAge)
+    //     {
+    //         Plugin.Log.LogWarning($"FollowerBrain.SetPersonalOverrideTask: {__instance.Info.Name} is doing {Type} with {OverrideStructureType}");
+    //     }
+    // }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetPersonalTask))]
     public static void FollowerBrain_GetTask(FollowerBrain __instance, FollowerLocation location, ref FollowerTask __result)
     {
         if (!Plugin.MakeOldFollowersWork.Value) return;
 
+        // Plugin.Log.LogWarning($"Checking if {__instance.Info.Name} should work instead of doing an old age task, current task: {__result}");
         if (__result is not FollowerTask_OldAge) return;
 
         var scheduledActivity = TimeManager.GetScheduledActivity(location);
@@ -17,19 +42,28 @@ public static class FollowerPatches
         {
             var task = FollowerBrain.GetDesiredTask_Work(location);
             task.RemoveAll(a => a is FollowerTask_OldAge);
-            var workTask = task.Random();
-            if (workTask != null)
+
+            if (task.Count > 0) // Ensure the list has elements
             {
-                __result = workTask;
-                found = true;
+                var workTask = task.Random();
+                if (workTask != null)
+                {
+                    __result = workTask;
+                    found = true;
+                }
+            }
+            else
+            {
+                Plugin.Log.LogWarning($"No available work tasks for elderly follower {__instance.Info.Name}.");
             }
         }
 
         if (found)
         {
-            Plugin.L($"Elderly follower {__instance.Info.Name} set to work on {__result} instead of an old age task!");
+            Plugin.L($"Elderly follower {__instance.Info.Name} set to work on {__result}.");
         }
     }
+
 
     private static IEnumerator ExtortMoneyRoutine(interaction_FollowerInteraction interaction)
     {
@@ -161,23 +195,24 @@ public static class FollowerPatches
         return true;
     }
 
-    internal static bool IsFollowerImprisoned(FollowerBrain brain)
+    private static bool IsFollowerImprisoned(FollowerBrain brain)
     {
         if (!brain.Info.CursedState.ToString().Contains("Imprison", StringComparison.OrdinalIgnoreCase)) return false;
         Plugin.L($"Skipping {brain.Info.Name} because they are in prison!");
         return true;
     }
 
-    internal static bool IsFollowerAvailable(FollowerBrain brain)
+    private static bool IsFollowerAvailable(FollowerBrain brain)
     {
         if (brain.CurrentTaskType is not (FollowerTaskType.Sleep or FollowerTaskType.SleepBedRest or FollowerTaskType.Mating)) return true;
         Plugin.L($"Skipping {brain.Info.Name} because they are busy with task: {brain.CurrentTaskType.ToString()}");
         return false;
     }
 
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnFollowerCommandFinalized), typeof(FollowerCommands[]))]
-    public static void interaction_FollowerInteraction_OnFollowerCommandFinalized(ref interaction_FollowerInteraction __instance, params FollowerCommands[] followerCommands)
+    public static void interaction_FollowerInteraction_OnFollowerCommandFinalized_Postfix(ref interaction_FollowerInteraction __instance, params FollowerCommands[] followerCommands)
     {
         if (followerCommands[0] is not (FollowerCommands.Reassure or FollowerCommands.Reeducate or FollowerCommands.Bully or FollowerCommands.Romance or FollowerCommands.PetDog or FollowerCommands.ExtortMoney or FollowerCommands.Dance or FollowerCommands.Intimidate or FollowerCommands.Bless or FollowerCommands.Bribe))
         {
@@ -186,6 +221,7 @@ public static class FollowerPatches
         }
 
         var cmd = followerCommands[0];
+
         var followers = Helpers.AllFollowers;
 
         if (cmd == FollowerCommands.Reassure && ShouldMassReassure(followerCommands[0]))
@@ -353,7 +389,7 @@ public static class FollowerPatches
     public static void interaction_FollowerInteraction_Close(ref bool DoResetFollower, ref bool unpause, ref bool reshowMenu)
     {
         if (!Routines.RoutinesTranspilers.AnyMassActionsEnabled) return;
-        
+
         DoResetFollower = true;
         unpause = true;
         reshowMenu = false;
@@ -362,13 +398,44 @@ public static class FollowerPatches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
     public static void interaction_FollowerInteraction_LevelUpRoutine(ref Action Callback, ref bool GoToAndStop, ref bool onFinishClose)
-    { 
+    {
         if (!Routines.RoutinesTranspilers.AnyMassActionsEnabled) return;
-        
+
         Callback = null;
         GoToAndStop = false;
         onFinishClose = true;
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerCommandItems), nameof(FollowerCommandItems.GiveWorkerCommand))]
+    public static void interaction_FollowerInteraction_OnFollowerCommandFinalized(Follower follower, ref CommandItem __result)
+    {
+        if (Plugin.MakeOldFollowersWork.Value && follower.Brain.Info.CursedState == Thought.OldAge)
+        {
+            __result.SubCommands = FollowerCommandGroups.GiveWorkerCommands(follower);
+        }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnFollowerCommandFinalized))]
+    public static bool interaction_FollowerInteraction_OnFollowerCommandFinalized(ref interaction_FollowerInteraction __instance, params FollowerCommands[] followerCommands)
+    {
+        var makeOldPeopleWork = Plugin.MakeOldFollowersWork.Value;
+        var command = followerCommands[0] == FollowerCommands.GiveWorkerCommand_2 || followerCommands[0] == FollowerCommands.MakeDemand;
+        var old = __instance.follower.Brain.Info.CursedState == Thought.OldAge;
+        if (makeOldPeopleWork && command && old)
+        {
+            __instance.follower.Brain.CompleteCurrentTask();
+            var task = FollowerBrain.GetDesiredTask_Work(__instance.follower.Brain.Location).Random();
+            __instance.follower.Brain.HardSwapToTask(task);
+            NotificationCentre.Instance.PlayGenericNotification($"{ __instance.follower.Brain.Info.Name} sent to work on random task!", NotificationBase.Flair.Positive);
+            Plugin.L($"Old follower {__instance.follower.name} made to work on {task}");
+            __instance.Close(false, true, false);
+            return false;
+        }
+        return true;
+    }
+
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerCommandGroups), nameof(FollowerCommandGroups.OldAgeCommands), typeof(Follower))]

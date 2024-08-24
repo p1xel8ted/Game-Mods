@@ -1,3 +1,5 @@
+using Shared;
+
 namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
@@ -74,7 +76,12 @@ public static class HealingBay
 
         if (IsExhausted(brain) || __result.Count <= 0)
         {
-            __result = [new InventoryItem(InventoryItem.ITEM_TYPE.FLOWER_RED, 5)];
+            var qty = 10;
+            if (brain.Stats.Drunk > 0)
+            {
+                qty = 20;
+            }
+            __result = [new InventoryItem(InventoryItem.ITEM_TYPE.FLOWER_RED, qty)];
         }
     }
 
@@ -105,7 +112,8 @@ public static class HealingBay
         var follower = _followerBrainInfo;
         var exhaustion = follower._brain._directInfoAccess.Exhaustion;
         if (exhaustion <= 0) return;
-
+        
+        
         while (t < duration)
         {
             if (Time.deltaTime > 0f)
@@ -117,9 +125,12 @@ public static class HealingBay
             break;
         }
 
-        if (_followerBrainInfo._brain.Stats.Exhaustion != 0) return;
+        if (_followerBrainInfo._brain.Stats.Exhaustion == 0)
+        {
+            FollowerBrainStats.OnExhaustionStateChanged.Invoke(_followerBrainInfo._brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
+            NotificationCentre.Instance.PlayFaithNotification($"{_followerBrainInfo._brain.Info.Name} is no longer exhausted!", 0.001f, NotificationBase.Flair.None, _followerBrainInfo._brain.Info.ID, _followerBrainInfo._brain.Info.Name);  
+        }
 
-        FollowerBrainStats.OnExhaustionStateChanged.Invoke(_followerBrainInfo._brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
-        NotificationCentre.Instance.PlayFaithNotification($"{_followerBrainInfo._brain.Info.Name} is no longer exhausted!", 0.001f, NotificationBase.Flair.None, _followerBrainInfo._brain.Info.ID, [_followerBrainInfo._brain.Info.Name]);
+
     }
 }

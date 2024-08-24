@@ -1,3 +1,9 @@
+### 2.2.6 - 24/08/2024
+
+* Removal of Costura Fody as it's no longer required, and causes delays with updates on Thunderstore.
+* Fix for chest loot issues raised in [Nexus Bug Report #7](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs)
+* If your settings allow, when telling an old follower to work from the menu, a random task will be chosen for them to work on (previously they would say no, too old)
+
 ### 2.2.5 - 23/08/2024
 
 * Maintenance update for 1.4.4.592

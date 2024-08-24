@@ -56,6 +56,10 @@ If you enjoy the mod, please consider a donating [here](https://ko-fi.com/p1xel8
 
 [![KoFiLogo](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/p1xel8ted)
 
+## Recommendation
+
+While not a hard requirement, I recommend you install [Unity Debugger Assistant](https://thunderstore.io/c/cult-of-the-lamb/p/LethalCompanyModding/UnityDebuggerAssistant/) which allows for better log files when an exception happens because of a mod, which means I have more information to work with when bug reports are posted.
+
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)

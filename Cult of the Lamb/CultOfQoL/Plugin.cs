@@ -1,13 +1,14 @@
-﻿namespace CultOfQoL;
+﻿using Shared;
+
+namespace CultOfQoL;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-// [BepInDependency("io.github.xhayper.COTL_API", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.2.5";
+    private const string PluginVer = "2.2.6";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -203,10 +204,11 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         //Chest Auto-Interact
-        EnableAutoInteract = Config.Bind(AutoInteractSection, "Enable Auto Interact", true, new ConfigDescription("Makes chests automatically send you the resources when you're nearby.", null, new ConfigurationManagerAttributes
+        EnableAutoCollect = Config.Bind(AutoInteractSection, "Enable Auto Collect", true, new ConfigDescription("Makes chests automatically send you the resources when you're nearby.", null, new ConfigurationManagerAttributes
         {
-            Order = 5
+            Order = 5, DispName = "Enable Auto Collect**"
         }));
+        EnableAutoCollect.SettingChanged += (_, _) => ShowRestartMessage();
         AutoCollectFromFarmStationChests = Config.Bind(AutoInteractSection, "Auto Collect From Farm Station Chests", true, new ConfigDescription("Automatically collect from farm station chests.", null, new ConfigurationManagerAttributes
         {
             Order = 4
@@ -315,9 +317,10 @@ public partial class Plugin : BaseUnityPlugin
         }));
         MakeOldFollowersWork = Config.Bind(FollowersSection, "Make Old Followers Work", true, new ConfigDescription("Enable the elderly to work.", null, new ConfigurationManagerAttributes
         {
+            DispName = "Make Old Followers Work**",
             Order = 0
         }));
-
+        MakeOldFollowersWork.SettingChanged += (_, _) => ShowRestartMessage();
         //Traits
         NoNegativeTraits = Config.Bind(TraitsSection, "No Negative Traits", true, new ConfigDescription("Negative traits will be replaced based on the configuration here.", null, new ConfigurationManagerAttributes
         {
@@ -360,14 +363,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 0
         }));
-
-        // //Mass Section
-        // MassLevelUp = Config.Bind(MassSection, "Mass Level Up", true, new ConfigDescription("When interacting with a follower than can level, all eligible followers will be leveled up.", null, new ConfigurationManagerAttributes
-        // {
-        //     DispName = "Mass Level Up**", Order = 18
-        // }));
-        // MassLevelUp.SettingChanged += (_, _) => ShowRestartMessage();
-
+        
         MassFertilize = Config.Bind(MassSection, "Mass Fertilize", true, new ConfigDescription("When fertilizing a plot, all farm plots are fertilized at once.", null, new ConfigurationManagerAttributes
         {
             Order = 17
@@ -378,10 +374,6 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 16
         }));
-        // MassHarvest = Config.Bind(MassSection, "Mass Harvest", true, new ConfigDescription("When harvesting a plot, all farm plots are harvested at once.", null, new ConfigurationManagerAttributes
-        // {
-        //     Order = 15
-        // }));
 
         MassBribe = Config.Bind(MassSection, "Mass Bribe", true, new ConfigDescription("When bribing a follower, all followers are bribed at once.", null, new ConfigurationManagerAttributes
         {
@@ -527,7 +519,7 @@ public partial class Plugin : BaseUnityPlugin
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {MonoMod.Utils.PlatformHelper.Current}.");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
         // if (!SoftDepend.Enabled) return;
         //
         // SoftDepend.AddSettingsMenus();
@@ -630,7 +622,7 @@ public partial class Plugin : BaseUnityPlugin
         UpdateMenuGlitch();
         //  UpdateScale();
         UpdateNavigationMode();
-        // UpdateAllMagnets();
+        UpdateAllMagnets();
         // UpdateDoubleMagnet();
         // UpdateTripleMagnet();
         // UpdateCustomMagnet();
@@ -644,7 +636,7 @@ public partial class Plugin : BaseUnityPlugin
         var mmc = FindObjectOfType<MainMenuController>();
         if (mmc)
         {
-            mmc.doIntroGlitch = Plugin.MainMenuGlitch.Value;
+            mmc.doIntroGlitch = MainMenuGlitch.Value;
         }
     }
 

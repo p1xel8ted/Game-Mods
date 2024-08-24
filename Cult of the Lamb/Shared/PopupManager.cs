@@ -1,4 +1,7 @@
-﻿namespace Namify;
+﻿using Namify;
+using UnityEngine;
+
+namespace Shared;
 
 internal class PopupManager : MonoBehaviour
 {

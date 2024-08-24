@@ -1,3 +1,5 @@
+using Shared;
+
 namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
@@ -190,18 +192,20 @@ public static class FastCollectingPatches
     [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.Update))]
     private static void Interaction_CollectResourceChest_Update(ref Interaction_CollectResourceChest __instance)
     {
+        if (!Plugin.EnableAutoCollect.Value) return;
+
         if (!__instance.playerFarming)
         {
             return;
         }
 
-        if (Plugin.EnableAutoInteract.Value && !InputManager.Gameplay.GetInteractButtonHeld())
+        if (Plugin.EnableAutoCollect.Value && !InputManager.Gameplay.GetInteractButtonHeld())
         {
             if (__instance.StructureBrain is Structures_FarmerStation && !Plugin.AutoCollectFromFarmStationChests.Value)
             {
                 return;
             }
-            
+
             var range = 5f;
 
             if (Plugin.IncreaseAutoCollectRange.Value)
@@ -216,15 +220,15 @@ public static class FastCollectingPatches
             __instance.DistanceToTriggerDeposits = range;
             __instance.Activating = true;
 
-            var activating = __instance.Activating;
-            var emptyInventory = __instance.StructureInfo.Inventory.Sum(item => item.quantity) < Plugin.TriggerAmount.Value;
+
+            var inventoryQty = __instance.StructureInfo.Inventory.Sum(item => item.quantity);
+            var emptyInventory = inventoryQty <= 0;
+            var triggerHit = inventoryQty >= Plugin.TriggerAmount.Value;
             var distance = Vector3.Distance(__instance.transform.position, __instance.playerFarming.transform.position);
             var tooFarAway = distance > __instance.DistanceToTriggerDeposits;
 
 
-            if (!activating) return;
-
-            if (emptyInventory || tooFarAway)
+            if (!triggerHit || emptyInventory || tooFarAway)
             {
                 __instance.Activating = false;
             }
@@ -240,40 +244,21 @@ public static class FastCollectingPatches
         }
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(LumberjackStation), nameof(LumberjackStation.GiveItem))]
-    private static bool LumberjackStation_GiveItem(ref LumberjackStation __instance, InventoryItem.ITEM_TYPE type)
-    {
-        if (!__instance) return true;
-        
-        foreach (var item in __instance.StructureInfo.Inventory.ToList().Where(item => item.type == (int) type))
-        {
-            Inventory.AddItem((int) type, item.quantity);
-            __instance.StructureInfo.Inventory.Remove(item);
-        }
-
-        if (__instance)
-        {
-            __instance.UpdateChest(false);
-            __instance.ExhaustedCheck();
-        }
-
-        return false;
-
-    }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(LumberjackStation), nameof(LumberjackStation.Update))]
-    private static void LumberjackStation_Update(ref LumberjackStation __instance)
+    private static bool LumberjackStation_Update(ref LumberjackStation __instance)
     {
+        if (!Plugin.EnableAutoCollect.Value) return true;
+
         if (!__instance.Player)
         {
-            if (!__instance.playerFarming) return;
+            if (!__instance.playerFarming) return true;
 
             __instance.Player = PlayerFarming.Instance.gameObject;
         }
 
-        if (Plugin.EnableAutoInteract.Value && !InputManager.Gameplay.GetInteractButtonHeld())
+        if (Plugin.EnableAutoCollect.Value && !(InputManager.Gameplay.GetInteractButtonHeld() || InputManager.Gameplay.GetInteractButtonUp()))
         {
             var range = 5f;
 
@@ -287,29 +272,48 @@ public static class FastCollectingPatches
             }
 
             __instance.DistanceToTriggerDeposits = range;
-            __instance.Activating = true;
 
-            var activating = __instance.Activating;
-            var emptyInventory = __instance.StructureInfo.Inventory.Sum(item => item.quantity) < Plugin.TriggerAmount.Value;
+
+            var inventoryQty = __instance.StructureInfo.Inventory.Sum(item => item.quantity);
+            var emptyInventory = inventoryQty <= 0;
+            var triggerHit = inventoryQty >= Plugin.TriggerAmount.Value;
             var distance = Vector3.Distance(__instance.transform.position, __instance.Player.transform.position);
             var tooFarAway = distance > __instance.DistanceToTriggerDeposits;
 
-            if (!activating) return;
 
-            if (emptyInventory || tooFarAway)
+            if (!triggerHit || emptyInventory || tooFarAway)
             {
-                __instance.Activating = false;
+                return true;
             }
+            
+            var station = __instance;
+            foreach (var itemType in __instance.StructureInfo.Inventory.Select(item => (InventoryItem.ITEM_TYPE) item.type))
+            {
+                ResourceCustomTarget.Create(__instance.Player.gameObject, __instance.transform.position, itemType, delegate
+                {
+                    station.GiveItem(itemType);
+                });
+            }
+            __instance.StructureInfo.Inventory.Clear();
 
-            return;
+
+            AudioManager.Instance.PlayOneShot("event:/chests/chest_item_spawn", __instance.transform.position);
+            __instance.ChestPosition.transform.DOKill();
+            __instance.ChestPosition.transform.localScale = Vector3.one;
+            __instance.ChestPosition.transform.DOPunchScale(__instance.PunchScale, 1f);
+            __instance.UpdateChest();
+            __instance.ExhaustedCheck();
+
+            return false;
         }
 
-        __instance.DistanceToTriggerDeposits = 5f;
-
-        if (__instance.Activating && (__instance.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp() || Vector3.Distance(__instance.transform.position, __instance.Player.transform.position) > __instance.DistanceToTriggerDeposits))
-        {
-            __instance.Activating = false;
-        }
+        // __instance.DistanceToTriggerDeposits = 5f;
+        //
+        // if (__instance.Activating && (__instance.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp() || Vector3.Distance(__instance.transform.position, __instance.Player.transform.position) > __instance.DistanceToTriggerDeposits))
+        // {
+        //     __instance.Activating = false;
+        // }
+        return true;
     }
 
     //collection speed for Interaction_EntranceShrine (dungeon shrines) - default speed is 0.1f

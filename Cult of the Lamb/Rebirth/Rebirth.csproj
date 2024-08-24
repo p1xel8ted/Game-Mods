@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
     <ItemGroup>
       <None Remove="assets\rebirth_command.png" />
@@ -15,11 +16,8 @@
       </None>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Update="BepInEx.Core" Version="5.4.21" />
-    </ItemGroup>
-    <ItemGroup>
-      <Reference Include="AFPSCounter.Runtime">
-        <HintPath>..\libs\AFPSCounter.Runtime.dll</HintPath>
+      <Reference Include="System.Net.Http">
+        <HintPath>..\libs\System.Net.Http.dll</HintPath>
       </Reference>
       <Reference Include="Assembly-CSharp">
         <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
@@ -27,77 +25,8 @@
       <Reference Include="Assembly-CSharp-firstpass">
         <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
       </Reference>
-      <Reference Include="AstarPathfindingProject">
-        <HintPath>..\libs\AstarPathfindingProject.dll</HintPath>
-      </Reference>
-      <Reference Include="Coffee.UIParticle">
-        <HintPath>..\libs\Coffee.UIParticle.dll</HintPath>
-      </Reference>
-      <Reference Include="com.steamworks.net">
-        <HintPath>..\libs\com.steamworks.net.dll</HintPath>
-      </Reference>
       <Reference Include="COTL_API">
         <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\API\COTL_API.dll</HintPath>
-      </Reference>
-      <Reference Include="DOGames.Threading">
-        <HintPath>..\libs\DOGames.Threading.dll</HintPath>
-      </Reference>
-      <Reference Include="DOTween">
-        <HintPath>..\libs\DOTween.dll</HintPath>
-      </Reference>
-      <Reference Include="DOTween.Modules">
-        <HintPath>..\libs\DOTween.Modules.dll</HintPath>
-      </Reference>
-      <Reference Include="DOTweenPro">
-        <HintPath>..\libs\DOTweenPro.dll</HintPath>
-      </Reference>
-      <Reference Include="DOTweenPro.Scripts">
-        <HintPath>..\libs\DOTweenPro.Scripts.dll</HintPath>
-      </Reference>
-      <Reference Include="Elringus.BlendModes.Runtime">
-        <HintPath>..\libs\Elringus.BlendModes.Runtime.dll</HintPath>
-      </Reference>
-      <Reference Include="FMODUnity">
-        <HintPath>..\libs\FMODUnity.dll</HintPath>
-      </Reference>
-      <Reference Include="LeTai.TranslucentImage">
-        <HintPath>..\libs\LeTai.TranslucentImage.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.CSharp">
-        <HintPath>..\libs\Microsoft.CSharp.dll</HintPath>
-      </Reference>
-      <Reference Include="Newtonsoft.Json">
-        <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
-      </Reference>
-      <Reference Include="Org.OpenAPITools">
-        <HintPath>..\libs\Org.OpenAPITools.dll</HintPath>
-      </Reference>
-      <Reference Include="Plawius.ControllerIcons">
-        <HintPath>..\libs\Plawius.ControllerIcons.dll</HintPath>
-      </Reference>
-      <Reference Include="ProBuilderCore-Unity5">
-        <HintPath>..\libs\ProBuilderCore-Unity5.dll</HintPath>
-      </Reference>
-      <Reference Include="Rewired_Core">
-        <HintPath>..\libs\Rewired_Core.dll</HintPath>
-      </Reference>
-      <Reference Include="Rewired_Windows">
-        <HintPath>..\libs\Rewired_Windows.dll</HintPath>
-      </Reference>
-      <Reference Include="Rewired_Windows_Functions">
-        <HintPath>..\libs\Rewired_Windows_Functions.dll</HintPath>
-      </Reference>
-      <Reference Include="Sirenix.Utilities">
-        <HintPath>..\libs\Sirenix.Utilities.dll</HintPath>
-      </Reference>
-      <Reference Include="SocketIOUnityAssembly">
-        <HintPath>..\libs\SocketIOUnityAssembly.dll</HintPath>
-      </Reference>
-      <Reference Include="spine-unity">
-        <HintPath>..\libs\spine-unity.dll</HintPath>
-      </Reference>
-      <Reference Include="UnifyLibrary">
-        <HintPath>..\libs\UnifyLibrary.dll</HintPath>
       </Reference>
       <Reference Include="Unity.2D.SpriteShape.Runtime">
         <HintPath>..\libs\Unity.2D.SpriteShape.Runtime.dll</HintPath>
@@ -105,14 +34,8 @@
       <Reference Include="Unity.Addressables">
         <HintPath>..\libs\Unity.Addressables.dll</HintPath>
       </Reference>
-      <Reference Include="Unity.Burst">
-        <HintPath>..\libs\Unity.Burst.dll</HintPath>
-      </Reference>
       <Reference Include="Unity.InputSystem">
         <HintPath>..\libs\Unity.InputSystem.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.Mathematics">
-        <HintPath>..\libs\Unity.Mathematics.dll</HintPath>
       </Reference>
       <Reference Include="Unity.Postprocessing.Runtime">
         <HintPath>..\libs\Unity.Postprocessing.Runtime.dll</HintPath>
@@ -122,9 +45,6 @@
       </Reference>
       <Reference Include="Unity.ResourceManager">
         <HintPath>..\libs\Unity.ResourceManager.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.TextMeshPro">
-        <HintPath>..\libs\Unity.TextMeshPro.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine">
         <HintPath>..\libs\UnityEngine.dll</HintPath>
@@ -206,12 +126,6 @@
       </Reference>
       <Reference Include="UnityEngine.XRModule">
         <HintPath>..\libs\UnityEngine.XRModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityFx.Outline">
-        <HintPath>..\libs\UnityFx.Outline.dll</HintPath>
-      </Reference>
-      <Reference Include="websocket-sharp">
-        <HintPath>..\libs\websocket-sharp.dll</HintPath>
       </Reference>
     </ItemGroup>
 </Project>

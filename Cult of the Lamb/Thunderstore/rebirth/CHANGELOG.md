@@ -1,4 +1,8 @@
-### 1.0.7 
+### 1.0.8 - 24/08/2024
+
+* Removal of Costura Fody as it's no longer required, and causes delays with updates on Thunderstore.
+
+### 1.0.7 - 23/08/2024
 
 * Maintenance update for 1.4.4.592
 * Reverted/removed UnityDebuggerAssistant requirement

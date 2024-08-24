@@ -33,6 +33,10 @@ public static class Patches
             Plugin.Log.LogInfo($"Follower name {name} confirmed! Removing name from saved name list.");
             Data.NamifyNames.Remove(_pendingName);
             Data.UserNames.Remove(_pendingName);
+            
+            //remove * from instance._targetFollower.Brain.Info.Name
+            instance._targetFollower.Brain.Info.Name = instance._targetFollower.Brain.Info.Name.Replace("*", string.Empty);
+            _pendingName = string.Empty;
         });
     }
 
@@ -56,6 +60,7 @@ public static class Patches
 
         var bothNames = Data.NamifyNames.Concat(Data.UserNames).Distinct().ToList();
         _pendingName = bothNames.RandomElement();
+        _pendingName = $"{_pendingName}*";
 
         __result = _pendingName;
     }

@@ -1,3 +1,8 @@
+### 0.1.7 - 24/08/2024
+
+* Removal of Costura Fody as it's no longer required, and causes delays with updates on Thunderstore.
+* Names that have been randomly generated will now have an asterix (*) next to them when indoctrinating a follower. You do not need to manually remove it.
+
 ### 0.1.6 - 23/08/2024
 
 * Maintenance update for 1.4.4.592

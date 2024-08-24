@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace Rebirth;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -10,14 +8,14 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.rebirth";
     private const string PluginName = "Rebirth";
-    private const string PluginVer = "1.0.7";
+    private const string PluginVer = "1.0.8";
 
-    public static ManualLogSource Log { get; private set; } = null!;
-    public static string PluginPath = null!;
-    internal static ConfigEntry<bool> RebirthOldFollowers = null!;
+    public static ManualLogSource Log { get; private set; }
+    public static string PluginPath { get; private set; }
+    internal static ConfigEntry<bool> RebirthOldFollowers { get; private set; }
     public static InventoryItem.ITEM_TYPE RebirthItem { get; private set; }
-    private CustomObjective RebirthCollectItemQuest { get; set; } = null!;
-    internal static RebirthItem RebirthItemInstance { get; private set; } = null!;
+    private CustomObjective RebirthCollectItemQuest { get; set; }
+    internal static RebirthItem RebirthItemInstance { get; private set; }
     
     public readonly static ModdedSaveData<List<int>> RebirthSaveData = new(PluginGuid);
 

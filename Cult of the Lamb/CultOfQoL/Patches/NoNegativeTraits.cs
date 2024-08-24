@@ -1,4 +1,6 @@
-﻿namespace CultOfQoL.Patches;
+﻿using Shared;
+
+namespace CultOfQoL.Patches;
 
 [Harmony]
 public static class NoNegativeTraits

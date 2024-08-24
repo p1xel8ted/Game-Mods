@@ -60,7 +60,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> RareTarotCardsOnly{ get; private set;}
     internal static ConfigEntry<bool> FiftyPercentIncreaseToLifespanInstead{ get; private set;}
 
-    internal static ConfigEntry<bool> EnableAutoInteract{ get; private set;}
+    internal static ConfigEntry<bool> EnableAutoCollect{ get; private set;}
     internal static ConfigEntry<int> TriggerAmount { get; private set;}
     internal static ConfigEntry<bool> IncreaseAutoCollectRange{ get; private set;}
     internal static ConfigEntry<bool> UseCustomAutoInteractRange{ get; private set;}

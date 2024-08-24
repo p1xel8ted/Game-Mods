@@ -1,4 +1,6 @@
-﻿namespace CultOfQoL.Patches;
+﻿using Shared;
+
+namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
 internal static class TwitchItems
@@ -75,7 +77,7 @@ internal static class TwitchItems
 
         [UsedImplicitly]
         [HarmonyPostfix]
-        public static void Authenticate(ref bool __result, MethodBase __originalMethod)
+        public static void Authenticate(ref bool __result)
         {
             __result = Plugin.UnlockTwitchItems.Value;
         }
