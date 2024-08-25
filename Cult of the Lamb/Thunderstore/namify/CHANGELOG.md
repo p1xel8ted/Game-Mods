@@ -1,3 +1,8 @@
+### 0.1.8 - 25/08/2024
+
+* Fixed the asterix for Namify names not being removed in all instances
+* Added cleanup method for already named followers (runs when player loads in, and when a follower name is confirmed)
+
 ### 0.1.7 - 24/08/2024
 
 * Removal of Costura Fody as it's no longer required, and causes delays with updates on Thunderstore.

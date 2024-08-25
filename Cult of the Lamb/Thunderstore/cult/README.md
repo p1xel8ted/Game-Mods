@@ -48,7 +48,9 @@
 - Double or triple magnet range for loot, or use a custom magnet range.
 - Magnetize all loot to the player.
 - Fast Rituals & Sermons.
+- Reverse Ritual of Enrichment nerf. This will also force-enable remove follower level limit.
 - Probably more features I've missed.
+- Some features above may have changed or been removed entirely since I first wrote them.
 
 ## Donate
 
@@ -73,4 +75,4 @@ While not a hard requirement, I recommend you install [Unity Debugger Assistant]
 
 ## Issues
 
-* Please use the Bug tab on the page over at [Nexus Mods](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs).
+* Please use the Bug tab on the page over at [Nexus Mods](https://www.nexusmods.com/cultofthelamb/mods/1?tab=bugs). Before logging a bug, please see sticky on the [Posts](https://www.nexusmods.com/cultofthelamb/mods/1?tab=posts) tab.

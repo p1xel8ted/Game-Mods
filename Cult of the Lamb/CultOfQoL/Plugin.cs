@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace CultOfQoL;
+﻿namespace CultOfQoL;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
@@ -8,7 +6,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.2.6";
+    private const string PluginVer = "2.2.7";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -19,7 +17,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private const string SavesSection = "07. Saves";
 
-    // private const string ScalingSection = "08. Scale";
+    //private const string ScalingSection = "08. Scale";
     private const string WeatherSection = "09. Weather";
     private const string NotificationsSection = "10. Notifications";
 
@@ -36,7 +34,9 @@ public partial class Plugin : BaseUnityPlugin
     private const string MassSection = "18. Mass Actions";
     private const string StructureSection = "04. Structures";
     private const string TraitsSection = "19. Traits";
-
+    private const string LootSection = "20. Loot";
+    private const string PostProcessingSection = "21. Post Processing";
+    private const string RitualSection = "22. Rituals";
     internal static ManualLogSource Log { get; private set; }
 
     // internal static CanvasScaler GameCanvasScaler { get; set; }
@@ -125,20 +125,6 @@ public partial class Plugin : BaseUnityPlugin
             L($"Save slot to load changed to {SaveSlotToLoad.Value}");
         };
 
-        //Scale
-        // EnableCustomUiScale = Config.Bind(ScalingSection, "Enable Custom UI Scale", false, new ConfigDescription("Enable/disable the custom UI scale.", null, new ConfigurationManagerAttributes {Order = 2}));
-        // EnableCustomUiScale.SettingChanged += (_, _) =>
-        // {
-        //   Scales.ChangeAllScalers();
-        // };
-        //
-        // CustomUiScale = Config.Bind(ScalingSection, "Custom UI Scale", 1f, new ConfigDescription("The custom UI scale to use.", new AcceptableValueRange<float>(0.10f, 101f), new ConfigurationManagerAttributes {Order = 1}));
-        // CustomUiScale.SettingChanged += (_, _) =>
-        // {
-        //     Scales.ChangeAllScalers();
-        // };
-        //
-        // NotificationsScale = Config.Bind(ScalingSection, "Notifications Scale", 100, new ConfigDescription("The scale to use for notifications. This setting is independent of Custom UI Scale", new AcceptableValueRange<int>(1, 101), new ConfigurationManagerAttributes {Order = 0}));
 
         //Weather
         ChangeWeatherOnPhaseChange = Config.Bind(WeatherSection, "Change Weather On Phase Change", true, new ConfigDescription("By default, the game changes weather when you exit a structure, or on a new day. Enabling this makes the weather change on each phase i.e. morning, noon, evening, night.", null, new ConfigurationManagerAttributes {Order = 2}));
@@ -472,7 +458,7 @@ public partial class Plugin : BaseUnityPlugin
         MassReeducate.SettingChanged += (_, _) => ShowRestartMessage();
 
         //Loot
-        AllLootMagnets = Config.Bind("20. Loot", "All Loot Magnets", true, new ConfigDescription("All loot is magnetized to you.", null, new ConfigurationManagerAttributes
+        AllLootMagnets = Config.Bind(LootSection, "All Loot Magnets", true, new ConfigDescription("All loot is magnetized to you.", null, new ConfigurationManagerAttributes
         {
             Order = 0
         }));
@@ -480,7 +466,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             UpdateAllMagnets();
         };
-        DoubleMagnetRange = Config.Bind("20. Loot", "Double Magnet Range", true, new ConfigDescription("Doubles the magnet range.", null, new ConfigurationManagerAttributes
+        DoubleMagnetRange = Config.Bind(LootSection, "Double Magnet Range", true, new ConfigDescription("Doubles the magnet range.", null, new ConfigurationManagerAttributes
         {
             Order = 0
         }));
@@ -489,7 +475,7 @@ public partial class Plugin : BaseUnityPlugin
             UpdateDoubleMagnet();
         };
 
-        TripleMagnetRange = Config.Bind("20. Loot", "Triple Magnet Range", false, new ConfigDescription("Triples the magnet range.", null, new ConfigurationManagerAttributes
+        TripleMagnetRange = Config.Bind(LootSection, "Triple Magnet Range", false, new ConfigDescription("Triples the magnet range.", null, new ConfigurationManagerAttributes
         {
             Order = 0
         }));
@@ -498,7 +484,7 @@ public partial class Plugin : BaseUnityPlugin
             UpdateTripleMagnet();
         };
 
-        UseCustomMagnetRange = Config.Bind("20. Loot", "Use Custom Magnet Range", false, new ConfigDescription("Use a custom magnet range instead of the default or increased range.", null, new ConfigurationManagerAttributes
+        UseCustomMagnetRange = Config.Bind(LootSection, "Use Custom Magnet Range", false, new ConfigDescription("Use a custom magnet range instead of the default or increased range.", null, new ConfigurationManagerAttributes
         {
             Order = 0
         }));
@@ -506,7 +492,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             UpdatePickups();
         };
-        CustomMagnetRange = Config.Bind("20. Loot", "Custom Magnet Range", 7, new ConfigDescription("Quadruples the magnet range.", new AcceptableValueRange<int>(7, 50), new ConfigurationManagerAttributes
+        CustomMagnetRange = Config.Bind(LootSection, "Custom Magnet Range", 7, new ConfigDescription("Quadruples the magnet range.", new AcceptableValueRange<int>(7, 50), new ConfigurationManagerAttributes
         {
             Order = 0
         }));
@@ -514,7 +500,29 @@ public partial class Plugin : BaseUnityPlugin
         {
             UpdateCustomMagnet();
         };
-
+        
+        //Post Processing
+        VignetteEffect = Config.Bind(PostProcessingSection, "Vignette Effect", true, new ConfigDescription("Enable/disable the vignette effect.", null, new ConfigurationManagerAttributes
+        {
+            Order = 0
+        }));
+        VignetteEffect.SettingChanged += (_, _) =>
+        {
+            PostProcessing.ToggleVignette();
+        };
+        
+        ReverseEnrichmentNerf = Config.Bind(RitualSection, "Reverse Enrichment Nerf", true, new ConfigDescription("Reverts the nerf to the Ritual of Enrichment. Enabling this will automatically enable remove follower level cap.", null, new ConfigurationManagerAttributes
+        {
+            Order = 0
+        }));
+        ReverseEnrichmentNerf.SettingChanged += (_, _) =>
+        {
+            if(ReverseEnrichmentNerf.Value && !RemoveLevelLimit.Value)
+            {
+                Log.LogInfo("Enabling 'Remove Level Limit' as it is required for 'Reverse Enrichment Nerf'.");
+                RemoveLevelLimit.Value = true;
+            }
+        };
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
         SceneManager.sceneLoaded += OnSceneLoaded;

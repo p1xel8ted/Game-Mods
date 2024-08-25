@@ -1,6 +1,3 @@
-using Debug = UnityEngine.Debug;
-using Debugger = DG.Tweening.Core.Debugger;
-
 namespace CultOfQoL.Patches;
 
 [HarmonyPatch]

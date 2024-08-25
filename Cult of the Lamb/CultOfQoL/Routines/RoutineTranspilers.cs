@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace CultOfQoL.Routines;
+﻿namespace CultOfQoL.Routines;
 
 [Harmony]
 public static class RoutinesTranspilers

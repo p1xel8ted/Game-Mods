@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.7</Version>
+        <Version>0.1.8</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -124,8 +124,12 @@
       <Compile Include="..\Shared\Extensions.cs">
         <Link>Extensions.cs</Link>
       </Compile>
-      <Compile Include="..\Shared\PopupManager.cs">
-        <Link>PopupManager.cs</Link>
-      </Compile>
+      <Compile Remove="screenshots\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Remove="screenshots\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="screenshots\**" />
     </ItemGroup>
 </Project>

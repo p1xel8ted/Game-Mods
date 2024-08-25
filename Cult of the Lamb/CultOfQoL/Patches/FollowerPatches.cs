@@ -1,39 +1,15 @@
-﻿using Shared;
-
-namespace CultOfQoL.Patches;
+﻿namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
 public static class FollowerPatches
 {
-
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetPersonalOverrideTask))]
-    // public static void FollowerBrain_GetPersonalOverrideTask(FollowerBrain __instance, ref FollowerTask __result)
-    // {
-    //     if (Plugin.MakeOldFollowersWork.Value && __instance.Info.CursedState == Thought.OldAge)
-    //     {
-    //         __instance.CurrentOverrideTaskType = __instance.CurrentTaskType;
-    //         Plugin.Log.LogWarning($"FollowerBrain.GetPersonalOverrideTask: {__instance.Info.Name} is doing {__result}");
-    //     }
-    // }
-    //
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.SetPersonalOverrideTask))]
-    // public static void FollowerBrain_SetPersonalOverrideTask(FollowerBrain __instance, FollowerTaskType Type, StructureBrain.TYPES OverrideStructureType)
-    // {
-    //     if (Plugin.MakeOldFollowersWork.Value && __instance.Info.CursedState == Thought.OldAge)
-    //     {
-    //         Plugin.Log.LogWarning($"FollowerBrain.SetPersonalOverrideTask: {__instance.Info.Name} is doing {Type} with {OverrideStructureType}");
-    //     }
-    // }
-
+    
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetPersonalTask))]
     public static void FollowerBrain_GetTask(FollowerBrain __instance, FollowerLocation location, ref FollowerTask __result)
     {
         if (!Plugin.MakeOldFollowersWork.Value) return;
-
-        // Plugin.Log.LogWarning($"Checking if {__instance.Info.Name} should work instead of doing an old age task, current task: {__result}");
+        
         if (__result is not FollowerTask_OldAge) return;
 
         var scheduledActivity = TimeManager.GetScheduledActivity(location);
@@ -54,7 +30,7 @@ public static class FollowerPatches
             }
             else
             {
-                Plugin.Log.LogWarning($"No available work tasks for elderly follower {__instance.Info.Name}.");
+                Plugin.L($"No available work tasks for elderly follower {__instance.Info.Name}.");
             }
         }
 
@@ -96,7 +72,6 @@ public static class FollowerPatches
         if (!Plugin.MassBribe.Value) return false;
         if (followerCommands != FollowerCommands.Bribe) return false;
         var notBribed = Follower.Followers.Count(follower => FollowerCommandItems.Bribe().IsAvailable(follower));
-        //Plugin.L($"{notBribed} followers available for bribing!");
         return notBribed > 1;
     }
 
@@ -105,7 +80,6 @@ public static class FollowerPatches
         if (!Plugin.MassPetDog.Value) return false;
         if (followerCommands != FollowerCommands.PetDog) return false;
         var notPetted = Follower.Followers.Count(follower => FollowerCommandItems.PetDog().IsAvailable(follower) && IsFollowerADog(follower.Brain));
-        // Plugin.L($"{notPetted} followers available for petting!");
         return notPetted > 1;
     }
 
@@ -114,7 +88,6 @@ public static class FollowerPatches
         if (!Plugin.MassExtort.Value) return false;
         if (followerCommands != FollowerCommands.ExtortMoney) return false;
         var notPaidTithesCount = Follower.Followers.Count(follower => FollowerCommandItems.Extort().IsAvailable(follower));
-        //Plugin.L($"{notPaidTithesCount} followers available for extorting!");
         return notPaidTithesCount > 1;
     }
 
@@ -123,7 +96,6 @@ public static class FollowerPatches
         if (!Plugin.MassInspire.Value) return false;
         if (followerCommands != FollowerCommands.Dance) return false;
         var notInspiredCount = Follower.Followers.Count(follower => FollowerCommandItems.Dance().IsAvailable(follower));
-        //Plugin.L($"{notInspiredCount} followers available for inspiring!");
         return notInspiredCount > 1;
     }
 
@@ -132,7 +104,6 @@ public static class FollowerPatches
         if (!Plugin.MassIntimidate.Value) return false;
         if (followerCommands != FollowerCommands.Intimidate) return false;
         var notIntimidatedCount = Follower.Followers.Count(follower => FollowerCommandItems.Intimidate().IsAvailable(follower));
-        //Plugin.L($"{notIntimidatedCount} followers available for intimidating!");
         return notIntimidatedCount > 1;
     }
 
@@ -141,7 +112,6 @@ public static class FollowerPatches
         if (!Plugin.MassBless.Value) return false;
         if (followerCommands != FollowerCommands.Bless) return false;
         var notBlessedCount = Follower.Followers.Count(follower => FollowerCommandItems.Bless().IsAvailable(follower));
-        //Plugin.L($"{notBlessedCount} followers available for blessing!");
         return notBlessedCount > 1;
     }
 
@@ -150,7 +120,6 @@ public static class FollowerPatches
         if (!Plugin.MassRomance.Value) return false;
         if (followerCommands != FollowerCommands.Romance) return false;
         var notKissedCount = Follower.Followers.Count(follower => FollowerCommandItems.Kiss().IsAvailable(follower));
-        //Plugin.L($"{notKissedCount} followers available for romancing!");
         return notKissedCount > 1;
     }
 
@@ -159,7 +128,6 @@ public static class FollowerPatches
         if (!Plugin.MassBully.Value) return false;
         if (followerCommands != FollowerCommands.Bully) return false;
         var notBulliedCount = Follower.Followers.Count(follower => FollowerCommandItems.Bully().IsAvailable(follower));
-        //Plugin.L($"{notBulliedCount} followers available for bullying!");
         return notBulliedCount > 1;
     }
 
@@ -168,7 +136,6 @@ public static class FollowerPatches
         if (!Plugin.MassBully.Value) return false;
         if (followerCommands != FollowerCommands.Reassure) return false;
         var notReassuredCount = Follower.Followers.Count(follower => FollowerCommandItems.Reassure().IsAvailable(follower));
-        //Plugin.L($"{notReassuredCount} followers available for reassuring!");
         return notReassuredCount > 1;
     }
 
@@ -177,7 +144,6 @@ public static class FollowerPatches
         if (!Plugin.MassBully.Value) return false;
         if (followerCommands != FollowerCommands.Reeducate) return false;
         var notReeducatedCount = Follower.Followers.Count(follower => FollowerCommandItems.Reeducate().IsAvailable(follower));
-        //Plugin.L($"{notReeducatedCount} followers available for reeducating!");
         return notReeducatedCount > 1;
     }
 

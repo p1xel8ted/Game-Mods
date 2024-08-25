@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace CultOfQoL.Patches;
+﻿namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
 internal static class TwitchItems

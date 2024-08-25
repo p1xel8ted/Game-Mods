@@ -1,3 +1,8 @@
+### 2.2.7 - 25/08/2024
+
+* Added requested feature, reversing the nerf to the Ritual of Enrichment. Enabling this will also remove follower level limit as it's required.
+* Added a remove vignette option. Despite having it disabled in the game config, there is still vignetting present on the main camera.
+
 ### 2.2.6 - 24/08/2024
 
 * Removal of Costura Fody as it's no longer required, and causes delays with updates on Thunderstore.

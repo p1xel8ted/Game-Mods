@@ -8,13 +8,13 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.1.7";
+    private const string PluginVer = "0.1.8";
     private const string NamesSection = "Names";
     private const string ApiSection = "API";
 
-    public static ManualLogSource Log = null!;
-    internal static ConfigEntry<string> PersonalApiKey = null!;
-    internal static ConfigEntry<string> AddName = null!;
+    public static ManualLogSource Log { get; private set; }
+    internal static ConfigEntry<string> PersonalApiKey { get; private set; }
+    internal static ConfigEntry<string> AddName { get; private set; }
 
     private static bool _showGetNewConfirmationDialog;
     private static bool _showReloadConfirmationDialog;

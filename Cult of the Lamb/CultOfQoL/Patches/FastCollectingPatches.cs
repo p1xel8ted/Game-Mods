@@ -1,5 +1,3 @@
-using Shared;
-
 namespace CultOfQoL.Patches;
 
 [HarmonyPatch]

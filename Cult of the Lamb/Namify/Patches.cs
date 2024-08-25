@@ -4,7 +4,7 @@ namespace Namify;
 public static class Patches
 {
     private static string _pendingName = string.Empty;
-    
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save))]
     private static void SaveAndLoad_Save()
@@ -12,13 +12,29 @@ public static class Patches
         if (!DataManager.Instance.AllowSaving || CheatConsole.IN_DEMO) return;
         Data.SaveData();
     }
-    
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Load))]
     private static void SaveAndLoad_Load(int saveSlot)
     {
         if (CheatConsole.IN_DEMO) return;
         Data.LoadData();
+    }
+
+    private static void CleanNames()
+    {
+        Plugin.Log.LogInfo("Ensuring names are cleaned of * ...");
+        foreach (var follower in FollowerManager.Followers.SelectMany(a => a.Value))
+        {
+            follower.Brain.Info.Name = follower.Brain.Info.Name.Replace("*", string.Empty);
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerFarming), nameof(PlayerFarming.OnEnable))]
+    private static void PlayerFarming_OnEnable()
+    {
+        CleanNames();
     }
 
     [HarmonyPostfix]
@@ -33,10 +49,11 @@ public static class Patches
             Plugin.Log.LogInfo($"Follower name {name} confirmed! Removing name from saved name list.");
             Data.NamifyNames.Remove(_pendingName);
             Data.UserNames.Remove(_pendingName);
-            
-            //remove * from instance._targetFollower.Brain.Info.Name
-            instance._targetFollower.Brain.Info.Name = instance._targetFollower.Brain.Info.Name.Replace("*", string.Empty);
+
+            instance._targetFollower.Brain.Info.Name = _pendingName.Replace("*", string.Empty);
             _pendingName = string.Empty;
+            
+            CleanNames();
         });
     }
 

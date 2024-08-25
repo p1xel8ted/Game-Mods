@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace CultOfQoL.Patches;
+﻿namespace CultOfQoL.Patches;
 
 [HarmonyPatch]
 public static class GameSpeedManipulationPatches
