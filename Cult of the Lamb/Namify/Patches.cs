@@ -29,6 +29,14 @@ public static class Patches
             follower.Brain.Info.Name = follower.Brain.Info.Name.Replace("*", string.Empty);
         }
     }
+    
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract))]
+    private static void interaction_FollowerInteraction_OnInteract()
+    {
+        CleanNames();
+    }
+
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerFarming), nameof(PlayerFarming.OnEnable))]
@@ -77,7 +85,10 @@ public static class Patches
 
         var bothNames = Data.NamifyNames.Concat(Data.UserNames).Distinct().ToList();
         _pendingName = bothNames.RandomElement();
-        _pendingName = $"{_pendingName}*";
+        if (Plugin.AsterixNames.Value)
+        {
+            _pendingName = $"{_pendingName}*";
+        }
 
         __result = _pendingName;
     }

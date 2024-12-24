@@ -12,7 +12,7 @@ public partial class Plugin
     // private static List<SaveSlotData> SortedTrimmedSaveGames { get; set; } = [];
     private static bool CanSave { get; set; }
     private static string CurrentSave { get; set; }
-    private readonly static Dictionary<string, Vector3> SaveLocationsDictionary = new();
+    private static readonly Dictionary<string, Vector3> SaveLocationsDictionary = new();
 
 
     [HarmonyPrefix]

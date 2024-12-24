@@ -2,9 +2,9 @@
 
 internal static class ElementMaps
 {
-    internal readonly static Dictionary<string, Element> ItemElementCache = new();
+    internal static readonly Dictionary<string, Element> ItemElementCache = new();
 
-    internal readonly static Dictionary<string, Element> ElementMappings = new()
+    internal static readonly Dictionary<string, Element> ElementMappings = new()
     {
         {"brown", Element.Slowing},
         {"d_blue", Element.Acceleration},

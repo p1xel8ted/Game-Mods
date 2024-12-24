@@ -4,13 +4,13 @@ namespace AppleTreesEnhanced;
 
 public static class Helpers
 {
-    internal readonly static string[] WorldReadyHarvests =
+    internal static readonly string[] WorldReadyHarvests =
     [
         Constants.HarvestReady.WorldBerryBush1, Constants.HarvestReady.WorldBerryBush2, Constants.HarvestReady.WorldBerryBush3
     ];
 
 
-    internal readonly static string[] SellThesePlease =
+    internal static readonly string[] SellThesePlease =
     [
         Constants.OutputItems.Bee, Constants.OutputItems.Wax, Constants.OutputItems.Honey
     ];

@@ -154,7 +154,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSettings), nameof(GameSettings.ApplyLanguageChange))]
     public static void GameSettings_Init()
     {
-        Plugin.UpdateLists(true);
+        Plugin.UpdateLists();
     }
     
     [HarmonyPostfix]

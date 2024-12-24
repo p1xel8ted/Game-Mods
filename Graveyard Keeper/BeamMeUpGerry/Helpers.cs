@@ -42,7 +42,7 @@ public static class Helpers
         var playerMoney = MainGame.me.player.data.money;
 
         // Calculate dynamic fee based on player's money
-        var dynamicFee = (float) Math.Max(minimumFee, Math.Min(maximumFee, Math.Round(0.1f * playerMoney / 100f, 2)));
+        var dynamicFee = (float)Math.Max(minimumFee, Math.Min(maximumFee, Math.Round(0.1f * playerMoney / 100f, 2)));
 
         // Logging for debugging or information purposes
         Log($"[Fee]: {Trading.FormatMoney(dynamicFee, true)}\nMoney: {Trading.FormatMoney(playerMoney, true)}, Minimum: {Trading.FormatMoney(minimumFee, true)}");
@@ -75,7 +75,7 @@ public static class Helpers
     public static string RemoveCharacters(string locationZone)
     {
         var translation = SpeechBubbleGUI.SpeechText(locationZone);
-        var removeTheseCharacters = new[] {'\n', '\t', '\\', '\'', '[', ']'};
+        var removeTheseCharacters = new[] { '\n', '\t', '\\', '\'', '[', ']' };
         var cleanedString = removeTheseCharacters.Aggregate(translation, (current, c) => current.Replace(c.ToString(), ""));
         var textInfo = CultureInfo.CurrentCulture.TextInfo;
         return textInfo.ToTitleCase(cleanedString.ToLower());
@@ -117,6 +117,7 @@ public static class Helpers
         {
             Tools.ShowCinematic(Gerry.transform);
         }
+
         Gerry.ReplaceWithObject(Constants.GerryTalkingSkullID, true);
         Tools.NameSpawnedGerry(Gerry);
         GerryRunning = true;
@@ -156,19 +157,19 @@ public static class Helpers
         }
     }
 
-    private readonly static Dictionary<string, string> UnusualMaps = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, string> UnusualMaps = new(StringComparer.OrdinalIgnoreCase)
     {
-        {Constants.ZoneLSand, Constants.SandMoundZone},
-        {Constants.ZoneLClay, Constants.ClayPitZone},
-        {Constants.ZoneLLighthouse, "sealight"},
-        {Constants.ZoneLQuarry, "stone_workyard"},
-        {Constants.ZoneLFellingsite, "zombie_sawmill"},
-        {Constants.ZoneLCoal, Constants.NorthCoalZone},
-        {"@lighthouse", "sealight"},
-        {"@quarry", "stone_workyard"},
-        {"@players_tavern", "players_tavern"},
-        {"@zone_nountain_fort", "camp"}, //no match, this is close enough
-        {"@zone_refugees_camp_tp", "refugees_camp"}
+        { Constants.ZoneLSand, Constants.SandMoundZone },
+        { Constants.ZoneLClay, Constants.ClayPitZone },
+        { Constants.ZoneLLighthouse, "sealight" },
+        { Constants.ZoneLQuarry, "stone_workyard" },
+        { Constants.ZoneLFellingsite, "zombie_sawmill" },
+        { Constants.ZoneLCoal, Constants.NorthCoalZone },
+        { "@lighthouse", "sealight" },
+        { "@quarry", "stone_workyard" },
+        { "@players_tavern", "players_tavern" },
+        { "@zone_nountain_fort", "camp" }, //no match, this is close enough
+        { "@zone_refugees_camp_tp", "refugees_camp" }
     };
 
     // private static string[] LocationsToReturnFalse =>
@@ -219,6 +220,12 @@ public static class Helpers
 
     internal static bool RemoveZone(Location location)
     {
+        if (!Plugin.RestrictToFoundLocations.Value)
+        {
+            Plugin.Log.LogInfo($"[RemoveZone] {location.zone} - RestrictToFoundLocations is false. Not removing.");
+            return false;
+        }
+
         if (location.customZone)
         {
             Plugin.Log.LogInfo($"[RemoveZone] {location.zone} is a custom location. Not removing.");
@@ -335,6 +342,7 @@ public static class Helpers
     internal static IEnumerator LogPosition(Action onComplete = null)
     {
         if (!MainGame.game_started || MainGame.me.player == null || EnvironmentEngine.me == null) yield break;
+        var dateTimeNow = DateTime.Now.ToString("HH_mm_ss_dd_MM_yyyy"); //convert to filesystem safe format
         var myZone = MainGame.me.player.GetMyWorldZoneId();
         var zone = myZone.IsNullOrWhiteSpace() ? string.Empty : $"zone_{MainGame.me.player.GetMyWorldZoneId()}";
         var preset = EnvironmentEngine.cur_preset;
@@ -342,11 +350,15 @@ public static class Helpers
         var coords = MainGame.me.player.grid_pos;
         // Plugin.Log.LogWarning($"Local: {MainGame.me.player.transform.localPosition}, Global: {MainGame.me.player.transform.position} ");
         var state = EnvironmentEngine.me.data.state;
-        var location = new Location($"custom_{zone}_rename_me", preset == null ? "" : preset.name, teleportPoints[0].gd_tag, coords, false, state)
+        var location = new Location($"custom_{zone}_rename_me_{dateTimeNow}", preset == null ? "" : preset.name, teleportPoints[0].gd_tag, coords, false, state)
         {
             customZone = true
         };
         location.SaveJson();
-        onComplete?.Invoke();
+
+        if (onComplete == null) yield break;
+
+        Plugin.Log.LogWarning("Invoking onComplete");
+        onComplete.Invoke();
     }
 }

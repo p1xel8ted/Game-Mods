@@ -3,7 +3,7 @@
 [HarmonyPatch]
 public static class Patches
 {
-    private readonly static List<string> DropList =
+    private static readonly List<string> DropList =
     [
         "fruit:berry", "fruit:apple_green_crop", "fruit:apple_red_crop", "honey", "beeswax", "ash", "shr_agaric",
         "shr_boletus", "bat_wing", "jelly_slug",

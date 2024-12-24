@@ -3,7 +3,7 @@
 public static class Invents
 {
 
-    private readonly static string[] AlwaysSkip = ["bat","slime","refugees", "bee", "refugee", "npc_tavern_barman", "soul_container", "box_pallet"];
+    private static readonly string[] AlwaysSkip = ["bat","slime","refugees", "bee", "refugee", "npc_tavern_barman", "soul_container", "box_pallet"];
 
     internal static IEnumerator LoadInventories(Action callback = null)
     {

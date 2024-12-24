@@ -100,7 +100,7 @@ public static class Tools
         }
     }
 
-    private readonly static string[] Quests =
+    private static readonly string[] Quests =
     [
         "start",
         "get_out_from_house_tech",
@@ -122,9 +122,9 @@ public static class Tools
         "player_repairs_sword"
     ];
 
-    private readonly static List<string> LoadedModsById = [];
-    private readonly static List<string> LoadedModsByName = [];
-    private readonly static List<string> LoadedModsByFileName = [];
+    private static readonly List<string> LoadedModsById = [];
+    private static readonly List<string> LoadedModsByName = [];
+    private static readonly List<string> LoadedModsByFileName = [];
 
     public static bool TutorialDone()
     {

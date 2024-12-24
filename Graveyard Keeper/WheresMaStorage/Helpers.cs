@@ -2,9 +2,9 @@
 
 public static class Helpers
 {
-    private readonly static Dictionary<string, bool> OriginalHandToolDestroy = new();
-    internal readonly static Dictionary<string, int> OriginalInventorySizes = new();
-    private readonly static Dictionary<string, int> OriginalStackSizes = new();
+    private static readonly Dictionary<string, bool> OriginalHandToolDestroy = new();
+    internal static readonly Dictionary<string, int> OriginalInventorySizes = new();
+    private static readonly Dictionary<string, int> OriginalStackSizes = new();
 
     internal static void RunWmsTasks()
     {

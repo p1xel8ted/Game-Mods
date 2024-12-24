@@ -4,7 +4,7 @@
 [HarmonyPriority(1)]
 public static class Actions
 {
-    private readonly static string[] SafeGerryTags =
+    private static readonly string[] SafeGerryTags =
     [
         "tavern_skull",
         "talking_skull",

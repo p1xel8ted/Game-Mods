@@ -2,7 +2,7 @@
 
 internal static class LangDicts
 {
-    private readonly static Dictionary<string, Dictionary<ElementMaps.Element, string>> LanguageDictionaries = new()
+    private static readonly Dictionary<string, Dictionary<ElementMaps.Element, string>> LanguageDictionaries = new()
     {
         ["en"] = new Dictionary<ElementMaps.Element, string>
         {

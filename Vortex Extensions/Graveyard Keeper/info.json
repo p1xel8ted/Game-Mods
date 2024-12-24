@@ -1,6 +1,7 @@
 {
-  "name": "Game: Graveyard Keeper",
+  "name": "Graveyard Keeper Vortex Extension",
   "author": "p1xel8ted",
-  "version": "1.0.0",
-  "description": "Vortex support for Graveyard Keeper (QMod)"
+  "version": "1.1.0",
+  "description": "Vortex support for Graveyard Keeper - supports Steam and GOG versions, and automatic downloading of the Graveyard Keeper BepInEx pack.",
+  "type": "game"
 }

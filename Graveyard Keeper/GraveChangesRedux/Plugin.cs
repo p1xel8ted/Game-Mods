@@ -8,10 +8,10 @@ public class Plugin : BaseUnityPlugin
     private const string PluginName = "Grave Changes Redux";
     private const string PluginVer = "0.1.1";
 
-    private readonly static Dictionary<string,float> ItemDefBackups = new();
-    private readonly static Dictionary<string,SmartExpression> ObjDefBackups = new();
+    private static readonly Dictionary<string,float> ItemDefBackups = new();
+    private static readonly Dictionary<string,SmartExpression> ObjDefBackups = new();
 
-    private readonly static string[] SkipThese = ["grave_empty", "_place", "place_", "grave_corp", "grave_exhume", "grave_ground"];
+    private static readonly string[] SkipThese = ["grave_empty", "_place", "place_", "grave_corp", "grave_exhume", "grave_ground"];
     private static ManualLogSource LOG { get; set; }
     private static ConfigEntry<bool> ModifyGraves { get; set; }
     private static ConfigEntry<bool> ModifyObjects { get; set; }

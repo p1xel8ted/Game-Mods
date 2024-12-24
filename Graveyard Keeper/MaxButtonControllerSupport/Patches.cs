@@ -15,7 +15,7 @@ public partial class Plugin
 
     private static bool _unsafeInteraction;
 
-    private readonly static string[] UnSafeCraftObjects =
+    private static readonly string[] UnSafeCraftObjects =
     [
         "mf_crematorium_corp", "garden_builddesk", "tree_garden_builddesk", "mf_crematorium", "grave_ground",
         "tile_church_semicircle_2floors", "mf_grindstone_1", "zombie_garden_desk_1", "zombie_garden_desk_2",
@@ -27,12 +27,12 @@ public partial class Plugin
         "refugee_camp_garden_bed_3"
     ];
 
-    private readonly static string[] UnSafeCraftZones =
+    private static readonly string[] UnSafeCraftZones =
     [
         "church"
     ];
 
-    private readonly static string[] UnSafePartials =
+    private static readonly string[] UnSafePartials =
     [
         "blockage", "obstacle", "builddesk", "fix", "broken"
     ];

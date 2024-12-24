@@ -42,7 +42,7 @@ internal static class Language
         None
     }
 
-    private readonly static Dictionary<Terms, string> TermMap = new()
+    private static readonly Dictionary<Terms, string> TermMap = new()
     {
         {Terms.ZoneLClay, Constants.ZoneLClay},
         {Terms.ZoneLCoal, Constants.ZoneLCoal},
@@ -81,7 +81,7 @@ internal static class Language
         {Terms.WhereIsIt, Constants.WhereIsIt}
     };
 
-    private readonly static Dictionary<string, Dictionary<string, string>> LanguageDictionaries = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, Dictionary<string, string>> LanguageDictionaries = new(StringComparer.OrdinalIgnoreCase)
     {
         ["en"] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {

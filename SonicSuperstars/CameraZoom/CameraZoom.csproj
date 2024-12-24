@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{64082741-AF48-4121-BCBD-8BA7B271F241}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CameraZoom</RootNamespace>
+    <AssemblyName>CameraZoom</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <EnableDefaultItems>False</EnableDefaultItems>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Include="ImprovedCamera\FOVFixes.cs" />
+    <Compile Include="ImprovedCamera\ImprovedCamera.cs" />
+    <Compile Include="ImprovedCamera\MyPluginInfo.cs" />
+    <Compile Include="ImprovedCamera\Plugin.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony" />
+    <Reference Include="ArzestLib" />
+    <Reference Include="Assembly-CSharp">
+      <HintPath>E:\SteamLibrary\steamapps\common\The Messenger\TheMessenger_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx.Core" />
+    <Reference Include="BepInEx.Unity.IL2CPP" />
+    <Reference Include="Cinemachine" />
+    <Reference Include="Il2CppInterop.Runtime" />
+    <Reference Include="Il2Cppmscorlib" />
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\The Messenger\TheMessenger_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

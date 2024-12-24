@@ -4,7 +4,7 @@
 [HarmonyBefore("p1xel8ted.gyk.queueeverything")]
 public static class Patches
 {
-    private readonly static string[] Exclude =
+    private static readonly string[] Exclude =
     [
         "zombie", "refugee", "bee", "tree", "berry", "bush", "pump", "compost", "peat", "slime", "candelabrum", "incense", "garden", "planting"
     ];

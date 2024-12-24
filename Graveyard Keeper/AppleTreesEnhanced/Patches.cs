@@ -3,7 +3,7 @@
 [Harmony]
 public static class Patches
 {
-    private readonly static HashSet<string> SellableItemIds = [..Helpers.SellThesePlease];
+    private static readonly HashSet<string> SellableItemIds = [..Helpers.SellThesePlease];
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Vendor), nameof(Vendor.CanBuyItem), typeof(ItemDefinition), typeof(bool))]

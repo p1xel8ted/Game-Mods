@@ -3,7 +3,7 @@
 [Harmony]
 public static class Patches
 {
-    private readonly static ItemDefinition.ItemType[] ToolItems =
+    private static readonly ItemDefinition.ItemType[] ToolItems =
     [
         ItemDefinition.ItemType.Axe, ItemDefinition.ItemType.Shovel, ItemDefinition.ItemType.Hammer,
         ItemDefinition.ItemType.Pickaxe, ItemDefinition.ItemType.FishingRod, ItemDefinition.ItemType.BodyArmor,

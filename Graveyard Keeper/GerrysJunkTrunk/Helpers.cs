@@ -2,7 +2,7 @@
 
 public partial class Plugin
 {
-    private readonly static ItemDefinition.ItemType[] ExcludeItems =
+    private static readonly ItemDefinition.ItemType[] ExcludeItems =
     [
         ItemDefinition.ItemType.Axe, ItemDefinition.ItemType.Shovel, ItemDefinition.ItemType.Hammer,
         ItemDefinition.ItemType.Pickaxe, ItemDefinition.ItemType.FishingRod, ItemDefinition.ItemType.BodyArmor,

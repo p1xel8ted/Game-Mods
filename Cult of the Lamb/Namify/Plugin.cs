@@ -8,20 +8,22 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.1.8";
+    private const string PluginVer = "0.1.9";
     private const string NamesSection = "Names";
     private const string ApiSection = "API";
 
     public static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<string> PersonalApiKey { get; private set; }
     internal static ConfigEntry<string> AddName { get; private set; }
+    internal static ConfigEntry<bool> AsterixNames { get; private set; }
+    private static bool ShowGetNewConfirmationDialog { get; set; }
+    private static bool ShowReloadConfirmationDialog { get; set; }
 
-    private static bool _showGetNewConfirmationDialog;
-    private static bool _showReloadConfirmationDialog;
-    private static string _namifyNamesFilePath;
-    private static string _userDataFilePath;
-    private static string NamifyNamesFilePath => _namifyNamesFilePath ??= Path.Combine(Application.persistentDataPath, "saves", Data.NamifyDataPath);
-    private static string UserNameFilePath => _userDataFilePath ??= Path.Combine(Application.persistentDataPath, "saves", Data.UserDataPath);
+    // private static string _namifyNamesFilePath { get; set; }
+    // private static string _userDataFilePath { get; set; }
+    private static string NamifyNamesFilePath => Path.Combine(Application.persistentDataPath, "saves", Data.NamifyDataPath);
+    private static string UserNameFilePath => Path.Combine(Application.persistentDataPath, "saves", Data.UserDataPath);
+    private static PopupManager PopupManagerInstance { get; set; }
 
     private void Awake()
     {
@@ -35,10 +37,11 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
     }
-    private static PopupManager PopupManager = null!;
+
     private void InitializeConfigurations()
     {
-        PopupManager = gameObject.AddComponent<PopupManager>();
+        PopupManagerInstance = gameObject.AddComponent<PopupManager>();
+        AsterixNames = Config.Bind(NamesSection, "Asterix Names", true, new ConfigDescription("Namified names will have an asterix next to them. Will be removed automatically.", null, new ConfigurationManagerAttributes {Order = 11}));
         PersonalApiKey = Config.Bind(ApiSection, "Personal API Key", "ee5f806e1c1d458b99c934c0eb3de5b8", "The default API Key is mine, limited to 1000 requests per day. You can get your own at https://randommer.io/");
         AddName = Config.Bind(NamesSection, "Add Name", "", new ConfigDescription("Adds a name to the list of names.", null, new ConfigurationManagerAttributes {Order = 10}));
         Config.Bind(NamesSection, "Add Name Button", true, new ConfigDescription("Add the name entered to the list.", null, new ConfigurationManagerAttributes {Order = 9, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = AddNameButton}));
@@ -72,7 +75,7 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            PopupManager.ShowPopup($"Names file ({NamifyNamesFilePath}) does not exist!");
+            PopupManagerInstance.ShowPopup($"Names file ({NamifyNamesFilePath}) does not exist!");
         }
     }
 
@@ -84,7 +87,7 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            PopupManager.ShowPopup($"Names file ({UserNameFilePath}) does not exist!");
+            PopupManagerInstance.ShowPopup($"Names file ({UserNameFilePath}) does not exist!");
         }
     }
 
@@ -97,12 +100,12 @@ public class Plugin : BaseUnityPlugin
             if (GUILayout.Button("Yes", GUILayout.ExpandWidth(true)))
             {
                 GenerateNewNamesAction();
-                _showGetNewConfirmationDialog = false;
+                ShowGetNewConfirmationDialog = false;
             }
 
             if (GUILayout.Button("No", GUILayout.ExpandWidth(true)))
             {
-                _showGetNewConfirmationDialog = false;
+                ShowGetNewConfirmationDialog = false;
             }
         }
         GUILayout.EndHorizontal();
@@ -119,19 +122,19 @@ public class Plugin : BaseUnityPlugin
                 try
                 {
                     Data.LoadData();
-                    PopupManager.ShowPopup("Names reloaded from file!");
+                    PopupManagerInstance.ShowPopup("Names reloaded from file!");
                 }
                 catch (Exception e)
                 {
-                    PopupManager.ShowPopup($"Error in reloading names. Check log for more details.");
+                    PopupManagerInstance.ShowPopup($"Error in reloading names. Check log for more details.");
                     Log.LogError($"Error in reloading names: {e.Message}");
                 }
-                _showReloadConfirmationDialog = false;
+                ShowReloadConfirmationDialog = false;
             }
 
             if (GUILayout.Button("No", GUILayout.ExpandWidth(true)))
             {
-                _showReloadConfirmationDialog = false;
+                ShowReloadConfirmationDialog = false;
             }
         }
         GUILayout.EndHorizontal();
@@ -145,10 +148,10 @@ public class Plugin : BaseUnityPlugin
             Data.NamifyNames.Clear();
             Data.GetNamifyNames(() =>
             {
-                PopupManager.ShowPopup("Error in generating new names!");
+                PopupManagerInstance.ShowPopup("Error in generating new names!");
             }, () =>
             {
-                PopupManager.ShowPopup("New names generated!");
+                PopupManagerInstance.ShowPopup("New names generated!");
             });
         }
         catch (Exception ex)
@@ -163,24 +166,24 @@ public class Plugin : BaseUnityPlugin
         {
             if (string.IsNullOrWhiteSpace(AddName.Value))
             {
-                PopupManager.ShowPopup("You haven't entered a name to add?");
+                PopupManagerInstance.ShowPopup("You haven't entered a name to add?");
                 return;
             }
 
             if (!Data.UserNames.Add(AddName.Value))
             {
-                PopupManager.ShowPopup($"'{AddName.Value}' already exists!");
+                PopupManagerInstance.ShowPopup($"'{AddName.Value}' already exists!");
                 return;
             }
 
             Data.SaveData();
-            PopupManager.ShowPopup($"Added '{AddName.Value}' to available names!");
+            PopupManagerInstance.ShowPopup($"Added '{AddName.Value}' to available names!");
         }
     }
 
     private static void ReloadNames(ConfigEntryBase entry)
     {
-        if (_showReloadConfirmationDialog)
+        if (ShowReloadConfirmationDialog)
         {
             DisplayReloadConfirmationDialog();
         }
@@ -189,14 +192,14 @@ public class Plugin : BaseUnityPlugin
             var button = GUILayout.Button("Reload Names From File", GUILayout.ExpandWidth(true));
             if (button)
             {
-                _showReloadConfirmationDialog = true;
+                ShowReloadConfirmationDialog = true;
             }
         }
     }
 
     private static void GenerateNewNamesButton(ConfigEntryBase entry)
     {
-        if (_showGetNewConfirmationDialog)
+        if (ShowGetNewConfirmationDialog)
         {
             DisplayGetNewConfirmationDialog();
         }
@@ -205,7 +208,7 @@ public class Plugin : BaseUnityPlugin
             var button = GUILayout.Button("Generate New Names", GUILayout.ExpandWidth(true));
             if (button)
             {
-                _showGetNewConfirmationDialog = true;
+                ShowGetNewConfirmationDialog = true;
             }
         }
     }

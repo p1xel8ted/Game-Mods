@@ -8,7 +8,7 @@ internal static class LangDicts
         NoneFound
     }
 
-    private readonly static Dictionary<string, Dictionary<Messages, string>> LanguageDictionaries = new()
+    private static readonly Dictionary<string, Dictionary<Messages, string>> LanguageDictionaries = new()
     {
         ["en"] = new Dictionary<Messages, string>
         {

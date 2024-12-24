@@ -2,54 +2,53 @@
 
 public static class LocationLists
 {
-
-
-    internal static List<Location> AllLocations =>
+    // internal static readonly List<Location> CustomLocations = [];
+    internal static readonly List<Location> AllLocations =
     [
-        new Location("zone_home", "house", "tp_house_b", new Vector2(29.5f, -68.4f), true, EnvironmentEngine.State.Inside), //tp_house_b
-        new Location("zone_tavern", "tavern", "tp_tavern_b", new Vector2(52.5f, -87.5f), true, EnvironmentEngine.State.Inside), //tp_tavern_b
-        new Location(Constants.ZoneLLighthouse, string.Empty, "tp_lighthouse_a", new Vector2(268.0f, -23.0f), true), //tp_lighthouse_a
-        new Location(Constants.ZoneLQuarry, "mining", "tp_mining_hut_b", new Vector2(49.0f, -122.9f), true, EnvironmentEngine.State.Inside), //tp_mining_hut_b
-        new Location("@players_tavern", "players", "tp_players_tavern_front_b", new Vector2(203.5f, -97.5f), true, EnvironmentEngine.State.Inside), //tp_players_tavern_front_b
-        new Location("@zone_nountain_fort", string.Empty, "tp_mountain_fort_point_a", new Vector2(203.0f, 39.0f), true), //tp_mountain_fort_point_a
-        new Location("@zone_refugees_camp_tp", string.Empty, "tp_refugee_point_a", new Vector2(25.0f, 59.0f), true), //tp_refugee_point_a
-        new Location("zone_witch_hut", string.Empty, string.Empty, new Vector2(-51.7f, -18.5f)),
-        new Location("zone_cellar", "mortuary", string.Empty, new Vector2(112.9f, -96.3f), false, EnvironmentEngine.State.Inside),
-        new Location("zone_alchemy", "mortuary", string.Empty, new Vector2(85.9f, -106.0f), false, EnvironmentEngine.State.Inside),
-        new Location("zone_morgue", "mortuary", string.Empty, new Vector2(101.5f, -118.0f), false, EnvironmentEngine.State.Inside),
-        new Location("zone_beegarden", string.Empty, string.Empty, new Vector2(33.7f, 18.9f)),
-        new Location("zone_hill", string.Empty, string.Empty, new Vector2(86.4f, 14.5f)),
-        new Location("zone_sacrifice", string.Empty, string.Empty, new Vector2(99.3f, -87.8f), false, EnvironmentEngine.State.Inside),
-        new Location("zone_beatch", string.Empty, string.Empty, new Vector2(234.4f, 3.3f)),
-        new Location("zone_vineyard", string.Empty, string.Empty, new Vector2(67.4f, 4.26f)),
-        new Location("zone_camp", string.Empty, string.Empty, new Vector2(215.5f, 29.4f)),
-        new Location("zone_souls", "mortuary", string.Empty, new Vector2(115.1f, -112.6f), false, EnvironmentEngine.State.Inside),
-        new Location("zone_graveyard", string.Empty, string.Empty, new Vector2(17.0f, -15.7f)),
-        new Location("zone_euric_room", "euric", string.Empty, new Vector2(209.5f, -120.8f), false, EnvironmentEngine.State.Inside),
-        new Location("zone_church", "church", string.Empty, new Vector2(1.9f, -85.6f), false, EnvironmentEngine.State.Inside),
-        new Location(Constants.ZoneLFellingsite, string.Empty, string.Empty, new Vector2(23.0f, 35.5f)),
-        new Location(Constants.ZoneLCoal, string.Empty, string.Empty, new Vector2(-5.3f, 63.5f)),
-        new Location(Constants.ZoneLClay, string.Empty, string.Empty, new Vector2(6.2f, -33.2f)),
-        new Location(Constants.ZoneLSand, string.Empty, string.Empty, new Vector2(3.5f, 9.1f)),
-        new Location(Constants.ZoneLMill, string.Empty, string.Empty, new Vector2(123.0f, -8.0f)),
-        new Location(Constants.ZoneLFarmer, string.Empty, string.Empty, new Vector2(122.9f, -33.9f))
+        new("zone_home", "house", "tp_house_b", new Vector2(29.5f, -68.4f), true, EnvironmentEngine.State.Inside), //tp_house_b
+        new("zone_tavern", "tavern", "tp_tavern_b", new Vector2(52.5f, -87.5f), true, EnvironmentEngine.State.Inside), //tp_tavern_b
+        new(Constants.ZoneLLighthouse, string.Empty, "tp_lighthouse_a", new Vector2(268.0f, -23.0f), true), //tp_lighthouse_a
+        new(Constants.ZoneLQuarry, "mining", "tp_mining_hut_b", new Vector2(49.0f, -122.9f), true, EnvironmentEngine.State.Inside), //tp_mining_hut_b
+        new("@players_tavern", "players", "tp_players_tavern_front_b", new Vector2(203.5f, -97.5f), true, EnvironmentEngine.State.Inside), //tp_players_tavern_front_b
+        new("@zone_nountain_fort", string.Empty, "tp_mountain_fort_point_a", new Vector2(203.0f, 39.0f), true), //tp_mountain_fort_point_a
+        new("@zone_refugees_camp_tp", string.Empty, "tp_refugee_point_a", new Vector2(25.0f, 59.0f), true), //tp_refugee_point_a
+        new("zone_witch_hut", string.Empty, string.Empty, new Vector2(-51.7f, -18.5f)),
+        new("zone_cellar", "mortuary", string.Empty, new Vector2(112.9f, -96.3f), false, EnvironmentEngine.State.Inside),
+        new("zone_alchemy", "mortuary", string.Empty, new Vector2(85.9f, -106.0f), false, EnvironmentEngine.State.Inside),
+        new("zone_morgue", "mortuary", string.Empty, new Vector2(101.5f, -118.0f), false, EnvironmentEngine.State.Inside),
+        new("zone_beegarden", string.Empty, string.Empty, new Vector2(33.7f, 18.9f)),
+        new("zone_hill", string.Empty, string.Empty, new Vector2(86.4f, 14.5f)),
+        new("zone_sacrifice", string.Empty, string.Empty, new Vector2(99.3f, -87.8f), false, EnvironmentEngine.State.Inside),
+        new("zone_beatch", string.Empty, string.Empty, new Vector2(234.4f, 3.3f)),
+        new("zone_vineyard", string.Empty, string.Empty, new Vector2(67.4f, 4.26f)),
+        new("zone_camp", string.Empty, string.Empty, new Vector2(215.5f, 29.4f)),
+        new("zone_souls", "mortuary", string.Empty, new Vector2(115.1f, -112.6f), false, EnvironmentEngine.State.Inside),
+        new("zone_graveyard", string.Empty, string.Empty, new Vector2(17.0f, -15.7f)),
+        new("zone_euric_room", "euric", string.Empty, new Vector2(209.5f, -120.8f), false, EnvironmentEngine.State.Inside),
+        new("zone_church", "church", string.Empty, new Vector2(1.9f, -85.6f), false, EnvironmentEngine.State.Inside),
+        new(Constants.ZoneLFellingsite, string.Empty, string.Empty, new Vector2(23.0f, 35.5f)),
+        new(Constants.ZoneLCoal, string.Empty, string.Empty, new Vector2(-5.3f, 63.5f)),
+        new(Constants.ZoneLClay, string.Empty, string.Empty, new Vector2(6.2f, -33.2f)),
+        new(Constants.ZoneLSand, string.Empty, string.Empty, new Vector2(3.5f, 9.1f)),
+        new(Constants.ZoneLMill, string.Empty, string.Empty, new Vector2(123.0f, -8.0f)),
+        new(Constants.ZoneLFarmer, string.Empty, string.Empty, new Vector2(122.9f, -33.9f))
     ];
 
-    private static AnswerVisualData Page1Answer => new() {id = Language.GetTranslation(Language.Terms.Page1)};
-    private  static AnswerVisualData Page2Answer => new() {id = Language.GetTranslation(Language.Terms.Page2)};
-    private  static AnswerVisualData Page3Answer => new() {id = Language.GetTranslation(Language.Terms.Page3)};
-    private  static AnswerVisualData Page4Answer => new() {id = Language.GetTranslation(Language.Terms.Page4)};
-    private  static AnswerVisualData Page5Answer => new() {id = Language.GetTranslation(Language.Terms.Page5)};
-    private  static AnswerVisualData Page6Answer => new() {id  = Language.GetTranslation(Language.Terms.Page6)};
-    private  static AnswerVisualData Page7Answer => new() {id  = Language.GetTranslation(Language.Terms.Page7)};
-    private  static AnswerVisualData Page8Answer => new() {id  = Language.GetTranslation(Language.Terms.Page8)};
-    private  static AnswerVisualData Page9Answer => new() {id  = Language.GetTranslation(Language.Terms.Page9)};
-    private  static AnswerVisualData Page10Answer => new() {id  = Language.GetTranslation(Language.Terms.Page10)};
-    private  static AnswerVisualData CancelAnswer => new() {id = Constants.Cancel};
+    private static AnswerVisualData Page1Answer => new() { id = Language.GetTranslation(Language.Terms.Page1) };
+    private static AnswerVisualData Page2Answer => new() { id = Language.GetTranslation(Language.Terms.Page2) };
+    private static AnswerVisualData Page3Answer => new() { id = Language.GetTranslation(Language.Terms.Page3) };
+    private static AnswerVisualData Page4Answer => new() { id = Language.GetTranslation(Language.Terms.Page4) };
+    private static AnswerVisualData Page5Answer => new() { id = Language.GetTranslation(Language.Terms.Page5) };
+    private static AnswerVisualData Page6Answer => new() { id = Language.GetTranslation(Language.Terms.Page6) };
+    private static AnswerVisualData Page7Answer => new() { id = Language.GetTranslation(Language.Terms.Page7) };
+    private static AnswerVisualData Page8Answer => new() { id = Language.GetTranslation(Language.Terms.Page8) };
+    private static AnswerVisualData Page9Answer => new() { id = Language.GetTranslation(Language.Terms.Page9) };
+    private static AnswerVisualData Page10Answer => new() { id = Language.GetTranslation(Language.Terms.Page10) };
+    private static AnswerVisualData CancelAnswer => new() { id = Constants.Cancel };
 
-    internal readonly static List<List<AnswerVisualData>> Locations = [];
+    internal static readonly List<List<AnswerVisualData>> Locations = [];
 
-    
+
     // internal static Dictionary<string, string> LocationTranslationMap => new(StringComparer.OrdinalIgnoreCase)
     // {
     //     {Constants.ZoneLLighthouse, strings.Lighthouse},
@@ -81,6 +80,7 @@ public static class LocationLists
             {
                 Plugin.Log.LogInfo(z);
             }
+
             Plugin.Log.LogInfo("|---------- Players Seen Zones:End ----------|");
 
             Plugin.Log.LogInfo("|---------- One Time Crafts:Start ----------|");
@@ -88,20 +88,23 @@ public static class LocationLists
             {
                 Plugin.Log.LogInfo($"[Completed One Time Crafts] - {blockage}");
             }
+
             Plugin.Log.LogInfo("|---------- One Time Crafts:End ----------|");
-            
+
             Plugin.Log.LogInfo("|---------- Unlocked Phrases:Start ----------|");
             foreach (var phrase in MainGame.me.save.unlocked_phrases)
             {
                 Plugin.Log.LogInfo($"[Unlocked Phrase] - {phrase}");
             }
+
             Plugin.Log.LogInfo("|---------- Unlocked Phrases:End ----------|");
-            
+
             Plugin.Log.LogInfo("|---------- Blacklist Phrases:Start ----------|");
             foreach (var phrase in MainGame.me.save.black_list_of_phrases)
             {
                 Plugin.Log.LogInfo($"[Blacklist Phrase] - {phrase}");
             }
+
             Plugin.Log.LogInfo("|---------- Blacklist Phrases:End ----------|");
         }
     }
@@ -138,19 +141,18 @@ public static class LocationLists
             locations = locations.Where(a => !Helpers.RemoveZone(a)).ToList();
         }
 
-        var pageCount = Mathf.CeilToInt(locations.Count / (float) Plugin.LocationsPerPage.Value);
+        var pageCount = Mathf.CeilToInt(locations.Count / (float)Plugin.LocationsPerPage.Value);
 
         for (var pageIndex = 0; pageIndex < pageCount; pageIndex++)
         {
             var page = locations.Skip(pageIndex * Plugin.LocationsPerPage.Value)
                 .Take(Plugin.LocationsPerPage.Value)
-                .Select(location => new AnswerVisualData {id = location.zone})
+                .Select(location => new AnswerVisualData { id = location.zone })
                 .ToList();
-            
+
             AddNavigationAnswers(page, pageIndex, pageCount);
             Locations.Add(page);
         }
-        
     }
 
     private static void AddNavigationAnswers(IList<AnswerVisualData> page, int pageIndex, int pageCount)
@@ -197,23 +199,57 @@ public static class LocationLists
 
     internal static void LoadCustomZones()
     {
-        var path = Location.GetSavePath();
-        Directory.CreateDirectory(path); // CreateDirectory does nothing if the directory already exists
-
-        var files = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
-        foreach (var file in files)
+        try
         {
-            var location = Location.LoadFromJson(file);
-            if (!string.IsNullOrWhiteSpace(location.zone))
+            var path = Location.GetSavePath();
+            Plugin.Log.LogInfo($"Custom zones save path: {path}");
+
+            Directory.CreateDirectory(path); // CreateDirectory does nothing if the directory already exists
+            Plugin.Log.LogInfo("Checked or created the directory.");
+
+            var files = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
+            Plugin.Log.LogInfo($"Found {files.Length} JSON files in path: {path}");
+
+            foreach (var file in files)
             {
-                var exists = AllLocations.Any(a => a.zone.Equals(location.zone, StringComparison.OrdinalIgnoreCase));
-                if (exists)
+                Plugin.Log.LogInfo($"Processing file: {file}");
+                try
                 {
-                    Plugin.Log.LogWarning($"Custom location '{location.zone}' already exists in the list, skipping...");
-                    return;
+                    var location = Location.LoadFromJson(file);
+                    if (location == null)
+                    {
+                        Plugin.Log.LogWarning($"Failed to load location from file: {file}");
+                        continue;
+                    }
+
+                    Plugin.Log.LogInfo($"Loaded location from file: {file}, Zone: {location.zone}");
+
+                    if (!string.IsNullOrWhiteSpace(location.zone))
+                    {
+                        var exists = AllLocations.Any(a => a.zone.Equals(location.zone, StringComparison.OrdinalIgnoreCase));
+                        if (exists)
+                        {
+                            Plugin.Log.LogWarning($"Custom location '{location.zone}' already exists in the list, skipping...");
+                            continue;
+                        }
+
+                        AllLocations.Add(location);
+                        Plugin.Log.LogInfo($"Added location '{location.zone}' to the list.");
+                    }
+                    else
+                    {
+                        Plugin.Log.LogWarning($"Location zone is null or empty in file: {file}");
+                    }
                 }
-                AllLocations.Add(location);
+                catch (Exception ex)
+                {
+                    Plugin.Log.LogError($"Error processing file: {file}. Exception: {ex}");
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogError($"Error in LoadCustomZones: {ex}");
         }
     }
 }

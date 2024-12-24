@@ -19,29 +19,29 @@ public static class Fields
     internal const string ShippingBoxTag = "shipping_box";
     internal static bool DebugMessageShown { get; set; }
 
-    internal readonly static string[] AlwaysHidePartials =
+    internal static readonly string[] AlwaysHidePartials =
     [
         "refugee_camp_well", "refugee_camp_tent", "pump", "pallet", "refugee_camp_well_2"
     ];
 
-    internal readonly static string[] ChiselItems =
+    internal static readonly string[] ChiselItems =
     [
         "chisel"
     ];
 
-    internal readonly static ItemDefinition.ItemType[] GraveItems =
+    internal static readonly ItemDefinition.ItemType[] GraveItems =
     [
         ItemDefinition.ItemType.GraveStone, ItemDefinition.ItemType.GraveFence, ItemDefinition.ItemType.GraveCover,
         ItemDefinition.ItemType.GraveStoneReq, ItemDefinition.ItemType.GraveFenceReq, ItemDefinition.ItemType.GraveCoverReq
     ];
 
-    internal readonly static string[] PenPaperInkItems =
+    internal static readonly string[] PenPaperInkItems =
     [
         "book", "chapter", "ink", "pen"
     ];
 
 
-    internal readonly static string[] StockpileWidgetsPartials =
+    internal static readonly string[] StockpileWidgetsPartials =
     [
         "mf_stones", "mf_ore", "mf_timber"
     ];
@@ -65,13 +65,13 @@ public static class Fields
     internal static bool ZombieWorker { get; set; }
     internal static List<Item> OldDrops { get; set; } = [];
 
-    internal readonly static string[] ExcludeTheseWildernessInventories =
+    internal static readonly string[] ExcludeTheseWildernessInventories =
     [
         "vendor", "npc", "donkey", "zombie", "worker", "refugee", "pile", "carrot", "cooking", "guard", "working", "obj_church"
     ];
 
-    internal readonly static Dictionary<WorldGameObject, MultiInventory> WildernessMultiInventories = new();
-    internal readonly static List<Inventory> WildernessInventories = [];
+    internal static readonly Dictionary<WorldGameObject, MultiInventory> WildernessMultiInventories = new();
+    internal static readonly List<Inventory> WildernessInventories = [];
 
     internal static bool InventoriesLoaded { get; set; }
     public static bool DropsCleaned { get; set; }

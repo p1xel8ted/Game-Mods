@@ -7,7 +7,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.0.9";
+    private const string PluginVer = "3.1.0";
 
     internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }
@@ -23,6 +23,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<int> LocationsPerPage { get; private set; }
     internal static ConfigEntry<bool> SortAlphabetically { get; private set; }
     private static ConfigEntry<bool> EnableCustomLocations { get; set; }
+    internal static ConfigEntry<bool> RestrictToFoundLocations { get; set; }
     internal static ConfigEntry<bool> OpenNewLocationFileOnSave { get; private set; }
     private static ConfigEntry<bool> CustomLocationMessage { get; set; }
     private static ConfigEntry<KeyboardShortcut> SaveCustomLocationKeybind { get; set; }
@@ -63,7 +64,7 @@ public class Plugin : BaseUnityPlugin
 
         CachedPlayer ??= ReInput.players.GetPlayer(0);
 
-        if (EnableCustomLocations.Value)
+        if (EnableCustomLocations.Value && !CrossModFields.IsInDungeon)
         {
             if (SaveCustomLocationKeybind.Value.IsUp() || LazyInput.gamepad_active && CachedPlayer.GetButtonDown(SaveCustomLocationControllerButton.Value))
             {
@@ -77,8 +78,7 @@ public class Plugin : BaseUnityPlugin
 
             if (ReloadCustomLocationsKeybind.Value.IsUp())
             {
-                LocationLists.LoadCustomZones();
-                UpdateLists(true);
+                UpdateLists();
             }
         }
 
@@ -183,29 +183,28 @@ public class Plugin : BaseUnityPlugin
 
         LocationsPerPage = ConfigInstance.Bind("04. Locations", "Locations Per Page", 8, new ConfigDescription("Set the number of locations to display per page", new AcceptableValueRange<int>(minPages, maxPages), new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 794}));
         SortAlphabetically = ConfigInstance.Bind("04. Locations", "Sort Alphabetically", false, new ConfigDescription("Toggle alphabetical sorting of locations", null, new ConfigurationManagerAttributes {Order = 793}));
+        RestrictToFoundLocations = ConfigInstance.Bind("04. Locations", "Restrict To Found Locations", true, new ConfigDescription("Toggle the ability to restrict locations to found locations", null, new ConfigurationManagerAttributes {Order = 792}));
         EnableCustomLocations = ConfigInstance.Bind("05. Custom Locations", "Enable Custom Locations", false, new ConfigDescription("Toggle the ability to save & load custom locations.", null, new ConfigurationManagerAttributes {Order = 792}));
         SaveCustomLocationKeybind = ConfigInstance.Bind("05. Custom Locations", "Save Custom Location Keybind", new KeyboardShortcut(KeyCode.X), new ConfigDescription("Set the keybind for saving custom locations.", null, new ConfigurationManagerAttributes {Order = 791}));
         ReloadCustomLocationsKeybind = ConfigInstance.Bind("05. Custom Locations", "Reload Custom Locations Keybind", new KeyboardShortcut(KeyCode.X, KeyCode.LeftControl), new ConfigDescription("Set the keybind for reloading custom locations.", null, new ConfigurationManagerAttributes {Order = 790}));
         SaveCustomLocationControllerButton = ConfigInstance.Bind("05. Custom Locations", "Save Custom Location Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.None), new ConfigDescription("Set the controller button for saving custom locations.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 790}));
         OpenNewLocationFileOnSave = ConfigInstance.Bind("05. Custom Locations", "Open New Location File On Save", true, new ConfigDescription("Toggle the ability to open the new location file after saving.", null, new ConfigurationManagerAttributes {Order = 789}));
-
-        UpdateLists();
     }
 
-    internal readonly static Dictionary<string, ConfigEntry<bool>> LocationSettings = [];
+    internal static readonly Dictionary<string, ConfigEntry<bool>> LocationSettings = [];
 
 
-    internal static void UpdateLists(bool forceReload = false)
+    internal static void UpdateLists()
     {
-        if (forceReload)
-        {
-            Plugin.Log.LogInfo("Force reloading custom locations.");
-            LocationLists.LoadCustomZones();
-        }
+        LocationLists.LoadCustomZones();
+        
         var originalLanguage = GameSettings._cur_lng;
         GJL.LoadLanguageResource("en");
+        
         foreach (var location in LocationLists.AllLocations.OrderByDescending(a => Helpers.RemoveCharacters(a.zone)))
         {
+            Plugin.Log.LogWarning($"Creating config entry for {location.zone}");
+            
             //if (location.zone.Equals(strings.Page_1) || location.zone.Equals(strings.Page_2) || location.zone.Equals(strings.Page_3) || location.zone.Equals(strings.Custom_Locations) || location.zone.Equals(Constants.Cancel)) continue;
             var key = Helpers.RemoveCharacters(location.zone);
             var configEntry = ConfigInstance.Bind("5. Locations", key, true, $"Toggle visibility of {key} in the menu.");

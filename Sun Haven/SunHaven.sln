@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModMenu", "ModMenu\ModMenu.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheatEnablerPatcher", "CheatEnablerPatcher\CheatEnablerPatcher.csproj", "{6D7BD752-2FC8-4C91-9AD3-BA48FF134422}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermaTransform", "PermaTransform\PermaTransform.csproj", "{6AFD61A4-0996-4EF7-810E-74CB3F4E759D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{6D7BD752-2FC8-4C91-9AD3-BA48FF134422}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D7BD752-2FC8-4C91-9AD3-BA48FF134422}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D7BD752-2FC8-4C91-9AD3-BA48FF134422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AFD61A4-0996-4EF7-810E-74CB3F4E759D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AFD61A4-0996-4EF7-810E-74CB3F4E759D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AFD61A4-0996-4EF7-810E-74CB3F4E759D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AFD61A4-0996-4EF7-810E-74CB3F4E759D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

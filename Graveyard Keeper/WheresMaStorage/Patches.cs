@@ -40,7 +40,7 @@ public static class Patches
             include_bags: true, sortWGOS: true);
     }
 
-    private readonly static string[] AlwaysSkip = ["slime", "bat", "refugees", "refugee", "bush_berry", "tree_apple", "bee"];
+    private static readonly string[] AlwaysSkip = ["slime", "bat", "refugees", "refugee", "bush_berry", "tree_apple", "bee"];
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.GetMultiInventory))]

@@ -3,7 +3,7 @@
 [Harmony]
 public static class Patches
 {
-    private readonly static WriteOnce<Vector3> SubPosition = new();
+    private static readonly WriteOnce<Vector3> SubPosition = new();
     internal static UIPanel HUD { get; private set; }
     internal static Transform ScreenSize { get; set; }
     private static bool IntroPlaying { get; set; }

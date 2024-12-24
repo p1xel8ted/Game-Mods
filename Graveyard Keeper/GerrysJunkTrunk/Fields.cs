@@ -14,14 +14,14 @@ public partial class Plugin
     
     private static int _techCount;
     private static int _oldTechCount;
-    private readonly static Dictionary<string, int> StackSizeBackups = new();
+    private static readonly Dictionary<string, int> StackSizeBackups = new();
     
     private static WorldGameObject _shippingBox;
     private static WorldGameObject _interactedObject;
     private static bool _shippingBuild;
     private static bool _usingShippingBox;
 
-    private readonly static List<BaseItemCellGUI> AlreadyDone = [];
+    private static readonly List<BaseItemCellGUI> AlreadyDone = [];
     internal static ObjectCraftDefinition NewItem { get; private set; }
     private const string ShippingBoxId = "mf_wood_builddesk:p:mf_shipping_box_place";  
 }

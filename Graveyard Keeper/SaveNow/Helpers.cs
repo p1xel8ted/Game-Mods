@@ -142,7 +142,7 @@ public partial class Plugin
         StartTimer();
     }
 
-    private readonly static List<GJTimer> Timers = [];
+    private static readonly List<GJTimer> Timers = [];
 
     private static void KillTimers()
     {

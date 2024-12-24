@@ -100,11 +100,7 @@ internal class Location
 
         if (!Directory.Exists(path)) Directory.CreateDirectory(path);
 
-        var fileName = $"{zone}_{DateTime.Now:HH_mm_ss_dd_MM_yyyy}.json";
-        if (zone.IsNullOrWhiteSpace())
-        {
-            fileName = $"no_zone_{DateTime.Now:HH_mm_ss_dd_MM_yyyy}.json";
-        }
+        var fileName = $"{zone}.json";
 
         var saveLocation = Path.Combine(path, fileName);
         try

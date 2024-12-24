@@ -2,22 +2,22 @@
 
 public partial class Plugin
 {
-    private readonly static List<WorldGameObject> CurrentlyCrafting = [];
+    private static readonly List<WorldGameObject> CurrentlyCrafting = [];
 
     //"axe", "hammer", "shovel", "sword",
-    private readonly static string[] MultiOutCantQueue =
+    private static readonly string[] MultiOutCantQueue =
     [
         "chisel_2_2b", "marble_plate_3"
     ];
 
     //individual craft definitions
-    private readonly static string[] UnSafeCraftDefPartials =
+    private static readonly string[] UnSafeCraftDefPartials =
     [
         "1_to_2", "2_to_3", "3_to_4", "4_to_5", "rem_grave", "soul_workbench_craft", "burgers_place", "beer_barrels_place", "remove", "refugee", "upgrade", "fountain", "blockage", "obstacle", "builddesk", "fix", "broken", "elevator", "refugee", "Remove" //, "mf_barrel"
     ];
 
     //unsafe crafting objects as a whole
-    private readonly static string[] UnSafeCraftObjects =
+    private static readonly string[] UnSafeCraftObjects =
     [
         "mf_crematorium_corp", "garden_builddesk", "tree_garden_builddesk", "mf_crematorium", "grave_ground",
         "tile_church_semicircle_2floors", "mf_grindstone_1", "zombie_garden_desk_1", "zombie_garden_desk_2", "zombie_garden_desk_3",

@@ -13,7 +13,7 @@ public class Plugin : BaseUnityPlugin
     private const string Column = "column";
     private const string Church = "CHURCH";
     
-    private readonly static List<GameObject> ChurchColumnsList = [];
+    private static readonly List<GameObject> ChurchColumnsList = [];
     private static ManualLogSource LOG { get; set; }
     private static ConfigEntry<float> ExtinguishDistance { get; set; }
     private static ConfigEntry<KeyboardShortcut> ExtinguishKeyBind { get; set; }
