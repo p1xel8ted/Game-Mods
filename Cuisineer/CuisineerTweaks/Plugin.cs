@@ -56,14 +56,11 @@ public class Plugin : BasePlugin
 
     internal static ConfigEntry<bool> UseStaticZoomLevel { get; private set; }
     internal static ConfigEntry<float> StaticZoomAdjustment { get; private set; }
-
     internal static ConfigEntry<bool> DisplayMessages { get; private set; }
-
-
-    internal static ConfigEntry<KeyboardShortcut> KeybindReload { get; private set; }
-    internal static ConfigEntry<KeyboardShortcut> KeybindSaveGame { get; private set; }
-    internal static ConfigEntry<KeyboardShortcut> KeybindZoomIn{ get; private set; }
-    internal static ConfigEntry<KeyboardShortcut> KeybindZoomOut { get; private set; }
+    internal static ConfigEntry<KeyCode> KeybindReload { get; private set; }
+    internal static ConfigEntry<KeyCode> KeybindSaveGame { get; private set; }
+    internal static ConfigEntry<KeyCode> KeybindZoomIn{ get; private set; }
+    internal static ConfigEntry<KeyCode> KeybindZoomOut { get; private set; }
     
 
     private void InitConfig()
@@ -73,13 +70,13 @@ public class Plugin : BasePlugin
             new ConfigDescription("Enables debug mode, which enables more verbose logging. This is not recommended for normal use."));
         DisplayMessages = Config.Bind("00. General", "DisplayMessages", true,
             new ConfigDescription("Enables the display of messages in-game. Disable this if you don't want to see messages."));
-        KeybindReload = Config.Bind("00. General", "KeybindReload", new KeyboardShortcut(KeyCode.R),
+        KeybindReload = Config.Bind("00. General", "KeybindReload", KeyCode.R,
             new ConfigDescription("The keybind to reload the configuration file. List of valid entries here: https://docs.unity3d.com/ScriptReference/KeyCode.html"));
-        KeybindSaveGame = Config.Bind("00. General", "KeybindSaveGame", new KeyboardShortcut(KeyCode.K),
+        KeybindSaveGame = Config.Bind("00. General", "KeybindSaveGame", KeyCode.K,
             new ConfigDescription("The keybind to save the current game. List of valid entries here: https://docs.unity3d.com/ScriptReference/KeyCode.html"));
-        KeybindZoomIn = Config.Bind("00. General", "KeybindZoomIn", new KeyboardShortcut(KeyCode.O),
+        KeybindZoomIn = Config.Bind("00. General", "KeybindZoomIn", KeyCode.O,
             new ConfigDescription("The keybind to zoom in. List of valid entries here: https://docs.unity3d.com/ScriptReference/KeyCode.html"));
-        KeybindZoomOut = Config.Bind("00. General", "KeybindZoomOut", new KeyboardShortcut(KeyCode.L),
+        KeybindZoomOut = Config.Bind("00. General", "KeybindZoomOut", KeyCode.L,
             new ConfigDescription("The keybind to zoom out. List of valid entries here: https://docs.unity3d.com/ScriptReference/KeyCode.html"));
         
         

@@ -9,13 +9,13 @@ public class UnityEvents : MonoBehaviour
 
     private void Update()
     {
-        if (Plugin.KeybindReload.Value.IsUp())
+        if (Input.GetKeyUp(Plugin.KeybindReload.Value))
         {
             Plugin.Instance.Config.Reload();
         }
 
         // Handle DebugK key action
-        if (CuisineerSaveManager.m_Instance != null && Plugin.KeybindSaveGame.Value.IsUp())
+        if (CuisineerSaveManager.m_Instance != null && Input.GetKeyUp(Plugin.KeybindSaveGame.Value))
         {
             CuisineerSaveManager.SaveCurrent();
             Plugin.Logger.LogInfo("Saved current game.");
@@ -25,11 +25,11 @@ public class UnityEvents : MonoBehaviour
         if (Plugin.AdjustableZoomLevel.Value && GameInstances.PlayerRuntimeDataInstance != null)
         {
             var change = 0f;
-            if (Plugin.KeybindZoomIn.Value.IsUp())
+            if (Input.GetKeyUp(Plugin.KeybindZoomIn.Value))
             {
                 change = -0.1f;
             }
-            else if (Plugin.KeybindZoomOut.Value.IsUp())
+            else if (Input.GetKeyUp(Plugin.KeybindZoomOut.Value))
             {
                 change = 0.1f;
             }
