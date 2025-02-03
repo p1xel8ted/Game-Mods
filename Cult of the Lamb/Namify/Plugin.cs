@@ -8,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.1.9";
+    private const string PluginVer = "0.2.0";
     private const string NamesSection = "Names";
     private const string ApiSection = "API";
 
@@ -29,6 +29,10 @@ public class Plugin : BaseUnityPlugin
     {
         InitializeLogger();
         InitializeConfigurations();
+        
+        FollowerBrain.OnBrainAdded += Patches.CleanNames;
+        FollowerManager.OnFollowerAdded += Patches.CleanNames;
+        
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Log.LogInfo($"Loaded {PluginName}!");
     }
@@ -41,9 +45,12 @@ public class Plugin : BaseUnityPlugin
     private void InitializeConfigurations()
     {
         PopupManagerInstance = gameObject.AddComponent<PopupManager>();
-        AsterixNames = Config.Bind(NamesSection, "Asterix Names", true, new ConfigDescription("Namified names will have an asterix next to them. Will be removed automatically.", null, new ConfigurationManagerAttributes {Order = 11}));
+        AsterixNames = Config.Bind(NamesSection, "Asterisks Names", false, new ConfigDescription("Namified names will have an asterisk next to them in the UI. Will be removed automatically when the follower is accepted.", null, new ConfigurationManagerAttributes {Order = 12}));
+        Config.Bind(NamesSection, "Clean Asterisks", true, new ConfigDescription("Manually run the clean-up names function. Need to be loaded into a save to function.", null, new ConfigurationManagerAttributes {Order = 11, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = CleanAsterisks}));
+        
         PersonalApiKey = Config.Bind(ApiSection, "Personal API Key", "ee5f806e1c1d458b99c934c0eb3de5b8", "The default API Key is mine, limited to 1000 requests per day. You can get your own at https://randommer.io/");
         AddName = Config.Bind(NamesSection, "Add Name", "", new ConfigDescription("Adds a name to the list of names.", null, new ConfigurationManagerAttributes {Order = 10}));
+       
         Config.Bind(NamesSection, "Add Name Button", true, new ConfigDescription("Add the name entered to the list.", null, new ConfigurationManagerAttributes {Order = 9, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = AddNameButton}));
         Config.Bind(NamesSection, "Open Namify Names File", true, new ConfigDescription("Opens the Namify generated names file for viewing/editing.", null, new ConfigurationManagerAttributes {Order = 8, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = OpenNamifyNamesFile}));
         Config.Bind(NamesSection, "Open User Names File", true, new ConfigDescription("Opens the user-generated names file for viewing/editing.", null, new ConfigurationManagerAttributes {Order = 7, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = OpenUserGeneratedNamesFile}));
@@ -56,6 +63,14 @@ public class Plugin : BaseUnityPlugin
         if (GUILayout.Button("Open Namify List", GUILayout.ExpandWidth(true)))
         {
             TryOpenNamifyNamesFile();
+        }
+    }
+    
+    private static void CleanAsterisks(ConfigEntryBase entry)
+    {
+        if (GUILayout.Button("Clean Asterisks", GUILayout.ExpandWidth(true)))
+        {
+            Patches.CleanNames();
         }
     }
 

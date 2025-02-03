@@ -10,7 +10,7 @@ public class Plugin : BaseUnityPlugin
     private const string MainMenu = "MainMenu";
 
 
-    private readonly static Harmony Harmony = new(PluginGuid);
+    private static readonly Harmony Harmony = new(PluginGuid);
 
     public static Resolution Resolution = new()
     {
@@ -19,8 +19,8 @@ public class Plugin : BaseUnityPlugin
         refreshRate = MaxRefreshRate
     };
 
-    private readonly static List<CinemachineVirtualCamera> VirtualCameras = [];
-    private readonly static Dictionary<string, float> OriginalCameraZoomValues = new();
+    private static readonly List<CinemachineVirtualCamera> VirtualCameras = [];
+    private static readonly Dictionary<string, float> OriginalCameraZoomValues = new();
     private static ManualLogSource Log { get; set; }
     public static ConfigEntry<float> RunSpeedMultiplier { get; private set; }
     public static ConfigEntry<bool> EnableRunSpeedMultiplier { get; private set; }

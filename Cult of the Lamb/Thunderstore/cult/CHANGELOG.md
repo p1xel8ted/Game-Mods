@@ -1,3 +1,8 @@
+### 2.2.8 - 10/01/2025
+
+* Added option to set keybinds for modifiying game speed
+* Pressing the reset game speed to default keybind will now not function if the feature is not enabled
+
 ### 2.2.7 - 25/08/2024
 
 * Added requested feature, reversing the nerf to the Ritual of Enrichment. Enabling this will also remove follower level limit as it's required.

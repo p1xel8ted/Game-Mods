@@ -19,7 +19,10 @@ public partial class Plugin
     internal static ConfigEntry<bool> FastCollecting { get; private set; }
     internal static ConfigEntry<bool> RemoveMenuClutter { get; private set; }
     internal static ConfigEntry<bool> RemoveTwitchButton { get; private set; }
-
+    
+    internal static ConfigEntry<KeyboardShortcut> ResetTimeScaleKey { get; private set; }
+    internal static ConfigEntry<KeyboardShortcut> IncreaseGameSpeedKey { get; private set; }
+    internal static ConfigEntry<KeyboardShortcut> DecreaseGameSpeedKey { get; private set; }
     internal static ConfigEntry<bool> AllLootMagnets { get; private set; }
     internal static ConfigEntry<bool> DoubleMagnetRange { get; private set; }
     internal static ConfigEntry<bool> TripleMagnetRange { get; private set; }

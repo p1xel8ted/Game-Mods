@@ -6,7 +6,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.2.7";
+    private const string PluginVer = "2.2.8";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -171,8 +171,12 @@ public partial class Plugin : BaseUnityPlugin
         AdjustRefineryRequirements = Config.Bind(StructureSection, "Adjust Refinery Requirements", true, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes {Order = 1}));
 
         //Speed
-        EnableGameSpeedManipulation = Config.Bind(GameSpeedSection, "Enable Game Speed Manipulation", true, new ConfigDescription("Use left/right arrows keys to increase/decrease game speed in 0.25 increments. Up arrow to reset to default.", null, new ConfigurationManagerAttributes {Order = 5}));
-        ShortenGameSpeedIncrements = Config.Bind(GameSpeedSection, "Shorten Game Speed Increments", false, new ConfigDescription("Increments in steps of 1, instead of 0.25.", null, new ConfigurationManagerAttributes {Order = 4}));
+        EnableGameSpeedManipulation = Config.Bind(GameSpeedSection, "Enable Game Speed Manipulation", true, new ConfigDescription("Use left/right arrows keys to increase/decrease game speed in 0.25 increments. Up arrow to reset to default.", null, new ConfigurationManagerAttributes {Order = 8}));
+        ShortenGameSpeedIncrements = Config.Bind(GameSpeedSection, "Shorten Game Speed Increments", false, new ConfigDescription("Increments in steps of 1, instead of 0.25.", null, new ConfigurationManagerAttributes {Order = 7}));
+        ResetTimeScaleKey = Config.Bind(GameSpeedSection, "Reset Time Scale Key", new KeyboardShortcut(KeyCode.UpArrow), new ConfigDescription("The keyboard shortcut to reset the game speed to 1.", null, new ConfigurationManagerAttributes {Order = 6}));
+        IncreaseGameSpeedKey = Config.Bind(GameSpeedSection, "Increase Game Speed Key", new KeyboardShortcut(KeyCode.RightArrow), new ConfigDescription("The keyboard shortcut to increase the game speed.", null, new ConfigurationManagerAttributes {Order = 5}));
+        DecreaseGameSpeedKey = Config.Bind(GameSpeedSection, "Decrease Game Speed Key", new KeyboardShortcut(KeyCode.LeftArrow), new ConfigDescription("The keyboard shortcut to decrease the game speed.", null, new ConfigurationManagerAttributes {Order = 4}));
+        
         FastCollecting = Config.Bind(GameSpeedSection, "Speed Up Collection", true, new ConfigDescription("Increases the rate you can collect from the shrines, and other structures.", null, new ConfigurationManagerAttributes {DispName = "Speed Up Collection**", Order = 3}));
         FastCollecting.SettingChanged += (_, _) => ShowRestartMessage();
         SlowDownTime = Config.Bind(GameSpeedSection, "Slow Down Time", false, new ConfigDescription("Enables the ability to slow down time. This is different to the increase speed implementation. This will make the days longer, but not slow down animations.", null, new ConfigurationManagerAttributes {Order = 2}));

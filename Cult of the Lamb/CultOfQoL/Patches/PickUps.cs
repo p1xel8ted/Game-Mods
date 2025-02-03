@@ -3,7 +3,7 @@
 [Harmony]
 public static class PickUps
 {
-    private readonly static Dictionary<int, (float OriginalRange, bool OriginalMagnet)> OriginalSettings = [];
+    private static readonly Dictionary<int, (float OriginalRange, bool OriginalMagnet)> OriginalSettings = [];
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PickUp), nameof(PickUp.OnEnable))]

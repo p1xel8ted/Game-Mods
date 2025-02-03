@@ -14,24 +14,24 @@ public static class RoutinesTranspilers
     // private const string LevelUpRoutine = "LevelUpRoutine";
     private const string RomanceRoutine = "RomanceRoutine";
     private const string ExtortMoneyRoutine = "ExtortMoneyRoutine";
-    private readonly static MethodInfo GetInstance = AccessTools.Method(typeof(GameManager), nameof(GameManager.GetInstance));
-    private readonly static MethodInfo OnConversationNext = AccessTools.Method(typeof(GameManager), nameof(GameManager.OnConversationNext));
-    private readonly static MethodInfo OnConversationNew = AccessTools.Method(typeof(GameManager), nameof(GameManager.OnConversationNew), [typeof(bool), typeof(bool), typeof(PlayerFarming)]);
-    private readonly static MethodInfo AddPlayerToCamera = AccessTools.Method(typeof(GameManager), nameof(GameManager.AddPlayerToCamera));
-    private readonly static MethodInfo CameraSetOffset = AccessTools.Method(typeof(GameManager), nameof(GameManager.CameraSetOffset));
-    private readonly static MethodInfo HudManagerHide = AccessTools.Method(typeof(HUD_Manager), nameof(HUD_Manager.Hide));
-    private readonly static FieldInfo HudManagerInstance = AccessTools.Field(typeof(HUD_Manager), nameof(HUD_Manager.Instance));
+    private static readonly MethodInfo GetInstance = AccessTools.Method(typeof(GameManager), nameof(GameManager.GetInstance));
+    private static readonly MethodInfo OnConversationNext = AccessTools.Method(typeof(GameManager), nameof(GameManager.OnConversationNext));
+    private static readonly MethodInfo OnConversationNew = AccessTools.Method(typeof(GameManager), nameof(GameManager.OnConversationNew), [typeof(bool), typeof(bool), typeof(PlayerFarming)]);
+    private static readonly MethodInfo AddPlayerToCamera = AccessTools.Method(typeof(GameManager), nameof(GameManager.AddPlayerToCamera));
+    private static readonly MethodInfo CameraSetOffset = AccessTools.Method(typeof(GameManager), nameof(GameManager.CameraSetOffset));
+    private static readonly MethodInfo HudManagerHide = AccessTools.Method(typeof(HUD_Manager), nameof(HUD_Manager.Hide));
+    private static readonly FieldInfo HudManagerInstance = AccessTools.Field(typeof(HUD_Manager), nameof(HUD_Manager.Instance));
     // private readonly static FieldInfo PlayerInstance = AccessTools.Field(typeof(PlayerFarming), nameof(PlayerFarming.Instance));
     // private readonly static MethodInfo setStateMachine = AccessTools.Property(typeof(StateMachine), nameof(StateMachine.CURRENT_STATE)).SetMethod;
     // private readonly static MethodInfo simpleAnimatorAnimate = AccessTools.Method(typeof(SimpleSpineAnimator), nameof(SimpleSpineAnimator.Animate), [typeof(string), typeof(int), typeof(bool)]);
-    private readonly static FieldInfo BiomeConstantsInstance = AccessTools.Field(typeof(BiomeConstants), nameof(BiomeConstants.Instance));
-    private readonly static MethodInfo DepthOfFieldTween = AccessTools.Method(typeof(BiomeConstants), nameof(BiomeConstants.DepthOfFieldTween));
-    private readonly static List<string> AlreadyLogged = [];
+    private static readonly FieldInfo BiomeConstantsInstance = AccessTools.Field(typeof(BiomeConstants), nameof(BiomeConstants.Instance));
+    private static readonly MethodInfo DepthOfFieldTween = AccessTools.Method(typeof(BiomeConstants), nameof(BiomeConstants.DepthOfFieldTween));
+    private static readonly List<string> AlreadyLogged = [];
 
     
     internal static bool AnyMassActionsEnabled => routineChecks.Any(pair => pair.Value.Invoke().Value);
     
-    private readonly static Dictionary<string, Func<ConfigEntry<bool>>> routineChecks = new()
+    private static readonly Dictionary<string, Func<ConfigEntry<bool>>> routineChecks = new()
     {
         [BribeRoutine] = () => Plugin.MassBribe,
         [IntimidateRoutine] = () => Plugin.MassIntimidate,

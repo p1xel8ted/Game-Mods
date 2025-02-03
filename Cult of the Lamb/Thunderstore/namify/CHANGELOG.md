@@ -1,3 +1,8 @@
+### 0.2.0 - 03 February 2025
+
+* Added button to F1 screen to manually clean-up any leftover asterisks (this happens already at various stages, but now you can manually trigger it.)
+* Re-wrote logic to prevent instances where an asterisk might remain after indoctrinating.
+
 ### 0.1.9 - 03 September 2024
 
 * Added option to toggle asterisk functionality.

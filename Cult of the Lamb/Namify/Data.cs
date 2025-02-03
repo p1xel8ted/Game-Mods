@@ -8,8 +8,8 @@ public static class Data
     internal const string UserDataPath = "user_names.json";
     public static SortedSet<string> NamifyNames = [];
     public static SortedSet<string> UserNames = [];
-    private readonly static COTLDataReadWriter<List<string>> NamifyNameReadWriter = new();
-    private readonly static COTLDataReadWriter<List<string>> UserNameReadWriter = new();
+    private static readonly COTLDataReadWriter<List<string>> NamifyNameReadWriter = new();
+    private static readonly COTLDataReadWriter<List<string>> UserNameReadWriter = new();
     static Data()
     {
         NamifyNameReadWriter.OnReadCompleted += names =>

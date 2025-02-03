@@ -10,11 +10,9 @@ public partial class Plugin : BaseUnityPlugin
     
     private static ConfigEntry<bool> Debug { get; set; }
     internal static ManualLogSource Log { get; set; }
-
     private static ConfigEntry<bool> ShowSoldMessagesOnPlayer { get; set; }
     private static ConfigEntry<bool> EnableGerry { get; set; }
-    // private static ConfigEntry<bool> ShowSummaryMessage { get; set; }
-
+ 
     private static ConfigEntry<bool> ShowItemPriceTooltips { get; set; }
     private static ConfigEntry<bool> InternalShippingBoxBuilt { get; set; }
     private static ConfigEntry<bool> InternalShowIntroMessage { get; set; }
@@ -54,14 +52,7 @@ public partial class Plugin : BaseUnityPlugin
         ShowSoldMessagesOnPlayer = Config.Bind("02. Messages", "Show Sold Messages On Player", true,
             new ConfigDescription("Display messages on the player when items are sold", null,
                 new ConfigurationManagerAttributes {Order = 5}));
-
-        // ShowSoldMessageWhenNoSale = Config.Bind("02. Messages", "Show Sold Message When No Sale", false,
-        //     new ConfigDescription("Disable the sold message when there is no sale", null,
-        //         new ConfigurationManagerAttributes {Order = 4}));
-
-        // ShowSummaryMessage = Config.Bind("4. UI", "Show Summary", false,
-        //     new ConfigDescription("Display a summary of transactions and other relevant information", null,
-        //         new ConfigurationManagerAttributes {Order = 3}));
+        
 
         ShowItemPriceTooltips = Config.Bind("03. Price Tooltips", "Show Item Price Tooltips", true,
             new ConfigDescription("Display tooltips with item prices in the user interface", null,

@@ -7,9 +7,9 @@ public static class GameSpeedManipulationPatches
     private static int _newSpeed;
     private static bool _timeMessageShown;
 
-    private readonly static List<float> gameSpeedShort = [0.25f, 1, 2, 3, 4, 5];
+    private static readonly List<float> GameSpeedShort = [0.25f, 1, 2, 3, 4, 5];
 
-    private readonly static List<float> gameSpeed =
+    private static readonly List<float> GameSpeed =
     [
         0.25f, 0.5f, 0.75f, 1, 1.25f, 1.5f, 1.75f, 2,
         2.25f, 2.5f, 2.75f, 3, 3.25f, 3.5f, 3.75f, 4,
@@ -48,7 +48,7 @@ public static class GameSpeedManipulationPatches
         {
             GameManager.instance.CurrentGameSpeed = _newSpeed;
 
-            var speedList = Plugin.ShortenGameSpeedIncrements.Value ? gameSpeedShort : gameSpeed;
+            var speedList = Plugin.ShortenGameSpeedIncrements.Value ? GameSpeedShort : GameSpeed;
             _newSpeed = GameManager.instance.CurrentGameSpeed % speedList.Count;
             _newGameSpeed = speedList[_newSpeed];
         }
@@ -80,25 +80,25 @@ public static class GameSpeedManipulationPatches
             NotificationCentre.Instance.PlayGenericNotification($"Slow down time enabled at {Mathf.Abs(Plugin.SlowDownTimeMultiplier.Value)}x.");
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (!Plugin.EnableGameSpeedManipulation.Value) return;
+
+        if (Plugin.ResetTimeScaleKey.Value.IsUp())
         {
             ResetTime();
             NotificationCentre.Instance.PlayGenericNotification("Returned game speed to 1 (default)");
-            return;
+            return;  
         }
-
-        if (!Plugin.EnableGameSpeedManipulation.Value) return;
-
-        var speedList = Plugin.ShortenGameSpeedIncrements.Value ? gameSpeedShort : gameSpeed;
+        
+        var speedList = Plugin.ShortenGameSpeedIncrements.Value ? GameSpeedShort : GameSpeed;
         var speedCount = speedList.Count;
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Plugin.IncreaseGameSpeedKey.Value.IsUp())
         {
             UpdateGameSpeed(__instance.CurrentGameSpeed + 1);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Plugin.DecreaseGameSpeedKey.Value.IsUp())
         {
             UpdateGameSpeed(__instance.CurrentGameSpeed - 1);
             return;

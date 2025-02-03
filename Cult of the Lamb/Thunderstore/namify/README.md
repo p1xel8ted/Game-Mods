@@ -7,7 +7,7 @@
 * Names are removed from the list as they are used to prevent duplicates.
 * The provided API key is limited to 1000 requests per day. If you want to use your own API key, you can get one from [randommer.io](https://randommer.io/).
 * Add your own names to the list by editing the json file or by using the interface via F1. The file is saved unencrypted to allow users to edit the file themselves.
-* Namified names will display an asterix at the end of the name. Once the name is confirmed, the asterix is removed automatically.
+* Namified names will display an astericks at the end of the name. Once the name is confirmed, the astericks is removed automatically - this can be toggled via F1.
 
 ## Donate
 

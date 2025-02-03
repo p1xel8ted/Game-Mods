@@ -3,7 +3,7 @@ namespace CultOfQoL.Patches;
 [HarmonyPatch]
 public static class Notifications
 {
-    private readonly static List<int> StructureID = [];
+    private static readonly List<int> StructureID = [];
 
     // [HarmonyPrefix]
     // [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.Show))]

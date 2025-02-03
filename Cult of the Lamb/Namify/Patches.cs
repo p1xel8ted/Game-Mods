@@ -1,10 +1,10 @@
+using Shared;
+
 namespace Namify;
 
 [Harmony]
 public static class Patches
 {
-    private static string _pendingName = string.Empty;
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save))]
     private static void SaveAndLoad_Save()
@@ -20,24 +20,68 @@ public static class Patches
         if (CheatConsole.IN_DEMO) return;
         Data.LoadData();
     }
-
-    private static void CleanNames()
+    
+    internal static void CleanNames(int id = -1)
     {
-        Plugin.Log.LogInfo("Ensuring names are cleaned of * ...");
+        var logDict = new Dictionary<int, string>();
+
+        foreach (var follower in FollowerManager.SimFollowers.SelectMany(a => a.Value))
+        {
+            if (!follower.Brain.Info.Name.TryReplace("*", string.Empty, out var newName)) continue;
+            
+            follower.Brain.Info.Name = newName;
+            logDict.TryAdd(follower.Brain.Info.ID, newName);
+        }
+
         foreach (var follower in FollowerManager.Followers.SelectMany(a => a.Value))
         {
-            follower.Brain.Info.Name = follower.Brain.Info.Name.Replace("*", string.Empty);
+            if (!follower.Brain.Info.Name.TryReplace("*", string.Empty, out var newName)) continue;
+            
+            follower.Brain.Info.Name = newName;
+            logDict.TryAdd(follower.Brain.Info.ID, newName);
+        }
+
+        foreach (var follower in DataManager.Instance.Followers)
+        {
+            if (!follower.Name.TryReplace("*", string.Empty, out var newName)) continue;
+            
+            follower.Name = newName;
+            logDict.TryAdd(follower.ID, newName);
+        }
+
+        var f1 = FollowerManager.FindFollowerByID(id);
+        if (f1)
+        {
+            if (f1.Brain.Info.Name.TryReplace("*", string.Empty, out var newName))
+            {
+                f1.Brain.Info.Name = newName;
+                logDict.TryAdd(f1.Brain.Info.ID, newName);
+            }
+        }
+
+        var f2 = FollowerManager.FindSimFollowerByID(id);
+        if (f2 != null)
+        {
+            if (f2.Brain.Info.Name.TryReplace("*", string.Empty, out var newName))
+            {
+                f2.Brain.Info.Name = newName;
+                logDict.TryAdd(f2.Brain.Info.ID, newName);
+            }
+        }
+
+        foreach (var kvp in logDict)
+        {
+            Plugin.Log.LogInfo($"Cleaned ID: {kvp.Key} Name: {kvp.Value}");
         }
     }
-    
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract))]
     private static void interaction_FollowerInteraction_OnInteract()
     {
         CleanNames();
     }
-
-
+    
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerFarming), nameof(PlayerFarming.OnEnable))]
     private static void PlayerFarming_OnEnable()
@@ -52,15 +96,17 @@ public static class Patches
         var instance = __instance;
         __instance._acceptButton.onClick.AddListener(delegate
         {
-            var name = instance._targetFollower.Brain.Info.Name;
-            if (name != _pendingName) return;
-            Plugin.Log.LogInfo($"Follower name {name} confirmed! Removing name from saved name list.");
-            Data.NamifyNames.Remove(_pendingName);
-            Data.UserNames.Remove(_pendingName);
-
-            instance._targetFollower.Brain.Info.Name = _pendingName.Replace("*", string.Empty);
-            _pendingName = string.Empty;
+            var name = instance._targetFollower.Brain.Info.Name; //should contain an asterisk at this stage depending on settings
             
+            name = name.Replace("*", string.Empty);
+
+            Plugin.Log.LogInfo($"Follower name {name} confirmed! Removing name from saved name list and cleaning up asterisks if applicable.");
+
+            Data.NamifyNames.Remove(name);
+            Data.UserNames.Remove(name);
+            
+            instance._targetFollower.Brain.Info.Name = name;
+
             CleanNames();
         });
     }
@@ -76,20 +122,21 @@ public static class Patches
         {
             Data.GetNamifyNames();
         }
+
         if (Data.NamifyNames.Count <= 0 && Data.UserNames.Count <= 0)
         {
             Plugin.Log.LogError("No names found!");
             return;
         }
-        if (__result == _pendingName) return;
-
+        
         var bothNames = Data.NamifyNames.Concat(Data.UserNames).Distinct().ToList();
-        _pendingName = bothNames.RandomElement();
-        if (Plugin.AsterixNames.Value)
+        var name = bothNames.RandomElement();
+        
+        if (Plugin.AsterixNames.Value && !name.Contains("*"))
         {
-            _pendingName = $"{_pendingName}*";
+            name = $"{name}*";
         }
 
-        __result = _pendingName;
+        __result = name;
     }
 }
