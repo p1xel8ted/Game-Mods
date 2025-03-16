@@ -52,7 +52,10 @@ public partial class Plugin : BaseUnityPlugin
         AutoSelectCraftButtonWithController = Config.Bind("01. Options", "Auto Select Craft Button With Controller", true, new ConfigDescription("Automatically select the craft button when using a controller.", null, new ConfigurationManagerAttributes {Order = 11}));
 
         MakeEverythingAuto = Config.Bind("01. Options", "Make Everything Auto", true, new ConfigDescription("Automate all possible crafts.", null, new ConfigurationManagerAttributes {Order = 10}));
-
+        MakeEverythingAuto.SettingChanged += (sender, args) =>
+        {
+          Tools.ShowMessage(
+        };
         MakeHandTasksAuto = Config.Bind("01. Options", "Make Hand Tasks Auto", false, new ConfigDescription("Automate manual crafts (i.e. cooking table).", null, new ConfigurationManagerAttributes {Order = 9}));
 
         ForceMultiCraft = Config.Bind("01. Options", "Force Multi Craft", true, new ConfigDescription("Makes almost all crafting items able to be queued.", null, new ConfigurationManagerAttributes {Order = 7}));

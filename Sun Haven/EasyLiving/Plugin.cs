@@ -6,7 +6,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.easyliving";
     private const string PluginName = "Easy Living";
-    private const string PluginVersion = "0.1.6";
+    private const string PluginVersion = "0.1.7";
     private static ConfigEntry<KeyboardShortcut> SaveShortcut { get; set; }
     private static ConfigEntry<bool> EnableSaveShortcut { get; set; }
     public static ConfigEntry<bool> SkipMuseumMissingItemsDialogue { get; private set; }
@@ -129,13 +129,17 @@ public partial class Plugin : BaseUnityPlugin
     private static void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         UpdatePlayerPref();
-        var refreshRate = Screen.resolutions.Max(a => a.refreshRate);
+        var maxRefreshRateRatio = Screen.resolutions
+            .OrderByDescending(r => (float)r.refreshRateRatio.value)
+            .Select(r => r.refreshRateRatio)
+            .FirstOrDefault();
+        
         if (ResolutionChange.Value)
         {
-            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, Screen.fullScreenMode == FullScreenMode.FullScreenWindow, refreshRate);
-            LOG.LogInfo($"Screen resolution set to {Display.main.systemWidth}x{Display.main.systemHeight} @ {refreshRate}Hz");
+            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow, maxRefreshRateRatio);
+            LOG.LogInfo($"Screen resolution set to {Display.main.systemWidth}x{Display.main.systemHeight} @ {maxRefreshRateRatio}Hz");
         }
-        Time.fixedDeltaTime = 1f / refreshRate;
+        Time.fixedDeltaTime = (float)(1f / maxRefreshRateRatio.value);
 
         LOG.LogInfo($"FixedDeltaTime set to {Time.fixedDeltaTime}");
     }

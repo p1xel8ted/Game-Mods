@@ -9,12 +9,12 @@ public static class Patches
     private const float RegenerationInterval = 3f; // Example value for regeneration interval
     private const string PlayerFarmScene = "2playerfarm";
     private static GameObject _newButton;
-    private readonly static WriteOnce<Vector2> OriginalSize = new();
+    private static readonly WriteOnce<Vector2> OriginalSize = new();
 
     private static float _regenerationTimer;
 
-    private static int InstalledDlcCount;
-    private static int TotalDlcCount;
+    private static int _installedDlcCount;
+    private static int _totalDlcCount;
     private static bool PlayerReturnedToMenu { get; set; }
 
     internal static bool SkipAutoLoad { get; set; }
@@ -126,7 +126,10 @@ public static class Patches
     [HarmonyPatch(typeof(ScrollRect), nameof(ScrollRect.LateUpdate))]
     public static void ScrollRect_Initialize(ref ScrollRect __instance)
     {
-        if (GetGameObjectPath(__instance.gameObject) != "Player(Clone)/UI_Quests/QuestTracker/Scroll View/") return;
+        // Plugin.LOG.LogWarning($"ScrollRect: {__instance.name}, {GetGameObjectPath(__instance.gameObject)}");
+        
+        if (GetGameObjectPath(__instance.gameObject) != "Player(Clone)/UI_Quests/QuestTracker/Scroll View") return;
+        
 
         if (!Plugin.EnableAdjustQuestTrackerHeightView.Value)
         {
@@ -236,10 +239,10 @@ public static class Patches
 
     private static void UpdateDlcData()
     {
-        InstalledDlcCount = 0;
-        TotalDlcCount = 0;
+        _installedDlcCount = 0;
+        _totalDlcCount = 0;
 
-        var scroller = GameObject.Find("Canvas_Home/[HomeMenu]/DLCBox/DLC_Scroller");
+        var scroller = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/DLCBox/DLC_Scroller");
         if (!scroller) return;
 
         var sc = scroller.GetComponent<Scroller>();
@@ -249,8 +252,8 @@ public static class Patches
         {
             if (data is not DLCScrollerData dlc) continue;
 
-            TotalDlcCount += dlc.steamPackIDs.Count;
-            InstalledDlcCount += dlc.steamPackIDs.Count(id => SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = id}));
+            _totalDlcCount += dlc.steamPackIDs.Count;
+            _installedDlcCount += dlc.steamPackIDs.Count(id => SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = id}));
         }
 
         Canvas.ForceUpdateCanvases();
@@ -271,7 +274,7 @@ public static class Patches
     
     private static void UpdatePatchNotes()
     {
-        var patchNotesBox = GameObject.Find("Canvas_Home/[HomeMenu]/PatchNotesBox");
+        var patchNotesBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PatchNotesBox");
         if (patchNotesBox)
         {
             patchNotesBox.SetActive(!Plugin.RemovePatchNotes.Value);
@@ -281,12 +284,12 @@ public static class Patches
     }
     private static void UpdateDlcBox()
     {
-        var dlcBox = GameObject.Find("Canvas_Home/[HomeMenu]/DLCBox");
+        var dlcBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/DLCBox");
         if (!dlcBox) return;
 
         UpdateDlcData();
 
-        if (InstalledDlcCount >= TotalDlcCount)
+        if (_installedDlcCount >= _totalDlcCount)
         {
             dlcBox.SetActive(false);
         }
@@ -299,7 +302,7 @@ public static class Patches
     }
     private static void UpdateSocialMedia()
     {
-        var socialMedia = GameObject.Find("Canvas_Home/[HomeMenu]/PlayButtons/SocialMediaButtons");
+        var socialMedia = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PlayButtons/SocialMediaButtons");
         if (socialMedia)
         {
             socialMedia.SetActive(!Plugin.RemoveSocialMediaButtons.Value);
@@ -309,7 +312,7 @@ public static class Patches
     }
     private static void UpdateLogo()
     {
-        var ppStudios = GameObject.Find("Canvas_Home/[HomeMenu]/Image");
+        var ppStudios = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/Image");
         if (ppStudios)
         {
             ppStudios.SetActive(!Plugin.RemovePixelSproutStudiosLogo.Value);

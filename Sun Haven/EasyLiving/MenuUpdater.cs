@@ -12,12 +12,12 @@ internal class MenuUpdater : MonoBehaviour
         
     private void FindMenuObjects()
     {
-        _menuBox = GameObject.Find("Canvas_Home/[HomeMenu]/PlayButtons");
+        _menuBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PlayButtons");
         if (_menuBox)
         {
             _border = _menuBox.GetComponent<Image>();
             _rectTransform = _menuBox.GetComponent<RectTransform>();
-            _playButton = _menuBox.transform.Find("PlayButton(Clone)");
+            _playButton = _menuBox.transform.Find("PlayButton");
             if (_playButton)
             {
                 _playButton.name = "ContinueButton";

@@ -78,9 +78,6 @@
       <Reference Include="UnityEngine.SharedInternalsModule">
         <HintPath>..\libs\UnityEngine.SharedInternalsModule.dll</HintPath>
       </Reference>
-      <Reference Include="UnityEngine.TextCoreModule">
-        <HintPath>..\libs\UnityEngine.TextCoreModule.dll</HintPath>
-      </Reference>
       <Reference Include="UnityEngine.TextRenderingModule">
         <HintPath>..\libs\UnityEngine.TextRenderingModule.dll</HintPath>
       </Reference>
