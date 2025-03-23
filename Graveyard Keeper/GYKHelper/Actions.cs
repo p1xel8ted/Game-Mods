@@ -28,16 +28,16 @@ public static class Actions
     public static Action GameStatusUndefined;
     public static Action GameStartedPlaying;
 
-    
+
     public static Action EndOfDayPrefix;
     public static Action EndOfDayPostfix;
-    
-    
+
+
     public static Action GameBalanceLoad;
     public static Action<WorldGameObject> WorldGameObjectInteract;
 
     public static Action<WorldGameObject, WorldGameObject> WorldGameObjectInteractPrefix;
-    
+
     [HarmonyPrefix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
@@ -59,7 +59,7 @@ public static class Actions
             Plugin.Log.LogInfo("End of day beginning. No mods attached to EndOfDayPrefix Action.");
         }
     }
-    
+
     [HarmonyPostfix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
@@ -81,7 +81,7 @@ public static class Actions
             Plugin.Log.LogInfo("End of day finished. No mods attached to EndOfDayPostfix Action.");
         }
     }
-    
+
     [HarmonyPrefix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(InGameMenuGUI), nameof(InGameMenuGUI.ReturnToMainMenu))]
@@ -97,7 +97,7 @@ public static class Actions
             {
                 Plugin.Log.LogInfo($"Type: {del.Method.DeclaringType}, Method: {del.Method.Name}");
             }
-    
+
             ReturnToMenu.Invoke();
         }
         else
@@ -182,7 +182,7 @@ public static class Actions
             Plugin.Log.LogInfo("WGO interacted with (postfix). No mods attached to WorldGameObjectInteract Action.");
         }
     }
-    
+
     [HarmonyPrefix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.Interact))]
@@ -295,4 +295,6 @@ public static class Actions
             gerry.DestroyMe();
         }
     }
+
+
 }
