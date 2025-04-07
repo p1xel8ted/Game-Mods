@@ -19,7 +19,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> FastCollecting { get; private set; }
     internal static ConfigEntry<bool> RemoveMenuClutter { get; private set; }
     internal static ConfigEntry<bool> RemoveTwitchButton { get; private set; }
-    
+
     internal static ConfigEntry<KeyboardShortcut> ResetTimeScaleKey { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> IncreaseGameSpeedKey { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> DecreaseGameSpeedKey { get; private set; }
@@ -73,12 +73,15 @@ public partial class Plugin
     internal static ConfigEntry<bool> NotifyOfScarecrowTraps { get; private set; }
     internal static ConfigEntry<bool> NotifyOfNoFuel { get; private set; }
     internal static ConfigEntry<bool> NotifyOfBedCollapse { get; private set; }
-
     internal static ConfigEntry<bool> GiveFollowersNewNecklaces { get; private set; }
-
-
     internal static ConfigEntry<bool> RandomWeatherChangeWhenExitingArea { get; private set; }
     internal static ConfigEntry<bool> ChangeWeatherOnPhaseChange { get; private set; }
+    internal static ConfigEntry<Color> LightSnowColor { get; private set; }
+    internal static ConfigEntry<Color> LightWindColor { get; private set; }
+    internal static ConfigEntry<Color> LightRainColor { get; private set; }
+    internal static ConfigEntry<Color> MediumRainColor { get; private set; }
+    internal static ConfigEntry<Color> HeavyRainColor { get; private set; }
+    private static ConfigEntry<Weather.WeatherCombo> WeatherDropDown { get; set; }
     internal static ConfigEntry<bool> ShowPhaseNotifications { get; private set; }
     internal static ConfigEntry<bool> ShowWeatherChangeNotifications { get; private set; }
 

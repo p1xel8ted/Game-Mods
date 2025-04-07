@@ -1,3 +1,7 @@
+### 2.2.9 - 07/04/2025
+
+* Added option to change the color of the various weather overlays that lighten or darken the screen during certain weather types.
+
 ### 2.2.8 - 10/01/2025
 
 * Added option to set keybinds for modifiying game speed

@@ -4,9 +4,9 @@
 public static class NoNegativeTraits
 {
 
-    private static HashSet<FollowerTrait.TraitType> AllTraits;
-    private static bool? isNothingNegativePresentCache;
-    private static List<FollowerTraitBackup> FollowerTraitBackups = [];
+    private static HashSet<FollowerTrait.TraitType> _allTraits;
+    private static bool? _isNothingNegativePresentCache;
+    private static List<FollowerTraitBackup> _followerTraitBackups = [];
 
     private static string DataPath => Path.Combine(Application.persistentDataPath, "saves", $"slot_{SaveAndLoad.SAVE_SLOT}_follower_trait_backups.json");
 
@@ -15,8 +15,8 @@ public static class NoNegativeTraits
         if (IsNothingNegativePresent()) return;
         if (!File.Exists(DataPath)) return;
         var json = File.ReadAllText(DataPath);
-        FollowerTraitBackups = JsonConvert.DeserializeObject<List<FollowerTraitBackup>>(json);
-        Plugin.L($"Loaded {FollowerTraitBackups.Count} follower trait backups.");
+        _followerTraitBackups = JsonConvert.DeserializeObject<List<FollowerTraitBackup>>(json);
+        Plugin.L($"Loaded {_followerTraitBackups.Count} follower trait backups.");
     }
 
     private static HashSet<FollowerTrait.TraitType> InitializeAllTraits()
@@ -28,7 +28,7 @@ public static class NoNegativeTraits
         allTraits.UnionWith(FollowerTrait.RareStartingTraits);
         allTraits.UnionWith(FollowerTrait.StartingTraits);
         allTraits.UnionWith(FollowerTrait.ExcludedFromMating);
-
+        
         var cultTraits = DataManager.Instance.CultTraits;
         if (Plugin.UseUnlockedTraitsOnly.Value)
         {
@@ -36,6 +36,8 @@ public static class NoNegativeTraits
             allTraits.RemoveWhere(a => cultTraits.Contains(a));
         }
         allTraits.RemoveWhere(a => !FollowerTrait.IsPositiveTrait(a));
+        
+        allTraits.RemoveWhere(a=> a == FollowerTrait.TraitType.BishopOfCult);
 
         if (!Plugin.IncludeImmortal.Value)
         {
@@ -69,9 +71,9 @@ public static class NoNegativeTraits
 
     internal static void RestoreOriginalTraits()
     {
-        if (IsNothingNegativePresent() || FollowerTraitBackups == null) return;
+        if (IsNothingNegativePresent() || _followerTraitBackups == null) return;
 
-        foreach (var backup in FollowerTraitBackups)
+        foreach (var backup in _followerTraitBackups)
         {
             var follower = FollowerManager.FindFollowerByID(backup.ID);
             if (follower == null || follower.Brain == null)
@@ -127,7 +129,7 @@ public static class NoNegativeTraits
         if (IsNothingNegativePresent()) return;
         try
         {
-            if (FollowerTraitBackups == null || !FollowerTraitBackups.Any())
+            if (_followerTraitBackups == null || !_followerTraitBackups.Any())
             {
                 if (log)
                 {
@@ -136,11 +138,11 @@ public static class NoNegativeTraits
                 return;
             }
 
-            var json = JsonConvert.SerializeObject(FollowerTraitBackups, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(_followerTraitBackups, Formatting.Indented);
             File.WriteAllText(DataPath, json);
             if (log)
             {
-                Plugin.L($"Saved {FollowerTraitBackups.Count} follower trait backups to {DataPath}");
+                Plugin.L($"Saved {_followerTraitBackups.Count} follower trait backups to {DataPath}");
             }
         }
         catch (Exception ex)
@@ -154,8 +156,8 @@ public static class NoNegativeTraits
 
     internal static bool IsNothingNegativePresent()
     {
-        isNothingNegativePresentCache ??= BepInEx.Bootstrap.Chainloader.PluginInfos.Any(plugin => plugin.Value.Instance.Info.Metadata.GUID.Equals("NothingNegative", StringComparison.OrdinalIgnoreCase));
-        return isNothingNegativePresentCache.Value;
+        _isNothingNegativePresentCache ??= BepInEx.Bootstrap.Chainloader.PluginInfos.Any(plugin => plugin.Value.Instance.Info.Metadata.GUID.Equals("NothingNegative", StringComparison.OrdinalIgnoreCase));
+        return _isNothingNegativePresentCache.Value;
     }
 
     private static void ProcessTraitReplacement(FollowerBrain brain)
@@ -203,10 +205,10 @@ public static class NoNegativeTraits
             Name = brain._directInfoAccess.Name
         };
 
-        var alreadyBackedUp = FollowerTraitBackups?.Any(b => b.ID == traitBackup.ID && b.Name == traitBackup.Name) ?? false;
+        var alreadyBackedUp = _followerTraitBackups?.Any(b => b.ID == traitBackup.ID && b.Name == traitBackup.Name) ?? false;
         if (alreadyBackedUp) return;
         Plugin.L($"Backing up original traits for {brain._directInfoAccess.Name}");
-        FollowerTraitBackups?.Add(traitBackup);
+        _followerTraitBackups?.Add(traitBackup);
         SaveBackupToFile();
     }
 
@@ -222,7 +224,7 @@ public static class NoNegativeTraits
 
     private static FollowerTrait.TraitType FindPositiveReplacement(FollowerBrain brain)
     {
-        if (AllTraits == null)
+        if (_allTraits == null)
         {
             GenerateAvailableTraits();
         }
@@ -230,7 +232,7 @@ public static class NoNegativeTraits
         FollowerTrait.TraitType newTrait;
         do
         {
-            newTrait = AllTraits!.ElementAt(Random.Range(0, AllTraits!.Count));
+            newTrait = _allTraits!.ElementAt(Random.Range(0, _allTraits!.Count));
         } while (!FollowerTrait.IsPositiveTrait(newTrait) || brain.HasTrait(newTrait));
 
         return newTrait;
@@ -256,14 +258,14 @@ public static class NoNegativeTraits
     private static void BiomeBaseManager_Start()
     {
         if (IsNothingNegativePresent()) return;
-        FollowerTraitBackups?.Clear();
+        _followerTraitBackups?.Clear();
         LoadBackupFromFile();
         GenerateAvailableTraits();
     }
 
     internal static void GenerateAvailableTraits()
     {
-        AllTraits = InitializeAllTraits();
+        _allTraits = InitializeAllTraits();
     }
 
     [Serializable]
