@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.cheatenabler";
     private const string PluginName = "Cheat Enabler";
-    private const string PluginVersion = "0.3.3";
+    private const string PluginVersion = "0.3.4";
     internal static ManualLogSource LOG { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
     

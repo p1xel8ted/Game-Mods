@@ -11,9 +11,9 @@ public class Patches
         {
             Plugin.LOG.LogInfo("Override PlayerSettings.SetCheatsEnabled() to TRUE");
         }
+
         enable = true;
     }
-
 
 
     [HarmonyPostfix]
@@ -24,10 +24,10 @@ public class Patches
         if (PlayerPrefs.GetInt("CheatEnabler") == 1) return;
 
         var lang = LocalizationManager.CurrentLanguageCode;
-        var title = Lang.DlcMessageTitleTranslations.TryGetValue(lang, out var titleTranslation) ? titleTranslation : "Cheat Enabler";
         var message = Lang.DlcMessageTranslations.TryGetValue(lang, out var messageTranslation) ? messageTranslation : "Cheat Enabler will not allow you to add/spawn items that are marked as DLC items regardless if you own the DLC or not. Please do not raise bug reports regarding this.";
         var response = Lang.DlcOkTranslations.TryGetValue(lang, out var responseTranslation) ? responseTranslation : "I Understand";
-        DialogueController.Instance.SetDialogueBustVisualsOptimized("Lynn", small: true, isSwimsuitBust: true);
+
+        DialogueController.Instance.StartCoroutine(DialogueController.Instance.SetDialogueBustRoutine("Lynn", true, false, true, false, false, false, false));
         DialogueController.Instance.PushDialogue(new DialogueNode
         {
             dialogueText = [message],
@@ -38,10 +38,7 @@ public class Patches
                     responseText = () => response
                 }
             }
-        }, delegate
-        {
-            PlayerPrefs.SetInt("CheatEnabler", 1);
-        });
+        }, delegate { PlayerPrefs.SetInt("CheatEnabler", 1); });
     }
 
     [HarmonyPrefix]
@@ -111,6 +108,7 @@ public class Patches
             });
             if (dlcItemFound) return false; //don't let the original method run
         }
+
         return true; //let the original method run
     }
 
@@ -205,6 +203,7 @@ public class Patches
                 SingletonBehaviour<PetManager>.Instance.SpawnPet(Player.Instance, new PetItem(data.id));
                 return;
             }
+
             Utils.LogToPlayer($"Unfortunately, {data.FormattedName} ({data.ID}) is a DLC item and cannot be spawned via Cheat Enabler.");
         });
         return false;
@@ -342,6 +341,7 @@ public class Patches
         {
             Utils.LogToPlayer($"{kvp.Key}: {kvp.Value}");
         }
+
         return false; //don't let the original method run
     }
 
@@ -400,12 +400,14 @@ public class Patches
             Utils.LogToPlayer($"Item '{item}' not found. Please use /finditemid to get valid item names.");
             return false; //don't let the original method run
         }
+
         Database.GetData(id, delegate(ItemData data)
         {
             if (!data.isDLCItem)
             {
                 return;
             }
+
             Utils.LogToPlayer($"Unfortunately, {data.FormattedName} ({data.ID}) is a DLC item and cannot be added via Cheat Enabler.");
         });
         return true; //let the original method run
@@ -419,6 +421,7 @@ public class Patches
         {
             Plugin.LOG.LogInfo("Forcing load of custom commands, and built-in commands.");
         }
+
         QuantumConsoleProcessor.LoadCommandsFromType(typeof(CheatEnablerCommands));
         QuantumConsoleProcessor.LoadCommandsFromType(typeof(QuantumConsoleManager));
     }
@@ -446,6 +449,7 @@ public class Patches
             Plugin.LOG.LogError($"No descriptions dictionary found for '{lang}'");
             return;
         }
+
         foreach (var command in QuantumConsoleProcessor._commandTable)
         {
             var commandData = command.Value;
@@ -482,6 +486,7 @@ public class Patches
             {
                 Plugin.LOG.LogInfo($"No descriptions dictionary found for '{lang}'");
             }
+
             if (!SkipCommands.Contains(command.CommandName))
             {
                 Plugin.LOG.LogInfo($"Command '{command.CommandName}' - '{command.CommandSignature}' has no description. Language: '{lang}'");
@@ -500,5 +505,4 @@ public class Patches
         "/help",
         "/manual"
     ];
-
 }
