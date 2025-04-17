@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.museumsellpriceredux";
     private const string PluginName = "Museum Sell Price Redux";
-    private const string PluginVersion = "0.1.4";
+    private const string PluginVersion = "0.1.5";
 
     internal static ConfigEntry<bool> Enabled { get; private set; }
     private static ConfigEntry<bool> Debug { get; set; }
@@ -16,8 +16,9 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Database.OnDataFinishedLoading += Patches.ItemData_Loaded;
-        LOG = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(LOG);
+        
+        LOG = Logger;
+        
         Enabled = Config.Bind("01. General", "Enabled", true, new ConfigDescription("Toggle mod. Click 'Apply' to save changes.", null, new ConfigurationManagerAttributes
             {Order = 51}));
         Debug = Config.Bind("01. General", "Debug", false, new ConfigDescription("Toggle debug logging", null, new ConfigurationManagerAttributes

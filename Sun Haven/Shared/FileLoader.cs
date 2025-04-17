@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-
-namespace Shared;
+﻿namespace Shared;
 
 public static class FileLoader
 {

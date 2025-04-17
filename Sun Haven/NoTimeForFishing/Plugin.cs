@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.notimeforfishing";
     private const string PluginName = "No Time For Fishing!";
-    private const string PluginVersion = "0.0.9";
+    private const string PluginVersion = "0.1.0";
 
     public static ConfigEntry<bool> DisableCaughtFishWindow;
     public static ConfigEntry<bool> SkipFishingMiniGame;
@@ -57,8 +57,7 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        LOG = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(LOG);
+        LOG = Logger;
 
         // 01. Bobber Dynamics
         InstantAttraction = Config.Bind("01. Bobber Dynamics", "Immediate Fish Attraction", true,

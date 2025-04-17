@@ -10,7 +10,7 @@ public static class ItemHandler
     private const string RecipeListAnvil = "new_Anvil";
     private const string RecipeListMonsterAnvil = "monster_anvil";
     
-    internal readonly static List<(int id, int speed, int damage, string craftingStation, List<ItemInfo> inputs, float craftingHours, ItemData data)> CustomScythes = [];
+    internal static readonly List<(int id, int speed, int damage, string craftingStation, List<ItemInfo> inputs, float craftingHours, ItemData data)> CustomScythes = [];
 
     private static void CreateAndConfigureItem((int id, int speed, int damage, string craftingStation, List<ItemInfo> inputs, float craftingHours) scythe)
     {
@@ -52,8 +52,8 @@ public static class ItemHandler
                     return;
                 }
                 
-                Object.DontDestroyOnLoad(useItem);
-                Object.DontDestroyOnLoad(item);
+                // Object.DontDestroyOnLoad(useItem);
+                // Object.DontDestroyOnLoad(item);
 
                 item.useItem = useItem;
                 var weaponComponent = useItem.gameObject.GetComponent<Weapon>();

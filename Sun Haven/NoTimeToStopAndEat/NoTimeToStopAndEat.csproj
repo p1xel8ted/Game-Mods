@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.1.4</Version>
+        <Version>0.1.5</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -14,15 +14,16 @@
       <DefineConstants>TRACE;NTTSAE</DefineConstants>
     </PropertyGroup>
     <Import Project="..\zip.target"/>
-    <ItemGroup>
-        <PackageReference Update="BepInEx.Core" Version="5.4.21"/>
-    </ItemGroup>
+
     <ItemGroup>
       <Reference Include="DOTween">
         <HintPath>..\libs\DOTween.dll</HintPath>
       </Reference>
       <Reference Include="DOTweenPro">
         <HintPath>..\libs\DOTweenPro.dll</HintPath>
+      </Reference>
+      <Reference Include="Shared">
+        <HintPath>..\libs\Shared.dll</HintPath>
       </Reference>
       <Reference Include="SunHaven.Core">
         <HintPath>..\libs\SunHaven.Core.dll</HintPath>

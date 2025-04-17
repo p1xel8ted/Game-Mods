@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.cheatenabler";
     private const string PluginName = "Cheat Enabler";
-    private const string PluginVersion = "0.3.4";
+    private const string PluginVersion = "0.3.5";
     internal static ManualLogSource LOG { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
     
@@ -16,7 +16,7 @@ public class Plugin : BaseUnityPlugin
         LOG = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         LOG.LogInfo($"Plugin {PluginName} is loaded!");
-        DontDestroyOnLoad(this);
+        // DontDestroyOnLoad(this);
     }
     
     private void OnDestroy()

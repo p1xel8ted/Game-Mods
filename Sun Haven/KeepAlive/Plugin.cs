@@ -1,13 +1,15 @@
-﻿namespace KeepAlive;
+﻿using MonoMod.Utils;
+
+namespace KeepAlive;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.keepalive";
     private const string PluginName = "Keep Alive";
-    private const string PluginVersion = "0.0.9";
+    private const string PluginVersion = "0.1.0";
     
-    private static ManualLogSource Log;
+    private static ManualLogSource Log { get; set; }
 
     internal static List<string> NoKillList = ["UniverseLibBehaviour", "UniverseLib", "UniverseLibBehaviour(Clone)", "UniverseLib(Clone)", "ExplorerBehaviour", "Explorer", "ExplorerBehaviour(Clone)", "Explorer(Clone)"];
 
@@ -15,7 +17,7 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {MonoMod.Utils.PlatformHelper.Current}.");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
         AddGameObjectToNoKillList("bepinex");
     }
 

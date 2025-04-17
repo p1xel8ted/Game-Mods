@@ -118,11 +118,11 @@ public static class Tools
     {
         if (toolIndex != -1)
         {
-            Utilities.SetActionBar(toolIndex);
+            Utils.SetActionBar(toolIndex);
         }
         else
         {
-            Utilities.Notify(errorMessage, toolDataID, true);
+            Utils.Notify(errorMessage, toolDataID, true);
         }
     }
 
@@ -131,7 +131,7 @@ public static class Tools
     {
         ToolAction(Tool.Pickaxe, Rock is not null && Rock.Pickaxeable, Plugin.EnableAutoPickaxe.Value, NoPickaxeOnActionBar);
 
-        ToolAction(Tool.Axe, (Utilities.IsInFarmTile() && Tree is not null && !Tree.FullyGrown) || (Tree is not null && Tree.Axeable) || (Wood is not null && Wood.Axeable), Plugin.EnableAutoAxe.Value, NoAxeOnActionBar);
+        ToolAction(Tool.Axe, (Utils.IsInFarmTile() && Tree is not null && !Tree.FullyGrown) || (Tree is not null && Tree.Axeable) || (Wood is not null && Wood.Axeable), Plugin.EnableAutoAxe.Value, NoAxeOnActionBar);
         ToolAction(Tool.Scythe, Plant is not null || (collider.name.Contains(Foliage) && !collider.name.Contains(Prop)) || (Crop is not null && Crop.FullyGrown), Plugin.EnableAutoScythe.Value, NoScytheOnActionBar);
         ToolAction(Tool.FishingRod, TileHasWater(Plugin.FishingRodWaterDetectionDistance.Value), Plugin.EnableAutoFishingRod.Value, NoFishingRodOnActionBar);
         ToolAction(Tool.Hoe, TileManager.Instance.IsHoeable(new Vector2Int((int) Player.Instance.ExactGraphicsPosition.x, (int) Player.Instance.ExactGraphicsPosition.y)), Plugin.EnableAutoHoe.Value, NoHoeOnActionBar);
@@ -239,7 +239,7 @@ public static class Tools
         {
             if (!string.IsNullOrEmpty(failedConditionMessage))
             {
-                Utilities.Notify(failedConditionMessage, 0, true);
+                Utils.Notify(failedConditionMessage, 0, true);
             }
 
             return;
@@ -255,12 +255,12 @@ public static class Tools
             }
             else
             {
-                Utilities.Notify(ToolLevelTooLow(toolData.toolData), toolData.toolData.id, true);
+                Utils.Notify(ToolLevelTooLow(toolData.toolData), toolData.toolData.id, true);
             }
         }
         else
         {
-            Utilities.Notify(NoSuitableToolFoundOnActionBar, 0, true);
+            Utils.Notify(NoSuitableToolFoundOnActionBar, 0, true);
         }
     }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using BepInEx.Configuration;
-
-namespace Shared;
+﻿namespace Shared;
 
 /// <summary>
 /// Class that specifies how a setting should be displayed inside the ConfigurationManager settings window.
@@ -29,7 +26,7 @@ namespace Shared;
 /// You can optionally remove fields that you won't use from this class, it's the same as leaving them null.
 /// </remarks>
 #pragma warning disable 0169, 0414, 0649
-internal sealed class ConfigurationManagerAttributes
+public sealed class ConfigurationManagerAttributes
 {
     /// <summary>
     /// Should the setting be shown as a percentage (only use with value range settings).

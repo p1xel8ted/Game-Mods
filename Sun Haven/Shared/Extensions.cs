@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
 namespace Shared;
 
 public static class Extensions
 {
-    
     public static void SetAnchoredPosition(this Transform transform, Vector2 position)
     {
         if (transform == null) return;
@@ -26,7 +20,7 @@ public static class Extensions
     {
         transform.localPosition = new Vector3(position.x, position.y, transform.localPosition.z);
     }
-    
+
     public static void SetLocalPosition(this GameObject gameObject, Vector2 position)
     {
         gameObject.transform.localPosition = new Vector3(position.x, position.y, gameObject.transform.localPosition.z);
@@ -79,6 +73,7 @@ public static class Extensions
 
         return path;
     }
+
     // Extension method to find all child transforms with the given name.
     public static List<Transform> FindChildrenByName(this Transform parent, string name)
     {
@@ -86,6 +81,7 @@ public static class Extensions
         FindChildrenByNameRecursive(parent, name, ref foundChildren);
         return foundChildren;
     }
+
     // Extension method to find the first child transform with the given name.
     public static Transform FindFirstChildByName(this Transform parent, string name)
     {
@@ -100,7 +96,7 @@ public static class Extensions
 #if BepInEx_IL2CPP
             var child = o.TryCast<Transform>();
 #else
-            var child = (Transform) o;
+            var child = (Transform)o;
 #endif
             if (child != null && child.name == name)
             {
@@ -126,16 +122,18 @@ public static class Extensions
 #if BepInEx_IL2CPP
             var child = o.TryCast<Transform>();
 #else
-            var child = (Transform) o;
+            var child = (Transform)o;
 #endif
             if (child != null && child.name == name)
             {
                 foundChildren.Add(child);
             }
+
             // Recurse into each child.
             FindChildrenByNameRecursive(child, name, ref foundChildren);
         }
     }
+
     public static bool TryGetComponentsInChildren<T>(this Transform transform, out List<T> components) where T : Component
     {
         components = [..transform.GetComponentsInChildren<T>()];
@@ -191,11 +189,23 @@ public static class Extensions
         component = gameObject.GetComponent<T>();
         return component != null;
     }
+    
+    public static T TryAddComponent<T>(this GameObject gameObject) where T : Component
+    {
+        var component = gameObject.GetComponent<T>();
+        if (component == null)
+        {
+            component = gameObject.AddComponent<T>();
+        }
+
+        return component;
+    }
+
     public static bool Contains(this string source, string toCheck, StringComparison comp = StringComparison.InvariantCultureIgnoreCase)
     {
         return source?.IndexOf(toCheck, comp) >= 0;
     }
-    
+
     public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
     {
         if (dictionary == null)
@@ -207,12 +217,12 @@ public static class Extensions
         dictionary.Add(key, value);
         return true;
     }
-    
+
     public static Dictionary<string, T> ToCaseInsensitiveDictionary<T>(this Dictionary<string, T> dictionary)
     {
         return new Dictionary<string, T>(dictionary, StringComparer.OrdinalIgnoreCase);
     }
-    
+
     // case-insensitive TryGetValue
     public static bool TryGetValueIgnoreCase<TValue>(this Dictionary<string, TValue> dictionary, string key, out TValue value)
     {
@@ -230,7 +240,7 @@ public static class Extensions
         value = default;
         return false;
     }
-    
+
     public static string GetCaseSensitiveKey<TValue>(this Dictionary<string, TValue> dictionary, string key)
     {
         if (dictionary == null)
@@ -240,6 +250,4 @@ public static class Extensions
 
         return dictionary.Where(pair => pair.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Select(pair => pair.Key).FirstOrDefault();
     }
-    
-    
 }

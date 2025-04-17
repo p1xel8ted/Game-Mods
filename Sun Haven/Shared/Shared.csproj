@@ -4,14 +4,17 @@
         <Version>0.1.0</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <DefineConstants>TRACE</DefineConstants>
+        <OutputPath>C:\Users\Ben\OneDrive\Development\Game-Mods\Sun Haven\libs</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DefineConstants>TRACE</DefineConstants>
+        <OutputPath>C:\Users\Ben\OneDrive\Development\Game-Mods\Sun Haven\libs</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -40,4 +43,6 @@
         <HintPath>..\libs\UnityEngine.UI.dll</HintPath>
       </Reference>
     </ItemGroup>
+
+
 </Project>

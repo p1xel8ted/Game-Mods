@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.0.7</Version>
+        <Version>0.0.8</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -13,16 +13,18 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DefineConstants>TRACE;AT</DefineConstants>
     </PropertyGroup>
+  
     <Import Project="..\zip.target"/>
-    <ItemGroup>
-        <PackageReference Update="BepInEx.Core" Version="5.4.21"/>
-    </ItemGroup>
+
     <ItemGroup>
       <Reference Include="PSS.Database">
         <HintPath>..\libs\PSS.Database.dll</HintPath>
       </Reference>
       <Reference Include="QFSW.QC">
         <HintPath>..\libs\QFSW.QC.dll</HintPath>
+      </Reference>
+      <Reference Include="Shared">
+        <HintPath>..\libs\Shared.dll</HintPath>
       </Reference>
       <Reference Include="Sirenix.Serialization">
         <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
@@ -84,25 +86,5 @@
       <Reference Include="UnityEngine.UIModule">
         <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
       </Reference>
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
-        <Link>Shared\ConfigurationManagerAttributes.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\Extensions.cs">
-        <Link>Shared\Extensions.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\FileLoader.cs">
-        <Link>Shared\FileLoader.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\SpriteUtil.cs">
-        <Link>Shared\SpriteUtil.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\Utils.cs">
-        <Link>Shared\Utils.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\WriteOnce.cs">
-        <Link>Shared\WriteOnce.cs</Link>
-      </Compile>
     </ItemGroup>
 </Project>

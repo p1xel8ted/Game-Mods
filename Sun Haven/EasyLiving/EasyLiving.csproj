@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.1.7</Version>
+        <Version>0.1.8</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -14,9 +14,7 @@
       <DefineConstants>TRACE;EL</DefineConstants>
     </PropertyGroup>
     <Import Project="..\zip.target"/>
-    <ItemGroup>
-        <PackageReference Update="BepInEx.Core" Version="5.4.21"/>
-    </ItemGroup>
+
     <ItemGroup>
       <Reference Include="Assembly-CSharp">
         <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
@@ -93,6 +91,9 @@
       <Reference Include="Rewired_Windows">
         <HintPath>..\libs\Rewired_Windows.dll</HintPath>
       </Reference>
+      <Reference Include="Shared">
+        <HintPath>..\libs\Shared.dll</HintPath>
+      </Reference>
       <Reference Include="SimpleWebTransport">
         <HintPath>..\libs\SimpleWebTransport.dll</HintPath>
       </Reference>
@@ -116,6 +117,9 @@
       </Reference>
       <Reference Include="SunHaven.External">
         <HintPath>..\libs\SunHaven.External.dll</HintPath>
+      </Reference>
+      <Reference Include="SunHaven.Loading">
+        <HintPath>..\libs\SunHaven.Loading.dll</HintPath>
       </Reference>
       <Reference Include="Telepathy">
         <HintPath>..\libs\Telepathy.dll</HintPath>
@@ -352,18 +356,5 @@
         <HintPath>..\libs\ZeroFormatter.Interfaces.dll</HintPath>
       </Reference>
     </ItemGroup>
-    <ItemGroup>
-      <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
-        <Link>Shared\ConfigurationManagerAttributes.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\Extensions.cs">
-        <Link>Shared\Extensions.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\Utils.cs">
-        <Link>Shared\Utils.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\WriteOnce.cs">
-        <Link>Shared\WriteOnce.cs</Link>
-      </Compile>
-    </ItemGroup>
+
 </Project>

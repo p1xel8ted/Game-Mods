@@ -7,7 +7,7 @@ public static class Transpilers
     [HarmonyPatch(typeof(Fish), nameof(Fish.BiteRoutine), MethodType.Enumerator)]
     public static IEnumerable<CodeInstruction> Fish_BiteRoutine_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var chanceMethod = AccessTools.Method(typeof(Wish.Utilities), nameof(Wish.Utilities.Chance));
+        var chanceMethod = AccessTools.Method(typeof(Utilities), nameof(Utilities.Chance));
         var codes = new List<CodeInstruction>(instructions);
         var foundMatchingSequence = false;
 
@@ -38,7 +38,7 @@ public static class Transpilers
     [HarmonyPatch(typeof(FishingRod), nameof(FishingRod.WinMiniGame))]
     public static IEnumerable<CodeInstruction> FishingRod_WinMiniGame_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var chanceMethod = AccessTools.Method(typeof(Wish.Utilities), nameof(Wish.Utilities.Chance));
+        var chanceMethod = AccessTools.Method(typeof(Utilities), nameof(Utilities.Chance));
         var codes = new List<CodeInstruction>(instructions);
         var foundMatchingSequence = false;
         for (var i = 1; i < codes.Count; i++) // Start from index 1 since we check i-1

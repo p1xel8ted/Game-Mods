@@ -3,7 +3,7 @@
 [CommandPrefix("/")]
 public static class CheatEnablerCommands
 {
-    private readonly static Dictionary<int, string> questStarts = new()
+    private static readonly Dictionary<int, string> questStarts = new()
     {
         {1, "TheSunDragonsProtection1Quest"},
         {2, "TheSunDragonsProtection2Quest"},
@@ -15,7 +15,7 @@ public static class CheatEnablerCommands
         {8, "TheSunDragonsProtection8Quest"}
     };
 
-    private readonly static Dictionary<int, string[]> progressFlags = new()
+    private static readonly Dictionary<int, string[]> progressFlags = new()
     {
         {2, ["TheSunDragonsProtection1Quest", "JourneyToDragonsMeetCutscene1"]},
         {3, ["TheSunDragonsProtection2Quest", "JourneyToDragonsMeetCutscene2"]},
@@ -26,7 +26,7 @@ public static class CheatEnablerCommands
         {8, ["TheSunDragonsProtection7Quest", "TheSunDragonsProtectionCutscene5"]}
     };
 
-    private readonly static Dictionary<int, string> questStartsNelvari = new()
+    private static readonly Dictionary<int, string> questStartsNelvari = new()
     {
         {0, "TheSunDragonsProtection1Quest"},
         {1, "TheSunDragonsProtection2Quest"},
@@ -38,7 +38,7 @@ public static class CheatEnablerCommands
         {8, "TheMysteryOfNelvari3Quest"}
     };
 
-    private readonly static Dictionary<int, string[]> progressFlagsNelvari = new()
+    private static readonly Dictionary<int, string[]> progressFlagsNelvari = new()
     {
         {1, ["TheSunDragonsProtection1Quest", "JourneyToDragonsMeetCutscene1"]},
         {2, ["TheSunDragonsProtection2Quest", "JourneyToDragonsMeetCutscene2"]},
@@ -50,7 +50,7 @@ public static class CheatEnablerCommands
         {8, ["TheMysteryOfNelvari2Quest"]}
     };
 
-    private readonly static Dictionary<int, string> questStartsWithergate = new()
+    private static readonly Dictionary<int, string> questStartsWithergate = new()
     {
         {1, "TheSunDragonsProtection8Quest"},
         {6, "ClearingTheRoad1Quest"},
@@ -69,7 +69,7 @@ public static class CheatEnablerCommands
         {19, "ConfrontingDynus6Quest"}
     };
 
-    private readonly static Dictionary<int, string[]> progressFlagsWithergate = new()
+    private static readonly Dictionary<int, string[]> progressFlagsWithergate = new()
     {
         {6, ["TheSunDragonsProtection8Quest", "TimeOfNeedCutscene1", "TimeOfNeedCutscene2", "NelvariTree", "CompleteNelvariTree0", "CompleteNelvariTree1", "CompleteNelvariTree2", "CompleteNelvariTree3"]},
         {7, ["NorthTownMonster", "ClearingTheRoad1Quest", "ClearingTheRoadCutscene1"]},

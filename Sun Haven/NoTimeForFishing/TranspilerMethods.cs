@@ -5,9 +5,9 @@ public static class TranspilerMethods
 {
     internal static bool MuseumChance(float chance)
     {
-        if (!Plugin.IncreaseMuseumFishChance.Value) return Wish.Utilities.Chance(chance);
+        if (!Plugin.IncreaseMuseumFishChance.Value) return Utilities.Chance(chance);
         
-        var newChance = Wish.Utilities.Chance(Plugin.IncreaseMuseumFishChanceValue.Value);
+        var newChance = Utilities.Chance(Plugin.IncreaseMuseumFishChanceValue.Value);
         if (Plugin.Debug.Value)
         {
             Plugin.LOG.LogInfo($"Museum chance modified from {chance} to {Plugin.IncreaseMuseumFishChanceValue.Value}");
@@ -47,6 +47,6 @@ public static class TranspilerMethods
 
     internal static bool ModifyNibbleChance(float chance)
     {
-        return Plugin.NibblingBehaviour.Value && Wish.Utilities.Chance(chance);
+        return Plugin.NibblingBehaviour.Value && Utilities.Chance(chance);
     }  
 }

@@ -28,7 +28,7 @@ public static class Patches
     private static Dictionary<int, float> BackUpTicketPrices { get; } = new();
     private static Dictionary<int, float> BackUpOrbPrices { get; } = new();
 
-    private readonly static HashSet<string> ExcludedNames = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> ExcludedNames = new(StringComparer.OrdinalIgnoreCase)
     {
         AncientNelVarian,
         AncientWithergate,
@@ -52,20 +52,41 @@ public static class Patches
     public static void ItemData_Loaded(int itemId)
     {
         var itemSellInfo = Utils.GetItemSellInfo(itemId);
-        var item = GetItemFromCache(Database.Instance, itemId);
+        if (Database.Instance)
+        {
+            var item = GetItemFromCache(Database.Instance, itemId);
 
-        DescriptionCache[itemId] = item.description;
 
-        var existsInItemSellList = Utils.GetItemSellInfo(itemId);
-        if (existsInItemSellList == null)
+            if (!item)
+            {
+                Plugin.Log($"Item with id {itemId} was not found in the cache!", error: true);
+                return;
+            }
+
+
+            if (DescriptionCache != null)
+            {
+                DescriptionCache[itemId] = item.description;
+            }
+            else
+            {
+                Plugin.Log("DescriptionCache is not initialized!", error: true);
+                return;
+            }
+        }
+
+
+        if (itemSellInfo == null)
         {
             Plugin.Log($"ItemSellInfo for {itemId} does not exist!", error: true);
+            return;
         }
-        
-        BackupItemPrices(itemSellInfo, itemId);
 
+
+        BackupItemPrices(itemSellInfo, itemId);
         ModifyItem(itemSellInfo, itemId);
     }
+
 
     private static bool IsMuseumItem(int id, float price)
     {
@@ -90,10 +111,12 @@ public static class Patches
         {
             Plugin.Log($"Backed up gold sell price for {itemSellInfo.name} to {itemSellInfo.sellPrice}", debug: true);
         }
+
         if (BackUpOrbPrices.TryAdd(item, itemSellInfo.orbSellPrice))
         {
             Plugin.Log($"Backed up orb sell price for {itemSellInfo.name} to {itemSellInfo.orbSellPrice}", debug: true);
         }
+
         if (BackUpTicketPrices.TryAdd(item, itemSellInfo.ticketSellPrice))
         {
             Plugin.Log($"Backed up ticket sell price for {itemSellInfo.name} to {itemSellInfo.ticketSellPrice}", debug: true);
@@ -103,6 +126,12 @@ public static class Patches
     // Method to get all items from the cache based on itemId
     private static ItemData GetItemFromCache(Database database, int itemId)
     {
+        if (!database)
+        {
+            Plugin.Log("Database is null!", error: true);
+            return null;
+        }
+
         foreach (var typeCache in database.cache.Values)
         {
             if (!typeCache.TryGetValue(itemId, out var cacheNode)) continue;
@@ -110,6 +139,7 @@ public static class Patches
             var cacheItem = cacheNode.Value;
             return cacheItem.Data as ItemData;
         }
+
         return null;
     }
 
@@ -182,11 +212,13 @@ public static class Patches
                 item.Value.sellPrice = sellPrice;
                 Plugin.Log($"Restored gold sell price for {itemName} to {sellPrice}", debug: true);
             }
+
             if (BackUpOrbPrices.TryGetValue(item.Key, out var orbPrice))
             {
                 item.Value.orbSellPrice = orbPrice;
                 Plugin.Log($"Restored orb sell price for {itemName} to {orbPrice}", debug: true);
             }
+
             if (BackUpTicketPrices.TryGetValue(item.Key, out var ticketPrice))
             {
                 item.Value.ticketSellPrice = ticketPrice;
@@ -256,7 +288,7 @@ public static class Patches
     {
         if (!Plugin.Enabled.Value) return;
         var originalSellPrice = GetOriginalSellPrice(item, id);
-        
+
         if (item.name.Contains(OriginsOfSunHavenAndElios, StringComparison.OrdinalIgnoreCase) && item.sellPrice <= 2f)
         {
             item.sellPrice = originalSellPrice * 10 * Plugin.Multiplier.Value / 2;
@@ -281,6 +313,7 @@ public static class Patches
         {
             BackupItemPrices(item.Value, item.Key);
         }
+
         Plugin.Log("Prices backed up...");
     }
 
@@ -294,13 +327,13 @@ public static class Patches
         {
             ModifyItem(item.Value, item.Key);
         }
+
         Plugin.Log("Price changes applied...");
 
         if (notification)
         {
-            Plugin.SendNotification("Prices updated!");    
+            Plugin.SendNotification("Prices updated!");
         }
-      
     }
 
     [HarmonyPostfix]
@@ -310,5 +343,4 @@ public static class Patches
         BackUpPrices();
         ApplyPriceChanges();
     }
-
 }

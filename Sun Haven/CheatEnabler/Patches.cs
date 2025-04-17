@@ -31,7 +31,7 @@ public class Patches
         DialogueController.Instance.PushDialogue(new DialogueNode
         {
             dialogueText = [message],
-            responses = new Dictionary<int, Response>()
+            responses = new Dictionary<int, Response>
             {
                 [0] = new()
                 {
@@ -499,7 +499,7 @@ public class Patches
         }
     }
 
-    private readonly static string[] SkipCommands =
+    private static readonly string[] SkipCommands =
     [
         "/man",
         "/help",

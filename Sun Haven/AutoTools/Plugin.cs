@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.autotools";
     private const string PluginName = "Auto Tools";
-    private const string PluginVersion = "0.0.7";
+    private const string PluginVersion = "0.0.8";
     private const string CategoryGeneral = "01. General";
     private const string CategoryFarm = "02. Farm";
     private const string CategoryEnemies = "03. Enemies";
@@ -30,8 +30,8 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        LOG = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(LOG);
+        LOG = Logger;
+        
         WateringCan.onWateringCanEmpty += FindNextWateringCan;
         WateringCan.onFillUpWateringCan += FillWateringCanProper;
 
@@ -84,7 +84,7 @@ public class Plugin : BaseUnityPlugin
 
     private static void FindNextWateringCan()
     {
-        Utilities.Notify(Tools.YourWateringCanIsEmpty, Tools.GetBestWateringCanId(), true);
+        Utils.Notify(Tools.YourWateringCanIsEmpty, Tools.GetBestWateringCanId(), true);
         Tools.FindBestTool(Tools.Tool.WateringCan);
     }
 }

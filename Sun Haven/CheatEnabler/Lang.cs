@@ -2,7 +2,7 @@
 
 public static class Lang
 {
-    private readonly static Dictionary<string, Dictionary<string, string>> LanguageDictionaries = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, Dictionary<string, string>> LanguageDictionaries = new(StringComparer.OrdinalIgnoreCase)
     {
         ["en"] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -1847,7 +1847,7 @@ public static class Lang
         return LanguageDictionaries.TryGetValue(language, out var dict) ? dict : LanguageDictionaries["en"];
     }
 
-    internal readonly static Dictionary<string, string> DlcMessageTitleTranslations = new()
+    internal static readonly Dictionary<string, string> DlcMessageTitleTranslations = new()
     {
         ["en"] = "Cheat Enabler",
         ["fr"] = "Activateur de Triche",
@@ -1867,7 +1867,7 @@ public static class Lang
         ["pt-BR"] = "Ativador de Trapaça"
     };
 
-    internal readonly static Dictionary<string, string> DlcOkTranslations = new()
+    internal static readonly Dictionary<string, string> DlcOkTranslations = new()
     {
         ["en"] = "I understand - thanks Lynn!",
         ["fr"] = "Je comprends - merci Lynn!",
@@ -1888,7 +1888,7 @@ public static class Lang
     };
 
 
-    internal readonly static Dictionary<string, string> DlcMessageTranslations = new()
+    internal static readonly Dictionary<string, string> DlcMessageTranslations = new()
     {
         ["en"] = "I see you have Cheat Enabler installed! Please note that it can't be used to spawn/add items obtained via DLC - even if you own the DLC. Please don't raise this to the author as a bug.\n\n* Note - If you change the game's language, we'll have this conversation again in your chosen language.\n",
         ["fr"] = "Je vois que vous avez installé l'Activateur de Triche ! Veuillez noter qu'il ne peut pas être utilisé pour générer/ajouter des objets obtenus via DLC, même si vous possédez le DLC. Veuillez ne pas signaler cela à l'auteur comme un bug.\n\n* Remarque - Si vous changez la langue du jeu, nous aurons de nouveau cette conversation dans la langue de votre choix.\n",

@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.uiscales";
     private const string PluginName = "UI Scales";
-    private const string PluginVersion = "0.2.2";
+    private const string PluginVersion = "0.2.3";
 
     internal static Transform Bust { get; set; }
     internal static WriteOnce<float> OriginalPortraitPosition { get; } = new();
@@ -164,7 +164,7 @@ public class Plugin : BaseUnityPlugin
             ScalePortrait();
         };
         
-        PortraitScale = Config.Bind<float>("03. Character Portrait Settings", "Portrait Scale", 2f, new ConfigDescription("Adjust the size of character portraits in dialogue.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 989}));
+        PortraitScale = Config.Bind("03. Character Portrait Settings", "Portrait Scale", 2f, new ConfigDescription("Adjust the size of character portraits in dialogue.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes {Order = 989}));
         PortraitScale.SettingChanged += (_, _) =>
         {
             ScalePortrait();

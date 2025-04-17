@@ -8,6 +8,8 @@ public static class Patches
     private const string SkippingLoadOfLastModifiedSave = "Skipping load of last modified save.";
     private const float RegenerationInterval = 3f; // Example value for regeneration interval
     private const string PlayerFarmScene = "2playerfarm";
+
+    internal const string DevOpsContinue = "devopsdinosaur.sunhaven.continue_button";
     private static GameObject _newButton;
     private static readonly WriteOnce<Vector2> OriginalSize = new();
 
@@ -18,6 +20,9 @@ public static class Patches
     private static bool PlayerReturnedToMenu { get; set; }
 
     internal static bool SkipAutoLoad { get; set; }
+
+
+    private static GameObject ContinueButton { get; set; }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(UIHandler), nameof(UIHandler.ExitGame))]
@@ -100,6 +105,7 @@ public static class Patches
             Plugin.LOG.LogWarning(SkippingLoadOfLastModifiedSave);
             return;
         }
+
         var saves = SingletonBehaviour<GameSave>.Instance.Saves.OrderByDescending(save => save.worldData.saveTime).ToList();
         var lastModifiedSave = saves.FirstOrDefault();
         if (lastModifiedSave != null)
@@ -108,18 +114,7 @@ public static class Patches
         }
     }
 
-    private static string GetGameObjectPath(GameObject obj)
-    {
-        var path = obj.name;
-        var parent = obj.transform.parent;
-        while (parent != null)
-        {
-            path = parent.name + "/" + path;
-            parent = parent.parent;
-        }
 
-        return path;
-    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ScrollRect), nameof(ScrollRect.OnEnable))]
@@ -127,9 +122,9 @@ public static class Patches
     public static void ScrollRect_Initialize(ref ScrollRect __instance)
     {
         // Plugin.LOG.LogWarning($"ScrollRect: {__instance.name}, {GetGameObjectPath(__instance.gameObject)}");
-        
-        if (GetGameObjectPath(__instance.gameObject) != "Player(Clone)/UI_Quests/QuestTracker/Scroll View") return;
-        
+
+        if (__instance.gameObject.GetGameObjectPath() != "Player(Clone)/UI_Quests/QuestTracker/Scroll View") return;
+
 
         if (!Plugin.EnableAdjustQuestTrackerHeightView.Value)
         {
@@ -214,11 +209,13 @@ public static class Patches
 
         _newButton = Object.Instantiate(exitButton, exitButton.transform.parent);
         _newButton.name = "ExitToDesktopButton";
+
         var pop = _newButton.AddComponent<Popup>();
         pop.name = "ExitToDesktopPop";
         pop.description = "Save progress and exit directly to the desktop.";
         pop.text = "Exit to Desktop";
 
+        _newButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
         _newButton.GetComponent<Button>().onClick.RemoveAllListeners();
         _newButton.GetComponent<Button>().onClick.AddListener(() =>
         {
@@ -242,7 +239,8 @@ public static class Patches
         _installedDlcCount = 0;
         _totalDlcCount = 0;
 
-        var scroller = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/DLCBox/DLC_Scroller");
+        var scroller = MainMenuController.Instance.PCHomeMenu.transform.FindFirstChildByName("DLC_Scroller");
+        // var scroller = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/DLCBox/DLC_Scroller");
         if (!scroller) return;
 
         var sc = scroller.GetComponent<Scroller>();
@@ -253,7 +251,7 @@ public static class Patches
             if (data is not DLCScrollerData dlc) continue;
 
             _totalDlcCount += dlc.steamPackIDs.Count;
-            _installedDlcCount += dlc.steamPackIDs.Count(id => SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = id}));
+            _installedDlcCount += dlc.steamPackIDs.Count(id => SteamApps.BIsDlcInstalled(new AppId_t { m_AppId = id }));
         }
 
         Canvas.ForceUpdateCanvases();
@@ -271,51 +269,58 @@ public static class Patches
 
         UpdatePatchNotes();
     }
-    
+
     private static void UpdatePatchNotes()
     {
-        var patchNotesBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PatchNotesBox");
+        var patchNotesBox = MainMenuController.Instance.PCHomeMenu.transform.FindFirstChildByName("PatchNotesBox");
+        // var patchNotesBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PatchNotesBox");
         if (patchNotesBox)
         {
-            patchNotesBox.SetActive(!Plugin.RemovePatchNotes.Value);
+            patchNotesBox.gameObject.SetActive(!Plugin.RemovePatchNotes.Value);
         }
 
         Canvas.ForceUpdateCanvases();
     }
+
     private static void UpdateDlcBox()
     {
-        var dlcBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/DLCBox");
+        var dlcBox = MainMenuController.Instance.PCHomeMenu.transform.FindFirstChildByName("DLCBox");
+        //var dlcBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/DLCBox");
         if (!dlcBox) return;
 
         UpdateDlcData();
 
         if (_installedDlcCount >= _totalDlcCount)
         {
-            dlcBox.SetActive(false);
+            dlcBox.gameObject.SetActive(false);
         }
         else
         {
-            dlcBox.SetActive(!Plugin.RemoveDlcAds.Value);
+            dlcBox.gameObject.SetActive(!Plugin.RemoveDlcAds.Value);
         }
 
         Canvas.ForceUpdateCanvases();
     }
+
     private static void UpdateSocialMedia()
     {
-        var socialMedia = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PlayButtons/SocialMediaButtons");
+        var socialMedia = MainMenuController.Instance.PCHomeMenu.transform.FindFirstChildByName("SocialMediaButtons");
+        // var socialMedia = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PlayButtons/SocialMediaButtons");
         if (socialMedia)
         {
-            socialMedia.SetActive(!Plugin.RemoveSocialMediaButtons.Value);
+            socialMedia.gameObject.SetActive(!Plugin.RemoveSocialMediaButtons.Value);
         }
 
         Canvas.ForceUpdateCanvases();
     }
+
     private static void UpdateLogo()
     {
-        var ppStudios = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/Image");
+        var ppStudios = MainMenuController.Instance.PCHomeMenu.transform.Find("Image");
+        // var ppStudios = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/Image");
         if (ppStudios)
         {
-            ppStudios.SetActive(!Plugin.RemovePixelSproutStudiosLogo.Value);
+            ppStudios.gameObject.SetActive(!Plugin.RemovePixelSproutStudiosLogo.Value);
         }
 
         Canvas.ForceUpdateCanvases();
@@ -334,28 +339,131 @@ public static class Patches
             var text = component.GetComponentInChildren<TextMeshProUGUI>();
             var button = component.GetComponent<Button>();
 
-            var isInstalled = SteamApps.BIsDlcInstalled(new AppId_t {m_AppId = steamID});
+            var isInstalled = SteamApps.BIsDlcInstalled(new AppId_t { m_AppId = steamID });
 
             text.alpha = isInstalled ? 0.50f : 1f;
             foreach (var image in images)
             {
-                image.color = image.color with {a = isInstalled ? 0.25f : 1f};
+                image.color = image.color with { a = isInstalled ? 0.25f : 1f };
             }
+
             button.interactable = !isInstalled;
         }
     }
 
+    private static MenuUpdater MenuUpdaterInstance { get; set; }
+
     [HarmonyPostfix]
-    [HarmonyAfter("devopsdinosaur.sunhaven.continue_button")]
+    [HarmonyAfter(DevOpsContinue)]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.HomeMenu))]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.Start))]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.SetBackgroundBlur))]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.SetupButtons))]
-    public static void MainMenuController_HomeMenu(MainMenuController __instance)
+    public static void MainMenuController_HomeMenuPatches(MainMenuController __instance)
     {
         UpdateMainMenu();
+        MenuUpdaterInstance = __instance.homeMenu.TryAddComponent<MenuUpdater>();
+    }
+
+
+
+    [HarmonyPostfix]
+    [HarmonyAfter(DevOpsContinue)]
+    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.HomeMenu))]
+    public static void MainMenuController_HomeMenu(MainMenuController __instance)
+    {
+        if (!Plugin.QuickContinueButton.Value) return;
+
+        if (Utils.DevOpsContinueExists(DevOpsContinue))
+        {
+            Plugin.LOG.LogWarning($"Detected DevOpsDinosaurs Continue mod, aborting creating continue button!");
+        }
+        else
+        {
+            CreateContinueButton(__instance);
+        }
+    }
+
+    private static string GetLocalizedContinue()
+    {
+        var language = LocalizationManager.CurrentLanguageCode;
+        return language switch
+        {
+            "da" => "Fortsæt",
+            "de" => "Fortsetzen",
+            "en" => "Continue",
+            "es" => "Continuar",
+            "fr" => "Continuer",
+            "it" => "Continua",
+            "ja" => "続行",
+            "ko" => "계속",
+            "nl" => "Doorgaan",
+            "pt" => "Continuar",
+            "pt-BR" => "Continuar",
+            "ru" => "Продолжить",
+            "sv" => "Fortsätt",
+            "uk" => "Продовжити",
+            "zh-CN" => "继续",
+            "zh-TW" => "繼續",
+            _ => "Continue"
+        };
+    }
+    
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainMenuLoader), nameof(MainMenuLoader.MainLoadingRoutine))]
+    private static void MaineMenuLoader_MainLoadingRoutine(ref IEnumerator __result)
+    {
+        if (!Plugin.QuickBoot.Value) return;
         
-        if (__instance.homeMenu.GetComponent<MenuUpdater>()) return;
-        __instance.homeMenu.AddComponent<MenuUpdater>();
+        __result = Utils.FilterByMethodName(__result, "RunLogoAnimationRoutine");
+    }
+
+    internal static void CreateContinueButton(MainMenuController mmc)
+    {
+        if (Utils.DevOpsContinueExists(DevOpsContinue)) return;
+
+        if (!Plugin.QuickContinueButton.Value)
+        {
+            if (!ContinueButton) return;
+
+            Object.Destroy(ContinueButton);
+            if (MenuUpdaterInstance)
+            {
+                MenuUpdaterInstance.SetContinueNull();
+            }
+
+            return;
+        }
+
+        if (ContinueButton) return;
+
+        var savesDirectory = Path.Combine(Application.persistentDataPath, "Saves");
+
+        var playButtonParent = mmc.PCHomeMenu.transform.Find("PlayButtons");
+
+        if (playButtonParent)
+        {
+            var playButton = playButtonParent.Find("PlayButton");
+
+            var lastModifiedSave = SingletonBehaviour<GameSave>.Instance.Saves
+                .OrderByDescending(save => File.GetLastWriteTime(Path.Combine(savesDirectory, save.fileName)))
+                .FirstOrDefault();
+
+            if (lastModifiedSave != null && playButton)
+            {
+                var characterIndex = SingletonBehaviour<GameSave>.Instance.Saves.IndexOf(lastModifiedSave);
+                var menuRect = playButtonParent.GetComponent<RectTransform>();
+                menuRect.sizeDelta = new Vector2(menuRect.sizeDelta.x, 310);
+
+                ContinueButton = Object.Instantiate(playButton.gameObject, playButtonParent);
+                ContinueButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = GetLocalizedContinue();
+                ContinueButton.transform.SetAsFirstSibling();
+                ContinueButton.name = "ContinueButton";
+
+                Object.Destroy(ContinueButton.transform.GetChild(0)?.gameObject.GetComponent<Localize>());
+
+                ContinueButton.GetComponent<Button>().onClick.AddListener(delegate { mmc.PlayGame(characterIndex); });
+            }
+        }
     }
 }

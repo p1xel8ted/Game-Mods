@@ -6,23 +6,27 @@ internal class MenuUpdater : MonoBehaviour
     private Image _border;
     private RectTransform _rectTransform;
     private Transform _continueButton;
-    private Transform _playButton;
+    //private Transform _playButton;
     private Transform _dlcShopButton;
     private Transform _socialMediaButtons;
-        
+
+    internal void SetContinueNull()
+    {
+        _continueButton = null;
+    }
+    
     private void FindMenuObjects()
     {
-        _menuBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PlayButtons");
+        _menuBox = MainMenuController.Instance.PCHomeMenu.transform.Find("PlayButtons").gameObject;
+       // _menuBox = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/PlayButtons");
         if (_menuBox)
         {
             _border = _menuBox.GetComponent<Image>();
             _rectTransform = _menuBox.GetComponent<RectTransform>();
-            _playButton = _menuBox.transform.Find("PlayButton");
-            if (_playButton)
-            {
-                _playButton.name = "ContinueButton";
-            }
+            //_playButton = _menuBox.transform.Find("PlayButton");
+
             Canvas.ForceUpdateCanvases();
+            
             _continueButton = _menuBox.transform.Find("ContinueButton");
             _dlcShopButton = _menuBox.transform.Find("DLCShopButton");
             _socialMediaButtons = _menuBox.transform.Find("SocialMediaButtons");
@@ -33,24 +37,23 @@ internal class MenuUpdater : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
         FindMenuObjects();
     }
     
     private void Start()
     {
-        DontDestroyOnLoad(this);
         FindMenuObjects();
     }
 
     private void OnEnable()
     {
-        DontDestroyOnLoad(this);
         FindMenuObjects();
     }
 
     private void LateUpdate()
     {
+        _continueButton ??= _menuBox.transform.Find("ContinueButton");
+        
         _rectTransform.anchorMin = new Vector2(0.5f, 1); // Top Center
         _rectTransform.anchorMax = new Vector2(0.5f, 1); // Top Center
         _rectTransform.pivot = new Vector2(0.5f, 1);  

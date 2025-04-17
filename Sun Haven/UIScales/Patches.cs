@@ -4,7 +4,7 @@
 public static class Patches
 {
 
-    private readonly static string[] SkipCanvasScalers = ["sinai", "UI_Loading", "UI_SplashScreen"];
+    private static readonly string[] SkipCanvasScalers = ["sinai", "UI_Loading", "UI_SplashScreen"];
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(CanvasScaler), nameof(CanvasScaler.OnEnable))]
