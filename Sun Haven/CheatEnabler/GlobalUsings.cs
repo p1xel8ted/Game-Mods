@@ -17,6 +17,5 @@ global using QFSW.QC;
 global using QFSW.QC.Utilities;
 global using Shared;
 global using UnityEngine;
-global using UnityEngine.UI;
 global using Wish;
 global using Object = UnityEngine.Object;
