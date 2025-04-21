@@ -12,6 +12,15 @@ public static class Patches
     /// </summary>
     [UsedImplicitly] public static List<Slot> GearSlots = [];
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.SetUpInventoryData))]
+    private static void PlayerInventory_SetUpInventoryData(PlayerInventory __instance)
+    {
+        foreach (var item in __instance.Items)
+        {
+            Plugin.LOG.LogWarning($"Item: {item.id}-{item.item.Type}, {item.item.ID()}, {item.slot.slotNumber}, {item.slotNumber}");
+        }
+    }
 
     /// <summary>
     /// Harmony prefix patch for PlayerInventory's LoadPlayerInventory method.
@@ -24,6 +33,8 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.OpenMajorPanel))]
     private static void PlayerInventory_Initialize(PlayerInventory __instance, int panelIndex)
     {
+        if (!GameObject.Find(Const.PlayerInventoryPath)) return;
+        
         if(panelIndex != 0) return;
         
         if (UI.SlotsCreated && UI.GearPanel != null)
@@ -34,11 +45,11 @@ public static class Patches
 
         UI.InitializeGearPanel();
         
-        UI.CreateSlots(__instance, ArmorType.Ring, 2);
-        UI.CreateSlots(__instance, ArmorType.Keepsake, 2);
-        UI.CreateSlots(__instance, ArmorType.Amulet, 2);
+      //UI.CreateSlots(__instance, ArmorType.Ring, 2);
+       //  UI.CreateSlots(__instance, ArmorType.Keepsake, 2);
+        // UI.CreateSlots(__instance, ArmorType.Amulet, 2);
 
-        __instance.SetUpInventoryData();
+         __instance.SetUpInventoryData();
 
         var characterPanelSlots = GameObject.Find(Const.CharacterPanelSlotsPath);
         if (characterPanelSlots != null)
@@ -71,6 +82,8 @@ public static class Patches
     [HarmonyPatch(typeof(Inventory), nameof(Inventory.SwapItems))]
     private static void Inventory_SwapItems(ref Inventory __instance, ref int slot1)
     {
+        //TODO: Come back when main issue is fixed
+        return;
         if (!Plugin.UseAdjustedEquipping.Value)
         {
             Utils.Log("Adjusted equipping disabled. Skipping slot swapping logic.");
@@ -117,6 +130,8 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.GetStat))]
     public static void PlayerInventory_GetStat(ref PlayerInventory __instance, StatType stat, ref float __result)
     {
+        //TODO: Come back when main issue is fixed
+        return;
         if (Plugin.MakeSlotsStorageOnly.Value) return;
         __result += __instance.GetStatValueFromSlot(ArmorType.Ring, Const.NewRingSlotOne, 2, stat);
         __result += __instance.GetStatValueFromSlot(ArmorType.Ring, Const.NewRingSlotTwo, 3, stat);
@@ -138,6 +153,8 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.Awake))]
     public static void PlayerInventory_Awake(ref PlayerInventory __instance)
     {
+        // //TODO: Come back when main issue is fixed
+        // return;
         if (UI.ActionAttached) return;
         UI.ActionAttached = true;
 
@@ -168,6 +185,8 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.LateUpdate))]
     private static void PlayerInventory_EquipNonVisualArmor(ref PlayerInventory __instance)
     {
+        //TODO: Come back when main issue is fixed
+        return;
         if (!UI.SlotsCreated) return;
         __instance.EquipNonVisualArmor(Const.NewRingSlotOne, ArmorType.Ring, 2);
         __instance.EquipNonVisualArmor(Const.NewRingSlotTwo, ArmorType.Ring, 3);

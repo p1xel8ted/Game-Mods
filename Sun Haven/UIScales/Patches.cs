@@ -1,9 +1,11 @@
-﻿namespace UIScales;
+﻿using System.Globalization;
+using TMPro;
+
+namespace UIScales;
 
 [Harmony]
 public static class Patches
 {
-
     private static readonly string[] SkipCanvasScalers = ["sinai", "UI_Loading", "UI_SplashScreen"];
 
     [HarmonyPostfix]
@@ -103,29 +105,82 @@ public static class Patches
         Player.Instance.SetZoom(Plugin.ZoomLevel.Value, true);
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.PopupPanel))]
-    public static void MainMenuController_PopupPanel()
+    private static Slider SliderInstance { get; set; }
+    private static TextMeshProUGUI TextInstance { get; set; }
+
+    internal static void ExtSetZoomSlider(float value)
     {
-        var newZoomText = GameObject.Find("Canvas/[OptionsMenu]/Settings/Scroll View/Viewport/Content/Panel/ZoomLevelTMP");
-        if (newZoomText)
+        if (SliderInstance)
         {
-            newZoomText.gameObject.SetActive(false);
+            SliderInstance.Set(value, false);
         }
 
-        var newZoomSlider = GameObject.Find("Canvas/[OptionsMenu]/Settings/Scroll View/Viewport/Content/Panel/ZoomSlider");
-        if (newZoomSlider)
+        if (TextInstance)
         {
-            newZoomSlider.gameObject.SetActive(false);
+            TextInstance.SetText($"{value.ToString(CultureInfo.InvariantCulture)}x");
+        }
+
+        if (Player.Instance)
+        {
+            Player.Instance.OverrideCameraZoomLevel = false;
+            Player.Instance.SetZoom(value, true);
         }
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.OnEnable))]
-    public static void PlayerSettings_Start(ref PlayerSettings __instance)
+    private static void SetupZoomSlider(Slider slider, TextMeshProUGUI text)
     {
+        SliderInstance = slider;
+        TextInstance = text;
+
+        slider.onValueChanged = new Slider.SliderEvent();
+        slider.wholeNumbers = false;
+        slider.minValue = 0.5f;
+        slider.maxValue = 10f;
+
+        slider.onValueChanged.RemoveAllListeners();
+        slider.onValueChanged.AddListener(value =>
+        {
+            value = Mathf.Round(value * 4) / 4;
+            Plugin.ZoomLevel.Value = value;
+            slider.Set(value, false);
+            text.SetText($"{value.ToString(CultureInfo.InvariantCulture)}x");
+            Player.Instance.OverrideCameraZoomLevel = false;
+            Player.Instance.SetZoom(value, true);
+        });
+
+        slider.value = Plugin.ZoomLevel.Value;
+        slider.Set(Plugin.ZoomLevel.Value, false);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.PopupPanel))]
+    public static void MainMenuController_PopupPanel(MainMenuController __instance)
+    {
+        var slider = __instance.settings.zoomSlider;
+        var text = __instance.settings.zoomTMP;
+        SetupZoomSlider(slider, text);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Slider), nameof(Slider.ClampValue))]
+    public static void Slider_ClampValue(Slider __instance, float input, ref float __result)
+    {
+        if (__instance.name == "ZoomSlider")
+        {
+            __result = Mathf.Round(input * 4) / 4;
+        }
+    }
+
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.SetupUI))]
+    public static void PlayerSettings_Start(PlayerSettings __instance)
+    {
+        var slider = __instance.zoomSlider;
+        var text = __instance.zoomTMP;
+        SetupZoomSlider(slider, text);
+
         __instance.uiScaleSlider.transform.parent.transform.parent.gameObject.SetActive(false);
-        __instance.zoomSlider.transform.parent.transform.parent.gameObject.SetActive(false);
     }
 
     [HarmonyPostfix]
@@ -148,7 +203,7 @@ public static class Patches
         if (!Plugin.ScalePortraitAdjustments.Value) return;
         if (__instance._usingBust)
         {
-            __instance._bust.gameObject.transform.localPosition = __instance._bust.gameObject.transform.localPosition with {x = Plugin.OriginalPortraitPosition.Value + Plugin.PortraitHorizontalPosition.Value};
+            __instance._bust.gameObject.transform.localPosition = __instance._bust.gameObject.transform.localPosition with { x = Plugin.OriginalPortraitPosition.Value + Plugin.PortraitHorizontalPosition.Value };
         }
     }
 }

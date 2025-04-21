@@ -10,7 +10,8 @@ public static class Patches
     private const string PlayerFarmScene = "2playerfarm";
 
     internal const string DevOpsContinue = "devopsdinosaur.sunhaven.continue_button";
-    private static GameObject _newButton;
+    internal static GameObject QuitToDesktopButton { get; set; }
+
     private static readonly WriteOnce<Vector2> OriginalSize = new();
 
     private static float _regenerationTimer;
@@ -115,7 +116,6 @@ public static class Patches
     }
 
 
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(ScrollRect), nameof(ScrollRect.OnEnable))]
     [HarmonyPatch(typeof(ScrollRect), nameof(ScrollRect.LateUpdate))]
@@ -179,45 +179,47 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.OnEnable))]
     public static void PlayerSettings_OnEnable()
     {
-        var moneyInfo = GameObject.Find("Player(Clone)/UI_Inventory/Inventory/Items/Money");
+        var moneyInfo = Player.Instance.PlayerInventory._panels.Find(a => a.name == "Items").Find("Money");
         if (moneyInfo)
         {
-            moneyInfo.SetActive(true);
-            Plugin.LOG.LogInfo("Money info is now visible.");
+            moneyInfo.gameObject.SetActive(true);
+            //Plugin.LOG.LogInfo("Money info is now visible.");
         }
 
-        var characterBorder = GameObject.Find("Player(Clone)/UI_Inventory/Inventory/Items/Slots/CharacterPanel/Border");
+
+        var characterBorder = Player.Instance.PlayerInventory.equipmentPanel.transform.Find("Border");
         if (characterBorder)
         {
-            characterBorder.SetActive(true);
-            Plugin.LOG.LogInfo("Character border is now visible.");
+            characterBorder.gameObject.SetActive(true);
+            //Plugin.LOG.LogInfo("Character border is now visible.");
         }
 
 
         if (!Plugin.AddQuitToDesktopButton.Value)
         {
-            if (_newButton)
+            if (QuitToDesktopButton)
             {
-                Object.Destroy(_newButton);
+                Object.Destroy(QuitToDesktopButton);
             }
 
             return;
         }
 
-        var exitButton = GameObject.Find("Player(Clone)/UI_Inventory/Inventory/ExitButton");
-        if (!exitButton || _newButton) return;
+        var exitButton = Player.Instance.PlayerInventory._panels.Find(a => a.name == "Items").parent.Find("ExitButton");
+    
+        if (!exitButton || QuitToDesktopButton) return;
 
-        _newButton = Object.Instantiate(exitButton, exitButton.transform.parent);
-        _newButton.name = "ExitToDesktopButton";
+        QuitToDesktopButton = Object.Instantiate(exitButton.gameObject, exitButton.transform.parent);
+        QuitToDesktopButton.name = "ExitToDesktopButton";
 
-        var pop = _newButton.AddComponent<Popup>();
+        var pop = QuitToDesktopButton.AddComponent<Popup>();
         pop.name = "ExitToDesktopPop";
         pop.description = "Save progress and exit directly to the desktop.";
         pop.text = "Exit to Desktop";
 
-        _newButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
-        _newButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        _newButton.GetComponent<Button>().onClick.AddListener(() =>
+        QuitToDesktopButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
+        QuitToDesktopButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        QuitToDesktopButton.GetComponent<Button>().onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
             NotificationStack.Instance.SendNotification("Game Saved! Exiting...");
@@ -226,8 +228,13 @@ public static class Patches
             Application.Quit();
         });
 
+        var canvasGroup = QuitToDesktopButton.GetComponent<CanvasGroup>();
+        if (canvasGroup)
+        {
+            canvasGroup.enabled = false;
+        }
 
-        var rectTransform = _newButton.GetComponent<RectTransform>();
+        var rectTransform = QuitToDesktopButton.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(265.5f, -147.5f);
         rectTransform.anchoredPosition3D = new Vector3(265.5f, -147.5f, 1);
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
@@ -366,7 +373,6 @@ public static class Patches
     }
 
 
-
     [HarmonyPostfix]
     [HarmonyAfter(DevOpsContinue)]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.HomeMenu))]
@@ -408,13 +414,13 @@ public static class Patches
             _ => "Continue"
         };
     }
-    
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuLoader), nameof(MainMenuLoader.MainLoadingRoutine))]
     private static void MaineMenuLoader_MainLoadingRoutine(ref IEnumerator __result)
     {
         if (!Plugin.QuickBoot.Value) return;
-        
+
         __result = Utils.FilterByMethodName(__result, "RunLogoAnimationRoutine");
     }
 
