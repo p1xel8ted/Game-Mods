@@ -6,6 +6,7 @@ public static class Transpilers
 
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.SetZoomLevel))]
+    [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.SetupUI))]
     public static IEnumerable<CodeInstruction> PlayerSettings_SetZoomLevel_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var codes = new List<CodeInstruction>(instructions);

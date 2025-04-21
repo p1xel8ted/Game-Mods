@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.2.3</Version>
+        <Version>0.2.4</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -39,6 +39,9 @@
       </Reference>
       <Reference Include="Unity.ResourceManager">
         <HintPath>..\libs\Unity.ResourceManager.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.TextMeshPro">
+        <HintPath>..\libs\Unity.TextMeshPro.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine">
         <HintPath>..\libs\UnityEngine.dll</HintPath>

@@ -24,35 +24,40 @@ public class CustomUI : MonoBehaviour
 
     internal static GameObject CreateScrollView(Transform parent)
     {
-        ScrollRect scrollRect = new GameObject(Const.GridContainerName).AddComponent<ScrollRect>();
-        scrollRect.gameObject.layer = LayerMask.NameToLayer("UI");
+        var scrollRect = new GameObject(Const.GridContainerName).AddComponent<ScrollRect>();
+        scrollRect.gameObject.layer = LayerMask.NameToLayer("Player");
         scrollRect.transform.SetParent(parent);
         scrollRect.transform.localScale = Vector3.one;
-        scrollRect.transform.localPosition = Vector3.zero;
+        scrollRect.transform.localPosition = new Vector3(-2.3f, 7f, 0f);
         scrollRect.scrollSensitivity = 5f;
         scrollRect.movementType = ScrollRect.MovementType.Clamped;
 
-        GameObject viewport = new GameObject("Viewport");
-        viewport.layer = LayerMask.NameToLayer("UI");
-        RectTransform viewportTransform = viewport.AddComponent<RectTransform>();
+        var viewport = new GameObject("Viewport")
+        {
+            layer = LayerMask.NameToLayer("UI")
+        };
+        var viewportTransform = viewport.AddComponent<RectTransform>();
         viewportTransform.SetParent(scrollRect.transform);
         viewportTransform.localScale = Vector3.one;
         viewportTransform.localPosition = Vector3.zero;
-        viewportTransform.sizeDelta = new Vector2(100, 165);
+        viewportTransform.sizeDelta = new Vector2(100, 155);
 
         var viewportImage = viewport.AddComponent<Image>();
-        viewportImage.rectTransform.sizeDelta = new Vector2(100, 165);
+        viewportImage.rectTransform.sizeDelta = new Vector2(100, 155);
         viewportImage.color = new Color(0, 0, 0, 0); // Transparent color for the viewport image
-        var mask = viewport.AddComponent<Mask>();
-        mask.showMaskGraphic = false;
 
-        GameObject content = new GameObject("Content");
-        content.layer = LayerMask.NameToLayer("UI");
-        RectTransform contentTransform = content.AddComponent<RectTransform>();
+        //var mask = viewport.AddComponent<Mask>();
+        // mask.showMaskGraphic = false;
+
+        var content = new GameObject("Content")
+        {
+            layer = LayerMask.NameToLayer("UI")
+        };
+        var contentTransform = content.AddComponent<RectTransform>();
         contentTransform.SetParent(viewportTransform);
         contentTransform.localScale = Vector3.one;
         contentTransform.localPosition = Vector3.zero;
-        contentTransform.sizeDelta = new Vector2(100, 165);
+        contentTransform.sizeDelta = new Vector2(100, 155);
 
         var gridLayoutGroup = content.AddComponent<GridLayoutGroup>();
         gridLayoutGroup.cellSize = new Vector2(32, 32);
@@ -77,20 +82,19 @@ public class CustomUI : MonoBehaviour
         if (!bgSprite)
         {
             var bgTexture = CreateTexture(bgTextureData);
-            bgSprite = Sprite.Create(bgTexture, new Rect(0, 0, bgTexture.width, bgTexture.height), new Vector2(0.5f, 0.5f), 24);
+            bgSprite = Sprite.Create(bgTexture, new Rect(0, 0, bgTexture.width, bgTexture.height), new Vector2(0.5f, 0.5f), 24f, 0, SpriteMeshType.FullRect);
         }
 
         var go = new GameObject("Background");
         var bg = go.AddComponent<Image>();
         bg.sprite = bgSprite;
-        bg.gameObject.layer = LayerMask.NameToLayer("UI");
-        RectTransform transform = bg.rectTransform;
+        bg.gameObject.layer = LayerMask.NameToLayer("Player");
+        var transform = bg.rectTransform;
         transform.SetParent(GameObject.Find(Const.PlayerInventoryPath).transform);
         transform.localScale = Vector3.one;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-        transform.sizeDelta = new Vector2(100, 165);
-
+        transform.sizeDelta = new Vector2(100, 155);
         return go;
     }
 
@@ -100,15 +104,15 @@ public class CustomUI : MonoBehaviour
         if (!titleSprite)
         {
             var tex = CreateTexture(titleTextureData);
-            titleSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 24);
+            titleSprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 24f, 0, SpriteMeshType.FullRect);
         }
 
-        Image title = new GameObject("Title").AddComponent<Image>();
+        var title = new GameObject("Title").AddComponent<Image>();
         title.sprite = titleSprite;
-        title.gameObject.layer = LayerMask.NameToLayer("UI");
+        title.gameObject.layer = LayerMask.NameToLayer("Player");
         title.transform.SetParent(parent);
         title.preserveAspect = true;
-        RectTransform transform = title.rectTransform;
+        var transform = title.rectTransform;
         transform.localScale = Vector3.one;
         transform.localPosition = new Vector3(0, 177, 0);
         transform.localRotation = Quaternion.identity;
@@ -117,9 +121,9 @@ public class CustomUI : MonoBehaviour
 
     internal static TextMeshProUGUI CreateTitleText(Transform parent, string name)
     {
-        TextMeshProUGUI titleText = CreateText(parent, "Title text");
+        var titleText = CreateText(parent, "Title text");
         titleText.enableAutoSizing = true;
-        titleText.gameObject.layer = LayerMask.NameToLayer("UI");
+        titleText.gameObject.layer = LayerMask.NameToLayer("Player");
         titleText.rectTransform.sizeDelta = new Vector2(80, 30);
         titleText.transform.localScale = Vector3.one;
         titleText.transform.localPosition = new Vector3(0.0f, 0f, 0.0f);
@@ -137,7 +141,7 @@ public class CustomUI : MonoBehaviour
         var baseText = UIHandler.Instance.endOfDayScreen.coinsTotalTMP;
         var text = Instantiate(baseText, parent);
         text.alignment = TextAlignmentOptions.Left;
-        text.gameObject.layer = LayerMask.NameToLayer("UI");
+        text.gameObject.layer = LayerMask.NameToLayer("Player");
         text.name = name;
         return text;
     }
@@ -151,13 +155,13 @@ public class CustomUI : MonoBehaviour
 
     protected static Texture2D CreateTexture(string data)
     {
-        var texture = new Texture2D(1, 1);
+        var texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+
         texture.LoadImage(Convert.FromBase64String(data));
+
         texture.filterMode = FilterMode.Point;
         texture.wrapMode = TextureWrapMode.Clamp;
-        texture.wrapModeU = TextureWrapMode.Clamp;
-        texture.wrapModeV = TextureWrapMode.Clamp;
-        texture.wrapModeW = TextureWrapMode.Clamp;
+
         return texture;
     }
 }

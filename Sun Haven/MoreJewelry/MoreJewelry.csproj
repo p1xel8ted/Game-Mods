@@ -99,4 +99,8 @@
       <None Remove="settings.png" />
       <None Remove="shown.png" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="assets\bg.png" />
+    </ItemGroup>
 </Project>

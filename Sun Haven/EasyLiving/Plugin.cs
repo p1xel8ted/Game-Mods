@@ -6,7 +6,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.easyliving";
     private const string PluginName = "Easy Living";
-    private const string PluginVersion = "0.1.8";
+    private const string PluginVersion = "0.1.9";
     private static ConfigEntry<KeyboardShortcut> SaveShortcut { get; set; }
     private static ConfigEntry<bool> EnableSaveShortcut { get; set; }
     public static ConfigEntry<bool> SkipMuseumMissingItemsDialogue { get; private set; }
@@ -90,6 +90,18 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         AddQuitToDesktopButton = Config.Bind("04. UI", "Add Quit To Desktop Button", true, new ConfigDescription("Add a 'Quit To Desktop' button to the main menu. Bottom right X.", null, new ConfigurationManagerAttributes { Order = 16 }));
+        AddQuitToDesktopButton.SettingChanged += (sender, args) =>
+        {
+            if (AddQuitToDesktopButton.Value)
+            {
+                Patches.PlayerSettings_OnEnable();
+            }
+            else
+            {
+                Patches.QuitToDesktopButton?.Destroy();
+            }
+        };
+        
         EnableAdjustQuestTrackerHeightView = Config.Bind("04. UI", "Enable Adjust Quest Tracker Height", true, new ConfigDescription("Enable adjusting the height of the quest tracker.", null, new ConfigurationManagerAttributes { Order = 15 }));
         AdjustQuestTrackerHeightView = Config.Bind("04. UI", "Adjust Quest Tracker Height", Display.main.systemHeight / 3, new ConfigDescription("Adjust the height of the quest tracker.", new AcceptableValueRange<int>(-2000, 2000), new ConfigurationManagerAttributes { Order = 14 }));
         ApplyMoveSpeedMultiplier = Config.Bind("05. Player", "Apply Move Speed Multiplier", true, new ConfigDescription("Apply a multiplier to the players base speed.", null, new ConfigurationManagerAttributes { Order = 13 }));

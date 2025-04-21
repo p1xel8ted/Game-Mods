@@ -55,8 +55,10 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         LOG = Logger;
+        
         UIHandler.OnInventoryOpened += UI.UIHandler_OpenInventory;
         UIHandler.OnInventoryClosed += UI.UIHandler_CloseInventory;
+        
         Debug = Config.Bind("00. Debug", "Debug", false, new ConfigDescription("Enable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = false, Order = 99}));
         UseAdjustedEquipping = Config.Bind("01. General", "Use Adjusted Equipping", true, new ConfigDescription("Use adjusted equipping logic for rings, amulets, and keepsakes.", null, new ConfigurationManagerAttributes {Order = 0}));
         ShowPanelToggle = Config.Bind("01. General", "Show Panel Toggle", true, new ConfigDescription("Show the panel toggle in the character panel.", null, new ConfigurationManagerAttributes {Order = 1}));

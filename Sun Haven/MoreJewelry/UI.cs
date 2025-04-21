@@ -108,46 +108,16 @@ public static class UI
     /// <seealso cref="Const"/>
     internal static void InitializeGearPanel()
     {
-        // var bg = CustomUI.CreateBg();
-        // var title = CustomUI.CreateTitle(bg.transform);
-        // CreateTitleText(title.transform, "Catchable fish");
-
-        // var slideOutPanel = GameObject.Find(Const.EncyclopediaPanelPath);
-        // var slideOutPanelParent = GameObject.Find(Const.PlayerItemsPath);
-        var slideOutPanelParent = Player.Instance.Inventory._inventoryPanel;
-        // if (slideOutPanel == null)
-        // {
-        //     Plugin.LOG.LogError("'Encyclopedia' panel not found. Please report this.");
-        //     return;
-        // }
-        if (slideOutPanelParent == null)
-        {
-            Plugin.LOG.LogError("'player item' panel not found. Please report this.");
-            return;
-        }
+        // if (GearPanel) return;
+      
+        
         GearPanel = CustomUI.CreateBg();
-
-        //GearPanel = Object.Instantiate(slideOutPanel, slideOutPanelParent.transform);
         GearPanel.name = Const.GearPanelName;
-
-        // var rectTransform = GearPanel.GetComponent<RectTransform>();
-        // var sizeDelta = rectTransform.sizeDelta;
-        //
-        // sizeDelta -= new Vector2(10, 0);
-        // sizeDelta += new Vector2(0, 10);
-        //
-        // rectTransform.sizeDelta = sizeDelta;
+        
         TitlePanel = CustomUI.CreateTitle(GearPanel.transform);
         TitlePanel.localPosition = Const.TitlePosition;
         TitlePanel.localScale = Const.TitleScale;
-        //
-        // var sp = CustomUI.CreateScrollView(GearPanel.transform);
-        
-        // Destroy every child except the first one (the title text) as we don't need them
-        // for (var i = 1; i < GearPanel.transform.childCount; i++)
-        // {
-        //     Object.Destroy(GearPanel.transform.GetChild(i).gameObject);
-        // }
+   
 
         // Find and destroy the EncyclopediaSorting component as we don't need it.
         var encyclopediaSorting = GearPanel.GetComponentInChildren<EncylopdeiaSorting>();
@@ -157,6 +127,7 @@ public static class UI
         }
 
         UpdateTitleText();
+        
         CreateToggleArrows();
 
         UpdatePanelVisibility();
@@ -215,11 +186,7 @@ public static class UI
     /// </remarks>
     private static Popup CreatePopup(GameObject parent, string name, string content, string title)
     {
-        var popup = parent.GetComponent<Popup>();
-        if (popup == null)
-        {
-            popup = parent.AddComponent<Popup>();
-        }
+        var popup = parent.TryAddComponent<Popup>();
         popup.name = name;
         popup.description = content;
         popup.text = title;
@@ -251,6 +218,7 @@ public static class UI
             Plugin.LOG.LogError("Left or right arrow not found. Please report this.");
             return;
         }
+
         var parent = GameObject.Find(Const.PlayerItemsPath);
 
         //create new instances of the arrows and attach them to the parent
@@ -314,6 +282,8 @@ public static class UI
     /// </remarks>
     internal static void UpdateNavigationElements()
     {
+        //TODO: Come back after main issue is fixed
+        return;
         if (Patches.GearSlots.Count != 6)
         {
             return;
@@ -483,13 +453,13 @@ public static class UI
             GearPanel.SetActive(panelVisible);
             if (panelVisible)
             {
-                LeftArrowInstance.SetActive(false);
-                RightArrowInstance.SetActive(true);
+                if (LeftArrowInstance != null) LeftArrowInstance.SetActive(false);
+                if (RightArrowInstance != null) RightArrowInstance.SetActive(true);
             }
             else
             {
-                LeftArrowInstance.SetActive(true);
-                RightArrowInstance.SetActive(false);
+                if (LeftArrowInstance != null) LeftArrowInstance.SetActive(true);
+                if (RightArrowInstance != null) RightArrowInstance.SetActive(false);
             }
         }
     }
@@ -518,6 +488,7 @@ public static class UI
         }
 
         var gridContainer = GetOrCreateGridContainer();
+      
 
         for (var i = 1; i <= count; i++)
         {
@@ -527,11 +498,11 @@ public static class UI
                 Plugin.LOG.LogError($"Failed to instantiate {armorType}Slot ({i}). Please report this.");
                 continue;
             }
-
+            
             newSlot.name = $"{armorType}Slot ({i})";
             Patches.GearSlots.Add(newSlot);
             inventory._slots = inventory._slots.Append([newSlot]).ToArray();
-            inventory.maxSlots++;
+            inventory.maxSlots = inventory._slots.Length;
         }
     }
 
@@ -548,15 +519,14 @@ public static class UI
     /// </remarks>
     private static GameObject GetOrCreateGridContainer()
     {
-        var existingContainer = GearPanel.transform.Find(Const.GridContainerName);
+        var existingContainer = GearPanel.transform.Find(Const.GridContainerViewportContent);
         if (existingContainer != null)
         {
             return existingContainer.gameObject;
         }
 
-        return CustomUI.CreateScrollView(GearPanel.transform);
-
-
+        var newContainer = CustomUI.CreateScrollView(GearPanel.transform);
+        return newContainer;
 
 
         //
@@ -613,6 +583,7 @@ public static class UI
             titleText.text = Utils.GetTitle();
             return;
         }
+
         titleText.text = Utils.GetTitle();
         titleText.fontSizeMin = 16;
         titleText.fontSizeMax = 20;

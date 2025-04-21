@@ -2,6 +2,19 @@ namespace Shared;
 
 public static class Extensions
 {
+
+    public static void Destroy(this GameObject go, bool immediate = false)
+    {
+        if (immediate)
+        {
+            UnityEngine.Object.DestroyImmediate(go);      
+        }
+        else
+        {
+            UnityEngine.Object.Destroy(go);   
+        }
+       
+    }
     public static void SetAnchoredPosition(this Transform transform, Vector2 position)
     {
         if (transform == null) return;
