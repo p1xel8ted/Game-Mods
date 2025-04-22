@@ -1,6 +1,4 @@
-﻿using Steamworks;
-
-namespace MoreTheMerrier;
+﻿namespace MoreTheMerrier;
 
 [Harmony]
 public static class Patches

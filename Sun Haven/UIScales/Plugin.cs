@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.uiscales";
     private const string PluginName = "UI Scales";
-    private const string PluginVersion = "0.2.4";
+    private const string PluginVersion = "0.2.5";
 
     internal static Transform Bust { get; set; }
     internal static WriteOnce<float> OriginalPortraitPosition { get; } = new();
@@ -38,9 +38,11 @@ public class Plugin : BaseUnityPlugin
     public static ConfigEntry<float> OptionsMenuScale { get; private set; }
     public static ConfigEntry<float> EverythingElseScale { get; private set; }
     public static ConfigEntry<bool> ScalePortraitAdjustments { get; private set; }
+    internal static ConfigFile ConfigInstance { get; private set; }
 
     private void Awake()
     {
+        ConfigInstance = Config;
         SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
         LOG = Logger;
         InitConfig();
@@ -93,8 +95,10 @@ public class Plugin : BaseUnityPlugin
         QuestsScale.SettingChanged += (_, _) => { Patches.UpdateAllScalers(); };
         ItemIconsScale = Config.Bind("02. User Interface Scale Settings", "Item Icons Scale", 2f, new ConfigDescription("Adjust the scale of item icons.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes { Order = 989 }));
         ItemIconsScale.SettingChanged += (_, _) => { Patches.UpdateAllScalers(); };
+        
         TooltipScale = Config.Bind("02. User Interface Scale Settings", "Tooltip Scale", 2f, new ConfigDescription("Adjust the scale of tooltips.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes { Order = 988 }));
         TooltipScale.SettingChanged += (_, _) => { Patches.UpdateAllScalers(); };
+        
         OptionsMenuScale = Config.Bind("02. User Interface Scale Settings", "Options Menu Scale", 2f, new ConfigDescription("Adjust the scale of the options menu.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes { Order = 987 }));
         OptionsMenuScale.SettingChanged += (_, _) => { Patches.UpdateAllScalers(); };
 
@@ -105,18 +109,18 @@ public class Plugin : BaseUnityPlugin
         EverythingElseScale.SettingChanged += (_, _) => { Patches.UpdateAllScalers(); };
 
         // 03. Character Portrait Settings
-        ScalePortraitAdjustments = Config.Bind("03. Character Portrait Settings", "Enable Portrait Adjustments", false, new ConfigDescription("Allow modifications to the character portrait.", null, new ConfigurationManagerAttributes { Order = 990 }));
+        ScalePortraitAdjustments = Config.Bind("04. Character Portrait Settings", "Enable Portrait Adjustments", false, new ConfigDescription("Allow modifications to the character portrait.", null, new ConfigurationManagerAttributes { Order = 990 }));
         ScalePortraitAdjustments.SettingChanged += (_, _) => { ScalePortrait(); };
 
-        PortraitScale = Config.Bind("03. Character Portrait Settings", "Portrait Scale", 2f, new ConfigDescription("Adjust the size of character portraits in dialogue.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes { Order = 989 }));
+        PortraitScale = Config.Bind("04. Character Portrait Settings", "Portrait Scale", 2f, new ConfigDescription("Adjust the size of character portraits in dialogue.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes { Order = 989 }));
         PortraitScale.SettingChanged += (_, _) => { ScalePortrait(); };
 
-        PortraitHorizontalPosition = Config.Bind<float>("03. Character Portrait Settings", "Portrait Position", 0, new ConfigDescription("Adjust the horizontal position of character portraits in dialogue.", new AcceptableValueRange<float>(-1500f, 1500f), new ConfigurationManagerAttributes { Order = 988 }));
+        PortraitHorizontalPosition = Config.Bind<float>("04. Character Portrait Settings", "Portrait Position", 0, new ConfigDescription("Adjust the horizontal position of character portraits in dialogue.", new AcceptableValueRange<float>(-1500f, 1500f), new ConfigurationManagerAttributes { Order = 988 }));
 
         // 04. Zoom Settings
-        ZoomAdjustments = Config.Bind("04. Zoom Settings", "Enable Zoom Adjustments", true, new ConfigDescription("Allow modifications to the zoom level.", null, new ConfigurationManagerAttributes { Order = 987 }));
+        ZoomAdjustments = Config.Bind("05. Zoom Settings", "Enable Zoom Adjustments", true, new ConfigDescription("Allow modifications to the zoom level.", null, new ConfigurationManagerAttributes { Order = 987 }));
 
-        ZoomLevel = Config.Bind<float>("04. Zoom Settings", "Zoom Level", 2, new ConfigDescription("Adjust the zoom level while in game.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes { Order = 986 }));
+        ZoomLevel = Config.Bind<float>("05. Zoom Settings", "Zoom Level", 2, new ConfigDescription("Adjust the zoom level while in game.", new AcceptableValueRange<float>(0.5f, 10f), new ConfigurationManagerAttributes { Order = 986 }));
         ZoomLevel.SettingChanged += (_, _) =>
         {
             if (!ZoomAdjustments.Value) return;
@@ -127,9 +131,9 @@ public class Plugin : BaseUnityPlugin
             Patches.ExtSetZoomSlider(ZoomLevel.Value);
         };
 
-        ZoomKeyboardShortcutIncrease = Config.Bind("04. Zoom Settings", "Zoom Level Increase", new KeyboardShortcut(KeyCode.Keypad8), new ConfigDescription("Keybind to increase the zoom level.", null, new ConfigurationManagerAttributes { Order = 985 }));
+        ZoomKeyboardShortcutIncrease = Config.Bind("05. Zoom Settings", "Zoom Level Increase", new KeyboardShortcut(KeyCode.Keypad8), new ConfigDescription("Keybind to increase the zoom level.", null, new ConfigurationManagerAttributes { Order = 985 }));
 
-        ZoomKeyboardShortcutDecrease = Config.Bind("04. Zoom Settings", "Zoom Level Decrease", new KeyboardShortcut(KeyCode.Keypad2), new ConfigDescription("Keybind to decrease the zoom level.", null, new ConfigurationManagerAttributes { Order = 984 }));
+        ZoomKeyboardShortcutDecrease = Config.Bind("05. Zoom Settings", "Zoom Level Decrease", new KeyboardShortcut(KeyCode.Keypad2), new ConfigDescription("Keybind to decrease the zoom level.", null, new ConfigurationManagerAttributes { Order = 984 }));
     }
 
     internal static void MovePortrait()
@@ -194,5 +198,7 @@ public class Plugin : BaseUnityPlugin
         {
             scaler.enabled = false;
         }
+        
+        Patches.AllCanvasScalers.AddRange(Resources.FindObjectsOfTypeAll<CanvasScaler>());
     }
 }

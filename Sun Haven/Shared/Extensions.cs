@@ -28,6 +28,31 @@ public static class Extensions
             transform.localPosition = new Vector3(position.x, position.y, transform.localPosition.z);
         }
     }
+    
+    public static void RemoveAllByKey<TKey, TValue>(
+        this IDictionary<TKey, TValue> dict,
+        Func<TKey, bool> predicate)
+    {
+        var keysToRemove = dict.Keys.Where(predicate).ToList();
+
+        foreach (var key in keysToRemove)
+            dict.Remove(key);
+    }
+
+    
+    public static void RemoveAllByValue<TKey, TValue>(
+        this IDictionary<TKey, TValue> dict,
+        Func<TValue, bool> predicate)
+    {
+        var keysToRemove = dict
+            .Where(pair => predicate(pair.Value))
+            .Select(pair => pair.Key)
+            .ToList();
+
+        foreach (var key in keysToRemove)
+            dict.Remove(key);
+    }
+
 
     public static void SetLocalPosition(this Transform transform, Vector2 position)
     {

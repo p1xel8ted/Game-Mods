@@ -1,19 +1,39 @@
-﻿using System.Globalization;
-using TMPro;
-
-namespace UIScales;
+﻿namespace UIScales;
 
 [Harmony]
 public static class Patches
 {
     private static readonly string[] SkipCanvasScalers = ["sinai", "UI_Loading", "UI_SplashScreen"];
+    private static Slider SliderInstance { get; set; }
+    private static TextMeshProUGUI TextInstance { get; set; }
+
+
+    internal static readonly List<CanvasScaler> AllCanvasScalers = [];
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(CanvasScaler), nameof(CanvasScaler.OnEnable))]
     public static void CanvasScaler_OnEnable(ref CanvasScaler __instance)
     {
-        if (__instance.gameObject.GetGameObjectPath().Equals("WorldInteraction(Clone)/Canvas")) return;
+        if (SkipScaler(__instance)) return;
+
+        AllCanvasScalers.Add(__instance);
+        
         UpdateScaler(__instance);
+
+        var blackOut = __instance.transform.Find("BlackOut");
+        if (blackOut)
+        {
+            blackOut.localScale = new Vector3(500f, 500f, 1);
+        }
+    }
+
+    private static bool SkipScaler(CanvasScaler scaler)
+    {
+        if (scaler.name.Contains("sinai", StringComparison.OrdinalIgnoreCase)) return true;
+        if (SkipCanvasScalers.Contains(scaler.name)) return true;
+        if (scaler.gameObject.GetGameObjectPath().Equals("WorldInteraction(Clone)/Canvas")) return true;
+
+        return false;
     }
 
     [HarmonyPostfix]
@@ -43,10 +63,9 @@ public static class Patches
 
     private static void UpdateScaler(CanvasScaler scaler)
     {
-        UpdateCanvasScalerRefScale(scaler);
+        if (SkipScaler(scaler)) return;
 
-        if (scaler.name.Contains("sinai", StringComparison.OrdinalIgnoreCase)) return;
-        if (SkipCanvasScalers.Contains(scaler.name)) return;
+        UpdateCanvasScalerRefScale(scaler);
 
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;
         scaler.scaleFactor = Plugin.EverythingElseScale.Value;
@@ -75,8 +94,9 @@ public static class Patches
 
     internal static void UpdateAllScalers()
     {
-        var canvasScalers = Resources.FindObjectsOfTypeAll<CanvasScaler>();
-        foreach (var scaler in canvasScalers)
+        AllCanvasScalers.RemoveAll(a => !a);
+        
+        foreach (var scaler in AllCanvasScalers)
         {
             UpdateScaler(scaler);
         }
@@ -103,10 +123,8 @@ public static class Patches
     {
         Player.Instance.OverrideCameraZoomLevel = false;
         Player.Instance.SetZoom(Plugin.ZoomLevel.Value, true);
+        AllCanvasScalers.AddRange(Resources.FindObjectsOfTypeAll<CanvasScaler>());
     }
-
-    private static Slider SliderInstance { get; set; }
-    private static TextMeshProUGUI TextInstance { get; set; }
 
     internal static void ExtSetZoomSlider(float value)
     {
@@ -120,11 +138,10 @@ public static class Patches
             TextInstance.SetText($"{value.ToString(CultureInfo.InvariantCulture)}x");
         }
 
-        if (Player.Instance)
-        {
-            Player.Instance.OverrideCameraZoomLevel = false;
-            Player.Instance.SetZoom(value, true);
-        }
+        if (!Player.Instance) return;
+
+        Player.Instance.OverrideCameraZoomLevel = false;
+        Player.Instance.SetZoom(value, true);
     }
 
     private static void SetupZoomSlider(Slider slider, TextMeshProUGUI text)
@@ -154,8 +171,10 @@ public static class Patches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuController), nameof(MainMenuController.PopupPanel))]
-    public static void MainMenuController_PopupPanel(MainMenuController __instance)
+    public static void MainMenuController_PopupPanel(MainMenuController __instance, string childPanelName)
     {
+        if (!childPanelName.StartsWith("Settings", StringComparison.OrdinalIgnoreCase)) return;
+
         var slider = __instance.settings.zoomSlider;
         var text = __instance.settings.zoomTMP;
         SetupZoomSlider(slider, text);
@@ -171,16 +190,21 @@ public static class Patches
         }
     }
 
-
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.SetupUI))]
-    public static void PlayerSettings_Start(PlayerSettings __instance)
+    [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.GetCanvasAdjustments))]
+    public static void PlayerSettings_GetCanvasAdjustments(PlayerSettings __instance)
     {
         var slider = __instance.zoomSlider;
         var text = __instance.zoomTMP;
-        SetupZoomSlider(slider, text);
+        if (slider && text)
+        {
+            SetupZoomSlider(slider, text);
+        }
 
-        __instance.uiScaleSlider.transform.parent.transform.parent.gameObject.SetActive(false);
+        if (__instance.uiScaleSlider)
+        {
+            __instance.uiScaleSlider.transform.parent.transform.parent.gameObject.SetActive(false);
+        }
     }
 
     [HarmonyPostfix]
