@@ -1,26 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>0.1.6</Version>
+        <Version>0.1.0</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DefineConstants>TRACE;NTTSAE</DefineConstants>
+      <DefineConstants>TRACE;KA</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DefineConstants>TRACE;NTTSAE</DefineConstants>
+      <DefineConstants>TRACE;KA</DefineConstants>
     </PropertyGroup>
     <Import Project="..\zip.target"/>
 
     <ItemGroup>
-      <Reference Include="DOTween">
-        <HintPath>..\libs\DOTween.dll</HintPath>
+      <Reference Include="PSS.Database">
+        <HintPath>..\libs\PSS.Database.dll</HintPath>
       </Reference>
-      <Reference Include="DOTweenPro">
-        <HintPath>..\libs\DOTweenPro.dll</HintPath>
+      <Reference Include="QFSW.QC">
+        <HintPath>..\libs\QFSW.QC.dll</HintPath>
+      </Reference>
+      <Reference Include="Sirenix.Serialization">
+        <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
       </Reference>
       <Reference Include="SunHaven.Core">
         <HintPath>..\libs\SunHaven.Core.dll</HintPath>
@@ -45,6 +48,9 @@
       </Reference>
       <Reference Include="UnityEngine.CoreModule">
         <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ImageConversionModule">
+        <HintPath>..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.IMGUIModule">
         <HintPath>..\libs\UnityEngine.IMGUIModule.dll</HintPath>
@@ -77,11 +83,39 @@
         <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
       </Reference>
     </ItemGroup>
-    <ItemGroup>
-      <None Remove="header.png" />
-      <None Remove="logo.png" />
-    </ItemGroup>
+
     <ItemGroup>
       <PackageReference Remove="Costura.Fody" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
+        <Link>Shared\ConfigurationManagerAttributes.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\Extensions.cs">
+        <Link>Shared\Extensions.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\FileLoader.cs">
+        <Link>Shared\FileLoader.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\GlobalUsings.cs">
+        <Link>Shared\GlobalUsings.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\SpriteUtil.cs">
+        <Link>Shared\SpriteUtil.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\Utils.cs">
+        <Link>Shared\Utils.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\WriteOnce.cs">
+        <Link>Shared\WriteOnce.cs</Link>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\Shared\Shared.csproj">
+        <Link>Shared\Shared.csproj</Link>
+      </Content>
+    </ItemGroup>
+
 </Project>

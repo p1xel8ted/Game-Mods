@@ -3,7 +3,6 @@
 public partial class Plugin
 {
     private const string LoadScreen = "LoadScreen";
-    private const string GameSaved = "Game Saved!";
 
     private static void Notify()
     {
@@ -17,8 +16,7 @@ public partial class Plugin
 
         if (EnableSaveShortcut.Value && SaveShortcut.Value.IsUp() && Player.Instance is not null && GameSave.Instance is not null)
         {
-            SingletonBehaviour<GameSave>.Instance.SaveGame(true);
-            SingletonBehaviour<NotificationStack>.Instance.SendNotification(GameSaved);
+            Utils.SaveGame(true);
         }
 
         if (MoveSpeedMultiplierIncrease.Value.IsUp())

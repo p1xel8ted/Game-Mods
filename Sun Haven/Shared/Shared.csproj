@@ -44,5 +44,9 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Remove="Costura.Fody" />
+    </ItemGroup>
+
 
 </Project>

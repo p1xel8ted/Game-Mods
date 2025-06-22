@@ -1,4 +1,5 @@
 using UnityEngine.Experimental.Rendering;
+using Debug = UnityEngine.Debug;
 
 namespace Shared;
 
@@ -20,6 +21,21 @@ public static class Utils
             QuantumConsole.Instance._autoScroll = AutoScrollOptions.Never;
             QuantumConsole.Instance._maxStoredLogs = 100000;
             QuantumConsole.Instance.LogToConsoleAsync(message);
+        }
+    }
+
+    public static void SaveGame(bool notify, bool newCharacter = false)
+    {
+        var gameSave = SingletonBehaviour<GameSave>.Instance;
+        var notificationStack = SingletonBehaviour<NotificationStack>.Instance;
+        if (gameSave)
+        {
+            gameSave.SaveGame();
+            gameSave.WriteCharacterToFile(newCharacter);
+            if (notificationStack && notify)
+            {
+                notificationStack.SendNotification("Game Saved!");
+            }
         }
     }
     public static bool DevOpsContinueExists(string guid)

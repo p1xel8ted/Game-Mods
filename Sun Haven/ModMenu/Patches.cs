@@ -8,8 +8,8 @@ public static class Patches
     private const string UnityExplorer = "UnityExplorer";
     private const string SeparatorImage = "SeparatorImage";
     private static Transform _modMenuView, _audioView, _audioButton;
-    private readonly static Color TitleColor = new(0.660f, 0.830f, 0f, 1f);
-    private readonly static Color SectionColor = new(1, 0.8f, 0, 1);
+    private static readonly Color TitleColor = new(0.660f, 0.830f, 0f, 1f);
+    private static readonly Color SectionColor = new(1, 0.8f, 0, 1);
 
     private static Transform ModHeaderTemplate { get; set; }
     private static Transform ButtonTemplate { get; set; }
@@ -279,14 +279,14 @@ public static class Patches
 
     private static void CreateConfigEntry(KeyValuePair<ConfigDefinition, ConfigEntryBase> configEntry, Transform newSection)
     {
-        Plugin.LOG.LogWarning($"Creating config entry for {configEntry.Key.Key} - Tags?: {configEntry.Value.Description.Tags?.Length}");
+        Plugin.Log.LogWarning($"Creating config entry for {configEntry.Key.Key} - Tags?: {configEntry.Value.Description.Tags?.Length}");
         if (configEntry.Value.Description.Tags?.Length > 0)
         {
             foreach (var tag in configEntry.Value.Description.Tags)
             {
                 if (tag is ConfigurationManagerAttributes a)
                 {
-                    Plugin.LOG.LogWarning($"Att {a}");
+                    Plugin.Log.LogWarning($"Att {a}");
                 }
             }
         }
@@ -436,7 +436,7 @@ public static class Patches
         var popup = searchChildren ? item.GetComponentInChildren<Popup>() : item.GetComponent<Popup>();
         if (popup == null)
         {
-            Plugin.LOG.LogError($"Could not find popup component on {item.name}");
+            Plugin.Log.LogError($"Could not find popup component on {item.name}");
             return;
         }
         popup.text = title;
@@ -524,7 +524,7 @@ public static class Patches
 
     private static void LocateTemplates(Transform panel)
     {
-        Plugin.LOG.LogWarning($"Locating templates and constructing mod menu....");
+        Plugin.Log.LogWarning($"Locating templates and constructing mod menu....");
         ModHeaderTemplate = panel.Find("Viewport/Content/Setting_Keybinds");
         ButtonTemplate = panel.Find("Viewport/Content/Setting_Keybinds");
         DropDownTemplate = panel.Find("Viewport/Content/Setting_Language");

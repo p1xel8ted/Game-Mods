@@ -1,4 +1,6 @@
-﻿namespace AutoTools;
+﻿using MonoMod.Utils;
+
+namespace AutoTools;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency("p1xel8ted.sunhaven.keepalive")]
@@ -6,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.autotools";
     private const string PluginName = "Auto Tools";
-    private const string PluginVersion = "0.0.8";
+    private const string PluginVersion = "0.0.9";
     private const string CategoryGeneral = "01. General";
     private const string CategoryFarm = "02. Farm";
     private const string CategoryEnemies = "03. Enemies";
@@ -51,7 +53,7 @@ public class Plugin : BaseUnityPlugin
         EnableDebug = Config.Bind(CategoryDebug, "Enable Debug", false, new ConfigDescription("Enable Debug.", null, new ConfigurationManagerAttributes {Order = 16}));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        LOG.LogInfo($"Plugin {PluginName} is loaded!");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
     }
     
     private static void FillWateringCanProper()

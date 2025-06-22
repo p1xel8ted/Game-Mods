@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.charactereditredux";
     private const string PluginName = "Character Edit Redux";
-    private const string PluginVersion = "0.1.0";
+    private const string PluginVersion = "0.1.1";
     internal static ManualLogSource Log { get; private set; }
 
     private void Awake()

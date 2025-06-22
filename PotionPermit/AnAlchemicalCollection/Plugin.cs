@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.potionpermit.alchemical_collection";
     private const string PluginName = "An Alchemical Collection";
-    private const string PluginVersion = "0.2.0";
+    private const string PluginVersion = "0.2.1";
     private const string Preload = "PreLoad";
     private const string MainMenu = "MainMenu";
 
@@ -236,24 +236,24 @@ public class Plugin : BaseUnityPlugin
         {
             CleanUpMainMenu(!CleanUpMainMenuConfig.Value);
         };
-        IncreaseUpdateRate = Config.Bind("12. Misc", "Enable Increase Update Rate", true,
-            new ConfigDescription("Enable the increase of the update rate.", null,
-                new ConfigurationManagerAttributes {Order = 40}));
-        IncreaseUpdateRate.SettingChanged += (_, _) =>
-        {
-            UpdateFixedDeltaTime();
-        };
-        IncreaseUpdateRateValue = Config.Bind("12. Misc", "Increase Update Rate",
-            Helper.CalculateLowestMultiplierAbove50(MaxRefreshRate),
-            new ConfigDescription(
-                "Sets the rate the camera and physics update. Can resolve camera judder, but setting too high can cause performance issues. Game default is 50fps. Ideally it should be a multiple of your refresh rate. You may/may not notice a difference.",
-                null,
-                new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 40}));
-        IncreaseUpdateRateValue.SettingChanged += (_, _) =>
-        {
-            IncreaseUpdateRateValue.Value = Mathf.RoundToInt(IncreaseUpdateRateValue.Value);
-            UpdateFixedDeltaTime();
-        };
+        // IncreaseUpdateRate = Config.Bind("12. Misc", "Enable Increase Update Rate", true,
+        //     new ConfigDescription("Enable the increase of the update rate.", null,
+        //         new ConfigurationManagerAttributes {Order = 40}));
+        // IncreaseUpdateRate.SettingChanged += (_, _) =>
+        // {
+        //     UpdateFixedDeltaTime();
+        // };
+        // IncreaseUpdateRateValue = Config.Bind("12. Misc", "Increase Update Rate",
+        //     Helper.CalculateLowestMultiplierAbove50(MaxRefreshRate),
+        //     new ConfigDescription(
+        //         "Sets the rate the camera and physics update. Can resolve camera judder, but setting too high can cause performance issues. Game default is 50fps. Ideally it should be a multiple of your refresh rate. You may/may not notice a difference.",
+        //         null,
+        //         new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 40}));
+        // IncreaseUpdateRateValue.SettingChanged += (_, _) =>
+        // {
+        //     IncreaseUpdateRateValue.Value = Mathf.RoundToInt(IncreaseUpdateRateValue.Value);
+        //     UpdateFixedDeltaTime();
+        // };
         CharacterBob = Config.Bind("12. Misc", "Character Bob", false,
             new ConfigDescription("Toggle the player and NPC models bobbing up and down when idle. The dog will immediately sit instead of standing and bobbing.", null,
                 new ConfigurationManagerAttributes {Order = 39}));
@@ -289,11 +289,11 @@ public class Plugin : BaseUnityPlugin
         L($"Plugin {PluginName} is unloaded!");
     }
 
-    private static void UpdateFixedDeltaTime()
-    {
-        if (!IncreaseUpdateRate.Value) return;
-        Time.fixedDeltaTime = 1f / IncreaseUpdateRateValue.Value;
-    }
+    // private static void UpdateFixedDeltaTime()
+    // {
+    //     if (!IncreaseUpdateRate.Value) return;
+    //     Time.fixedDeltaTime = 1f / IncreaseUpdateRateValue.Value;
+    // }
 
     private static void CleanUpMainMenu(bool restore = false)
     {
@@ -357,7 +357,7 @@ public class Plugin : BaseUnityPlugin
         RefreshVirtualCameras();
         SetTargetFrameRate();
         SetScreenResolution();
-        UpdateFixedDeltaTime();
+        //UpdateFixedDeltaTime();
         ModifyHud();
         UpdateCameraZoom();
         CleanUpMainMenu();

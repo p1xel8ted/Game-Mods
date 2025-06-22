@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
   </PropertyGroup>
@@ -21,9 +21,6 @@
     </Reference>
     <Reference Include="QFSW.QC">
       <HintPath>..\libs\QFSW.QC.dll</HintPath>
-    </Reference>
-    <Reference Include="Shared">
-      <HintPath>..\libs\Shared.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
@@ -85,6 +82,40 @@
     <Reference Include="UnityEngine.UIModule">
       <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Remove="Costura.Fody" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
+      <Link>Shared\ConfigurationManagerAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Extensions.cs">
+      <Link>Shared\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\FileLoader.cs">
+      <Link>Shared\FileLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\GlobalUsings.cs">
+      <Link>Shared\GlobalUsings.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\SpriteUtil.cs">
+      <Link>Shared\SpriteUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Utils.cs">
+      <Link>Shared\Utils.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\WriteOnce.cs">
+      <Link>Shared\WriteOnce.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Shared\Shared.csproj">
+      <Link>Shared\Shared.csproj</Link>
+    </Content>
   </ItemGroup>
 
 </Project>

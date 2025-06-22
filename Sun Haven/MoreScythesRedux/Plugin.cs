@@ -1,4 +1,6 @@
-﻿namespace MoreScythesRedux;
+﻿using MonoMod.Utils;
+
+namespace MoreScythesRedux;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency("p1xel8ted.sunhaven.keepalive")]
@@ -6,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.morescythesredux";
     private const string PluginName = "More Scythes Redux";
-    private const string PluginVersion = "0.1.5";
+    private const string PluginVersion = "0.1.6";
     public static ManualLogSource LOG { get; private set; }
 
     private void Awake()
@@ -31,7 +33,7 @@ public class Plugin : BaseUnityPlugin
         
         LOG = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        Logger.LogInfo($"{PluginName} plugin has loaded successfully.");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
     }
     
     private void OnDestroy()

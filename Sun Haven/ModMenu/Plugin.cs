@@ -6,14 +6,13 @@ public class Plugin : BaseUnityPlugin
     private const string PluginGuid = "p1xel8ted.sunhaven.modmenu";
     private const string PluginName = "Mod Menu";
     private const string PluginVersion = "0.1.0";
-    internal static ManualLogSource LOG { get; set; }
+    internal static ManualLogSource Log { get; set; }
     
     private void Awake()
     {
-        LOG = new ManualLogSource(PluginName);
-        BepInEx.Logging.Logger.Sources.Add(LOG);
+        Log = Logger;
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        LOG.LogInfo($"Plugin {PluginName} is loaded!");
+        Log.LogInfo($"Plugin {PluginName} is loaded!");
     }
 }

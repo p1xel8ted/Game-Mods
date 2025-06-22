@@ -1,4 +1,6 @@
-﻿namespace MuseumSellPriceRedux;
+﻿using MonoMod.Utils;
+
+namespace MuseumSellPriceRedux;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency("p1xel8ted.sunhaven.keepalive")]
@@ -6,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.museumsellpriceredux";
     private const string PluginName = "Museum Sell Price Redux";
-    private const string PluginVersion = "0.1.5";
+    private const string PluginVersion = "0.1.6";
 
     internal static ConfigEntry<bool> Enabled { get; private set; }
     private static ConfigEntry<bool> Debug { get; set; }
@@ -35,7 +37,7 @@ public class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes
                     {Order = 48, HideDefaultButton = true, CustomDrawer = ApplyChanges}));
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        LOG.LogInfo($"Plugin {PluginName} is loaded!");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
     }
 
     private static void ApplyChanges(ConfigEntryBase entry)

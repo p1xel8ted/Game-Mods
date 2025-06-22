@@ -5,86 +5,86 @@ public static class CheatEnablerCommands
 {
     private static readonly Dictionary<int, string> questStarts = new()
     {
-        {1, "TheSunDragonsProtection1Quest"},
-        {2, "TheSunDragonsProtection2Quest"},
-        {3, "TheSunDragonsProtection3Quest"},
-        {4, "TheSunDragonsProtection4Quest"},
-        {5, "TheSunDragonsProtection5Quest"},
-        {6, "TheSunDragonsProtection6Quest"},
-        {7, "TheSunDragonsProtection7Quest"},
-        {8, "TheSunDragonsProtection8Quest"}
+        { 1, "TheSunDragonsProtection1Quest" },
+        { 2, "TheSunDragonsProtection2Quest" },
+        { 3, "TheSunDragonsProtection3Quest" },
+        { 4, "TheSunDragonsProtection4Quest" },
+        { 5, "TheSunDragonsProtection5Quest" },
+        { 6, "TheSunDragonsProtection6Quest" },
+        { 7, "TheSunDragonsProtection7Quest" },
+        { 8, "TheSunDragonsProtection8Quest" }
     };
 
     private static readonly Dictionary<int, string[]> progressFlags = new()
     {
-        {2, ["TheSunDragonsProtection1Quest", "JourneyToDragonsMeetCutscene1"]},
-        {3, ["TheSunDragonsProtection2Quest", "JourneyToDragonsMeetCutscene2"]},
-        {4, ["TheSunDragonsProtection3Quest", "TheSunDragonsProtectionCutscene1"]},
-        {5, ["TheSunDragonsProtection4Quest"]},
-        {6, ["TheSunDragonsProtection5Quest", "TheSunDragonsProtectionCutscene2"]},
-        {7, ["TheSunDragonsProtection6Quest", "TheSunDragonsProtectionCutscene3", "TheSunDragonsProtectionCutscene4", "CollectedGloriteCrystal"]},
-        {8, ["TheSunDragonsProtection7Quest", "TheSunDragonsProtectionCutscene5"]}
+        { 2, ["TheSunDragonsProtection1Quest", "JourneyToDragonsMeetCutscene1"] },
+        { 3, ["TheSunDragonsProtection2Quest", "JourneyToDragonsMeetCutscene2"] },
+        { 4, ["TheSunDragonsProtection3Quest", "TheSunDragonsProtectionCutscene1"] },
+        { 5, ["TheSunDragonsProtection4Quest"] },
+        { 6, ["TheSunDragonsProtection5Quest", "TheSunDragonsProtectionCutscene2"] },
+        { 7, ["TheSunDragonsProtection6Quest", "TheSunDragonsProtectionCutscene3", "TheSunDragonsProtectionCutscene4", "CollectedGloriteCrystal"] },
+        { 8, ["TheSunDragonsProtection7Quest", "TheSunDragonsProtectionCutscene5"] }
     };
 
     private static readonly Dictionary<int, string> questStartsNelvari = new()
     {
-        {0, "TheSunDragonsProtection1Quest"},
-        {1, "TheSunDragonsProtection2Quest"},
-        {2, "TheSunDragonsProtection3Quest"},
-        {3, "TheSunDragonsProtection4Quest"},
-        {5, "TheSunDragonsProtection8Quest"},
-        {6, "ClearingTheRoad1Quest"},
-        {7, "TheMysteryOfNelvari2Quest"},
-        {8, "TheMysteryOfNelvari3Quest"}
+        { 0, "TheSunDragonsProtection1Quest" },
+        { 1, "TheSunDragonsProtection2Quest" },
+        { 2, "TheSunDragonsProtection3Quest" },
+        { 3, "TheSunDragonsProtection4Quest" },
+        { 5, "TheSunDragonsProtection8Quest" },
+        { 6, "ClearingTheRoad1Quest" },
+        { 7, "TheMysteryOfNelvari2Quest" },
+        { 8, "TheMysteryOfNelvari3Quest" }
     };
 
     private static readonly Dictionary<int, string[]> progressFlagsNelvari = new()
     {
-        {1, ["TheSunDragonsProtection1Quest", "JourneyToDragonsMeetCutscene1"]},
-        {2, ["TheSunDragonsProtection2Quest", "JourneyToDragonsMeetCutscene2"]},
-        {3, ["TheSunDragonsProtection3Quest", "TheSunDragonsProtectionCutscene1"]},
-        {4, ["TheSunDragonsProtection4Quest", "TheSunDragonsProtectionCutscene2"]},
-        {5, ["TheSunDragonsProtection3Quest", "TheSunDragonsProtectionCutscene3", "TheSunDragonsProtectionCutscene4", "TheSunDragonsProtectionCutscene5"]},
-        {6, ["TheSunDragonsProtection8Quest", "TimeOfNeedCutscene1", "TimeOfNeedCutscene2"]},
-        {7, ["TheMysteryOfNelvari1Quest"]},
-        {8, ["TheMysteryOfNelvari2Quest"]}
+        { 1, ["TheSunDragonsProtection1Quest", "JourneyToDragonsMeetCutscene1"] },
+        { 2, ["TheSunDragonsProtection2Quest", "JourneyToDragonsMeetCutscene2"] },
+        { 3, ["TheSunDragonsProtection3Quest", "TheSunDragonsProtectionCutscene1"] },
+        { 4, ["TheSunDragonsProtection4Quest", "TheSunDragonsProtectionCutscene2"] },
+        { 5, ["TheSunDragonsProtection3Quest", "TheSunDragonsProtectionCutscene3", "TheSunDragonsProtectionCutscene4", "TheSunDragonsProtectionCutscene5"] },
+        { 6, ["TheSunDragonsProtection8Quest", "TimeOfNeedCutscene1", "TimeOfNeedCutscene2"] },
+        { 7, ["TheMysteryOfNelvari1Quest"] },
+        { 8, ["TheMysteryOfNelvari2Quest"] }
     };
 
     private static readonly Dictionary<int, string> questStartsWithergate = new()
     {
-        {1, "TheSunDragonsProtection8Quest"},
-        {6, "ClearingTheRoad1Quest"},
-        {7, "ClearingTheRoad2Quest"},
-        {8, "JourneyToWithergate1Quest"},
-        {9, "JourneyToWithergate2Quest"},
-        {10, "JourneyToWithergate3Quest"},
-        {11, "JourneyToWithergate4Quest"},
-        {12, "JourneyToWithergate5Quest"},
-        {13, "JourneyToWithergate6Quest"},
-        {14, "ConfrontingDynus1Quest"},
-        {15, "ConfrontingDynus2Quest"},
-        {16, "ConfrontingDynus3Quest"},
-        {17, "ConfrontingDynus4Quest"},
-        {18, "ConfrontingDynus5Quest"},
-        {19, "ConfrontingDynus6Quest"}
+        { 1, "TheSunDragonsProtection8Quest" },
+        { 6, "ClearingTheRoad1Quest" },
+        { 7, "ClearingTheRoad2Quest" },
+        { 8, "JourneyToWithergate1Quest" },
+        { 9, "JourneyToWithergate2Quest" },
+        { 10, "JourneyToWithergate3Quest" },
+        { 11, "JourneyToWithergate4Quest" },
+        { 12, "JourneyToWithergate5Quest" },
+        { 13, "JourneyToWithergate6Quest" },
+        { 14, "ConfrontingDynus1Quest" },
+        { 15, "ConfrontingDynus2Quest" },
+        { 16, "ConfrontingDynus3Quest" },
+        { 17, "ConfrontingDynus4Quest" },
+        { 18, "ConfrontingDynus5Quest" },
+        { 19, "ConfrontingDynus6Quest" }
     };
 
     private static readonly Dictionary<int, string[]> progressFlagsWithergate = new()
     {
-        {6, ["TheSunDragonsProtection8Quest", "TimeOfNeedCutscene1", "TimeOfNeedCutscene2", "NelvariTree", "CompleteNelvariTree0", "CompleteNelvariTree1", "CompleteNelvariTree2", "CompleteNelvariTree3"]},
-        {7, ["NorthTownMonster", "ClearingTheRoad1Quest", "ClearingTheRoadCutscene1"]},
-        {8, ["ClearingTheRoad2Quest", "ClearingTheRoadCutscene2"]},
-        {9, ["JourneyToWithergate1Quest", "JourneyToWithergateCutscene1"]},
-        {10, ["JourneyToWithergate2Quest", "JourneyToWithergateCutscene2"]},
-        {11, ["JourneyToWithergate3Quest", "JourneyToWithergateCutscene3"]},
-        {12, ["JourneyToWithergate4Quest", "JourneyToWithergateCutscene4"]},
-        {13, ["Apartment", "JourneyToWithergate5Quest", "JourneyToWithergateCutscene5"]},
-        {14, ["JourneyToWithergate6Quest"]},
-        {15, ["ConfrontingDynus1Quest", "ConfrontingDynusCutscene1"]},
-        {16, ["ConfrontingDynus2Quest", "ConfrontingDynusCutscene2"]},
-        {17, ["ConfrontingDynus3Quest", "ConfrontingDynusCutscene3", "ConfrontingDynusCutscene4", "ConfrontingDynusCutscene5"]},
-        {18, ["ConfrontingDynus4Quest", "DynusAltarCutscene"]},
-        {19, ["ConfrontingDynus5Quest", "DynusIntroCutscene"]}
+        { 6, ["TheSunDragonsProtection8Quest", "TimeOfNeedCutscene1", "TimeOfNeedCutscene2", "NelvariTree", "CompleteNelvariTree0", "CompleteNelvariTree1", "CompleteNelvariTree2", "CompleteNelvariTree3"] },
+        { 7, ["NorthTownMonster", "ClearingTheRoad1Quest", "ClearingTheRoadCutscene1"] },
+        { 8, ["ClearingTheRoad2Quest", "ClearingTheRoadCutscene2"] },
+        { 9, ["JourneyToWithergate1Quest", "JourneyToWithergateCutscene1"] },
+        { 10, ["JourneyToWithergate2Quest", "JourneyToWithergateCutscene2"] },
+        { 11, ["JourneyToWithergate3Quest", "JourneyToWithergateCutscene3"] },
+        { 12, ["JourneyToWithergate4Quest", "JourneyToWithergateCutscene4"] },
+        { 13, ["Apartment", "JourneyToWithergate5Quest", "JourneyToWithergateCutscene5"] },
+        { 14, ["JourneyToWithergate6Quest"] },
+        { 15, ["ConfrontingDynus1Quest", "ConfrontingDynusCutscene1"] },
+        { 16, ["ConfrontingDynus2Quest", "ConfrontingDynusCutscene2"] },
+        { 17, ["ConfrontingDynus3Quest", "ConfrontingDynusCutscene3", "ConfrontingDynusCutscene4", "ConfrontingDynusCutscene5"] },
+        { 18, ["ConfrontingDynus4Quest", "DynusAltarCutscene"] },
+        { 19, ["ConfrontingDynus5Quest", "DynusIntroCutscene"] }
     };
 
     [Command]
@@ -116,6 +116,7 @@ public static class CheatEnablerCommands
             Utils.LogToPlayer($"{quest}");
         }
     }
+
     [Command]
     public static void getworldquestskipepiloguebreakpoints(int breakpoint)
     {
@@ -184,6 +185,7 @@ public static class CheatEnablerCommands
             {
                 affectedQuests.Add($"SetProgress: CompleteNelvariTree{i}");
             }
+
             affectedQuests.Add("SetProgress: NelvariTree");
         }
 
@@ -369,8 +371,7 @@ public static class CheatEnablerCommands
     [Command]
     public static void savegame()
     {
-        SingletonBehaviour<GameSave>.Instance.SaveGame(true);
-        SingletonBehaviour<NotificationStack>.Instance.SendNotification("Game Saved!");
+        Utils.SaveGame(true);
     }
 
     [Command]

@@ -1,4 +1,6 @@
-﻿namespace NoTimeForFishing;
+﻿using MonoMod.Utils;
+
+namespace NoTimeForFishing;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency("p1xel8ted.sunhaven.keepalive")]
@@ -6,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.notimeforfishing";
     private const string PluginName = "No Time For Fishing!";
-    private const string PluginVersion = "0.1.0";
+    private const string PluginVersion = "0.1.1";
 
     public static ConfigEntry<bool> DisableCaughtFishWindow;
     public static ConfigEntry<bool> SkipFishingMiniGame;
@@ -204,7 +206,7 @@ public class Plugin : BaseUnityPlugin
 
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        LOG.LogInfo($"Plugin {PluginName} is loaded!");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
     }
 
     private void OnDestroy()

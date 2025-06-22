@@ -1,4 +1,6 @@
-﻿namespace UIScales;
+﻿using MonoMod.Utils;
+
+namespace UIScales;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency("p1xel8ted.sunhaven.keepalive")]
@@ -6,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.uiscales";
     private const string PluginName = "UI Scales";
-    private const string PluginVersion = "0.2.5";
+    private const string PluginVersion = "0.2.7";
 
     internal static Transform Bust { get; set; }
     internal static WriteOnce<float> OriginalPortraitPosition { get; } = new();
@@ -47,7 +49,7 @@ public class Plugin : BaseUnityPlugin
         LOG = Logger;
         InitConfig();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        LOG.LogInfo($"Plugin {PluginName} is loaded!");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
     }
 
     private void Update()

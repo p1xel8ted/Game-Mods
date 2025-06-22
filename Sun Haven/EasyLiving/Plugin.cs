@@ -1,4 +1,6 @@
-﻿namespace EasyLiving;
+﻿using MonoMod.Utils;
+
+namespace EasyLiving;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 [BepInDependency("p1xel8ted.sunhaven.keepalive")]
@@ -6,7 +8,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.easyliving";
     private const string PluginName = "Easy Living";
-    private const string PluginVersion = "0.1.9";
+    private const string PluginVersion = "0.2.0";
     private static ConfigEntry<KeyboardShortcut> SaveShortcut { get; set; }
     private static ConfigEntry<bool> EnableSaveShortcut { get; set; }
     public static ConfigEntry<bool> SkipMuseumMissingItemsDialogue { get; private set; }
@@ -134,7 +136,7 @@ public partial class Plugin : BaseUnityPlugin
         QuickBoot = Config.Bind("11. Misc", "Quick Boot", true, new ConfigDescription("Enable quick booting to the main menu.", null, new ConfigurationManagerAttributes { Order = -3 }));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        LOG.LogInfo($"Plugin {PluginName} is loaded!");
+        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
     }
 
     private void OnDisable()
