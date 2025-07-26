@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.outofseasonseeds";
     private const string PluginName = "Seedify";
-    private const string PluginVersion = "0.1.0";
+    private const string PluginVersion = "0.1.1";
 
     internal static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<bool> DebugLogging { get; private set; }

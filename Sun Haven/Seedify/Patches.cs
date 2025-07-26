@@ -128,10 +128,23 @@ public static class Patches
 
     internal static void SetupModifiedData(Scene arg0, LoadSceneMode loadSceneMode)
     {
-        if (ModifiedCropInfos.Count > 0)
+        if (UpdateModifiedCropInfosRoutine != null)
         {
-            WriteLog($"SetupModifiedData: {ModifiedCropInfos.Count} modified crop infos already", LogType.Info);
-            return;
+            Plugin.PluginInstance.StopCoroutine(UpdateModifiedCropInfosRoutine);
+            UpdateModifiedCropInfosRoutine = null;
+        }
+
+        UpdateModifiedCropInfosRoutine = Plugin.PluginInstance.StartCoroutine(SetupWhenReady());
+    }
+
+    private static IEnumerator SetupWhenReady()
+    {
+        while (!SingletonBehaviour<ItemInfoDatabase>._instance ||
+               SingletonBehaviour<ItemInfoDatabase>._instance.cropInfos == null ||
+               SingletonBehaviour<ItemInfoDatabase>._instance.cropInfos.Count == 0)
+        {
+            WriteLog("SetupWhenReady: Waiting for ItemInfoDatabase to be ready...", LogType.Info);
+            yield return null;
         }
 
         var og = SingletonBehaviour<ItemInfoDatabase>._instance.cropInfos;
@@ -142,6 +155,7 @@ public static class Patches
 
         WriteLog($"SetupModifiedData: {ModifiedCropInfos.Count} modified crop infos", LogType.Info);
 
+
         if (UpdateModifiedCropInfosRoutine != null)
         {
             Plugin.PluginInstance.StopCoroutine(UpdateModifiedCropInfosRoutine);
@@ -150,6 +164,7 @@ public static class Patches
 
         UpdateModifiedCropInfosRoutine = Plugin.PluginInstance.StartCoroutine(UpdateModifiedCropInfos());
     }
+
 
     private static IEnumerator UpdateModifiedCropInfos()
     {

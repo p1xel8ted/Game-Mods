@@ -2,7 +2,9 @@
 <Project>
 
     <!--User Configuration-->
-    <Import Condition=" Exists('Directory.Build.props.user') " Project="Directory.Build.props.user"/>
+   <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user"
+        Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+
 
     <!--Base Settings-->
     <PropertyGroup>
@@ -18,8 +20,9 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>embedded</DebugType>
         <LangVersion>latest</LangVersion>
+        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
-
+    
     <!--Default all references to CopyLocal False.-->
     <ItemDefinitionGroup>
         <Reference>
