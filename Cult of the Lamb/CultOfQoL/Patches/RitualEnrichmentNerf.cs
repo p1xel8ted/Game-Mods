@@ -3,14 +3,14 @@
 [Harmony]
 public static class RitualEnrichmentNerf
 {
-    private static void AddCoins(int type, int quantity, bool ForceNormalInventory = false, int myQty = 0)
+    private static void AddCoins(int type, int quantity, bool forceNormalInventory = false, int myQty = 0)
     {
         if (!Plugin.ReverseEnrichmentNerf.Value || myQty == 0)
         {
-            Inventory.AddItem(type, quantity, ForceNormalInventory);
+            Inventory.AddItem(type, quantity, forceNormalInventory);
             return;
         }
-        Inventory.AddItem(type, myQty, ForceNormalInventory);
+        Inventory.AddItem(type, myQty, forceNormalInventory);
         Plugin.L($"RitualEnrichmentNerf: Adding {quantity} coins to inventory.");
     }
 

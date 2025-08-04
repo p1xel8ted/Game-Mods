@@ -150,4 +150,17 @@ public partial class Plugin
     internal static UIMainMenuController UIMainMenuController { get; set; }
     public static ConfigEntry<bool> VignetteEffect { get; private set; }
     public static ConfigEntry<bool> ReverseEnrichmentNerf { get; private set; }
+    
+    public static ConfigEntry<int> HarvestTotemRange { get; private set; }
+    public static ConfigEntry<int> PropagandaSpeakerRange { get; private set; }
+    
+    public static ConfigEntry<int> FarmStationRange { get; private set; }
+    
+    public static ConfigEntry<int> FarmPlotSignRange { get; private set; }
+    public static ConfigEntry<int> SinBossLimit { get; private set; }
+    
+    public static ConfigEntry<int> MinRangeLifeExpectancy { get; private set; }
+    public static ConfigEntry<int> MaxRangeLifeExpectancy { get; private set; }
+    
+    public static ConfigEntry<float> RitualCooldownTime { get; private set; }
 }

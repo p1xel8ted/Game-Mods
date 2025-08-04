@@ -3,13 +3,61 @@
 [HarmonyPatch]
 public static class FollowerPatches
 {
-    
+   public static int GetMinLifeExpectancy()
+    {
+        return Plugin.MinRangeLifeExpectancy.Value;
+    }
+
+    public static int GetMaxLifeExpectancy()
+    {
+        return Plugin.MaxRangeLifeExpectancy.Value;
+    }
+
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.NewCharacter))]
+    public static IEnumerable<CodeInstruction> FollowerInfo_NewCharacter_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        var originalCode = instructions.ToList();
+        var modifiedCode = new List<CodeInstruction>(originalCode);
+
+        try
+        {
+            var getMinMethod = AccessTools.Method(typeof(FollowerPatches), nameof(GetMinLifeExpectancy));
+            var getMaxMethod = AccessTools.Method(typeof(FollowerPatches), nameof(GetMaxLifeExpectancy));
+            var randomRangeMethod = AccessTools.Method(typeof(Random), nameof(Random.Range), [typeof(int), typeof(int)]);
+
+            for (var i = 0; i < modifiedCode.Count - 2; i++)
+            {
+                if (
+                    modifiedCode[i].opcode == OpCodes.Ldc_I4_S &&
+                    modifiedCode[i + 1].opcode == OpCodes.Ldc_I4_S &&
+                    modifiedCode[i + 2].Calls(randomRangeMethod)
+                )
+                {
+                    modifiedCode[i] = new CodeInstruction(OpCodes.Call, getMinMethod).WithLabels(modifiedCode[i].labels);
+                    modifiedCode[i + 1] = new CodeInstruction(OpCodes.Call, getMaxMethod).WithLabels(modifiedCode[i + 1].labels);
+
+                    Plugin.Log.LogInfo("[Transpiler] Patched Random.Range(min, max) for LifeExpectancy.");
+                    break;
+                }
+            }
+
+            return modifiedCode;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogError($"[Transpiler] Error in NewCharacter transpiler: {ex}");
+            return originalCode;
+        }
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetPersonalTask))]
     public static void FollowerBrain_GetTask(FollowerBrain __instance, FollowerLocation location, ref FollowerTask __result)
     {
         if (!Plugin.MakeOldFollowersWork.Value) return;
-        
+
         if (__result is not FollowerTask_OldAge) return;
 
         var scheduledActivity = TimeManager.GetScheduledActivity(location);
@@ -49,13 +97,11 @@ public static class FollowerPatches
         int num;
         for (var i = 0; i < Random.Range(3, 7); i = num + 1)
         {
-            ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, interaction.follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, delegate
-            {
-                Inventory.AddItem(20, 1);
-            });
+            ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, interaction.follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, delegate { Inventory.AddItem(20, 1); });
             yield return new WaitForSeconds(0.1f);
             num = i;
         }
+
         yield return new WaitForSeconds(0.25f);
     }
 
@@ -202,6 +248,7 @@ public static class FollowerPatches
                 }));
             }
         }
+
         if (cmd == FollowerCommands.Reeducate && ShouldMassReeducate(followerCommands[0]))
         {
             foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
@@ -394,11 +441,12 @@ public static class FollowerPatches
             __instance.follower.Brain.CompleteCurrentTask();
             var task = FollowerBrain.GetDesiredTask_Work(__instance.follower.Brain.Location).Random();
             __instance.follower.Brain.HardSwapToTask(task);
-            NotificationCentre.Instance.PlayGenericNotification($"{ __instance.follower.Brain.Info.Name} sent to work on random task!", NotificationBase.Flair.Positive);
+            NotificationCentre.Instance.PlayGenericNotification($"{__instance.follower.Brain.Info.Name} sent to work on random task!", NotificationBase.Flair.Positive);
             Plugin.L($"Old follower {__instance.follower.name} made to work on {task}");
             __instance.Close(false, true, false);
             return false;
         }
+
         return true;
     }
 
@@ -414,6 +462,7 @@ public static class FollowerPatches
                 __result.Add(FollowerCommandItems.Extort());
             }
         }
+
         if (Plugin.IntimidateOldFollowers.Value)
         {
             if (DoctrineUpgradeSystem.GetUnlocked(DoctrineUpgradeSystem.DoctrineType.WorkWorship_Intimidate))

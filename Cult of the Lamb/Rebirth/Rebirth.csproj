@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>1.0.9</Version>
+    <Version>1.1.0</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <LangVersion>latest</LangVersion>
@@ -26,7 +26,7 @@
         <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
       </Reference>
       <Reference Include="COTL_API">
-        <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\API\COTL_API.dll</HintPath>
+        <HintPath>G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\API\COTL_API.dll</HintPath>
       </Reference>
       <Reference Include="Unity.2D.SpriteShape.Runtime">
         <HintPath>..\libs\Unity.2D.SpriteShape.Runtime.dll</HintPath>
