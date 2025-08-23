@@ -1,9 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
     <ItemGroup>
       <None Remove="assets\rebirth_command.png" />
@@ -127,5 +133,10 @@
       <Reference Include="UnityEngine.XRModule">
         <HintPath>..\libs\UnityEngine.XRModule.dll</HintPath>
       </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="..\Shared\Helpers.cs">
+        <Link>Helpers.cs</Link>
+      </Compile>
     </ItemGroup>
 </Project>

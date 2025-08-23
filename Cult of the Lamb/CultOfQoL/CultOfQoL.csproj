@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.3.0</Version>
+        <Version>2.3.1</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
@@ -446,15 +446,15 @@
     </ItemGroup>
     <ItemGroup>
       <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
-        <Link>ConfigurationManagerAttributes.cs</Link>
+        <Link>Util\ConfigurationManagerAttributes.cs</Link>
       </Compile>
       <Compile Include="..\Shared\Extensions.cs">
-        <Link>Extensions.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\Helpers.cs">
-        <Link>Helpers.cs</Link>
+        <Link>Util\Extensions.cs</Link>
       </Compile>
       <Compile Remove="screenshots\**" />
+      <Compile Include="..\Shared\Helpers.cs">
+        <Link>Util\Helpers.cs</Link>
+      </Compile>
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Remove="screenshots\**" />

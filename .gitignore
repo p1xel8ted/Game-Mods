@@ -1076,3 +1076,46 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/rider,visualstudio,visualstudiocode,csharp
 *.DotSettings
+
+# === AI/Claude/Chatbot/Generated/Private files ===
+# Claude, Copilot, ChatGPT, and other AI tool artifacts
+.copilot/
+.copilot.json
+.copilot-*.json
+claude/
+claude-*
+*claude*.json
+*claude*.md
+*claude*.log
+*chatgpt*
+*openai*
+*ai-generated*
+*aioutput*
+*aigenerated*
+*prompt*
+*completion*
+*anthropic*
+*llm*
+*conversation*
+*transcript*
+*ai*
+
+# VS Code/extension/AI session logs
+.vscode/copilot*
+.vscode/claude*
+.vscode/ai*
+
+# Other sensitive or temporary files
+*.secret
+*.env
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.bak
+*.tmp
+*.swp
+*.log
+
+# End AI/Claude/Private additions

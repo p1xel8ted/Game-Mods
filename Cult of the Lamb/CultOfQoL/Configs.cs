@@ -1,16 +1,19 @@
+using CultOfQoL.Core;
+using CultOfQoL.Patches.Systems;
+
 namespace CultOfQoL;
 
 public partial class Plugin
 {
     private static ConfigEntry<bool> EnableLogging { get; set; }
-    private static ConfigEntry<bool> EnableQuickSaveShortcut { get; set; }
-    private static ConfigEntry<KeyboardShortcut> SaveKeyboardShortcut { get; set; }
+    internal static ConfigEntry<bool> EnableQuickSaveShortcut { get; set; }
+    internal static ConfigEntry<KeyboardShortcut> SaveKeyboardShortcut { get; set; }
     internal static ConfigEntry<bool> SaveOnQuitToDesktop { get; private set; }
     internal static ConfigEntry<bool> SaveOnQuitToMenu { get; private set; }
     internal static ConfigEntry<bool> DirectLoadSave { get; private set; }
     internal static ConfigEntry<int> SaveSlotToLoad { get; private set; }
-    private static ConfigEntry<KeyboardShortcut> DirectLoadSkipKey { get; set; }
-    private static ConfigEntry<bool> DisableAds { get; set; }
+    internal static ConfigEntry<KeyboardShortcut> DirectLoadSkipKey { get; set; }
+    internal static ConfigEntry<bool> DisableAds { get; set; }
     internal static ConfigEntry<bool> HideNewGameButtons { get; private set; }
 
     internal static ConfigEntry<bool> SkipDevIntros { get; private set; }
@@ -24,10 +27,10 @@ public partial class Plugin
     internal static ConfigEntry<KeyboardShortcut> IncreaseGameSpeedKey { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> DecreaseGameSpeedKey { get; private set; }
     internal static ConfigEntry<bool> AllLootMagnets { get; private set; }
-    internal static ConfigEntry<bool> DoubleMagnetRange { get; private set; }
-    internal static ConfigEntry<bool> TripleMagnetRange { get; private set; }
-    internal static ConfigEntry<bool> UseCustomMagnetRange { get; private set; }
-    internal static ConfigEntry<int> CustomMagnetRange { get; private set; }
+   // internal static ConfigEntry<bool> DoubleMagnetRange { get; private set; }
+   // internal static ConfigEntry<bool> TripleMagnetRange { get; private set; }
+   // internal static ConfigEntry<bool> UseCustomMagnetRange { get; private set; }
+    internal static ConfigEntry<float> MagnetRangeMultiplier { get; private set; }
 
     private static ConfigEntry<bool> MainMenuGlitch { get; set; }
 
@@ -45,6 +48,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> CleanseIllnessAndExhaustionOnLevelUp { get; private set; }
     internal static ConfigEntry<bool> UnlockTwitchItems { get; private set; }
     internal static ConfigEntry<bool> LumberAndMiningStationsDontAge { get; private set; }
+    internal static ConfigEntry<float> LumberAndMiningStationsAgeMultiplier{ get; private set; }
     internal static ConfigEntry<bool> CollectTitheFromOldFollowers { get; private set; }
     internal static ConfigEntry<bool> IntimidateOldFollowers { get; private set; }
     internal static ConfigEntry<bool> EnableGameSpeedManipulation { get; private set; }
@@ -53,7 +57,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> ShortenGameSpeedIncrements { get; private set; }
     internal static ConfigEntry<bool> SlowDownTime { get; private set; }
     internal static ConfigEntry<float> SlowDownTimeMultiplier { get; private set; }
-    internal static ConfigEntry<bool> DoubleLifespanInstead { get; private set; }
+   // internal static ConfigEntry<bool> DoubleLifespanInstead { get; private set; }
     internal static ConfigEntry<bool> DisableGameOver { get; private set; }
 
     internal static ConfigEntry<bool> FastRitualSermons { get; private set; }
@@ -61,13 +65,13 @@ public partial class Plugin
     internal static ConfigEntry<bool> TurnOffSpeakersAtNight { get; private set; }
     internal static ConfigEntry<bool> ThriceMultiplyTarotCardLuck { get; private set; }
     internal static ConfigEntry<bool> RareTarotCardsOnly { get; private set; }
-    internal static ConfigEntry<bool> FiftyPercentIncreaseToLifespanInstead { get; private set; }
+  //  internal static ConfigEntry<bool> FiftyPercentIncreaseToLifespanInstead { get; private set; }
 
     internal static ConfigEntry<bool> EnableAutoCollect { get; private set; }
     internal static ConfigEntry<int> TriggerAmount { get; private set; }
     internal static ConfigEntry<bool> IncreaseAutoCollectRange { get; private set; }
-    internal static ConfigEntry<bool> UseCustomAutoInteractRange { get; private set; }
-    internal static ConfigEntry<float> CustomAutoInteractRangeMulti { get; private set; }
+  //  internal static ConfigEntry<bool> UseCustomAutoInteractRange { get; private set; }
+    internal static ConfigEntry<float> AutoInteractRangeMulti { get; private set; }
     internal static ConfigEntry<bool> AutoCollectFromFarmStationChests { get; private set; }
     internal static ConfigEntry<bool> AddExhaustedToHealingBay { get; private set; }
     internal static ConfigEntry<bool> NotifyOfScarecrowTraps { get; private set; }
@@ -88,12 +92,12 @@ public partial class Plugin
     internal static ConfigEntry<float> CustomSoulCapacityMulti { get; private set; }
     internal static ConfigEntry<float> CustomSiloCapacityMulti { get; private set; }
 
-    internal static ConfigEntry<bool> DoubleSiloCapacity { get; private set; }
-    internal static ConfigEntry<bool> UseCustomSoulCapacity { get; private set; }
-    internal static ConfigEntry<bool> UseCustomSiloCapacity { get; private set; }
+  //  internal static ConfigEntry<bool> DoubleSiloCapacity { get; private set; }
+   // internal static ConfigEntry<bool> UseCustomSoulCapacity { get; private set; }
+   // internal static ConfigEntry<bool> UseCustomSiloCapacity { get; private set; }
     internal static ConfigEntry<bool> UseMultiplesOf32 { get; private set; }
 
-    internal static ConfigEntry<bool> EnableBaseDamageMultiplier { get; private set; }
+  //  internal static ConfigEntry<bool> EnableBaseDamageMultiplier { get; private set; }
     internal static ConfigEntry<float> BaseDamageMultiplier { get; private set; }
 
     internal static ConfigEntry<float> CustomDamageMulti { get; private set; }
@@ -103,9 +107,9 @@ public partial class Plugin
     internal static ConfigEntry<bool> RemoveHelpButtonInPauseMenu { get; private set; }
     internal static ConfigEntry<bool> RemoveTwitchButtonInPauseMenu { get; private set; }
     internal static ConfigEntry<bool> RemovePhotoModeButtonInPauseMenu { get; private set; }
-    internal static ConfigEntry<bool> EnableRunSpeedMulti { get; private set; }
-    internal static ConfigEntry<bool> EnableDodgeSpeedMulti { get; private set; }
-    internal static ConfigEntry<bool> EnableLungeSpeedMulti { get; private set; }
+   // internal static ConfigEntry<bool> EnableRunSpeedMulti { get; private set; }
+   // internal static ConfigEntry<bool> EnableDodgeSpeedMulti { get; private set; }
+   // internal static ConfigEntry<bool> EnableLungeSpeedMulti { get; private set; }
     internal static ConfigEntry<float> RunSpeedMulti { get; private set; }
     internal static ConfigEntry<float> DodgeSpeedMulti { get; private set; }
     internal static ConfigEntry<float> LungeSpeedMulti { get; private set; }
@@ -114,7 +118,7 @@ public partial class Plugin
 
     internal static ConfigEntry<bool> DisablePropagandaSpeakerAudio { get; private set; }
 
-    internal static ConfigEntry<bool> UseCustomDamageValue { get; private set; }
+   // internal static ConfigEntry<bool> UseCustomDamageValue { get; private set; }
 
 
     internal static ConfigEntry<bool> RemoveLevelLimit { get; private set; }

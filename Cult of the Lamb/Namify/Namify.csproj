@@ -1,9 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.2.0</Version>
+        <Version>0.2.1</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
     </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
     <ItemGroup>
       <Reference Include="System.Net.Http">
         <HintPath>..\libs\System.Net.Http.dll</HintPath>
@@ -125,6 +131,9 @@
         <Link>Extensions.cs</Link>
       </Compile>
       <Compile Remove="screenshots\**" />
+      <Compile Include="..\Shared\Helpers.cs">
+        <Link>Helpers.cs</Link>
+      </Compile>
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Remove="screenshots\**" />

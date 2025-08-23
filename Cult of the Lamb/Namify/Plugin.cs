@@ -1,3 +1,4 @@
+using MonoMod.Utils;
 using Shared;
 
 namespace Namify;
@@ -8,7 +9,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.2.0";
+    private const string PluginVer = "0.2.1";
     private const string NamesSection = "Names";
     private const string ApiSection = "API";
 
@@ -34,7 +35,7 @@ public class Plugin : BaseUnityPlugin
         FollowerManager.OnFollowerAdded += Patches.CleanNames;
         
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        Log.LogInfo($"Loaded {PluginName}!");
+        Helpers.PrintModLoaded(PluginName, Logger);
     }
 
     private void InitializeLogger()

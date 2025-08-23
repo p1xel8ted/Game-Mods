@@ -1,4 +1,9 @@
-﻿namespace CultOfQoL;
+﻿using CultOfQoL.Core;
+using CultOfQoL.Patches.Gameplay;
+using CultOfQoL.Patches.Systems;
+using CultOfQoL.Patches.UI;
+
+namespace CultOfQoL;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
@@ -6,7 +11,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.3.0";
+    private const string PluginVer = "2.3.1";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -66,31 +71,31 @@ public partial class Plugin : BaseUnityPlugin
         RemovePhotoModeButtonInPauseMenu = Config.Bind(MenuCleanupSection, "Remove Photo Mode Button In Pause Menu", true, new ConfigDescription("Removes the photo mode button in the pause menu.", null, new ConfigurationManagerAttributes { Order = 1 }));
         MainMenuGlitch = Config.Bind(MenuCleanupSection, "Main Menu Glitch", false, new ConfigDescription("Disables the sudden dark-mode switch effect.", null, new ConfigurationManagerAttributes { Order = 0 }));
         MainMenuGlitch.SettingChanged += (_, _) => { UpdateMenuGlitch(); };
-       
+
         //Player Damage
-        EnableBaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Enable Base Damage Multiplier", false, new ConfigDescription("Enable/disable the base damage multiplier.", null, new ConfigurationManagerAttributes { Order = 6 }));
-        BaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Base Damage Multiplier", 1.5f, new ConfigDescription("The base damage multiplier to use.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes { Order = 5 }));
+        // EnableBaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Enable Base Damage Multiplier", false, new ConfigDescription("Enable/disable the base damage multiplier.", null, new ConfigurationManagerAttributes { Order = 6 }));
+        BaseDamageMultiplier = Config.Bind(PlayerDamageSection, "Base Damage Multiplier", 1.0f, new ConfigDescription("The base damage multiplier to use.", new AcceptableValueRange<float>(-10, 10), new ConfigurationManagerAttributes { Order = 5 }));
         BaseDamageMultiplier.SettingChanged += (_, _) => { BaseDamageMultiplier.Value = Mathf.Round(BaseDamageMultiplier.Value * 4) / 4; };
         ReverseGoldenFleeceDamageChange = Config.Bind(GameMechanicsSection, "Reverse Golden Fleece Change", true, new ConfigDescription("Reverts the default damage increase to 10% instead of 5%.", null, new ConfigurationManagerAttributes { Order = 4 }));
         IncreaseGoldenFleeceDamageRate = Config.Bind(GameMechanicsSection, "Increase Golden Fleece Rate", true, new ConfigDescription("Doubles the damage increase.", null, new ConfigurationManagerAttributes { Order = 3 }));
-        UseCustomDamageValue = Config.Bind(GameMechanicsSection, "Use Custom Damage Value", false, new ConfigDescription("Use a custom damage value instead of the default 10%.", null, new ConfigurationManagerAttributes { Order = 2 }));
-        CustomDamageMulti = Config.Bind(GameMechanicsSection, "Custom Damage Multiplier", 2.0f, new ConfigDescription("The custom damage multiplier to use. Based off the games default 5%.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes { Order = 1 }));
+       // UseCustomDamageValue = Config.Bind(GameMechanicsSection, "Use Custom Damage Value", false, new ConfigDescription("Use a custom damage value instead of the default 10%.", null, new ConfigurationManagerAttributes { Order = 2 }));
+        CustomDamageMulti = Config.Bind(GameMechanicsSection, "Custom Damage Multiplier", 1.0f, new ConfigDescription("The custom damage multiplier to use. Based off the games default 5%.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 1 }));
         CustomDamageMulti.SettingChanged += (_, _) => { CustomDamageMulti.Value = Mathf.Round(CustomDamageMulti.Value * 4) / 4; };
 
         //Player Speed
-        EnableRunSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Run Speed Multiplier", true, new ConfigDescription("Enable/disable the run speed multiplier.", null, new ConfigurationManagerAttributes { Order = 8 }));
-        RunSpeedMulti = Config.Bind(PlayerSpeedSection, "Run Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player runs.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes { Order = 7 }));
+        // EnableRunSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Run Speed Multiplier", true, new ConfigDescription("Enable/disable the run speed multiplier.", null, new ConfigurationManagerAttributes { Order = 8 }));
+        RunSpeedMulti = Config.Bind(PlayerSpeedSection, "Run Speed Multiplier", 1.0f, new ConfigDescription("How much faster the player runs.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 7 }));
         RunSpeedMulti.SettingChanged += (_, _) => { RunSpeedMulti.Value = Mathf.Round(RunSpeedMulti.Value * 4) / 4; };
         DisableRunSpeedInDungeons = Config.Bind(PlayerSpeedSection, "Disable Run Speed In Dungeons", true, new ConfigDescription("Disables the run speed multiplier in dungeons.", null, new ConfigurationManagerAttributes { Order = 6 }));
         DisableRunSpeedInCombat = Config.Bind(PlayerSpeedSection, "Disable Run Speed In Combat", true, new ConfigDescription("Disables the run speed multiplier in combat.", null, new ConfigurationManagerAttributes { Order = 5 }));
 
-        EnableDodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Dodge Speed Multiplier", true, new ConfigDescription("Enable/disable the dodge speed multiplier.", null, new ConfigurationManagerAttributes { Order = 4 }));
-        DodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Dodge Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player dodges.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes { Order = 3 }));
+        // EnableDodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Dodge Speed Multiplier", true, new ConfigDescription("Enable/disable the dodge speed multiplier.", null, new ConfigurationManagerAttributes { Order = 4 }));
+        DodgeSpeedMulti = Config.Bind(PlayerSpeedSection, "Dodge Speed Multiplier", 1.0f, new ConfigDescription("How much faster the player dodges.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 3 }));
         DodgeSpeedMulti.SettingChanged += (_, _) => { DodgeSpeedMulti.Value = Mathf.Round(DodgeSpeedMulti.Value * 4) / 4; };
-        EnableLungeSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Lunge Speed Multiplier", true, new ConfigDescription("Enable/disable the lunge speed multiplier.", null, new ConfigurationManagerAttributes { Order = 2 }));
-        LungeSpeedMulti = Config.Bind(PlayerSpeedSection, "Lunge Speed Multiplier", 1.5f, new ConfigDescription("How much faster the player lunges.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes { Order = 1 }));
+        // EnableLungeSpeedMulti = Config.Bind(PlayerSpeedSection, "Enable Lunge Speed Multiplier", true, new ConfigDescription("Enable/disable the lunge speed multiplier.", null, new ConfigurationManagerAttributes { Order = 2 }));
+        LungeSpeedMulti = Config.Bind(PlayerSpeedSection, "Lunge Speed Multiplier", 1.0f, new ConfigDescription("How much faster the player lunges.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 1 }));
         LungeSpeedMulti.SettingChanged += (_, _) => { LungeSpeedMulti.Value = Mathf.Round(LungeSpeedMulti.Value * 4) / 4; };
-       
+
         //Save
         SaveOnQuitToDesktop = Config.Bind(SavesSection, "Save On Quit To Desktop", true, new ConfigDescription("Modify the confirmation dialog to save the game when you quit to desktop.", null, new ConfigurationManagerAttributes { Order = 8 }));
         SaveOnQuitToMenu = Config.Bind(SavesSection, "Save On Quit To Menu", true, new ConfigDescription("Modify the confirmation dialog to save the game when you quit to menu.", null, new ConfigurationManagerAttributes { Order = 7 }));
@@ -139,31 +144,31 @@ public partial class Plugin : BaseUnityPlugin
         RareTarotCardsOnly = Config.Bind(GameMechanicsSection, "Rare Tarot Cards Only", true, new ConfigDescription("Only draw rare tarot cards.", null, new ConfigurationManagerAttributes { Order = 2 }));
 
         SinBossLimit = Config.Bind(GameMechanicsSection, "Sin Boss Limit", 3, new ConfigDescription("Bishop kills required to unlock Sin. Default is 3.", new AcceptableValueRange<int>(1, 5), new ConfigurationManagerAttributes { Order = 1 }));
-        
+
         //Mines
         LumberAndMiningStationsDontAge = Config.Bind(MinesSection, "Infinite Lumber & Mining Stations", false, new ConfigDescription("Lumber and mining stations should never run out and collapse. Takes 1st priority.", null, new ConfigurationManagerAttributes { Order = 3 }));
-        LumberAndMiningStationsDontAge.SettingChanged += (_, _) =>
+  
+        LumberAndMiningStationsAgeMultiplier = Config.Bind(MinesSection, "Lumber & Mining Stations Age Multiplier", 1.0f, new ConfigDescription("How much slower (or faster) the lumber and mining stations age. Default is 1.0f.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 2 }));
+        LumberAndMiningStationsAgeMultiplier.SettingChanged += (_, _) =>
         {
-            if (!LumberAndMiningStationsDontAge.Value) return;
-            DoubleLifespanInstead.Value = false;
-            FiftyPercentIncreaseToLifespanInstead.Value = false;
+            LumberAndMiningStationsAgeMultiplier.Value = Mathf.Round(LumberAndMiningStationsAgeMultiplier.Value * 4) / 4;
         };
-
-        DoubleLifespanInstead = Config.Bind(MinesSection, "Double Life Span Instead", false, new ConfigDescription("Doubles the life span of lumber/mining stations. Takes 2nd priority.", null, new ConfigurationManagerAttributes { Order = 2 }));
-        DoubleLifespanInstead.SettingChanged += (_, _) =>
-        {
-            if (!DoubleLifespanInstead.Value) return;
-            LumberAndMiningStationsDontAge.Value = false;
-            FiftyPercentIncreaseToLifespanInstead.Value = false;
-        };
-
-        FiftyPercentIncreaseToLifespanInstead = Config.Bind(MinesSection, "Add 50% to Life Span Instead", true, new ConfigDescription("For when double is too long for your tastes. This will extend their life by 50% instead of 100%. Takes 3rd priority.", null, new ConfigurationManagerAttributes { Order = 1 }));
-        FiftyPercentIncreaseToLifespanInstead.SettingChanged += (_, _) =>
-        {
-            if (!FiftyPercentIncreaseToLifespanInstead.Value) return;
-            LumberAndMiningStationsDontAge.Value = false;
-            DoubleLifespanInstead.Value = false;
-        };
+        
+        // DoubleLifespanInstead = Config.Bind(MinesSection, "Double Life Span Instead", false, new ConfigDescription("Doubles the life span of lumber/mining stations. Takes 2nd priority.", null, new ConfigurationManagerAttributes { Order = 2 }));
+        // DoubleLifespanInstead.SettingChanged += (_, _) =>
+        // {
+        //     if (!DoubleLifespanInstead.Value) return;
+        //     LumberAndMiningStationsDontAge.Value = false;
+        //     FiftyPercentIncreaseToLifespanInstead.Value = false;
+        // };
+        //
+        // FiftyPercentIncreaseToLifespanInstead = Config.Bind(MinesSection, "Add 50% to Life Span Instead", true, new ConfigDescription("For when double is too long for your tastes. This will extend their life by 50% instead of 100%. Takes 3rd priority.", null, new ConfigurationManagerAttributes { Order = 1 }));
+        // FiftyPercentIncreaseToLifespanInstead.SettingChanged += (_, _) =>
+        // {
+        //     if (!FiftyPercentIncreaseToLifespanInstead.Value) return;
+        //     LumberAndMiningStationsDontAge.Value = false;
+        //     DoubleLifespanInstead.Value = false;
+        // };
 
         //Structures
         TurnOffSpeakersAtNight = Config.Bind(StructureSection, "Turn Off Speakers At Night", true, new ConfigDescription("Turns the speakers off, and stops fuel consumption at night time.", null, new ConfigurationManagerAttributes { Order = 9 }));
@@ -171,7 +176,7 @@ public partial class Plugin : BaseUnityPlugin
         AddExhaustedToHealingBay = Config.Bind(StructureSection, "Add Exhausted To Healing Bay", true, new ConfigDescription("Allows you to select exhausted followers for rest and relaxation in the healing bays.", null, new ConfigurationManagerAttributes { Order = 7 }));
         OnlyShowDissenters = Config.Bind(StructureSection, "Only Show Dissenters In Prison Menu", true, new ConfigDescription("Only show dissenting followers when interacting with the prison.", null, new ConfigurationManagerAttributes { Order = 6 }));
         AdjustRefineryRequirements = Config.Bind(StructureSection, "Adjust Refinery Requirements", true, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 5 }));
-        
+
         var harvestRange = Mathf.RoundToInt(HarvestTotem.EFFECTIVE_DISTANCE);
         HarvestTotemRange = Config.Bind(StructureSection, "Harvest Totem Range", harvestRange, new ConfigDescription($"The range of the harvest totem. Default is {harvestRange}.", new AcceptableValueRange<int>(3, 14), new ConfigurationManagerAttributes { Order = 4 }));
         HarvestTotemRange.SettingChanged += (_, _) => { HarvestTotem.EFFECTIVE_DISTANCE = Mathf.RoundToInt(HarvestTotemRange.Value); };
@@ -194,7 +199,7 @@ public partial class Plugin : BaseUnityPlugin
         FastCollecting = Config.Bind(GameSpeedSection, "Speed Up Collection", true, new ConfigDescription("Increases the rate you can collect from the shrines, and other structures.", null, new ConfigurationManagerAttributes { DispName = "Speed Up Collection**", Order = 3 }));
         FastCollecting.SettingChanged += (_, _) => ShowRestartMessage();
         SlowDownTime = Config.Bind(GameSpeedSection, "Slow Down Time", false, new ConfigDescription("Enables the ability to slow down time. This is different to the increase speed implementation. This will make the days longer, but not slow down animations.", null, new ConfigurationManagerAttributes { Order = 2 }));
-        SlowDownTimeMultiplier = Config.Bind(GameSpeedSection, "Slow Down Time Multiplier", 2f, new ConfigDescription("The multiplier to use for slow down time. For example, the default value of 2 is making the day twice as long.", new AcceptableValueRange<float>(1.25f, 100f), new ConfigurationManagerAttributes { Order = 1 }));
+        SlowDownTimeMultiplier = Config.Bind(GameSpeedSection, "Slow Down Time Multiplier", 1.0f, new ConfigDescription("The multiplier to use for slow down time. For example, the default value of 2 is making the day twice as long.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 1 }));
         SlowDownTimeMultiplier.SettingChanged += (_, _) => { SlowDownTimeMultiplier.Value = Mathf.Round(SlowDownTimeMultiplier.Value * 4) / 4; };
         FastRitualSermons = Config.Bind(GameSpeedSection, "Fast Rituals & Sermons", true, new ConfigDescription("Speeds up rituals and sermons.", null, new ConfigurationManagerAttributes { Order = 0 }));
         FastRitualSermons.SettingChanged += (_, _) =>
@@ -203,7 +208,7 @@ public partial class Plugin : BaseUnityPlugin
             RitualSermonSpeed.RitualRunning = false;
             GameManager.SetTimeScale(1);
         };
-        
+
         RitualCooldownTime = Config.Bind(
             GameSpeedSection,
             "Ritual Cooldown Time Multiplier",
@@ -221,10 +226,7 @@ public partial class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { Order = 0 }
             )
         );
-        RitualCooldownTime.SettingChanged += (_, _) =>
-        {
-            RitualCooldownTime.Value = Mathf.Round(RitualCooldownTime.Value * 4) / 4;
-        };
+        RitualCooldownTime.SettingChanged += (_, _) => { RitualCooldownTime.Value = Mathf.Round(RitualCooldownTime.Value * 4) / 4; };
 
         //Chest Auto-Interact
         EnableAutoCollect = Config.Bind(AutoInteractSection, "Enable Auto Collect", true, new ConfigDescription("Makes chests automatically send you the resources when you're nearby.", null, new ConfigurationManagerAttributes
@@ -244,30 +246,30 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 3
         }));
-        UseCustomAutoInteractRange = Config.Bind(AutoInteractSection, "Use Custom Range", false, new ConfigDescription("Use a custom range instead of the default or increased range.", null, new ConfigurationManagerAttributes
-        {
-            Order = 2
-        }));
-        CustomAutoInteractRangeMulti = Config.Bind(AutoInteractSection, "Custom Range Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for auto-collect range when using custom range.", new AcceptableValueRange<float>(1.25f, 100), new ConfigurationManagerAttributes
+        // UseCustomAutoInteractRange = Config.Bind(AutoInteractSection, "Use Custom Range", false, new ConfigDescription("Use a custom range instead of the default or increased range.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 2
+        // }));
+        AutoInteractRangeMulti = Config.Bind(AutoInteractSection, "Custom Range Multiplier", 1.0f, new ConfigDescription("Enter a multiplier to use for auto-collect range when using custom range.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes
         {
             Order = 1
         }));
-        CustomAutoInteractRangeMulti.SettingChanged += (_, _) => { CustomAutoInteractRangeMulti.Value = Mathf.Round(CustomAutoInteractRangeMulti.Value * 4) / 4; };
+        AutoInteractRangeMulti.SettingChanged += (_, _) => { AutoInteractRangeMulti.Value = Mathf.Round(AutoInteractRangeMulti.Value * 4) / 4; };
 
         //Capacity
         UseMultiplesOf32 = Config.Bind(CapacitySection, "Use Multiples of 32", true, new ConfigDescription("Use multiples of 32 for silo capacity.", null, new ConfigurationManagerAttributes
         {
             Order = 7
         }));
-        DoubleSiloCapacity = Config.Bind(CapacitySection, "Double Silo Capacity", true, new ConfigDescription("Doubles the silo capacity of applicable structures.", null, new ConfigurationManagerAttributes
-        {
-            Order = 6
-        }));
-        UseCustomSiloCapacity = Config.Bind(CapacitySection, "Use Custom Silo Capacity", false, new ConfigDescription("Use a custom silo capacity instead of the default or increased capacity.", null, new ConfigurationManagerAttributes
-        {
-            Order = 5
-        }));
-        CustomSiloCapacityMulti = Config.Bind(CapacitySection, "Custom Silo Capacity Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for silo capacity when using custom capacity.", new AcceptableValueRange<float>(1.25f, 1000), null, new ConfigurationManagerAttributes
+        // DoubleSiloCapacity = Config.Bind(CapacitySection, "Double Silo Capacity", true, new ConfigDescription("Doubles the silo capacity of applicable structures.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 6
+        // }));
+        // UseCustomSiloCapacity = Config.Bind(CapacitySection, "Use Custom Silo Capacity", false, new ConfigDescription("Use a custom silo capacity instead of the default or increased capacity.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 5
+        // }));
+        CustomSiloCapacityMulti = Config.Bind(CapacitySection, "Custom Silo Capacity Multiplier", 1.0f, new ConfigDescription("Enter a multiplier to use for silo capacity when using custom capacity.", new AcceptableValueRange<float>(-10f, 10f), null, new ConfigurationManagerAttributes
         {
             Order = 4
         }));
@@ -276,11 +278,11 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 3
         }));
-        UseCustomSoulCapacity = Config.Bind(CapacitySection, "Use Custom Soul Capacity", false, new ConfigDescription("Use a custom soul capacity instead of the default or doubled capacity.", null, new ConfigurationManagerAttributes
-        {
-            Order = 2
-        }));
-        CustomSoulCapacityMulti = Config.Bind(CapacitySection, "Custom Soul Capacity Multiplier", 2.0f, new ConfigDescription("Enter a multiplier to use for soul capacity when using custom capacity.", new AcceptableValueRange<float>(1.25f, 1000f), null, new ConfigurationManagerAttributes
+        // UseCustomSoulCapacity = Config.Bind(CapacitySection, "Use Custom Soul Capacity", false, new ConfigDescription("Use a custom soul capacity instead of the default or doubled capacity.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 2
+        // }));
+        CustomSoulCapacityMulti = Config.Bind(CapacitySection, "Custom Soul Capacity Multiplier", 1.0f, new ConfigDescription("Enter a multiplier to use for soul capacity when using custom capacity.", new AcceptableValueRange<float>(-10f, 10f), null, new ConfigurationManagerAttributes
         {
             Order = 1
         }));
@@ -336,24 +338,28 @@ public partial class Plugin : BaseUnityPlugin
         }));
         MakeOldFollowersWork.SettingChanged += (_, _) => ShowRestartMessage();
 
-        MinRangeLifeExpectancy = Config.Bind(FollowersSection,
+        MinRangeLifeExpectancy = Config.Bind(
+            FollowersSection,
             "Minimum Range Life Expectancy", 40,
             new ConfigDescription(
-                "The minimum range for life expectancy. The game will randomly generate a value between this and the maximum. Must be less than the maximum.",
+                "The lowest possible life expectancy a follower can have. The game will randomly choose a value between this and the maximum value below. This must be less than the maximum.",
                 new AcceptableValueRange<int>(1, 100),
-                new ConfigurationManagerAttributes { ShowRangeAsPercent = false, Order = 2 }));
-        MinRangeLifeExpectancy.SettingChanged += (_, _) => EnforceRangeSanity();
+                new ConfigurationManagerAttributes { ShowRangeAsPercent = false, Order = 2 }
+            )
+        );
+        MinRangeLifeExpectancy.SettingChanged += (_, _) => { EnforceRangeSanity(); };
 
-        MaxRangeLifeExpectancy = Config.Bind(FollowersSection,
+        MaxRangeLifeExpectancy = Config.Bind(
+            FollowersSection,
             "Maximum Range Life Expectancy", 55,
             new ConfigDescription(
-                "The maximum range for life expectancy. The game will randomly generate a value between the minimum and this. Must be greater than the minimum.",
+                "The highest possible life expectancy a follower can have. The game will randomly choose a value between the minimum above and this value.",
                 new AcceptableValueRange<int>(1, 100),
-                new ConfigurationManagerAttributes { ShowRangeAsPercent = false, Order = 1 }));
-        MaxRangeLifeExpectancy.SettingChanged += (_, _) => EnforceRangeSanity();
+                new ConfigurationManagerAttributes { Order = 0 }
+            )
+        );
+        MaxRangeLifeExpectancy.SettingChanged += (_, _) => { EnforceRangeSanity(); };
 
-        MaxRangeLifeExpectancy = Config.Bind(FollowersSection, "Maximum Range Life Expectancy", 55, new ConfigDescription("The maximum range for life expectancy. Default is 55.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 0 }));
-        MaxRangeLifeExpectancy.SettingChanged += (_, _) => EnforceRangeSanity();
 
         //Traits
         NoNegativeTraits = Config.Bind(TraitsSection, "No Negative Traits", true, new ConfigDescription("Negative traits will be replaced based on the configuration here.", null, new ConfigurationManagerAttributes
@@ -499,28 +505,34 @@ public partial class Plugin : BaseUnityPlugin
             Order = 0
         }));
         AllLootMagnets.SettingChanged += (_, _) => { UpdateAllMagnets(); };
-        DoubleMagnetRange = Config.Bind(LootSection, "Double Magnet Range", true, new ConfigDescription("Doubles the magnet range.", null, new ConfigurationManagerAttributes
-        {
-            Order = 0
-        }));
-        DoubleMagnetRange.SettingChanged += (_, _) => { UpdateDoubleMagnet(); };
+        // DoubleMagnetRange = Config.Bind(LootSection, "Double Magnet Range", true, new ConfigDescription("Doubles the magnet range.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 0
+        // }));
+        // DoubleMagnetRange.SettingChanged += (_, _) => { UpdateDoubleMagnet(); };
+        //
+        // TripleMagnetRange = Config.Bind(LootSection, "Triple Magnet Range", false, new ConfigDescription("Triples the magnet range.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 0
+        // }));
+        // TripleMagnetRange.SettingChanged += (_, _) => { UpdateTripleMagnet(); };
 
-        TripleMagnetRange = Config.Bind(LootSection, "Triple Magnet Range", false, new ConfigDescription("Triples the magnet range.", null, new ConfigurationManagerAttributes
+        // UseCustomMagnetRange = Config.Bind(LootSection, "Use Custom Magnet Range", false, new ConfigDescription("Use a custom magnet range instead of the default or increased range.", null, new ConfigurationManagerAttributes
+        // {
+        //     Order = 0
+        // }));
+        // UseCustomMagnetRange.SettingChanged += (_, _) => { UpdatePickups(); };
+        MagnetRangeMultiplier = Config.Bind(LootSection, "Magnet Range Multiplier", 1.0f, new ConfigDescription("Apply a multiplier to the magnet range.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes
         {
             Order = 0
         }));
-        TripleMagnetRange.SettingChanged += (_, _) => { UpdateTripleMagnet(); };
-
-        UseCustomMagnetRange = Config.Bind(LootSection, "Use Custom Magnet Range", false, new ConfigDescription("Use a custom magnet range instead of the default or increased range.", null, new ConfigurationManagerAttributes
+        MagnetRangeMultiplier.SettingChanged += (_, _) =>
         {
-            Order = 0
-        }));
-        UseCustomMagnetRange.SettingChanged += (_, _) => { UpdatePickups(); };
-        CustomMagnetRange = Config.Bind(LootSection, "Custom Magnet Range", 7, new ConfigDescription("Quadruples the magnet range.", new AcceptableValueRange<int>(7, 50), new ConfigurationManagerAttributes
-        {
-            Order = 0
-        }));
-        CustomMagnetRange.SettingChanged += (_, _) => { UpdateCustomMagnet(); };
+            {
+                MagnetRangeMultiplier.Value = MagnetRangeMultiplier.Value * 4f / 4f;
+                UpdateCustomMagnet();
+            }
+        };
 
         //Post Processing
         VignetteEffect = Config.Bind(PostProcessingSection, "Vignette Effect", true, new ConfigDescription("Enable/disable the vignette effect.", null, new ConfigurationManagerAttributes
@@ -545,7 +557,9 @@ public partial class Plugin : BaseUnityPlugin
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
+        Helpers.PrintModLoaded(PluginName, Logger);
+
+
         // if (!SoftDepend.Enabled) return;
         //
         // SoftDepend.AddSettingsMenus();
@@ -611,16 +625,6 @@ public partial class Plugin : BaseUnityPlugin
         }
     }
 
-    // private static Action<ConfigEntryBase> SetWeather(WeatherSystemController.WeatherStrength strength, WeatherSystemController.WeatherType type)
-    // {
-    //     if (WeatherSystemController.Instance)
-    //     {
-    //         WeatherSystemController.Instance.SetWeather(type, strength, 0);
-    //     }
-    //
-    //     return null;
-    // }
-
     private static void UpdateNoNegativeTraits()
     {
         if (IsNoNegativePresent())
@@ -631,18 +635,18 @@ public partial class Plugin : BaseUnityPlugin
 
         if (NoNegativeTraits.Value)
         {
-            Patches.NoNegativeTraits.UpdateAllFollowerTraits();
+            Patches.Followers.NoNegativeTraits.UpdateAllFollowerTraits();
         }
         else
         {
-            Patches.NoNegativeTraits.RestoreOriginalTraits();
+            Patches.Followers.NoNegativeTraits.RestoreOriginalTraits();
         }
     }
 
     private static void GenerateAvailableTraits()
     {
         if (IsNoNegativePresent()) return;
-        Patches.NoNegativeTraits.GenerateAvailableTraits();
+        Patches.Followers.NoNegativeTraits.GenerateAvailableTraits();
     }
 
     private static void UpdateNavigationMode()
@@ -666,76 +670,21 @@ public partial class Plugin : BaseUnityPlugin
         }
     }
 
-    private static void UpdateDoubleMagnet()
-    {
-        if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
-        {
-            PickUps.RestoreMagnetRange();
-        }
-
-        if (DoubleMagnetRange.Value)
-        {
-            PickUps.UpdateAllPickUps();
-            TripleMagnetRange.Value = false;
-            UseCustomMagnetRange.Value = false;
-        }
-    }
-
-    private static void UpdateTripleMagnet()
-    {
-        if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
-        {
-            PickUps.RestoreMagnetRange();
-        }
-
-        if (TripleMagnetRange.Value)
-        {
-            PickUps.UpdateAllPickUps();
-            DoubleMagnetRange.Value = false;
-            UseCustomMagnetRange.Value = false;
-        }
-    }
 
     private static void UpdateCustomMagnet()
     {
-        if (!UseCustomMagnetRange.Value)
-        {
-            return;
-        }
+        if (Mathf.Approximately(MagnetRangeMultiplier.Value, 1.0f)) return;
 
-        UseCustomMagnetRange.Value = true;
-        DoubleMagnetRange.Value = false;
-        TripleMagnetRange.Value = false;
         PickUps.UpdateAllPickUps();
     }
 
-    private static void UpdatePickups()
-    {
-        if (!DoubleMagnetRange.Value && !TripleMagnetRange.Value && !UseCustomMagnetRange.Value)
-        {
-            PickUps.RestoreMagnetRange();
-        }
 
-        if (UseCustomMagnetRange.Value)
-        {
-            PickUps.UpdateAllPickUps();
-            DoubleMagnetRange.Value = false;
-            TripleMagnetRange.Value = false;
-        }
-    }
 
     private static void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         UpdateMenuGlitch();
-        //  UpdateScale();
         UpdateNavigationMode();
         UpdateAllMagnets();
-        // UpdateDoubleMagnet();
-        // UpdateTripleMagnet();
-        // UpdateCustomMagnet();
-        // UpdatePickups();
-        // UpdateNoNegativeTraits();
-        // Scales.ChangeAllScalers();
     }
 
     private static void UpdateMenuGlitch()
@@ -766,7 +715,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static bool IsNoNegativePresent()
     {
-        if (!Patches.NoNegativeTraits.IsNothingNegativePresent()) return false;
+        if (!Patches.Followers.NoNegativeTraits.IsNothingNegativePresent()) return false;
         PopupManager.ShowPopup($"You have the 'Nothing Negative' mod by voidptr installed. Please remove it to use Cult of QoL's No Negative Traits feature.", false);
         return true;
     }

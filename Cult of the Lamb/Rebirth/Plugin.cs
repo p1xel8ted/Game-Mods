@@ -1,3 +1,6 @@
+using MonoMod.Utils;
+using Shared;
+
 namespace Rebirth;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -8,7 +11,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.rebirth";
     private const string PluginName = "Rebirth";
-    private const string PluginVer = "1.1.0";
+    private const string PluginVer = "1.1.1";
 
     public static ManualLogSource Log { get; private set; }
     public static string PluginPath { get; private set; }
@@ -17,7 +20,7 @@ public class Plugin : BaseUnityPlugin
     private CustomObjective RebirthCollectItemQuest { get; set; }
     internal static RebirthItem RebirthItemInstance { get; private set; }
     
-    public readonly static ModdedSaveData<List<int>> RebirthSaveData = new(PluginGuid);
+    public static readonly ModdedSaveData<List<int>> RebirthSaveData = new(PluginGuid);
 
     private void Awake()
     {
@@ -45,7 +48,7 @@ public class Plugin : BaseUnityPlugin
         });
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        Log.LogInfo($"Loaded {PluginName}!");
+        Helpers.PrintModLoaded(PluginName, Logger);
 
     }
 }
