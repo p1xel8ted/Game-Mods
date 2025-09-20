@@ -1,3 +1,18 @@
+### 2.3.0 - 20/09/2025
+
+* Configuration overhaul. Added Reset All Settings button. Default settings are now based on game defaults.
+* Customise Harvest Totem radius
+* Customise Propaganda Speaker radius
+* Customise Farm Station radius
+* Customise Farm Sign radius
+* Customise Ritual Cooldowns
+* Customise Life Expectancy range
+* Customise Sin Unlock Boss amount
+* Make wood silos produce spider webs (configurable)
+* Make stone silos produce crystal shards (configurableconfigurable)
+* Make kitchen produce bones (configurable)
+* Make Offering Shrines generate webs, silks, and crystals.
+
 ### 2.2.9 - 07/04/2025
 
 * Added option to change the color of the various weather overlays that lighten or darken the screen during certain weather types.

@@ -7,25 +7,26 @@ public static class PlayerFleeceManagerPatches
     [HarmonyPatch(typeof(PlayerFleeceManager), nameof(PlayerFleeceManager.IncrementDamageModifier))]
     public static bool PlayerFleeceManager_IncrementDamageModifier()
     {
-        if (!Plugin.ReverseGoldenFleeceDamageChange.Value && !Plugin.IncreaseGoldenFleeceDamageRate.Value && Mathf.Approximately(Plugin.BaseDamageMultiplier.Value, 1.0f)) return true;
-
+        // Only patch if we're modifying Golden Fleece behavior
+        if (!Plugin.ReverseGoldenFleeceDamageChange.Value && !Helpers.IsMultiplierActive(Plugin.BaseDamageMultiplier.Value)) return true;
+    
         var playerFleece = DataManager.Instance.PlayerFleece;
-        if (playerFleece == 1)
-        {
-            if(!Mathf.Approximately(Plugin.BaseDamageMultiplier.Value, 1.0f))
-            {
-                PlayerFleeceManager.damageMultiplier += Mathf.Ceil(0.05f * Mathf.Abs(Plugin.CustomDamageMulti.Value));
-            }
-            else
-            {
-                if (Plugin.ReverseGoldenFleeceDamageChange.Value)
-                    PlayerFleeceManager.damageMultiplier += Plugin.IncreaseGoldenFleeceDamageRate.Value ? 0.2f : 0.1f;
-                else
-                    PlayerFleeceManager.damageMultiplier += Plugin.IncreaseGoldenFleeceDamageRate.Value ? 0.1f : 0.05f;
-            }
-        }
+        if (playerFleece != 1) return false; // Golden Fleece
 
+        var baseIncrement =
+            // Step 1: Determine base increment based on reverse nerf setting
+            // Use old (pre-nerf) value : 0.1f if reversing nerf, else use new (post-nerf) value : 0.05f
+            Plugin.ReverseGoldenFleeceDamageChange.Value ? 0.1f : 0.05f;
+
+        // Step 2: Apply custom multiplier if active
+        if (Helpers.IsMultiplierActive(Plugin.BaseDamageMultiplier.Value))
+        {
+            baseIncrement *= Plugin.BaseDamageMultiplier.Value;
+        }
+        
+        PlayerFleeceManager.damageMultiplier += baseIncrement;
         PlayerFleeceManager.OnDamageMultiplierModified?.Invoke(PlayerFleeceManager.damageMultiplier);
+
         return false;
     }
 }

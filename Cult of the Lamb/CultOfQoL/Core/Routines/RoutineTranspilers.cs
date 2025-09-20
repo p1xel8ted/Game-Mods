@@ -29,24 +29,24 @@ public static class RoutinesTranspilers
     private static readonly List<string> AlreadyLogged = [];
 
     
-    internal static bool AnyMassActionsEnabled => routineChecks.Any(pair => pair.Value.Invoke().Value);
+    internal static bool AnyMassActionsEnabled => RoutineChecks.Any(pair => pair.Value.Invoke().Value);
     
-    private static readonly Dictionary<string, Func<ConfigEntry<bool>>> routineChecks = new()
+    private static readonly Dictionary<string, Func<ConfigEntry<bool>>> RoutineChecks = new()
     {
-        [BribeRoutine] = () => CultOfQoL.Plugin.MassBribe,
-        [IntimidateRoutine] = () => CultOfQoL.Plugin.MassIntimidate,
-        [BullyRoutine] = () => CultOfQoL.Plugin.MassBully,
-        [ReassureRoutine] = () => CultOfQoL.Plugin.MassReassure,
-        [ReeducateRoutine] = () => CultOfQoL.Plugin.MassReeducate,
-        [BlessRoutine] = () => CultOfQoL.Plugin.MassBless,
-        [DanceRoutine] = () => CultOfQoL.Plugin.MassInspire,
-        [PetDogRoutine] = () => CultOfQoL.Plugin.MassPetDog,
+        [BribeRoutine] = () => Plugin.MassBribe,
+        [IntimidateRoutine] = () => Plugin.MassIntimidate,
+        [BullyRoutine] = () => Plugin.MassBully,
+        [ReassureRoutine] = () => Plugin.MassReassure,
+        [ReeducateRoutine] = () => Plugin.MassReeducate,
+        [BlessRoutine] = () => Plugin.MassBless,
+        [DanceRoutine] = () => Plugin.MassInspire,
+        [PetDogRoutine] = () => Plugin.MassPetDog,
         // [LevelUpRoutine] = () => Plugin.MassLevelUp,
-        [RomanceRoutine] = () => CultOfQoL.Plugin.MassRomance,
-        [ExtortMoneyRoutine] = () => CultOfQoL.Plugin.MassExtort
+        [RomanceRoutine] = () => Plugin.MassRomance,
+        [ExtortMoneyRoutine] = () => Plugin.MassExtort
     };
 
-    private static bool RunThisTranspiler => routineChecks.Any(pair => pair.Value.Invoke().Value);
+    private static bool RunThisTranspiler => RoutineChecks.Any(pair => pair.Value.Invoke().Value);
 
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract))]
@@ -87,13 +87,12 @@ public static class RoutinesTranspilers
         {
             var declaringType = original.DeclaringType.ToString();
 
-            var routineCheckResults = routineChecks
+            var routineCheckResults = RoutineChecks
                 .Where(pair => declaringType.Contains(pair.Key, StringComparison.OrdinalIgnoreCase) && !pair.Value.Invoke().Value)
                 .ToList();
 
-            foreach (var pair in routineCheckResults)
+            if (routineCheckResults.Any())
             {
-                CultOfQoL.Plugin.Log.LogWarning($"Not patching {declaringType}:{original.Name} as {pair.Value.Invoke().Definition.Key} is false!");
                 return instructions;
             }
 
@@ -121,7 +120,7 @@ public static class RoutinesTranspilers
     {
         if (AlreadyLogged.Contains(declaringType)) return;
         AlreadyLogged.Add(declaringType);
-        CultOfQoL.Plugin.L($"[Mass Actions] -> {message}");
+        Plugin.L($"[Mass Actions] -> {message}");
     }
 
     private static void TryReplaceWithNop(IReadOnlyList<CodeInstruction> codes, int index, bool condition, int count)

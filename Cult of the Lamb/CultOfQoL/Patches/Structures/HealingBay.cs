@@ -5,11 +5,11 @@ namespace CultOfQoL.Patches.Structures;
 [HarmonyPatch]
 public static class HealingBay
 {
-    private const float duration = 3f;
+    private const float Duration = 3f;
     private const string InteractionHealingBay = "Interaction_HealingBay";
     private static FollowerBrainInfo _followerBrainInfo;
-    private static float t;
-    private static bool usingHealingBay;
+    private static float _t;
+    private static bool _usingHealingBay;
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(NotificationFaith), nameof(NotificationFaith.Configure), typeof(string), typeof(float), typeof(FollowerInfo), typeof(bool), typeof(NotificationBase.Flair), typeof(string[]))]
@@ -40,7 +40,7 @@ public static class HealingBay
     public static void FollowerInformationBox_ConfigureImpl(FollowerInformationBox __instance)
     {
         if (!Plugin.AddExhaustedToHealingBay.Value) return;
-        if (!usingHealingBay) return;
+        if (!_usingHealingBay) return;
 
         var hb = Resources.FindObjectsOfTypeAll<Interaction_HealingBay>().First();
         var costs = hb.GetCost(__instance.followBrain);
@@ -55,14 +55,14 @@ public static class HealingBay
     [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.OnHidden))]
     public static void Interaction_HealingBay_OnHidden(Interaction_HealingBay __instance)
     {
-        usingHealingBay = false;
+        _usingHealingBay = false;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.OnInteract))]
     public static void Interaction_HealingBay_OnInteract(Interaction_HealingBay __instance, StateMachine state)
     {
-        usingHealingBay = true;
+        _usingHealingBay = true;
     }
 
 
@@ -114,12 +114,12 @@ public static class HealingBay
         if (exhaustion <= 0) return;
         
         
-        while (t < duration)
+        while (_t < Duration)
         {
             if (Time.deltaTime > 0f)
             {
-                t += Time.deltaTime;
-                var num = t / duration;
+                _t += Time.deltaTime;
+                var num = _t / Duration;
                 follower._brain.Stats.Exhaustion = Mathf.Lerp(exhaustion, 0f, num);
             }
             break;

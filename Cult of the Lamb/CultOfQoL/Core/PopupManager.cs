@@ -2,15 +2,15 @@
 
 internal class PopupManager : MonoBehaviour
 {
-    internal bool showPopup;
-    private string popupMessage = "";
-    private Rect popupRect = new(Screen.width / 2f - 150, Screen.height / 2f - 75, 500, 300);
-    private GUIStyle messageStyle;
-    private GUIStyle windowStyle;
-    private GUIStyle titleStyle;
+    internal bool ShowPopup;
+    private string _popupMessage = "";
+    private Rect _popupRect = new(Screen.width / 2f - 150, Screen.height / 2f - 75, 500, 300);
+    private GUIStyle _messageStyle;
+    private GUIStyle _windowStyle;
+    private GUIStyle _titleStyle;
     private void Start()
     {
-        titleStyle = new GUIStyle
+        _titleStyle = new GUIStyle
         {
             alignment = TextAnchor.MiddleCenter,
             wordWrap = true,
@@ -18,7 +18,7 @@ internal class PopupManager : MonoBehaviour
             normal = {textColor = Color.black}
         };
 
-        messageStyle = new GUIStyle
+        _messageStyle = new GUIStyle
         {
             alignment = TextAnchor.MiddleCenter,
             wordWrap = true,
@@ -26,7 +26,7 @@ internal class PopupManager : MonoBehaviour
             normal = {textColor = Color.black}
         };
 
-        windowStyle = new GUIStyle
+        _windowStyle = new GUIStyle
         {
             normal = {background = Texture2D.whiteTexture, textColor = Color.black},
             richText = true,
@@ -36,13 +36,13 @@ internal class PopupManager : MonoBehaviour
 
     private void OnGUI()
     {
-        if (showPopup)
+        if (ShowPopup)
         {
-            popupRect = GUI.ModalWindow(0, popupRect, DrawPopup, string.Empty, windowStyle);
+            _popupRect = GUI.ModalWindow(0, _popupRect, DrawPopup, string.Empty, _windowStyle);
         }
     }
 
-    private bool dontShowAgainThisSession;
+    private bool _dontShowAgainThisSession;
 
     private void DrawPopup(int windowID)
     {
@@ -50,12 +50,12 @@ internal class PopupManager : MonoBehaviour
         GUILayout.FlexibleSpace();
 
         // Apply the title style
-        GUI.Label(new Rect(10, 10, popupRect.width - 20, 30), CultOfQoL.Plugin.PluginName, titleStyle);
+        GUI.Label(new Rect(10, 10, _popupRect.width - 20, 30), Plugin.PluginName, _titleStyle);
 
         GUILayout.FlexibleSpace();
 
         // Use the custom style in the label for the message
-        GUILayout.Label(popupMessage, messageStyle);
+        GUILayout.Label(_popupMessage, _messageStyle);
 
         // Add some space between the label and the first button
         GUILayout.FlexibleSpace();
@@ -65,14 +65,14 @@ internal class PopupManager : MonoBehaviour
         GUILayout.FlexibleSpace(); // Add flexible space before the button
         if (GUILayout.Button("OK", [GUILayout.Width(100), GUILayout.Height(40)]))
         {
-            showPopup = false;
+            ShowPopup = false;
         }
-        if (!ignoreDontShow)
+        if (!_ignoreDontShow)
         {
             if (GUILayout.Button("Close & Don't Show Again This Session", [GUILayout.Width(250), GUILayout.Height(40)]))
             {
-                dontShowAgainThisSession = true;
-                showPopup = false;
+                _dontShowAgainThisSession = true;
+                ShowPopup = false;
             }
         }
         GUILayout.FlexibleSpace(); // Add flexible space after the button
@@ -80,12 +80,12 @@ internal class PopupManager : MonoBehaviour
         GUILayout.FlexibleSpace(); 
     }
 
-    private bool ignoreDontShow;
-    public void ShowPopup(string message, bool showCloseAndDontShowAgain)
+    private bool _ignoreDontShow;
+    public void ShowPopupDlg(string message, bool showCloseAndDontShowAgain)
     {
-        ignoreDontShow = !showCloseAndDontShowAgain;
-        if (dontShowAgainThisSession && showCloseAndDontShowAgain) return;
-        popupMessage = message;
-        showPopup = true;
+        _ignoreDontShow = !showCloseAndDontShowAgain;
+        if (_dontShowAgainThisSession && showCloseAndDontShowAgain) return;
+        _popupMessage = message;
+        ShowPopup = true;
     }
 }

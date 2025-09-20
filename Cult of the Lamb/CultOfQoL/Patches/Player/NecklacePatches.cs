@@ -8,9 +8,23 @@ public static class NecklacePatches
     public static void interaction_FollowerInteraction_GiveItemRoutine(ref interaction_FollowerInteraction __instance, ref InventoryItem.ITEM_TYPE itemToGive)
     {
         if (!Plugin.GiveFollowersNewNecklaces.Value) return;
-        if (!itemToGive.ToString().Contains("Necklace")) return;
-        InventoryItem.Spawn(__instance.follower.Brain.Info.Necklace, 1, __instance.follower.transform.position);
-        __instance.follower.Brain.Info.Necklace = InventoryItem.ITEM_TYPE.NONE;
+        if (!IsNecklace(itemToGive)) return;
+        
+        var followerBrain = __instance.follower.Brain;
+        var currentNecklace = followerBrain.Info.Necklace;
+        
+        // Only drop the old necklace if they have one
+        if (!IsNecklace(currentNecklace)) return;
+        
+        InventoryItem.Spawn(currentNecklace, 1, __instance.follower.transform.position);
+        followerBrain.Info.Necklace = InventoryItem.ITEM_TYPE.NONE;
         __instance.follower.SetOutfit(FollowerOutfitType.Follower, false);
+    }
+    
+    private static bool IsNecklace(InventoryItem.ITEM_TYPE itemType)
+    {
+        // Future-proof: catches any enum value with "Necklace" in the name
+        return itemType != InventoryItem.ITEM_TYPE.NONE && 
+               itemType.ToString().Contains("Necklace", StringComparison.OrdinalIgnoreCase);
     }
 }

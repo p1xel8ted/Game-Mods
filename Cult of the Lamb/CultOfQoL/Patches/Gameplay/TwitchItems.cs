@@ -3,32 +3,32 @@
 [HarmonyPatch]
 internal static class TwitchItems
 {
+    // Centralized list of known Twitch skins
+    private static readonly List<string> KnownTwitchSkins = ["TwitchCat", "TwitchMouse", "TwitchPoggers", "TwitchDog", "TwitchDogAlt"];
+    
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.OnEnableInteraction))]
     public static void BuildingShrine_OnEnableInteraction()
     {
         if (!Plugin.UnlockTwitchItems.Value) return;
     
-        var availableTwitchTotemDecorations = DataManager.GetAvailableTwitchTotemDecorations();
-        var availableTwitchTotemSkins = DataManager.GetAvailableTwitchTotemSkins();
-    
-        var twitchSkins = new List<string>(5) {"TwitchCat", "TwitchMouse", "TwitchPoggers", "TwitchDog", "TwitchDogAlt"};
-    
-        // if (!DataManager.TwitchTotemRewardAvailable()) return;
-        foreach (var totem in availableTwitchTotemDecorations)
+        // Unlock totem decorations
+        foreach (var totem in DataManager.GetAvailableTwitchTotemDecorations())
         {
             StructuresData.CompleteResearch(totem);
             StructuresData.SetRevealed(totem);
         }
     
-        foreach (var skin in twitchSkins)
+        // Unlock hardcoded known skins
+        foreach (var skin in KnownTwitchSkins)
         {
             DataManager.SetFollowerSkinUnlocked(skin);
         }
     
-        foreach (var availableTwitchTotemSkin in availableTwitchTotemSkins)
+        // Unlock any additional Twitch skins from game data
+        foreach (var skin in DataManager.GetAvailableTwitchTotemSkins())
         {
-            DataManager.SetFollowerSkinUnlocked(availableTwitchTotemSkin);
+            DataManager.SetFollowerSkinUnlocked(skin);
         }
     }
     
@@ -36,11 +36,16 @@ internal static class TwitchItems
     [UsedImplicitly]
     public static class Drops
     {
-        private const string AuthenticateMethod = "Authenticate";
-        private const string Heretic = "Heretic";
-        private const string Cultist = "Cultist";
-        private const string Sinful = "Sinful";
-        private const string Pilgrim = "Pilgrim";
+        private const string AuthenticateMethodPrefix = "Authenticate";
+        
+        // Paid DLC authentication methods to exclude
+        private static readonly HashSet<string> PaidDlcKeywords = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Heretic",
+            "Cultist", 
+            "Sinful",
+            "Pilgrim"
+        };
 
         [UsedImplicitly]
         [HarmonyTargetMethods]
@@ -48,27 +53,12 @@ internal static class TwitchItems
         {
             foreach (var method in AccessTools.GetDeclaredMethods(typeof(GameManager)))
             {
-                if (method.Name.Contains(Sinful, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-                if (method.Name.Contains(Heretic, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-                if (method.Name.Contains(Cultist, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
+                if (!method.Name.StartsWith(AuthenticateMethodPrefix)) continue;
                 
-                if (method.Name.Contains(Pilgrim, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-                
-                if (!method.Name.StartsWith(AuthenticateMethod)) continue;
+                // Skip if it's a paid DLC authentication method
+                if (PaidDlcKeywords.Any(dlc => method.Name.Contains(dlc, StringComparison.OrdinalIgnoreCase))) continue;
 
-                Plugin.L($"[Unlock Twitch Items] Unlocking {method.Name}");
+                Plugin.L($"[Unlock Twitch Items] Patching {method.Name}");
                 yield return method;
             }
         }
@@ -77,8 +67,8 @@ internal static class TwitchItems
         [HarmonyPostfix]
         public static void Authenticate(ref bool __result)
         {
-            __result = Plugin.UnlockTwitchItems.Value;
+            if (Plugin.UnlockTwitchItems.Value)
+                __result = true;
         }
-
     }
 }

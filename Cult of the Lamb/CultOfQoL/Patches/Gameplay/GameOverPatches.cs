@@ -8,10 +8,7 @@ public static class GameOverPatches
     public static void PlayerController_Update()
     {
         if (!Plugin.DisableGameOver.Value) return;
-        DataManager.Instance.GameOverEnabled = false;
-        DataManager.Instance.GameOver = false;
-        DataManager.Instance.InGameOver = false;
-        DataManager.Instance.DisplayGameOverWarning = false;
+        DisableGameOverFlags();
     }
 
     [HarmonyPrefix]
@@ -19,9 +16,15 @@ public static class GameOverPatches
     public static void TimeManager_StartNewPhase()
     {
         if (!Plugin.DisableGameOver.Value) return;
-        DataManager.Instance.GameOverEnabled = false;
-        DataManager.Instance.GameOver = false;
-        DataManager.Instance.InGameOver = false;
-        DataManager.Instance.DisplayGameOverWarning = false;
+        DisableGameOverFlags();
+    }
+
+    private static void DisableGameOverFlags()
+    {
+        var data = DataManager.Instance;
+        data.GameOverEnabled = false;
+        data.GameOver = false;
+        data.InGameOver = false;
+        data.DisplayGameOverWarning = false;
     }
 }

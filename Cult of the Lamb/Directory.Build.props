@@ -16,6 +16,9 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <DebugType>embedded</DebugType>
+        <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
+        <Deterministic>true</Deterministic>
     </PropertyGroup>
 
     <!--Default all references to CopyLocal False.-->

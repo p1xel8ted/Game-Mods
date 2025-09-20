@@ -19,6 +19,21 @@ public static class Extensions
     }
 
 
+    public static bool IsMealWithMeat(this InventoryItem.ITEM_TYPE itemType)
+    {
+        string[] checkThese = ["meat", "fish", "mixed"];
+        var itemName = itemType.ToString().ToLower();
+        return checkThese.Any(check => itemName.Contains(check));
+    }
+    
+    public static bool IsMixedMeal(this InventoryItem.ITEM_TYPE itemType)
+    {
+        string[] checkThese = ["mixed"];
+        var itemName = itemType.ToString().ToLower();
+        return checkThese.Any(check => itemName.Contains(check));
+    }
+
+
     public static void AddRange<T>(this SortedSet<T> set, IEnumerable<T> elements)
     {
         foreach (var element in elements)

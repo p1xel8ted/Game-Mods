@@ -44,11 +44,14 @@ public static class FastCollectingPatches
     private static IEnumerator CollectBeds(Interaction_Bed bedInteraction)
     {
         CollectBedsRunning = true;
-        var beds = Interaction.interactions.OfType<Interaction_Bed>().ToList();
-        foreach (var bed in beds.Where(a => a && a.StructureBrain?.SoulCount > 0))
+        
+        // Performance optimization: Direct iteration instead of LINQ to avoid multiple enumerations
+        foreach (var interaction in Interaction.interactions)
         {
-            if (!bed || bed == bedInteraction) continue;
-            bed.StartCoroutine(bed.GiveReward());
+            if (interaction is Interaction_Bed bed && bed && bed != bedInteraction && bed.StructureBrain?.SoulCount > 0)
+            {
+                bed.StartCoroutine(bed.GiveReward());
+            }
         }
 
         yield return new WaitForSeconds(0.10f);
@@ -70,12 +73,15 @@ public static class FastCollectingPatches
     {
         CollectAllBuildingShrinesRunning = true;
         yield return new WaitForEndOfFrame();
-        var shrines = Interaction.interactions.OfType<BuildingShrinePassive>().ToList();
-        foreach (var shrine in shrines.Where(a => a.StructureBrain?.SoulCount > 0))
+        
+        // Performance optimization: Direct iteration instead of LINQ
+        foreach (var interaction in Interaction.interactions)
         {
-            if (!shrine || shrine == __instance) continue;
-            shrine.OnInteract(state);
-            yield return new WaitForSeconds(0.10f);
+            if (interaction is BuildingShrinePassive shrine && shrine && shrine != __instance && shrine.StructureBrain?.SoulCount > 0)
+            {
+                shrine.OnInteract(state);
+                yield return new WaitForSeconds(0.10f);
+            }
         }
 
         CollectAllBuildingShrinesRunning = false;
@@ -96,12 +102,15 @@ public static class FastCollectingPatches
     {
         CollectAllOuthouseRunning = true;
         yield return new WaitForEndOfFrame();
-        var outhouses = Interaction.interactions.OfType<Interaction_Outhouse>().ToList();
-        foreach (var outhouse in outhouses.Where(a => a.StructureBrain?.GetPoopCount() > 0))
+        
+        // Performance optimization: Direct iteration instead of LINQ
+        foreach (var interaction in Interaction.interactions)
         {
-            if (!outhouse || outhouse == __instance) continue;
-            outhouse.OnInteract(state);
-            yield return new WaitForSeconds(0.10f);
+            if (interaction is Interaction_Outhouse outhouse && outhouse && outhouse != __instance && outhouse.StructureBrain?.GetPoopCount() > 0)
+            {
+                outhouse.OnInteract(state);
+                yield return new WaitForSeconds(0.10f);
+            }
         }
 
         CollectAllOuthouseRunning = false;
@@ -122,12 +131,15 @@ public static class FastCollectingPatches
     {
         CompostBinDeadBodyRunning = true;
         yield return new WaitForEndOfFrame();
-        var composts = Interaction.interactions.OfType<Interaction_CompostBinDeadBody>().ToList();
-        foreach (var cbd in composts.Where(a => a.StructureBrain?.PoopCount > 0))
+        
+        // Performance optimization: Direct iteration instead of LINQ
+        foreach (var interaction in Interaction.interactions)
         {
-            if (!cbd || cbd == __instance) continue;
-            cbd.OnInteract(state);
-            yield return new WaitForSeconds(0.10f);
+            if (interaction is Interaction_CompostBinDeadBody cbd && cbd && cbd != __instance && cbd.StructureBrain?.PoopCount > 0)
+            {
+                cbd.OnInteract(state);
+                yield return new WaitForSeconds(0.10f);
+            }
         }
 
         CompostBinDeadBodyRunning = false;
@@ -147,10 +159,14 @@ public static class FastCollectingPatches
     private static IEnumerator CollectAllHarvestTotems(HarvestTotem totem, StateMachine state)
     {
         CollectAllHarvestTotemsRunning = true;
-        foreach (var t in HarvestTotem.HarvestTotems.Where(a => a != null && a.StructureBrain?.SoulCount > 0))
+        
+        // Performance optimization: Direct iteration instead of LINQ
+        foreach (var t in HarvestTotem.HarvestTotems)
         {
-            if (!t || t == totem) continue;
-            t.OnInteract(state);
+            if (t && t != totem && t.StructureBrain?.SoulCount > 0)
+            {
+                t.OnInteract(state);
+            }
         }
 
         yield return new WaitForSeconds(0.10f);
@@ -172,12 +188,15 @@ public static class FastCollectingPatches
     {
         CollectAllShrinesRunning = true;
         yield return new WaitForEndOfFrame();
-        var shrines = Interaction.interactions.OfType<Interaction_OfferingShrine>().ToList();
-        foreach (var shrine in shrines.Where(a => a.StructureInfo?.Inventory?.Count > 0))
+        
+        // Performance optimization: Direct iteration instead of LINQ
+        foreach (var interaction in Interaction.interactions)
         {
-            if (!shrine || shrine == __instance) continue;
-            yield return new WaitForSeconds(0.10f);
-            shrine.OnInteract(state);
+            if (interaction is Interaction_OfferingShrine shrine && shrine && shrine != __instance && shrine.StructureInfo?.Inventory?.Count > 0)
+            {
+                yield return new WaitForSeconds(0.10f);
+                shrine.OnInteract(state);
+            }
         }
 
         CollectAllShrinesRunning = false;
@@ -212,11 +231,7 @@ public static class FastCollectingPatches
             }
 
             var range = 5f;
-
-            if (Plugin.IncreaseAutoCollectRange.Value)
-            {
-                range = 10f;
-            }
+            
 
             if (!Mathf.Approximately(Plugin.AutoInteractRangeMulti.Value, 1.0f))
             {
@@ -267,12 +282,7 @@ public static class FastCollectingPatches
         if (Plugin.EnableAutoCollect.Value && !(InputManager.Gameplay.GetInteractButtonHeld() || InputManager.Gameplay.GetInteractButtonUp()))
         {
             var range = 5f;
-
-            if (Plugin.IncreaseAutoCollectRange.Value)
-            {
-                range = 10f;
-            }
-
+            
             if (!Mathf.Approximately(Plugin.AutoInteractRangeMulti.Value, 1.0f))
             {
                 range *= Plugin.AutoInteractRangeMulti.Value;

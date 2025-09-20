@@ -19,7 +19,6 @@ public static class Rituals
 
     public static int GetBossLimit()
     {
-        Plugin.Log.LogWarning($"[DEBUG] GetBossLimit called: returning {Plugin.SinBossLimit.Value}");
         return Plugin.SinBossLimit.Value;
     }
 
@@ -30,7 +29,7 @@ public static class Rituals
         if (Plugin.SinBossLimit.Value == 3) return;
         
         var bossCount = DataManager.Instance.BossesCompleted.Count;
-        var bossLimit = Rituals.GetBossLimit();
+        var bossLimit = GetBossLimit();
         var pleasureRevealed = DataManager.Instance.PleasureRevealed;
         var followerCount = Ritual.FollowerToAttendSermon.Count;
         var firePitUnlocked = UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FirePit);
@@ -39,7 +38,7 @@ public static class Rituals
         var noFollowers = followerCount <= 0;
         var firePitNotUnlocked = !firePitUnlocked;
 
-        Plugin.Log.LogInfo(
+        Plugin.L(
             $"[Sin Unlock] OnboardSin Check:\n" +
             $"  - BossesCompleted.Count = {bossCount} (needs >= {bossLimit})   => {(notEnoughBosses ? "FAIL (Not enough bosses)" : "OK")}\n" +
             $"  - PleasureRevealed = {pleasureRevealed}                      => {(pleasureRevealed ? "FAIL (Already revealed)" : "OK")}\n" +
@@ -49,11 +48,11 @@ public static class Rituals
 
         if (notEnoughBosses || pleasureRevealed || noFollowers || firePitNotUnlocked)
         {
-            Plugin.Log.LogWarning("[Sin Unlock] => Skipping onboarding ritual (one or more requirements not met)");
+            Plugin.L("[Sin Unlock] => Skipping onboarding ritual (one or more requirements not met)");
         }
         else
         {
-            Plugin.Log.LogInfo("[Sin Unlock] => Proceeding to onboarding ritual (all requirements met)");
+            Plugin.L("[Sin Unlock] => Proceeding to onboarding ritual (all requirements met)");
         }
     }
 

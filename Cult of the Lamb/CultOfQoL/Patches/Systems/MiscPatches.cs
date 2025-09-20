@@ -3,13 +3,23 @@ namespace CultOfQoL.Patches.Systems;
 [HarmonyPatch]
 public class MiscPatches
 {
+    // Cached for performance
+    private static readonly HashSet<string> SpamMessages = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Skeleton AnimationState",
+        "called during processing",
+        "Steam informs us the controller is a",
+        "connected"
+        
+    };
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(Interaction_HarvestMeat), nameof(Interaction_HarvestMeat.Update))]
     public static IEnumerable<CodeInstruction> Interaction_HarvestMeat_Update(IEnumerable<CodeInstruction> instructions)
     {
         var debugLogMethod = AccessTools.Method(typeof(Debug), nameof(Debug.Log), [typeof(object)]);
         var codes = instructions.ToList();
-        for (var i = 0; i < codes.Count; i++)
+        
+        for (var i = 2; i < codes.Count; i++) // Start at 2 to avoid index out of bounds
         {
             if (codes[i].Calls(debugLogMethod) && codes[i - 1].opcode == OpCodes.Box)
             {
@@ -19,27 +29,25 @@ public class MiscPatches
             }
         }
         
-        return codes.AsEnumerable();
+        return codes;
     }
 
 
     //for some reason, args is being passed null, which eventually makes its way to _extraText and causes a null reference exception
     //having this here stops the null
+    // Prevents null reference exception when _extraText is null
     [HarmonyPrefix]
     [HarmonyPatch(typeof(NotificationFaith), nameof(NotificationFaith.Localize))]
     public static void NotificationFaith_Localize(ref NotificationFaith __instance)
     {
-        if (__instance._extraText is not {Length: > 0})
-        {
-            __instance._extraText ??= [];
-        }
+        __instance._extraText ??= [];
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Debugger), nameof(Debugger.LogInvalidTween))]
     public static bool Debugger_LogInvalidTween(Tween t)
     {
-        return false;
+        return false; // Suppress invalid tween logging
     }
 
     [HarmonyPrefix]
@@ -49,16 +57,15 @@ public class MiscPatches
     [HarmonyPatch(typeof(Debug), nameof(Debug.Log), typeof(object))]
     public static bool Debug_Log(object message)
     {
-        //print method and declaring type that called Debug.Log or Debug.LogWarning
-        // Plugin.L($"Declaring Type: {new StackTrace().GetFrame(2).GetMethod().DeclaringType}, Method: {new StackTrace().GetFrame(2).GetMethod().Name} ");
-        //
+       
         if (message is not string s) return true;
-        if (s.Contains("Skeleton AnimationState")) return false;
-        if (s.Contains("called during processing")) return false;
-        if (s.Contains("Steam informs us the controller is a")) return false;
-        if (float.TryParse(s, out _) || int.TryParse(s, out _)) return false;
-        if (s.Contains("connected")) return false;
-        return false;
+        
+        // Block numeric-only logs
+        if (s.All(c => char.IsDigit(c) || c == '.' || c == '-'))
+            return false;
+        
+        // Block known spam messages
+        return !SpamMessages.Any(spam => s.Contains(spam, StringComparison.OrdinalIgnoreCase));
     }
 
 }

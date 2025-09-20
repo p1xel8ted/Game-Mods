@@ -322,6 +322,11 @@ public static class Helpers
 
         return tasks.Values.FirstOrDefault() as FollowerTask_Farm;
     }
+    
+    public static bool IsMultiplierActive(float value)
+    {
+        return !Mathf.Approximately(value, 1.0f);
+    }
 
     private static FollowerTask_Pray GetPrayTask()
     {

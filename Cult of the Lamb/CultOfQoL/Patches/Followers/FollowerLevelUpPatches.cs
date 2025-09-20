@@ -3,32 +3,7 @@
 [Harmony]
 public static class FollowerLevelUpPatches
 {
-
-    // [HarmonyPrefix]
-    // [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine), MethodType.Enumerator)]
-    // public static bool interaction_FollowerInteraction_LevelUpRoutine(interaction_FollowerInteraction __instance)
-    // {
-    //     if (!__instance)
-    //     {
-    //       GameManager.GetInstance().OnConversationEnd();
-    //       Plugin.Log.LogError("interaction_FollowerInteraction.LevelUpRoutine:MoveNext - __instance is null!");
-    //       return false;
-    //     }
-    //     if(!__instance.follower)
-    //     {
-    //         GameManager.GetInstance().OnConversationEnd();
-    //         Plugin.Log.LogError("interaction_FollowerInteraction.LevelUpRoutine:MoveNext - __instance.follower is null!");
-    //         return false;
-    //     }
-    //     if (!__instance._playerFarming)
-    //     {
-    //         GameManager.GetInstance().OnConversationEnd();
-    //         Plugin.Log.LogError("interaction_FollowerInteraction.LevelUpRoutine:MoveNext - __instance._playerFarming is null!");
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
+    
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.CanLevelUp))]
     public static void FollowerBrain_CanLevelUp(ref FollowerBrain __instance, ref bool __result)

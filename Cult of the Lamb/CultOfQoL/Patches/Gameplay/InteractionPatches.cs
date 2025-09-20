@@ -1,108 +1,25 @@
 ﻿namespace CultOfQoL.Patches.Gameplay;
 
-[Harmony]
+[HarmonyPatch]
 [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
 public static class InteractionPatches
 {
     private static GameManager GI => GameManager.GetInstance();
 
-
+    // Prevents follower interaction when menus are open
     [HarmonyPrefix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract), typeof(StateMachine))]
     public static bool Interaction_Follower_OnInteract(ref interaction_FollowerInteraction __instance)
     {
-        if (UIMenuBase.ActiveMenus.Count > 0 || GameManager.InMenu)
-        {
-            Plugin.L("Not interacting with follower because a menu//conversation is open.");
-            foreach (var menu in UIMenuBase.ActiveMenus)
-            {
-                Plugin.L($"Menu: {menu}");
-            }
-            return false;
-        }
+        if (UIMenuBase.ActiveMenus.Count == 0 && !GameManager.InMenu) return true;
         
-        return true;
-    }
-    
-    // [HarmonyPostfix]
-    // [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
-    // public static void Interaction_Follower_OnConversationEnd(ref interaction_FollowerInteraction __instance)
-    // {
-    //     Plugin.Log.LogWarning("LevelUpRoutine");
-    //     if (__instance.follower.Brain.CanLevelUp() && Plugin.MassLevelUp.Value)
-    //     {
-    //         GI.StartCoroutine(LevelUpAllFollowers());
-    //     }
-    // }
-
-    // // ReSharper disable Unity.PerformanceAnalysis
-    // private static IEnumerator LevelUpAllFollowers()
-    // {
-    //     yield return new WaitForEndOfFrame();
-    //     foreach (var follower in Follower.Followers.Where(follower => follower && follower.Brain != null && follower.Brain.CanLevelUp()))
-    //     {
-    //         if (!FollowerPatches.IsFollowerAvailable(follower.Brain) || FollowerPatches.IsFollowerImprisoned(follower.Brain)) continue;
-    //         yield return new WaitForSeconds(0.15f);
-    //         try
-    //         {
-    //             var interaction = Resources.FindObjectsOfTypeAll<interaction_FollowerInteraction>().First();
-    //             Plugin.L($"Attempting to level up follower {follower.name}");
-    //             GI.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, true, false));
-    //         }
-    //         catch (Exception e)
-    //         {
-    //             Plugin.Log.LogError($"Error leveling up follower: {e.Message}");
-    //         }
-    //     }
-    // }
-
-    // private static IEnumerator PickAllPlants()
-    // {
-    //     yield return new WaitForEndOfFrame();
-    //     foreach (var plot in FarmPlot.FarmPlots.Where(p => p.StructureBrain is {IsFullyGrown: true}))
-    //     {
-    //         yield return new WaitForSeconds(0.10f);
-    //         Plugin.Log.LogWarning($"Picking crop from {plot.name}");
-    //         plot.Harvested();
-    //     }
-    // }
-
-    private static IEnumerator WaterAllPlants()
-    {
-        yield return new WaitForEndOfFrame();
-        foreach (var plot in FarmPlot.FarmPlots.Where(p => p.StructureBrain != null && p.StructureBrain.CanWater()))
+        Plugin.L($"Blocking follower interaction - {UIMenuBase.ActiveMenus.Count} menu(s) open or InMenu={GameManager.InMenu}");
+        foreach (var menu in UIMenuBase.ActiveMenus)
         {
-            yield return new WaitForSeconds(0.10f);
-            plot.StructureInfo.Watered = true;
-            plot.StructureInfo.WateredCount = 0;
-            plot.WateringTime = 0.95f;
-            plot.UpdateWatered();
-            plot.UpdateCropImage();
+            Plugin.L($"  Active Menu: {menu}");
         }
+        return false;
     }
-    
-    // [HarmonyReversePatch]
-    // [HarmonyPatch(typeof(Interaction), nameof(Interaction.OnInteract), typeof(StateMachine))]
-    // [MethodImpl(MethodImplOptions.NoInlining)]
-    // public static void BaseOnInteract(Interaction_Berries instance, StateMachine state)
-    // {
-    //     // This will be replaced with the original method's body at runtime
-    // }
-    //
-    // //Interaction_Berries : Interaction
-    // [HarmonyPrefix]
-    // [HarmonyPatch(typeof(Interaction_Berries), nameof(Interaction_Berries.OnInteract), typeof(StateMachine))]
-    // public static void Interaction_Berries_OnInteract(ref Interaction_Berries __instance, StateMachine state)
-    // {
-    //     foreach (var berry in Interaction_Berries.Berries.Where(berry => berry.StructureBrain.IsCrop))
-    //     {
-    //         Plugin.Log.LogWarning($"Picking berries from {berry.name}");
-    //         BaseOnInteract(__instance, state);
-    //       
-    //         berry.activatingPlayers.Add(berry._playerFarming);
-    //         GI.StartCoroutine(berry.PickBerries(berry._playerFarming));
-    //     }
-    // }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(FarmPlot), nameof(FarmPlot.OnInteract), typeof(StateMachine))]
@@ -119,20 +36,46 @@ public static class InteractionPatches
     public static void FarmPlot_AddFertiliser(ref FarmPlot __instance, InventoryItem.ITEM_TYPE chosenItem)
     {
         if (!Plugin.MassFertilize.Value) return;
-        GI.StartCoroutine(AddFertiliser(chosenItem));
+        GI.StartCoroutine(FertilizeAllPlots(chosenItem));
     }
 
-    private static IEnumerator AddFertiliser(InventoryItem.ITEM_TYPE chosenItem)
+    private static IEnumerator WaterAllPlants()
     {
         yield return new WaitForEndOfFrame();
-        foreach (var plot in FarmPlot.FarmPlots.Where(p => p.StructureBrain != null && p.StructureBrain.CanFertilize()))
+        var waterablePlots = FarmPlot.FarmPlots.Where(p => p.StructureBrain?.CanWater() == true).ToList();
+        
+        Plugin.L($"Watering {waterablePlots.Count} plots");
+        foreach (var plot in waterablePlots)
         {
+            plot.StructureInfo.Watered = true;
+            plot.StructureInfo.WateredCount = 0;
+            plot.WateringTime = 0.95f;
+            plot.UpdateWatered();
+            plot.UpdateCropImage();
             yield return new WaitForSeconds(0.10f);
-            plot.StructureBrain.AddFertilizer(chosenItem);
-            ResourceCustomTarget.Create(plot.gameObject, PlayerFarming.Instance.transform.position, chosenItem, plot.AddFertilizer);
-            Inventory.ChangeItemQuantity((int) chosenItem, -1);
         }
     }
 
-
+    private static IEnumerator FertilizeAllPlots(InventoryItem.ITEM_TYPE chosenItem)
+    {
+        yield return new WaitForEndOfFrame();
+        var fertilizablePlots = FarmPlot.FarmPlots.Where(p => p.StructureBrain?.CanFertilize() == true).ToList();
+        var itemsNeeded = fertilizablePlots.Count;
+        var itemsAvailable = Inventory.GetItemQuantity((int)chosenItem);
+        
+        if (itemsNeeded > itemsAvailable)
+        {
+            Plugin.L($"Warning: Need {itemsNeeded} fertilizer but only have {itemsAvailable}");
+            fertilizablePlots = fertilizablePlots.Take(itemsAvailable).ToList();
+        }
+        
+        Plugin.L($"Fertilizing {fertilizablePlots.Count} plots with {chosenItem}");
+        foreach (var plot in fertilizablePlots)
+        {
+            plot.StructureBrain.AddFertilizer(chosenItem);
+            ResourceCustomTarget.Create(plot.gameObject, PlayerFarming.Instance.transform.position, chosenItem, plot.AddFertilizer);
+            Inventory.ChangeItemQuantity((int)chosenItem, -1);
+            yield return new WaitForSeconds(0.10f);
+        }
+    }
 }

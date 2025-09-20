@@ -35,7 +35,7 @@ public partial class Plugin
     private static ConfigEntry<bool> MainMenuGlitch { get; set; }
 
     internal static ConfigEntry<bool> ReverseGoldenFleeceDamageChange { get; private set; }
-    internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate { get; private set; }
+   // internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate { get; private set; }
     internal static ConfigEntry<bool> AdjustRefineryRequirements { get; private set; }
 
     internal static ConfigEntry<bool> NoNegativeTraits { get; private set; }
@@ -53,9 +53,9 @@ public partial class Plugin
     internal static ConfigEntry<bool> IntimidateOldFollowers { get; private set; }
     internal static ConfigEntry<bool> EnableGameSpeedManipulation { get; private set; }
 
-    internal static ConfigEntry<bool> DoubleSoulCapacity { get; private set; }
+  //  internal static ConfigEntry<bool> DoubleSoulCapacity { get; private set; }
     internal static ConfigEntry<bool> ShortenGameSpeedIncrements { get; private set; }
-    internal static ConfigEntry<bool> SlowDownTime { get; private set; }
+   // internal static ConfigEntry<bool> SlowDownTime { get; private set; }
     internal static ConfigEntry<float> SlowDownTimeMultiplier { get; private set; }
    // internal static ConfigEntry<bool> DoubleLifespanInstead { get; private set; }
     internal static ConfigEntry<bool> DisableGameOver { get; private set; }
@@ -69,7 +69,7 @@ public partial class Plugin
 
     internal static ConfigEntry<bool> EnableAutoCollect { get; private set; }
     internal static ConfigEntry<int> TriggerAmount { get; private set; }
-    internal static ConfigEntry<bool> IncreaseAutoCollectRange { get; private set; }
+   // internal static ConfigEntry<bool> IncreaseAutoCollectRange { get; private set; }
   //  internal static ConfigEntry<bool> UseCustomAutoInteractRange { get; private set; }
     internal static ConfigEntry<float> AutoInteractRangeMulti { get; private set; }
     internal static ConfigEntry<bool> AutoCollectFromFarmStationChests { get; private set; }
@@ -89,8 +89,8 @@ public partial class Plugin
     internal static ConfigEntry<bool> ShowPhaseNotifications { get; private set; }
     internal static ConfigEntry<bool> ShowWeatherChangeNotifications { get; private set; }
 
-    internal static ConfigEntry<float> CustomSoulCapacityMulti { get; private set; }
-    internal static ConfigEntry<float> CustomSiloCapacityMulti { get; private set; }
+    internal static ConfigEntry<float> SoulCapacityMulti { get; private set; }
+    internal static ConfigEntry<float> SiloCapacityMulti { get; private set; }
 
   //  internal static ConfigEntry<bool> DoubleSiloCapacity { get; private set; }
    // internal static ConfigEntry<bool> UseCustomSoulCapacity { get; private set; }
@@ -100,7 +100,7 @@ public partial class Plugin
   //  internal static ConfigEntry<bool> EnableBaseDamageMultiplier { get; private set; }
     internal static ConfigEntry<float> BaseDamageMultiplier { get; private set; }
 
-    internal static ConfigEntry<float> CustomDamageMulti { get; private set; }
+    internal static ConfigEntry<float> FleeceDamageMulti { get; private set; }
     internal static ConfigEntry<bool> DisableRunSpeedInDungeons { get; private set; }
     internal static ConfigEntry<bool> DisableRunSpeedInCombat { get; private set; }
 
@@ -167,4 +167,12 @@ public partial class Plugin
     public static ConfigEntry<int> MaxRangeLifeExpectancy { get; private set; }
     
     public static ConfigEntry<float> RitualCooldownTime { get; private set; }
+    public static ConfigEntry<bool> AddSpiderWebsToOfferings { get; set; }
+
+    public static ConfigEntry<bool> AddCrystalShardsToOfferings { get; set; }
+    public static ConfigEntry<bool> CookedMeatMealsContainBone { get; set; }
+    public static ConfigEntry<bool> ProduceSpiderWebsFromLumber { get; set; }
+    public static ConfigEntry<int> SpiderWebsPerLogs { get; set; }
+    public static ConfigEntry<bool> ProduceCrystalShardsFromStone { get; set; }
+    public static ConfigEntry<int> CrystalShardsPerStone { get; set; }
 }

@@ -20,7 +20,7 @@ public static class GameSpeedManipulationPatches
     [HarmonyPatch(typeof(TimeManager), nameof(TimeManager.Simulate), typeof(float), typeof(bool))]
     public static void TimeManager_Simulate(ref float deltaGameTime, ref bool skippingTime)
     {
-        if (!Plugin.SlowDownTime.Value || skippingTime) return;
+        if (Mathf.Approximately(Plugin.SlowDownTimeMultiplier.Value, 1.0f) || skippingTime) return;
 
         if (float.TryParse(Plugin.SlowDownTimeMultiplier.Value.ToString(CultureInfo.InvariantCulture), out var value) && value > 0)
         {
@@ -74,7 +74,7 @@ public static class GameSpeedManipulationPatches
     {
         if (!__instance) return;
 
-        if (Plugin.SlowDownTime.Value && !_timeMessageShown)
+        if (!Mathf.Approximately(Plugin.SlowDownTimeMultiplier.Value, 1.0f) && !_timeMessageShown)
         {
             _timeMessageShown = true;
             NotificationCentre.Instance.PlayGenericNotification($"Slow down time enabled at {Mathf.Abs(Plugin.SlowDownTimeMultiplier.Value)}x.");

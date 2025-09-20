@@ -1,26 +1,41 @@
 ﻿namespace CultOfQoL.Patches.UI;
 
-[Harmony]
+[HarmonyPatch]
 public static class PostProcessing
 {
-    private static TranslucentImage _vignetteImage;
+    private static readonly HashSet<TranslucentImage> VignetteImages = [];
     
     [HarmonyPostfix]
     [HarmonyPatch(typeof(TranslucentImage), nameof(TranslucentImage.OnEnable))]
     private static void TranslucentImage_OnEnable(TranslucentImage __instance)
     {
-        if (__instance.activeSprite && __instance.activeSprite.name.Contains("vignette"))
-        {
-            _vignetteImage = __instance;
-            ToggleVignette();
-        }
+        if (!IsVignetteImage(__instance)) return;
+        
+        VignetteImages.Add(__instance); // HashSet handles duplicates automatically
+        __instance.enabled = Plugin.VignetteEffect.Value;
+    }
+    
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(TranslucentImage), nameof(TranslucentImage.OnDisable))]
+    private static void TranslucentImage_OnDisable(TranslucentImage __instance)
+    {
+        VignetteImages.Remove(__instance);
     }
     
     internal static void ToggleVignette()
     {
-        if (_vignetteImage)
+        // Clean up any destroyed objects and toggle remaining
+        VignetteImages.RemoveWhere(img => !img);
+        
+        foreach (var vignetteImage in VignetteImages)
         {
-            _vignetteImage.enabled = Plugin.VignetteEffect.Value;
+            vignetteImage.enabled = Plugin.VignetteEffect.Value;
         }
+    }
+    
+    private static bool IsVignetteImage(TranslucentImage image)
+    {
+        return image?.activeSprite && 
+               image.activeSprite.name.Contains("vignette", StringComparison.OrdinalIgnoreCase);
     }
 }

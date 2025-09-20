@@ -1,9 +1,10 @@
 ﻿namespace CultOfQoL.Patches.Gameplay;
 
-[Harmony]
+[HarmonyPatch]
 public static class PickUps
 {
     private static readonly Dictionary<int, (float OriginalRange, bool OriginalMagnet)> OriginalSettings = [];
+    private const float DefaultMagnetRange = 7f;
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PickUp), nameof(PickUp.OnEnable))]
@@ -12,66 +13,78 @@ public static class PickUps
         UpdatePickUp(__instance);
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PickUp), nameof(PickUp.OnDisable))]
+    public static void PickUp_OnDisable(PickUp __instance)
+    {
+        // Clean up dictionary entry when pickup is disabled/destroyed
+        OriginalSettings.Remove(__instance.GetInstanceID());
+    }
+
     internal static void UpdateAllPickUps()
     {
-        var pickupCount = GetAllPickUps().Count();
-        Plugin.L($"Updating {pickupCount} pick ups");
-        foreach (var pickUp in GetAllPickUps())
+        var pickups = PickUp.PickUps.ToList(); // Use the game's static list
+        Plugin.L($"Updating {pickups.Count} pick ups");
+        foreach (var pickUp in pickups)
         {
             UpdatePickUp(pickUp);
         }
     }
 
-    private static IEnumerable<PickUp> GetAllPickUps()
+    internal static void RestoreAllPickUps()
     {
-        //return PickUp.PickUps;
-        return Resources.FindObjectsOfTypeAll<PickUp>();
+        var pickups = PickUp.PickUps.ToList();
+        Plugin.L($"Restoring {pickups.Count} pick ups");
+        foreach (var pickUp in pickups)
+        {
+            RestorePickUp(pickUp);
+        }
     }
 
     private static void UpdatePickUp(PickUp p)
     {
-        if (!p.CanBePickedUp) return;
+        if (!p || !p.CanBePickedUp) return;
 
         var id = p.GetInstanceID();
+        
+        // Store original settings only once
         if (!OriginalSettings.ContainsKey(id))
         {
             OriginalSettings[id] = (p.MagnetDistance, p.MagnetToPlayer);
         }
 
-        var (originalRange, _) = OriginalSettings[id];
+        var (originalRange, originalMagnet) = OriginalSettings[id];
 
-
-        if (!Mathf.Approximately(Plugin.MagnetRangeMultiplier.Value, 1.0f))
+        // Apply range multiplier
+        if (Helpers.IsMultiplierActive(Plugin.MagnetRangeMultiplier.Value))
         {
-            if (originalRange == 0)
-            {
-                originalRange = 7;
-            }  
-            p.MagnetDistance = originalRange * Plugin.MagnetRangeMultiplier.Value;
+            var baseRange = originalRange > 0 ? originalRange : DefaultMagnetRange;
+            p.MagnetDistance = baseRange * Plugin.MagnetRangeMultiplier.Value;
+        }
+        else
+        {
+            p.MagnetDistance = originalRange;
         }
 
-        if (Plugin.AllLootMagnets.Value)
+        // Apply magnet to all items
+        p.MagnetToPlayer = Plugin.AllLootMagnets.Value || originalMagnet;
+    }
+
+    private static void RestorePickUp(PickUp p)
+    {
+        if (!p || !p.CanBePickedUp) return;
+
+        var id = p.GetInstanceID();
+        if (OriginalSettings.TryGetValue(id, out var settings))
         {
-            p.MagnetToPlayer = true;
+            p.MagnetDistance = settings.OriginalRange;
+            p.MagnetToPlayer = settings.OriginalMagnet;
         }
     }
-    
-    public static void RestoreMagnets()
-    {
-        foreach (var p in GetAllPickUps())
-        {
-            if (!p.CanBePickedUp) continue;
 
-            var id = p.GetInstanceID();
-            if (OriginalSettings.TryGetValue(id, out var settings))
-            {
-                Plugin.L($"Restoring magnet to player to {settings.OriginalMagnet} for {p.name}");
-                p.MagnetToPlayer = settings.OriginalMagnet;
-            }
-            else
-            {
-                Plugin.L($"Could not find original magnet settings for {p.name}");
-            }
-        }
+    // Call this when exiting to menu or when mod is disabled
+    public static void ClearCache()
+    {
+        OriginalSettings.Clear();
     }
 }

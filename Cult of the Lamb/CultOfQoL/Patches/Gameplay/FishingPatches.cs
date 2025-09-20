@@ -3,29 +3,47 @@
 [HarmonyPatch]
 public static class FishingPatches
 {
+    private static readonly FieldInfo ReelingCanvasGroupField = AccessTools.Field(typeof(UIFishingOverlayController), nameof(UIFishingOverlayController.reelingCanvasGroup));
+    
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(UIFishingOverlayController), nameof(UIFishingOverlayController.SetState))]
-    public static IEnumerable<CodeInstruction> TranspilerOne(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
+    public static IEnumerable<CodeInstruction> UIFishingOverlayController_SetState_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
     {
-        if (Plugin.EasyFishing is {Value: false}) return instructions;
+        
+        var originalCode = instructions.ToList();
+        var modifiedCode = new List<CodeInstruction>(originalCode);
+        
+        if (!Plugin.EasyFishing.Value) return originalCode;
 
-        var codes = new List<CodeInstruction>(instructions);
-        for (var i = 0; i < codes.Count; i++)
+        try
         {
-            if (!codes[i].LoadsField(AccessTools.Field(typeof(UIFishingOverlayController), nameof(UIFishingOverlayController.reelingCanvasGroup)))) continue;
-            if (codes[i + 2].opcode == OpCodes.Callvirt) continue;
-           Plugin.L($"Found {nameof(UIFishingOverlayController.reelingCanvasGroup)} at {i}");
-            codes[i + 1].operand = 0f;
-            codes[i + 2].operand = 0f;
+            for (var i = 0; i < modifiedCode.Count - 2; i++)
+            {
+
+                if (modifiedCode[i].LoadsField(ReelingCanvasGroupField) && modifiedCode[i + 2].opcode != OpCodes.Callvirt)
+                {
+                    modifiedCode[i + 1].operand = 0f;
+                    modifiedCode[i + 2].operand = 0f;
+                    
+                    Plugin.Log.LogInfo($"Patched {nameof(UIFishingOverlayController.reelingCanvasGroup)} at index {i}");   
+                }
+            }
+            
+            return modifiedCode.AsEnumerable();
         }
-        return codes.AsEnumerable();
+        catch (Exception ex)
+        {
+            Plugin.Log.LogError($"[Transpiler] Error in FollowerInfo.NewCharacter transpiler: {ex}");
+            return originalCode;
+        }
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(UIFishingOverlayController), nameof(UIFishingOverlayController.IsNeedleWithinSection))]
     public static void UIFishingOverlayController_IsNeedleWithinSection(ref bool __result)
     {
-        if (Plugin.EasyFishing is {Value: false}) return;
-        __result = true;
+        if (!Plugin.EasyFishing.Value) return;
+        
+        __result = true; 
     }
 }
