@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.Gameplay;
 
-[HarmonyPatch]
+[Harmony]
 public static class FishingPatches
 {
     private static readonly FieldInfo ReelingCanvasGroupField = AccessTools.Field(typeof(UIFishingOverlayController), nameof(UIFishingOverlayController.reelingCanvasGroup));

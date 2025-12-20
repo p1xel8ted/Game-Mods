@@ -1,6 +1,6 @@
 namespace CultOfQoL.Patches.Gameplay;
 
-[HarmonyPatch]
+[Harmony]
 public static class GameOverPatches
 {
     [HarmonyPrefix]

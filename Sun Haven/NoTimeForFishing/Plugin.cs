@@ -8,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.notimeforfishing";
     private const string PluginName = "No Time For Fishing!";
-    private const string PluginVersion = "0.1.1";
+    private const string PluginVersion = "0.1.2";
 
     public static ConfigEntry<bool> DisableCaughtFishWindow;
     public static ConfigEntry<bool> SkipFishingMiniGame;

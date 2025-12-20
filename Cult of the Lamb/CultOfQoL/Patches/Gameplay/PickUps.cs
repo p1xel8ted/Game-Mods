@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.Gameplay;
 
-[HarmonyPatch]
+[Harmony]
 public static class PickUps
 {
     private static readonly Dictionary<int, (float OriginalRange, bool OriginalMagnet)> OriginalSettings = [];

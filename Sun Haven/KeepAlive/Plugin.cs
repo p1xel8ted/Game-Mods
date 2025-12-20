@@ -7,7 +7,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.keepalive";
     private const string PluginName = "Keep Alive";
-    private const string PluginVersion = "0.1.1";
+    private const string PluginVersion = "0.1.2";
     
     private static ManualLogSource Log { get; set; }
 

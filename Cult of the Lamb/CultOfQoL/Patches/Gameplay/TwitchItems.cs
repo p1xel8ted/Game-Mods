@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.Gameplay;
 
-[HarmonyPatch]
+[Harmony]
 internal static class TwitchItems
 {
     // Centralized list of known Twitch skins

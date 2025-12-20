@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.UI;
 
-[HarmonyPatch]
+[Harmony]
 public static class MenuCleanupPatches
 {
     private static bool ReturningToMenu { get; set; }

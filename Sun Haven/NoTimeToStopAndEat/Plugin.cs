@@ -8,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.notimetoeat";
     private const string PluginName = "No Time To Stop & Eat!";
-    private const string PluginVersion = "0.1.6";
+    private const string PluginVersion = "0.1.7";
     
     internal static ConfigEntry<bool> HideFoodItemWhenEating { get; private set; }
 

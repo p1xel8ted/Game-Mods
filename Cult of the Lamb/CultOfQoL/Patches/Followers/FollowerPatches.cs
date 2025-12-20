@@ -2,7 +2,7 @@
 
 namespace CultOfQoL.Patches.Followers;
 
-[HarmonyPatch]
+[Harmony]
 public static class FollowerPatches
 {
     public static int GetMinLifeExpectancy()

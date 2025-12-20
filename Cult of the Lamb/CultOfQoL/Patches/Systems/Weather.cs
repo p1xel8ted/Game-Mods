@@ -2,7 +2,7 @@ using CultOfQoL.Core;
 
 namespace CultOfQoL.Patches.Systems;
 
-[HarmonyPatch]
+[Harmony]
 public static class Weather
 {
     private static WeatherSystemController WeatherSystemControllerInstance => WeatherSystemController.Instance;

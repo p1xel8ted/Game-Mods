@@ -8,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.museumsellpriceredux";
     private const string PluginName = "Museum Sell Price Redux";
-    private const string PluginVersion = "0.1.6";
+    private const string PluginVersion = "0.1.7";
 
     internal static ConfigEntry<bool> Enabled { get; private set; }
     private static ConfigEntry<bool> Debug { get; set; }

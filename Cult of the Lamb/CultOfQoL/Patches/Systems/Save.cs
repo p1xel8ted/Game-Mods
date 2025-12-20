@@ -1,6 +1,6 @@
 namespace CultOfQoL.Patches.Systems;
 
-[HarmonyPatch]
+[Harmony]
 public static class Save
 {
     private const string SaveAndQuitTitle = "Save & Quit";

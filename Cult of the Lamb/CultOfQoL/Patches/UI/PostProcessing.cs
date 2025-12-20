@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.UI;
 
-[HarmonyPatch]
+[Harmony]
 public static class PostProcessing
 {
     private static readonly HashSet<TranslucentImage> VignetteImages = [];

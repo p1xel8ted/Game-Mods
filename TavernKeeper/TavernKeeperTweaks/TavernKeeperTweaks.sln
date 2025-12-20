@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TavernKeeperTweaks", "TavernKeeperTweaks\TavernKeeperTweaks.csproj", "{05C91C1D-5B80-4BA0-9760-046D43B32148}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05C91C1D-5B80-4BA0-9760-046D43B32148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05C91C1D-5B80-4BA0-9760-046D43B32148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05C91C1D-5B80-4BA0-9760-046D43B32148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05C91C1D-5B80-4BA0-9760-046D43B32148}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

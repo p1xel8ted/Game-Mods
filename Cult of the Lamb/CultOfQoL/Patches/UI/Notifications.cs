@@ -1,6 +1,6 @@
 namespace CultOfQoL.Patches.UI;
 
-[HarmonyPatch]
+[Harmony]
 public static class Notifications
 {
     private static readonly HashSet<int> StructuresWithNoFuel = [];

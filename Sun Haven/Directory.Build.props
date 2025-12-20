@@ -1,29 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-    <!--User Configuration-->
-   <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user"
-        Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+    <!-- User Configuration -->
+    <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+    <Import Project="Environment.props" Condition="Exists('Environment.props')" />
 
-
-    <!--Base Settings-->
+    <!-- Suppress MSBuild Warnings -->
     <PropertyGroup>
-        <Description>$(MSBuildProjectName)</Description>
+        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+        <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
+    </PropertyGroup>
+
+    <!-- Base Settings -->
+    <PropertyGroup>
         <TargetFramework>net481</TargetFramework>
+        <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Deterministic>true</Deterministic>
         <IsPackable>false</IsPackable>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <!-- Debug Settings -->
+    <PropertyGroup>
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <EmbedAllSources>true</EmbedAllSources>
+        <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
+    </PropertyGroup>
+
+    <!-- Project Metadata -->
+    <PropertyGroup>
         <Authors>p1xel8ted</Authors>
         <Company>$(Authors)</Company>
         <Product>$(MSBuildProjectName)</Product>
+        <Description>$(MSBuildProjectName)</Description>
         <PackageId>$(MSBuildProjectName)</PackageId>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>embedded</DebugType>
-        <LangVersion>latest</LangVersion>
-        <EmbedAllSources>true</EmbedAllSources>
     </PropertyGroup>
-    
-    <!--Default all references to CopyLocal False.-->
+
+    <!-- Output -->
+    <PropertyGroup>
+        <OutputPath>$(BepInExPluginsPath)\$(MSBuildProjectName)</OutputPath>
+    </PropertyGroup>
+
+    <!-- Default All References to CopyLocal False -->
     <ItemDefinitionGroup>
         <Reference>
             <Private>False</Private>
@@ -36,17 +56,11 @@
         </PackageReference>
     </ItemDefinitionGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <OutputPath>G:\SteamLibrary\steamapps\common\Sun Haven\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <OutputPath>G:\SteamLibrary\steamapps\common\Sun Haven\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
-    </PropertyGroup>
-    
+    <!-- Common Packages -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
-        <PackageReference Include="Resource.Embedder" Version="2.2.0"/>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.5.0-beta.2" PrivateAssets="all" ExcludeAssets="runtime" />
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="Resource.Embedder" Version="2.2.0" />
     </ItemGroup>
-    
+
 </Project>

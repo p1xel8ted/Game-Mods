@@ -1,0 +1,55 @@
+# .gitignore for CultOfQoL (C# Unity Mod Project)
+# Build results
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+
+# Rider/VSCode/VS
+.idea/
+.vscode/
+*.sln.docstates
+*.DotSettings.user
+
+# Unity
+Library/
+Temp/
+Build/
+Builds/
+Logs/
+MemoryCaptures/
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# User images/screenshots
+screenshots/
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Crash logs
+*.stacktrace
+
+# Others
+*.bak
+*.swp
+*.tmp
+*.log

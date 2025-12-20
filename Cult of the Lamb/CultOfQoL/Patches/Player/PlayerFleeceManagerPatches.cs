@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.Player;
 
-[HarmonyPatch]
+[Harmony]
 public static class PlayerFleeceManagerPatches
 {
     [HarmonyPrefix]

@@ -1,4 +1,6 @@
-﻿namespace CuisineerTweaks;
+﻿using Il2Cpp;
+
+namespace CuisineerTweaks;
 
 [Harmony]
 public static class Patches
@@ -44,12 +46,38 @@ public static class Patches
         Fixes.UpdateItemStackSize(item);
     }
 
+    private static string _lastSceneName;
+    private static int _lastFrame;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.LoadScene), typeof(string))]
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.LoadScene), typeof(string), typeof(LoadSceneParameters))]
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.LoadScene), typeof(string), typeof(LoadSceneMode))]
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.LoadScene), typeof(int), typeof(LoadSceneMode))]
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.LoadScene), typeof(int), typeof(LoadSceneParameters))]
+    [HarmonyPatch(typeof(SceneManager), nameof(SceneManager.LoadSceneAsync), typeof(string))]
+    public static void SceneManager_LoadScene(object[] __args)
+    {
+        if (__args.Length == 0) return;
+        var sceneName = __args[0] as string ?? (__args[0] is int index ? SceneManager.GetSceneByBuildIndex(index).name : null);
+        if (sceneName == null) return;
+
+        int currentFrame = Time.frameCount;
+        if (_lastSceneName == sceneName && _lastFrame == currentFrame) return;
+
+        _lastSceneName = sceneName;
+        _lastFrame = currentFrame;
+
+        Fixes.RunFixes(sceneName);
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(UI_CarpenterUpgradeArea), nameof(UI_CarpenterUpgradeArea.HandleUpgradeRestaurantClicked))]
     public static void UI_CarpenterUpgradeArea_HandleUpgradeRestaurantClicked(ref UI_CarpenterUpgradeArea __instance)
     {
         if (!Plugin.InstantRestaurantUpgrades.Value) return;
         var currentDateInt = GameInstances.CalendarManagerInstance.CurrDate;
+        // Set upgrade date to 2 days before current date to make it immediately available
         GlobalEvents.Narrative.OnFlagTrigger.Invoke(Const.UpgradeDateRestaurant, FlagType.Persisting, currentDateInt - 2);
         GameInstances.RestaurantDataManagerInstance.HandleDayChanged();
         if (GameInstances.RestaurantExtInstance != null)
@@ -69,7 +97,7 @@ public static class Patches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.LateUpdate))]
-    public static void Player_OnEnable(ref Player __instance)
+    public static void Player_LateUpdate(ref Player __instance)
     {
         GameInstances.PlayerRuntimeDataInstance = __instance.m_RuntimeData;
         if (!Plugin.IncreasePlayerMoveSpeed.Value) return;
@@ -148,7 +176,7 @@ public static class Patches
 
     [HarmonyFinalizer]
     [HarmonyPatch(typeof(BaseAttack), nameof(BaseAttack.HandleCollision))]
-    public static Exception Finalizer()
+    public static System.Exception Finalizer()
     {
         return null;
     }
@@ -204,7 +232,7 @@ public static class Patches
             }
             else
             {
-                Plugin.Logger.LogError($"AutoLoadSpecifiedSaveSlot: Chosen save slot {slot + 1} is empty!");
+                MelonLogger.Error($"AutoLoadSpecifiedSaveSlot: Chosen save slot {slot + 1} is empty!");
             }
         }
     }
@@ -222,8 +250,60 @@ public static class Patches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.LateUpdate))]
-    public static void Player_LateUpdate(ref Player __instance)
+    public static void Player_LateUpdate_KeybindHandler(ref Player __instance)
     {
+        if (Input.GetKeyUp(Plugin.KeybindReload.Value))
+        {
+            MelonPreferences.Load();
+            Utils.ShowScreenMessage("Config reloaded...", 1);
+        }
+
+        // Handle DebugK key action
+        if (CuisineerSaveManager.m_Instance != null && Input.GetKeyUp(Plugin.KeybindSaveGame.Value))
+        {
+            CuisineerSaveManager.SaveCurrent();
+            MelonLogger.Msg("Saved current game.");
+        }
+
+        // Handle zoom level adjustment
+        if (Plugin.AdjustableZoomLevel.Value && GameInstances.PlayerRuntimeDataInstance != null)
+        {
+            var change = 0f;
+            if (Input.GetKeyUp(Plugin.KeybindZoomIn.Value))
+            {
+                change = -0.1f;
+            }
+            else if (Input.GetKeyUp(Plugin.KeybindZoomOut.Value))
+            {
+                change = 0.1f;
+            }
+
+            if (change != 0f)
+            {
+                var newValue = Mathf.Round((Plugin.UseStaticZoomLevel.Value ? Plugin.StaticZoomAdjustment.Value : Plugin.RelativeZoomAdjustment.Value + change) * 10f) / 10f;
+                var newZoom = Fixes.GetNewZoomValue(newValue);
+
+                if (newZoom > 0.5f)
+                {
+                    if (Plugin.UseStaticZoomLevel.Value)
+                    {
+                        Plugin.StaticZoomAdjustment.Value = newValue;
+                    }
+                    else
+                    {
+                        Plugin.RelativeZoomAdjustment.Value = newValue;
+                    }
+
+                    Fixes.UpdateCameraZoom();
+                }
+            }
+        }
+
+        // Handle time pause when viewing inventories
+        if (TimeManager.m_Instance == null) return;
+        var shouldPause = Plugin.PauseTimeWhenViewingInventories.Value && UI_InventoryViewBase.AnyInventoryActive;
+        TimeManager.ToggleTimePause(shouldPause);
+
         if (!Plugin.RegenPlayerHp.Value) return;
 
         if (Time.time > NextRegen && __instance.m_RuntimeData.m_PlayerHP < __instance.m_RuntimeData.MaxAvailableHP)
@@ -232,6 +312,7 @@ public static class Patches
             __instance.Heal(Plugin.RegenPlayerHpAmount.Value, !Plugin.RegenPlayerHpShowFloatingText.Value);
         }
     }
+
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(GUI), nameof(GUI.Label), typeof(Rect), typeof(string), typeof(GUIStyle))]
@@ -244,7 +325,7 @@ public static class Patches
             style.alignment = TextAnchor.UpperLeft;
             position.y -= 17;
             style.wordWrap = true;
-            text += $"{Environment.NewLine}Cuisineer Tweaks v{Plugin.PluginVersion}";
+            text += $"{Environment.NewLine}Cuisineer Tweaks v0.3.0";
         }
     }
 
@@ -318,7 +399,7 @@ public static class Patches
         if (!Plugin.AutoReloadWeapons.Value) return;
 
         var currWeapon = __instance.m_CurrWeapon;
-        if (currWeapon is not {IsRanged: true}) return;
+        if (currWeapon is not { IsRanged: true }) return;
 
         var ammoCount = currWeapon.m_RangedWeapon.m_AmmoCount;
         if (currWeapon.m_CurrentAmmo < ammoCount)
@@ -420,7 +501,7 @@ public static class Patches
         foreach (var refreshRate in refreshRates.Where(refreshRate => frameRateDatas.All(a => a.m_FPS != refreshRate)))
         {
             if (refreshRate < 50) continue;
-            frameRateDatas.Add(new FramerateData {m_FPS = refreshRate});
+            frameRateDatas.Add(new FramerateData { m_FPS = refreshRate });
             Utils.WriteLog($"{refreshRate}Hz not detected in Target Framerate options; adding now.");
         }
 

@@ -1,6 +1,6 @@
-namespace CultOfQoL.Patches.Systems;
+namespace CultOfQoL.Patches.Misc;
 
-[HarmonyPatch]
+[Harmony]
 public class MiscPatches
 {
     // Cached for performance
@@ -9,9 +9,19 @@ public class MiscPatches
         "Skeleton AnimationState",
         "called during processing",
         "Steam informs us the controller is a",
-        "connected"
-        
+        "connected",
+        "Fading IN transition",
+        "Fading OUT transition",
+        "Unable to determine ActionElementMap",
+        "attempt Unlock for Avhievement",
+        "Break here",
+        "StoryObjectiveData must be instantiated",
+        "Setup critters",
+        "Using Unscaled Time",
+        "Configure Node Connection Listener",
+        "Configure Branch Connection Listener"
     };
+    
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(Interaction_HarvestMeat), nameof(Interaction_HarvestMeat.Update))]
     public static IEnumerable<CodeInstruction> Interaction_HarvestMeat_Update(IEnumerable<CodeInstruction> instructions)

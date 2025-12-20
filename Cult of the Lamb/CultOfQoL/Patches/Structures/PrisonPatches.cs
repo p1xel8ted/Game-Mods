@@ -1,6 +1,6 @@
 namespace CultOfQoL.Patches.Structures;
 
-[HarmonyPatch]
+[Harmony]
 public static class PrisonPatches
 {
     [HarmonyPrefix]

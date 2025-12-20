@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.Systems;
 
-[HarmonyPatch]
+[Harmony]
 public static class GameSpeedManipulationPatches
 {
     private static float _newGameSpeed;

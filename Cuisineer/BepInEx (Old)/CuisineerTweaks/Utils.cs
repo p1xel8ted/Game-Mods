@@ -6,13 +6,13 @@ public static class Utils
 {
     public static void WriteLog(string message, bool ignoreDebug = false)
     {
-        if (Plugin.DebugMode.Value || ignoreDebug)
-        {
-            Plugin.Logger.LogInfo(message);
-        }
+        // if (Plugin.DebugMode.Value || ignoreDebug)
+        // {
+        Plugin.Logger.LogInfo(message);
+        //}
     }
-    
-    public static int FindLowestFrameRateMultipleAboveFifty(int originalRate)
+
+    public static float FindLowestFrameRateMultipleAboveFifty(float originalRate)
     {
         for (var rate = originalRate / 2; rate > 50; rate--)
         {
@@ -24,7 +24,7 @@ public static class Utils
 
         return originalRate;
     }
-    
+
     public static List<T> FindIl2CppType<T>() where T : UnityEngine.Object
     {
         var list = new List<T>();
@@ -32,11 +32,11 @@ public static class Utils
         return list;
     }
 
-    public static void AttachToSceneOnLoaded(System.Action<Scene, LoadSceneMode> action)
-    {
-        SceneManager.sceneLoaded += action;
-    }
-    
+    // public static void AttachToSceneOnLoaded(System.Action<Scene, LoadSceneMode> action)
+    // {
+    //     SceneManager.sceneLoaded += action;
+    // }
+
     internal static void FastForwardBrewCraft(UI_BrewArea.StateData stateData)
     {
         var currDate = GameInstances.CalendarManagerInstance.CurrDate;
@@ -76,10 +76,12 @@ public static class Utils
 
 
         WriteLog($"Chosen Display Settings: {Fixes.ResolutionWidth}x{Fixes.ResolutionHeight}@{Fixes.MaxRefreshRate}Hz in {Fixes.FullScreenMode} mode");
+
+        Fixes.UpdateFixedDeltaTime();
         if (!changeRes) return;
         Fixes.UpdateResolutionFrameRate();
     }
-    
+
     internal static void ScaleElement(string path, bool maskCheck, float scaleFactor = 1f)
     {
         var element = GameObject.Find(path);
@@ -93,6 +95,6 @@ public static class Utils
             }
         }
 
-        element.transform.localScale = element.transform.localScale with {x = scaleFactor};
+        element.transform.localScale = element.transform.localScale with { x = scaleFactor };
     }
 }

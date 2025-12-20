@@ -1,6 +1,6 @@
 namespace CultOfQoL.Patches.Systems;
 
-[HarmonyPatch]
+[Harmony]
 public static class FastCollectingPatches
 {
     private static GameManager GI => GameManager.GetInstance();

@@ -1,6 +1,6 @@
 namespace CultOfQoL.Patches.Player;
 
-[HarmonyPatch]
+[Harmony]
 public static class PlayerPatches
 {
     private const string PlayerPrefab = "PlayerPrefab";

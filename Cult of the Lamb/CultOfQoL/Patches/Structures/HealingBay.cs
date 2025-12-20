@@ -2,7 +2,7 @@ using ReflectionHelper = CultOfQoL.Core.ReflectionHelper;
 
 namespace CultOfQoL.Patches.Structures;
 
-[HarmonyPatch]
+[Harmony]
 public static class HealingBay
 {
     private const float Duration = 3f;

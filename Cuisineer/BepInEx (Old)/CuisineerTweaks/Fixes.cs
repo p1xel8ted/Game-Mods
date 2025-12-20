@@ -11,8 +11,8 @@ public static class Fixes
     public static int ResolutionWidth { get; set; }
     public static int ResolutionHeight { get; set; }
     public static FullScreenMode FullScreenMode { get; set; }
-    public static int MaxRefreshRate { get; set; }
-    private static int TimeScale => Utils.FindLowestFrameRateMultipleAboveFifty(MaxRefreshRate);
+    public static float MaxRefreshRate { get; set; }
+    private static float TimeScale => Utils.FindLowestFrameRateMultipleAboveFifty(MaxRefreshRate);
     private static Dictionary<string, int> OriginalItemStackSizes { get; } = new();
     private static Dictionary<string, float> OriginalWeaponTimes { get; } = new();
 
@@ -66,7 +66,7 @@ public static class Fixes
         var originalZoom = GameInstances.MapTransitionManagerInstance.m_CurrMapData.m_OrthoSize;
         var difference = newZoom - originalZoom;
 
-        GameInstances.PlayerCameraInstance.m_Lens = GameInstances.PlayerCameraInstance.m_Lens with {OrthographicSize = newZoom};
+        GameInstances.PlayerCameraInstance.m_Lens = GameInstances.PlayerCameraInstance.m_Lens with { OrthographicSize = newZoom };
 
         if (!showMessage) return;
         var message = Plugin.UseStaticZoomLevel.Value ? $"{Lang.GetZoomSetToMessage()} {Plugin.StaticZoomAdjustment.Value:F1}" : $"{Lang.GetZoomAdjustedByMessage()} {difference:F1}";
@@ -128,15 +128,15 @@ public static class Fixes
 
     internal static void RunFixes(string scene, bool refresh = false)
     {
-        Utils.WriteLog(!refresh ? $"New Scene {scene} Loaded: Running Fixes" : "Refresh Requested: Running Fixes", true);
+        // Utils.WriteLog(!refresh ? $"New Scene {scene} Loaded: Running Fixes" : "Refresh Requested: Running Fixes", true);
 
         UpdateResolutionFrameRate();
         UpdateFixedDeltaTime();
         UpdateAutoSave();
-        UpdateInventoryStackSize();
-        UpdateWeaponCooldowns();
+        // UpdateInventoryStackSize();
+        // UpdateWeaponCooldowns();
         UpdateMainMenu(scene);
-        UpdateCheats();
+     UpdateCheats();
         UpdateCameraZoom(false);
         UpdateScalers();
     }
@@ -144,20 +144,12 @@ public static class Fixes
     private static void UpdateScalers()
     {
         const float ultrawideAspect = 2.3f;
-        var currentAspect = (float) Screen.currentResolution.width / Screen.currentResolution.height;
+        var currentAspect = (float)Screen.currentResolution.width / Screen.currentResolution.height;
         var scalers = Utils.FindIl2CppType<CanvasScaler>();
         foreach (var scaler in scalers)
         {
-            if (currentAspect >= ultrawideAspect)
-            {
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-            }
-            else
-            {
-                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            }
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.screenMatchMode = currentAspect >= ultrawideAspect ? CanvasScaler.ScreenMatchMode.Expand : CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
         }
     }
 
@@ -165,13 +157,15 @@ public static class Fixes
     {
         if (ResolutionWidth == 0 || ResolutionHeight == 0 || FullScreenMode == 0 || MaxRefreshRate == 0) return;
 
-        Screen.SetResolution(ResolutionWidth, ResolutionHeight, FullScreenMode, MaxRefreshRate);
+        var rr = Mathf.RoundToInt(MaxRefreshRate);
+
+        Screen.SetResolution(ResolutionWidth, ResolutionHeight, FullScreenMode, rr);
 
         Utils.WriteLog($"Set resolution to {Screen.currentResolution}");
 
-        if (Application.targetFrameRate != MaxRefreshRate)
+        if (Application.targetFrameRate != rr)
         {
-            Application.targetFrameRate = MaxRefreshRate;
+            Application.targetFrameRate = rr;
             Utils.WriteLog($"Set targetFrameRate to {Application.targetFrameRate}.");
         }
         else
@@ -180,11 +174,19 @@ public static class Fixes
         }
     }
 
-    private static void UpdateFixedDeltaTime()
+    public static void UpdateFixedDeltaTime()
     {
         if (!Plugin.CorrectFixedUpdateRate.Value) return;
 
-        float targetFPS = Plugin.UseRefreshRateForFixedUpdateRate.Value ? MaxRefreshRate : TimeScale;
+        if (MaxRefreshRate <= 0)
+        {
+            //hasnt initialized yet
+            MaxRefreshRate = Screen.resolutions.Max(a => a.m_RefreshRate);
+        }
+
+        var targetFPS = Plugin.UseRefreshRateForFixedUpdateRate.Value ? MaxRefreshRate : TimeScale;
+        
+        Plugin.Logger.LogInfo($"Using targetFPS: {targetFPS} for fixedDeltaTime calculation.");
         var newValue = 1f / targetFPS;
 
         if (Mathf.Approximately(newValue, Time.fixedDeltaTime))
@@ -203,6 +205,7 @@ public static class Fixes
         }
 
         Time.fixedDeltaTime = newValue;
+        //  Utils.WriteLog($"Time.fixedDeltaTime: {Time.fixedDeltaTime}");
         Utils.WriteLog($"Set fixedDeltaTime to {newValue} ({targetFPS}fps).");
     }
 
@@ -224,11 +227,11 @@ public static class Fixes
         float currentAspect;
         if (ResolutionHeight == 0 || ResolutionWidth == 0)
         {
-            currentAspect = (float) Display.main.systemWidth / Display.main.systemHeight;
+            currentAspect = (float)Display.main.systemWidth / Display.main.systemHeight;
         }
         else
         {
-            currentAspect = (float) ResolutionWidth / ResolutionHeight;
+            currentAspect = (float)ResolutionWidth / ResolutionHeight;
         }
 
         if (currentAspect != 0 && currentAspect <= Const.BaseAspect) return;

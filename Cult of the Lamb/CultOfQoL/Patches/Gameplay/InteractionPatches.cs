@@ -1,6 +1,6 @@
 ﻿namespace CultOfQoL.Patches.Gameplay;
 
-[HarmonyPatch]
+[Harmony]
 [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
 public static class InteractionPatches
 {

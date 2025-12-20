@@ -2,7 +2,7 @@
 
 namespace CultOfQoL.Patches.Structures;
 
-[HarmonyPatch]
+[Harmony]
 internal static class StructurePatches
 {
     // Performance optimization: Cache Unity component lookups

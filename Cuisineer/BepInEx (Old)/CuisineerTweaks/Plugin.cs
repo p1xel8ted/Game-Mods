@@ -1,4 +1,6 @@
-﻿namespace CuisineerTweaks;
+﻿using Il2CppInterop.Runtime.Injection;
+
+namespace CuisineerTweaks;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
 public class Plugin : BasePlugin
@@ -6,7 +8,7 @@ public class Plugin : BasePlugin
     private const string PluginGuid = "p1xel8ted.cuisineer.cuisineertweaks";
     private const string PluginName = "Cuisineer Tweaks (IL2CPP)";
     internal const string PluginVersion = "0.2.1";
-
+    
     internal static ManualLogSource Logger { get; private set; }
     internal static ConfigEntry<bool> CorrectMainMenuAspect { get; private set; }
     internal static ConfigEntry<bool> CorrectFixedUpdateRate { get; private set; }
@@ -46,14 +48,14 @@ public class Plugin : BasePlugin
     internal static ConfigEntry<bool> ModifyWeaponSpecialCooldown { get; private set; }
     internal static ConfigEntry<float> WeaponSpecialCooldownValue { get; private set; }
     internal static ConfigEntry<bool> DebugMode { get; private set; }
-
+    
     internal static ConfigEntry<bool> AllCustomersSelfServe { get; private set; }
     internal static Plugin Instance { get; private set; }
     internal static ConfigEntry<bool> OneHitDestructible { get; private set; }
     internal static ConfigEntry<bool> AutoReloadWeapons { get; private set; }
     internal static ConfigEntry<bool> AdjustableZoomLevel { get; private set; }
     internal static ConfigEntry<float> RelativeZoomAdjustment { get; private set; }
-
+    
     internal static ConfigEntry<bool> UseStaticZoomLevel { get; private set; }
     internal static ConfigEntry<float> StaticZoomAdjustment { get; private set; }
     internal static ConfigEntry<bool> DisplayMessages { get; private set; }
@@ -62,7 +64,7 @@ public class Plugin : BasePlugin
     internal static ConfigEntry<KeyCode> KeybindZoomIn{ get; private set; }
     internal static ConfigEntry<KeyCode> KeybindZoomOut { get; private set; }
     
-
+    
     private void InitConfig()
     {
         // Group 0: General Settings
@@ -87,30 +89,30 @@ public class Plugin : BasePlugin
             new ConfigDescription("Sets the fixed update rate based on the monitor's refresh rate for smoother gameplay. If you're playing on a potato, this may have performance impacts."));
         CorrectMainMenuAspect = Config.Bind("01. Performance", "CorrectMainMenuAspect", true,
             new ConfigDescription("Adjusts the main menu images to fit the screen. Will only be applied on aspect ratios wider than 16:9."));
-
+    
         // Group 2: User Interface Enhancements
         InstantText = Config.Bind("02. User Interface", "InstantDialogueText", true,
             new ConfigDescription("Dialogue text is instantly displayed, skipping the typewriter effect."));
-
+    
         // Group 3: Inventory Management
         IncreaseStackSize = Config.Bind("03. Inventory", "IncreaseStackSize", true,
             new ConfigDescription("Enables increasing the item stack size, allowing for more efficient inventory management."));
         IncreaseStackSizeValue = Config.Bind("03. Inventory", "IncreaseStackSizeValue", 999,
             new ConfigDescription("Determines the maximum number of items in a single stack.", new AcceptableValueRange<int>(1, 999)));
-
+    
         // Group 4: Save System Customization
         EnableAutoSave = Config.Bind("04. Save System", "EnableAutoSave", true,
             new ConfigDescription("Activates the auto-save feature, automatically saving game progress at set intervals."));
         AutoSaveFrequency = Config.Bind("04. Save System", "AutoSaveFrequency", 300,
             new ConfigDescription("Sets the frequency of auto-saves in seconds.", new AcceptableValueRange<int>(30, 600)));
-
+    
         LoadToSaveMenu = Config.Bind("04. Save System", "LoadToSaveMenu", true,
             new ConfigDescription("Changes the initial game load screen to the save menu, streamlining the game start."));
         AutoLoadSpecifiedSave = Config.Bind("04. Save System", "AutoLoadSpecifiedSave", false,
             new ConfigDescription("Automatically loads a pre-selected save slot when starting the game."));
         AutoLoadSpecifiedSaveSlot = Config.Bind("04. Save System", "AutoLoadSpecifiedSaveSlot", 1,
             new ConfigDescription("Determines which save slot to auto-load.", new AcceptableValueRange<int>(1, 5)));
-
+    
         // Group 5: Gameplay Enhancements
         PauseTimeWhenViewingInventories = Config.Bind("05. Gameplay", "PauseTimeWhenViewingInventories", true,
             new ConfigDescription("Pauses the game when accessing inventory screens, excluding cooking interfaces."));
@@ -126,7 +128,7 @@ public class Plugin : BasePlugin
             new ConfigDescription("Enables the modification of item drop rates."));
         ItemDropMultiplierValue = Config.Bind("05. Gameplay", "ItemDropMultiplierValue", 2,
             new ConfigDescription("Sets the multiplier for item drop rates. At the moment, basically sets stack size on drop.", new AcceptableValueList<int>(2, 3, 4, 5, 6)));
-
+    
         // Group 6: Player Health Customization
         ModifyPlayerMaxHp = Config.Bind("06. Player Health", "ModifyPlayerMaxHp", false,
             new ConfigDescription("Enables the modification of the player's maximum health."));
@@ -140,13 +142,13 @@ public class Plugin : BasePlugin
             new ConfigDescription("Determines the time interval in seconds for each health regeneration tick.", new AcceptableValueList<float>(1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f)));
         RegenPlayerHpShowFloatingText = Config.Bind("06. Player Health", "RegenPlayerHpShowFloatingText", true,
             new ConfigDescription("Displays a floating text notification during health regeneration."));
-
+    
         //Group 7: Player Movement
         IncreasePlayerMoveSpeed = Config.Bind("07. Player Movement", "IncreasePlayerMoveSpeed", false,
             new ConfigDescription("Increases the speed of the player."));
         PlayerMoveSpeedValue = Config.Bind("07. Player Movement", "PlayerMoveSpeedValue", 1.25f,
             new ConfigDescription("Determines the speed of the player. Good luck playing at 5.", new AcceptableValueRange<float>(1.10f, 5f)));
-
+    
         // Group 8: Restaurant Management
         AutomaticPayment = Config.Bind("08. Restaurant", "AutomaticPayment", false,
             new ConfigDescription("Automatically accept payment for customer."));
@@ -160,7 +162,7 @@ public class Plugin : BasePlugin
             new ConfigDescription("Toggle the Dine & Dash mechanic."));
         AllCustomersSelfServe = Config.Bind("08. Restaurant", "AllCustomersSelfServe", false,
             new ConfigDescription("All customers are able to collect their own dishes."));
-
+    
         //Group 9: Attacks/Damage
         RemoveChainAttackDelay = Config.Bind("09. Attacks/Damage", "RemoveChainAttackDelay", false,
             new ConfigDescription("Removes the delay for chain attacks. So instead of [swing..swing.....big swing] it becomes, [swing..swing..big swing]. Or that's the idea. It's very subtle, as the delay is only half a second anyway."));
@@ -172,8 +174,8 @@ public class Plugin : BasePlugin
             new ConfigDescription("One hit destructible objects. Like the rocks/trees etc."));
         AutoReloadWeapons = Config.Bind("09. Attacks/Damage", "AutoReloadWeapons", false,
             new ConfigDescription("Automatically reload weapons when they run out of ammo."));
-
-
+    
+    
         //Group 10: Cheats
         AutoCook = Config.Bind("10. Cheats", "AutoCook", false,
             new ConfigDescription("Automatically cook food. !!WARNING!! - THIS WILL CAUSE ALL(?) RECIPES TO UNLOCK AND POP THE APPROPRIATE ACHIEVEMENTS."));
@@ -181,7 +183,7 @@ public class Plugin : BasePlugin
             new ConfigDescription("No ingredients required."));
         InstantKill = Config.Bind("10. Cheats", "InstantKill", false,
             new ConfigDescription("One hit kill enemies."));
-
+    
         //Group 11: Zoom
         AdjustableZoomLevel = Config.Bind("11. Zoom", "AdjustableZoomLevel", false,
             new ConfigDescription("Adjust the zoom level of the camera. This needs to be true for any of the zoom settings to function."));
@@ -196,26 +198,17 @@ public class Plugin : BasePlugin
 
     public override void Load()
     {
+        Debug.unityLogger.logEnabled = true;
+
         Instance = this;
         Logger = Log;
-        Config.ConfigReloaded += (_, _) =>
-        {
-            InitConfig();
-            Utils.WriteLog("Reloaded configuration.", true);
-            Fixes.RunFixes(string.Empty, true);
-            Utils.ShowScreenMessage(Lang.GetReloadedConfigMessage(), 2);
-        };
-        InitConfig();
 
-        Utils.AttachToSceneOnLoaded((scene, _) =>
-        {
-            Fixes.RunFixes(scene.name);
-        });
+        InitConfig();
         
         
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        AddComponent<UnityEvents>();
-        Utils.WriteLog($"Plugin {PluginGuid} is loaded!", true);
+   
+      Logger.LogInfo($"Plugin {PluginGuid} is loaded!");
     }
 
 
