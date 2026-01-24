@@ -35,6 +35,42 @@ public class Plugin : BaseUnityPlugin
         Helpers.PrintModLoaded(PluginName, Logger);
     }
 
+    private void Start()
+    {
+        // Pre-load names to avoid async issues during first follower generation
+        StartCoroutine(PreloadNamesCoroutine());
+    }
+
+    private IEnumerator PreloadNamesCoroutine()
+    {
+        // Wait a few frames for GameManager to initialize
+        for (int i = 0; i < 10; i++)
+        {
+            yield return null;
+        }
+        
+        // Try to load existing names from file first
+        if (File.Exists(NamifyNamesFilePath) || File.Exists(UserNameFilePath))
+        {
+            Log.LogInfo("Loading existing names from file...");
+            Data.LoadData();
+        }
+        
+        // If still no names loaded, fetch from API
+        if (Data.NamifyNames.Count == 0 && Data.UserNames.Count == 0)
+        {
+            Log.LogInfo("No existing names found, fetching from API...");
+            Data.GetNamifyNames(
+                onFail: () => Log.LogWarning("Failed to fetch names during initialization"),
+                onComplete: () => Log.LogInfo("Successfully pre-loaded names from API")
+            );
+        }
+        else
+        {
+            Log.LogInfo($"Pre-loaded {Data.NamifyNames.Count} Namify names and {Data.UserNames.Count} user names.");
+        }
+    }
+
     private void InitializeLogger()
     {
         Log = Logger;

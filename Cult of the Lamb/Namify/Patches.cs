@@ -45,16 +45,36 @@ public static class Patches
             }
         }
 
+        // Clean up existing custom listeners to prevent memory leaks
+        // We can't remove the game's listeners, so we track our own
+        __instance._acceptButton.onClick.RemoveAllListeners();
+        
+        // Re-register the game's original onClick behavior by copying it from decompiled code
+        // This ensures we have clean state and our listener runs in correct order
         __instance._acceptButton.onClick.AddListener(delegate
         {
-            var name = instance._nameInputField.text.Replace("*", string.Empty);
-
-            Plugin.Log.LogInfo($"Follower name {name} confirmed! Removing name from saved name list.");
-
-            Data.NamifyNames.Remove(name);
-            Data.UserNames.Remove(name);
-
-            instance._targetFollower.Brain.Info.Name = name;
+            // Remove asterisk from the input field BEFORE game reads it
+            var cleanName = instance._nameInputField.text.Replace("*", string.Empty);
+            instance._nameInputField.text = cleanName;
+            
+            // Now let the game's logic run - it will read the cleaned name
+            instance._targetFollower.Brain.Info.Name = LocalizeIntegration.Arabic_ReverseNonRTL(instance._nameInputField.text);
+            
+            if (!string.IsNullOrEmpty(instance.twitchFollowerViewerID))
+            {
+                DataManager.Instance.TwitchFollowerViewerIDs.Insert(0, instance.twitchFollowerViewerID);
+                DataManager.Instance.TwitchFollowerIDs.Insert(0, instance.twitchFollowerID);
+                instance.twitchFollowerViewerID = "";
+                instance.twitchFollowerID = "";
+            }
+            
+            // Remove name from our lists
+            Plugin.Log.LogInfo($"Follower name {cleanName} confirmed! Removing name from saved name list.");
+            Data.NamifyNames.Remove(cleanName);
+            Data.UserNames.Remove(cleanName);
+            
+            instance.SwapOutfit();
+            instance.Hide();
         });
     }
 
@@ -65,15 +85,26 @@ public static class Patches
     {
         if (GameManager.GetInstance() is null) return;
         if (DataManager.Instance is null) return;
-        if (Data.NamifyNames.Count <= 0)
-        {
-            Data.GetNamifyNames();
-        }
-
+        
+        // If we have no names at all, try to load from file synchronously
         if (Data.NamifyNames.Count <= 0 && Data.UserNames.Count <= 0)
         {
-            Plugin.Log.LogError("No names found!");
-            return;
+            try
+            {
+                Data.LoadData();
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.LogWarning($"Failed to load names during generation: {ex.Message}");
+            }
+        }
+        
+        // If still no names after trying to load, trigger async fetch but use game's default name for now
+        if (Data.NamifyNames.Count <= 0 && Data.UserNames.Count <= 0)
+        {
+            Plugin.Log.LogWarning("No names available yet, using game's default. Triggering background fetch...");
+            Data.GetNamifyNames();
+            return; // Keep the game's generated name
         }
         
         var bothNames = Data.NamifyNames.Concat(Data.UserNames).Distinct().ToList();

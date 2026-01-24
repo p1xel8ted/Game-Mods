@@ -61,14 +61,16 @@ public static class Data
 
     private static void RemoveFollowerNames()
     {
+        if (Follower.Followers == null) return;
+        
         foreach (var name in NamifyNames)
         {
-            Follower.Followers.RemoveAll(a => a.Brain.Info.Name == name);
+            Follower.Followers.RemoveAll(a => a?.Brain?.Info?.Name == name);
         }
         
         foreach (var name in UserNames)
         {
-            Follower.Followers.RemoveAll(a => a.Brain.Info.Name == name);
+            Follower.Followers.RemoveAll(a => a?.Brain?.Info?.Name == name);
         }
     }
 
@@ -86,20 +88,36 @@ public static class Data
 
     internal static void GetNamifyNames(Action onFail = null, Action onComplete = null)
     {
-        var primaryError = false;
         if (NamifyNames.Count > 0)
         {
             return;
         }
 
-        GameManager.GetInstance().StartCoroutine(NamifyNamesGetRequest("https://randommer.io/api/Name?nameType=fullname&quantity=1000", true, req =>
+        var gameManager = GameManager.GetInstance();
+        if (gameManager == null)
+        {
+            Plugin.Log.LogWarning("GameManager not ready, cannot fetch names");
+            onFail?.Invoke();
+            return;
+        }
+
+        gameManager.StartCoroutine(NamifyNamesGetRequest("https://randommer.io/api/Name?nameType=fullname&quantity=1000", true, req =>
         {
             if (req.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError or UnityWebRequest.Result.DataProcessingError)
             {
                 Plugin.Log.LogError($"{req.error}: {req.downloadHandler.text}");
                 NotificationCentre.Instance.PlayGenericNotification("There was an error retrieving names for Namify! Trying back-up source...");
-                onFail?.Invoke();
-                primaryError = true;
+                
+                // Start backup request here, inside the error callback
+                var gameManagerRetry = GameManager.GetInstance();
+                if (gameManagerRetry != null)
+                {
+                    gameManagerRetry.StartCoroutine(GetNamifyNamesBackupRequest(onFail, onComplete));
+                }
+                else
+                {
+                    onFail?.Invoke();
+                }
             }
             else
             {
@@ -114,10 +132,6 @@ public static class Data
                 onComplete?.Invoke();
             }
         }));
-
-        if (!primaryError) return;
-
-        GameManager.GetInstance().StartCoroutine(GetNamifyNamesBackupRequest(onFail, onComplete));
     }
 
     private static IEnumerator GetNamifyNamesBackupRequest(Action onFail = null, Action onComplete = null)
@@ -150,13 +164,20 @@ public static class Data
 
     private static IEnumerator NamifyNamesGetRequest(string endpoint, bool apiKey, Action<UnityWebRequest> callback)
     {
-        using var request = UnityWebRequest.Get(endpoint);
-        if (apiKey)
+        var request = UnityWebRequest.Get(endpoint);
+        try
         {
-            request.SetRequestHeader("X-Api-Key", Plugin.PersonalApiKey.Value);
-        }
+            if (apiKey)
+            {
+                request.SetRequestHeader("X-Api-Key", Plugin.PersonalApiKey.Value);
+            }
 
-        yield return request.SendWebRequest();
-        callback(request);
+            yield return request.SendWebRequest();
+            callback(request);
+        }
+        finally
+        {
+            request?.Dispose();
+        }
     }
 }
