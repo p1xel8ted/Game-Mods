@@ -3,14 +3,15 @@
 # Rebirth
 
 * Followers can be reborn, allowing you to change their names, looks etc.
-* First one is free; subsequent ones on the same follower require 25 Rebirth Tokens obtained from crusading. 
-* * Source of the tokens is from killing enemies, destroying old bone piles (not the ones from enemies), dungeon chests and offering shrines and more.
-* * The drop chance starts at 15% and scales with your dungeon luck modifier. 
-* The followers' XP carries over, but there is a 10% chance they lose half of their XP and 1 level when reborn. There is a notification when this happens.
+* First one is free; subsequent ones on the same follower require Rebirth Tokens obtained from crusading (default 25, configurable).
+* * Source of the tokens is from killing enemies, destroying old bone piles, dungeon chests, offering shrines, and more.
+* * The drop chance defaults to 5% (configurable).
+* The followers' XP carries over, but there is a 20% chance they lose some XP when reborn (configurable). There is a notification when this happens.
 * Their old body stays; compost it, eat it. Up to you.
-* Refine the tokens at your refineries for 15 bones!
+* Refine the tokens at your refineries from bones (default 15, configurable)!
 * Send your followers on a mission to get tokens!
 * Go on a quest yourself to get tokens!
+* All values are configurable via the in-game mod settings menu or the BepInEx config file.
 
 ## Donate
 
