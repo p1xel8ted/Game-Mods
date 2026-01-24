@@ -24,11 +24,12 @@ Output goes directly to `G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepIn
 
 ## Solution Architecture
 
-Three mods sharing common utilities via linked source files:
+Four mods sharing common utilities via linked source files:
 
-- **CultOfQoL** (v2.3.1) - Large quality-of-life collection (~50 features) with extensive Harmony patches
-- **Rebirth** (v0.2.1) - Follower rebirth mechanic, depends on COTL_API (0.2.8)
-- **Namify** (v0.2.1) - Custom naming/labeling for game entities
+- **CultOfQoL** - Large quality-of-life collection (~50 features) with extensive Harmony patches
+- **Rebirth** - Follower rebirth mechanic, depends on COTL_API
+- **Namify** - Custom naming/labeling for game entities
+- **SkipOfTheLamb** - Standalone intro-skip plugin (detects CultOfQoL to avoid conflicts)
 
 ### Shared Code (Linked Source Files)
 
@@ -44,13 +45,15 @@ Each `.csproj` includes these via `<Compile Include="..\Shared\File.cs" Link="Fi
 Patches are in `CultOfQoL/Patches/` organized by game system:
 - `Followers/` - Level-up, traits, follower behavior
 - `Gameplay/` - Fishing, rituals, tarot, pickups, interactions
+- `Misc/` - Uncategorized patches
 - `Player/` - Necklaces, fleece manager, player mechanics
-- `Structures/` - Healing bay, prisons, totems
+- `Structures/` - Healing bay, mating tent, prisons, totems
 - `Systems/` - Auto-collect, game speed, saves, weather
+- `UI/` - Menu cleanup, notifications, post-processing, intros
 
 ### Plugin Configuration Pattern
 
-CultOfQoL's `Plugin.cs` defines config entries in numbered sections (01-20) using BepInEx's ConfigFile system. Patches read these static config properties to conditionally apply modifications. All config UI is handled via the BepInEx Configuration Manager dependency.
+CultOfQoL uses a **partial class split**: `Configs.cs` declares all `ConfigEntry<T>` properties, and `Plugin.cs` binds them in `Awake()` with section, description, and order. Config entries are organized into numbered sections (01-20) visible in BepInEx Configuration Manager. Performance-sensitive patches use `ConfigCache` (cached values with dirty-key invalidation via `SettingChanged` handlers) instead of reading `ConfigEntry.Value` directly.
 
 ### GlobalUsings
 
