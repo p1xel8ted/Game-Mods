@@ -32,12 +32,19 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# Binaries
+*.dll
+*.exe
+*.pdb
+*.nupkg
+
 [Ll]ibs/
 [Ll]ib/
 !Cult of the Lamb/libs/
 Cult of the Lamb/libs/*
 !Cult of the Lamb/libs/game_code/
 !Cult of the Lamb/libs/game_code/**
+Cult of the Lamb/libs/game_code/**/*.dll
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
