@@ -6,7 +6,7 @@ public class MissionItem: CustomMission
 
     public override InventoryItem.ITEM_TYPE RewardType => Plugin.RebirthItem;
 
-    public override int BaseChance => 50;
-    
-    public override IntRange RewardRange => new(15, 25);
+    public override int BaseChance => Plugin.MissionBaseChance.Value;
+
+    public override IntRange RewardRange => new(Plugin.MissionRewardMin.Value, Plugin.MissionRewardMax.Value);
 }

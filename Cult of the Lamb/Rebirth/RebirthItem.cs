@@ -14,9 +14,9 @@ public sealed class RebirthItem : CustomInventoryItem
     public override string InternalName => "REBIRTH_ITEM";
 
     public override bool AddItemToDungeonChests => true;
-    public override int DungeonChestSpawnChance => 5;
-    public override int DungeonChestMinAmount => 4;
-    public override int DungeonChestMaxAmount => 7;
+    public override int DungeonChestSpawnChance => Plugin.ChestSpawnChance.Value;
+    public override int DungeonChestMinAmount => Plugin.ChestMinAmount.Value;
+    public override int DungeonChestMaxAmount => Plugin.ChestMaxAmount.Value;
     
     public override Vector3 LocalScale { get; } = new(0.5f, 0.5f, 0.5f);
     public override InventoryItem.ITEM_TYPE ItemPickUpToImitate => InventoryItem.ITEM_TYPE.BLACK_GOLD;
@@ -25,9 +25,9 @@ public sealed class RebirthItem : CustomInventoryItem
 
     public override bool CanBeRefined => true;
     public override InventoryItem.ITEM_TYPE RefineryInput => InventoryItem.ITEM_TYPE.BONE;
-    public override int RefineryInputQty => 15;
-    
-    public override float CustomRefineryDuration => 256f;
+    public override int RefineryInputQty => Plugin.BoneCost.Value;
+
+    public override float CustomRefineryDuration => Plugin.RefineryDuration.Value;
 
     public override string LocalizedName() => "Rebirth Token";
 

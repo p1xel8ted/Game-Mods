@@ -2,7 +2,7 @@
 {
     internal class RebirthSubCommand : CustomFollowerCommand
     {
-        private const int ItemQty = 25;
+        private static int ItemQty => Plugin.TokenCost.Value;
         public override string InternalName => "REBIRTH_SUB_COMMAND";
 
         public override Sprite CommandIcon { get; } = TextureHelper.CreateSpriteFromPath(Path.Combine(Plugin.PluginPath, "assets", "rebirth_command.png"));
@@ -29,8 +29,7 @@
                 return "You already have a follower awaiting indoctrination!";
             }
             
-            Helper.TooOld = Helper.IsOld(follower);
-            if (Helper.TooOld)
+            if (Helper.IsOld(follower))
             {
                 return "Not enough life essence left to satisfy those below.";
             }
@@ -49,13 +48,12 @@
                 return false;
             }
             
-            Helper.TooOld = Helper.IsOld(follower);
-            if (Helper.TooOld)
+            if (Helper.IsOld(follower))
             {
                 return false;
             }
 
-            return Inventory.GetItemQuantity((int)Plugin.RebirthItem) >= ItemQty;
+            return Inventory.GetItemQuantity((int) Plugin.RebirthItem) >= ItemQty;
         }
 
 
@@ -63,8 +61,9 @@
         public override void Execute(interaction_FollowerInteraction interaction, FollowerCommands finalCommand)
         {
             if (finalCommand != FollowerCommands.AreYouSureYes) return;
+            interaction.Close(true, reshowMenu: false);
             RebirthFollowerCommand.SpawnRecruit(interaction.follower);
-            Inventory.ChangeItemQuantity(Plugin.RebirthItem,-ItemQty);
+            Inventory.ChangeItemQuantity(Plugin.RebirthItem, -ItemQty);
         }
     }
 }

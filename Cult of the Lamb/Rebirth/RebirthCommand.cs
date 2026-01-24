@@ -30,8 +30,7 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         }
 
 
-        Helper.TooOld = Helper.IsOld(follower);
-        if (Helper.TooOld)
+        if (Helper.IsOld(follower))
         {
             return "Not enough life essence left to satisfy those below.";
         }
@@ -47,8 +46,7 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
             return false;
         }
 
-        Helper.TooOld = Helper.IsOld(follower);
-        if (Helper.TooOld)
+        if (Helper.IsOld(follower))
         {
             return false;
         }
@@ -77,8 +75,9 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         yield return new WaitForSeconds(3f);
         DataManager.Instance.Followers_Recruit.Add(f);
         FollowerManager.SpawnExistingRecruits(BiomeBaseManager.Instance.RecruitSpawnLocation.transform.position);
-        Object.FindObjectOfType<FollowerRecruit>().ManualTriggerAnimateIn();
+        Object.FindObjectOfType<FollowerRecruit>()?.ManualTriggerAnimateIn();
         BiomeBaseManager.Instance.SpawnExistingRecruits = true;
+        NotificationCentre.NotificationsEnabled = true;
         yield return new WaitForSeconds(2f);
     }
 
@@ -87,10 +86,10 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
     {
         BiomeBaseManager.Instance.SpawnExistingRecruits = true;
         NotificationCentre.NotificationsEnabled = false;
-        var name = follower.name;
+        var name = follower.Brain.Info.Name;
         var oldId = follower.Brain.Info.ID;
         var oldXp = follower.Brain.Info.XPLevel;
-        var newXp = Mathf.CeilToInt(oldXp / 2f);
+        var newXp = Mathf.CeilToInt(oldXp * Plugin.XpPenaltyMultiplier.Value / 100f);
         var halfXp = Helper.DoHalfStats();
 
         var fi = FollowerInfo.NewCharacter(FollowerLocation.Base);
@@ -100,24 +99,13 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
             GameManager.GetInstance().StartCoroutine(GiveFollowerIE(fi, follower));
             Plugin.Log.LogInfo($"New follower: {fi.Name}");
             SaveData.AddBornAgainFollower(fi);
-            fi.XPLevel = oldXp;
-
-            if (halfXp)
-            {
-                if (fi.XPLevel >= 2)
-                {
-                    fi.XPLevel -= 1;
-                }
-
-                fi.XPLevel = newXp;
-            }
+            fi.XPLevel = halfXp ? newXp : oldXp;
         }
         else
         {
             Plugin.Log.LogWarning("New follower is null!");
+            NotificationCentre.NotificationsEnabled = true;
         }
-
-        NotificationCentre.NotificationsEnabled = true;
 
         GameManager.GetInstance().StartCoroutine(ShowMessages(name, halfXp));
         RemoveFromDeadLists(oldId);
@@ -159,9 +147,8 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
     // ReSharper disable once OptionalParameterHierarchyMismatch
     public override void Execute(interaction_FollowerInteraction interaction, FollowerCommands finalCommand)
     {
-        if (finalCommand == FollowerCommands.AreYouSureYes)
-        {
-            SpawnRecruit(interaction.follower);
-        }
+        if (finalCommand != FollowerCommands.AreYouSureYes) return;
+        interaction.Close(true, reshowMenu: false);
+        SpawnRecruit(interaction.follower);
     }
 }

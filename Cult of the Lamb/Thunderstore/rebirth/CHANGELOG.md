@@ -1,6 +1,15 @@
 ### 1.1.1 - 24/01/2026
 
-* Internal build improvements.
+* Added configurable settings for all rebirth mechanics (XP penalty chance/amount, token cost).
+* Added configurable settings for token drops (enemy drop rate, drop quantity).
+* Added configurable settings for dungeon chests (spawn chance, token amounts).
+* Added configurable settings for refinery (bone cost, duration).
+* Added configurable settings for missions (reward range, appearance chance).
+* All settings accessible via in-game mod settings menu and BepInEx config file.
+* Fixed body piles rolling for token drops twice.
+* Fixed rebirth notifications showing internal object name instead of follower name.
+* Fixed interaction menu not closing after confirming rebirth.
+* Fixed XP penalty calculation during rebirth.
 
 ### 1.0.8 - 24/08/2024
 
