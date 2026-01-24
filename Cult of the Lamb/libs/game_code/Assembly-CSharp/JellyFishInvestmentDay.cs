@@ -1,0 +1,21 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: JellyFishInvestmentDay
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
+
+using MessagePack;
+using System;
+
+#nullable disable
+[MessagePackObject(false)]
+[Serializable]
+public class JellyFishInvestmentDay
+{
+  [Key(0)]
+  public int Day;
+  [Key(1)]
+  public int InvestmentAmount;
+  [Key(2)]
+  public float InterestRate;
+}

@@ -1,0 +1,119 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: SingleChoiceRewardHeartShop
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
+
+using UnityEngine;
+
+#nullable disable
+public class SingleChoiceRewardHeartShop : SingleChoiceRewardOption
+{
+  public void OnEnable()
+  {
+    if (DungeonSandboxManager.Active)
+    {
+      this.itemOptions.Clear();
+      this.itemOptions.Add(new BuyEntry(InventoryItem.ITEM_TYPE.RED_HEART, InventoryItem.ITEM_TYPE.BLACK_GOLD, 1));
+    }
+    if (this.itemOptions.Count > 0)
+    {
+      this.AllowDecorationAndSkin = true;
+      switch (this.itemOptions[0].itemToBuy)
+      {
+        case InventoryItem.ITEM_TYPE.RED_HEART:
+          float num1 = Random.value;
+          if ((double) num1 > 0.75)
+          {
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.RED_HEART;
+            break;
+          }
+          if ((double) num1 > 0.5)
+          {
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.HALF_HEART;
+            break;
+          }
+          if ((double) num1 > 0.25)
+          {
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.BLUE_HEART;
+            break;
+          }
+          this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.HALF_BLUE_HEART;
+          break;
+        case InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION:
+          if (DataManager.Instance.GetDecorationListFromLocation(PlayerFarming.Location).Count <= 0)
+          {
+            if ((double) Random.value > 0.75)
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.RED_HEART;
+            else if ((double) Random.value > 0.5)
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.HALF_HEART;
+            else if ((double) Random.value > 0.25)
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.BLUE_HEART;
+            else
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.HALF_BLUE_HEART;
+            this.itemOptions[0].quantity = 1;
+            break;
+          }
+          break;
+        case InventoryItem.ITEM_TYPE.FOUND_ITEM_FOLLOWERSKIN:
+          if (!DataManager.CheckIfThereAreSkinsAvailable())
+          {
+            if ((double) Random.value > 0.800000011920929)
+            {
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.GOLD_REFINED;
+              this.itemOptions[0].quantity = 5;
+              break;
+            }
+            if ((double) Random.value > 0.40000000596046448)
+            {
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.BLACK_GOLD;
+              this.itemOptions[0].quantity = 15;
+              break;
+            }
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.GOLD_NUGGET;
+            this.itemOptions[0].quantity = 25;
+            break;
+          }
+          break;
+        case InventoryItem.ITEM_TYPE.DOCTRINE_STONE:
+          if (!DoctrineUpgradeSystem.TrySermonsStillAvailable() || !DoctrineUpgradeSystem.TryGetStillDoctrineStone())
+          {
+            if ((double) Random.value < 0.5)
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.GIFT_SMALL;
+            else
+              this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.GIFT_MEDIUM;
+            this.itemOptions[0].quantity = 1;
+            break;
+          }
+          break;
+        case InventoryItem.ITEM_TYPE.DLC_NECKLACE:
+          float num2 = Random.value;
+          if ((double) num2 > 0.800000011920929)
+          {
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.Necklace_Weird;
+            break;
+          }
+          if ((double) num2 > 0.60000002384185791)
+          {
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.Necklace_Winter;
+            break;
+          }
+          if ((double) num2 > 0.40000000596046448)
+          {
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.Necklace_Targeted;
+            break;
+          }
+          if ((double) num2 > 0.20000000298023224)
+          {
+            this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.Necklace_Frozen;
+            break;
+          }
+          this.itemOptions[0].itemToBuy = InventoryItem.ITEM_TYPE.Necklace_Deaths_Door;
+          break;
+      }
+    }
+    if (this.itemOptions.Count > 0 && this.itemOptions[0].itemToBuy != InventoryItem.ITEM_TYPE.NONE)
+      return;
+    this.gameObject.SetActive(false);
+  }
+}

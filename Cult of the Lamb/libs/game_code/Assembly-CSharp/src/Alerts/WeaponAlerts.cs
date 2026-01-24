@@ -1,0 +1,38 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: src.Alerts.WeaponAlerts
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
+
+using MessagePack;
+using System;
+
+#nullable disable
+namespace src.Alerts;
+
+[MessagePackObject(false)]
+[Serializable]
+public class WeaponAlerts : AlertCategory<EquipmentType>
+{
+  public WeaponAlerts()
+  {
+    DataManager.OnWeaponUnlocked += new Action<EquipmentType>(this.OnWeaponUnlocked);
+  }
+
+  void object.Finalize()
+  {
+    try
+    {
+      if (DataManager.Instance == null)
+        return;
+      DataManager.OnWeaponUnlocked -= new Action<EquipmentType>(this.OnWeaponUnlocked);
+    }
+    finally
+    {
+      // ISSUE: explicit finalizer call
+      base.Finalize();
+    }
+  }
+
+  public void OnWeaponUnlocked(EquipmentType weapon) => this.AddOnce(weapon);
+}

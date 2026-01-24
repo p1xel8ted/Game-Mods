@@ -1,0 +1,33 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: EnableOnLocation
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
+
+using UnityEngine;
+
+#nullable disable
+public class EnableOnLocation : MonoBehaviour
+{
+  [SerializeField]
+  public FollowerLocation location;
+  public FollowerLocation debugLocation;
+  [SerializeField]
+  public bool disableInstead;
+
+  public void OnEnable()
+  {
+    this.debugLocation = PlayerFarming.Location;
+    if (!this.disableInstead)
+    {
+      if (PlayerFarming.Location == this.location)
+        this.gameObject.SetActive(true);
+      else
+        this.gameObject.SetActive(false);
+    }
+    else if (PlayerFarming.Location != this.location)
+      this.gameObject.SetActive(true);
+    else
+      this.gameObject.SetActive(false);
+  }
+}

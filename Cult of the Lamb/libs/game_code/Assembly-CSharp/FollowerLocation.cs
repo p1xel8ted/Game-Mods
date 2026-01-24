@@ -1,0 +1,110 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: FollowerLocation
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
+
+#nullable disable
+public enum FollowerLocation
+{
+  None = -1, // 0xFFFFFFFF
+  Church = 0,
+  Base = 1,
+  Lumberjack = 2,
+  Hub1 = 3,
+  Hub2 = 4,
+  Hub3 = 5,
+  HubShore = 6,
+  Dungeon1_1 = 7,
+  Dungeon1_2 = 8,
+  Dungeon1_3 = 9,
+  Dungeon1_4 = 10, // 0x0000000A
+  Dungeon2_1 = 11, // 0x0000000B
+  Dungeon2_2 = 12, // 0x0000000C
+  Dungeon2_3 = 13, // 0x0000000D
+  Dungeon2_4 = 14, // 0x0000000E
+  Dungeon3_1 = 15, // 0x0000000F
+  Dungeon3_2 = 16, // 0x00000010
+  Dungeon3_3 = 17, // 0x00000011
+  Dungeon3_4 = 18, // 0x00000012
+  Temple1 = 19, // 0x00000013
+  Temple2 = 20, // 0x00000014
+  Temple3 = 21, // 0x00000015
+  Hub1_2 = 22, // 0x00000016
+  Hub1_3 = 23, // 0x00000017
+  Hub1_Main = 24, // 0x00000018
+  Hub1_Swamp = 25, // 0x00000019
+  Hub1_Berries = 26, // 0x0000001A
+  Hub1_RatauOutside = 27, // 0x0000001B
+  Hub1_RatauInside = 28, // 0x0000001C
+  Hub1_Sozo = 29, // 0x0000001D
+  Hub1_Forest = 30, // 0x0000001E
+  Dungeon_BlackOffering = 31, // 0x0000001F
+  HubShore_Lighthouse = 32, // 0x00000020
+  Dungeon_Follower1 = 33, // 0x00000021
+  Dungeon_Follower2 = 34, // 0x00000022
+  Dungeon_Follower3 = 35, // 0x00000023
+  Dungeon_Follower4 = 36, // 0x00000024
+  Dungeon_Follower5 = 37, // 0x00000025
+  Dungeon_Logs1 = 38, // 0x00000026
+  Dungeon_Logs2 = 39, // 0x00000027
+  Dungeon_Logs3 = 40, // 0x00000028
+  Dungeon_Food1 = 41, // 0x00000029
+  Dungeon_Food2 = 42, // 0x0000002A
+  Dungeon_Food3 = 43, // 0x0000002B
+  Dungeon_Stone1 = 44, // 0x0000002C
+  Dungeon_Stone2 = 45, // 0x0000002D
+  Dungeon_Stone3 = 46, // 0x0000002E
+  Boss_1 = 47, // 0x0000002F
+  Boss_2 = 48, // 0x00000030
+  Boss_3 = 49, // 0x00000031
+  Boss_4 = 50, // 0x00000032
+  Boss_5 = 51, // 0x00000033
+  HorseTown = 52, // 0x00000034
+  Dungeon1_5 = 53, // 0x00000035
+  IgnoreMe = 54, // 0x00000036
+  Dungeon4_1 = 55, // 0x00000037
+  Dungeon4_2 = 56, // 0x00000038
+  Dungeon4_3 = 57, // 0x00000039
+  Dungeon4_4 = 58, // 0x0000003A
+  Dungeon5_1 = 59, // 0x0000003B
+  Dungeon5_2 = 60, // 0x0000003C
+  Dungeon5_3 = 61, // 0x0000003D
+  Dungeon5_4 = 62, // 0x0000003E
+  NextBiomeUnlock1 = 63, // 0x0000003F
+  NextBiomeUnlock2 = 64, // 0x00000040
+  NextBiomeUnlock3 = 65, // 0x00000041
+  NextBiomeUnlock4 = 66, // 0x00000042
+  Dungeon_Decoration_Shop1 = 67, // 0x00000043
+  Dungeon_Decoration_Shop1_Inside = 68, // 0x00000044
+  Dungeon_Follower_Shop1 = 69, // 0x00000045
+  DoorRoom = 70, // 0x00000046
+  LambTown = 71, // 0x00000047
+  BountyRoom1 = 72, // 0x00000048
+  BountyRoom2 = 73, // 0x00000049
+  BountyRoom3 = 74, // 0x0000004A
+  BountyRoom4 = 75, // 0x0000004B
+  BountyRoom5 = 76, // 0x0000004C
+  Dungeon_Location_3 = 77, // 0x0000004D
+  Dungeon_Location_4 = 78, // 0x0000004E
+  Sozo = 79, // 0x0000004F
+  Sozo_Cave = 80, // 0x00000050
+  IntroDungeon = 81, // 0x00000051
+  Missionary = 82, // 0x00000052
+  Demon = 83, // 0x00000053
+  Endless = 84, // 0x00000054
+  Graveyard_Location = 85, // 0x00000055
+  Dungeon1_6 = 86, // 0x00000056
+  DLC_ShrineRoom = 87, // 0x00000057
+  Blacksmith_Inside = 88, // 0x00000058
+  Yngya_Room = 89, // 0x00000059
+  TarotShop_Inside = 90, // 0x0000005A
+  DecorationShop_Inside = 91, // 0x0000005B
+  Flockade_Inside = 92, // 0x0000005C
+  Boss_Yngya = 93, // 0x0000005D
+  Dead_Whale_Inside = 94, // 0x0000005E
+  DLC_DoorRoom = 95, // 0x0000005F
+  Boss_Wolf = 96, // 0x00000060
+  LeftInTheDungeon = 97, // 0x00000061
+  Total = 98, // 0x00000062
+}

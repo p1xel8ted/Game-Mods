@@ -34,6 +34,10 @@ bld/
 
 [Ll]ibs/
 [Ll]ib/
+!Cult of the Lamb/libs/
+Cult of the Lamb/libs/*
+!Cult of the Lamb/libs/game_code/
+!Cult of the Lamb/libs/game_code/**
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -1077,35 +1081,19 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/rider,visualstudio,visualstudiocode,csharp
 *.DotSettings
 
-# === AI/Claude/Chatbot/Generated/Private files ===
-# Claude, Copilot, ChatGPT, and other AI tool artifacts
+# Claude Code local files
+.claude/
+!**/CLAUDE.md
+
+# Other AI tool artifacts
 .copilot/
 .copilot.json
 .copilot-*.json
-claude/
-claude-*
-*claude*.json
-*claude*.md
-*claude*.log
 *chatgpt*
 *openai*
-*ai-generated*
-*aioutput*
-*aigenerated*
-*prompt*
-*completion*
 *anthropic*
-*llm*
-*conversation*
-*transcript*
-*ai*
 
-# VS Code/extension/AI session logs
-.vscode/copilot*
-.vscode/claude*
-.vscode/ai*
-
-# Other sensitive or temporary files
+# Sensitive or temporary files
 *.secret
 *.env
 *.key
@@ -1116,6 +1104,3 @@ claude-*
 *.bak
 *.tmp
 *.swp
-*.log
-
-# End AI/Claude/Private additions

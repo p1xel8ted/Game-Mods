@@ -1,0 +1,120 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: FarmStation
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
+
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
+using System.Collections.Generic;
+using UnityEngine;
+
+#nullable disable
+public class FarmStation : Interaction
+{
+  public static Vector3 Centre = new Vector3(0.0f, 0.0f);
+  public SpriteRenderer RangeSprite;
+  public static List<FarmStation> FarmStations = new List<FarmStation>();
+  public Structure Structure;
+  public Structures_FarmerStation _StructureInfo;
+  public GameObject WorshipperPosition;
+  public LayerMask playerMask;
+  public string sRequireLevel2;
+  public string sMoreActions;
+  public Color FadeOut = new Color(1f, 1f, 1f, 0.0f);
+  public float DistanceRadius = 1f;
+  public float Distance = 1f;
+  public int FrameIntervalOffset;
+  public int UpdateInterval = 2;
+  public bool distanceChanged;
+  public Vector3 _updatePos;
+
+  public StructuresData StructureInfo => this.Structure.Structure_Info;
+
+  public Structures_FarmerStation StructureBrain
+  {
+    get
+    {
+      if (this._StructureInfo == null)
+        this._StructureInfo = this.Structure.Brain as Structures_FarmerStation;
+      return this._StructureInfo;
+    }
+    set => this._StructureInfo = value;
+  }
+
+  public void Start()
+  {
+    this.UpdateLocalisation();
+    this.Interactable = false;
+    this.HasSecondaryInteraction = true;
+    this.RangeSprite.size = new Vector2(6f, 6f);
+    this.playerMask = (LayerMask) ((int) this.playerMask | 1 << LayerMask.NameToLayer("Player"));
+    this.FrameIntervalOffset = Random.Range(0, this.UpdateInterval);
+  }
+
+  public override void UpdateLocalisation() => base.UpdateLocalisation();
+
+  public override void OnEnableInteraction() => base.OnEnableInteraction();
+
+  public override void OnEnable()
+  {
+    base.OnEnable();
+    FarmStation.FarmStations.Add(this);
+    if (!((Object) this.GetComponentInParent<PlacementObject>() == (Object) null))
+      return;
+    this.RangeSprite.DOColor(this.FadeOut, 0.0f).SetUpdate<TweenerCore<Color, Color, ColorOptions>>(true);
+  }
+
+  public override void OnDisableInteraction()
+  {
+    base.OnDisableInteraction();
+    FarmStation.FarmStations.Remove(this);
+  }
+
+  public override void GetLabel()
+  {
+    this.Label = "";
+    this.Interactable = false;
+  }
+
+  public override void GetSecondaryLabel()
+  {
+    this.SecondaryLabel = "";
+    this.SecondaryInteractable = false;
+  }
+
+  public override void Update()
+  {
+    base.Update();
+    if ((Time.frameCount + this.FrameIntervalOffset) % this.UpdateInterval != 0 || (Object) PlayerFarming.Instance == (Object) null)
+      return;
+    if (!GameManager.overridePlayerPosition)
+    {
+      this._updatePos = PlayerFarming.Instance.transform.position;
+      this.DistanceRadius = 1f;
+    }
+    else
+    {
+      this._updatePos = PlacementRegion.Instance.PlacementPosition;
+      this.DistanceRadius = 6f;
+    }
+    if ((double) Vector3.Distance(this._updatePos, this.transform.position) < (double) this.DistanceRadius)
+    {
+      this.RangeSprite.gameObject.SetActive(true);
+      this.RangeSprite.DOKill();
+      this.RangeSprite.DOColor(StaticColors.OffWhiteColor, 0.5f).SetUpdate<TweenerCore<Color, Color, ColorOptions>>(true);
+      this.distanceChanged = true;
+    }
+    else
+    {
+      if (!this.distanceChanged)
+        return;
+      this.RangeSprite.DOKill();
+      this.RangeSprite.DOColor(this.FadeOut, 0.5f).SetUpdate<TweenerCore<Color, Color, ColorOptions>>(true);
+      this.distanceChanged = false;
+    }
+  }
+
+  public override void OnSecondaryInteract(StateMachine state) => base.OnSecondaryInteract(state);
+}

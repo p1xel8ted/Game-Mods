@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(/C:\\mnt\\c\\Users\\Ben\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\CultOfQoL/**)"
-    ],
-    "deny": [],
-    "ask": []
-  }
-}
