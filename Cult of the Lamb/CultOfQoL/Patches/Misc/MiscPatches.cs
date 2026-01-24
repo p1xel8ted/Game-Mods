@@ -28,7 +28,8 @@ public class MiscPatches
         "Configure Node Connection Listener",
         "Configure Branch Connection Listener",
         "DLC is not installed, showing button",
-        "DLC is installed, hiding button"
+        "DLC is installed, hiding button",
+        "Releasing gameobject"
     };
     
     [HarmonyTranspiler]
