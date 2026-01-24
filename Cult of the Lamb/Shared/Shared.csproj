@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>0.1.0</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
+    <NoWarn>MSB3277</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AFPSCounter.Examples">
@@ -16,12 +15,6 @@
     </Reference>
     <Reference Include="AmplifyShaderEditor.Samples.BuiltIn">
       <HintPath>..\libs\AmplifyShaderEditor.Samples.BuiltIn.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="AstarPathfindingProject">
       <HintPath>..\libs\AstarPathfindingProject.dll</HintPath>
@@ -125,9 +118,6 @@
     <Reference Include="Sirenix.OdinInspector.Attributes">
       <HintPath>..\libs\Sirenix.OdinInspector.Attributes.dll</HintPath>
     </Reference>
-    <Reference Include="Sirenix.OdinInspector.CompatibilityLayer">
-      <HintPath>..\libs\Sirenix.OdinInspector.CompatibilityLayer.dll</HintPath>
-    </Reference>
     <Reference Include="Sirenix.Serialization">
       <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
     </Reference>
@@ -155,9 +145,6 @@
     <Reference Include="Unity.2D.SpriteShape.Runtime">
       <HintPath>..\libs\Unity.2D.SpriteShape.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Addressables">
-      <HintPath>..\libs\Unity.Addressables.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
       <HintPath>..\libs\Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
@@ -172,9 +159,6 @@
     </Reference>
     <Reference Include="Unity.Burst.Unsafe">
       <HintPath>..\libs\Unity.Burst.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InputSystem">
-      <HintPath>..\libs\Unity.InputSystem.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InternalAPIEngineBridge.001">
       <HintPath>..\libs\Unity.InternalAPIEngineBridge.001.dll</HintPath>
@@ -209,9 +193,6 @@
     <Reference Include="Unity.Recorder.Base">
       <HintPath>..\libs\Unity.Recorder.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.ResourceManager">
-      <HintPath>..\libs\Unity.ResourceManager.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.ScriptableBuildPipeline">
       <HintPath>..\libs\Unity.ScriptableBuildPipeline.dll</HintPath>
     </Reference>
@@ -220,9 +201,6 @@
     </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>..\libs\Unity.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\libs\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AccessibilityModule">
       <HintPath>..\libs\UnityEngine.AccessibilityModule.dll</HintPath>
@@ -254,9 +232,6 @@
     <Reference Include="UnityEngine.ClusterRendererModule">
       <HintPath>..\libs\UnityEngine.ClusterRendererModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.CrashReportingModule">
       <HintPath>..\libs\UnityEngine.CrashReportingModule.dll</HintPath>
     </Reference>
@@ -280,9 +255,6 @@
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\libs\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>..\libs\UnityEngine.InputLegacyModule.dll</HintPath>
@@ -350,32 +322,17 @@
     <Reference Include="UnityEngine.TextCoreTextEngineModule">
       <HintPath>..\libs\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\libs\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.TilemapModule">
       <HintPath>..\libs\UnityEngine.TilemapModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TLSModule">
       <HintPath>..\libs\UnityEngine.TLSModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\libs\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
       <HintPath>..\libs\UnityEngine.UIElementsModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UIElementsNativeModule">
-      <HintPath>..\libs\UnityEngine.UIElementsNativeModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UmbraModule">
       <HintPath>..\libs\UnityEngine.UmbraModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UNETModule">
-      <HintPath>..\libs\UnityEngine.UNETModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UnityAnalyticsCommonModule">
       <HintPath>..\libs\UnityEngine.UnityAnalyticsCommonModule.dll</HintPath>

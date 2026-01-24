@@ -104,7 +104,7 @@ public static class GameSpeedManipulationPatches
             return;
         }
 
-        if (_newGameSpeed <= 0 || _newSpeed <= 0 || __instance.CurrentGameSpeed <= 0)
+        if (_newGameSpeed <= 0 || _newSpeed < 0 || __instance.CurrentGameSpeed < 0)
         {
             ResetTime();
         }
@@ -114,7 +114,7 @@ public static class GameSpeedManipulationPatches
 
         void UpdateGameSpeed(int newSpeedIndex)
         {
-            _newSpeed = newSpeedIndex % speedCount;
+            _newSpeed = ((newSpeedIndex % speedCount) + speedCount) % speedCount;
             _newGameSpeed = speedList[_newSpeed];
             GameManager.SetTimeScale(_newGameSpeed);
             NotificationCentre.Instance.PlayGenericNotification(

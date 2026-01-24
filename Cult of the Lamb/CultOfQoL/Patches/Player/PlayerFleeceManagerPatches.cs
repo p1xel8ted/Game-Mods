@@ -8,7 +8,7 @@ public static class PlayerFleeceManagerPatches
     public static bool PlayerFleeceManager_IncrementDamageModifier()
     {
         // Only patch if we're modifying Golden Fleece behavior
-        if (!Plugin.ReverseGoldenFleeceDamageChange.Value && !Helpers.IsMultiplierActive(Plugin.BaseDamageMultiplier.Value)) return true;
+        if (!Plugin.ReverseGoldenFleeceDamageChange.Value && !Helpers.IsMultiplierActive(Plugin.FleeceDamageMulti.Value)) return true;
     
         var playerFleece = DataManager.Instance.PlayerFleece;
         if (playerFleece != 1) return false; // Golden Fleece
@@ -19,9 +19,9 @@ public static class PlayerFleeceManagerPatches
             Plugin.ReverseGoldenFleeceDamageChange.Value ? 0.1f : 0.05f;
 
         // Step 2: Apply custom multiplier if active
-        if (Helpers.IsMultiplierActive(Plugin.BaseDamageMultiplier.Value))
+        if (Helpers.IsMultiplierActive(Plugin.FleeceDamageMulti.Value))
         {
-            baseIncrement *= Plugin.BaseDamageMultiplier.Value;
+            baseIncrement *= Plugin.FleeceDamageMulti.Value;
         }
         
         PlayerFleeceManager.damageMultiplier += baseIncrement;

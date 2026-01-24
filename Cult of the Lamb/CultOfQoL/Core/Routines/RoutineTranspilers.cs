@@ -11,9 +11,10 @@ public static class RoutinesTranspilers
     private const string BlessRoutine = "BlessRoutine";
     private const string DanceRoutine = "DanceRoutine";
     private const string PetDogRoutine = "PetDogRoutine";
-    // private const string LevelUpRoutine = "LevelUpRoutine";
     private const string RomanceRoutine = "RomanceRoutine";
     private const string ExtortMoneyRoutine = "ExtortMoneyRoutine";
+    private const string LevelUpRoutine = "LevelUpRoutine";
+
     private static readonly MethodInfo GetInstance = AccessTools.Method(typeof(GameManager), nameof(GameManager.GetInstance));
     private static readonly MethodInfo OnConversationNext = AccessTools.Method(typeof(GameManager), nameof(GameManager.OnConversationNext));
     private static readonly MethodInfo OnConversationNew = AccessTools.Method(typeof(GameManager), nameof(GameManager.OnConversationNew), [typeof(bool), typeof(bool), typeof(PlayerFarming)]);
@@ -21,16 +22,12 @@ public static class RoutinesTranspilers
     private static readonly MethodInfo CameraSetOffset = AccessTools.Method(typeof(GameManager), nameof(GameManager.CameraSetOffset));
     private static readonly MethodInfo HudManagerHide = AccessTools.Method(typeof(HUD_Manager), nameof(HUD_Manager.Hide));
     private static readonly FieldInfo HudManagerInstance = AccessTools.Field(typeof(HUD_Manager), nameof(HUD_Manager.Instance));
-    // private readonly static FieldInfo PlayerInstance = AccessTools.Field(typeof(PlayerFarming), nameof(PlayerFarming.Instance));
-    // private readonly static MethodInfo setStateMachine = AccessTools.Property(typeof(StateMachine), nameof(StateMachine.CURRENT_STATE)).SetMethod;
-    // private readonly static MethodInfo simpleAnimatorAnimate = AccessTools.Method(typeof(SimpleSpineAnimator), nameof(SimpleSpineAnimator.Animate), [typeof(string), typeof(int), typeof(bool)]);
     private static readonly FieldInfo BiomeConstantsInstance = AccessTools.Field(typeof(BiomeConstants), nameof(BiomeConstants.Instance));
     private static readonly MethodInfo DepthOfFieldTween = AccessTools.Method(typeof(BiomeConstants), nameof(BiomeConstants.DepthOfFieldTween));
-    private static readonly List<string> AlreadyLogged = [];
+    private static readonly HashSet<string> AlreadyLogged = [];
 
-    
     internal static bool AnyMassActionsEnabled => RoutineChecks.Any(pair => pair.Value.Invoke().Value);
-    
+
     private static readonly Dictionary<string, Func<ConfigEntry<bool>>> RoutineChecks = new()
     {
         [BribeRoutine] = () => Plugin.MassBribe,
@@ -41,32 +38,30 @@ public static class RoutinesTranspilers
         [BlessRoutine] = () => Plugin.MassBless,
         [DanceRoutine] = () => Plugin.MassInspire,
         [PetDogRoutine] = () => Plugin.MassPetDog,
-        // [LevelUpRoutine] = () => Plugin.MassLevelUp,
         [RomanceRoutine] = () => Plugin.MassRomance,
-        [ExtortMoneyRoutine] = () => Plugin.MassExtort
+        [ExtortMoneyRoutine] = () => Plugin.MassExtort,
+        [LevelUpRoutine] = () => Plugin.MassLevelUp
     };
-
-    private static bool RunThisTranspiler => RoutineChecks.Any(pair => pair.Value.Invoke().Value);
 
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract))]
     private static IEnumerable<CodeInstruction> interaction_FollowerInteraction_OnInteract(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
-        if (!RunThisTranspiler) return instructions;
+        var original_codes = instructions.ToList();
+        if (!AnyMassActionsEnabled) return original_codes;
 
-        if (original.DeclaringType != null)
+        try
         {
-            var declaringType = original.DeclaringType.ToString();
-            LogOnce(declaringType, $"Patching {declaringType}:{original.Name}");
+            var codes = new List<CodeInstruction>(original_codes);
+            LogOnce(original, "Removing DepthOfFieldTween.");
+            NopCallSequence(codes, c => c.LoadsField(BiomeConstantsInstance), DepthOfFieldTween);
+            return codes;
         }
-
-
-        var codes = new List<CodeInstruction>(instructions);
-        for (var index = 0; index < codes.Count; index++)
+        catch (Exception ex)
         {
-            TryReplaceWithNop(codes, index, codes[index].LoadsField(BiomeConstantsInstance) && codes[index + 6].Calls(DepthOfFieldTween), 7);
+            Plugin.Log.LogWarning($"[Transpiler] interaction_FollowerInteraction.OnInteract: {ex.Message}");
+            return original_codes;
         }
-        return codes.AsEnumerable();
     }
 
     [HarmonyTranspiler]
@@ -78,59 +73,78 @@ public static class RoutinesTranspilers
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.BlessRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.DanceRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.PetDogRoutine), MethodType.Enumerator)]
-    // [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.RomanceRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ExtortMoneyRoutine), MethodType.Enumerator)]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine), MethodType.Enumerator)]
     private static IEnumerable<CodeInstruction> interaction_FollowerInteraction_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
+        var original_codes = instructions.ToList();
+
         if (original.DeclaringType != null)
         {
             var declaringType = original.DeclaringType.ToString();
-
-            var routineCheckResults = RoutineChecks
-                .Where(pair => declaringType.Contains(pair.Key, StringComparison.OrdinalIgnoreCase) && !pair.Value.Invoke().Value)
-                .ToList();
-
-            if (routineCheckResults.Any())
+            if (RoutineChecks.Any(pair => declaringType.Contains(pair.Key, StringComparison.OrdinalIgnoreCase) && !pair.Value.Invoke().Value))
             {
-                return instructions;
+                return original_codes;
+            }
+        }
+
+        try
+        {
+            var codes = new List<CodeInstruction>(original_codes);
+            LogOnce(original, "Removing HUD/conversation/camera calls.");
+
+            NopCallSequence(codes, c => c.LoadsField(HudManagerInstance), HudManagerHide);
+            NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNew);
+            NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNext);
+            NopCallSequence(codes, c => c.Calls(GetInstance), AddPlayerToCamera);
+            NopCallSequence(codes, c => c.Calls(GetInstance), CameraSetOffset);
+
+            return codes;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] interaction_FollowerInteraction.{original.Name}: {ex.Message}");
+            return original_codes;
+        }
+    }
+
+    private static void LogOnce(MethodBase original, string description)
+    {
+        var key = $"{original.DeclaringType}.{original.Name}";
+        if (!AlreadyLogged.Add(key)) return;
+        Plugin.Log.LogInfo($"[Transpiler] interaction_FollowerInteraction.{original.Name}: {description}");
+    }
+
+    /// <summary>
+    /// Finds all occurrences of <paramref name="targetCall"/> in <paramref name="codes"/> and NOPs each occurrence
+    /// along with the preceding argument-loading instructions back to the anchor instruction identified by <paramref name="anchorTest"/>.
+    /// </summary>
+    private static void NopCallSequence(List<CodeInstruction> codes, Func<CodeInstruction, bool> anchorTest, MethodInfo targetCall, int maxWindow = 12)
+    {
+        for (var i = 0; i < codes.Count; i++)
+        {
+            if (!codes[i].Calls(targetCall)) continue;
+
+            var anchorFound = false;
+            for (var j = i - 1; j >= Math.Max(0, i - maxWindow); j--)
+            {
+                if (!anchorTest(codes[j])) continue;
+
+                for (var k = j; k <= i; k++)
+                {
+                    codes[k].opcode = OpCodes.Nop;
+                    codes[k].operand = null;
+                }
+
+                anchorFound = true;
+                break;
             }
 
-            LogOnce(declaringType, $"Patching {declaringType}:{original.Name}");
-        }
-
-
-        var codes = new List<CodeInstruction>(instructions);
-
-        for (var index = 0; index < codes.Count; index++)
-        {
-            // if (!declaringType.Contains(IntimidateRoutine, StringComparison.OrdinalIgnoreCase))
-            // {
-            //     TryReplaceWithNop(codes, index, codes[index].LoadsField(PlayerInstance) && codes[index + 3].Calls(setStateMachine), 4);
-            //     TryReplaceWithNop(codes, index, codes[index].LoadsField(PlayerInstance) && codes[index + 5].Calls(simpleAnimatorAnimate), 14);
-            // }
-            TryReplaceWithNop(codes, index, codes[index].LoadsField(HudManagerInstance) && codes[index + 4].Calls(HudManagerHide), 5);
-            TryReplaceWithNop(codes, index, codes[index].Calls(GetInstance) && codes[index + 3].Calls(OnConversationNew) && codes[index + 4].Calls(GetInstance) && codes[index + 8].Calls(OnConversationNext), 9);
-            TryReplaceWithNop(codes, index, codes[index].Calls(GetInstance) && codes[index + 4].Calls(OnConversationNext) && codes[index + 6].Calls(AddPlayerToCamera) && codes[index + 9].Calls(CameraSetOffset), 10);
-        }
-        return codes.AsEnumerable();
-    }
-
-    private static void LogOnce(string declaringType, string message)
-    {
-        if (AlreadyLogged.Contains(declaringType)) return;
-        AlreadyLogged.Add(declaringType);
-        Plugin.L($"[Mass Actions] -> {message}");
-    }
-
-    private static void TryReplaceWithNop(IReadOnlyList<CodeInstruction> codes, int index, bool condition, int count)
-    {
-        if (!condition) return;
-
-        for (var j = 0; j < count; j++)
-        {
-            codes[index + j].opcode = OpCodes.Nop;
+            if (!anchorFound)
+            {
+                Plugin.Log.LogWarning($"[Transpiler] NopCallSequence: Failed to find anchor for {targetCall.Name} at instruction {i}.");
+            }
         }
     }
-
 }

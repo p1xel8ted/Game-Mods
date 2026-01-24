@@ -38,7 +38,7 @@ public static class TarotCardPatches
             }
         }
         
-        __result = new TarotCards.TarotCard(card, upgradeLevel);
+        __result = new TarotCards.TarotCard(card, Mathf.Min(upgradeLevel, TarotCards.GetMaxTarotCardLevel(card)));
         return false;
     }
 }

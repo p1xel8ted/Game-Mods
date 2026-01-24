@@ -139,40 +139,37 @@ internal static class StructurePatches
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
         var codeInstructions = instructions.ToList();
-        var matcher = new CodeMatcher(codeInstructions);
-
-        // Find the CookingData.CookedMeal call
-        // Both methods have the meal type value on the stack right before this call
-        matcher.MatchForward(false,
-            new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(CookingData), nameof(CookingData.CookedMeal))
-            ));
-
-        if (matcher.IsInvalid)
+        try
         {
-            Plugin.Log.LogError($"Failed to find CookingData.CookedMeal in {original.DeclaringType?.Name}.{original.Name}");
+            var matcher = new CodeMatcher(codeInstructions);
+
+            matcher.MatchForward(false,
+                new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(CookingData), nameof(CookingData.CookedMeal))
+                ));
+
+            if (matcher.IsInvalid)
+            {
+                Plugin.Log.LogWarning($"[Transpiler] {original.DeclaringType?.Name}.{original.Name}: Failed to find CookingData.CookedMeal call.");
+                return codeInstructions;
+            }
+
+            matcher.Insert(
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(StructurePatches), nameof(GetUniversalSpawnPosition),
+                    [typeof(object)])),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(StructurePatches), nameof(CheckForBones),
+                    [typeof(InventoryItem.ITEM_TYPE), typeof(Vector3)]))
+            );
+
+            Plugin.Log.LogInfo($"[Transpiler] {original.DeclaringType?.Name}.{original.Name}: Inserted CheckForBones call before CookedMeal.");
+            return matcher.InstructionEnumeration();
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] {original.DeclaringType?.Name}.{original.Name}: {ex.Message}");
             return codeInstructions;
         }
-
-        // At this point, the meal type (obj2 or currentMeal) is already on the stack
-        // We need to duplicate it, get the spawn position, and call CheckForBones
-
-        matcher.Insert(
-            // Duplicate the meal type on the stack (we need it for both CheckForBones and CookedMeal)
-            new CodeInstruction(OpCodes.Dup),
-
-            // Load 'this' for accessing the instance
-            new CodeInstruction(OpCodes.Ldarg_0),
-
-            // Call a helper method that gets the spawn position from any of the three types
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(StructurePatches), nameof(GetUniversalSpawnPosition),
-                [typeof(object)])),
-
-            // Call CheckForBones(mealType, position)
-            new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(StructurePatches), nameof(CheckForBones),
-                [typeof(InventoryItem.ITEM_TYPE), typeof(Vector3)]))
-        );
-
-        return matcher.InstructionEnumeration();
     }
 
 
@@ -403,7 +400,7 @@ internal static class StructurePatches
 
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(Structures_Refinery), nameof(Structures_Refinery.GetCost), typeof(InventoryItem.ITEM_TYPE))]
+    [HarmonyPatch(typeof(Structures_Refinery), nameof(Structures_Refinery.GetCost), typeof(InventoryItem.ITEM_TYPE), typeof(int))]
     public static void Structures_Refinery_GetCost(ref List<StructuresData.ItemCost> __result)
     {
         // Performance optimization: Use cached config value

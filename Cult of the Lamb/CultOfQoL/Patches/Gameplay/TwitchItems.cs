@@ -42,9 +42,10 @@ internal static class TwitchItems
         private static readonly HashSet<string> PaidDlcKeywords = new(StringComparer.OrdinalIgnoreCase)
         {
             "Heretic",
-            "Cultist", 
+            "Cultist",
             "Sinful",
-            "Pilgrim"
+            "Pilgrim",
+            "Major"
         };
 
         [UsedImplicitly]

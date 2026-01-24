@@ -33,7 +33,7 @@ public static class Weather
                 var weather = WeatherSystemControllerInstance.weatherData.RandomElement();
                 WeatherSystemControllerInstance.SetWeather(weather.WeatherType, weather.WeatherStrength, 3f);
 
-                if (changeWeatherAndShowNotification && phase is not DayPhase.Count or DayPhase.None)
+                if (changeWeatherAndShowNotification && phase is not DayPhase.Count and not DayPhase.None)
                 {
                     // Performance optimization: Use cached string and pre-built message
                     var phaseString = phase.ToString();
@@ -45,7 +45,7 @@ public static class Weather
             }
         }
 
-        if (showPhaseNotifications && phase is not DayPhase.Count or DayPhase.None && !changeWeatherAndShowNotification)
+        if (showPhaseNotifications && phase is not DayPhase.Count and not DayPhase.None && !changeWeatherAndShowNotification)
         {
             NotificationCentre.Instance.PlayGenericNotification($"{phase} has started!");
         }
@@ -85,8 +85,7 @@ public static class Weather
 
         if (color.HasValue)
         {
-            __result.OverlayOpacity = color.Value.a;
-            __result.Overlay.color = color.Value with { a = 0f };
+            __result.WeatherTint = color.Value;
         }
     }
 

@@ -3,39 +3,51 @@
 [Harmony]
 public static class RitualEnrichmentNerf
 {
-    private static void AddCoins(int type, int quantity, bool forceNormalInventory = false, int myQty = 0)
+    private static void AddCoins(int type, int quantity, bool forceNormalInventory = false)
     {
-        if (!Plugin.ReverseEnrichmentNerf.Value || myQty == 0)
+        if (Plugin.ReverseEnrichmentNerf.Value)
         {
-            Inventory.AddItem(type, quantity, forceNormalInventory);
+            // CustomGiveCoins handles coin addition per-follower
+            Plugin.L($"RitualEnrichmentNerf: Skipping RitualRoutine's AddItem({quantity} coins) - CustomGiveCoins handles it.");
             return;
         }
-        Inventory.AddItem(type, myQty, forceNormalInventory);
-        Plugin.L($"RitualEnrichmentNerf: Adding {quantity} coins to inventory.");
+        Inventory.AddItem(type, quantity, forceNormalInventory);
     }
 
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(RitualDonation), nameof(RitualDonation.RitualRoutine), MethodType.Enumerator)]
     private static IEnumerable<CodeInstruction> RitualDonation_RitualRoutine(IEnumerable<CodeInstruction> instructions)
     {
-        var codes = new List<CodeInstruction>(instructions);
-        var addItemMethod = AccessTools.Method(typeof(Inventory), nameof(Inventory.AddItem), [typeof(int), typeof(int), typeof(bool)]);
-        var addCoinsMethod = AccessTools.Method(typeof(RitualEnrichmentNerf), nameof(AddCoins));
-
-        for (var i = 0; i < codes.Count; i++)
+        var original = instructions.ToList();
+        try
         {
-            if (!codes[i].Calls(addItemMethod)) continue;
+            var codes = new List<CodeInstruction>(original);
+            var addItemMethod = AccessTools.Method(typeof(Inventory), nameof(Inventory.AddItem), [typeof(int), typeof(int), typeof(bool)]);
+            var addCoinsMethod = AccessTools.Method(typeof(RitualEnrichmentNerf), nameof(AddCoins));
+            var found = false;
 
-            // Inject the myQty value before calling the new AddCoins method
-            codes.Insert(i, new CodeInstruction(OpCodes.Ldc_I4, 0)); // Push the default value of 0 for myQty onto the stack
+            for (var i = 0; i < codes.Count; i++)
+            {
+                if (!codes[i].Calls(addItemMethod)) continue;
+                codes[i].operand = addCoinsMethod;
+                found = true;
+            }
 
-            // Replace the method call with the updated AddCoins method
-            codes[i + 1].operand = addCoinsMethod;
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] RitualDonation.RitualRoutine: Failed to find Inventory.AddItem call.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo("[Transpiler] RitualDonation.RitualRoutine: Redirected Inventory.AddItem to AddCoins.");
+            return codes;
         }
-
-        return codes.AsEnumerable();
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] RitualDonation.RitualRoutine: {ex.Message}");
+            return original;
+        }
     }
-
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(RitualDonation), nameof(RitualDonation.GiveCoins))]
@@ -45,40 +57,31 @@ public static class RitualEnrichmentNerf
         {
             return true;
         }
-        // Replace the original method with custom logic
-        __result = CustomGiveCoins(follower, totalTime, delay);
 
-        // Skip the original method
+        __result = CustomGiveCoins(follower, totalTime, delay);
         return false;
     }
 
-    // Custom implementation of GiveCoins, replicating the old logic.
     private static IEnumerator CustomGiveCoins(Follower follower, float totalTime, float delay)
     {
-        if (!Plugin.ReverseEnrichmentNerf.Value)
-        {
-            yield break;
-        }
-
         if (!follower)
         {
             yield break;
         }
 
-        var randomCoins = follower.Brain.Info.XPLevel * 10;
+        var coinsPerFollower = follower.Brain.Info.XPLevel * 10;
 
         yield return new WaitForSeconds(delay);
 
-        var increment = (totalTime - delay) / randomCoins;
-        int num;
-        for (var i = 0; i < randomCoins; i = num + 1)
+        var increment = (totalTime - delay) / coinsPerFollower;
+        for (var i = 0; i < coinsPerFollower; i++)
         {
             AudioManager.Instance.PlayOneShot("event:/followers/pop_in", follower.transform.position);
             ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
             yield return new WaitForSeconds(increment);
-            num = i;
         }
-        
-        Inventory.AddItem(InventoryItem.ITEM_TYPE.BLACK_GOLD, randomCoins * 2);
+
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.BLACK_GOLD, coinsPerFollower * 2);
+        Plugin.L($"RitualEnrichmentNerf: {follower.Brain.Info.Name} donated {coinsPerFollower * 2} coins (level {follower.Brain.Info.XPLevel}).");
     }
 }

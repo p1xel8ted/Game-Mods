@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-    <!--Base Settings-->
     <PropertyGroup>
         <Description>$(MSBuildProjectName)</Description>
         <TargetFramework>net481</TargetFramework>
@@ -13,15 +12,17 @@
         <Company>$(Authors)</Company>
         <Product>$(MSBuildProjectName)</Product>
         <PackageId>$(MSBuildProjectName)</PackageId>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <DebugType>embedded</DebugType>
         <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
         <Deterministic>true</Deterministic>
+        <OutputPath>G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
     </PropertyGroup>
 
-    <!--Default all references to CopyLocal False.-->
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release-Thunderstore' ">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
     <ItemDefinitionGroup>
         <Reference>
             <Private>False</Private>
@@ -34,17 +35,54 @@
         </PackageReference>
     </ItemDefinitionGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <OutputPath>G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <OutputPath>G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
-    </PropertyGroup>
-
+    <!-- Common packages -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
         <PackageReference Include="BepInEx.BaseLib" Version="5.4.21"/>
+    </ItemGroup>
+
+    <!-- Common game/Unity references -->
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass">
+            <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.Addressables">
+            <HintPath>..\libs\Unity.Addressables.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.InputSystem">
+            <HintPath>..\libs\Unity.InputSystem.dll</HintPath>
+        </Reference>
+        <Reference Include="Unity.ResourceManager">
+            <HintPath>..\libs\Unity.ResourceManager.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>..\libs\UnityEngine.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>..\libs\UnityEngine.IMGUIModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+            <HintPath>..\libs\UnityEngine.TextRenderingModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+            <HintPath>..\libs\UnityEngine.UI.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+            <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <!-- Shared source files (exclude from the Shared project itself where SDK glob includes them) -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' != 'Shared'">
+        <Compile Include="..\Shared\Helpers.cs">
+            <Link>Helpers.cs</Link>
+        </Compile>
     </ItemGroup>
 
 </Project>

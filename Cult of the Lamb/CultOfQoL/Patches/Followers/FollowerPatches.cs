@@ -19,30 +19,34 @@ public static class FollowerPatches
     [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.NewCharacter))]
     public static IEnumerable<CodeInstruction> FollowerInfo_NewCharacter_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var originalCode = instructions.ToList();
-        var modifiedCode = new List<CodeInstruction>(originalCode);
-        const int defaultMin = 40;
-        const int defaultMax = 55;
+        var original = instructions.ToList();
         try
         {
+            var codes = new List<CodeInstruction>(original);
             var getMinMethod = AccessTools.Method(typeof(FollowerPatches), nameof(GetMinLifeExpectancy));
             var getMaxMethod = AccessTools.Method(typeof(FollowerPatches), nameof(GetMaxLifeExpectancy));
             var randomRangeMethod = AccessTools.Method(typeof(Random), nameof(Random.Range), [typeof(int), typeof(int)]);
+            var found = false;
 
-            for (var i = 0; i < modifiedCode.Count - 2; i++)
+            for (var i = 0; i < codes.Count - 2; i++)
             {
-                if (IsLoadInt(modifiedCode[i], defaultMin) && IsLoadInt(modifiedCode[i + 1], defaultMax) && modifiedCode[i + 2].Calls(randomRangeMethod))
+                if (IsLoadInt(codes[i], 40) && IsLoadInt(codes[i + 1], 55) && codes[i + 2].Calls(randomRangeMethod))
                 {
-                    modifiedCode[i] = new CodeInstruction(OpCodes.Call, getMinMethod).WithLabels(modifiedCode[i].labels);
-                    modifiedCode[i + 1] = new CodeInstruction(OpCodes.Call, getMaxMethod).WithLabels(modifiedCode[i + 1].labels);
-
-                    Plugin.Log.LogInfo($"[Transpiler] Replaced hardcoded range {defaultMin}, {defaultMax} in FollowerInfo.NewCharacter with range {GetMinLifeExpectancy()}, {GetMaxLifeExpectancy()}");
-
+                    codes[i] = new CodeInstruction(OpCodes.Call, getMinMethod).WithLabels(codes[i].labels);
+                    codes[i + 1] = new CodeInstruction(OpCodes.Call, getMaxMethod).WithLabels(codes[i + 1].labels);
+                    found = true;
                     break;
                 }
             }
 
-            return modifiedCode;
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] FollowerInfo.NewCharacter: Failed to find Random.Range(40, 55) call.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo($"[Transpiler] FollowerInfo.NewCharacter: Replaced life expectancy range with ({GetMinLifeExpectancy()}, {GetMaxLifeExpectancy()}).");
+            return codes;
 
             bool IsLoadInt(CodeInstruction instr, int value)
             {
@@ -53,8 +57,8 @@ public static class FollowerPatches
         }
         catch (Exception ex)
         {
-            Plugin.Log.LogError($"[Transpiler] Error in FollowerInfo.NewCharacter transpiler: {ex}");
-            return originalCode;
+            Plugin.Log.LogWarning($"[Transpiler] FollowerInfo.NewCharacter: {ex.Message}");
+            return original;
         }
     }
 
@@ -186,7 +190,7 @@ public static class FollowerPatches
 
     private static bool ShouldMassReassure(FollowerCommands followerCommands)
     {
-        if (!Plugin.MassBully.Value) return false;
+        if (!Plugin.MassReassure.Value) return false;
         if (followerCommands != FollowerCommands.Reassure) return false;
         var notReassuredCount = Follower.Followers.Count(follower => FollowerCommandItems.Reassure().IsAvailable(follower));
         return notReassuredCount > 1;
@@ -194,7 +198,7 @@ public static class FollowerPatches
 
     private static bool ShouldMassReeducate(FollowerCommands followerCommands)
     {
-        if (!Plugin.MassBully.Value) return false;
+        if (!Plugin.MassReeducate.Value) return false;
         if (followerCommands != FollowerCommands.Reeducate) return false;
         var notReeducatedCount = Follower.Followers.Count(follower => FollowerCommandItems.Reeducate().IsAvailable(follower));
         return notReeducatedCount > 1;
@@ -240,8 +244,15 @@ public static class FollowerPatches
         }
 
         var cmd = followerCommands[0];
+        var originalFollower = __instance.follower;
 
-        var followers = Helpers.AllFollowers;
+        var followers = Helpers.AllFollowers.Where(f => f != originalFollower).ToList();
+
+        foreach (var f in followers)
+        {
+            if (f.Interaction_FollowerInteraction)
+                f.Interaction_FollowerInteraction.playerFarming ??= PlayerFarming.Instance;
+        }
 
         if (cmd == FollowerCommands.Reassure && ShouldMassReassure(followerCommands[0]))
         {
@@ -260,7 +271,7 @@ public static class FollowerPatches
         {
             foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
             {
-                var run = FollowerCommandItems.Reeducate().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && IsFollowerImprisoned(interaction.follower.Brain) || IsFollowerDissenting(interaction.follower.Brain);
+                var run = FollowerCommandItems.Reeducate().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && (IsFollowerImprisoned(interaction.follower.Brain) || IsFollowerDissenting(interaction.follower.Brain));
                 interaction.StartCoroutine(RunEnumerator(run, interaction.ReeducateRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.ReeducatedAction = true;
@@ -274,7 +285,7 @@ public static class FollowerPatches
             foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
             {
                 var run = FollowerCommandItems.Bully().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.RomanceRoutine(), delegate
+                interaction.StartCoroutine(RunEnumerator(run, interaction.BullyRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.ScaredTraitInteracted = true;
                     Plugin.L($"Scared straight {interaction.follower.name}!");
@@ -297,7 +308,7 @@ public static class FollowerPatches
 
         if (cmd == FollowerCommands.PetDog && ShouldMassPetDog(followerCommands[0]))
         {
-            foreach (var interaction in Follower.Followers.Select(follower => follower.Interaction_FollowerInteraction))
+            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
             {
                 var isDog = IsFollowerADog(interaction.follower.Brain);
                 Plugin.L($"Is {interaction.follower.name} a dog? {isDog}");
@@ -399,9 +410,46 @@ public static class FollowerPatches
             __instance.follower.Brain._directInfoAccess.Illness = 0f;
             __instance.follower.Brain.Stats.Illness = 0f;
             var onIllnessStateChanged = FollowerBrainStats.OnIllnessStateChanged;
-            onIllnessStateChanged.Invoke(__instance.follower.Brain._directInfoAccess.ID, FollowerStatState.Off, FollowerStatState.On);
+            onIllnessStateChanged?.Invoke(__instance.follower.Brain._directInfoAccess.ID, FollowerStatState.Off, FollowerStatState.On);
             Plugin.L($"Resetting follower {__instance.follower.name} from illness!");
         }
+    }
+
+    private static bool MassLevelUpRunning { get; set; }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
+    public static void MassLevelUp_Postfix(ref interaction_FollowerInteraction __instance)
+    {
+        if (!Plugin.MassLevelUp.Value) return;
+        if (MassLevelUpRunning) return;
+
+        var originalFollower = __instance.follower;
+        var eligibleCount = Helpers.AllFollowers.Count(f => f != originalFollower && f.Brain.CanLevelUp());
+        if (eligibleCount < 1) return;
+
+        GameManager.GetInstance().StartCoroutine(MassLevelUpAll(originalFollower));
+    }
+
+    private static IEnumerator MassLevelUpAll(Follower original)
+    {
+        MassLevelUpRunning = true;
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (var follower in Helpers.AllFollowers)
+        {
+            if (follower == original) continue;
+            if (!follower.Brain.CanLevelUp()) continue;
+
+            var interaction = follower.Interaction_FollowerInteraction;
+            if (!interaction) continue;
+
+            interaction.playerFarming = PlayerFarming.Instance;
+            interaction.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, false, false));
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        MassLevelUpRunning = false;
     }
 
     [HarmonyPrefix]

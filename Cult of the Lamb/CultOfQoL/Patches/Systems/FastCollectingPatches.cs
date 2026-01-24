@@ -21,7 +21,6 @@ public static class FastCollectingPatches
         ___Delay = 0.0f;
     }
 
-    [HarmonyPrefix]
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrinePassive), nameof(BuildingShrinePassive.Update))]
     public static void BuildingShrinePassive_Update(ref float ___Delay)
@@ -223,7 +222,7 @@ public static class FastCollectingPatches
             return;
         }
 
-        if (Plugin.EnableAutoCollect.Value && !InputManager.Gameplay.GetInteractButtonHeld())
+        if (!InputManager.Gameplay.GetInteractButtonHeld())
         {
             if (__instance.StructureBrain is Structures_FarmerStation && !Plugin.AutoCollectFromFarmStationChests.Value)
             {
@@ -303,6 +302,9 @@ public static class FastCollectingPatches
                 return true;
             }
 
+            __instance.Delay -= Time.deltaTime;
+            if (__instance.Delay > 0f) return false;
+
             var station = __instance;
             foreach (var itemType in __instance.StructureInfo.Inventory.Select(item => (InventoryItem.ITEM_TYPE)item.type))
             {
@@ -317,6 +319,7 @@ public static class FastCollectingPatches
             __instance.ChestPosition.transform.localScale = Vector3.one;
             __instance.ChestPosition.transform.DOPunchScale(__instance.PunchScale, 1f);
             __instance.UpdateChest();
+            __instance.Delay = 0.1f;
             __instance.ExhaustedCheck();
 
             return false;
@@ -338,19 +341,38 @@ public static class FastCollectingPatches
     [HarmonyPatch(typeof(Interaction_Outhouse), nameof(Interaction_Outhouse.Update))]
     public static IEnumerable<CodeInstruction> InteractionEntranceShrineTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
     {
-        if (!Plugin.FastCollecting.Value) return instructions;
-        var delayField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Delay");
+        var original = instructions.ToList();
+        if (!Plugin.FastCollecting.Value) return original;
 
-        var codes = new List<CodeInstruction>(instructions);
-        for (var i = 0; i < codes.Count; i++)
+        try
         {
-            if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i + 1].StoresField(delayField))
-            {
-                Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found Delay at {i}");
-                codes[i].operand = originalMethod.GetRealDeclaringType().Name.Contains("Outhouse") ? 0.025f : 0f;
-            }
-        }
+            var codes = new List<CodeInstruction>(original);
+            var typeName = originalMethod.GetRealDeclaringType().Name;
+            var delayField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Delay");
+            var found = false;
 
-        return codes.AsEnumerable();
+            for (var i = 0; i < codes.Count - 1; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i + 1].StoresField(delayField))
+                {
+                    codes[i].operand = typeName.Contains("Outhouse") ? 0.025f : 0f;
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Plugin.Log.LogWarning($"[Transpiler] {typeName}.Update: Failed to find Delay field store.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo($"[Transpiler] {typeName}.Update: Reduced collection delay.");
+            return codes;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] {originalMethod.GetRealDeclaringType().Name}.Update: {ex.Message}");
+            return original;
+        }
     }
 }

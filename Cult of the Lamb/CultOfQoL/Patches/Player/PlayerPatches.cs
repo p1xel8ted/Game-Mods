@@ -43,7 +43,7 @@ public static class PlayerPatches
             return;
         }
 
-        __instance.RunSpeed = Plugin.RunSpeed.Value *= Mathf.Abs(Plugin.RunSpeedMulti.Value);
+        __instance.RunSpeed = Plugin.RunSpeed.Value * Mathf.Abs(Plugin.RunSpeedMulti.Value);
     }
 
     private static bool IsInCombat()
@@ -75,7 +75,7 @@ public static class PlayerPatches
     {
         if (Helpers.IsMultiplierActive(Plugin.DodgeSpeedMulti.Value))
         {
-            __instance.DodgeSpeed = Plugin.DodgeSpeed.Value *= Mathf.Abs(Plugin.DodgeSpeedMulti.Value);
+            __instance.DodgeSpeed = Plugin.DodgeSpeed.Value * Mathf.Abs(Plugin.DodgeSpeedMulti.Value);
         }
     }
 
@@ -85,7 +85,7 @@ public static class PlayerPatches
     {
         if (Helpers.IsMultiplierActive(Plugin.DodgeSpeedMulti.Value))
         {
-            __instance.playerController.DodgeSpeed = Plugin.DodgeSpeed.Value *= Mathf.Abs(Plugin.DodgeSpeedMulti.Value);
+            __instance.playerController.DodgeSpeed = Plugin.DodgeSpeed.Value * Mathf.Abs(Plugin.DodgeSpeedMulti.Value);
         }
     }
 
@@ -95,7 +95,7 @@ public static class PlayerPatches
     {
         if (Helpers.IsMultiplierActive(Plugin.DodgeSpeedMulti.Value))
         {
-            __instance.playerController.DodgeSpeed = Plugin.DodgeSpeed.Value *= Mathf.Abs(Plugin.DodgeSpeedMulti.Value);
+            __instance.playerController.DodgeSpeed = Plugin.DodgeSpeed.Value * Mathf.Abs(Plugin.DodgeSpeedMulti.Value);
         }
     }
 }

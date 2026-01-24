@@ -21,22 +21,6 @@ public static class FollowerLevelUpPatches
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(FollowerBrainInfo), nameof(FollowerBrainInfo.MaxLevelReached), MethodType.Getter)]
-    public static void FollowerBrainInfo_MaxLevelReached_Getter(ref bool __result)
-    {
-        if (!Plugin.RemoveLevelLimit.Value) return;
-        __result = false;
-    }
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(FollowerBrainInfo), nameof(FollowerBrainInfo.MaxLevelReached), MethodType.Setter)]
-    public static void FollowerBrainInfo_MaxLevelReached_Setter(ref bool value)
-    {
-        if (!Plugin.RemoveLevelLimit.Value) return;
-        value = false;
-    }
-
-    [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetWillLevelUp))]
     public static void FollowerBrain_GetWillLevelUp(ref FollowerBrain __instance, ref FollowerBrain.AdorationActions Action, ref bool __result)
     {
@@ -52,6 +36,81 @@ public static class FollowerLevelUpPatches
         __instance._adorationContainer.gameObject.SetActive(true);
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerBrainInfo), nameof(FollowerBrainInfo.ProductivityMultiplier), MethodType.Getter)]
+    public static void FollowerBrainInfo_ProductivityMultiplier(FollowerBrainInfo __instance, ref float __result)
+    {
+        if (!Plugin.RemoveLevelLimit.Value) return;
+        if (__instance.XPLevel <= 10) return;
+
+        // Original: (1 + (Clamp(XPLevel, 0.8, 10) - 1) / 5) * traitMultiplier
+        // When XPLevel > 10, clamped value is 10, level factor = 2.8
+        // Recalculate with actual XPLevel
+        const float clampedFactor = (float)(1.0 + (10.0 - 1.0) / 5.0);
+        var traitMultiplier = __result / clampedFactor;
+        var unclampedFactor = (float)(1.0 + ((double)__instance.XPLevel - 1.0) / 5.0);
+        __result = unclampedFactor * traitMultiplier;
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(FollowerTask_Pray), nameof(FollowerTask_Pray.SimDoingBegin))]
+    [HarmonyPatch(typeof(FollowerTask_PrayPassive), nameof(FollowerTask_PrayPassive.DepositSoul))]
+    public static IEnumerable<CodeInstruction> PrayerClampTranspiler(IEnumerable<CodeInstruction> instructions)
+    {
+        var original = instructions.ToList();
+        if (!Plugin.RemoveLevelLimit.Value) return original;
+
+        try
+        {
+            var codes = new List<CodeInstruction>(original);
+            var clampMethod = AccessTools.Method(typeof(Mathf), nameof(Mathf.Clamp), [typeof(int), typeof(int), typeof(int)]);
+            var maxMethod = AccessTools.Method(typeof(Mathf), nameof(Mathf.Max), [typeof(int), typeof(int)]);
+            var found = false;
+
+            for (var i = 0; i < codes.Count; i++)
+            {
+                if (!codes[i].Calls(clampMethod)) continue;
+
+                for (var j = i - 1; j >= 0; j--)
+                {
+                    if ((codes[j].opcode == OpCodes.Ldc_I4_S && codes[j].operand is sbyte and 10) ||
+                        (codes[j].opcode == OpCodes.Ldc_I4 && codes[j].operand is 10))
+                    {
+                        codes.RemoveAt(j);
+                        i--;
+                        break;
+                    }
+                }
+
+                codes[i].operand = maxMethod;
+                found = true;
+                break;
+            }
+
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] PrayerClampTranspiler: Failed to find Mathf.Clamp call.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo("[Transpiler] PrayerClampTranspiler: Replaced Mathf.Clamp with Mathf.Max (removed level cap).");
+            return codes;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] PrayerClampTranspiler: {ex.Message}");
+            return original;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(RitualSacrifice), nameof(RitualSacrifice.GetDevotionGain))]
+    public static void RitualSacrifice_GetDevotionGain(int XPLevel, ref int __result)
+    {
+        if (!Plugin.RemoveLevelLimit.Value) return;
+        __result = 40 + (Mathf.Max(XPLevel, 1) - 1) * 20;
+    }
+
     public static float GetMaxLevel()
     {
         if (Plugin.RemoveLevelLimit.Value)
@@ -61,25 +120,4 @@ public static class FollowerLevelUpPatches
         return 10;
     }
 
-    [HarmonyTranspiler]
-    [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.AddAdoration), typeof(Follower), typeof(FollowerBrain.AdorationActions), typeof(Action))]
-    public static IEnumerable<CodeInstruction> FollowerBrain_AddAdoration(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
-    {
-        if (!Plugin.RemoveLevelLimit.Value) return instructions;
-
-        var getXpLevel = AccessTools.Property(typeof(FollowerBrainInfo), nameof(FollowerBrainInfo.XPLevel)).GetGetMethod();
-        var codes = new List<CodeInstruction>(instructions);
-
-        for (var i = 0; i < codes.Count; i++)
-        {
-            if (!codes[i].Calls(getXpLevel)) continue;
-
-            Plugin.L($"{originalMethod.Name}: Found XPLevel property at {i}. Replacing 10 with call to GetMaxLevel().");
-            codes.Insert(i + 1, new CodeInstruction(OpCodes.Conv_R4));
-            codes[i + 2].opcode = OpCodes.Call;
-            codes[i + 2].operand = AccessTools.Method(typeof(FollowerLevelUpPatches), nameof(GetMaxLevel));
-        }
-
-        return codes;
-    }
 }

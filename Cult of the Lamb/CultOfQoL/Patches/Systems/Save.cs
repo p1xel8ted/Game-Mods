@@ -14,7 +14,7 @@ public static class Save
     }
     
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save))]
+    [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save), [])]
     public static void SaveAndLoad_Save()
     {
         GameSpeedManipulationPatches.ResetTime();

@@ -33,7 +33,7 @@ public static class NoNegativeTraits
         if (Plugin.UseUnlockedTraitsOnly.Value)
         {
             Plugin.L("Using unlocked traits only for available traits.");
-            allTraits.RemoveWhere(a => cultTraits.Contains(a));
+            allTraits.RemoveWhere(a => !cultTraits.Contains(a));
         }
         allTraits.RemoveWhere(a => !FollowerTrait.IsPositiveTrait(a));
         

@@ -74,6 +74,7 @@ public partial class Plugin
     internal static ConfigEntry<float> AutoInteractRangeMulti { get; private set; }
     internal static ConfigEntry<bool> AutoCollectFromFarmStationChests { get; private set; }
     internal static ConfigEntry<bool> AddExhaustedToHealingBay { get; private set; }
+    internal static ConfigEntry<bool> HideHealthyFromHealingBay { get; private set; }
     internal static ConfigEntry<bool> NotifyOfScarecrowTraps { get; private set; }
     internal static ConfigEntry<bool> NotifyOfNoFuel { get; private set; }
     internal static ConfigEntry<bool> NotifyOfBedCollapse { get; private set; }
@@ -138,7 +139,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassWater { get; private set; }
 
     // internal static ConfigEntry<bool> MassHarvest{ get; private set;}
-    //internal static ConfigEntry<bool> MassLevelUp{ get; private set;}
+    internal static ConfigEntry<bool> MassLevelUp { get; private set; }
 
     internal static ConfigEntry<bool> MakeOldFollowersWork { get; private set; }
 

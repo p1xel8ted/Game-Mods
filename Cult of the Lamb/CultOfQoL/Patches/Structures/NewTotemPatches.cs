@@ -36,8 +36,6 @@ public static class NewTotemPatches
     [HarmonyPrefix, HarmonyPatch(typeof(FarmStation), nameof(FarmStation.Update))]
     public static void FarmStation_Patches(FarmStation __instance)
     {
-        //transpiler needed in Update to update 6 to Plugin.FarmStationRange.Value
-        
         __instance.DistanceRadius = Plugin.FarmStationRange.Value;
 
         if (!Mathf.Approximately(__instance.RangeSprite.size.x, Plugin.FarmStationRange.Value))
@@ -50,8 +48,6 @@ public static class NewTotemPatches
     [HarmonyPrefix, HarmonyPatch(typeof(Interaction_FarmPlotSign), nameof(Interaction_FarmPlotSign.Update))]
     public static void Interaction_FarmPlotSign_Patches(Interaction_FarmPlotSign __instance)
     {
-        //transpiler needed in Update to update 5 to Plugin.FarmPlotRange.Value
-        
         __instance.DistanceRadius = Plugin.FarmPlotSignRange.Value;
 
         if (!Mathf.Approximately(__instance.RangeSprite.size.x, Plugin.FarmPlotSignRange.Value))
@@ -70,36 +66,81 @@ public static class NewTotemPatches
         return Plugin.FarmStationRange.Value;
     }
 
-    [HarmonyTranspiler, HarmonyPatch(typeof(FarmStation), nameof(FarmStation.Update))]
-    public static IEnumerable<CodeInstruction> FarmStation_Update_Transpiler(IEnumerable<CodeInstruction> instructions)
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(Structures_FarmerStation), nameof(Structures_FarmerStation.GetNextUnwateredPlot))]
+    [HarmonyPatch(typeof(Structures_FarmerStation), nameof(Structures_FarmerStation.GetNextUnseededPlot))]
+    [HarmonyPatch(typeof(Structures_FarmerStation), nameof(Structures_FarmerStation.GetNextUnfertilizedPlot))]
+    [HarmonyPatch(typeof(Structures_FarmerStation), nameof(Structures_FarmerStation.GetNextUnpickedPlot))]
+    public static IEnumerable<CodeInstruction> Structures_FarmerStation_Range_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
-        var originalCode = instructions.ToList();
-        var modifiedCode = new List<CodeInstruction>(originalCode);
-   
+        var originalCodes = instructions.ToList();
         try
         {
+            var codes = new List<CodeInstruction>(originalCodes);
             var getRangeMethod = AccessTools.Method(typeof(NewTotemPatches), nameof(GetFarmStationRange));
+            var found = false;
 
-            for (var i = 0; i < modifiedCode.Count - 1; i++)
+            for (var i = 0; i < codes.Count; i++)
             {
-                if (
-                    modifiedCode[i].opcode == OpCodes.Ldc_R4 &&
-                    modifiedCode[i].operand is float value &&
-                    Mathf.Approximately(value, 6f) &&
-                    modifiedCode[i + 1].opcode == OpCodes.Stfld &&
-                    modifiedCode[i + 1].operand is FieldInfo { Name: nameof(FarmStation.DistanceRadius) })
+                if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i].operand is float value && Mathf.Approximately(value, 6f))
                 {
-                    modifiedCode[i] = new CodeInstruction(OpCodes.Call, getRangeMethod).WithLabels(modifiedCode[i].labels);
-                    Plugin.Log.LogInfo($"[Transpiler] Replaced hardcoded {value} in FarmStation.Update with GetFarmStationRange()");
+                    codes[i] = new CodeInstruction(OpCodes.Call, getRangeMethod).WithLabels(codes[i].labels);
+                    found = true;
                 }
             }
 
-            return modifiedCode;
+            if (!found)
+            {
+                Plugin.Log.LogWarning($"[Transpiler] Structures_FarmerStation.{original.Name}: Failed to find hardcoded range 6f.");
+                return originalCodes;
+            }
+
+            Plugin.Log.LogInfo($"[Transpiler] Structures_FarmerStation.{original.Name}: Replaced hardcoded range with GetFarmStationRange().");
+            return codes;
         }
         catch (Exception ex)
         {
-            Plugin.Log.LogError($"[Transpiler] Error in FarmStation transpiler: {ex}");
-            return originalCode; 
+            Plugin.Log.LogWarning($"[Transpiler] Structures_FarmerStation.{original.Name}: {ex.Message}");
+            return originalCodes;
+        }
+    }
+
+    [HarmonyTranspiler, HarmonyPatch(typeof(FarmStation), nameof(FarmStation.Update))]
+    public static IEnumerable<CodeInstruction> FarmStation_Update_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        var original = instructions.ToList();
+        try
+        {
+            var codes = new List<CodeInstruction>(original);
+            var getRangeMethod = AccessTools.Method(typeof(NewTotemPatches), nameof(GetFarmStationRange));
+            var found = false;
+
+            for (var i = 0; i < codes.Count - 1; i++)
+            {
+                if (codes[i].opcode == OpCodes.Ldc_R4 &&
+                    codes[i].operand is float value &&
+                    Mathf.Approximately(value, 6f) &&
+                    codes[i + 1].opcode == OpCodes.Stfld &&
+                    codes[i + 1].operand is FieldInfo { Name: nameof(FarmStation.DistanceRadius) })
+                {
+                    codes[i] = new CodeInstruction(OpCodes.Call, getRangeMethod).WithLabels(codes[i].labels);
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] FarmStation.Update: Failed to find DistanceRadius assignment.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo("[Transpiler] FarmStation.Update: Replaced DistanceRadius with GetFarmStationRange().");
+            return codes;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] FarmStation.Update: {ex.Message}");
+            return original;
         }
     }
 
@@ -107,33 +148,39 @@ public static class NewTotemPatches
     [HarmonyTranspiler, HarmonyPatch(typeof(Interaction_FarmPlotSign), nameof(Interaction_FarmPlotSign.Update))]
     public static IEnumerable<CodeInstruction> Interaction_FarmPlotSign_Update_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var originalCode = instructions.ToList();
-        var modifiedCode = new List<CodeInstruction>(originalCode);
-
+        var original = instructions.ToList();
         try
         {
+            var codes = new List<CodeInstruction>(original);
             var getRangeMethod = AccessTools.Method(typeof(NewTotemPatches), nameof(GetFarmPlotSignRange));
+            var found = false;
 
-            for (var i = 0; i < modifiedCode.Count - 1; i++)
+            for (var i = 0; i < codes.Count - 1; i++)
             {
-                if (
-                    modifiedCode[i].opcode == OpCodes.Ldc_R4 &&
-                    modifiedCode[i].operand is float value &&
+                if (codes[i].opcode == OpCodes.Ldc_R4 &&
+                    codes[i].operand is float value &&
                     Mathf.Approximately(value, 5f) &&
-                    modifiedCode[i + 1].opcode == OpCodes.Stfld &&
-                    modifiedCode[i + 1].operand is FieldInfo { Name: nameof(Interaction_FarmPlotSign.DistanceRadius) })
+                    codes[i + 1].opcode == OpCodes.Stfld &&
+                    codes[i + 1].operand is FieldInfo { Name: nameof(Interaction_FarmPlotSign.DistanceRadius) })
                 {
-                    modifiedCode[i] = new CodeInstruction(OpCodes.Call, getRangeMethod).WithLabels(modifiedCode[i].labels);
-                    Plugin.Log.LogInfo($"[Transpiler] Replaced hardcoded {value} in Interaction_FarmPlotSign.Update with GetFarmPlotSignRange()");
+                    codes[i] = new CodeInstruction(OpCodes.Call, getRangeMethod).WithLabels(codes[i].labels);
+                    found = true;
                 }
             }
 
-            return modifiedCode;
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] Interaction_FarmPlotSign.Update: Failed to find DistanceRadius assignment.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo("[Transpiler] Interaction_FarmPlotSign.Update: Replaced DistanceRadius with GetFarmPlotSignRange().");
+            return codes;
         }
         catch (Exception ex)
         {
-            Plugin.Log.LogError($"[Transpiler] Error in Interaction_FarmPlotSign transpiler: {ex}");
-            return originalCode;
+            Plugin.Log.LogWarning($"[Transpiler] Interaction_FarmPlotSign.Update: {ex.Message}");
+            return original;
         }
     }
 }

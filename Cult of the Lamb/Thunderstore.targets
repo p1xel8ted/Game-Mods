@@ -1,0 +1,62 @@
+<Project>
+
+    <PropertyGroup>
+        <ThunderstorePackageDir>$(MSBuildThisFileDirectory)Thunderstore\$(ThunderstoreDir)\</ThunderstorePackageDir>
+        <ThunderstoreStagingDir>$(MSBuildThisFileDirectory)Thunderstore\_staging\$(ThunderstoreDir)\</ThunderstoreStagingDir>
+        <ThunderstorePluginsDir Condition=" '$(ThunderstoreNestedPlugins)' != 'true' ">$(ThunderstorePackageDir)plugins\</ThunderstorePluginsDir>
+        <ThunderstorePluginsDir Condition=" '$(ThunderstoreNestedPlugins)' == 'true' ">$(ThunderstorePackageDir)plugins\$(MSBuildProjectName)\</ThunderstorePluginsDir>
+        <ThunderstoreZipName>$(MSBuildProjectName)_$(Version).zip</ThunderstoreZipName>
+    </PropertyGroup>
+
+    <Target Name="ThunderstorePackage" AfterTargets="Build">
+
+        <!-- Ensure plugins directory exists -->
+        <MakeDir Directories="$(ThunderstorePluginsDir)" />
+
+        <!-- Copy DLL -->
+        <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(ThunderstorePluginsDir)" OverwriteReadOnlyFiles="true" />
+
+        <!-- Copy assets for nested plugins (e.g. Rebirth) -->
+        <ItemGroup Condition=" '$(ThunderstoreNestedPlugins)' == 'true' ">
+            <ThunderstoreAssets Include="$(OutputPath)assets\**\*" />
+        </ItemGroup>
+        <Copy Condition=" '$(ThunderstoreNestedPlugins)' == 'true' "
+              SourceFiles="@(ThunderstoreAssets)"
+              DestinationFolder="$(ThunderstorePluginsDir)assets\%(RecursiveDir)" />
+
+        <!-- Update manifest.json version -->
+        <Exec Command='powershell -NoProfile -Command "$j = Get-Content -Raw &apos;$(ThunderstorePackageDir)manifest.json&apos; | ConvertFrom-Json; $j.version_number = &apos;$(Version)&apos;; $j | ConvertTo-Json -Depth 10 | Set-Content &apos;$(ThunderstorePackageDir)manifest.json&apos;"' />
+
+        <!-- Clean staging directory -->
+        <RemoveDir Directories="$(ThunderstoreStagingDir)" />
+        <MakeDir Directories="$(ThunderstoreStagingDir)" />
+
+        <!-- Stage package files -->
+        <ItemGroup>
+            <ThunderstorePackageFiles Include="$(ThunderstorePackageDir)manifest.json" />
+            <ThunderstorePackageFiles Include="$(ThunderstorePackageDir)icon.png" />
+            <ThunderstorePackageFiles Include="$(ThunderstorePackageDir)README.md" />
+            <ThunderstorePackageFiles Include="$(ThunderstorePackageDir)CHANGELOG.md" Condition="Exists('$(ThunderstorePackageDir)CHANGELOG.md')" />
+        </ItemGroup>
+        <ItemGroup>
+            <ThunderstorePluginFiles Include="$(ThunderstorePackageDir)plugins\**\*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(ThunderstorePackageFiles)" DestinationFolder="$(ThunderstoreStagingDir)" />
+        <Copy SourceFiles="@(ThunderstorePluginFiles)"
+              DestinationFolder="$(ThunderstoreStagingDir)plugins\%(RecursiveDir)" />
+
+        <!-- Remove old zip if exists -->
+        <Delete Files="$(ThunderstorePackageDir)$(ThunderstoreZipName)" Condition="Exists('$(ThunderstorePackageDir)$(ThunderstoreZipName)')" />
+
+        <!-- Create zip -->
+        <ZipDirectory SourceDirectory="$(ThunderstoreStagingDir)"
+                      DestinationFile="$(ThunderstorePackageDir)$(ThunderstoreZipName)"
+                      Overwrite="true" />
+
+        <!-- Clean staging -->
+        <RemoveDir Directories="$(ThunderstoreStagingDir)" />
+
+        <Message Importance="high" Text="Thunderstore package created: $(ThunderstorePackageDir)$(ThunderstoreZipName)" />
+    </Target>
+
+</Project>

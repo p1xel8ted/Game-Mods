@@ -1,3 +1,7 @@
+### 1.1.1 - 24/01/2026
+
+* Internal build improvements.
+
 ### 1.0.8 - 24/08/2024
 
 * Removal of Costura Fody as it's no longer required, and causes delays with updates on Thunderstore.

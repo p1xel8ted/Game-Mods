@@ -1,0 +1,3 @@
+<Project>
+    <Import Project="Thunderstore.targets" Condition=" '$(Configuration)' == 'Release-Thunderstore' And '$(ThunderstoreDir)' != '' And Exists('$(MSBuildThisFileDirectory)Thunderstore.targets') " />
+</Project>

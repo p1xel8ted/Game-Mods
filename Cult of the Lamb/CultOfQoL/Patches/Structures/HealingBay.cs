@@ -8,11 +8,10 @@ public static class HealingBay
     private const float Duration = 3f;
     private const string InteractionHealingBay = "Interaction_HealingBay";
     private static FollowerBrainInfo _followerBrainInfo;
-    private static float _t;
     private static bool _usingHealingBay;
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(NotificationFaith), nameof(NotificationFaith.Configure), typeof(string), typeof(float), typeof(FollowerInfo), typeof(bool), typeof(NotificationBase.Flair), typeof(string[]))]
+    [HarmonyPatch(typeof(NotificationFaith), nameof(NotificationFaith.Configure), typeof(string), typeof(float), typeof(FollowerInfo), typeof(bool), typeof(NotificationBase.Flair), typeof(bool), typeof(string[]))]
     public static void NotificationFaith_Configure(NotificationFaith __instance, float faithDelta)
     {
         if (!Mathf.Approximately(faithDelta, 0.001f)) return;
@@ -22,17 +21,29 @@ public static class HealingBay
 
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(UIFollowerSelectMenuController), nameof(UIFollowerSelectMenuController.Show), typeof(List<FollowerSelectEntry>), typeof(bool), typeof(UpgradeSystem.Type), typeof(bool), typeof(bool), typeof(bool), typeof(bool))]
+    [HarmonyPatch(typeof(UIFollowerSelectMenuController), nameof(UIFollowerSelectMenuController.Show), typeof(List<FollowerSelectEntry>), typeof(bool), typeof(UpgradeSystem.Type), typeof(bool), typeof(bool), typeof(bool), typeof(bool), typeof(bool))]
     public static void UIFollowerSelectMenuController_Show_Prefix(UIFollowerSelectMenuController __instance, ref List<FollowerSelectEntry> followerSelectEntries)
     {
-        if (!Plugin.AddExhaustedToHealingBay.Value) return;
-
         var isHealingBay = ReflectionHelper.GetCallingClassName(3)!.Equals(InteractionHealingBay, StringComparison.OrdinalIgnoreCase);
         if (!isHealingBay) return;
 
-        followerSelectEntries.AddRange(from follower in Helpers.AllFollowers
-            where IsExhausted(follower.Brain)
-            select new FollowerSelectEntry(follower));
+        if (Plugin.AddExhaustedToHealingBay.Value)
+        {
+            foreach (var entry in followerSelectEntries)
+            {
+                if (entry.AvailabilityStatus != FollowerSelectEntry.Status.UnavailableDoesNotNeedHealing) continue;
+                var brain = FollowerBrain.GetOrCreateBrain(entry.FollowerInfo);
+                if (brain != null && IsExhausted(brain))
+                {
+                    entry.AvailabilityStatus = FollowerSelectEntry.Status.Available;
+                }
+            }
+        }
+
+        if (Plugin.HideHealthyFromHealingBay.Value)
+        {
+            followerSelectEntries.RemoveAll(entry => entry.AvailabilityStatus == FollowerSelectEntry.Status.UnavailableDoesNotNeedHealing);
+        }
     }
 
     [HarmonyPostfix]
@@ -42,8 +53,10 @@ public static class HealingBay
         if (!Plugin.AddExhaustedToHealingBay.Value) return;
         if (!_usingHealingBay) return;
 
-        var hb = Resources.FindObjectsOfTypeAll<Interaction_HealingBay>().First();
-        var costs = hb.GetCost(__instance.followBrain);
+        var hb = Resources.FindObjectsOfTypeAll<Interaction_HealingBay>().FirstOrDefault();
+        if (hb == null) return;
+        var isUpgraded = hb.structureBrain.Data.Type == StructureBrain.TYPES.HEALING_BAY_2;
+        var costs = Interaction_HealingBay.GetCost(__instance.followBrain, isUpgraded);
 
         if (__instance._unavailableContainer.activeSelf) return;
 
@@ -52,8 +65,22 @@ public static class HealingBay
     
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.OnFollowerChosenForConversion))]
+    private static void Interaction_HealingBay_OnFollowerChosen(Interaction_HealingBay __instance, FollowerInfo followerInfo)
+    {
+        _usingHealingBay = false;
+
+        if (!Plugin.AddExhaustedToHealingBay.Value) return;
+
+        var brain = FollowerBrain.GetOrCreateBrain(followerInfo);
+        if (brain?._directInfoAccess == null) return;
+        if (brain._directInfoAccess.Exhaustion <= 0) return;
+
+        __instance.StartCoroutine(HealExhaustionRoutine(brain.Info));
+    }
+
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.OnHidden))]
-    public static void Interaction_HealingBay_OnHidden(Interaction_HealingBay __instance)
+    private static void Interaction_HealingBay_OnHidden()
     {
         _usingHealingBay = false;
     }
@@ -103,34 +130,24 @@ public static class HealingBay
         return true;
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Interaction_HealingBay), nameof(Interaction_HealingBay.HealingRoutine), MethodType.Enumerator)]
-    private static void HealingRoutine(Interaction_HealingBay __instance)
+    private static IEnumerator HealExhaustionRoutine(FollowerBrainInfo follower)
     {
-        if (!Plugin.AddExhaustedToHealingBay.Value) return;
-
-        var follower = _followerBrainInfo;
         var exhaustion = follower._brain._directInfoAccess.Exhaustion;
-        if (exhaustion <= 0) return;
-        
-        
-        while (_t < Duration)
+        if (exhaustion <= 0) yield break;
+
+        var t = 0f;
+        while (t < Duration)
         {
             if (Time.deltaTime > 0f)
             {
-                _t += Time.deltaTime;
-                var num = _t / Duration;
-                follower._brain.Stats.Exhaustion = Mathf.Lerp(exhaustion, 0f, num);
+                t += Time.deltaTime;
+                follower._brain.Stats.Exhaustion = Mathf.Lerp(exhaustion, 0f, t / Duration);
             }
-            break;
+            yield return null;
         }
 
-        if (_followerBrainInfo._brain.Stats.Exhaustion == 0)
-        {
-            FollowerBrainStats.OnExhaustionStateChanged.Invoke(_followerBrainInfo._brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
-            NotificationCentre.Instance.PlayFaithNotification($"{_followerBrainInfo._brain.Info.Name} is no longer exhausted!", 0.001f, NotificationBase.Flair.None, _followerBrainInfo._brain.Info.ID, _followerBrainInfo._brain.Info.Name);  
-        }
-
-
+        follower._brain.Stats.Exhaustion = 0f;
+        FollowerBrainStats.OnExhaustionStateChanged?.Invoke(follower._brain.Info.ID, FollowerStatState.Off, FollowerStatState.On);
+        NotificationCentre.Instance?.PlayFaithNotification($"{follower._brain.Info.Name} is no longer exhausted!", 0.001f, NotificationBase.Flair.None, follower._brain.Info.ID, follower._brain.Info.Name);
     }
 }

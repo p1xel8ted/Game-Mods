@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Shared;
@@ -19,18 +20,21 @@ public static class Extensions
     }
 
 
-    public static bool IsMealWithMeat(this InventoryItem.ITEM_TYPE itemType)
+    extension(InventoryItem.ITEM_TYPE itemType)
     {
-        string[] checkThese = ["meat", "fish", "mixed"];
-        var itemName = itemType.ToString().ToLower();
-        return checkThese.Any(check => itemName.Contains(check));
-    }
-    
-    public static bool IsMixedMeal(this InventoryItem.ITEM_TYPE itemType)
-    {
-        string[] checkThese = ["mixed"];
-        var itemName = itemType.ToString().ToLower();
-        return checkThese.Any(check => itemName.Contains(check));
+        public bool IsMealWithMeat()
+        {
+            string[] checkThese = ["meat", "fish", "mixed"];
+            var itemName = itemType.ToString().ToLower();
+            return checkThese.Any(check => itemName.Contains(check));
+        }
+
+        public bool IsMixedMeal()
+        {
+            string[] checkThese = ["mixed"];
+            var itemName = itemType.ToString().ToLower();
+            return checkThese.Any(check => itemName.Contains(check));
+        }
     }
 
 

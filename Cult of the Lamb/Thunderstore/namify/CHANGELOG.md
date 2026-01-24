@@ -1,3 +1,9 @@
+### 0.2.1 - 24 January 2026
+
+* Simplified asterisk name indicator (now only shown during indoctrination).
+* Removed "Clean Asterisks" button (no longer needed).
+* Leftover asterisks in existing saves are now automatically cleaned on load.
+
 ### 0.2.0 - 03 February 2025
 
 * Added button to F1 screen to manually clean-up any leftover asterisks (this happens already at various stages, but now you can manually trigger it.)

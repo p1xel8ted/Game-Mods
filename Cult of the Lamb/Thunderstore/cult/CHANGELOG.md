@@ -1,3 +1,12 @@
+### 2.3.1 - 24/01/2026
+
+* Fixed crash spam after returning to the main menu.
+* Re-introduced mass level-up (previously removed in 2.2.5).
+* Fixed all mass actions (bless, bribe, bully, etc.) potentially crashing.
+* Added option to hide healthy followers from the healing bay selection menu.
+* Fixed various game warnings related to object creation.
+* Improved internal error handling and logging.
+
 ### 2.3.0 - 20/09/2025
 
 * Configuration overhaul. Added Reset All Settings button. Default settings are now based on game defaults.

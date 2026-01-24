@@ -1,10 +1,10 @@
 {
-    "name": "Namify",
-    "version_number": "0.2.0",
-    "website_url": "https://www.nexusmods.com/cultofthelamb/mods/15?tab=description",
-    "description": "Greatly expand the selection of names to choose from when naming followers! Requires an internet connection due to API usage.",
-    "dependencies": [
-        "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
-        "p1xel8ted-BepInEx_Configuration_Manager-18.3.0"
-    ]
+    "name":  "Namify",
+    "version_number":  "0.2.1",
+    "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/15?tab=description",
+    "description":  "Greatly expand the selection of names to choose from when naming followers! Requires an internet connection due to API usage.",
+    "dependencies":  [
+                         "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
+                         "p1xel8ted-BepInEx_Configuration_Manager-18.3.0"
+                     ]
 }

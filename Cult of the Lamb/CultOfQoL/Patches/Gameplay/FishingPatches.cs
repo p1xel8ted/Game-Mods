@@ -9,32 +9,37 @@ public static class FishingPatches
     [HarmonyPatch(typeof(UIFishingOverlayController), nameof(UIFishingOverlayController.SetState))]
     public static IEnumerable<CodeInstruction> UIFishingOverlayController_SetState_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
     {
-        
-        var originalCode = instructions.ToList();
-        var modifiedCode = new List<CodeInstruction>(originalCode);
-        
-        if (!Plugin.EasyFishing.Value) return originalCode;
+        var original = instructions.ToList();
+        if (!Plugin.EasyFishing.Value) return original;
 
         try
         {
-            for (var i = 0; i < modifiedCode.Count - 2; i++)
-            {
+            var codes = new List<CodeInstruction>(original);
+            var found = false;
 
-                if (modifiedCode[i].LoadsField(ReelingCanvasGroupField) && modifiedCode[i + 2].opcode != OpCodes.Callvirt)
+            for (var i = 0; i < codes.Count - 2; i++)
+            {
+                if (codes[i].LoadsField(ReelingCanvasGroupField) && codes[i + 2].opcode != OpCodes.Callvirt)
                 {
-                    modifiedCode[i + 1].operand = 0f;
-                    modifiedCode[i + 2].operand = 0f;
-                    
-                    Plugin.Log.LogInfo($"Patched {nameof(UIFishingOverlayController.reelingCanvasGroup)} at index {i}");   
+                    codes[i + 1].operand = 0f;
+                    codes[i + 2].operand = 0f;
+                    found = true;
                 }
             }
-            
-            return modifiedCode.AsEnumerable();
+
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] UIFishingOverlayController.SetState: Failed to find reelingCanvasGroup field loads.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo("[Transpiler] UIFishingOverlayController.SetState: Zeroed reeling canvas group values.");
+            return codes;
         }
         catch (Exception ex)
         {
-            Plugin.Log.LogError($"[Transpiler] Error in FollowerInfo.NewCharacter transpiler: {ex}");
-            return originalCode;
+            Plugin.Log.LogWarning($"[Transpiler] UIFishingOverlayController.SetState: {ex.Message}");
+            return original;
         }
     }
 

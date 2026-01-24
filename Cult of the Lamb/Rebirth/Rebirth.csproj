@@ -1,142 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <Version>1.1.1</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>embedded</DebugType>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Version>1.1.1</Version>
+        <ThunderstoreDir>rebirth</ThunderstoreDir>
+        <ThunderstoreNestedPlugins>true</ThunderstoreNestedPlugins>
+    </PropertyGroup>
     <ItemGroup>
       <None Remove="assets\rebirth_command.png" />
       <AdditionalFiles Include="assets\rebirth_command.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </AdditionalFiles>
-      <None Remove="assets\placeholder.png" />
       <None Update="assets\rebirth_item.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="System.Net.Http">
-        <HintPath>..\libs\System.Net.Http.dll</HintPath>
-      </Reference>
-      <Reference Include="Assembly-CSharp">
-        <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
-      </Reference>
-      <Reference Include="Assembly-CSharp-firstpass">
-        <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
-      </Reference>
       <Reference Include="COTL_API">
-        <HintPath>G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\API\COTL_API.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.2D.SpriteShape.Runtime">
-        <HintPath>..\libs\Unity.2D.SpriteShape.Runtime.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.Addressables">
-        <HintPath>..\libs\Unity.Addressables.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.InputSystem">
-        <HintPath>..\libs\Unity.InputSystem.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.Postprocessing.Runtime">
-        <HintPath>..\libs\Unity.Postprocessing.Runtime.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.ProBuilder">
-        <HintPath>..\libs\Unity.ProBuilder.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.ResourceManager">
-        <HintPath>..\libs\Unity.ResourceManager.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine">
-        <HintPath>..\libs\UnityEngine.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.AnimationModule">
-        <HintPath>..\libs\UnityEngine.AnimationModule.dll</HintPath>
+        <HintPath>..\libs\api\COTL_API.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.AudioModule">
         <HintPath>..\libs\UnityEngine.AudioModule.dll</HintPath>
       </Reference>
-      <Reference Include="UnityEngine.CoreModule">
-        <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.DirectorModule">
-        <HintPath>..\libs\UnityEngine.DirectorModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.GridModule">
-        <HintPath>..\libs\UnityEngine.GridModule.dll</HintPath>
-      </Reference>
       <Reference Include="UnityEngine.ImageConversionModule">
         <HintPath>..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
       </Reference>
-      <Reference Include="UnityEngine.IMGUIModule">
-        <HintPath>..\libs\UnityEngine.IMGUIModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.InputLegacyModule">
-        <HintPath>..\libs\UnityEngine.InputLegacyModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.JSONSerializeModule">
-        <HintPath>..\libs\UnityEngine.JSONSerializeModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.ParticleSystemModule">
-        <HintPath>..\libs\UnityEngine.ParticleSystemModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.Physics2DModule">
-        <HintPath>..\libs\UnityEngine.Physics2DModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.PhysicsModule">
-        <HintPath>..\libs\UnityEngine.PhysicsModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.ScreenCaptureModule">
-        <HintPath>..\libs\UnityEngine.ScreenCaptureModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.SharedInternalsModule">
-        <HintPath>..\libs\UnityEngine.SharedInternalsModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.SpriteShapeModule">
-        <HintPath>..\libs\UnityEngine.SpriteShapeModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.SubsystemsModule">
-        <HintPath>..\libs\UnityEngine.SubsystemsModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.TextCoreFontEngineModule">
-        <HintPath>..\libs\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.TextRenderingModule">
-        <HintPath>..\libs\UnityEngine.TextRenderingModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.TilemapModule">
-        <HintPath>..\libs\UnityEngine.TilemapModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UI">
-        <HintPath>..\libs\UnityEngine.UI.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UIModule">
-        <HintPath>..\libs\UnityEngine.UIModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UnityWebRequestModule">
-        <HintPath>..\libs\UnityEngine.UnityWebRequestModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UnityWebRequestTextureModule">
-        <HintPath>..\libs\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.VideoModule">
-        <HintPath>..\libs\UnityEngine.VideoModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.VRModule">
-        <HintPath>..\libs\UnityEngine.VRModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.XRModule">
-        <HintPath>..\libs\UnityEngine.XRModule.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Include="..\Shared\Helpers.cs">
-        <Link>Helpers.cs</Link>
-      </Compile>
     </ItemGroup>
 </Project>

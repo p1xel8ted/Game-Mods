@@ -8,148 +8,134 @@ public static class AutoCollectTranspilers
     [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.Update))]
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase originalMethod)
     {
-        var codes = new List<CodeInstruction>(instructions);
-        var delayField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Delay");
-
-        if (Plugin.EnableAutoCollect.Value && originalMethod.GetRealDeclaringType().Name.Contains("Interaction_CollectResourceChest"))
+        var original = instructions.ToList();
+        try
         {
-            var activatingField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Activating");
-            
-            var updateMethod = AccessTools.Method(typeof(Interaction), nameof(Interaction.Update));
-            var delayBetweenChecksField = AccessTools.Field(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.delayBetweenChecks));
+            var codes = new List<CodeInstruction>(original);
+            var typeName = originalMethod.GetRealDeclaringType().Name;
+            var isResourceChest = typeName.Contains("Interaction_CollectResourceChest");
 
-            var delayStartIndex = -1;
-            var delayEndIndex = -1;
-            Label? delayTargetLabel = null;
-            
-            var activatingStartIndex = -1;
-            var activatingEndIndex = -1;
-            Label? activatingTargetLabel = null;
+            if (Plugin.EnableAutoCollect.Value && isResourceChest)
+            {
+                var activatingBlock = FindActivatingBlock(codes, originalMethod);
+                if (activatingBlock.start != -1)
+                {
+                    RemoveCodeRange(codes, activatingBlock.start, activatingBlock.end - activatingBlock.start);
+                }
 
-            for (var i = 0; i < codes.Count; i++)
-            {
-                // removes this block of code
-                // if ((this.delayBetweenChecks -= Time.deltaTime) >= 0f && !InputManager.Gameplay.GetInteractButtonHeld(null))
-                // {
-                //     this.Activating = false;
-                //     return;
-                // }
-                // this.delayBetweenChecks = 0.4f;
-                if (codes[i].Calls(updateMethod) && delayStartIndex == -1)
+                var delayBlock = FindDelayCheckBlock(codes, originalMethod);
+                if (delayBlock.start != -1)
                 {
-                    delayStartIndex = i + 1;
-                    Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found Start Delay at {delayStartIndex}");
-                }
-        
-                if (codes[i].StoresField(delayBetweenChecksField) && codes[i - 1].opcode == OpCodes.Ldc_R4 && delayStartIndex != -1)
-                {
-                    delayEndIndex = i + 1;
-                    delayTargetLabel = codes[i + 1].operand as Label?;
-                    Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found End Delay at {delayEndIndex}");
-                    break;
+                    RemoveCodeRange(codes, delayBlock.start, delayBlock.end - delayBlock.start);
                 }
             }
-        
-            if (delayStartIndex != -1 && delayEndIndex != -1)
+
+            if (Plugin.FastCollecting.Value)
             {
-                var delayLabels = codes[delayStartIndex].labels.ToList();
-                codes.RemoveRange(delayStartIndex, delayEndIndex - delayStartIndex);
-        
-                if (delayLabels.Any())
-                {
-                    codes[delayStartIndex].labels.AddRange(delayLabels);
-                }
-        
-                if (delayTargetLabel.HasValue)
-                {
-                    codes[delayStartIndex].labels.Add(delayTargetLabel.Value);
-                }
-        
-                foreach (var t in codes)
-                {
-                    if (t.operand is not Label label || !label.Equals(delayTargetLabel)) continue;
-        
-                    if (delayTargetLabel != null)
-                    {
-                        t.operand = codes[delayStartIndex].labels.Count > 0 ? codes[delayStartIndex].labels[0] : delayTargetLabel.Value;
-                    }
-                }
+                ReduceSpawnDelay(codes, originalMethod);
             }
-            else
-            {
-                if (!originalMethod.GetRealDeclaringType().Name.Contains("Lumber"))
-                {
-                    Plugin.Log.LogError($"{originalMethod.GetRealDeclaringType().Name}: Could not find start and end delay");
-                }
-            }
-        
-        
-            for (var i = 0; i < codes.Count; i++)
-            {
-                // removes this block of code
-                // if (this.Activating && (this.StructureInfo.Inventory.Count <= 0 || InputManager.Gameplay.GetInteractButtonUp(base.playerFarming) || Vector3.Distance(base.transform.position, base.playerFarming.transform.position) > this.DistanceToTriggerDeposits))
-                // {
-                //     this.Activating = false;
-                // }
-                if (codes[i].LoadsField(activatingField) && activatingStartIndex == -1)
-                {
-                    activatingStartIndex = i - 1;
-                    Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found Start Activating at {activatingStartIndex}");
-                }
-        
-                if (codes[i].StoresField(activatingField) && activatingStartIndex != -1)
-                {
-                    activatingEndIndex = i + 1;
-                    activatingTargetLabel = codes[i + 1].operand as Label?;
-                    Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found End Activating at {activatingEndIndex}");
-                    break;
-                }
-            }
-        
-            if (activatingStartIndex != -1 && activatingEndIndex != -1)
-            {
-                var activatingLabels = codes[activatingStartIndex].labels.ToList();
-                codes.RemoveRange(activatingStartIndex, activatingEndIndex - activatingStartIndex);
-        
-                if (activatingLabels.Any())
-                {
-                    codes[activatingStartIndex].labels.AddRange(activatingLabels);
-                }
-        
-                if (activatingTargetLabel.HasValue)
-                {
-                    codes[activatingStartIndex].labels.Add(activatingTargetLabel.Value);
-                }
-        
-                foreach (var t in codes)
-                {
-                    if (t.operand is not Label label || !label.Equals(activatingTargetLabel)) continue;
-        
-                    if (activatingTargetLabel != null)
-                    {
-                        t.operand = codes[activatingStartIndex].labels.Count > 0 ? codes[activatingStartIndex].labels[0] : activatingTargetLabel.Value;
-                    }
-                }
-            }
-            else
-            {
-                Plugin.Log.LogError($"{originalMethod.GetRealDeclaringType().Name}: Could not find start and end activating");
-            }
+
+            Plugin.Log.LogInfo($"[Transpiler] {typeName}.Update: Applied auto-collect/fast-collect patches.");
+            return codes;
         }
-
-        if (Plugin.FastCollecting.Value)
+        catch (Exception ex)
         {
-            for (var i = 0; i < codes.Count; i++)
-            {
-                //changes delay
-                if (codes[i].opcode == OpCodes.Ldc_R4 && i + 1 < codes.Count && codes[i + 1].StoresField(delayField))
-                {
-                    Plugin.L($"{originalMethod.GetRealDeclaringType().Name}: Found Delay at {i}");
-                    codes[i].operand = originalMethod.GetRealDeclaringType().Name.Contains("Lumber") ? 0.025f : 0.01f;
-                }
-            }
+            Plugin.Log.LogWarning($"[Transpiler] {originalMethod.GetRealDeclaringType().Name}.Update: {ex.Message}");
+            return original;
         }
-        return codes.AsEnumerable();
     }
 
+    private static (int start, int end) FindDelayCheckBlock(List<CodeInstruction> codes, MethodBase originalMethod)
+    {
+        var updateMethod = AccessTools.Method(typeof(Interaction), nameof(Interaction.Update));
+        var delayBetweenChecksField = AccessTools.Field(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.delayBetweenChecks));
+
+        var start = -1;
+        var end = -1;
+
+        for (var i = 0; i < codes.Count; i++)
+        {
+            if (codes[i].Calls(updateMethod) && start == -1)
+            {
+                start = i + 1;
+            }
+
+            if (start != -1 && codes[i].StoresField(delayBetweenChecksField) && i > 0 && codes[i - 1].opcode == OpCodes.Ldc_R4)
+            {
+                end = i + 1;
+                break;
+            }
+        }
+
+        if (start == -1 || end == -1)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] {originalMethod.GetRealDeclaringType().Name}: Failed to find delay check block.");
+            return (-1, -1);
+        }
+
+        Plugin.Log.LogInfo($"[Transpiler] {originalMethod.GetRealDeclaringType().Name}: Found delay check block [{start}, {end}).");
+        return (start, end);
+    }
+
+    private static (int start, int end) FindActivatingBlock(List<CodeInstruction> codes, MethodBase originalMethod)
+    {
+        var activatingField = AccessTools.Field(typeof(Interaction_CollectResourceChest), "Activating");
+
+        var start = -1;
+        var end = -1;
+
+        for (var i = 0; i < codes.Count; i++)
+        {
+            if (codes[i].LoadsField(activatingField) && start == -1)
+            {
+                start = i - 1;
+            }
+
+            if (start != -1 && codes[i].StoresField(activatingField))
+            {
+                end = i + 1;
+                break;
+            }
+        }
+
+        if (start == -1 || end == -1)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] {originalMethod.GetRealDeclaringType().Name}: Failed to find Activating block.");
+            return (-1, -1);
+        }
+
+        Plugin.Log.LogInfo($"[Transpiler] {originalMethod.GetRealDeclaringType().Name}: Found Activating block [{start}, {end}).");
+        return (start, end);
+    }
+
+    private static void ReduceSpawnDelay(List<CodeInstruction> codes, MethodBase originalMethod)
+    {
+        var delayField = AccessTools.Field(originalMethod.GetRealDeclaringType(), "Delay");
+        var newDelay = originalMethod.GetRealDeclaringType().Name.Contains("Lumber") ? 0.025f : 0.01f;
+
+        for (var i = 0; i < codes.Count - 1; i++)
+        {
+            if (codes[i].opcode == OpCodes.Ldc_R4 && codes[i + 1].StoresField(delayField))
+            {
+                Plugin.Log.LogInfo($"[Transpiler] {originalMethod.GetRealDeclaringType().Name}: Replacing Delay {codes[i].operand} with {newDelay}.");
+                codes[i].operand = newDelay;
+            }
+        }
+    }
+
+    private static void RemoveCodeRange(List<CodeInstruction> codes, int startIndex, int count)
+    {
+        var labels = new List<Label>();
+        for (var i = startIndex; i < startIndex + count; i++)
+        {
+            labels.AddRange(codes[i].labels);
+        }
+
+        codes.RemoveRange(startIndex, count);
+
+        if (labels.Count > 0 && startIndex < codes.Count)
+        {
+            codes[startIndex].labels.AddRange(labels);
+        }
+    }
 }

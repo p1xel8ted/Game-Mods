@@ -57,43 +57,45 @@ public static class Rituals
     }
 
     [HarmonyTranspiler]
-    [HarmonyPatch(typeof(Interaction_TempleAltar), nameof(Interaction_TempleAltar.TryOnboardSin))]
     [HarmonyPatch(typeof(Interaction_TempleAltar), nameof(Interaction_TempleAltar.TryOnboardSin), MethodType.Enumerator)]
     public static IEnumerable<CodeInstruction> Interaction_TempleAltar_TryOnboardSin_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var originalCode = instructions.ToList();
-        var modifiedCode = new List<CodeInstruction>(originalCode);
-
+        var original = instructions.ToList();
         try
         {
+            var codes = new List<CodeInstruction>(original);
             var dmInstanceGetter = AccessTools.PropertyGetter(typeof(DataManager), nameof(DataManager.Instance));
             var bossesCompletedField = AccessTools.Field(typeof(DataManager), nameof(DataManager.BossesCompleted));
             var listCountGetter = AccessTools.PropertyGetter(typeof(List<FollowerLocation>), "Count");
             var getBossLimitMethod = AccessTools.Method(typeof(Rituals), nameof(GetBossLimit));
+            var found = false;
 
-            for (var i = 3; i < modifiedCode.Count; i++)
+            for (var i = 3; i < codes.Count; i++)
             {
-                var matches =
-                    modifiedCode[i - 3].Calls(dmInstanceGetter) &&
-                    modifiedCode[i - 2].LoadsField(bossesCompletedField) &&
-                    modifiedCode[i - 1].Calls(listCountGetter) &&
-                    modifiedCode[i].opcode == OpCodes.Ldc_I4_3;
-
-                if (matches)
+                if (codes[i - 3].Calls(dmInstanceGetter) &&
+                    codes[i - 2].LoadsField(bossesCompletedField) &&
+                    codes[i - 1].Calls(listCountGetter) &&
+                    codes[i].opcode == OpCodes.Ldc_I4_3)
                 {
-                    modifiedCode[i] = new CodeInstruction(OpCodes.Call, getBossLimitMethod).WithLabels(modifiedCode[i].labels);
-
-                    Plugin.Log.LogInfo("[Transpiler] Replaced BossesCompleted.Count < 3 check with GetBossLimit() in Interaction_TempleAltar.TryOnboardSin()");
+                    codes[i] = new CodeInstruction(OpCodes.Call, getBossLimitMethod).WithLabels(codes[i].labels);
+                    found = true;
                     break;
                 }
             }
 
-            return modifiedCode;
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] Interaction_TempleAltar.TryOnboardSin: Failed to find BossesCompleted.Count < 3 check.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo("[Transpiler] Interaction_TempleAltar.TryOnboardSin: Replaced boss limit with GetBossLimit().");
+            return codes;
         }
         catch (Exception ex)
         {
-            Plugin.Log.LogError($"[Transpiler] Error in TryOnboardSin transpiler: {ex}");
-            return originalCode;
+            Plugin.Log.LogWarning($"[Transpiler] Interaction_TempleAltar.TryOnboardSin: {ex.Message}");
+            return original;
         }
     }
 }

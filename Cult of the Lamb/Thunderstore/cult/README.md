@@ -23,6 +23,7 @@
 - Multiply tarot rare draw chance by 3 (from around 20% to 60%).
 - Receive a notification when a scarecrow catches a bird.
 - "Heal" exhausted followers in the healing bays.
+- Hide healthy followers from the healing bay selection menu.
 - Make lumber/mine/farm/refinery chests auto-loot when nearby (like the chest near the main portal).
 - Adjust refinery requirements (where possible, halve the materials needed to convert items).
 - Modify run, dodge, and lunge speeds.

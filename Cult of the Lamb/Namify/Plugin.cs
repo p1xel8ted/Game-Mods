@@ -31,9 +31,6 @@ public class Plugin : BaseUnityPlugin
         InitializeLogger();
         InitializeConfigurations();
         
-        FollowerBrain.OnBrainAdded += Patches.CleanNames;
-        FollowerManager.OnFollowerAdded += Patches.CleanNames;
-        
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Helpers.PrintModLoaded(PluginName, Logger);
     }
@@ -46,8 +43,7 @@ public class Plugin : BaseUnityPlugin
     private void InitializeConfigurations()
     {
         PopupManagerInstance = gameObject.AddComponent<PopupManager>();
-        AsterixNames = Config.Bind(NamesSection, "Asterisks Names", false, new ConfigDescription("Namified names will have an asterisk next to them in the UI. Will be removed automatically when the follower is accepted.", null, new ConfigurationManagerAttributes {Order = 12}));
-        Config.Bind(NamesSection, "Clean Asterisks", true, new ConfigDescription("Manually run the clean-up names function. Need to be loaded into a save to function.", null, new ConfigurationManagerAttributes {Order = 11, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = CleanAsterisks}));
+        AsterixNames = Config.Bind(NamesSection, "Asterisks Names", false, new ConfigDescription("Namified names will have an asterisk next to them in the indoctrination UI.", null, new ConfigurationManagerAttributes {Order = 12}));
         
         PersonalApiKey = Config.Bind(ApiSection, "Personal API Key", "ee5f806e1c1d458b99c934c0eb3de5b8", "The default API Key is mine, limited to 1000 requests per day. You can get your own at https://randommer.io/");
         AddName = Config.Bind(NamesSection, "Add Name", "", new ConfigDescription("Adds a name to the list of names.", null, new ConfigurationManagerAttributes {Order = 10}));
@@ -67,14 +63,6 @@ public class Plugin : BaseUnityPlugin
         }
     }
     
-    private static void CleanAsterisks(ConfigEntryBase entry)
-    {
-        if (GUILayout.Button("Clean Asterisks", GUILayout.ExpandWidth(true)))
-        {
-            Patches.CleanNames();
-        }
-    }
-
     private static void OpenUserGeneratedNamesFile(ConfigEntryBase entry)
     {
         if (GUILayout.Button("Open User List", GUILayout.ExpandWidth(true)))
