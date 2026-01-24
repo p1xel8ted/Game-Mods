@@ -102,7 +102,7 @@ public static class Patches
         // If still no names after trying to load, trigger async fetch but use game's default name for now
         if (Data.NamifyNames.Count <= 0 && Data.UserNames.Count <= 0)
         {
-            Plugin.Log.LogWarning("No names available yet, using game's default. Triggering background fetch...");
+            Plugin.Log.LogInfo("No names available yet, using game's default. Triggering background fetch...");
             Data.GetNamifyNames();
             return; // Keep the game's generated name
         }

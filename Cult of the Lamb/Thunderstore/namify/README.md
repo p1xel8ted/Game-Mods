@@ -2,12 +2,13 @@
 
 # Namify!
 
-* Gets a random list of 2000 names from the randommer.io API for use when naming followers.
-* The initial list is saved to a file where your save games are located to prevent having to make a request every time you start the game.
+* Gets a random list of 1000 names from the randommer.io API for use when naming followers.
+* Names are pre-loaded on game start for instant availability during indoctrination.
+* The name list is saved locally to prevent having to fetch names every time you start the game.
 * Names are removed from the list as they are used to prevent duplicates.
 * The provided API key is limited to 1000 requests per day. If you want to use your own API key, you can get one from [randommer.io](https://randommer.io/).
 * Add your own names to the list by editing the json file or by using the interface via F1. The file is saved unencrypted to allow users to edit the file themselves.
-* Namified names will display an astericks at the end of the name. Once the name is confirmed, the astericks is removed automatically - this can be toggled via F1.
+* Generated names display an asterisk during indoctrination so you can tell them apart from your own names. The asterisk is removed automatically once the name is confirmed. This can be toggled via F1.
 
 ## Donate
 

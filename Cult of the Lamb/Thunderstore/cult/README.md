@@ -32,7 +32,7 @@
 - Receive a notification when a bed has collapsed.
 - Skip receiving the crown video.
 - Mass collect resources from select structures (WIP).
-- Mass action features (level up, fertilize, water, bribe, bless, extort, intimidate, romance, bully, reassure, reeducate followers, and collect from various structures).
+- Mass action features (level up, fertilize, water, bribe, bless, extort, intimidate, romance, pet dog, bully, reassure, reeducate followers, and collect from various structures).
 - Remove the New Game button when you have at least one save game.
 - Enable Save on exit when quitting, with UI modifications to reflect this.
 - Quick save keybind to save whenever you want.
@@ -50,8 +50,14 @@
 - Magnetize all loot to the player.
 - Fast Rituals & Sermons.
 - Reverse Ritual of Enrichment nerf. This will also force-enable remove follower level limit.
-- Probably more features I've missed.
-- Some features above may have changed or been removed entirely since I first wrote them.
+- Customise Harvest Totem, Propaganda Speaker, Farm Station, and Farm Sign radii.
+- Customise Ritual Cooldowns.
+- Customise Life Expectancy range.
+- Customise Sin Unlock Boss amount.
+- Make wood silos produce spider webs (configurable).
+- Make stone silos produce crystal shards (configurable).
+- Make kitchens produce bones from meat meals (configurable).
+- Make Offering Shrines generate webs, silks, and crystals.
 
 ## Donate
 

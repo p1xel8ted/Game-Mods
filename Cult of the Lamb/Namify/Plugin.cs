@@ -61,7 +61,7 @@ public class Plugin : BaseUnityPlugin
         {
             Log.LogInfo("No existing names found, fetching from API...");
             Data.GetNamifyNames(
-                onFail: () => Log.LogWarning("Failed to fetch names during initialization"),
+                onFail: () => Log.LogInfo("Failed to fetch names during initialization"),
                 onComplete: () => Log.LogInfo("Successfully pre-loaded names from API")
             );
         }

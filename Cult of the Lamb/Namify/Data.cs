@@ -31,7 +31,7 @@ public static class Data
 
         NamifyNameReadWriter.OnWriteError += error =>
         {
-            Plugin.Log.LogWarning($"There was an issue saving Namify generated names: {error.Message}");
+            Plugin.Log.LogError($"There was an issue saving Namify generated names: {error.Message}");
         };
         
         
@@ -55,7 +55,7 @@ public static class Data
 
         UserNameReadWriter.OnWriteError += error =>
         {
-            Plugin.Log.LogWarning($"There was an issue saving user-generated names: {error.Message}");
+            Plugin.Log.LogError($"There was an issue saving user-generated names: {error.Message}");
         };
     }
 
@@ -96,7 +96,7 @@ public static class Data
         var gameManager = GameManager.GetInstance();
         if (gameManager == null)
         {
-            Plugin.Log.LogWarning("GameManager not ready, cannot fetch names");
+            Plugin.Log.LogInfo("GameManager not ready, cannot fetch names");
             onFail?.Invoke();
             return;
         }

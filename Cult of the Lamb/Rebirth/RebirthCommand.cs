@@ -98,7 +98,7 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         if (fi != null)
         {
             GameManager.GetInstance().StartCoroutine(GiveFollowerIE(fi, follower));
-            Plugin.Log.LogWarning($"New follower: {fi.Name}");
+            Plugin.Log.LogInfo($"New follower: {fi.Name}");
             SaveData.AddBornAgainFollower(fi);
             fi.XPLevel = oldXp;
 

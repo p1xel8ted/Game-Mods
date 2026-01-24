@@ -95,7 +95,7 @@ internal static class StructurePatches
             {
                 LOGCollectionCounts[__instance] = 0;
                 InventoryItem.Spawn(InventoryItem.ITEM_TYPE.SPIDER_WEB, 1, spawnPosition, 0f);
-                Plugin.Log.LogWarning($"Spawned spider web at lumber station after {logsPerSpiderWeb} logs collected");
+                Plugin.L($"Spawned spider web at lumber station after {logsPerSpiderWeb} logs collected");
             }
         }
         else if (type == InventoryItem.ITEM_TYPE.STONE)
@@ -106,7 +106,7 @@ internal static class StructurePatches
             {
                 LOGCollectionCounts[__instance] = 0;
                 InventoryItem.Spawn(InventoryItem.ITEM_TYPE.CRYSTAL, 1, spawnPosition, 0f);
-                Plugin.Log.LogWarning($"Spawned crystal shard at mining station after {stonePerCrystal} stone collected");
+                Plugin.L($"Spawned crystal shard at mining station after {stonePerCrystal} stone collected");
             }
         }
     }
@@ -118,7 +118,7 @@ internal static class StructurePatches
     {
         // Clean up tracking dictionary to prevent memory leaks
         LOGCollectionCounts.Remove(__instance);
-        Plugin.Log.LogWarning("Removed lumber station from spider web tracking dictionary on disable");
+        Plugin.L("Removed lumber station from spider web tracking dictionary on disable");
     }
 
     private static bool IsWoodOrLogType(InventoryItem.ITEM_TYPE type)

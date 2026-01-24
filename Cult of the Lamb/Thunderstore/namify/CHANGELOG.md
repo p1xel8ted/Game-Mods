@@ -3,6 +3,11 @@
 * Simplified asterisk name indicator (now only shown during indoctrination).
 * Removed "Clean Asterisks" button (no longer needed).
 * Leftover asterisks in existing saves are now automatically cleaned on load.
+* Fixed potential crash during follower name cleanup.
+* Fixed backup name source not being used when the primary source fails.
+* Fixed naming screen sometimes not properly applying outfit and Twitch changes.
+* Names are now pre-loaded on game start for faster indoctrination.
+* Improved handling when name lists aren't available yet.
 
 ### 0.2.0 - 03 February 2025
 

@@ -813,7 +813,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             if (!MenuCleanupPatches.SkipAutoLoad)
             {
-                Log.LogWarning($"{_cachedDirectLoadSkipKey.MainKey} pressed; skipping auto-load.");
+                L($"{_cachedDirectLoadSkipKey.MainKey} pressed; skipping auto-load.");
             }
 
             MenuCleanupPatches.SkipAutoLoad = true;

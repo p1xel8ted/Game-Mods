@@ -1,11 +1,15 @@
 ### 2.3.1 - 24/01/2026
 
+* Updated for Woolhaven.
 * Fixed crash spam after returning to the main menu.
 * Re-introduced mass level-up (previously removed in 2.2.5).
 * Fixed all mass actions (bless, bribe, bully, etc.) potentially crashing.
+* Fixed bones from cooking spawning in the wrong location when leaving the base area.
+* Fixed lumber mine chest giving infinite lumber when looting.
+* Fixed farm station radius setting only changing visuals but not actual follower work range.
+* Fixed rare tarot cards showing raw text keys instead of descriptions when using 3x luck.
+* Mass action fixes now only activate when the corresponding mass action setting is enabled.
 * Added option to hide healthy followers from the healing bay selection menu.
-* Fixed various game warnings related to object creation.
-* Improved internal error handling and logging.
 
 ### 2.3.0 - 20/09/2025
 
