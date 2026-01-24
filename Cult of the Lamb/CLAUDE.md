@@ -65,6 +65,7 @@ Each mod has a `GlobalUsings.cs` with project-wide `global using` statements. Cu
 - **Game/Unity assemblies** are in `libs/` and referenced directly in `.csproj` files (not via NuGet). All assemblies are **publicized** (private members exposed as public), so there is no need for reflection to access game internals. **Never use reflection** unless strictly required (e.g., inside a transpiler to get MethodInfo for IL patching).
 - **Original game source** is in `libs/game_code/Assembly-CSharp/`. Always reference this when investigating mod bugs, issues, or optimization requests to understand the vanilla game behavior being patched. **Never assume what a game method does based on its name alone** — always read the actual method body in the game code before making claims about its behavior or purpose.
 - **Harmony patching preference:** Prefer transpilers over prefix patches that skip the original method (`return false`). Transpilers preserve the original method's logic and only modify the specific behavior that needs changing, reducing the risk of missing side effects or future game updates adding new logic to the method.
+- **Braces:** Always use braces for control flow statements (`if`, `for`, `foreach`, `while`, etc.), except when the body is a single `return`, `continue`, or `break` statement.
 
 ## Workflow
 
