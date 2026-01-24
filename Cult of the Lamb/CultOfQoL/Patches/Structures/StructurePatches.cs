@@ -177,52 +177,37 @@ internal static class StructurePatches
     // Uses object parameter since FollowerTask_Cook doesn't inherit from Interaction_Kitchen
     public static Vector3 GetUniversalSpawnPosition(object instance)
     {
-        // Check if it's an Interaction_Kitchen or derived type (handles both Interaction types)
         if (instance is Interaction_Kitchen kitchen)
         {
             if (kitchen.SpawnMealPosition)
             {
                 return kitchen.SpawnMealPosition.position;
             }
-
-            // Fallback to kitchen position
             return kitchen.transform.position;
         }
 
-        // Handle FollowerTask_Cook case
         if (instance is FollowerTask_Cook cookTask)
         {
-            // Try to find the associated kitchen interaction
             var kitchenInteraction = cookTask.FindKitchen();
             if (kitchenInteraction && kitchenInteraction.SpawnMealPosition)
             {
                 return kitchenInteraction.SpawnMealPosition.position;
             }
 
-            // Try to get position from the kitchen structure
             if (cookTask.kitchenStructure is { Data: not null })
             {
-                // Use the structure's position (convert from Vector2Int to Vector3)
-                var pos = cookTask.kitchenStructure.Data.Position;
-                return new Vector3(pos.x, 0, pos.y);
-            }
-
-            // Last resort: try to get any interaction component
-            var anyKitchen = Object.FindObjectOfType<Interaction_Kitchen>();
-            if (anyKitchen && anyKitchen.SpawnMealPosition)
-            {
-                return anyKitchen.SpawnMealPosition.position;
+                return cookTask.kitchenStructure.Data.Position;
             }
         }
 
-        // Fallback to origin if we can't determine position
         Plugin.Log.LogWarning($"Could not determine spawn position for {instance?.GetType().Name ?? "null"}");
-        return Vector3.zero;
+        return Vector3.positiveInfinity;
     }
 
     public static void CheckForBones(InventoryItem.ITEM_TYPE mealType, Vector3 position)
     {
         if (!Plugin.CookedMeatMealsContainBone.Value) return;
+        if (float.IsPositiveInfinity(position.x)) return;
 
         var mixedMeal = mealType.IsMixedMeal();
         var meatMeal = mealType.IsMealWithMeat();

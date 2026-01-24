@@ -3,16 +3,6 @@
 [Harmony]
 public static class FollowerLevelUpPatches
 {
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
-    public static void LevelUpRoutine_Prefix(interaction_FollowerInteraction __instance)
-    {
-        if (!__instance.playerFarming)
-        {
-            __instance.playerFarming = PlayerFarming.Instance;
-        }
-    }
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.CanLevelUp))]
     public static void FollowerBrain_CanLevelUp(ref FollowerBrain __instance, ref bool __result)

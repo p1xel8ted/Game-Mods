@@ -248,10 +248,9 @@ public static class FollowerPatches
 
         var followers = Helpers.AllFollowers.Where(f => f != originalFollower).ToList();
 
-        foreach (var f in followers)
+        foreach (var f in followers.Where(f => f.Interaction_FollowerInteraction))
         {
-            if (f.Interaction_FollowerInteraction)
-                f.Interaction_FollowerInteraction.playerFarming ??= PlayerFarming.Instance;
+            f.Interaction_FollowerInteraction.playerFarming ??= PlayerFarming.Instance;
         }
 
         if (cmd == FollowerCommands.Reassure && ShouldMassReassure(followerCommands[0]))

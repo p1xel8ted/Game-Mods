@@ -47,12 +47,12 @@ public static class RoutinesTranspilers
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract))]
     private static IEnumerable<CodeInstruction> interaction_FollowerInteraction_OnInteract(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
-        var original_codes = instructions.ToList();
-        if (!AnyMassActionsEnabled) return original_codes;
+        var originalCodes = instructions.ToList();
+        if (!AnyMassActionsEnabled) return originalCodes;
 
         try
         {
-            var codes = new List<CodeInstruction>(original_codes);
+            var codes = new List<CodeInstruction>(originalCodes);
             LogOnce(original, "Removing DepthOfFieldTween.");
             NopCallSequence(codes, c => c.LoadsField(BiomeConstantsInstance), DepthOfFieldTween);
             return codes;
@@ -60,7 +60,7 @@ public static class RoutinesTranspilers
         catch (Exception ex)
         {
             Plugin.Log.LogWarning($"[Transpiler] interaction_FollowerInteraction.OnInteract: {ex.Message}");
-            return original_codes;
+            return originalCodes;
         }
     }
 
@@ -78,20 +78,20 @@ public static class RoutinesTranspilers
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine), MethodType.Enumerator)]
     private static IEnumerable<CodeInstruction> interaction_FollowerInteraction_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
-        var original_codes = instructions.ToList();
+        var originalCodes = instructions.ToList();
 
         if (original.DeclaringType != null)
         {
             var declaringType = original.DeclaringType.ToString();
             if (RoutineChecks.Any(pair => declaringType.Contains(pair.Key, StringComparison.OrdinalIgnoreCase) && !pair.Value.Invoke().Value))
             {
-                return original_codes;
+                return originalCodes;
             }
         }
 
         try
         {
-            var codes = new List<CodeInstruction>(original_codes);
+            var codes = new List<CodeInstruction>(originalCodes);
             LogOnce(original, "Removing HUD/conversation/camera calls.");
 
             NopCallSequence(codes, c => c.LoadsField(HudManagerInstance), HudManagerHide);
@@ -105,7 +105,29 @@ public static class RoutinesTranspilers
         catch (Exception ex)
         {
             Plugin.Log.LogWarning($"[Transpiler] interaction_FollowerInteraction.{original.Name}: {ex.Message}");
-            return original_codes;
+            return originalCodes;
+        }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ExtortMoneyRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.IntimidateRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.BlessRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ReeducateRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.RomanceRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.PetDogRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ReassureRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.BullyRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.DanceRoutine))]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.BribeRoutine))]
+    private static void EnsurePlayerFarming(interaction_FollowerInteraction __instance, MethodBase __originalMethod)
+    {
+        if (!RoutineChecks.TryGetValue(__originalMethod.Name, out var configGetter) || !configGetter().Value) return;
+
+        if (!__instance.playerFarming)
+        {
+            __instance.playerFarming = PlayerFarming.Instance;
         }
     }
 
