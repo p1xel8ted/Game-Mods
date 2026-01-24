@@ -45,6 +45,8 @@ Cult of the Lamb/libs/*
 !Cult of the Lamb/libs/game_code/
 !Cult of the Lamb/libs/game_code/**
 Cult of the Lamb/libs/game_code/**/*.dll
+Cult of the Lamb/libs/game_code/**/Youtube*
+Cult of the Lamb/libs/game_code/**/LightShaft/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
