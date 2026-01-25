@@ -9,7 +9,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.2.1";
+    private const string PluginVer = "0.2.2";
     private const string NamesSection = "Names";
     private const string ApiSection = "API";
 

@@ -1,5 +1,10 @@
+### 0.2.2 - 25 January 2026
+
+* Fixed asterisk indicator not appearing after clicking "get name" button during indoctrination.
+
 ### 0.2.1 - 24 January 2026
 
+* Woolhaven update.
 * Simplified asterisk name indicator (now only shown during indoctrination).
 * Removed "Clean Asterisks" button (no longer needed).
 * Leftover asterisks in existing saves are now automatically cleaned on load.

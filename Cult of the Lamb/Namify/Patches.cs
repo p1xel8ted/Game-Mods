@@ -80,6 +80,19 @@ public static class Patches
 
 
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIFollowerIndoctrinationMenuController), nameof(UIFollowerIndoctrinationMenuController.RandomiseName))]
+    private static void UIFollowerIndoctrinationMenuController_RandomiseName(UIFollowerIndoctrinationMenuController __instance)
+    {
+        if (!Plugin.AsterixNames.Value) return;
+
+        var name = __instance._nameInputField.text;
+        if (Data.NamifyNames.Contains(name) || Data.UserNames.Contains(name))
+        {
+            __instance._nameInputField.text = $"{name}*";
+        }
+    }
+
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.GenerateName))]
     public static void FollowerInfo_GenerateName(ref string __result)
     {
