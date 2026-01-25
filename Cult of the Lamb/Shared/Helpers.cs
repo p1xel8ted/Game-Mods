@@ -8,8 +8,6 @@ using BepInEx.Logging;
 using MonoMod.Utils;
 using UnityEngine;
 
-using Logger = UnityEngine.Logger;
-
 namespace Shared;
 
 public static class Helpers

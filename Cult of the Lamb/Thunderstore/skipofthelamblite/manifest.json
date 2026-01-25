@@ -2,7 +2,7 @@
     "name":  "Skip_of_the_Lamb_Lite",
     "version_number":  "0.1.0",
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/56",
-    "description":  "Skips the splash screens. That's it. No config, no fuss, probably won't break anything.",
+    "description":  "Skips the splash screens. That\u0027s it. No config, no fuss, probably won\u0027t break anything.",
     "dependencies":  [
                          "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101"
                      ]

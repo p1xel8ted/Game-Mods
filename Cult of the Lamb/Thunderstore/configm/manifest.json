@@ -1,6 +1,6 @@
 {
     "name": "BepInEx_Configuration_Manager",
-    "version_number": "18.3.0",
+    "version_number": "18.4.1",
     "website_url": "https://github.com/BepInEx/BepInEx.ConfigurationManager",
     "description": "Provides a configuration interface for BepInEx plugins.",
     "dependencies": [

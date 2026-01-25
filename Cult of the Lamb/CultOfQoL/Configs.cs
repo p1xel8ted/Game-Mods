@@ -16,8 +16,6 @@ public partial class Plugin
     internal static ConfigEntry<bool> DisableAds { get; set; }
     internal static ConfigEntry<bool> HideNewGameButtons { get; private set; }
 
-    internal static ConfigEntry<bool> SkipDevIntros { get; private set; }
-    internal static ConfigEntry<bool> SkipCrownVideo { get; private set; }
     internal static ConfigEntry<bool> EasyFishing { get; private set; }
     internal static ConfigEntry<bool> FastCollecting { get; private set; }
     internal static ConfigEntry<bool> RemoveMenuClutter { get; private set; }

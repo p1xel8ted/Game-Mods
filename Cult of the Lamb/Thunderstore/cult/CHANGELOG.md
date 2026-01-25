@@ -1,5 +1,7 @@
 ### 2.3.3
 
+* Removed skip intro/video features (moved to dedicated Skip of the Lamb mod).
+* Added "WeatherSystemController: Same system transition" to the log spam filter.
 * Weather, scarecrow, fuel, and bed collapse notifications are now suppressed when in dungeons or during cutscenes/transitions.
 * Added duplicate notification prevention - the same notification won't appear again within 10 seconds.
 

@@ -2,7 +2,6 @@
 
 ## Features
 
-- Removes intros.
 - Cheese the fishing mini-game (no need to press anything apart from the initial cast; reeling UI is hidden, compatible with Auto-Fish accessibility settings).
 - Remove extra buttons from menus (Discord, bug report, Twitch, etc.).
 - Collect tithes/inspire all at once (unless followers are in prison, sleeping, using the bathroom, or dissenting).
@@ -30,7 +29,6 @@
 - Disable run speed multiplier in dungeons and combat.
 - Modify base damage dealt.
 - Receive a notification when a bed has collapsed.
-- Skip receiving the crown video.
 - Mass collect resources from select structures (WIP).
 - Mass action features (level up, fertilize, water, bribe, bless, extort, intimidate, romance, pet dog, bully, reassure, reeducate followers, and collect from various structures).
 - Remove the New Game button when you have at least one save game.

@@ -1,38 +1,55 @@
-using BepInEx.Bootstrap;
-using Shared;
-
 namespace SkipOfTheLamb;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInIncompatibility("p1xel8ted.cotl.skipofthelamblite")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.skipofthelamb";
     private const string PluginName = "Skip of the Lamb";
-    private const string PluginVer = "0.1.0";
-    private const string CultOfQoLGuid = "p1xel8ted.cotl.CultOfQoLCollection";
+    private const string PluginVer = "0.1.1";
 
     internal static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<bool> SkipDevIntros { get; private set; }
     internal static ConfigEntry<bool> SkipCrownVideo { get; private set; }
+    internal static ConfigEntry<bool> SkipWoolhavenPrerenderedCinematic { get; private set; }
+    internal static ConfigEntry<bool> SkipWoolhavenInGameFirstArrivalScene { get; private set; }
+    internal static ConfigEntry<bool> SkipBossIntros { get; private set; }
+    internal static ConfigEntry<bool> SkipMiniBossIntros { get; private set; }
+    internal static ConfigEntry<bool> IgnoreFirstEncounter { get; private set; }
 
     private void Awake()
     {
         Log = Logger;
 
-        SkipDevIntros = Config.Bind("General", "Skip Intros", false,
-            new ConfigDescription("Skip splash screens.", null,
+        SkipDevIntros = Config.Bind("01. Pre-Rendered Videos", "Skip Splash Screens", false,
+            new ConfigDescription("Skip developer/publisher logo videos on startup.", null,
                 new ConfigurationManagerAttributes { Order = 2 }));
 
-        SkipCrownVideo = Config.Bind("General", "Skip Crown Video", false,
-            new ConfigDescription("Skips the video when the lamb gets given the crown.", null,
+        SkipCrownVideo = Config.Bind("01. Pre-Rendered Videos", "Skip Crown Video", false,
+            new ConfigDescription("Skip the video when the player first dies and is crowned by the death cat.", null,
                 new ConfigurationManagerAttributes { Order = 1 }));
 
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        SkipWoolhavenPrerenderedCinematic = Config.Bind("01. Pre-Rendered Videos", "Skip Woolhaven Video", false,
+            new ConfigDescription("Skip the pre-rendered video after completing the Woolhaven intro dungeon.", null,
+                new ConfigurationManagerAttributes { Order = 0 }));
 
-        if (Chainloader.PluginInfos.ContainsKey(CultOfQoLGuid))
-        {
-            Log.LogWarning("CultOfQoL detected. Its skip intro/video features will be disabled in favour of Skip of the Lamb.");
-        }
+        SkipWoolhavenInGameFirstArrivalScene = Config.Bind("02. In-Game Cutscenes", "Skip Woolhaven Arrival", false,
+            new ConfigDescription("Skip the in-game cutscene when first arriving in Woolhaven.", null,
+                new ConfigurationManagerAttributes { Order = 3 }));
+
+        SkipBossIntros = Config.Bind("02. In-Game Cutscenes", "Skip Main Boss Intros", false,
+            new ConfigDescription("Skip in-game boss ritual/transformation sequences.", null,
+                new ConfigurationManagerAttributes { Order = 2 }));
+
+        SkipMiniBossIntros = Config.Bind("02. In-Game Cutscenes", "Skip Mini-Boss Intros", false,
+            new ConfigDescription("Skip in-game mini-boss roar/spawn sequences.", null,
+                new ConfigurationManagerAttributes { Order = 1 }));
+
+        IgnoreFirstEncounter = Config.Bind("02. In-Game Cutscenes", "Ignore First Encounter", false,
+            new ConfigDescription("Skip boss intros even on first encounter. Useful for veteran players on new saves.", null,
+                new ConfigurationManagerAttributes { Order = 0 }));
+
+       Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
         Helpers.PrintModLoaded(PluginName, Logger);
     }

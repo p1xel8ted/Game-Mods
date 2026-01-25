@@ -11,7 +11,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.3.2";
+    private const string PluginVer = "2.3.3";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -73,8 +73,6 @@ public partial class Plugin : BaseUnityPlugin
         //General - 01
         EnableLogging = ConfigInstance.Bind(GeneralSection, "Enable Logging", false, new ConfigDescription("Enable/disable logging.", null, new ConfigurationManagerAttributes { Order = 5 }));
         EnableLogging.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.EnableLogging);
-        SkipDevIntros = ConfigInstance.Bind(GeneralSection, "Skip Intros", false, new ConfigDescription("Skip splash screens.", null, new ConfigurationManagerAttributes { Order = 3 }));
-        SkipCrownVideo = ConfigInstance.Bind(GeneralSection, "Skip Crown Video", false, new ConfigDescription("Skips the video when the lamb gets given the crown.", null, new ConfigurationManagerAttributes { Order = 2 }));
         UnlockTwitchItems = ConfigInstance.Bind(GeneralSection, "Unlock Twitch Items", false, new ConfigDescription("Unlock pre-order DLC, Twitch plush, and Twitch drops. Paid DLC is excluded on purpose.", null, new ConfigurationManagerAttributes { Order = 1 }));
 
         //Menu Cleanup - 02

@@ -1,6 +1,6 @@
 {
     "name":  "Skip_of_the_Lamb",
-    "version_number":  "0.1.0",
+    "version_number":  "0.1.0.1",
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/55",
     "description":  "Skips intros, in-game cutscenes, and the various pre-rendered cutscenes. Tries not to break the game doing it.",
     "dependencies":  [

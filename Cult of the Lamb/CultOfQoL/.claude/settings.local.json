@@ -7,7 +7,10 @@
       "Bash(git add:*)",
       "Bash(git rm:*)",
       "Read(/C:\\Users\\Ben\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\Shared/**)",
-      "Read(/C:\\Users\\Ben\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb/**)"
+      "Read(/C:\\Users\\Ben\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb/**)",
+      "Bash(tree:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []

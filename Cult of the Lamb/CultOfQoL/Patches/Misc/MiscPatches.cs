@@ -30,7 +30,8 @@ public class MiscPatches
         "DLC is not installed, showing button",
         "DLC is installed, hiding button",
         "Releasing gameobject",
-        "WAITING"
+        "WAITING",
+        "WeatherSystemController: Same system transition"
     };
     
     [HarmonyTranspiler]

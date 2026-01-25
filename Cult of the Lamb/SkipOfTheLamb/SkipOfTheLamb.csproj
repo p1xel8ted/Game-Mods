@@ -1,11 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.0</Version>
+        <Version>0.1.1</Version>
         <ThunderstoreDir>skipofthelamb</ThunderstoreDir>
     </PropertyGroup>
     <ItemGroup>
       <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
         <Link>ConfigurationManagerAttributes.cs</Link>
       </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="DOTween">
+            <HintPath>..\libs\DOTween.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.Physics2DModule">
+            <HintPath>..\libs\UnityEngine.Physics2DModule.dll</HintPath>
+        </Reference>
     </ItemGroup>
 </Project>
