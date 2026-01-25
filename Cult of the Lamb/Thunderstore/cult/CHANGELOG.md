@@ -1,14 +1,11 @@
-### 2.3.3 - 25/01/2026
+### 2.3.2 - 25/01/2026
 
+* Added option to auto-select the two followers with the highest mating success chance when opening the Mating Tent.
+* Added compatibility check for Skip of the Lamb mod. Skip intro/video features in CultOfQoL are automatically disabled when Skip of the Lamb is installed.
 * Fixed crash/hang when starting a new game with "Only Unlocked Traits" enabled (no traits unlocked yet would cause an ArgumentOutOfRangeException).
 * Renamed "Remove Level Limit" to "Uncap Level Benefits" - the base game removed the level cap in 1.5.0, but follower benefits (productivity, prayer devotion, sacrifice rewards) are still capped at level 10. This setting removes those caps.
 * Removed force-enable of Uncap Level Benefits when enabling Reverse Enrichment Nerf (no longer required since base game allows leveling past 10).
 * Added "WAITING" to the log spam filter.
-
-### 2.3.2 - 24/01/2026
-
-* Added option to auto-select the two followers with the highest mating success chance when opening the Mating Tent.
-* Added compatibility check for Skip of the Lamb mod. Skip intro/video features in CultOfQoL are automatically disabled when Skip of the Lamb is installed.
 
 ### 2.3.1 - 24/01/2026
 
