@@ -1,8 +1,8 @@
 {
     "name":  "Skip_of_the_Lamb",
     "version_number":  "0.1.0",
-    "website_url":  "",
-    "description":  "Skip splash screens and the crown video in Cult of the Lamb. Created at user request.",
+    "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/55",
+    "description":  "Skip splash screens and the crown video cutscene. Works in harmony with Cult of QoL.",
     "dependencies":  [
                          "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101"
                      ]
