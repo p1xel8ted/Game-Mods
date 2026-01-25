@@ -317,6 +317,10 @@ public partial class Plugin : BaseUnityPlugin
         ShowWeatherChangeNotifications.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ShowWeatherChangeNotifications);
 
         //Followers - 14
+        PrioritizeRequestedFollowers = ConfigInstance.Bind(FollowersSection, "Prioritize Requested Followers", false, new ConfigDescription("Followers with active requests (rituals, missions, mating, etc.) appear at the top of selection lists.", null, new ConfigurationManagerAttributes
+        {
+            Order = 9
+        }));
         GiveFollowersNewNecklaces = ConfigInstance.Bind(FollowersSection, "Give Followers New Necklaces", false, new ConfigDescription("Followers will be able to receive new necklaces, with the old one being returned to you.", null, new ConfigurationManagerAttributes
         {
             Order = 8

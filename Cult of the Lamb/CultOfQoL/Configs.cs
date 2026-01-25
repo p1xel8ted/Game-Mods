@@ -171,6 +171,7 @@ public partial class Plugin
     public static ConfigEntry<bool> AddCrystalShardsToOfferings { get; set; }
     public static ConfigEntry<bool> CookedMeatMealsContainBone { get; set; }
     internal static ConfigEntry<bool> AutoSelectBestMatingPair { get; private set; }
+    internal static ConfigEntry<bool> PrioritizeRequestedFollowers { get; private set; }
     public static ConfigEntry<bool> ProduceSpiderWebsFromLumber { get; set; }
     public static ConfigEntry<int> SpiderWebsPerLogs { get; set; }
     public static ConfigEntry<bool> ProduceCrystalShardsFromStone { get; set; }

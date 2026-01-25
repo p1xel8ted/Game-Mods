@@ -4,6 +4,7 @@
 * Added "WeatherSystemController: Same system transition" to the log spam filter.
 * Weather, scarecrow, fuel, and bed collapse notifications are now suppressed when in dungeons or during cutscenes/transitions.
 * Added duplicate notification prevention - the same notification won't appear again within 10 seconds.
+* Added option to prioritize followers with active requests at the top of selection lists.
 
 ### 2.3.2 - 25/01/2026
 
