@@ -1,3 +1,8 @@
+### 2.3.3
+
+* Weather, scarecrow, fuel, and bed collapse notifications are now suppressed when in dungeons or during cutscenes/transitions.
+* Added duplicate notification prevention - the same notification won't appear again within 10 seconds.
+
 ### 2.3.2 - 25/01/2026
 
 * Added option to auto-select the two followers with the highest mating success chance when opening the Mating Tent.

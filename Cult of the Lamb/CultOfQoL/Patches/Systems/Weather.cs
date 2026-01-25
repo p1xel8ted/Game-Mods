@@ -1,4 +1,5 @@
 using CultOfQoL.Core;
+using CultOfQoL.Patches.UI;
 
 namespace CultOfQoL.Patches.Systems;
 
@@ -35,11 +36,15 @@ public static class Weather
 
                 if (changeWeatherAndShowNotification && phase is not DayPhase.Count and not DayPhase.None)
                 {
+                    if (Notifications.ShouldSuppressNotification()) return;
+
                     // Performance optimization: Use cached string and pre-built message
                     var phaseString = phase.ToString();
                     var weatherString = WeatherStringCache.TryGetValue(weather.WeatherType, out var cached) ? cached : string.Empty;
-                    NotificationCentre.Instance.PlayGenericNotification(
-                        $"{phaseString} has started and it brings {weather.WeatherStrength} {weatherString}!");
+                    var message = $"{phaseString} has started and it brings {weather.WeatherStrength} {weatherString}!";
+                    if (Notifications.IsDuplicateNotification(message)) return;
+
+                    NotificationCentre.Instance.PlayGenericNotification(message);
                     return;
                 }
             }
@@ -47,7 +52,12 @@ public static class Weather
 
         if (showPhaseNotifications && phase is not DayPhase.Count and not DayPhase.None && !changeWeatherAndShowNotification)
         {
-            NotificationCentre.Instance.PlayGenericNotification($"{phase} has started!");
+            if (Notifications.ShouldSuppressNotification()) return;
+
+            var message = $"{phase} has started!";
+            if (Notifications.IsDuplicateNotification(message)) return;
+
+            NotificationCentre.Instance.PlayGenericNotification(message);
         }
     }
 
@@ -112,7 +122,10 @@ public static class Weather
     public static void WeatherSystemController_SetWeather_Postfix(WeatherSystemController __instance, WeatherSystemController.WeatherType weatherType, WeatherSystemController.WeatherStrength weatherStrength)
     {
         // Performance optimization: Use cached config value and early return
-        if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ShowWeatherChangeNotifications, () => Plugin.ShowWeatherChangeNotifications.Value)) 
+        if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ShowWeatherChangeNotifications, () => Plugin.ShowWeatherChangeNotifications.Value))
+            return;
+
+        if (Notifications.ShouldSuppressNotification())
             return;
 
         // Performance optimization: Cache the notifications list check to avoid LINQ overhead
@@ -127,7 +140,10 @@ public static class Weather
         var message = weatherType == WeatherSystemController.WeatherType.None
             ? "Weather cleared!"
             : $"Weather changed to {weatherStrength} {GetWeatherString(weatherType)}!";
-            
+
+        if (Notifications.IsDuplicateNotification(message))
+            return;
+
         NotificationCentre.Instance.PlayGenericNotification(message);
     }
 }
