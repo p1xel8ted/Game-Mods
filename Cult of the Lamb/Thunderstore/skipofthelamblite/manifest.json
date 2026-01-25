@@ -1,0 +1,9 @@
+{
+    "name":  "Skip_of_the_Lamb_Lite",
+    "version_number":  "0.1.0",
+    "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/55",
+    "description":  "Lightweight mod that skips developer splash screens on startup. No configuration required.",
+    "dependencies":  [
+                         "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101"
+                     ]
+}
