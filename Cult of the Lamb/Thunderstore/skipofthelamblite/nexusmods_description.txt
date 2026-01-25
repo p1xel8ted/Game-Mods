@@ -6,17 +6,22 @@
 
 [size=4][b]What[/b][/size]
 
-[size=3]Created at user request.[/size]
+[size=3]A lightweight mod that skips developer/publisher splash screens on game startup. No configuration required - just install and play.[/size]
 
 [list]
-[*][size=3]Skip the developer splash screens on game start.[/size]
-[*][size=3]Skip the video when the lamb gets given the crown.[/size]
-[*][size=3]Both features are disabled by default and can be enabled via config file or Configuration Manager.[/size]
+[*][size=3]Automatically skips developer/publisher logo videos when launching the game[/size]
 [/list]
+
+[size=4][b]Looking for More?[/b][/size]
+
+[size=3]If you want additional skip features (crown video, Woolhaven cutscenes, boss intros), check out the full [url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] mod instead.[/size]
 
 [size=4][b]Compatibility[/b][/size]
 
-[size=3]Works in harmony with [url=https://www.nexusmods.com/cultofthelamb/mods/7]Cult of QoL[/url] if installed. CultOfQoL's skip intro/video features will be automatically disabled in favor of this mod's settings.[/size]
+[list]
+[*][size=3][b]Skip of the Lamb[/b] - Incompatible. Only one variant can be loaded at a time.[/size]
+[*][size=3][b]Cult of QoL[/b] - Fully compatible.[/size]
+[/list]
 
 [size=4][b]Recommendation[/b][/size]
 
@@ -26,13 +31,5 @@
 
 [list]
 [*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
-[*][size=3]Optionally install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/]Configuration Manager[/url] for in-game configuration with F1.[/size]
 [*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder. Either run the game, or create it if it doesn't exist.[/size]
-[/list]
-
-[size=4][b]Configuration[/b][/size]
-
-[list]
-[*][size=3]The configuration file is generated when you first run the game with the mod enabled. It can be found in the "...\Cult of the Lamb\BepInEx\config" folder.[/size]
-[*][size=3]If you have Configuration Manager installed, press F1 in game to configure. If you're in a dungeon, pause the game first otherwise the cursor doesn't work.[/size]
 [/list]

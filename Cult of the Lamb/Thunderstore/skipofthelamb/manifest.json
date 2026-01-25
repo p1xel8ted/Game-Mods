@@ -2,7 +2,7 @@
     "name":  "Skip_of_the_Lamb",
     "version_number":  "0.1.0",
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/55",
-    "description":  "Skip splash screens and the crown video cutscene. Works in harmony with Cult of QoL.",
+    "description":  "Skips intros, in-game cutscenes, and the various pre-rendered cutscenes. Tries not to break the game doing it.",
     "dependencies":  [
                          "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101"
                      ]

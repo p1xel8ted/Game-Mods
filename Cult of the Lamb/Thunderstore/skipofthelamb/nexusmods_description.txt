@@ -6,17 +6,35 @@
 
 [size=4][b]What[/b][/size]
 
-[size=3]Created at user request.[/size]
+[size=3]A mod to skip various cutscenes and intros in Cult of the Lamb.[/size]
+
+[size=4][b]Pre-Rendered Videos[/b][/size]
 
 [list]
-[*][size=3]Skip the developer splash screens on game start.[/size]
-[*][size=3]Skip the video when the lamb gets given the crown.[/size]
-[*][size=3]Both features are disabled by default and can be enabled via config file or Configuration Manager.[/size]
+[*][size=3]Skip Splash Screens - Skip developer/publisher logo videos on startup[/size]
+[*][size=3]Skip Crown Video - Skip the video when the player first dies and is crowned by the death cat[/size]
+[*][size=3]Skip Woolhaven Video - Skip the pre-rendered video after completing the Woolhaven intro dungeon[/size]
 [/list]
+
+[size=4][b]In-Game Cutscenes[/b][/size]
+
+[list]
+[*][size=3]Skip Woolhaven Arrival - Skip the in-game cutscene when first arriving in Woolhaven[/size]
+[*][size=3]Skip Main Boss Intros - Skip in-game boss ritual/transformation sequences[/size]
+[*][size=3]Skip Mini-Boss Intros - Skip in-game mini-boss roar/spawn sequences[/size]
+[*][size=3]Ignore First Encounter - Skip boss intros even on first encounter (useful for veteran players on new saves)[/size]
+[/list]
+
+[size=4][b]Just Want Splash Screens Skipped?[/b][/size]
+
+[size=3]Check out [url=https://www.nexusmods.com/cultofthelamb/mods/56]Skip of the Lamb Lite[/url] - a lightweight version with no configuration required.[/size]
 
 [size=4][b]Compatibility[/b][/size]
 
-[size=3]Works in harmony with [url=https://www.nexusmods.com/cultofthelamb/mods/7]Cult of QoL[/url] if installed. CultOfQoL's skip intro/video features will be automatically disabled in favor of this mod's settings.[/size]
+[list]
+[*][size=3][b]Skip of the Lamb Lite[/b] - Incompatible. Only one variant can be loaded at a time.[/size]
+[*][size=3][b]Cult of QoL[/b] - Fully compatible. Skip features have been removed from CultOfQoL.[/size]
+[/list]
 
 [size=4][b]Recommendation[/b][/size]
 
@@ -31,6 +49,8 @@
 [/list]
 
 [size=4][b]Configuration[/b][/size]
+
+[size=3]All features are disabled by default.[/size]
 
 [list]
 [*][size=3]The configuration file is generated when you first run the game with the mod enabled. It can be found in the "...\Cult of the Lamb\BepInEx\config" folder.[/size]
