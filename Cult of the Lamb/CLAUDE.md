@@ -78,6 +78,11 @@ Each mod has a `GlobalUsings.cs` with project-wide `global using` statements. Cu
 
 - **Never add Co-Authored-By lines** to commit messages.
 
+## Changelogs
+
+- **Never create a new version entry** in changelogs unless explicitly instructed by the user. Add changes to the existing unreleased version entry.
+- If unsure whether to create a new version or add to an existing one, ask the user before continuing.
+
 ## Distribution
 
 Thunderstore packages in `Thunderstore/<modname>/` containing manifest.json, icon.png, README.md, CHANGELOG.md, and the compiled plugin DLL. The CultOfQoL mod depends on `BepInEx-BepInExPack_CultOfTheLamb-5.4.2101` and `p1xel8ted-BepInEx_Configuration_Manager-18.3.0`.
