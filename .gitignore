@@ -1014,17 +1014,19 @@ FodyWeavers.xsd
 # End of https://www.toptal.com/developers/gitignore/api/rider,visualstudio,visualstudiocode,csharp
 *.DotSettings
 
-# Claude Code local files
+# AI tool artifacts
 .claude/
-!**/CLAUDE.md
-
-# Other AI tool artifacts
+**/CLAUDE.md
+.cursor/
+.cursorrules
 .copilot/
 .copilot.json
 .copilot-*.json
-*chatgpt*
-*openai*
-*anthropic*
+.github/copilot-instructions.md
+.aider*
+.codeium/
+.continue/
+.tabnine/
 
 # Sensitive or temporary files
 *.secret
