@@ -3,19 +3,23 @@
 [Harmony]
 public static class FollowerLevelUpPatches
 {
+    // CanLevelUp: The game's implementation already allows leveling past 10 (just checks adoration >= max).
+    // This patch ensures the behavior is consistent with our uncapped benefits feature.
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.CanLevelUp))]
     public static void FollowerBrain_CanLevelUp(ref FollowerBrain __instance, ref bool __result)
     {
-        if (!Plugin.RemoveLevelLimit.Value) return;
+        if (!Plugin.UncapLevelBenefits.Value) return;
         __result = __instance.Stats.Adoration >= __instance.Stats.MAX_ADORATION;
     }
 
+    // IsMaxLevel: As of 1.5.0, this method is no longer called anywhere in the game code (dead code).
+    // Kept for safety in case future updates re-introduce calls to this method or for older game versions.
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.IsMaxLevel))]
     public static void FollowerBrain_IsMaxLevel(ref bool __result)
     {
-        if (!Plugin.RemoveLevelLimit.Value) return;
+        if (!Plugin.UncapLevelBenefits.Value) return;
         __result = false;
     }
 
@@ -23,7 +27,7 @@ public static class FollowerLevelUpPatches
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetWillLevelUp))]
     public static void FollowerBrain_GetWillLevelUp(ref FollowerBrain __instance, ref FollowerBrain.AdorationActions Action, ref bool __result)
     {
-        if (!Plugin.RemoveLevelLimit.Value) return;
+        if (!Plugin.UncapLevelBenefits.Value) return;
         __result = __instance.Stats.Adoration + __instance.GetAddorationToAdd(Action) >= __instance.Stats.MAX_ADORATION;
     }
 
@@ -31,15 +35,17 @@ public static class FollowerLevelUpPatches
     [HarmonyPatch(typeof(FollowerInformationBox), nameof(FollowerInformationBox.ConfigureImpl))]
     public static void FollowerInformationBox_ConfigureImpl(ref FollowerInformationBox __instance)
     {
-        if (!Plugin.RemoveLevelLimit.Value) return;
+        if (!Plugin.UncapLevelBenefits.Value) return;
         __instance._adorationContainer.gameObject.SetActive(true);
     }
 
+    // ProductivityMultiplier: The game clamps XPLevel to 10 in the calculation.
+    // This patch recalculates using the actual level for followers above level 10.
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrainInfo), nameof(FollowerBrainInfo.ProductivityMultiplier), MethodType.Getter)]
     public static void FollowerBrainInfo_ProductivityMultiplier(FollowerBrainInfo __instance, ref float __result)
     {
-        if (!Plugin.RemoveLevelLimit.Value) return;
+        if (!Plugin.UncapLevelBenefits.Value) return;
         if (__instance.XPLevel <= 10) return;
 
         // Original: (1 + (Clamp(XPLevel, 0.8, 10) - 1) / 5) * traitMultiplier
@@ -57,7 +63,7 @@ public static class FollowerLevelUpPatches
     public static IEnumerable<CodeInstruction> PrayerClampTranspiler(IEnumerable<CodeInstruction> instructions)
     {
         var original = instructions.ToList();
-        if (!Plugin.RemoveLevelLimit.Value) return original;
+        if (!Plugin.UncapLevelBenefits.Value) return original;
 
         try
         {
@@ -106,13 +112,13 @@ public static class FollowerLevelUpPatches
     [HarmonyPatch(typeof(RitualSacrifice), nameof(RitualSacrifice.GetDevotionGain))]
     public static void RitualSacrifice_GetDevotionGain(int XPLevel, ref int __result)
     {
-        if (!Plugin.RemoveLevelLimit.Value) return;
+        if (!Plugin.UncapLevelBenefits.Value) return;
         __result = 40 + (Mathf.Max(XPLevel, 1) - 1) * 20;
     }
 
     public static float GetMaxLevel()
     {
-        if (Plugin.RemoveLevelLimit.Value)
+        if (Plugin.UncapLevelBenefits.Value)
         {
             return float.PositiveInfinity;
         }

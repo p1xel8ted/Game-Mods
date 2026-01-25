@@ -29,7 +29,8 @@ public class MiscPatches
         "Configure Branch Connection Listener",
         "DLC is not installed, showing button",
         "DLC is installed, hiding button",
-        "Releasing gameobject"
+        "Releasing gameobject",
+        "WAITING"
     };
     
     [HarmonyTranspiler]

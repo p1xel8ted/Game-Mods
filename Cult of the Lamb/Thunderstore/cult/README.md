@@ -41,7 +41,7 @@
 - Turn off propaganda speaker audio.
 - Cleanse illness and exhaustion when followers level up.
 - Enable intimidating old followers.
-- Remove follower level limit.
+- Uncap follower level benefits (productivity, prayer devotion, sacrifice rewards scale beyond level 10).
 - Disable the main menu glitch (sudden dark-mode switch effect).
 - Disable the new ads and developer/publisher logos on the main menu.
 - Disable game over function when you have 0 followers for consecutive days.
@@ -49,7 +49,7 @@
 - Double or triple magnet range for loot, or use a custom magnet range.
 - Magnetize all loot to the player.
 - Fast Rituals & Sermons.
-- Reverse Ritual of Enrichment nerf. This will also force-enable remove follower level limit.
+- Reverse Ritual of Enrichment nerf (coins scale with follower level).
 - Customise Harvest Totem, Propaganda Speaker, Farm Station, and Farm Sign radii.
 - Customise Ritual Cooldowns.
 - Customise Life Expectancy range.

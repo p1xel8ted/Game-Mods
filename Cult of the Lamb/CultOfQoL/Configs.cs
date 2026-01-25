@@ -122,7 +122,7 @@ public partial class Plugin
    // internal static ConfigEntry<bool> UseCustomDamageValue { get; private set; }
 
 
-    internal static ConfigEntry<bool> RemoveLevelLimit { get; private set; }
+    internal static ConfigEntry<bool> UncapLevelBenefits { get; private set; }
 
 
     internal static ConfigEntry<bool> MassBribe { get; private set; }
@@ -172,6 +172,7 @@ public partial class Plugin
 
     public static ConfigEntry<bool> AddCrystalShardsToOfferings { get; set; }
     public static ConfigEntry<bool> CookedMeatMealsContainBone { get; set; }
+    internal static ConfigEntry<bool> AutoSelectBestMatingPair { get; private set; }
     public static ConfigEntry<bool> ProduceSpiderWebsFromLumber { get; set; }
     public static ConfigEntry<int> SpiderWebsPerLogs { get; set; }
     public static ConfigEntry<bool> ProduceCrystalShardsFromStone { get; set; }

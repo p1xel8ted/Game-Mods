@@ -28,12 +28,20 @@ public static class NoNegativeTraits
         allTraits.UnionWith(FollowerTrait.RareStartingTraits);
         allTraits.UnionWith(FollowerTrait.StartingTraits);
         allTraits.UnionWith(FollowerTrait.ExcludedFromMating);
-        
+
         var cultTraits = DataManager.Instance.CultTraits;
-        if (Plugin.UseUnlockedTraitsOnly.Value)
+        if (Plugin.UseUnlockedTraitsOnly.Value && cultTraits is { Count: > 0 })
         {
             Plugin.L("Using unlocked traits only for available traits.");
-            allTraits.RemoveWhere(a => !cultTraits.Contains(a));
+            var unlockedPositiveTraits = allTraits.Where(a => cultTraits.Contains(a) && FollowerTrait.IsPositiveTrait(a)).ToHashSet();
+            if (unlockedPositiveTraits.Count > 0)
+            {
+                allTraits = unlockedPositiveTraits;
+            }
+            else
+            {
+                Plugin.L("No unlocked positive traits found. Falling back to all positive traits.");
+            }
         }
         allTraits.RemoveWhere(a => !FollowerTrait.IsPositiveTrait(a));
         
@@ -189,9 +197,15 @@ public static class NoNegativeTraits
             brain.RemoveTrait(trait, Plugin.ShowNotificationsWhenRemovingTraits.Value);
 
             var newTrait = FindPositiveReplacement(brain);
-            brain.AddTrait(newTrait, Plugin.ShowNotificationsWhenAddingTraits.Value);
-
-            Plugin.L($"\tAdded replacement positive trait {newTrait}");
+            if (newTrait != FollowerTrait.TraitType.None)
+            {
+                brain.AddTrait(newTrait, Plugin.ShowNotificationsWhenAddingTraits.Value);
+                Plugin.L($"\tAdded replacement positive trait {newTrait}");
+            }
+            else
+            {
+                Plugin.L($"\tNo replacement trait available for {trait}");
+            }
         }
     }
 
@@ -224,18 +238,25 @@ public static class NoNegativeTraits
 
     private static FollowerTrait.TraitType FindPositiveReplacement(FollowerBrain brain)
     {
-        if (_allTraits == null)
+        if (_allTraits == null || _allTraits.Count == 0)
         {
             GenerateAvailableTraits();
         }
-        
-        FollowerTrait.TraitType newTrait;
-        do
-        {
-            newTrait = _allTraits!.ElementAt(Random.Range(0, _allTraits!.Count));
-        } while (!FollowerTrait.IsPositiveTrait(newTrait) || brain.HasTrait(newTrait));
 
-        return newTrait;
+        if (_allTraits == null || _allTraits.Count == 0)
+        {
+            Plugin.L("Warning: No positive traits available for replacement.");
+            return FollowerTrait.TraitType.None;
+        }
+
+        var availableTraits = _allTraits.Where(t => !brain.HasTrait(t)).ToList();
+        if (availableTraits.Count == 0)
+        {
+            Plugin.L("Warning: Follower already has all available positive traits.");
+            return FollowerTrait.TraitType.None;
+        }
+
+        return availableTraits[Random.Range(0, availableTraits.Count)];
     }
 
 

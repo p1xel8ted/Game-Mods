@@ -11,7 +11,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.3.1";
+    private const string PluginVer = "2.3.2";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -172,6 +172,7 @@ public partial class Plugin : BaseUnityPlugin
         LumberAndMiningStationsAgeMultiplier.SettingChanged += (_, _) => { LumberAndMiningStationsAgeMultiplier.Value = Mathf.Round(LumberAndMiningStationsAgeMultiplier.Value * 4) / 4; };
 
         //Structures - 09
+        AutoSelectBestMatingPair = ConfigInstance.Bind(StructureSection, "Auto-Select Best Mating Pair", false, new ConfigDescription("Automatically selects the two followers with the highest mating success chance when the Mating Tent is opened.", null, new ConfigurationManagerAttributes { Order = 10 }));
         TurnOffSpeakersAtNight = ConfigInstance.Bind(StructureSection, "Turn Off Speakers At Night", false, new ConfigDescription("Turns the speakers off, and stops fuel consumption at night time.", null, new ConfigurationManagerAttributes { Order = 9 }));
         TurnOffSpeakersAtNight.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.TurnOffSpeakersAtNight);
         DisablePropagandaSpeakerAudio = ConfigInstance.Bind(StructureSection, "Disable Propaganda Speaker Audio", false, new ConfigDescription("Disables the audio from propaganda speakers.", null, new ConfigurationManagerAttributes { Order = 8 }));
@@ -334,7 +335,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 5
         }));
-        RemoveLevelLimit = ConfigInstance.Bind(FollowersSection, "Remove Level Limit", false, new ConfigDescription("Removes the level limit for followers. They can now level up infinitely.", null, new ConfigurationManagerAttributes
+        UncapLevelBenefits = ConfigInstance.Bind(FollowersSection, "Uncap Level Benefits", false, new ConfigDescription("Removes the level 10 cap on follower benefits. Productivity, prayer devotion, and sacrifice rewards will scale beyond level 10. (The base game removed the level cap in 1.5.0, but benefits are still capped at level 10.)", null, new ConfigurationManagerAttributes
         {
             Order = 4
         }));
@@ -539,18 +540,10 @@ public partial class Plugin : BaseUnityPlugin
         }));
         VignetteEffect.SettingChanged += (_, _) => { PostProcessing.ToggleVignette(); };
 
-        ReverseEnrichmentNerf = ConfigInstance.Bind(RitualSection, "Reverse Enrichment Nerf", false, new ConfigDescription("Reverts the nerf to the Ritual of Enrichment. Enabling this will automatically enable remove follower level cap.", null, new ConfigurationManagerAttributes
+        ReverseEnrichmentNerf = ConfigInstance.Bind(RitualSection, "Reverse Enrichment Nerf", false, new ConfigDescription("Reverts the nerf to the Ritual of Enrichment. Coins scale with follower level (level * 20 per follower).", null, new ConfigurationManagerAttributes
         {
             Order = 0
         }));
-        ReverseEnrichmentNerf.SettingChanged += (_, _) =>
-        {
-            if (ReverseEnrichmentNerf.Value && !RemoveLevelLimit.Value)
-            {
-                Log.LogInfo("Enabling 'Remove Level Limit' as it is required for 'Reverse Enrichment Nerf'.");
-                RemoveLevelLimit.Value = true;
-            }
-        };
 
         ConfigInstance.Bind(ResetAllSettingsSection, "Reset All Settings", false, new ConfigDescription("Set this to true and save the config file to reset all settings to default.", null, new ConfigurationManagerAttributes
         {

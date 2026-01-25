@@ -115,6 +115,6 @@
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Followers", Plugin.BulkFollowerCommands.Definition.Key, Plugin.BulkFollowerCommands);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Followers", Plugin.OnlyShowDissenters.Definition.Key, Plugin.OnlyShowDissenters);
 //         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Followers", Plugin.MassLevelUp.Definition.Key, Plugin.MassLevelUp);
-//         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Followers", Plugin.RemoveLevelLimit.Definition.Key, Plugin.RemoveLevelLimit);
+//         CustomSettingsManager.AddBepInExConfig("Cult of QoL - Followers", Plugin.UncapLevelBenefits.Definition.Key, Plugin.UncapLevelBenefits);
 //     }
 // }
