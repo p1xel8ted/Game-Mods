@@ -1,0 +1,68 @@
+{
+  "format": 1,
+  "restore": {
+    "F:\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\SkipOfTheLamb\\SkipOfTheLamb.csproj": {}
+  },
+  "projects": {
+    "F:\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\SkipOfTheLamb\\SkipOfTheLamb.csproj": {
+      "version": "0.1.0",
+      "restore": {
+        "projectUniqueName": "F:\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\SkipOfTheLamb\\SkipOfTheLamb.csproj",
+        "projectName": "SkipOfTheLamb",
+        "projectPath": "F:\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\SkipOfTheLamb\\SkipOfTheLamb.csproj",
+        "packagesPath": "C:\\Users\\Ben\\.nuget\\packages\\",
+        "outputPath": "F:\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\SkipOfTheLamb\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "F:\\OneDrive\\Development\\Game-Mods\\Cult of the Lamb\\NuGet.Config",
+          "C:\\Users\\Ben\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net481"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.bepinex.dev/v3/index.json": {},
+          "https://nuget.bepinex.dev/v3/index.json;": {},
+          "https://nuget.samboy.dev/v3/index.json": {}
+        },
+        "frameworks": {
+          "net481": {
+            "targetAlias": "net481",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net481": {
+          "targetAlias": "net481",
+          "dependencies": {
+            "BepInEx.BaseLib": {
+              "target": "Package",
+              "version": "[5.4.21, )"
+            },
+            "BepInEx.Core": {
+              "target": "Package",
+              "version": "[5.4.21, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
