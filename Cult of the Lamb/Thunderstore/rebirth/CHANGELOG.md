@@ -11,6 +11,7 @@
 * Fixed rebirth notifications showing internal object name instead of follower name.
 * Fixed interaction menu potentially not closing after confirming rebirth.
 * Fixed XP penalty calculation during rebirth.
+* Updated Configuration Manager dependency to 18.4.1.
 
 ### 1.0.8 - 24/08/2024
 

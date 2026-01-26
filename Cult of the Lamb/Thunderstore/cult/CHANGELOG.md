@@ -13,6 +13,7 @@
 * Fixed mass collect from beds, shrines, outhouses, compost bins, and harvest totems sometimes stopping early or causing errors.
 * Fixed relationship notifications sometimes causing errors when follower skin data is missing.
 * Reduced log spam from the game.
+* Updated Configuration Manager dependency to 18.4.1.
 
 ### 2.3.2 - 25/01/2026
 

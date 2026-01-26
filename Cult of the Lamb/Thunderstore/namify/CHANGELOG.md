@@ -1,6 +1,7 @@
 ### 0.2.2 - 25 January 2026
 
 * Fixed asterisk indicator not appearing after clicking "get name" button during indoctrination.
+* Updated Configuration Manager dependency to 18.4.1.
 
 ### 0.2.1 - 24 January 2026
 
