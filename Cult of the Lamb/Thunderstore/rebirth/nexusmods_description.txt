@@ -1,0 +1,52 @@
+[size=4][b]Features[/b][/size]
+
+[list]
+[*][size=3]Followers can be reborn, allowing you to change their names, looks etc.[/size]
+[*][size=3]First one is free; subsequent ones on the same follower require Rebirth Tokens obtained from crusading (default 25, configurable).[/size]
+[*][size=3]Source of the tokens is from killing enemies, destroying old bone piles, dungeon chests, offering shrines, and more.[/size]
+[*][size=3]The drop chance defaults to 5% (configurable).[/size]
+[*][size=3]The followers' XP carries over, but there is a 20% chance they lose some XP when reborn (configurable). There is a notification when this happens.[/size]
+[*][size=3]Their old body stays; compost it, eat it. Up to you.[/size]
+[*][size=3]Refine the tokens at your refineries from bones (default 15, configurable)![/size]
+[*][size=3]Send your followers on a mission to get tokens![/size]
+[*][size=3]Go on a quest yourself to get tokens![/size]
+[*][size=3]All values are configurable via the in-game mod settings menu or the BepInEx config file.[/size]
+[/list]
+
+[size=4][b]Installation[/b][/size]
+
+[list]
+[*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
+[*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/xhayper/COTL_API/]COTL API[/url][/size]
+[*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/]Configuration Manager[/url][/size]
+[*][size=3]Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
+[/list]
+
+[size=4][b]Configuration[/b][/size]
+
+[list]
+[*][size=3]Press F1 in game to open the configuration manager.[/size]
+[*][size=3]The configuration file can be found in the "...\Cult of the Lamb\BepInEx\config" folder.[/size]
+[/list]
+
+[size=4][b]Recommendation[/b][/size]
+
+[size=3]While not required, I recommend installing [url=https://thunderstore.io/c/cult-of-the-lamb/p/LethalCompanyModding/UnityDebuggerAssistant/]Unity Debugger Assistant[/url] for better log files when reporting bugs.[/size]
+
+[size=4][b]My Other Mods[/b][/size]
+
+[list]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/1]Cult of QoL[/url] - Massive quality-of-life overhaul with 100+ features[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/8]Rebirth[/url] - Followers can be reborn with new names and appearances[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/15]Namify[/url] - Random name generation from 1000+ names plus custom names[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] - Skip intros, splash screens, and videos[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/56]Skip of the Lamb Lite[/url] - Just skips splash screens, no config needed[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/58]Trait Control[/url] - Replace negative traits, control trait probabilities[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/59]Glyph Override[/url] - Force specific controller button prompts[/size]
+[/list]
+
+[size=4][b]Support[/b][/size]
+
+[size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
+
+[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
