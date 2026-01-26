@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <ThunderstorePackageDir>$(MSBuildThisFileDirectory)Thunderstore\$(ThunderstoreDir)\</ThunderstorePackageDir>
-        <ThunderstoreStagingDir>$(MSBuildThisFileDirectory)Thunderstore\_staging\$(ThunderstoreDir)\</ThunderstoreStagingDir>
+        <!-- Use temp directory for staging to avoid OneDrive sync locks -->
+        <ThunderstoreStagingDir>$(TEMP)\Thunderstore_staging\$(ThunderstoreDir)\</ThunderstoreStagingDir>
         <ThunderstorePluginsDir Condition=" '$(ThunderstoreNestedPlugins)' != 'true' ">$(ThunderstorePackageDir)plugins\</ThunderstorePluginsDir>
         <ThunderstorePluginsDir Condition=" '$(ThunderstoreNestedPlugins)' == 'true' ">$(ThunderstorePackageDir)plugins\$(MSBuildProjectName)\</ThunderstorePluginsDir>
         <ThunderstoreZipName>$(MSBuildProjectName)_$(Version).zip</ThunderstoreZipName>
