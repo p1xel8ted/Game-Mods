@@ -33,14 +33,32 @@ public static class Helpers
         // List of piracy marker files and folders (expand as needed)
         private static readonly string[] PiracyFiles =
         [
+            // Emulators and loaders
             "SmartSteamEmu.ini", "codex.ini", "steam_emu.ini", "goldberg_emulator.dll",
-            "3dmgame.dll", "ALI213.dll", "crack", "crack.exe", "steam_api64_o.dll",
-            "steamclient_loader.dll", "CODEX", "Goldberg", "REVOLT", "SKIDROW",
-            "PROPHET", "CPY", "PLAZA", "FLT", "FLT.dll", "HOODLUM", "EMPRESS",
-            "VALVEEMPRESS", "DARKSiDERS", "RAZOR1911", "TENOKE", "DOGE", "BAT", "P2P",
-            "nosTEAM", "FCKDRM", "unarc.dll", "uninstall.exe", "setup.exe",
-            "INSTALLER", "steam_api64.cdx.dll", "Launcher.exe", "Redist", "RLD!",
-            "fix.exe", "crackfix", "ReadMe.txt", "README.nfo"
+            "steamclient_loader.dll", "steam_api64_o.dll", "steam_api.cdx", "steam_api64.cdx.dll",
+            "steam_interfaces.txt", "local_save.txt", "valve.ini", "codex64.dll",
+            "coldclient.dll", "ColdClientLoader.ini", "steamless.dll", "GreenLuma",
+
+            // DLC unlockers
+            "CreamAPI.dll", "cream_api.ini", "ScreamAPI.dll",
+
+            // Online fixes
+            "OnlineFix.dll", "OnlineFix.url", "online-fix.me",
+
+            // Scene groups
+            "CODEX", "SKIDROW", "CPY", "PLAZA", "HOODLUM", "EMPRESS", "TENOKE",
+            "PROPHET", "REVOLT", "DARKSiDERS", "RAZOR1911", "FLT", "FLT.dll",
+            "RUNE", "RUNE.ini", "TiNYiSO", "RELOADED", "RLD!", "DOGE", "BAT", "P2P",
+            "ElAmigos", "FitGirl", "DODI", "xatab", "KaOs", "IGG", "Masquerade",
+
+            // Common crack files
+            "3dmgame.dll", "ALI213.dll", "crack", "crack.exe", "Crack.nfo",
+            "crackfix", "CrackOnly", "fix.exe", "gamefix.dll", "SKIDROW.ini",
+            "nosTEAM", "NoSteam", "FCKDRM", "Goldberg", "VALVEEMPRESS",
+
+            // Installers and misc
+            "unarc.dll", "uninstall.exe", "setup.exe", "INSTALLER",
+            "Launcher.exe", "Redist", "ReadMe.txt", "README.nfo"
         ];
 
 

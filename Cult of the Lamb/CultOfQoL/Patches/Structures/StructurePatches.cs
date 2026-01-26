@@ -560,8 +560,8 @@ internal static class StructurePatches
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(Interaction_FollowerKitchen), nameof(Interaction_FollowerKitchen.OnInteract))]
-    public static bool Interaction_FollowerKitchen_OnInteract(Interaction_FollowerKitchen __instance)
+    [HarmonyPatch(typeof(Interaction_FollowerKitchen), nameof(Interaction_FollowerKitchen.ShowMenu))]
+    public static bool Interaction_FollowerKitchen_ShowMenu(Interaction_FollowerKitchen __instance)
     {
         if (!Plugin.AllowPlayerEatFromKitchen.Value) return true;
 
