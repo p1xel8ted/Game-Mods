@@ -1,5 +1,11 @@
 ![QoL Logo](https://i.ibb.co/5W3HT7j/nexus-main-logo.png)
 
+## Related Mods
+
+Some features have been moved to dedicated mods:
+- **[Skip of the Lamb](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Skip_of_the_Lamb/)** - Skip intros, splash screens, and videos
+- **[Trait Control](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Trait_Control/)** - Replace negative traits, control trait probabilities
+
 ## Features
 
 - Cheese the fishing mini-game (no need to press anything apart from the initial cast; reeling UI is hidden, compatible with Auto-Fish accessibility settings).
@@ -23,6 +29,8 @@
 - Receive a notification when a scarecrow catches a bird.
 - "Heal" exhausted followers in the healing bays.
 - Hide healthy followers from the healing bay selection menu.
+- Prioritize followers with active requests at the top of selection lists.
+- Auto-select the two followers with the highest mating success chance in the Mating Tent.
 - Make lumber/mine/farm/refinery chests auto-loot when nearby (like the chest near the main portal).
 - Adjust refinery requirements (where possible, halve the materials needed to convert items).
 - Modify run, dodge, and lunge speeds.
@@ -31,6 +39,8 @@
 - Receive a notification when a bed has collapsed.
 - Mass collect resources from select structures (WIP).
 - Mass action features (level up, fertilize, water, bribe, bless, extort, intimidate, romance, pet dog, bully, reassure, reeducate followers, and collect from various structures).
+- Mass pet farm animals - petting one animal pets all of them.
+- Refinery mass fill - clicking an item fills the queue to maximum.
 - Remove the New Game button when you have at least one save game.
 - Enable Save on exit when quitting, with UI modifications to reflect this.
 - Quick save keybind to save whenever you want.
