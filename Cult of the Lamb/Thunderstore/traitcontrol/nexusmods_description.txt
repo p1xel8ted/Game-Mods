@@ -1,0 +1,54 @@
+[size=4][b]Support[/b][/size]
+
+[size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
+
+[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
+
+[size=4][b]Features[/b][/size]
+
+[size=4][b]No Negative Traits[/b][/size]
+[list]
+[*][size=3]Automatically replaces negative traits with positive ones when followers are created.[/size]
+[*][size=3]Backs up original traits and can restore them if the feature is disabled.[/size]
+[*][size=3]Option to use only unlocked traits for replacements.[/size]
+[*][size=3]Configurable inclusion of Immortal and Disciple traits.[/size]
+[*][size=3]Optional notifications when traits are added or removed.[/size]
+[/list]
+
+[size=4][b]Trait Weights (Trait Probability Control)[/b][/size]
+
+[size=3]Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 10.[/size]
+
+[size=3][b]How it works:[/b][/size]
+[list]
+[*][size=3][b]Higher weight = more likely to appear[/b] - Want more Faithful followers? Slide it up to 5 or 10.[/size]
+[*][size=3][b]Lower weight = less likely[/b] - Don't want Materialistic followers? Slide it down.[/size]
+[*][size=3][b]Weight of 0 = disabled[/b] - That trait will never appear on new followers.[/size]
+[*][size=3]All traits default to 1.0 (equal chance).[/size]
+[/list]
+
+[size=3][b]Examples:[/b][/size]
+[list]
+[*][size=3]Set "Faithful" to 5.0, leave others at 1.0 → Faithful is 5x more likely than other traits[/size]
+[*][size=3]Set "Materialistic" to 0 → Materialistic will never appear[/size]
+[*][size=3]Set all negative traits to 0, positive traits to 10 → Only positive traits will appear[/size]
+[/list]
+
+[size=4][b]Incompatibilities[/b][/size]
+
+[size=3]This mod is incompatible with the "Nothing Negative" mod. If that mod is detected, Trait Control's features will be disabled automatically.[/size]
+
+[size=4][b]Installation[/b][/size]
+
+[list]
+[*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
+[*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/]Configuration Manager[/url][/size]
+[*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
+[/list]
+
+[size=4][b]Configuration[/b][/size]
+
+[list]
+[*][size=3]The configuration file is generated when you first run the game with the mod enabled. It can be found in the "...\Cult of the Lamb\BepInEx\config" folder.[/size]
+[*][size=3]Press F1 in game to open the configuration manager. If you're in a dungeon, pause the game first otherwise the cursor doesn't work.[/size]
+[/list]
