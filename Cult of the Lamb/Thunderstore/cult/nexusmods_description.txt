@@ -122,6 +122,7 @@
 [list]
 [*][size=3]Halve refinery material requirements[/size]
 [*][size=3]Mass fill refinery, cooking fire, kitchen, and pub queues with one click[/size]
+[*][size=3]Eat food directly from follower kitchens (hold interact button)[/size]
 [/list]
 
 [size=3][b]Weather[/b][/size]

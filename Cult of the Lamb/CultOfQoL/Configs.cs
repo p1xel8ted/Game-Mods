@@ -39,6 +39,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> CookingFireMassFill { get; private set; }
     internal static ConfigEntry<bool> KitchenMassFill { get; private set; }
     internal static ConfigEntry<bool> PubMassFill { get; private set; }
+    internal static ConfigEntry<bool> AllowPlayerEatFromKitchen { get; private set; }
 
     internal static ConfigEntry<bool> CleanseIllnessAndExhaustionOnLevelUp { get; private set; }
     internal static ConfigEntry<bool> UnlockTwitchItems { get; private set; }

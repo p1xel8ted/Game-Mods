@@ -95,6 +95,7 @@
 ### Crafting Stations
 - Halve refinery material requirements
 - Mass fill refinery, cooking fire, kitchen, and pub queues with one click
+- Eat food directly from follower kitchens (hold interact button)
 
 ### Weather
 - Random weather changes on area exit
