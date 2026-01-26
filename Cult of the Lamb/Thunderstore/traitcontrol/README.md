@@ -23,6 +23,8 @@ Control how likely each trait is to appear on new followers. Each trait has a we
 - Set "Materialistic" to 0 → Materialistic will never appear
 - Set all negative traits to 0, positive traits to 10 → Only positive traits will appear
 
+The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.
+
 ## Configuration
 
 All settings are configurable via the in-game mod settings menu (F1) or the BepInEx config file.

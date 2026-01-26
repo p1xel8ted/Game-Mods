@@ -34,6 +34,8 @@
 [*][size=3]Set all negative traits to 0, positive traits to 10 → Only positive traits will appear[/size]
 [/list]
 
+[size=3]The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.[/size]
+
 [size=4][b]Incompatibilities[/b][/size]
 
 [size=3]This mod is incompatible with "Nothing Negative" or any other mod that modifies the trait system.[/size]
