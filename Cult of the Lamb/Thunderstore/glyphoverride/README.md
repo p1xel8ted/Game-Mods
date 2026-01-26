@@ -1,4 +1,4 @@
-# Controller Prompts
+# Glyph Override
 
 Customize which controller button prompts are displayed in-game.
 

@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkipOfTheLambLite", "SkipOf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TraitControl", "TraitControl\TraitControl.csproj", "{D11BAF5F-B4CE-41DB-ABE4-1AA4CB389E01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllerPrompts", "ControllerPrompts\ControllerPrompts.csproj", "{A2F3C4D5-E6B7-8901-2345-6789ABCDEF01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlyphOverride", "GlyphOverride\GlyphOverride.csproj", "{A2F3C4D5-E6B7-8901-2345-6789ABCDEF01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

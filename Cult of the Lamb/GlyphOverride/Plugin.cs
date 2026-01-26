@@ -1,4 +1,4 @@
-namespace ControllerPrompts;
+namespace GlyphOverride;
 
 /// <summary>
 /// Provides controller prompt customization for Cult of the Lamb.
@@ -9,8 +9,8 @@ namespace ControllerPrompts;
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.cotl.controllerprompts";
-    private const string PluginName = "Controller Prompts";
+    private const string PluginGuid = "p1xel8ted.cotl.glyphoverride";
+    private const string PluginName = "Glyph Override";
     private const string PluginVer = "0.1.0";
 
     internal static ManualLogSource Log { get; private set; }
