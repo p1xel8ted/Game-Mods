@@ -78,6 +78,7 @@ public static class RoutinesTranspilers
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.RomanceRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ExtortMoneyRoutine), MethodType.Enumerator)]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine), MethodType.Enumerator)]
+    [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.PetIE), MethodType.Enumerator)]
     private static IEnumerable<CodeInstruction> interaction_FollowerInteraction_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
     {
         var originalCodes = instructions.ToList();
@@ -101,7 +102,7 @@ public static class RoutinesTranspilers
             NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNext);
             NopCallSequence(codes, c => c.Calls(GetInstance), AddPlayerToCamera);
             NopCallSequence(codes, c => c.Calls(GetInstance), CameraSetOffset);
-
+            
             return codes;
         }
         catch (Exception ex)
@@ -133,29 +134,29 @@ public static class RoutinesTranspilers
         }
     }
 
-    [HarmonyTranspiler]
-    [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.PetIE), MethodType.Enumerator)]
-    private static IEnumerable<CodeInstruction> Interaction_Ranchable_PetIE_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
-    {
-        var originalCodes = instructions.ToList();
-        if (!Plugin.MassPetAnimals.Value) return originalCodes;
-
-        try
-        {
-            var codes = new List<CodeInstruction>(originalCodes);
-            LogOnce(original, "Removing HUD/conversation/camera calls.");
-
-            NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNew);
-            NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNext);
-
-            return codes;
-        }
-        catch (Exception ex)
-        {
-            Plugin.Log.LogWarning($"[Transpiler] {GetRoutineName(original)}: {ex.Message}");
-            return originalCodes;
-        }
-    }
+    // [HarmonyTranspiler]
+    // [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.PetIE), MethodType.Enumerator)]
+    // private static IEnumerable<CodeInstruction> Interaction_Ranchable_PetIE_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+    // {
+    //     var originalCodes = instructions.ToList();
+    //     if (!Plugin.MassPetAnimals.Value) return originalCodes;
+    //
+    //     try
+    //     {
+    //         var codes = new List<CodeInstruction>(originalCodes);
+    //         LogOnce(original, "Removing HUD/conversation/camera calls.");
+    //
+    //         NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNew);
+    //         NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNext);
+    //
+    //         return codes;
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Plugin.Log.LogWarning($"[Transpiler] {GetRoutineName(original)}: {ex.Message}");
+    //         return originalCodes;
+    //     }
+    // }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.PetIE))]
@@ -175,6 +176,7 @@ public static class RoutinesTranspilers
         {
             return declaringType.Substring(startIndex + 1, endIndex - startIndex - 1);
         }
+
         return declaringType;
     }
 

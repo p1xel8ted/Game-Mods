@@ -558,30 +558,4 @@ internal static class StructurePatches
             _cookingFireMassFillInProgress = false;
         }
     }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Interaction_FollowerKitchen), nameof(Interaction_FollowerKitchen.ShowMenu))]
-    public static bool Interaction_FollowerKitchen_ShowMenu(Interaction_FollowerKitchen __instance)
-    {
-        if (!Plugin.AllowPlayerEatFromKitchen.Value) return true;
-
-        // Only trigger when holding the interact button, not just pressing
-        if (!InputManager.Gameplay.GetInteractButtonHeld()) return true;
-
-        var foodStorage = __instance.foodStorage?.StructureBrain as Structures_FoodStorage;
-        if (foodStorage == null || foodStorage.Data.QueuedResources.Count == 0) return true;
-
-        // Take first meal from storage
-        var mealType = foodStorage.Data.QueuedResources[0];
-        foodStorage.Data.QueuedResources.RemoveAt(0);
-        __instance.foodStorage.UpdateFoodDisplayed();
-
-        // Spawn meal and let player eat it
-        var spawnPosition = PlayerFarming.Instance.transform.position;
-        InventoryItem.Spawn(mealType, 1, spawnPosition, 0f);
-
-        Plugin.L($"[AllowPlayerEatFromKitchen] Spawned {mealType} from follower kitchen");
-
-        return false; // Skip normal menu
-    }
 }

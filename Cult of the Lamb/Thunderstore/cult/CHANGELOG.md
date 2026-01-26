@@ -1,14 +1,12 @@
 ### 2.3.4
 
-* Fixed mass pet animals causing a crash and leaving the player unable to move.
-* Fixed mass level-up causing the floating animation to play multiple times instead of once.
-* Fixed mass water causing errors when UIManager is not fully initialized.
+* Hopefully fixed mass pet animals causing a crash and leaving the player unable to move.
+* Potentially fixed mass water causing errors when UIManager is not fully initialized.
 * Fixed interacting with stations while the pause menu is open.
 * Improved logging for mass action features to show which feature is being patched.
 * Added cooking fire mass fill - clicking a meal fills the queue to maximum.
 * Added kitchen mass fill - clicking a meal fills the queue to maximum.
 * Added pub mass fill - clicking a drink fills the queue to maximum.
-* Added option to eat food directly from follower kitchens by holding the interact button.
 
 ### 2.3.3
 

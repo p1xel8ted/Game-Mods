@@ -186,7 +186,6 @@ public partial class Plugin : BaseUnityPlugin
         CookingFireMassFill = ConfigInstance.Bind(StructureSection, "Cooking Fire Mass Fill", false, new ConfigDescription("When adding a meal to the cooking fire queue, automatically fill all available slots with that meal.", null, new ConfigurationManagerAttributes { Order = 25 }));
         KitchenMassFill = ConfigInstance.Bind(StructureSection, "Kitchen Mass Fill", false, new ConfigDescription("When adding a meal to the follower kitchen queue, automatically fill all available slots with that meal.", null, new ConfigurationManagerAttributes { Order = 24 }));
         PubMassFill = ConfigInstance.Bind(StructureSection, "Pub Mass Fill", false, new ConfigDescription("When adding a drink to the pub queue, automatically fill all available slots with that drink.", null, new ConfigurationManagerAttributes { Order = 23 }));
-        AllowPlayerEatFromKitchen = ConfigInstance.Bind(StructureSection, "Allow Player Eat From Kitchen", false, new ConfigDescription("Hold the interact button at a follower kitchen to take and eat food directly.", null, new ConfigurationManagerAttributes { Order = 22 }));
 
         // Propaganda Speaker
         TurnOffSpeakersAtNight = ConfigInstance.Bind(StructureSection, "Turn Off Speakers At Night", false, new ConfigDescription("Turns the speakers off, and stops fuel consumption at night time.", null, new ConfigurationManagerAttributes { Order = 14 }));

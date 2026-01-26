@@ -416,26 +416,6 @@ public static class FollowerPatches
 
     private static bool MassLevelUpRunning { get; set; }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(SimpleSpineAnimator), nameof(SimpleSpineAnimator.Animate), typeof(string), typeof(int), typeof(bool))]
-    public static bool SimpleSpineAnimator_Animate_Prefix(SimpleSpineAnimator __instance)
-    {
-        if (!Plugin.MassLevelUp.Value) return true;
-        if (!MassLevelUpRunning) return true;
-        if (__instance != PlayerFarming.Instance?.simpleSpineAnimator) return true;
-        return false;
-    }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(SimpleSpineAnimator), nameof(SimpleSpineAnimator.AddAnimate))]
-    public static bool SimpleSpineAnimator_AddAnimate_Prefix(SimpleSpineAnimator __instance)
-    {
-        if (!Plugin.MassLevelUp.Value) return true;
-        if (!MassLevelUpRunning) return true;
-        if (__instance != PlayerFarming.Instance?.simpleSpineAnimator) return true;
-        return false;
-    }
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
     public static void MassLevelUp_Postfix(ref interaction_FollowerInteraction __instance)
@@ -453,6 +433,8 @@ public static class FollowerPatches
     private static IEnumerator MassLevelUpAll(Follower original)
     {
         MassLevelUpRunning = true;
+        var player = PlayerFarming.Instance;
+
         yield return new WaitForSeconds(0.5f);
 
         foreach (var follower in Helpers.AllFollowers)
@@ -463,7 +445,7 @@ public static class FollowerPatches
             var interaction = follower.Interaction_FollowerInteraction;
             if (!interaction) continue;
 
-            interaction.playerFarming = PlayerFarming.Instance;
+            interaction.playerFarming = player;
             interaction.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, false, false));
             yield return new WaitForSeconds(0.5f);
         }
