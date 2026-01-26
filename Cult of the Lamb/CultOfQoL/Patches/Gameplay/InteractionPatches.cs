@@ -45,7 +45,7 @@ public static class InteractionPatches
     {
         yield return new WaitForEndOfFrame();
         var waterablePlots = FarmPlot.FarmPlots.Where(p => p.StructureBrain?.CanWater() == true).ToList();
-        
+
         Plugin.L($"Watering {waterablePlots.Count} plots");
         foreach (var plot in waterablePlots)
         {
@@ -53,7 +53,10 @@ public static class InteractionPatches
             plot.StructureInfo.WateredCount = 0;
             plot.WateringTime = 0.95f;
             plot.UpdateWatered();
-            plot.UpdateCropImage();
+            if (MonoSingleton<UIManager>.Instance)
+            {
+                plot.UpdateCropImage();
+            }
             yield return new WaitForSeconds(0.10f);
         }
     }

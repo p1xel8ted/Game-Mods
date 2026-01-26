@@ -2,6 +2,7 @@
 
 * Fixed mass pet animals causing a crash and leaving the player unable to move.
 * Fixed mass level-up causing the floating animation to play multiple times instead of once.
+* Fixed mass water causing errors when UIManager is not fully initialized.
 * Improved logging for mass action features to show which feature is being patched.
 * Added cooking fire mass fill - clicking a meal fills the queue to maximum.
 * Added kitchen mass fill - clicking a meal fills the queue to maximum.
