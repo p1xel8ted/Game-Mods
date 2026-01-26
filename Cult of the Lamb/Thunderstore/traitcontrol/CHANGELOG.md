@@ -1,4 +1,4 @@
-### 0.1.1
+### 0.1.1 - 26/01/2026
 
 * Trait weight config entries now show the actual game description of each trait.
 
