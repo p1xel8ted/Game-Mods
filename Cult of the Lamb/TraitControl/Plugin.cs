@@ -7,7 +7,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.traitcontrol";
     internal const string PluginName = "Trait Control";
-    private const string PluginVer = "0.1.0";
+    private const string PluginVer = "0.1.1";
 
     private const string TraitReplacementSection = "01. Trait Replacement";
     private const string TraitWeightsSection = "02. Trait Weights";
@@ -76,18 +76,59 @@ public partial class Plugin : BaseUnityPlugin
         foreach (var trait in allStartingTraits.OrderBy(t => t.ToString()))
         {
             var isHidden = !EnableTraitWeights.Value;
+
+            // Try to get localized description from the game
+            var traitDescription = GetTraitDescription(trait);
+            var configDescription = string.IsNullOrEmpty(traitDescription)
+                ? $"Weight for {trait}. Higher = more likely. Set to 0 to disable. Default is 1.0."
+                : $"{traitDescription}\n\nWeight: Higher = more likely. Set to 0 to disable. Default is 1.0.";
+
             var weight = ConfigInstance.Bind(
                 TraitWeightsSection,
                 trait.ToString(),
                 1.0f,
                 new ConfigDescription(
-                    $"Weight for {trait}. Higher = more likely. Set to 0 to disable. Default is 1.0.",
+                    configDescription,
                     new AcceptableValueRange<float>(0f, 10f),
                     new ConfigurationManagerAttributes { Order = order--, Browsable = !isHidden }
                 )
             );
             TraitWeights[trait] = weight;
         }
+    }
+
+    /// <summary>
+    /// Attempts to get the localized description for a trait.
+    /// Returns null if localization is not available or returns the raw key.
+    /// </summary>
+    private static string GetTraitDescription(FollowerTrait.TraitType trait)
+    {
+        try
+        {
+            var description = FollowerTrait.GetLocalizedDescription(trait);
+            // I2 Localization returns the key itself if no translation exists
+            if (string.IsNullOrWhiteSpace(description) || description.StartsWith("Traits/"))
+            {
+                return null;
+            }
+            return StripRichText(description);
+        }
+        catch
+        {
+            // Localization system not ready
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Strips Unity rich text tags (color, sprite, size, etc.) from a string.
+    /// </summary>
+    private static string StripRichText(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return input;
+
+        // Remove all XML-style tags like <color=#FFD201>, </color>, <sprite name="icon">, etc.
+        return System.Text.RegularExpressions.Regex.Replace(input, "<[^>]+>", string.Empty).Trim();
     }
 
     private static Plugin _instance;
