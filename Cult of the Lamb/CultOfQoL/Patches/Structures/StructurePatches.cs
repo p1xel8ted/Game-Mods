@@ -395,4 +395,80 @@ internal static class StructurePatches
             item.CostValue = Mathf.CeilToInt(item.CostValue / 2f);
         }
     }
+
+    // Flag to prevent infinite recursion when mass filling refinery
+    private static bool _refineryMassFillInProgress;
+
+    // Flag to prevent infinite recursion when mass petting animals
+    private static bool _massPetAnimalsInProgress;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.OnAnimalCommandFinalized))]
+    public static void Interaction_Ranchable_OnAnimalCommandFinalized(
+        ref Interaction_Ranchable __instance,
+        params FollowerCommands[] followerCommands)
+    {
+        if (!Plugin.MassPetAnimals.Value) return;
+        if (_massPetAnimalsInProgress) return;
+        if (followerCommands.Length == 0 || followerCommands[0] != FollowerCommands.PetAnimal) return;
+
+        GameManager.GetInstance().StartCoroutine(PetAllAnimals(__instance));
+    }
+
+    private static IEnumerator PetAllAnimals(Interaction_Ranchable pettedAnimal)
+    {
+        _massPetAnimalsInProgress = true;
+        yield return new WaitForEndOfFrame();
+
+        try
+        {
+            // Get all ranchable animals that haven't been petted today
+            var animals = Interaction.interactions
+                .OfType<Interaction_Ranchable>()
+                .Where(r => r && r != pettedAnimal && !r.animal.PetToday)
+                .ToList();
+
+            Plugin.L($"[MassPetAnimals] Petting {animals.Count} additional animals");
+
+            foreach (var animal in animals)
+            {
+                if (!animal || animal.animal.PetToday) continue;
+
+                yield return new WaitForSeconds(0.15f);
+                animal.StartCoroutine(animal.PetIE());
+            }
+        }
+        finally
+        {
+            _massPetAnimalsInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIRefineryMenuController), nameof(UIRefineryMenuController.AddToQueue))]
+    public static void UIRefineryMenuController_AddToQueue(UIRefineryMenuController __instance, RefineryItem item)
+    {
+        if (!Plugin.RefineryMassFill.Value) return;
+        if (_refineryMassFillInProgress) return;
+
+        _refineryMassFillInProgress = true;
+        try
+        {
+            var maxItems = __instance.kMaxItems;
+            var currentCount = __instance._structureInfo.QueuedResources.Count;
+
+            // Keep adding same item until queue is full or can't afford
+            while (currentCount < maxItems && __instance.CanAffordWithPendingChanges(item.Type, item.Variant))
+            {
+                __instance.AddToQueue(item);
+                currentCount = __instance._structureInfo.QueuedResources.Count;
+            }
+
+            Plugin.L($"[RefineryMassFill] Filled queue with {item.Type} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _refineryMassFillInProgress = false;
+        }
+    }
 }

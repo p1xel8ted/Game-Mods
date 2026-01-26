@@ -6,18 +6,20 @@ public static class InteractionPatches
 {
     private static GameManager GI => GameManager.GetInstance();
 
-    // Prevents follower interaction when menus are open
+    /// <summary>
+    /// Prevents ALL interactions when menus are open.
+    /// Fixes bug where pressing A on a menu also triggers world interactions with nearby objects.
+    /// </summary>
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnInteract), typeof(StateMachine))]
-    public static bool Interaction_Follower_OnInteract(ref interaction_FollowerInteraction __instance)
+    [HarmonyPatch(typeof(Interaction), nameof(Interaction.OnInteract), typeof(StateMachine))]
+    public static bool Interaction_OnInteract(ref Interaction __instance)
     {
-        if (UIMenuBase.ActiveMenus.Count == 0 && !GameManager.InMenu) return true;
-        
-        Plugin.L($"Blocking follower interaction - {UIMenuBase.ActiveMenus.Count} menu(s) open or InMenu={GameManager.InMenu}");
-        foreach (var menu in UIMenuBase.ActiveMenus)
+        if (UIMenuBase.ActiveMenus.Count == 0 && !GameManager.InMenu)
         {
-            Plugin.L($"  Active Menu: {menu}");
+            return true;
         }
+
+        Plugin.L($"Blocking interaction with {__instance.GetType().Name} - {UIMenuBase.ActiveMenus.Count} menu(s) open or InMenu={GameManager.InMenu}");
         return false;
     }
 

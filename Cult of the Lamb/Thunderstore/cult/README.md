@@ -36,6 +36,7 @@
 - Quick save keybind to save whenever you want.
 - Reworked weather mod to work with the new weather system in the game (slightly more dynamic and configurable weather, with day phase change notifications).
 - Notifications for weather changes and time of day changes.
+- Disable all notifications, with option to still show critical ones (deaths, weapon destruction, dissenters).
 - Turn off propaganda speaker audio.
 - Cleanse illness and exhaustion when followers level up.
 - Enable intimidating old followers.

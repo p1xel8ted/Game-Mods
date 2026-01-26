@@ -31,7 +31,11 @@ public class MiscPatches
         "DLC is installed, hiding button",
         "Releasing gameobject",
         "WAITING",
-        "WeatherSystemController: Same system transition"
+        "WeatherSystemController: Same system transition",
+        "Max Tweens reached",
+        "Follower eat stored food",
+        "Required atlas size exceeds supported max",
+        "MEAL_"
     };
     
     [HarmonyTranspiler]
@@ -166,6 +170,8 @@ public class MiscPatches
     }
 
     [HarmonyPrefix]
+    [HarmonyPatch(typeof(Debug), nameof(Debug.LogError), typeof(object), typeof(Object))]
+    [HarmonyPatch(typeof(Debug), nameof(Debug.LogError), typeof(object))]
     [HarmonyPatch(typeof(Debug), nameof(Debug.LogWarning), typeof(object), typeof(Object))]
     [HarmonyPatch(typeof(Debug), nameof(Debug.LogWarning), typeof(object))]
     [HarmonyPatch(typeof(Debug), nameof(Debug.Log), typeof(object), typeof(Object))]

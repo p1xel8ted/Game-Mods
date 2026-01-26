@@ -1,10 +1,19 @@
 ### 2.3.3
 
 * Removed skip intro/video features (moved to dedicated Skip of the Lamb mod).
-* Added "WeatherSystemController: Same system transition" to the log spam filter.
+* Removed negative trait replacement feature (moved to dedicated Trait Control mod).
+* Added refinery mass fill - clicking an item fills the queue to maximum.
+* Added mass pet animals - petting one farm animal pets all of them.
+* Fixed offering shrines mass collect stopping mid-collection.
 * Weather, scarecrow, fuel, and bed collapse notifications are now suppressed when in dungeons or during cutscenes/transitions.
 * Added duplicate notification prevention - the same notification won't appear again within 10 seconds.
 * Added option to prioritize followers with active requests at the top of selection lists.
+* Added "Disable All Notifications" option to suppress all in-game notifications.
+* Added "Allow Critical Notifications" sub-option to still show deaths, weapon destruction, and dissenter notifications when notifications are disabled.
+* Reorganized Structures config section to group related settings together.
+* Fixed vanilla game bug causing NullReferenceException in relationship change notifications when follower skin data is invalid.
+* Extended log spam filter to cover LogError messages.
+* Added additional spam filter entries: "Max Tweens reached", "Follower eat stored food", "Required atlas size exceeds supported max", "MEAL_".
 
 ### 2.3.2 - 25/01/2026
 

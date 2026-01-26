@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>0.1.0</Version>
+        <ThunderstoreDir>controllerprompts</ThunderstoreDir>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Rewired_Core">
+            <HintPath>..\libs\Rewired_Core.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
+    </ItemGroup>
+</Project>

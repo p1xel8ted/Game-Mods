@@ -187,14 +187,30 @@ public static class FastCollectingPatches
     {
         CollectAllShrinesRunning = true;
         yield return new WaitForEndOfFrame();
-        
-        // Performance optimization: Direct iteration instead of LINQ
-        foreach (var interaction in Interaction.interactions)
+
+        // Snapshot the list to avoid modification during iteration
+        var shrines = Interaction.interactions
+            .OfType<Interaction_OfferingShrine>()
+            .Where(s => s && s != __instance && s.StructureInfo?.Inventory?.Count > 0)
+            .ToList();
+
+        Plugin.L($"[MassCollectOfferingShrines] Collecting from {shrines.Count} additional shrines");
+
+        foreach (var shrine in shrines)
         {
-            if (interaction is Interaction_OfferingShrine shrine && shrine && shrine != __instance && shrine.StructureInfo?.Inventory?.Count > 0)
+            // Re-check validity before interacting
+            if (!shrine || shrine.StructureInfo?.Inventory?.Count <= 0) continue;
+
+            yield return new WaitForSeconds(0.10f);
+
+            // Try-catch must be outside yield
+            try
             {
-                yield return new WaitForSeconds(0.10f);
                 shrine.OnInteract(state);
+            }
+            catch (Exception ex)
+            {
+                Plugin.LE($"[MassCollectOfferingShrines] Error collecting from shrine: {ex.Message}");
             }
         }
 

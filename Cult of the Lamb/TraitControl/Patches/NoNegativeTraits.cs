@@ -1,18 +1,20 @@
-﻿namespace CultOfQoL.Patches.Followers;
+using System.Diagnostics.CodeAnalysis;
+using UnityEngine.Serialization;
+
+namespace TraitControl.Patches;
 
 [Harmony]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class NoNegativeTraits
 {
-
     private static HashSet<FollowerTrait.TraitType> _allTraits;
-    private static bool? _isNothingNegativePresentCache;
     private static List<FollowerTraitBackup> _followerTraitBackups = [];
 
     private static string DataPath => Path.Combine(Application.persistentDataPath, "saves", $"slot_{SaveAndLoad.SAVE_SLOT}_follower_trait_backups.json");
 
     private static void LoadBackupFromFile()
     {
-        if (IsNothingNegativePresent()) return;
+        if (Plugin.IsNothingNegativePresent()) return;
         if (!File.Exists(DataPath)) return;
         var json = File.ReadAllText(DataPath);
         _followerTraitBackups = JsonConvert.DeserializeObject<List<FollowerTraitBackup>>(json);
@@ -44,8 +46,8 @@ public static class NoNegativeTraits
             }
         }
         allTraits.RemoveWhere(a => !FollowerTrait.IsPositiveTrait(a));
-        
-        allTraits.RemoveWhere(a=> a == FollowerTrait.TraitType.BishopOfCult);
+
+        allTraits.RemoveWhere(a => a == FollowerTrait.TraitType.BishopOfCult);
 
         if (!Plugin.IncludeImmortal.Value)
         {
@@ -69,51 +71,48 @@ public static class NoNegativeTraits
 
     internal static void UpdateAllFollowerTraits()
     {
-        if (IsNothingNegativePresent()) return;
-        foreach (var follower in Helpers.AllFollowers)
+        if (Plugin.IsNothingNegativePresent()) return;
+        foreach (var follower in FollowerManager.Followers.Values.SelectMany(list => list))
         {
             ProcessTraitReplacement(follower.Brain);
         }
     }
 
-
     internal static void RestoreOriginalTraits()
     {
-        if (IsNothingNegativePresent() || _followerTraitBackups == null) return;
+        if (Plugin.IsNothingNegativePresent() || _followerTraitBackups == null) return;
 
         foreach (var backup in _followerTraitBackups)
         {
-            var follower = FollowerManager.FindFollowerByID(backup.ID);
+            var follower = FollowerManager.FindFollowerByID(backup.id);
             if (follower == null || follower.Brain == null)
             {
-                Plugin.L($"Could not find follower with ID {backup.ID} to restore traits. Is the follower dead?");
+                Plugin.L($"Could not find follower with ID {backup.id} to restore traits. Is the follower dead?");
                 continue;
             }
 
-            if (backup.Traits == null)
+            if (backup.traits == null)
             {
                 Plugin.L($"No traits to restore for {follower.Brain._directInfoAccess.Name}");
                 continue;
             }
 
-            RestoreFollowerTraits(follower, backup.Traits);
+            RestoreFollowerTraits(follower, backup.traits);
         }
     }
 
-
     private static void ClearAllTraits(Follower follower)
     {
-        if (IsNothingNegativePresent()) return;
+        if (Plugin.IsNothingNegativePresent()) return;
         foreach (var trait in follower.Brain._directInfoAccess.Traits.ToList())
         {
-            follower.Brain.RemoveTrait(trait, Plugin.ShowNotificationsWhenRemovingTraits.Value);
+            follower.Brain.RemoveTrait(trait, ShouldShowRemoveNotification(trait));
         }
     }
 
     private static void RestoreFollowerTraits(Follower follower, List<string> backupTraits)
     {
         Plugin.L($"Restoring traits for {follower.Brain._directInfoAccess.Name}");
-
 
         ClearAllTraits(follower);
 
@@ -122,7 +121,7 @@ public static class NoNegativeTraits
         {
             if (Enum.TryParse(trait, out FollowerTrait.TraitType traitType))
             {
-                follower.Brain.AddTrait(traitType, Plugin.ShowNotificationsWhenAddingTraits.Value);
+                follower.Brain.AddTrait(traitType, ShouldShowAddNotification(traitType));
             }
             else
             {
@@ -131,10 +130,9 @@ public static class NoNegativeTraits
         }
     }
 
-
     private static void SaveBackupToFile(bool log = true)
     {
-        if (IsNothingNegativePresent()) return;
+        if (Plugin.IsNothingNegativePresent()) return;
         try
         {
             if (_followerTraitBackups == null || !_followerTraitBackups.Any())
@@ -162,13 +160,16 @@ public static class NoNegativeTraits
         }
     }
 
-    internal static bool IsNothingNegativePresent()
-    {
-        _isNothingNegativePresentCache ??= BepInEx.Bootstrap.Chainloader.PluginInfos.Any(plugin => plugin.Value.Instance.Info.Metadata.GUID.Equals("NothingNegative", StringComparison.OrdinalIgnoreCase));
-        return _isNothingNegativePresentCache.Value;
-    }
-
-    private static void ProcessTraitReplacement(FollowerBrain brain)
+    /// <summary>
+    /// Processes trait replacement for a follower brain.
+    /// </summary>
+    /// <param name="brain">The follower brain to process.</param>
+    /// <param name="directManipulation">
+    /// When true, directly manipulates the traits list without calling RemoveTrait/AddTrait.
+    /// This avoids NullReferenceExceptions during early game loading when singletons like
+    /// TwitchFollowers or NotificationCentre may not be initialized.
+    /// </param>
+    private static void ProcessTraitReplacement(FollowerBrain brain, bool directManipulation = false)
     {
         CreateTraitBackup(brain);
 
@@ -186,20 +187,47 @@ public static class NoNegativeTraits
 
             if (!Plugin.UseUnlockedTraitsOnly.Value && IsExclusiveTrait(trait) && TryReplaceExclusiveTrait(trait, out var replacement))
             {
-                // traits[traits.IndexOf(trait)] = replacement;
-                brain.RemoveTrait(trait, Plugin.ShowNotificationsWhenRemovingTraits.Value);
-                brain.AddTrait(replacement, Plugin.ShowNotificationsWhenAddingTraits.Value);
+                if (directManipulation)
+                {
+                    traits.Remove(trait);
+                    if (!traits.Contains(replacement))
+                    {
+                        traits.Add(replacement);
+                    }
+                }
+                else
+                {
+                    brain.RemoveTrait(trait, ShouldShowRemoveNotification(trait));
+                    brain.AddTrait(replacement, ShouldShowAddNotification(replacement));
+                }
                 Plugin.L($"\tReplacing negative exclusive trait {trait} with exclusive {replacement}");
                 continue;
             }
 
             Plugin.L($"\tRemoving negative trait {trait}");
-            brain.RemoveTrait(trait, Plugin.ShowNotificationsWhenRemovingTraits.Value);
+            if (directManipulation)
+            {
+                traits.Remove(trait);
+            }
+            else
+            {
+                brain.RemoveTrait(trait, ShouldShowRemoveNotification(trait));
+            }
 
             var newTrait = FindPositiveReplacement(brain);
             if (newTrait != FollowerTrait.TraitType.None)
             {
-                brain.AddTrait(newTrait, Plugin.ShowNotificationsWhenAddingTraits.Value);
+                if (directManipulation)
+                {
+                    if (!traits.Contains(newTrait))
+                    {
+                        traits.Add(newTrait);
+                    }
+                }
+                else
+                {
+                    brain.AddTrait(newTrait, ShouldShowAddNotification(newTrait));
+                }
                 Plugin.L($"\tAdded replacement positive trait {newTrait}");
             }
             else
@@ -214,12 +242,12 @@ public static class NoNegativeTraits
         var stringTraits = brain._directInfoAccess.Traits.Select(trait => trait.ToString()).ToList();
         var traitBackup = new FollowerTraitBackup
         {
-            Traits = stringTraits,
-            ID = brain._directInfoAccess.ID,
-            Name = brain._directInfoAccess.Name
+            traits = stringTraits,
+            id = brain._directInfoAccess.ID,
+            name = brain._directInfoAccess.Name
         };
 
-        var alreadyBackedUp = _followerTraitBackups?.Any(b => b.ID == traitBackup.ID && b.Name == traitBackup.Name) ?? false;
+        var alreadyBackedUp = _followerTraitBackups?.Any(b => b.id == traitBackup.id && b.name == traitBackup.name) ?? false;
         if (alreadyBackedUp) return;
         Plugin.L($"Backing up original traits for {brain._directInfoAccess.Name}");
         _followerTraitBackups?.Add(traitBackup);
@@ -231,7 +259,7 @@ public static class NoNegativeTraits
         if (FollowerTrait.ExclusiveTraits.TryGetValue(trait, out replacement)) return true;
 
         var pair = FollowerTrait.ExclusiveTraits.FirstOrDefault(x => x.Value == trait);
-        if (pair.Equals(default(KeyValuePair<FollowerTrait.TraitType, FollowerTrait.TraitType>))) return false;
+        if (pair.Key == default) return false;
         replacement = pair.Key;
         return true;
     }
@@ -259,14 +287,15 @@ public static class NoNegativeTraits
         return availableTraits[Random.Range(0, availableTraits.Count)];
     }
 
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), MethodType.Constructor, [typeof(FollowerInfo)])]
     private static void FollowerBrain_Constructor(ref FollowerBrain __instance)
     {
-        if (IsNothingNegativePresent()) return;
+        if (Plugin.IsNothingNegativePresent()) return;
         if (!Plugin.NoNegativeTraits.Value) return;
-        ProcessTraitReplacement(__instance);
+        // Use directManipulation to avoid NullReferenceException during early game loading
+        // when singletons like TwitchFollowers or NotificationCentre may not be initialized.
+        ProcessTraitReplacement(__instance, directManipulation: true);
     }
 
     private static bool IsExclusiveTrait(FollowerTrait.TraitType trait)
@@ -274,11 +303,38 @@ public static class NoNegativeTraits
         return FollowerTrait.ExclusiveTraits.ContainsKey(trait) || FollowerTrait.ExclusiveTraits.ContainsValue(trait);
     }
 
+    /// <summary>
+    /// Checks if a trait has a valid localization entry.
+    /// Returns false if the localized title is empty, null, or the raw key format.
+    /// </summary>
+    private static bool HasValidLocalization(FollowerTrait.TraitType trait)
+    {
+        var title = FollowerTrait.GetLocalizedTitle(trait);
+        // I2 Localization returns the key itself if no translation exists
+        return !string.IsNullOrWhiteSpace(title) && !title.StartsWith("Traits/");
+    }
+
+    /// <summary>
+    /// Determines if a notification should be shown for adding a trait.
+    /// </summary>
+    private static bool ShouldShowAddNotification(FollowerTrait.TraitType trait)
+    {
+        return Plugin.ShowNotificationsWhenAddingTraits.Value && HasValidLocalization(trait);
+    }
+
+    /// <summary>
+    /// Determines if a notification should be shown for removing a trait.
+    /// </summary>
+    private static bool ShouldShowRemoveNotification(FollowerTrait.TraitType trait)
+    {
+        return Plugin.ShowNotificationsWhenRemovingTraits.Value && HasValidLocalization(trait);
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BiomeBaseManager), nameof(BiomeBaseManager.Start))]
     private static void BiomeBaseManager_Start()
     {
-        if (IsNothingNegativePresent()) return;
+        if (Plugin.IsNothingNegativePresent()) return;
         _followerTraitBackups?.Clear();
         LoadBackupFromFile();
         GenerateAvailableTraits();
@@ -292,8 +348,8 @@ public static class NoNegativeTraits
     [Serializable]
     public class FollowerTraitBackup
     {
-        public int ID;
-        public string Name;
-        public List<string> Traits;
+        [FormerlySerializedAs("ID")] public int id;
+        [FormerlySerializedAs("Name")] public string name;
+        [FormerlySerializedAs("Traits")] public List<string> traits;
     }
 }

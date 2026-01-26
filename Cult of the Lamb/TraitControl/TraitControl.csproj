@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>0.1.0</Version>
+        <ThunderstoreDir>traitcontrol</ThunderstoreDir>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="ConfigurationManager">
+            <HintPath>..\libs\ConfigurationManager.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
+    </ItemGroup>
+</Project>

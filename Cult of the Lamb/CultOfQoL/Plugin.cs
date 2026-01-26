@@ -38,7 +38,6 @@ public partial class Plugin : BaseUnityPlugin
     private const string MinesSection = "08. Mines";
     private const string MassSection = "16. Mass Actions";
     private const string StructureSection = "09. Structures";
-    private const string TraitsSection = "15. Traits";
     private const string LootSection = "17. Loot";
     private const string PostProcessingSection = "18. Post Processing";
     private const string RitualSection = "19. Rituals";
@@ -158,7 +157,7 @@ public partial class Plugin : BaseUnityPlugin
 
         WeatherDropDown = ConfigInstance.Bind(WeatherSection, "Weather Dropdown", Weather.WeatherCombo.HeavyRain, new ConfigDescription("Select the type of weather you want to test to see the effect your chosen colour has.", null, new ConfigurationManagerAttributes { Order = 2 }));
 
-        ConfigInstance.Bind(WeatherSection, "Test Weather", true, new ConfigDescription("Test Weather Color", null, new ConfigurationManagerAttributes { Order = 1, HideDefaultButton = true, CustomDrawer = TestWeather }));
+        ConfigInstance.Bind(WeatherSection, "Test Weather", true, new ConfigDescription("Click to apply the weather type selected above and preview your custom color settings in-game.", null, new ConfigurationManagerAttributes { Order = 1, HideDefaultButton = true, CustomDrawer = TestWeather }));
 
 
         //Mines - 08
@@ -170,43 +169,57 @@ public partial class Plugin : BaseUnityPlugin
         LumberAndMiningStationsAgeMultiplier.SettingChanged += (_, _) => { LumberAndMiningStationsAgeMultiplier.Value = Mathf.Round(LumberAndMiningStationsAgeMultiplier.Value * 4) / 4; };
 
         //Structures - 09
-        AutoSelectBestMatingPair = ConfigInstance.Bind(StructureSection, "Auto-Select Best Mating Pair", false, new ConfigDescription("Automatically selects the two followers with the highest mating success chance when the Mating Tent is opened.", null, new ConfigurationManagerAttributes { Order = 10 }));
-        TurnOffSpeakersAtNight = ConfigInstance.Bind(StructureSection, "Turn Off Speakers At Night", false, new ConfigDescription("Turns the speakers off, and stops fuel consumption at night time.", null, new ConfigurationManagerAttributes { Order = 9 }));
-        TurnOffSpeakersAtNight.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.TurnOffSpeakersAtNight);
-        DisablePropagandaSpeakerAudio = ConfigInstance.Bind(StructureSection, "Disable Propaganda Speaker Audio", false, new ConfigDescription("Disables the audio from propaganda speakers.", null, new ConfigurationManagerAttributes { Order = 8 }));
-        DisablePropagandaSpeakerAudio.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.DisablePropagandaSpeakerAudio);
-        AddExhaustedToHealingBay = ConfigInstance.Bind(StructureSection, "Add Exhausted To Healing Bay", false, new ConfigDescription("Allows you to select exhausted followers for rest and relaxation in the healing bays.", null, new ConfigurationManagerAttributes { Order = 7 }));
-        HideHealthyFromHealingBay = ConfigInstance.Bind(StructureSection, "Hide Healthy From Healing Bay", false, new ConfigDescription("Hides followers that don't need healing from the healing bay selection menu.", null, new ConfigurationManagerAttributes { Order = 6 }));
-        OnlyShowDissenters = ConfigInstance.Bind(StructureSection, "Only Show Dissenters In Prison Menu", false, new ConfigDescription("Only show dissenting followers when interacting with the prison.", null, new ConfigurationManagerAttributes { Order = 5 }));
-        AdjustRefineryRequirements = ConfigInstance.Bind(StructureSection, "Adjust Refinery Requirements", false, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 4 }));
+        // Mating Tent
+        AutoSelectBestMatingPair = ConfigInstance.Bind(StructureSection, "Auto-Select Best Mating Pair", false, new ConfigDescription("Automatically selects the two followers with the highest mating success chance when the Mating Tent is opened.", null, new ConfigurationManagerAttributes { Order = 20 }));
+
+        // Healing Bay
+        AddExhaustedToHealingBay = ConfigInstance.Bind(StructureSection, "Add Exhausted To Healing Bay", false, new ConfigDescription("Allows you to select exhausted followers for rest and relaxation in the healing bays.", null, new ConfigurationManagerAttributes { Order = 19 }));
+        HideHealthyFromHealingBay = ConfigInstance.Bind(StructureSection, "Hide Healthy From Healing Bay", false, new ConfigDescription("Hides followers that don't need healing from the healing bay selection menu.", null, new ConfigurationManagerAttributes { Order = 18 }));
+
+        // Prison
+        OnlyShowDissenters = ConfigInstance.Bind(StructureSection, "Only Show Dissenters In Prison Menu", false, new ConfigDescription("Only show dissenting followers when interacting with the prison.", null, new ConfigurationManagerAttributes { Order = 17 }));
+
+        // Refinery
+        AdjustRefineryRequirements = ConfigInstance.Bind(StructureSection, "Adjust Refinery Requirements", false, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 16 }));
         AdjustRefineryRequirements.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AdjustRefineryRequirements);
+        RefineryMassFill = ConfigInstance.Bind(StructureSection, "Refinery Mass Fill", false, new ConfigDescription("When adding an item to the refinery queue, automatically fill all available slots with that item.", null, new ConfigurationManagerAttributes { Order = 15 }));
 
-        var harvestRange = Mathf.RoundToInt(HarvestTotem.EFFECTIVE_DISTANCE);
-        HarvestTotemRange = ConfigInstance.Bind(StructureSection, "Harvest Totem Range", harvestRange, new ConfigDescription($"The range of the harvest totem. Default is {harvestRange}.", new AcceptableValueRange<int>(3, 14), new ConfigurationManagerAttributes { Order = 3 }));
-        HarvestTotemRange.SettingChanged += (_, _) => { HarvestTotem.EFFECTIVE_DISTANCE = Mathf.RoundToInt(HarvestTotemRange.Value); };
-
+        // Propaganda Speaker
+        TurnOffSpeakersAtNight = ConfigInstance.Bind(StructureSection, "Turn Off Speakers At Night", false, new ConfigDescription("Turns the speakers off, and stops fuel consumption at night time.", null, new ConfigurationManagerAttributes { Order = 14 }));
+        TurnOffSpeakersAtNight.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.TurnOffSpeakersAtNight);
+        DisablePropagandaSpeakerAudio = ConfigInstance.Bind(StructureSection, "Disable Propaganda Speaker Audio", false, new ConfigDescription("Disables the audio from propaganda speakers.", null, new ConfigurationManagerAttributes { Order = 13 }));
+        DisablePropagandaSpeakerAudio.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.DisablePropagandaSpeakerAudio);
         var speakerRange = Mathf.RoundToInt(Structures_PropagandaSpeaker.EFFECTIVE_DISTANCE);
-        PropagandaSpeakerRange = ConfigInstance.Bind(StructureSection, "Propaganda Speaker Range", speakerRange, new ConfigDescription($"The range of the propaganda speaker. Default is {speakerRange}.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 2 }));
+        PropagandaSpeakerRange = ConfigInstance.Bind(StructureSection, "Propaganda Speaker Range", speakerRange, new ConfigDescription($"The range of the propaganda speaker. Default is {speakerRange}.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 12 }));
         PropagandaSpeakerRange.SettingChanged += (_, _) => { Structures_PropagandaSpeaker.EFFECTIVE_DISTANCE = Mathf.RoundToInt(PropagandaSpeakerRange.Value); };
 
-        FarmStationRange = ConfigInstance.Bind(StructureSection, "Farm Station Range", 6, new ConfigDescription("The range of the farm station. Default is 6.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 1 }));
-        FarmPlotSignRange = ConfigInstance.Bind(StructureSection, "Farm Plot Sign Range", 5, new ConfigDescription("The range of the farm plot sign. Default is 5.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 0 }));
+        // Structure Ranges
+        var harvestRange = Mathf.RoundToInt(HarvestTotem.EFFECTIVE_DISTANCE);
+        HarvestTotemRange = ConfigInstance.Bind(StructureSection, "Harvest Totem Range", harvestRange, new ConfigDescription($"The range of the harvest totem. Default is {harvestRange}.", new AcceptableValueRange<int>(3, 14), new ConfigurationManagerAttributes { Order = 11 }));
+        HarvestTotemRange.SettingChanged += (_, _) => { HarvestTotem.EFFECTIVE_DISTANCE = Mathf.RoundToInt(HarvestTotemRange.Value); };
+        FarmStationRange = ConfigInstance.Bind(StructureSection, "Farm Station Range", 6, new ConfigDescription("The range of the farm station. Default is 6.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 10 }));
+        FarmPlotSignRange = ConfigInstance.Bind(StructureSection, "Farm Plot Sign Range", 5, new ConfigDescription("The range of the farm plot sign. Default is 5.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 9 }));
 
-        CookedMeatMealsContainBone = ConfigInstance.Bind(StructureSection, "Cooked Meat Meals Contain Bone", false, new ConfigDescription("Meat + fish meals will spawn 1 - 3 bones when cooked.", null, new ConfigurationManagerAttributes { Order = -2 }));
+        // Cooking
+        CookedMeatMealsContainBone = ConfigInstance.Bind(StructureSection, "Cooked Meat Meals Contain Bone", false, new ConfigDescription("Meat + fish meals will spawn 1 - 3 bones when cooked.", null, new ConfigurationManagerAttributes { Order = 8 }));
         CookedMeatMealsContainBone.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.CookedMeatMealsContainBone);
-        AddSpiderWebsToOfferings = ConfigInstance.Bind(StructureSection, "Add Spider Webs To Offerings", false, new ConfigDescription("Adds Spider Webs to the Offering Shrines default offerings.", null, new ConfigurationManagerAttributes { Order = -3 }));
+
+        // Offering Shrines
+        AddSpiderWebsToOfferings = ConfigInstance.Bind(StructureSection, "Add Spider Webs To Offerings", false, new ConfigDescription("Adds Spider Webs to the Offering Shrines default offerings.", null, new ConfigurationManagerAttributes { Order = 7 }));
         AddSpiderWebsToOfferings.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AddSpiderWebsToOfferings);
-        AddCrystalShardsToOfferings = ConfigInstance.Bind(StructureSection, "Add Crystals To Offerings", false, new ConfigDescription("Adds Crystal Shards to the Offering Shrines rare offerings.", null, new ConfigurationManagerAttributes { Order = -4 }));
+        AddCrystalShardsToOfferings = ConfigInstance.Bind(StructureSection, "Add Crystals To Offerings", false, new ConfigDescription("Adds Crystal Shards to the Offering Shrines rare offerings.", null, new ConfigurationManagerAttributes { Order = 6 }));
         AddCrystalShardsToOfferings.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AddCrystalShardsToOfferings);
 
-        ProduceSpiderWebsFromLumber = ConfigInstance.Bind(StructureSection, "Lumber Stations Produce Spider Webs", false, new ConfigDescription("Lumber stations will produce spider webs from logs collected.", null, new ConfigurationManagerAttributes { Order = -5 }));
+        // Lumber Station
+        ProduceSpiderWebsFromLumber = ConfigInstance.Bind(StructureSection, "Lumber Stations Produce Spider Webs", false, new ConfigDescription("Lumber stations will produce spider webs from logs collected.", null, new ConfigurationManagerAttributes { Order = 5 }));
         ProduceSpiderWebsFromLumber.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ProduceSpiderWebsFromLumber);
-        SpiderWebsPerLogs = ConfigInstance.Bind(StructureSection, "Spider Webs Per Logs", 5, new ConfigDescription("Number of logs needed to produce 1 spider web.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = -6 }));
+        SpiderWebsPerLogs = ConfigInstance.Bind(StructureSection, "Spider Webs Per Logs", 5, new ConfigDescription("Number of logs needed to produce 1 spider web.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 4 }));
         SpiderWebsPerLogs.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.SpiderWebsPerLogs);
 
-        ProduceCrystalShardsFromStone = ConfigInstance.Bind(StructureSection, "Mining Stations Produce Crystal Shards", false, new ConfigDescription("Mining stations will produce crystal shards from stone collected.", null, new ConfigurationManagerAttributes { Order = -7 }));
+        // Mining Station
+        ProduceCrystalShardsFromStone = ConfigInstance.Bind(StructureSection, "Mining Stations Produce Crystal Shards", false, new ConfigDescription("Mining stations will produce crystal shards from stone collected.", null, new ConfigurationManagerAttributes { Order = 3 }));
         ProduceCrystalShardsFromStone.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ProduceCrystalShardsFromStone);
-        CrystalShardsPerStone = ConfigInstance.Bind(StructureSection, "Crystal Shards Per Stone", 5, new ConfigDescription("Number of stone needed to produce 1 crystal shard.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = -8 }));
+        CrystalShardsPerStone = ConfigInstance.Bind(StructureSection, "Crystal Shards Per Stone", 5, new ConfigDescription("Number of stone needed to produce 1 crystal shard.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 2 }));
         CrystalShardsPerStone.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.CrystalShardsPerStone);
 
         //Speed - 10
@@ -293,6 +306,14 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         //Notifications - 13
+        DisableAllNotifications = ConfigInstance.Bind(NotificationsSection, "Disable All Notifications", false, new ConfigDescription("Disable all in-game notifications. This also prevents custom notifications below from working.", null, new ConfigurationManagerAttributes
+        {
+            Order = 10
+        }));
+        AllowCriticalNotifications = ConfigInstance.Bind(NotificationsSection, "Allow Critical Notifications", true, new ConfigDescription("When 'Disable All Notifications' is enabled, still show critical notifications (deaths, weapon destruction, dissenters).", null, new ConfigurationManagerAttributes
+        {
+            Order = 9
+        }));
         NotifyOfScarecrowTraps = ConfigInstance.Bind(NotificationsSection, "Notify of Scarecrow Traps", false, new ConfigDescription("Display a notification when the farm scarecrows have caught a trap!", null, new ConfigurationManagerAttributes
         {
             Order = 5
@@ -371,38 +392,6 @@ public partial class Plugin : BaseUnityPlugin
         MaxRangeLifeExpectancy.SettingChanged += (_, _) => { EnforceRangeSanity(); };
 
 
-        //Traits - 15
-        NoNegativeTraits = ConfigInstance.Bind(TraitsSection, "No Negative Traits", false, new ConfigDescription("Negative traits will be replaced based on the configuration here.", null, new ConfigurationManagerAttributes
-        {
-            Order = 3
-        }));
-        NoNegativeTraits.SettingChanged += (_, _) => { UpdateNoNegativeTraits(); };
-        UseUnlockedTraitsOnly = ConfigInstance.Bind(TraitsSection, "Use Unlocked Traits Only", true, new ConfigDescription("Only use unlocked traits when replacing negative traits.", null, new ConfigurationManagerAttributes
-        {
-            Order = 2
-        }));
-        UseUnlockedTraitsOnly.SettingChanged += (_, _) => { GenerateAvailableTraits(); };
-        IncludeImmortal = ConfigInstance.Bind(TraitsSection, "Include Immortal", false, new ConfigDescription("Include the Immortal trait when replacing negative traits.", null, new ConfigurationManagerAttributes
-        {
-            Order = 1
-        }));
-        IncludeImmortal.SettingChanged += (_, _) => { GenerateAvailableTraits(); };
-        IncludeDisciple = ConfigInstance.Bind(TraitsSection, "Include Disciple", false, new ConfigDescription("Include the Disciple trait when replacing negative traits.", null, new ConfigurationManagerAttributes
-        {
-            Order = 0
-        }));
-        IncludeDisciple.SettingChanged += (_, _) => { GenerateAvailableTraits(); };
-
-        ShowNotificationsWhenRemovingTraits = ConfigInstance.Bind(TraitsSection, "Show Notifications When Removing Traits", false, new ConfigDescription("Show notifications when removing negative traits.", null, new ConfigurationManagerAttributes
-        {
-            Order = 0
-        }));
-        ShowNotificationsWhenAddingTraits = ConfigInstance.Bind(TraitsSection, "Show Notifications When Adding Traits", false, new ConfigDescription("Show notifications when adding positive traits.", null, new ConfigurationManagerAttributes
-        {
-            Order = 0
-        }));
-
-
         //Mass Section - 16
         MassFertilize = ConfigInstance.Bind(MassSection, "Mass Fertilize", false, new ConfigDescription("When fertilizing a plot, all farm plots are fertilized at once.", null, new ConfigurationManagerAttributes
         {
@@ -433,11 +422,16 @@ public partial class Plugin : BaseUnityPlugin
         }));
         MassExtort.SettingChanged += (_, _) => ShowRestartMessage();
 
-        MassPetDog = ConfigInstance.Bind(MassSection, "Mass Pet Dog", false, new ConfigDescription("When petting a a follower, all followers are petted at once.", null, new ConfigurationManagerAttributes
+        MassPetDog = ConfigInstance.Bind(MassSection, "Mass Pet Dog", false, new ConfigDescription("When petting a dog follower, all dog followers are petted at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Pet Dog**", Order = 12
+            DispName = "Mass Pet Dog**", Order = 13
         }));
         MassPetDog.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassPetAnimals = ConfigInstance.Bind(MassSection, "Mass Pet Animals", false, new ConfigDescription("When petting a farm animal, all farm animals are petted at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 12
+        }));
 
         MassIntimidate = ConfigInstance.Bind(MassSection, "Mass Intimidate", false, new ConfigDescription("When intimidating a follower, all followers are intimidated at once.", null, new ConfigurationManagerAttributes
         {
@@ -677,30 +671,6 @@ public partial class Plugin : BaseUnityPlugin
         }
     }
 
-    private static void UpdateNoNegativeTraits()
-    {
-        if (IsNoNegativePresent())
-        {
-            NoNegativeTraits.Value = false;
-            return;
-        }
-
-        if (NoNegativeTraits.Value)
-        {
-            Patches.Followers.NoNegativeTraits.UpdateAllFollowerTraits();
-        }
-        else
-        {
-            Patches.Followers.NoNegativeTraits.RestoreOriginalTraits();
-        }
-    }
-
-    private static void GenerateAvailableTraits()
-    {
-        if (IsNoNegativePresent()) return;
-        Patches.Followers.NoNegativeTraits.GenerateAvailableTraits();
-    }
-
     private static void UpdateNavigationMode()
     {
         var buttons = Resources.FindObjectsOfTypeAll<MMButton>();
@@ -756,6 +726,21 @@ public partial class Plugin : BaseUnityPlugin
         }
     }
 
+    /// <summary>
+    /// Logs an error message. Always logs regardless of EnableLogging setting.
+    /// </summary>
+    public static void LE(string message)
+    {
+        Log.LogError(message);
+    }
+
+    /// <summary>
+    /// Logs a warning message. Always logs regardless of EnableLogging setting.
+    /// </summary>
+    public static void LW(string message)
+    {
+        Log.LogWarning(message);
+    }
 
     private static void ShowRestartMessage()
     {
@@ -763,13 +748,6 @@ public partial class Plugin : BaseUnityPlugin
         {
             PopupManager.ShowPopupDlg(RestartGameMessage, true);
         }
-    }
-
-    private static bool IsNoNegativePresent()
-    {
-        if (!Patches.Followers.NoNegativeTraits.IsNothingNegativePresent()) return false;
-        PopupManager.ShowPopupDlg($"You have the 'Nothing Negative' mod by voidptr installed. Please remove it to use Cult of QoL's No Negative Traits feature.", false);
-        return true;
     }
 
     private static void HideBepInEx()

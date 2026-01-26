@@ -8,6 +8,56 @@ public static class Notifications
     private const float NotificationCooldown = 10f;
 
     /// <summary>
+    /// Notification types considered critical (deaths, equipment destruction, dissenters).
+    /// These are still shown when "Allow Critical Notifications" is enabled.
+    /// </summary>
+    private static readonly HashSet<NotificationCentre.NotificationType> CriticalNotifications =
+    [
+        // Deaths
+        NotificationCentre.NotificationType.Died,
+        NotificationCentre.NotificationType.DiedFromStarvation,
+        NotificationCentre.NotificationType.DiedFromIllness,
+        NotificationCentre.NotificationType.DiedFromOldAge,
+        NotificationCentre.NotificationType.KilledInAFightPit,
+        NotificationCentre.NotificationType.KilledByBlizzardMonster,
+        NotificationCentre.NotificationType.SacrificedAwayFromCult,
+        NotificationCentre.NotificationType.MurderedByYou,
+        NotificationCentre.NotificationType.ZombieKilledFollower,
+        // Equipment destruction
+        NotificationCentre.NotificationType.WeaponDestroyed,
+        NotificationCentre.NotificationType.CurseDestroyed,
+        // Faith crisis
+        NotificationCentre.NotificationType.BecomeDissenter,
+        NotificationCentre.NotificationType.LeaveCult
+    ];
+
+    /// <summary>
+    /// Returns true if the notification with the given type should be allowed.
+    /// </summary>
+    private static bool ShouldAllowNotification(NotificationCentre.NotificationType type)
+    {
+        if (!Plugin.DisableAllNotifications.Value)
+        {
+            return true;
+        }
+
+        if (Plugin.AllowCriticalNotifications.Value && CriticalNotifications.Contains(type))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns true if generic notifications (without type) should be allowed.
+    /// </summary>
+    private static bool ShouldAllowGenericNotification()
+    {
+        return !Plugin.DisableAllNotifications.Value;
+    }
+
+    /// <summary>
     /// Returns true if notifications should be suppressed (in dungeon or during cutscene/transition).
     /// </summary>
     internal static bool ShouldSuppressNotification()
@@ -113,4 +163,55 @@ public static class Notifications
             StructuresWithNoFuel.Remove(structureId);
         }
     }
+
+    /// <summary>
+    /// Vanilla game bug fix: Prevents NullReferenceException when FollowerInfo has invalid/empty SkinName.
+    /// This can happen during relationship change notifications if follower data is corrupted.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(SpineExtensions), nameof(SpineExtensions.ConfigureFollowerSkin),
+        typeof(Spine.Unity.SkeletonGraphic), typeof(FollowerInfo))]
+    public static bool SpineExtensions_ConfigureFollowerSkin(FollowerInfo followerInfo)
+    {
+        if (followerInfo == null || string.IsNullOrEmpty(followerInfo.SkinName))
+        {
+            return false;
+        }
+
+        var skinData = WorshipperData.Instance.GetColourData(followerInfo.SkinName);
+        if (skinData?.Skin == null || skinData.Skin.Count == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    #region Disable All Notifications
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayFollowerNotification))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayGenericNotification), typeof(NotificationCentre.NotificationType))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayRelationshipNotification))]
+    public static bool NotificationCentre_PlayTypedNotification(NotificationCentre.NotificationType type)
+    {
+        return ShouldAllowNotification(type);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayGenericNotification), typeof(string), typeof(NotificationBase.Flair))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayGenericNotificationNonLocalizedParams))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayGenericNotificationLocalizedParams))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayItemNotification))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayFaithNotification))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlaySinNotification))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayWarmthNotification))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayTwitchNotification))]
+    [HarmonyPatch(typeof(NotificationCentre), nameof(NotificationCentre.PlayHelpHinderNotification))]
+    public static bool NotificationCentre_PlayGenericNotification()
+    {
+        return ShouldAllowGenericNotification();
+    }
+
+    #endregion
 }

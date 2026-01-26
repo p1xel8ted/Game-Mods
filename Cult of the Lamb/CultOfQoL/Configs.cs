@@ -35,13 +35,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> ReverseGoldenFleeceDamageChange { get; private set; }
    // internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate { get; private set; }
     internal static ConfigEntry<bool> AdjustRefineryRequirements { get; private set; }
-
-    internal static ConfigEntry<bool> NoNegativeTraits { get; private set; }
-    internal static ConfigEntry<bool> UseUnlockedTraitsOnly { get; private set; }
-    internal static ConfigEntry<bool> IncludeImmortal { get; private set; }
-    internal static ConfigEntry<bool> IncludeDisciple { get; private set; }
-    internal static ConfigEntry<bool> ShowNotificationsWhenRemovingTraits { get; private set; }
-    internal static ConfigEntry<bool> ShowNotificationsWhenAddingTraits { get; private set; }
+    internal static ConfigEntry<bool> RefineryMassFill { get; private set; }
 
     internal static ConfigEntry<bool> CleanseIllnessAndExhaustionOnLevelUp { get; private set; }
     internal static ConfigEntry<bool> UnlockTwitchItems { get; private set; }
@@ -73,6 +67,8 @@ public partial class Plugin
     internal static ConfigEntry<bool> AutoCollectFromFarmStationChests { get; private set; }
     internal static ConfigEntry<bool> AddExhaustedToHealingBay { get; private set; }
     internal static ConfigEntry<bool> HideHealthyFromHealingBay { get; private set; }
+    internal static ConfigEntry<bool> DisableAllNotifications { get; private set; }
+    internal static ConfigEntry<bool> AllowCriticalNotifications { get; private set; }
     internal static ConfigEntry<bool> NotifyOfScarecrowTraps { get; private set; }
     internal static ConfigEntry<bool> NotifyOfNoFuel { get; private set; }
     internal static ConfigEntry<bool> NotifyOfBedCollapse { get; private set; }
@@ -132,6 +128,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassReeducate { get; private set; }
     internal static ConfigEntry<bool> MassExtort { get; private set; }
     internal static ConfigEntry<bool> MassPetDog { get; private set; }
+    internal static ConfigEntry<bool> MassPetAnimals { get; private set; }
     internal static ConfigEntry<bool> MassIntimidate { get; private set; }
     internal static ConfigEntry<bool> MassInspire { get; private set; }
     internal static ConfigEntry<bool> MassWater { get; private set; }
@@ -172,6 +169,7 @@ public partial class Plugin
     public static ConfigEntry<bool> CookedMeatMealsContainBone { get; set; }
     internal static ConfigEntry<bool> AutoSelectBestMatingPair { get; private set; }
     internal static ConfigEntry<bool> PrioritizeRequestedFollowers { get; private set; }
+
     public static ConfigEntry<bool> ProduceSpiderWebsFromLumber { get; set; }
     public static ConfigEntry<int> SpiderWebsPerLogs { get; set; }
     public static ConfigEntry<bool> ProduceCrystalShardsFromStone { get; set; }
