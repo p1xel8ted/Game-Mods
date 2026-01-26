@@ -2,7 +2,7 @@
 
 Control your followers' traits with this quality-of-life mod.
 
-*This mod was split from [Cult of QoL](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/CultOfQoL/) as that mod was becoming too large and unwieldy.*
+*Originally part of [Cult of QoL](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/CultOfQoL/), these trait features grew substantial enough to deserve their own dedicated mod.*
 
 ## Features
 

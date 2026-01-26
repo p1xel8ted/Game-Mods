@@ -1,7 +1,7 @@
 namespace TraitControl;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 [BepInIncompatibility("NothingNegative")]
 public partial class Plugin : BaseUnityPlugin
 {
