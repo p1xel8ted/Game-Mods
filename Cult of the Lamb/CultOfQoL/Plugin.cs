@@ -11,7 +11,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.3.3";
+    private const string PluginVer = "2.3.4";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -430,8 +430,9 @@ public partial class Plugin : BaseUnityPlugin
 
         MassPetAnimals = ConfigInstance.Bind(MassSection, "Mass Pet Animals", false, new ConfigDescription("When petting a farm animal, all farm animals are petted at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 12
+            DispName = "Mass Pet Animals**", Order = 12
         }));
+        MassPetAnimals.SettingChanged += (_, _) => ShowRestartMessage();
 
         MassIntimidate = ConfigInstance.Bind(MassSection, "Mass Intimidate", false, new ConfigDescription("When intimidating a follower, all followers are intimidated at once.", null, new ConfigurationManagerAttributes
         {

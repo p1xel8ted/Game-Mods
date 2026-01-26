@@ -1,3 +1,8 @@
+### 2.3.4
+
+* Fixed mass pet animals causing a crash and leaving the player unable to move.
+* Improved logging for mass action features to show which feature is being patched.
+
 ### 2.3.3
 
 * Removed skip intro/video features (moved to dedicated Skip of the Lamb mod).

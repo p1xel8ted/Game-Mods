@@ -435,6 +435,7 @@ internal static class StructurePatches
                 if (!animal || animal.animal.PetToday) continue;
 
                 yield return new WaitForSeconds(0.15f);
+                animal._playerFarming = PlayerFarming.Instance;
                 animal.StartCoroutine(animal.PetIE());
             }
         }

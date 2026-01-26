@@ -14,6 +14,7 @@ public static class RoutinesTranspilers
     private const string RomanceRoutine = "RomanceRoutine";
     private const string ExtortMoneyRoutine = "ExtortMoneyRoutine";
     private const string LevelUpRoutine = "LevelUpRoutine";
+    private const string PetIE = "PetIE";
 
     private static readonly MethodInfo GetInstance = AccessTools.Method(typeof(GameManager), nameof(GameManager.GetInstance));
     private static readonly MethodInfo OnConversationNext = AccessTools.Method(typeof(GameManager), nameof(GameManager.OnConversationNext));
@@ -40,7 +41,8 @@ public static class RoutinesTranspilers
         [PetDogRoutine] = () => Plugin.MassPetDog,
         [RomanceRoutine] = () => Plugin.MassRomance,
         [ExtortMoneyRoutine] = () => Plugin.MassExtort,
-        [LevelUpRoutine] = () => Plugin.MassLevelUp
+        [LevelUpRoutine] = () => Plugin.MassLevelUp,
+        [PetIE] = () => Plugin.MassPetAnimals
     };
 
     [HarmonyTranspiler]
@@ -59,7 +61,7 @@ public static class RoutinesTranspilers
         }
         catch (Exception ex)
         {
-            Plugin.Log.LogWarning($"[Transpiler] interaction_FollowerInteraction.OnInteract: {ex.Message}");
+            Plugin.Log.LogWarning($"[Transpiler] {GetRoutineName(original)}: {ex.Message}");
             return originalCodes;
         }
     }
@@ -104,7 +106,7 @@ public static class RoutinesTranspilers
         }
         catch (Exception ex)
         {
-            Plugin.Log.LogWarning($"[Transpiler] interaction_FollowerInteraction.{original.Name}: {ex.Message}");
+            Plugin.Log.LogWarning($"[Transpiler] {GetRoutineName(original)}: {ex.Message}");
             return originalCodes;
         }
     }
@@ -131,11 +133,64 @@ public static class RoutinesTranspilers
         }
     }
 
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.PetIE), MethodType.Enumerator)]
+    private static IEnumerable<CodeInstruction> Interaction_Ranchable_PetIE_Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+    {
+        var originalCodes = instructions.ToList();
+        if (!Plugin.MassPetAnimals.Value) return originalCodes;
+
+        try
+        {
+            var codes = new List<CodeInstruction>(originalCodes);
+            LogOnce(original, "Removing HUD/conversation/camera calls.");
+
+            NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNew);
+            NopCallSequence(codes, c => c.Calls(GetInstance), OnConversationNext);
+
+            return codes;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] {GetRoutineName(original)}: {ex.Message}");
+            return originalCodes;
+        }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.PetIE))]
+    private static void Interaction_Ranchable_PetIE_EnsurePlayerFarming(Interaction_Ranchable __instance)
+    {
+        if (!Plugin.MassPetAnimals.Value) return;
+        __instance._playerFarming ??= PlayerFarming.Instance;
+    }
+
+    private static string GetRoutineName(MethodBase original)
+    {
+        // Extract routine name from declaring type (e.g., "ClassName+<RoutineName>d__123" -> "RoutineName")
+        var declaringType = original.DeclaringType?.ToString() ?? "Unknown";
+        var startIndex = declaringType.IndexOf('<');
+        var endIndex = declaringType.IndexOf('>');
+        if (startIndex >= 0 && endIndex > startIndex)
+        {
+            return declaringType.Substring(startIndex + 1, endIndex - startIndex - 1);
+        }
+        return declaringType;
+    }
+
     private static void LogOnce(MethodBase original, string description)
     {
         var key = $"{original.DeclaringType}.{original.Name}";
         if (!AlreadyLogged.Add(key)) return;
-        Plugin.Log.LogInfo($"[Transpiler] interaction_FollowerInteraction.{original.Name}: {description}");
+
+        var routineName = GetRoutineName(original);
+
+        // Look up the friendly feature name from config
+        var featureName = RoutineChecks.TryGetValue(routineName, out var configGetter)
+            ? configGetter().Definition.Key
+            : "Unknown";
+
+        Plugin.Log.LogInfo($"[Transpiler] {routineName} ({featureName}): {description}");
     }
 
     /// <summary>
