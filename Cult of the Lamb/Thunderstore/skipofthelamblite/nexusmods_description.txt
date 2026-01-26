@@ -1,10 +1,4 @@
-[size=4][b]Support[/b][/size]
-
-[size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
-
-[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
-
-[size=4][b]What[/b][/size]
+[size=4][b]Features[/b][/size]
 
 [size=3]A lightweight mod that skips developer/publisher splash screens on game startup. No configuration required - just install and play.[/size]
 
@@ -12,9 +6,12 @@
 [*][size=3]Automatically skips developer/publisher logo videos when launching the game[/size]
 [/list]
 
-[size=4][b]Looking for More?[/b][/size]
+[size=4][b]Installation[/b][/size]
 
-[size=3]If you want additional skip features (crown video, Woolhaven cutscenes, boss intros), check out the full [url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] mod instead.[/size]
+[list]
+[*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
+[*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
+[/list]
 
 [size=4][b]Compatibility[/b][/size]
 
@@ -23,13 +20,24 @@
 [*][size=3][b]Cult of QoL[/b] - Fully compatible.[/size]
 [/list]
 
-[size=4][b]Recommendation[/b][/size]
+[size=4][b]Looking for More?[/b][/size]
 
-[size=3]While not a hard requirement, I recommend you install [url=https://thunderstore.io/c/cult-of-the-lamb/p/LethalCompanyModding/UnityDebuggerAssistant/]Unity Debugger Assistant[/url] which allows for better log files when an exception happens because of a mod, which means I have more information to work with when bug reports are posted.[/size]
+[size=3]If you want additional skip features (crown video, Woolhaven cutscenes, boss intros), check out the full [url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] mod instead.[/size]
 
-[size=4][b]Installation[/b][/size]
+[size=4][b]My Other Mods[/b][/size]
 
 [list]
-[*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
-[*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder. Either run the game, or create it if it doesn't exist.[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/1]Cult of QoL[/url] - Massive quality-of-life overhaul with 100+ features[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/8]Rebirth[/url] - Followers can be reborn with new names and appearances[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/15]Namify[/url] - Random name generation from 1000+ names plus custom names[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] - Skip intros, splash screens, and videos[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/56]Skip of the Lamb Lite[/url] - Just skips splash screens, no config needed[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/58]Trait Control[/url] - Replace negative traits, control trait probabilities[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/59]Glyph Override[/url] - Force specific controller button prompts[/size]
 [/list]
+
+[size=4][b]Support[/b][/size]
+
+[size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
+
+[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]

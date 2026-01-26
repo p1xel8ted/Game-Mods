@@ -1,12 +1,6 @@
-[size=4][b]Support[/b][/size]
-
-[size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
-
-[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
-
 [size=4][b]Features[/b][/size]
 
-[size=4][b]Force Controller Prompts[/b][/size]
+[size=3][b]Force Controller Prompts[/b][/size]
 [list]
 [*][size=3]Override the auto-detected controller type to display specific button prompts.[/size]
 [*][size=3]Useful when the game detects the wrong controller or when using adapters.[/size]
@@ -26,7 +20,7 @@
 [/list]
 [/list]
 
-[size=4][b]Nintendo Switch A/B Button Fix[/b][/size]
+[size=3][b]Nintendo Switch A/B Button Fix[/b][/size]
 [list]
 [*][size=3]Automatically swaps A/B button prompts when using any Nintendo Switch controller type.[/size]
 [*][size=3]Nintendo and Xbox controllers have physically swapped A/B button positions:[/size]
@@ -48,6 +42,24 @@
 [size=4][b]Configuration[/b][/size]
 
 [list]
-[*][size=3]The configuration file is generated when you first run the game with the mod enabled. It can be found in the "...\Cult of the Lamb\BepInEx\config" folder.[/size]
-[*][size=3]Press F1 in game to open the configuration manager. If you're in a dungeon, pause the game first otherwise the cursor doesn't work.[/size]
+[*][size=3]Press F1 in game to open the configuration manager.[/size]
+[*][size=3]The configuration file can be found in the "...\Cult of the Lamb\BepInEx\config" folder.[/size]
 [/list]
+
+[size=4][b]My Other Mods[/b][/size]
+
+[list]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/1]Cult of QoL[/url] - Massive quality-of-life overhaul with 100+ features[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/8]Rebirth[/url] - Followers can be reborn with new names and appearances[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/15]Namify[/url] - Random name generation from 1000+ names plus custom names[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] - Skip intros, splash screens, and videos[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/56]Skip of the Lamb Lite[/url] - Just skips splash screens, no config needed[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/58]Trait Control[/url] - Replace negative traits, control trait probabilities[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/59]Glyph Override[/url] - Force specific controller button prompts[/size]
+[/list]
+
+[size=4][b]Support[/b][/size]
+
+[size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
+
+[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
