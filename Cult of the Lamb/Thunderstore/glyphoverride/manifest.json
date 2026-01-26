@@ -1,10 +1,10 @@
 {
     "name":  "Glyph_Override",
     "version_number":  "0.1.0",
-    "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/1?tab=description",
+    "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/59?tab=description",
     "description":  "Force specific controller button prompts regardless of connected controller, plus Nintendo Switch A/B button fix",
     "dependencies":  [
                          "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
-                         "p1xel8ted-BepInEx_Configuration_Manager-18.3.0"
+                         "p1xel8ted-BepInEx_Configuration_Manager-18.4.1"
                      ]
 }

@@ -6,7 +6,7 @@ using CultOfQoL.Patches.UI;
 namespace CultOfQoL;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.3")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
