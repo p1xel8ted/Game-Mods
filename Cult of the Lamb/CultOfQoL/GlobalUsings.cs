@@ -22,6 +22,7 @@ global using Lamb.UI.FollowerInteractionWheel;
 global using Lamb.UI.FollowerSelect;
 global using Lamb.UI.MainMenu;
 global using Lamb.UI.PauseMenu;
+global using Lamb.UI.KitchenMenu;
 global using Lamb.UI.RefineryMenu;
 global using LeTai.Asset.TranslucentImage;
 global using Map;

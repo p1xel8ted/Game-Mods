@@ -180,9 +180,12 @@ public partial class Plugin : BaseUnityPlugin
         OnlyShowDissenters = ConfigInstance.Bind(StructureSection, "Only Show Dissenters In Prison Menu", false, new ConfigDescription("Only show dissenting followers when interacting with the prison.", null, new ConfigurationManagerAttributes { Order = 17 }));
 
         // Refinery
-        AdjustRefineryRequirements = ConfigInstance.Bind(StructureSection, "Adjust Refinery Requirements", false, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 16 }));
+        AdjustRefineryRequirements = ConfigInstance.Bind(StructureSection, "Adjust Refinery Requirements", false, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 27 }));
         AdjustRefineryRequirements.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AdjustRefineryRequirements);
-        RefineryMassFill = ConfigInstance.Bind(StructureSection, "Refinery Mass Fill", false, new ConfigDescription("When adding an item to the refinery queue, automatically fill all available slots with that item.", null, new ConfigurationManagerAttributes { Order = 15 }));
+        RefineryMassFill = ConfigInstance.Bind(StructureSection, "Refinery Mass Fill", false, new ConfigDescription("When adding an item to the refinery queue, automatically fill all available slots with that item.", null, new ConfigurationManagerAttributes { Order = 26 }));
+        CookingFireMassFill = ConfigInstance.Bind(StructureSection, "Cooking Fire Mass Fill", false, new ConfigDescription("When adding a meal to the cooking fire queue, automatically fill all available slots with that meal.", null, new ConfigurationManagerAttributes { Order = 25 }));
+        KitchenMassFill = ConfigInstance.Bind(StructureSection, "Kitchen Mass Fill", false, new ConfigDescription("When adding a meal to the follower kitchen queue, automatically fill all available slots with that meal.", null, new ConfigurationManagerAttributes { Order = 24 }));
+        PubMassFill = ConfigInstance.Bind(StructureSection, "Pub Mass Fill", false, new ConfigDescription("When adding a drink to the pub queue, automatically fill all available slots with that drink.", null, new ConfigurationManagerAttributes { Order = 23 }));
 
         // Propaganda Speaker
         TurnOffSpeakersAtNight = ConfigInstance.Bind(StructureSection, "Turn Off Speakers At Night", false, new ConfigDescription("Turns the speakers off, and stops fuel consumption at night time.", null, new ConfigurationManagerAttributes { Order = 14 }));

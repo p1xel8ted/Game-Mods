@@ -402,6 +402,11 @@ internal static class StructurePatches
     // Flag to prevent infinite recursion when mass petting animals
     private static bool _massPetAnimalsInProgress;
 
+    // Flags to prevent infinite recursion when mass filling cooking stations
+    private static bool _cookingFireMassFillInProgress;
+    private static bool _kitchenMassFillInProgress;
+    private static bool _pubMassFillInProgress;
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.OnAnimalCommandFinalized))]
     public static void Interaction_Ranchable_OnAnimalCommandFinalized(
@@ -470,6 +475,87 @@ internal static class StructurePatches
         finally
         {
             _refineryMassFillInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIFollowerKitchenMenuController), nameof(UIFollowerKitchenMenuController.AddToQueue))]
+    public static void UIFollowerKitchenMenuController_AddToQueue(UIFollowerKitchenMenuController __instance, InventoryItem.ITEM_TYPE meal)
+    {
+        if (!Plugin.KitchenMassFill.Value) return;
+        if (_kitchenMassFillInProgress) return;
+
+        _kitchenMassFillInProgress = true;
+        try
+        {
+            var maxItems = UIFollowerKitchenMenuController.kMaxItems;
+            var currentCount = __instance._structureInfo.QueuedMeals.Count;
+
+            while (currentCount < maxItems && CookingData.CanMakeMeal(meal))
+            {
+                __instance.AddToQueue(meal);
+                currentCount = __instance._structureInfo.QueuedMeals.Count;
+            }
+
+            Plugin.L($"[KitchenMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _kitchenMassFillInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIPubMenuController), nameof(UIPubMenuController.AddToQueue))]
+    public static void UIPubMenuController_AddToQueue(UIPubMenuController __instance, InventoryItem.ITEM_TYPE meal)
+    {
+        if (!Plugin.PubMassFill.Value) return;
+        if (_pubMassFillInProgress) return;
+
+        _pubMassFillInProgress = true;
+        try
+        {
+            var maxItems = __instance._pub.Brain.MaxQueue;
+            var currentCount = __instance._structureInfo.QueuedMeals.Count;
+
+            while (currentCount < maxItems && CookingData.CanMakeMeal(meal))
+            {
+                __instance.AddToQueue(meal);
+                currentCount = __instance._structureInfo.QueuedMeals.Count;
+            }
+
+            Plugin.L($"[PubMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _pubMassFillInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UICookingFireMenuController), nameof(UICookingFireMenuController.OnRecipeChosen))]
+    public static void UICookingFireMenuController_OnRecipeChosen(UICookingFireMenuController __instance, InventoryItem.ITEM_TYPE recipe)
+    {
+        if (!Plugin.CookingFireMassFill.Value) return;
+        if (_cookingFireMassFillInProgress) return;
+
+        _cookingFireMassFillInProgress = true;
+        try
+        {
+            var maxItems = __instance.RecipeLimit();
+            var currentCount = __instance._kitchenData.QueuedMeals.Count;
+
+            while (currentCount < maxItems && CookingData.CanMakeMeal(recipe))
+            {
+                __instance.OnRecipeChosen(recipe);
+                currentCount = __instance._kitchenData.QueuedMeals.Count;
+            }
+
+            Plugin.L($"[CookingFireMassFill] Filled queue with {recipe} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _cookingFireMassFillInProgress = false;
         }
     }
 }

@@ -1,7 +1,11 @@
 ### 2.3.4
 
 * Fixed mass pet animals causing a crash and leaving the player unable to move.
+* Fixed mass level-up causing the floating animation to play multiple times instead of once.
 * Improved logging for mass action features to show which feature is being patched.
+* Added cooking fire mass fill - clicking a meal fills the queue to maximum.
+* Added kitchen mass fill - clicking a meal fills the queue to maximum.
+* Added pub mass fill - clicking a drink fills the queue to maximum.
 
 ### 2.3.3
 

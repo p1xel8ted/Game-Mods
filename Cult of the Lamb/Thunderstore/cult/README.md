@@ -92,9 +92,9 @@
 - Customise trigger amount and range
 - Fast collection speed from shrines, beds, and chests
 
-### Refinery
+### Crafting Stations
 - Halve refinery material requirements
-- Mass fill refinery queue with one click
+- Mass fill refinery, cooking fire, kitchen, and pub queues with one click
 
 ### Weather
 - Random weather changes on area exit

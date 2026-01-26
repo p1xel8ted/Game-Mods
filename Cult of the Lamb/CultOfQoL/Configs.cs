@@ -36,6 +36,9 @@ public partial class Plugin
    // internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate { get; private set; }
     internal static ConfigEntry<bool> AdjustRefineryRequirements { get; private set; }
     internal static ConfigEntry<bool> RefineryMassFill { get; private set; }
+    internal static ConfigEntry<bool> CookingFireMassFill { get; private set; }
+    internal static ConfigEntry<bool> KitchenMassFill { get; private set; }
+    internal static ConfigEntry<bool> PubMassFill { get; private set; }
 
     internal static ConfigEntry<bool> CleanseIllnessAndExhaustionOnLevelUp { get; private set; }
     internal static ConfigEntry<bool> UnlockTwitchItems { get; private set; }
