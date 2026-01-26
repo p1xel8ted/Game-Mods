@@ -29,7 +29,7 @@ All settings are configurable via the in-game mod settings menu (F1) or the BepI
 
 ## Incompatibilities
 
-This mod is incompatible with the "Nothing Negative" mod. If that mod is detected, Trait Control's features will be disabled.
+This mod is incompatible with "Nothing Negative" or any other mod that modifies the trait system.
 
 ## Donate
 

@@ -36,7 +36,7 @@
 
 [size=4][b]Incompatibilities[/b][/size]
 
-[size=3]This mod is incompatible with the "Nothing Negative" mod. If that mod is detected, Trait Control's features will be disabled automatically.[/size]
+[size=3]This mod is incompatible with "Nothing Negative" or any other mod that modifies the trait system.[/size]
 
 [size=4][b]Installation[/b][/size]
 
