@@ -44,8 +44,8 @@ public static class FastCollectingPatches
     {
         CollectBedsRunning = true;
         
-        // Performance optimization: Direct iteration instead of LINQ to avoid multiple enumerations
-        foreach (var interaction in Interaction.interactions)
+        // Snapshot to avoid collection modified during enumeration
+        foreach (var interaction in Interaction.interactions.ToList())
         {
             if (interaction is Interaction_Bed bed && bed && bed != bedInteraction && bed.StructureBrain?.SoulCount > 0)
             {
@@ -73,8 +73,8 @@ public static class FastCollectingPatches
         CollectAllBuildingShrinesRunning = true;
         yield return new WaitForEndOfFrame();
         
-        // Performance optimization: Direct iteration instead of LINQ
-        foreach (var interaction in Interaction.interactions)
+        // Snapshot to avoid collection modified during enumeration
+        foreach (var interaction in Interaction.interactions.ToList())
         {
             if (interaction is BuildingShrinePassive shrine && shrine && shrine != __instance && shrine.StructureBrain?.SoulCount > 0)
             {
@@ -102,8 +102,8 @@ public static class FastCollectingPatches
         CollectAllOuthouseRunning = true;
         yield return new WaitForEndOfFrame();
         
-        // Performance optimization: Direct iteration instead of LINQ
-        foreach (var interaction in Interaction.interactions)
+        // Snapshot to avoid collection modified during enumeration
+        foreach (var interaction in Interaction.interactions.ToList())
         {
             if (interaction is Interaction_Outhouse outhouse && outhouse && outhouse != __instance && outhouse.StructureBrain?.GetPoopCount() > 0)
             {
@@ -131,8 +131,8 @@ public static class FastCollectingPatches
         CompostBinDeadBodyRunning = true;
         yield return new WaitForEndOfFrame();
         
-        // Performance optimization: Direct iteration instead of LINQ
-        foreach (var interaction in Interaction.interactions)
+        // Snapshot to avoid collection modified during enumeration
+        foreach (var interaction in Interaction.interactions.ToList())
         {
             if (interaction is Interaction_CompostBinDeadBody cbd && cbd && cbd != __instance && cbd.StructureBrain?.PoopCount > 0)
             {
@@ -159,8 +159,8 @@ public static class FastCollectingPatches
     {
         CollectAllHarvestTotemsRunning = true;
         
-        // Performance optimization: Direct iteration instead of LINQ
-        foreach (var t in HarvestTotem.HarvestTotems)
+        // Snapshot to avoid collection modified during enumeration
+        foreach (var t in HarvestTotem.HarvestTotems.ToList())
         {
             if (t && t != totem && t.StructureBrain?.SoulCount > 0)
             {
@@ -189,7 +189,7 @@ public static class FastCollectingPatches
         yield return new WaitForEndOfFrame();
 
         // Snapshot the list to avoid modification during iteration
-        var shrines = Interaction.interactions
+        var shrines = Interaction.interactions.ToList()
             .OfType<Interaction_OfferingShrine>()
             .Where(s => s && s != __instance && s.StructureInfo?.Inventory?.Count > 0)
             .ToList();

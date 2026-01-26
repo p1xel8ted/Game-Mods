@@ -4,16 +4,15 @@
 * Removed negative trait replacement feature (moved to dedicated Trait Control mod).
 * Added refinery mass fill - clicking an item fills the queue to maximum.
 * Added mass pet animals - petting one farm animal pets all of them.
-* Fixed offering shrines mass collect stopping mid-collection.
-* Weather, scarecrow, fuel, and bed collapse notifications are now suppressed when in dungeons or during cutscenes/transitions.
-* Added duplicate notification prevention - the same notification won't appear again within 10 seconds.
 * Added option to prioritize followers with active requests at the top of selection lists.
 * Added "Disable All Notifications" option to suppress all in-game notifications.
-* Added "Allow Critical Notifications" sub-option to still show deaths, weapon destruction, and dissenter notifications when notifications are disabled.
+* Added "Allow Critical Notifications" sub-option to still show critical notifications (deaths, weapon destruction, dissenters) when all notifications are disabled.
+* Weather, scarecrow, fuel, and bed collapse notifications no longer appear when in dungeons or during cutscenes.
+* Same notification won't appear again within 10 seconds.
 * Reorganized Structures config section to group related settings together.
-* Fixed vanilla game bug causing NullReferenceException in relationship change notifications when follower skin data is invalid.
-* Extended log spam filter to cover LogError messages.
-* Added additional spam filter entries: "Max Tweens reached", "Follower eat stored food", "Required atlas size exceeds supported max", "MEAL_".
+* Fixed mass collect from beds, shrines, outhouses, compost bins, and harvest totems sometimes stopping early or causing errors.
+* Fixed relationship notifications sometimes causing errors when follower skin data is missing.
+* Reduced log spam from the game.
 
 ### 2.3.2 - 25/01/2026
 
