@@ -17,7 +17,7 @@ Control your followers' traits with this quality-of-life mod.
 Control whether special/crossover traits can appear in trait pools:
 - **Immortal** - normally a special reward
 - **Disciple** - normally a special reward
-- **Don't Starve** - crossover trait (follower doesn't need to eat)
+- **Dont Starve** - crossover trait (follower doesn't need to eat)
 - **Blind** - crossover trait
 - **Born To The Rot** - crossover trait
 
@@ -83,7 +83,7 @@ Optional notifications when trait replacement adds or removes traits.
 | Use All Traits Pool | ON |
 | Include Immortal | OFF |
 | Include Disciple | OFF |
-| Include Don't Starve | OFF |
+| Include Dont Starve | OFF |
 | Include Blind | OFF |
 | Include Born To The Rot | OFF |
 

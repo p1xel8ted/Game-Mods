@@ -56,8 +56,8 @@ public partial class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { Order = 9 }));
         IncludeDisciple.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
 
-        IncludeDontStarve = ConfigInstance.Bind(UniqueTraitsSection, "Include Don't Starve", false,
-            new ConfigDescription("Allow the Don't Starve trait (normally a crossover reward - follower doesn't need to eat) to appear in trait pools.", null,
+        IncludeDontStarve = ConfigInstance.Bind(UniqueTraitsSection, "Include Dont Starve", false,
+            new ConfigDescription("Allow the Dont Starve trait (normally a crossover reward - follower doesn't need to eat) to appear in trait pools.", null,
                 new ConfigurationManagerAttributes { Order = 8 }));
         IncludeDontStarve.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
 
