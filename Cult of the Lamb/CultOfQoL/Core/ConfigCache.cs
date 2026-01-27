@@ -61,5 +61,7 @@ internal static class ConfigCache
         public const string SpiderWebsPerLogs = nameof(SpiderWebsPerLogs);
         public const string ProduceCrystalShardsFromStone = nameof(ProduceCrystalShardsFromStone);
         public const string CrystalShardsPerStone = nameof(CrystalShardsPerStone);
+        public const string ResourceChestDepositSounds = nameof(ResourceChestDepositSounds);
+        public const string ResourceChestCollectSounds = nameof(ResourceChestCollectSounds);
     }
 }

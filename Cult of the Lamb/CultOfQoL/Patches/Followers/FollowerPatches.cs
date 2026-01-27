@@ -176,7 +176,7 @@ public static class FollowerPatches
     {
         if (!Plugin.MassRomance.Value) return false;
         if (followerCommands != FollowerCommands.Romance) return false;
-        var notKissedCount = Follower.Followers.Count(follower => FollowerCommandItems.Kiss().IsAvailable(follower));
+        var notKissedCount = Follower.Followers.Count(follower => FollowerCommandItems.Kiss().IsAvailable(follower) && !FollowerManager.IsChild(follower.Brain.Info.ID));
         return notKissedCount > 1;
     }
 
@@ -296,7 +296,7 @@ public static class FollowerPatches
         {
             foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
             {
-                var run = FollowerCommandItems.Kiss().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
+                var run = FollowerCommandItems.Kiss().IsAvailable(interaction.follower) && !FollowerManager.IsChild(interaction.follower.Brain.Info.ID) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
                 interaction.StartCoroutine(RunEnumerator(run, interaction.RomanceRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.KissedAction = true;
@@ -433,24 +433,50 @@ public static class FollowerPatches
     private static IEnumerator MassLevelUpAll(Follower original)
     {
         MassLevelUpRunning = true;
-        var player = PlayerFarming.Instance;
+        yield return new WaitForEndOfFrame();
 
-        yield return new WaitForSeconds(0.5f);
-
-        foreach (var follower in Helpers.AllFollowers)
+        try
         {
-            if (follower == original) continue;
-            if (!follower.Brain.CanLevelUp()) continue;
+            var leveledUp = 0;
+            foreach (var follower in Helpers.AllFollowers)
+            {
+                if (follower == original) continue;
+                if (!follower.Brain.CanLevelUp()) continue;
 
-            var interaction = follower.Interaction_FollowerInteraction;
-            if (!interaction) continue;
+                // Apply level-up effects directly instead of calling LevelUpRoutine
+                // This avoids the slow animations and player bouncing
 
-            interaction.playerFarming = player;
-            interaction.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, false, false));
-            yield return new WaitForSeconds(0.5f);
+                // Reset adoration and increment level
+                follower.Brain.Stats.Adoration = 0f;
+                follower.Brain.Info.XPLevel++;
+
+                // Give rewards directly (20 souls worth of divine inspiration, or black gold if no unlock available)
+                if (GameManager.HasUnlockAvailable() || DataManager.Instance.DeathCatBeaten)
+                {
+                    PlayerFarming.Instance.GetSoul(20);
+                }
+                else
+                {
+                    Inventory.ChangeItemQuantity((int)InventoryItem.ITEM_TYPE.BLACK_GOLD, 20);
+                }
+
+                // Complete current task
+                follower.Brain.CompleteCurrentTask();
+
+                // Visual feedback - show adoration UI briefly and emit effect
+                follower.AdorationUI.BarController.SetBarSize(0f, false, false);
+                BiomeConstants.Instance.EmitHeartPickUpVFX(follower.transform.position, 0f, "fuchsia", "burst_big");
+                AudioManager.Instance.PlayOneShot("event:/followers/gain_loyalty", follower.transform.position);
+
+                leveledUp++;
+            }
+
+            Plugin.L($"[MassLevelUp] Leveled up {leveledUp} additional followers");
         }
-
-        MassLevelUpRunning = false;
+        finally
+        {
+            MassLevelUpRunning = false;
+        }
     }
 
     [HarmonyPrefix]

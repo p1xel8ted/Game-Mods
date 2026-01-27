@@ -177,4 +177,8 @@ public partial class Plugin
     public static ConfigEntry<int> SpiderWebsPerLogs { get; set; }
     public static ConfigEntry<bool> ProduceCrystalShardsFromStone { get; set; }
     public static ConfigEntry<int> CrystalShardsPerStone { get; set; }
+
+    // Sound
+    internal static ConfigEntry<bool> ResourceChestDepositSounds { get; private set; }
+    internal static ConfigEntry<bool> ResourceChestCollectSounds { get; private set; }
 }

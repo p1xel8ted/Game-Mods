@@ -1,4 +1,14 @@
-### 2.3.4
+### 2.3.5 - 27/01/2026
+
+* Fixed player getting stuck when using mass pet on farm animals.
+* Fixed player bouncing around during mass level-up.
+* Fixed mass romance affecting children followers.
+* Fixed refinery auto-fill causing an error.
+* Reduced log spam.
+* Added option to mute resource chest deposit sounds (when followers deposit).
+* Added option to mute resource chest collect sounds (when collecting from chests).
+
+### 2.3.4 - 26/01/2026
 
 * Hopefully fixed mass pet animals causing a crash and leaving the player unable to move.
 * Potentially fixed mass water causing errors when UIManager is not fully initialized.
@@ -8,7 +18,7 @@
 * Added kitchen mass fill - clicking a meal fills the queue to maximum.
 * Added pub mass fill - clicking a drink fills the queue to maximum.
 
-### 2.3.3
+### 2.3.3 - 26/01/2026
 
 * Removed skip intro/video features (moved to dedicated Skip of the Lamb mod).
 * Removed negative trait replacement feature (moved to dedicated Trait Control mod).

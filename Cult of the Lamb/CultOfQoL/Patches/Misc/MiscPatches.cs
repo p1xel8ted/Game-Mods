@@ -35,7 +35,8 @@ public class MiscPatches
         "Max Tweens reached",
         "Follower eat stored food",
         "Required atlas size exceeds supported max",
-        "MEAL_"
+        "MEAL_",
+        "SKIP CAPTURED MOVE"
     };
     
     [HarmonyTranspiler]

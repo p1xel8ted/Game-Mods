@@ -43,6 +43,7 @@ public partial class Plugin : BaseUnityPlugin
     private const string RitualSection = "19. Rituals";
     private const string GameMechanicsSection = "04. Game Mechanics";
     private const string ResetAllSettingsSection = "20. Reset All Settings";
+    private const string SoundSection = "21. Sound";
     internal static ManualLogSource Log { get; private set; }
 
     // internal static CanvasScaler GameCanvasScaler { get; set; }
@@ -549,6 +550,12 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 0, HideDefaultButton = true, CustomDrawer = ResetAll
         }));
+
+        //Sound - 21
+        ResourceChestDepositSounds = ConfigInstance.Bind(SoundSection, "Resource Chest Deposit Sounds", true, new ConfigDescription("Play sounds when followers deposit resources into chests.", null, new ConfigurationManagerAttributes { Order = 2 }));
+        ResourceChestDepositSounds.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ResourceChestDepositSounds);
+        ResourceChestCollectSounds = ConfigInstance.Bind(SoundSection, "Resource Chest Collect Sounds", true, new ConfigDescription("Play sounds when collecting resources from chests.", null, new ConfigurationManagerAttributes { Order = 1 }));
+        ResourceChestCollectSounds.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ResourceChestCollectSounds);
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 

@@ -114,6 +114,10 @@
 ### Post Processing
 - Remove vignette effect
 
+### Sound
+- Toggle resource chest deposit sounds (when followers deposit)
+- Toggle resource chest collect sounds (when collecting from chests)
+
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)

@@ -439,9 +439,14 @@ internal static class StructurePatches
             {
                 if (!animal || animal.animal.PetToday) continue;
 
-                yield return new WaitForSeconds(0.15f);
-                animal._playerFarming = PlayerFarming.Instance;
-                animal.StartCoroutine(animal.PetIE());
+                // Apply pet effects directly instead of calling PetIE
+                // This avoids the coroutine's player-locking animation and long delays
+                animal.AddAdoration(50f);
+                animal.animal.PetToday = true;
+
+                // Visual and audio feedback
+                BiomeConstants.Instance.EmitHeartPickUpVFX(animal.transform.position, 0f, "red", "burst_small");
+                AudioManager.Instance.PlayOneShot("event:/dlc/animal/shared/love_hearts", animal.transform.position);
             }
         }
         finally
@@ -464,7 +469,7 @@ internal static class StructurePatches
             var currentCount = __instance._structureInfo.QueuedResources.Count;
 
             // Keep adding same item until queue is full or can't afford
-            while (currentCount < maxItems && __instance.CanAffordWithPendingChanges(item.Type, item.Variant))
+            while (currentCount < maxItems && item.CanAfford)
             {
                 __instance.AddToQueue(item);
                 currentCount = __instance._structureInfo.QueuedResources.Count;

@@ -151,6 +151,12 @@
 [*][size=3]Remove vignette effect[/size]
 [/list]
 
+[size=3][b]Sound[/b][/size]
+[list]
+[*][size=3]Toggle resource chest deposit sounds (when followers deposit)[/size]
+[*][size=3]Toggle resource chest collect sounds (when collecting from chests)[/size]
+[/list]
+
 [size=4][b]Installation[/b][/size]
 
 [list]
