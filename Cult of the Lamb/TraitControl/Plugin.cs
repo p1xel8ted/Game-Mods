@@ -100,6 +100,9 @@ public partial class Plugin : BaseUnityPlugin
         // Generate dynamic trait weight configs
         GenerateTraitWeightConfigs();
 
+        // Apply initial visibility (handles unique trait toggles)
+        UpdateTraitWeightVisibility();
+
         // Notifications - 06
         ShowNotificationsWhenRemovingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Removing Traits", false,
             new ConfigDescription("Show notifications when trait replacement removes negative traits.", null,
