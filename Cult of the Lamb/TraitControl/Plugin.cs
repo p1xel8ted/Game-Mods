@@ -47,29 +47,49 @@ public partial class Plugin : BaseUnityPlugin
 
         // Unique Traits - 02
         IncludeImmortal = ConfigInstance.Bind(UniqueTraitsSection, "Include Immortal", false,
-            new ConfigDescription("Allow the Immortal trait (normally a special reward) to appear in trait pools.", null,
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Immortal, "normally a special reward"), null,
                 new ConfigurationManagerAttributes { Order = 10 }));
-        IncludeImmortal.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
+        IncludeImmortal.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            UpdateTraitWeightVisibility();
+        };
 
         IncludeDisciple = ConfigInstance.Bind(UniqueTraitsSection, "Include Disciple", false,
-            new ConfigDescription("Allow the Disciple trait (normally a special reward) to appear in trait pools.", null,
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Disciple, "normally a special reward"), null,
                 new ConfigurationManagerAttributes { Order = 9 }));
-        IncludeDisciple.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
+        IncludeDisciple.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            UpdateTraitWeightVisibility();
+        };
 
         IncludeDontStarve = ConfigInstance.Bind(UniqueTraitsSection, "Include Dont Starve", false,
-            new ConfigDescription("Allow the Dont Starve trait (normally a crossover reward - follower doesn't need to eat) to appear in trait pools.", null,
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.DontStarve, "crossover reward"), null,
                 new ConfigurationManagerAttributes { Order = 8 }));
-        IncludeDontStarve.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
+        IncludeDontStarve.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            UpdateTraitWeightVisibility();
+        };
 
         IncludeBlind = ConfigInstance.Bind(UniqueTraitsSection, "Include Blind", false,
-            new ConfigDescription("Allow the Blind trait (normally a crossover reward) to appear in trait pools.", null,
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Blind, "crossover reward"), null,
                 new ConfigurationManagerAttributes { Order = 7 }));
-        IncludeBlind.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
+        IncludeBlind.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            UpdateTraitWeightVisibility();
+        };
 
         IncludeBornToTheRot = ConfigInstance.Bind(UniqueTraitsSection, "Include Born To The Rot", false,
-            new ConfigDescription("Allow the Born To The Rot trait (normally a crossover reward) to appear in trait pools.", null,
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.BornToTheRot, "crossover reward"), null,
                 new ConfigurationManagerAttributes { Order = 6 }));
-        IncludeBornToTheRot.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
+        IncludeBornToTheRot.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            UpdateTraitWeightVisibility();
+        };
 
         // Trait Weights - 03
         EnableTraitWeights = ConfigInstance.Bind(TraitWeightsSection, "Enable Trait Weights", false,
@@ -163,6 +183,22 @@ public partial class Plugin : BaseUnityPlugin
     }
 
     /// <summary>
+    /// Builds a description for unique trait toggles, including the game description if available.
+    /// </summary>
+    private static string BuildUniqueTraitDescription(FollowerTrait.TraitType trait, string source)
+    {
+        var gameDescription = GetTraitDescription(trait);
+        var baseDescription = $"Allow the {trait} trait ({source}) to appear in trait pools.";
+
+        if (!string.IsNullOrEmpty(gameDescription))
+        {
+            return $"{gameDescription}\n\n{baseDescription}";
+        }
+
+        return baseDescription;
+    }
+
+    /// <summary>
     /// Attempts to get the localized description for a trait.
     /// Returns null if localization is not available or returns the raw key.
     /// </summary>
@@ -201,12 +237,28 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void UpdateTraitWeightVisibility()
     {
-        var show = EnableTraitWeights.Value;
+        var weightsEnabled = EnableTraitWeights.Value;
 
-        foreach (var entry in TraitWeights.Values)
+        foreach (var kvp in TraitWeights)
         {
-            if (entry.Description?.Tags?.Length > 0 && entry.Description.Tags[0] is ConfigurationManagerAttributes attrs)
+            if (kvp.Value.Description?.Tags?.Length > 0 && kvp.Value.Description.Tags[0] is ConfigurationManagerAttributes attrs)
             {
+                var show = weightsEnabled;
+
+                // Also check unique trait toggles
+                if (show)
+                {
+                    show = kvp.Key switch
+                    {
+                        FollowerTrait.TraitType.Immortal => IncludeImmortal.Value,
+                        FollowerTrait.TraitType.Disciple => IncludeDisciple.Value,
+                        FollowerTrait.TraitType.DontStarve => IncludeDontStarve.Value,
+                        FollowerTrait.TraitType.Blind => IncludeBlind.Value,
+                        FollowerTrait.TraitType.BornToTheRot => IncludeBornToTheRot.Value,
+                        _ => true
+                    };
+                }
+
                 attrs.Browsable = show;
             }
         }
