@@ -73,7 +73,7 @@ public partial class Plugin : BaseUnityPlugin
 
         // Trait Weights - 03
         EnableTraitWeights = ConfigInstance.Bind(TraitWeightsSection, "Enable Trait Weights", false,
-            new ConfigDescription("Enable weighted random selection for new followers. When enabled, you can configure how often each trait appears below. Set a weight to 0 to disable that trait entirely.", null,
+            new ConfigDescription("Enable weighted random selection for new followers. When enabled, you can configure how often each trait appears below. Set a weight to 0 to disable that trait entirely. This does not override settings in the sections above.", null,
                 new ConfigurationManagerAttributes { Order = 100 }));
         EnableTraitWeights.SettingChanged += (_, _) => UpdateTraitWeightVisibility();
 
