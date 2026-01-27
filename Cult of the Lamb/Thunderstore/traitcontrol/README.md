@@ -145,6 +145,16 @@ Optional notifications when trait replacement adds or removes traits.
 
 **Result:** You'll see notifications whenever the mod removes a negative trait or adds a positive replacement.
 
+### "I want followers with the Golden Poop trait (RoyalPooper)"
+| Setting | Value |
+|---------|-------|
+| Use All Traits Pool | ON |
+| Enable Trait Weights | ON |
+| RoyalPooper (in Good Traits) | 10.0 |
+| Other traits | 0 |
+
+**Result:** New followers will have the RoyalPooper trait (produces gold instead of poop). Note: RoyalPooper is only in the Rare/Faithful pools, so "Use All Traits Pool" must be enabled for it to appear on regular new followers.
+
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
