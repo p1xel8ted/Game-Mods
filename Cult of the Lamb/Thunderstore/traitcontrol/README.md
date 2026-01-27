@@ -6,26 +6,144 @@ Control your followers' traits with this quality-of-life mod.
 
 ## Features
 
-### No Negative Traits
-- Automatically replaces negative traits with positive ones when followers are created
+### Trait Replacement
+- Automatically replaces negative traits with positive ones on all followers (existing and new)
 - Backs up original traits and can restore them if feature is disabled
-- Configurable options for which traits to include (Immortal, Disciple, unlocked traits only)
+- Option to use only unlocked traits for replacements
+- Option to pull from all trait pools instead of the game's separate pools
+- Exclusive traits (like Lazy/Industrious) can be replaced with their counterpart or a random trait
 
-### Trait Weights (Trait Probability Control)
+### Unique Traits
+Control whether special/crossover traits can appear in trait pools:
+- **Immortal** - normally a special reward
+- **Disciple** - normally a special reward
+- **Don't Starve** - crossover trait (follower doesn't need to eat)
+- **Blind** - crossover trait
+- **Born To The Rot** - crossover trait
+
+### Trait Weights
 Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 10.
 
-**How it works:**
-- **Higher weight = more likely to appear** - Want more Faithful followers? Slide it up to 5 or 10.
-- **Lower weight = less likely** - Don't want Materialistic followers? Slide it down.
-- **Weight of 0 = disabled** - That trait will never appear on new followers.
-- All traits default to 1.0 (equal chance).
-
-**Examples:**
-- Set "Faithful" to 5.0, leave others at 1.0 → Faithful is 5x more likely than other traits
-- Set "Materialistic" to 0 → Materialistic will never appear
-- Set all negative traits to 0, positive traits to 10 → Only positive traits will appear
+- **Higher weight = more likely to appear**
+- **Lower weight = less likely**
+- **Weight of 0 = disabled** - that trait will never appear
+- All traits default to 1.0 (equal chance)
 
 The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.
+
+### Notifications
+Optional notifications when trait replacement adds or removes traits.
+
+## Configuration Examples
+
+### "I want all followers to have only positive traits"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Replacement | ON |
+| Use Unlocked Traits Only | OFF |
+| Prefer Exclusive Counterparts | ON |
+
+**Result:** All negative traits are replaced. Lazy becomes Industrious, Faithless becomes Faithful, etc.
+
+### "I want to allow Immortal trait on new followers"
+| Setting | Value |
+|---------|-------|
+| Include Immortal | ON |
+
+**Result:** Immortal can now appear when new followers join. Only one follower can have it at a time.
+
+### "I want Faithful trait to appear more often"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Weights | ON |
+| Faithful (in Good Traits) | 5.0 |
+| Other traits | 1.0 (default) |
+
+**Result:** Faithful is 5x more likely to appear than other traits on new followers.
+
+### "I want exclusive traits replaced with random positive traits"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Replacement | ON |
+| Prefer Exclusive Counterparts | OFF |
+
+**Result:** Lazy gets replaced with a random positive trait instead of Industrious.
+
+### "I only want traits I've unlocked via doctrines"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Replacement | ON |
+| Use Unlocked Traits Only | ON |
+
+**Result:** Only traits you've unlocked through doctrines will be used as replacements.
+
+### "I want to pull from all traits, but not unique ones"
+| Setting | Value |
+|---------|-------|
+| Use All Traits Pool | ON |
+| Include Immortal | OFF |
+| Include Disciple | OFF |
+| Include Don't Starve | OFF |
+| Include Blind | OFF |
+| Include Born To The Rot | OFF |
+
+**Result:** Trait selection uses all trait pools combined, but unique/crossover traits are excluded.
+
+### "I never want Materialistic followers"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Weights | ON |
+| Materialistic (in Bad Traits) | 0 |
+
+**Result:** Materialistic trait will never appear on new followers. No more gift demands.
+
+### "I want a cult of hard workers"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Replacement | ON |
+| Prefer Exclusive Counterparts | ON |
+| Enable Trait Weights | ON |
+| Industrious (in Good Traits) | 10.0 |
+| Lazy (in Bad Traits) | 0 |
+
+**Result:** Existing Lazy followers become Industrious. New followers are much more likely to be Industrious and will never be Lazy.
+
+### "I want followers who never die of old age"
+| Setting | Value |
+|---------|-------|
+| Include Immortal | ON |
+| Enable Trait Weights | ON |
+| Immortal (in Good Traits) | 10.0 |
+
+**Result:** Immortal trait is available and heavily favored. Note: Only one follower can have Immortal at a time.
+
+### "I want a zealous cult"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Weights | ON |
+| Faithful (in Good Traits) | 10.0 |
+| Faithless (in Bad Traits) | 0 |
+| SacrificeEnthusiast (in Good Traits) | 5.0 |
+
+**Result:** New followers strongly favor Faithful and SacrificeEnthusiast traits.
+
+### "I want to keep negative traits but control which ones appear"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Replacement | OFF |
+| Enable Trait Weights | ON |
+| (Set unwanted bad traits to 0) | 0 |
+
+**Result:** Negative traits still appear, but you control exactly which ones are allowed.
+
+### "I want notifications when traits are replaced"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Replacement | ON |
+| Show When Removing Traits | ON |
+| Show When Adding Traits | ON |
+
+**Result:** You'll see notifications whenever the mod removes a negative trait or adds a positive replacement.
 
 ## Installation
 

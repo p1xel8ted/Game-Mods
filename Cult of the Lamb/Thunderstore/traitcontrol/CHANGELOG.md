@@ -1,3 +1,11 @@
+### 0.1.2 - 27/01/2026
+
+* Added unique trait toggles for Don't Starve, Blind, and Born To The Rot.
+* Added "Prefer Exclusive Counterparts" config - controls whether exclusive traits (like Lazy) are replaced with their counterpart (Industrious) or a random positive trait.
+* Added "Use All Traits Pool" option - pull from all traits instead of the game's separate pools (Starting, Rare, Faithful).
+* Moved notification settings to their own section.
+* Improved config descriptions for clarity.
+
 ### 0.1.1 - 26/01/2026
 
 * Trait weight config entries now show the actual game description of each trait.

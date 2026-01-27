@@ -61,6 +61,24 @@ public static class NoNegativeTraits
             allTraits.Remove(FollowerTrait.TraitType.Disciple);
         }
 
+        if (!Plugin.IncludeDontStarve.Value)
+        {
+            Plugin.L("Removing DontStarve trait from available traits.");
+            allTraits.Remove(FollowerTrait.TraitType.DontStarve);
+        }
+
+        if (!Plugin.IncludeBlind.Value)
+        {
+            Plugin.L("Removing Blind trait from available traits.");
+            allTraits.Remove(FollowerTrait.TraitType.Blind);
+        }
+
+        if (!Plugin.IncludeBornToTheRot.Value)
+        {
+            Plugin.L("Removing BornToTheRot trait from available traits.");
+            allTraits.Remove(FollowerTrait.TraitType.BornToTheRot);
+        }
+
         Plugin.L("All 'positive' traits currently available based on your configuration:");
         foreach (var trait in allTraits)
         {
@@ -185,7 +203,7 @@ public static class NoNegativeTraits
                 continue;
             }
 
-            if (!Plugin.UseUnlockedTraitsOnly.Value && IsExclusiveTrait(trait) && TryReplaceExclusiveTrait(trait, out var replacement))
+            if (Plugin.PreferExclusiveCounterparts.Value && IsExclusiveTrait(trait) && TryReplaceExclusiveTrait(trait, out var replacement))
             {
                 if (directManipulation)
                 {
