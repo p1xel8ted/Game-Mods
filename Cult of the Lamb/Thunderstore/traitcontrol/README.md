@@ -22,10 +22,10 @@ Control whether special/crossover traits can appear in trait pools:
 - **Born To The Rot** - crossover trait
 
 ### Trait Weights
-Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 10.
+Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 10. Weights are relative to each other - a trait with weight 10 is 10x more likely to appear than a trait with weight 1.
 
-- **Higher weight = more likely to appear**
-- **Lower weight = less likely**
+- **Higher weight = more likely relative to other traits**
+- **Lower weight = less likely relative to other traits**
 - **Weight of 0 = disabled** - that trait will never appear
 - All traits default to 1.0 (equal chance)
 

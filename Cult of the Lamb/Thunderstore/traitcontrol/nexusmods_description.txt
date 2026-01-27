@@ -22,10 +22,10 @@
 [/list]
 
 [size=3][b]Trait Weights (Trait Probability Control)[/b][/size]
-[size=3]Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 10.[/size]
+[size=3]Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 10. Weights are relative to each other - a trait with weight 10 is 10x more likely to appear than a trait with weight 1.[/size]
 [list]
-[*][size=3][b]Higher weight = more likely to appear[/b][/size]
-[*][size=3][b]Lower weight = less likely[/b][/size]
+[*][size=3][b]Higher weight = more likely relative to other traits[/b][/size]
+[*][size=3][b]Lower weight = less likely relative to other traits[/b][/size]
 [*][size=3][b]Weight of 0 = disabled[/b] - that trait will never appear[/size]
 [*][size=3]All traits default to 1.0 (equal chance).[/size]
 [/list]
