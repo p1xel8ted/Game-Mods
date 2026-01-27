@@ -134,40 +134,43 @@ public static class SoundPatches
 
     /// <summary>
     /// Conditional PlayOneShot for deposit sounds (no position)
+    /// Takes AudioManager instance as first param to match stack from instance method call
     /// </summary>
-    public static void PlayChestDepositSound(string path)
+    public static void PlayChestDepositSound(AudioManager instance, string path)
     {
         if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestDepositSounds, () => Plugin.ResourceChestDepositSounds.Value))
         {
             return;
         }
 
-        AudioManager.Instance.PlayOneShot(path);
+        instance.PlayOneShot(path);
     }
 
     /// <summary>
     /// Conditional PlayOneShot for collect sounds (no position)
+    /// Takes AudioManager instance as first param to match stack from instance method call
     /// </summary>
-    public static void PlayChestCollectSound(string path)
+    public static void PlayChestCollectSound(AudioManager instance, string path)
     {
         if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestCollectSounds, () => Plugin.ResourceChestCollectSounds.Value))
         {
             return;
         }
 
-        AudioManager.Instance.PlayOneShot(path);
+        instance.PlayOneShot(path);
     }
 
     /// <summary>
     /// Conditional PlayOneShot for collect sounds (with position)
+    /// Takes AudioManager instance as first param to match stack from instance method call
     /// </summary>
-    public static void PlayChestCollectSoundWithPosition(string path, Vector3 position)
+    public static void PlayChestCollectSoundWithPosition(AudioManager instance, string path, Vector3 position)
     {
         if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestCollectSounds, () => Plugin.ResourceChestCollectSounds.Value))
         {
             return;
         }
 
-        AudioManager.Instance.PlayOneShot(path, position);
+        instance.PlayOneShot(path, position);
     }
 }
