@@ -1,3 +1,8 @@
+### 0.1.3 - 28/01/2026
+
+* Added new configuration examples to the README for accessing all traits and creating a cult full of immortals.
+* Fixed several README scenarios that were missing "Use All Traits Pool" setting (required for traits not in vanilla's default pools).
+
 ### 0.1.2 - 27/01/2026
 
 * Added unique trait toggles for Don't Starve, Blind, and Born To The Rot.

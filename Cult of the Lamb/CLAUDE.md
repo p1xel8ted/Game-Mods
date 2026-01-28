@@ -67,6 +67,7 @@ Each mod has a `GlobalUsings.cs` with project-wide `global using` statements. Cu
 - **All references are CopyLocal=False** - only the mod DLL is output
 - **Game/Unity assemblies** are in `libs/` and referenced directly in `.csproj` files (not via NuGet). All assemblies are **publicized** (private members exposed as public), so there is no need for reflection to access game internals. **Never use reflection** unless strictly required (e.g., inside a transpiler to get MethodInfo for IL patching).
 - **Original game source** is in `libs/game_code/Assembly-CSharp/`. Always reference this when investigating mod bugs, issues, or optimization requests to understand the vanilla game behavior being patched. **Never assume what a game method does based on its name alone** — always read the actual method body in the game code before making claims about its behavior or purpose.
+- **CRITICAL: Always verify against game code.** When answering ANY question about vanilla game behavior (what traits are in a list, how a system works, what values are used, etc.), DO NOT GUESS — read the actual game code first. This applies to questions, not just implementation work.
 - **Harmony patching preference:** Prefer transpilers over prefix patches that skip the original method (`return false`). Transpilers preserve the original method's logic and only modify the specific behavior that needs changing, reducing the risk of missing side effects or future game updates adding new logic to the method.
 - **Braces:** Always use braces for control flow statements (`if`, `for`, `foreach`, `while`, etc.), except when the body is a single `return`, `continue`, or `break` statement.
 
@@ -84,6 +85,13 @@ Each mod has a `GlobalUsings.cs` with project-wide `global using` statements. Cu
 - If unsure whether to create a new version or add to an existing one, ask the user before continuing.
 - **Use player-facing language**: Write changelog entries from the user's perspective, describing what they experience (e.g., "Fixed player getting stuck when petting animals") rather than technical implementation details (e.g., "Added null check for state field in PetIE coroutine").
 - **Always include dates**: Every version entry must have a date in DD/MM/YYYY format (e.g., `### 2.3.5 - 27/01/2026`), even if multiple versions are released on the same day.
+
+## Version Bumps
+
+When bumping versions, update all three locations:
+1. `CultOfQoL/CultOfQoL.csproj` - `<Version>` element
+2. `CultOfQoL/Plugin.cs` - `PluginVer` constant
+3. `Thunderstore/cult/manifest.json` - `version_number` field
 
 ## Distribution
 

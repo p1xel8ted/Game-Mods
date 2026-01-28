@@ -1,3 +1,7 @@
+### 2.3.6 - 28/01/2026
+
+* Fixed resource chest sound muting not working for lumberjack and mining station chests.
+
 ### 2.3.5 - 27/01/2026
 
 * Fixed player getting stuck when using mass pet on farm animals.

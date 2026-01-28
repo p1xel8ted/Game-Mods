@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CultOfQoL.Core;
 
 namespace CultOfQoL.Patches.Systems;
@@ -5,172 +6,84 @@ namespace CultOfQoL.Patches.Systems;
 [Harmony]
 public static class SoundPatches
 {
-    private static readonly MethodInfo PlayOneShotString = AccessTools.Method(typeof(AudioManager), nameof(AudioManager.PlayOneShot), [typeof(string)]);
-    private static readonly MethodInfo PlayOneShotStringVector3 = AccessTools.Method(typeof(AudioManager), nameof(AudioManager.PlayOneShot), [typeof(string), typeof(Vector3)]);
+    private const string ChestSoundPrefix = "event:/chests/";
+
+    // Types whose chest sounds we want to conditionally silence
+    private static readonly HashSet<Type> TargetTypes =
+    [
+        typeof(Interaction_CollectResourceChest),
+        typeof(LumberjackStation)
+    ];
 
     /// <summary>
-    /// Transpiler for DepositItem - replaces PlayOneShot with conditional version
+    /// Prefix patch for PlayOneShot overloads - conditionally blocks chest sounds
     /// </summary>
-    [HarmonyTranspiler]
-    [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.DepositItem))]
-    public static IEnumerable<CodeInstruction> DepositItem_Transpiler(IEnumerable<CodeInstruction> instructions)
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(AudioManager), nameof(AudioManager.PlayOneShot), typeof(string))]
+    [HarmonyPatch(typeof(AudioManager), nameof(AudioManager.PlayOneShot), typeof(string), typeof(Vector3))]
+    [HarmonyPatch(typeof(AudioManager), nameof(AudioManager.PlayOneShot), typeof(string), typeof(GameObject))]
+    public static bool PlayOneShot_Prefix(string soundPath)
     {
-        var original = instructions.ToList();
-        try
-        {
-            var codes = new List<CodeInstruction>(original);
-            var replacementMethod = AccessTools.Method(typeof(SoundPatches), nameof(PlayChestDepositSound));
-            var replaced = false;
-
-            for (var i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].Calls(PlayOneShotString))
-                {
-                    codes[i] = new CodeInstruction(OpCodes.Call, replacementMethod).WithLabels(codes[i].labels);
-                    replaced = true;
-                    break;
-                }
-            }
-
-            if (!replaced)
-            {
-                Plugin.Log.LogWarning("[Transpiler] DepositItem: Failed to find PlayOneShot call.");
-                return original;
-            }
-
-            Plugin.Log.LogInfo("[Transpiler] DepositItem: Replaced PlayOneShot with conditional version.");
-            return codes;
-        }
-        catch (Exception ex)
-        {
-            Plugin.Log.LogWarning($"[Transpiler] DepositItem: {ex.Message}");
-            return original;
-        }
+        return ShouldPlayChestSound(soundPath);
     }
 
     /// <summary>
-    /// Transpiler for SpawnItem - replaces PlayOneShot with conditional version
+    /// Determines if a chest sound should play based on config settings.
+    /// Returns true to play, false to skip.
     /// </summary>
-    [HarmonyTranspiler]
-    [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.SpawnItem))]
-    public static IEnumerable<CodeInstruction> SpawnItem_Transpiler(IEnumerable<CodeInstruction> instructions)
+    private static bool ShouldPlayChestSound(string soundPath)
     {
-        var original = instructions.ToList();
-        try
+        if (string.IsNullOrEmpty(soundPath) || !soundPath.StartsWith(ChestSoundPrefix))
         {
-            var codes = new List<CodeInstruction>(original);
-            var replacementMethod = AccessTools.Method(typeof(SoundPatches), nameof(PlayChestCollectSoundWithPosition));
-            var replaced = false;
-
-            for (var i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].Calls(PlayOneShotStringVector3))
-                {
-                    codes[i] = new CodeInstruction(OpCodes.Call, replacementMethod).WithLabels(codes[i].labels);
-                    replaced = true;
-                }
-            }
-
-            if (!replaced)
-            {
-                Plugin.Log.LogWarning("[Transpiler] SpawnItem: Failed to find PlayOneShot call.");
-                return original;
-            }
-
-            Plugin.Log.LogInfo("[Transpiler] SpawnItem: Replaced PlayOneShot with conditional version.");
-            return codes;
+            return true; // Not a chest sound, play normally
         }
-        catch (Exception ex)
+
+        // Check if call originates from a target type
+        var callingType = GetCallingTargetType();
+        if (callingType == null)
         {
-            Plugin.Log.LogWarning($"[Transpiler] SpawnItem: {ex.Message}");
-            return original;
+            return true; // Not from a target type, play normally
         }
+
+        // chest_small_open is the deposit sound (when followers deposit)
+        bool shouldPlay;
+        if (soundPath.EndsWith("chest_small_open"))
+        {
+            shouldPlay = ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestDepositSounds, () => Plugin.ResourceChestDepositSounds.Value);
+        }
+        else
+        {
+            // All other chest sounds are collect sounds
+            shouldPlay = ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestCollectSounds, () => Plugin.ResourceChestCollectSounds.Value);
+        }
+
+        var action = shouldPlay ? "Playing" : "Blocked";
+        Plugin.Log.LogWarning($"[SoundPatches] {action}: {soundPath} from {callingType.Name}");
+
+        return shouldPlay;
     }
 
     /// <summary>
-    /// Transpiler for Update - replaces chest-related PlayOneShot calls with conditional versions
+    /// Checks the call stack to see if the sound is being played from a target type.
+    /// Returns the calling type if found, null otherwise.
     /// </summary>
-    [HarmonyTranspiler]
-    [HarmonyPatch(typeof(Interaction_CollectResourceChest), nameof(Interaction_CollectResourceChest.Update))]
-    public static IEnumerable<CodeInstruction> Update_Transpiler(IEnumerable<CodeInstruction> instructions)
+    private static Type GetCallingTargetType()
     {
-        var original = instructions.ToList();
-        try
-        {
-            var codes = new List<CodeInstruction>(original);
-            var replacementMethodPosition = AccessTools.Method(typeof(SoundPatches), nameof(PlayChestCollectSoundWithPosition));
-            var replacementMethodNoPosition = AccessTools.Method(typeof(SoundPatches), nameof(PlayChestCollectSound));
-            var replacedCount = 0;
+        var stackTrace = new StackTrace(false);
+        var frameCount = stackTrace.FrameCount;
 
-            for (var i = 0; i < codes.Count; i++)
+        // Start at frame 3 to skip: GetCallingTargetType -> ShouldPlayChestSound -> Prefix -> (Harmony internals)
+        for (var i = 3; i < frameCount && i < 10; i++)
+        {
+            var frame = stackTrace.GetFrame(i);
+            var declaringType = frame?.GetMethod()?.DeclaringType;
+
+            if (declaringType != null && TargetTypes.Contains(declaringType))
             {
-                if (codes[i].Calls(PlayOneShotStringVector3))
-                {
-                    codes[i] = new CodeInstruction(OpCodes.Call, replacementMethodPosition).WithLabels(codes[i].labels);
-                    replacedCount++;
-                }
-                else if (codes[i].Calls(PlayOneShotString))
-                {
-                    codes[i] = new CodeInstruction(OpCodes.Call, replacementMethodNoPosition).WithLabels(codes[i].labels);
-                    replacedCount++;
-                }
+                return declaringType;
             }
-
-            if (replacedCount == 0)
-            {
-                Plugin.Log.LogWarning("[Transpiler] Update: Failed to find any PlayOneShot calls.");
-                return original;
-            }
-
-            Plugin.Log.LogInfo($"[Transpiler] Update: Replaced {replacedCount} PlayOneShot call(s) with conditional versions.");
-            return codes;
-        }
-        catch (Exception ex)
-        {
-            Plugin.Log.LogWarning($"[Transpiler] Update: {ex.Message}");
-            return original;
-        }
-    }
-
-    /// <summary>
-    /// Conditional PlayOneShot for deposit sounds (no position)
-    /// Takes AudioManager instance as first param to match stack from instance method call
-    /// </summary>
-    public static void PlayChestDepositSound(AudioManager instance, string path)
-    {
-        if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestDepositSounds, () => Plugin.ResourceChestDepositSounds.Value))
-        {
-            return;
         }
 
-        instance.PlayOneShot(path);
-    }
-
-    /// <summary>
-    /// Conditional PlayOneShot for collect sounds (no position)
-    /// Takes AudioManager instance as first param to match stack from instance method call
-    /// </summary>
-    public static void PlayChestCollectSound(AudioManager instance, string path)
-    {
-        if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestCollectSounds, () => Plugin.ResourceChestCollectSounds.Value))
-        {
-            return;
-        }
-
-        instance.PlayOneShot(path);
-    }
-
-    /// <summary>
-    /// Conditional PlayOneShot for collect sounds (with position)
-    /// Takes AudioManager instance as first param to match stack from instance method call
-    /// </summary>
-    public static void PlayChestCollectSoundWithPosition(AudioManager instance, string path, Vector3 position)
-    {
-        if (!ConfigCache.GetCachedValue(ConfigCache.Keys.ResourceChestCollectSounds, () => Plugin.ResourceChestCollectSounds.Value))
-        {
-            return;
-        }
-
-        instance.PlayOneShot(path, position);
+        return null;
     }
 }

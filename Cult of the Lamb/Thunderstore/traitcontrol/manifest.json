@@ -1,6 +1,6 @@
 {
     "name":  "Trait_Control",
-    "version_number":  "0.1.2",
+    "version_number":  "0.1.3",
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/58?tab=description",
     "description":  "Control follower traits - replace negative with positive, customize how often each trait appears - even stop certain traits altogether.",
     "dependencies":  [

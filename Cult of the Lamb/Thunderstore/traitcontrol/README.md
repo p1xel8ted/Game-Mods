@@ -48,18 +48,20 @@ Optional notifications when trait replacement adds or removes traits.
 ### "I want to allow Immortal trait on new followers"
 | Setting | Value |
 |---------|-------|
+| Use All Traits Pool | ON |
 | Include Immortal | ON |
 
-**Result:** Immortal can now appear when new followers join. Only one follower can have it at a time.
+**Result:** Immortal can now appear when new followers join.
 
 ### "I want Faithful trait to appear more often"
 | Setting | Value |
 |---------|-------|
+| Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
 | Faithful (in Good Traits) | 5.0 |
 | Other traits | 1.0 (default) |
 
-**Result:** Faithful is 5x more likely to appear than other traits on new followers.
+**Result:** Faithful is 5x more likely to appear than other traits on new followers. Note: Faithful is only in the Rare pool by default, so "Use All Traits Pool" is needed for it to appear on regular new followers.
 
 ### "I want exclusive traits replaced with random positive traits"
 | Setting | Value |
@@ -89,6 +91,18 @@ Optional notifications when trait replacement adds or removes traits.
 
 **Result:** Trait selection uses all trait pools combined, but unique/crossover traits are excluded.
 
+### "I want access to every single trait in the game"
+| Setting | Value |
+|---------|-------|
+| Use All Traits Pool | ON |
+| Include Immortal | ON |
+| Include Disciple | ON |
+| Include Dont Starve | ON |
+| Include Blind | ON |
+| Include Born To The Rot | ON |
+
+**Result:** Every trait in the game can appear on new followers, including special/crossover traits.
+
 ### "I never want Materialistic followers"
 | Setting | Value |
 |---------|-------|
@@ -102,30 +116,44 @@ Optional notifications when trait replacement adds or removes traits.
 |---------|-------|
 | Enable Trait Replacement | ON |
 | Prefer Exclusive Counterparts | ON |
+| Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
 | Industrious (in Good Traits) | 10.0 |
 | Lazy (in Bad Traits) | 0 |
 
-**Result:** Existing Lazy followers become Industrious. New followers are much more likely to be Industrious and will never be Lazy.
+**Result:** Existing Lazy followers become Industrious. New followers are much more likely to be Industrious and will never be Lazy. Note: Industrious is not in the default trait pools, so "Use All Traits Pool" is needed for weighting to work.
 
 ### "I want followers who never die of old age"
 | Setting | Value |
 |---------|-------|
+| Use All Traits Pool | ON |
 | Include Immortal | ON |
 | Enable Trait Weights | ON |
 | Immortal (in Good Traits) | 10.0 |
 
-**Result:** Immortal trait is available and heavily favored. Note: Only one follower can have Immortal at a time.
+**Result:** Immortal trait is available and heavily favored.
+
+### "I want a cult full of immortals"
+| Setting | Value |
+|---------|-------|
+| Use All Traits Pool | ON |
+| Include Immortal | ON |
+| Enable Trait Weights | ON |
+| Immortal (in Good Traits) | 10.0 |
+| Other traits | 0 |
+
+**Result:** Every new follower will have the Immortal trait.
 
 ### "I want a zealous cult"
 | Setting | Value |
 |---------|-------|
+| Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
 | Faithful (in Good Traits) | 10.0 |
 | Faithless (in Bad Traits) | 0 |
 | SacrificeEnthusiast (in Good Traits) | 5.0 |
 
-**Result:** New followers strongly favor Faithful and SacrificeEnthusiast traits.
+**Result:** New followers strongly favor Faithful and SacrificeEnthusiast traits. Note: These traits are not in the default pools, so "Use All Traits Pool" is needed.
 
 ### "I want to keep negative traits but control which ones appear"
 | Setting | Value |
