@@ -1,3 +1,5 @@
+using System;
+
 namespace Shared;
 
 public sealed class WriteOnce<T>

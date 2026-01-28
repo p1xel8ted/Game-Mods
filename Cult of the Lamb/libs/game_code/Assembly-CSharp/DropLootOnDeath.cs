@@ -1,9 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DropLootOnDeath
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
+using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -38,18 +39,18 @@ public class DropLootOnDeath : BaseMonoBehaviour
 
   public void SetHealth()
   {
-    if ((Object) this.health == (Object) null)
+    if ((UnityEngine.Object) this.health == (UnityEngine.Object) null)
       this.health = this.GetComponent<Health>();
-    if (!((Object) this.health != (Object) null))
+    if (!((UnityEngine.Object) this.health != (UnityEngine.Object) null))
       return;
     this.hp = this.health.totalHP;
   }
 
   public void OnEnable()
   {
-    if ((Object) this.health == (Object) null)
+    if ((UnityEngine.Object) this.health == (UnityEngine.Object) null)
       this.health = this.GetComponent<Health>();
-    if (!((Object) this.health != (Object) null))
+    if (!((UnityEngine.Object) this.health != (UnityEngine.Object) null))
       return;
     this.health.OnDie += new Health.DieAction(this.OnDie);
     if ((double) this.hp != -1.0)
@@ -59,7 +60,7 @@ public class DropLootOnDeath : BaseMonoBehaviour
 
   public void OnDisable()
   {
-    if (!((Object) this.health != (Object) null))
+    if (!((UnityEngine.Object) this.health != (UnityEngine.Object) null))
       return;
     this.health.OnDie -= new Health.DieAction(this.OnDie);
   }
@@ -73,9 +74,9 @@ public class DropLootOnDeath : BaseMonoBehaviour
     if (this.LootToDrop == InventoryItem.ITEM_TYPE.NONE)
       return;
     PlayerFarming playerFarming = attacker.GetComponent<PlayerFarming>();
-    if ((Object) playerFarming == (Object) null)
+    if ((UnityEngine.Object) playerFarming == (UnityEngine.Object) null)
       playerFarming = PlayerFarming.Instance;
-    if (this.LootToDrop == InventoryItem.ITEM_TYPE.BLACK_SOUL && (Object) this.health != (Object) null)
+    if (this.LootToDrop == InventoryItem.ITEM_TYPE.BLACK_SOUL && (UnityEngine.Object) this.health != (UnityEngine.Object) null)
     {
       this.MaxLoot = 10;
       if (this.OverrideBlackSoulsNumToDrop)
@@ -103,8 +104,15 @@ public class DropLootOnDeath : BaseMonoBehaviour
     Health.AttackTypes AttackType,
     Health.AttackFlags AttackFlags)
   {
-    this.Play(Attacker);
-    if (!((Object) this.health != (Object) null))
+    try
+    {
+      this.Play(Attacker);
+    }
+    catch (NullReferenceException ex)
+    {
+      Debug.LogError((object) ex.Message);
+    }
+    if (!((UnityEngine.Object) this.health != (UnityEngine.Object) null))
       return;
     this.health.OnDie -= new Health.DieAction(this.OnDie);
   }
@@ -117,12 +125,12 @@ public class DropLootOnDeath : BaseMonoBehaviour
 
   public void TrySpawnTarotDrops()
   {
-    if (!TrinketManager.HasTrinket(TarotCards.Card.MutatedDropRotburn) || !((Object) this.health != (Object) null) || this.health.team != Health.Team.Team2 || DungeonSandboxManager.Active)
+    if (!TrinketManager.HasTrinket(TarotCards.Card.MutatedDropRotburn) || !((UnityEngine.Object) this.health != (UnityEngine.Object) null) || this.health.team != Health.Team.Team2 || DungeonSandboxManager.Active)
       return;
     DropLootOnDeath component = this.GetComponent<DropLootOnDeath>();
-    if (!(bool) (Object) component || !component.GiveXP)
+    if (!(bool) (UnityEngine.Object) component || !component.GiveXP)
       return;
-    int num = Random.Range(0, 3);
+    int num = UnityEngine.Random.Range(0, 3);
     for (int index = 0; index < num; ++index)
       InventoryItem.Spawn(InventoryItem.ITEM_TYPE.MAGMA_STONE, 1, this.transform.position);
     if (num <= 0)
@@ -132,9 +140,9 @@ public class DropLootOnDeath : BaseMonoBehaviour
 
   public void TryApplyTwitchManipulation()
   {
-    if (!DataManager.Instance.EnemiesDropGoldDuringRun || !((Object) this.health != (Object) null) || this.health.team != Health.Team.Team2)
+    if (!DataManager.Instance.EnemiesDropGoldDuringRun || !((UnityEngine.Object) this.health != (UnityEngine.Object) null) || this.health.team != Health.Team.Team2)
       return;
-    InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLACK_GOLD, Random.Range(1, 3), this.transform.position);
+    InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLACK_GOLD, UnityEngine.Random.Range(1, 3), this.transform.position);
   }
 
   public enum DataSource

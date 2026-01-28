@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UI.Testing.MenuTester
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -1242,6 +1242,35 @@ public class MenuTester : MonoBehaviour
       LocalizationManager.CurrentLanguage = "Arabic";
       Debug.Log((object) "LANGUAGE NOT FOUND");
     }
+    else
+      this.TestMenus();
+  }
+
+  public void TestAllMenusInChineseSimplified()
+  {
+    if (LocalizationManager.HasLanguage("Chinese (Simplified)"))
+    {
+      LocalizationManager.CurrentLanguage = "Chinese (Simplified)";
+      Debug.Log((object) "LANGUAGE NOT FOUND");
+      this.TestMenus();
+    }
+    else
+      Debug.Log((object) "LANGUAGE NOT FOUND");
+  }
+
+  public void TestAllMenusInChineseTraditional()
+  {
+    if (LocalizationManager.HasLanguage("Chinese (Traditional)"))
+    {
+      LocalizationManager.CurrentLanguage = "Chinese (Traditional)";
+      this.TestMenus();
+    }
+    else
+      Debug.Log((object) "LANGUAGE NOT FOUND");
+  }
+
+  public void TestMenus()
+  {
     this._allMenuTests = new List<System.Action>()
     {
       new System.Action(this.TestMainMenu),
@@ -1833,7 +1862,7 @@ public class MenuTester : MonoBehaviour
   public void \u003CTestRanchMenu\u003Eb__185_0() => this._testInstance = (UIMenuBase) null;
 
   [CompilerGenerated]
-  public void \u003CSetInstance\u003Eb__192_0()
+  public void \u003CSetInstance\u003Eb__195_0()
   {
     this._testInstance = (UIMenuBase) null;
     Time.timeScale = 1f;

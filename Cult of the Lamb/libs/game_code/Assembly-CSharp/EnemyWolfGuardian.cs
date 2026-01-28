@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWolfGuardian
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -197,23 +197,12 @@ public class EnemyWolfGuardian : UnitObject
     }
     this.health.OnAddCharm += new Health.StasisEvent(this.ReconsiderTarget);
     this.health.OnStasisCleared += new Health.StasisEvent(this.ReconsiderTarget);
-    this.health.OnDamaged += new Health.HealthEvent(this.OnDamaged);
+    this.health.OnPoisonedHit += new Health.HitAction(((UnitObject) this).OnHit);
+    this.health.OnBurnHit += new Health.HitAction(((UnitObject) this).OnHit);
     this.TargetPosition = this.transform.position;
     if (!((UnityEngine.Object) GameManager.GetInstance() != (UnityEngine.Object) null))
       return;
     EnemyWolfGuardian.LastWolfGuardianAttacked = GameManager.GetInstance().CurrentTime;
-  }
-
-  public void OnDamaged(
-    GameObject attacker,
-    Vector3 attackLocation,
-    float damage,
-    Health.AttackTypes attackType,
-    Health.AttackFlags attackFlag)
-  {
-    if (!((UnityEngine.Object) this.warriorTrioManager != (UnityEngine.Object) null))
-      return;
-    this.warriorTrioManager.OnWarriorDamaged(this);
   }
 
   public override void OnDisable()
@@ -224,7 +213,8 @@ public class EnemyWolfGuardian : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
     this.health.OnAddCharm -= new Health.StasisEvent(this.ReconsiderTarget);
     this.health.OnStasisCleared -= new Health.StasisEvent(this.ReconsiderTarget);
-    this.health.OnDamaged -= new Health.HealthEvent(this.OnDamaged);
+    this.health.OnPoisonedHit -= new Health.HitAction(((UnitObject) this).OnHit);
+    this.health.OnBurnHit -= new Health.HitAction(((UnitObject) this).OnHit);
   }
 
   public override void OnDestroy()
@@ -437,6 +427,8 @@ public class EnemyWolfGuardian : UnitObject
     Health.AttackTypes AttackType,
     bool FromBehind)
   {
+    if ((UnityEngine.Object) this.warriorTrioManager != (UnityEngine.Object) null)
+      this.warriorTrioManager.OnWarriorDamaged(this);
     if (!string.IsNullOrEmpty(this.GetHitVO))
       AudioManager.Instance.PlayOneShot(this.GetHitVO);
     if (!string.IsNullOrEmpty(this.onHitSoundSFX))

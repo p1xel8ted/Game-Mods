@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UITarotCardsMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -70,7 +70,12 @@ public class UITarotCardsMenuController : UIMenuBase
   {
     get
     {
-      return !DataManager.Instance.PlayerFoundTrinkets.Contains(TarotCards.Card.CoopBetterApart) ? DataManager.AllTrinkets.Count - TarotCards.CoopCards.Length : DataManager.AllTrinkets.Count;
+      int count = DataManager.AllTrinkets.Count;
+      if (!DataManager.Instance.PlayerFoundTrinkets.Contains(TarotCards.Card.CoopBetterApart))
+        count -= TarotCards.CoopCards.Length;
+      if (!DataManager.Instance.MAJOR_DLC)
+        count -= TarotCards.MajorDLCCards.Length;
+      return count;
     }
   }
 

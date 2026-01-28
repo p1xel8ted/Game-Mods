@@ -1,9 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DropLootOnHit
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
+using System;
 using UnityEngine;
 
 #nullable disable
@@ -21,12 +22,19 @@ public class DropLootOnHit : BaseMonoBehaviour
 
   public void Start() => this.SetHealth();
 
+  public void OnDestroy()
+  {
+    if (!((UnityEngine.Object) this.health != (UnityEngine.Object) null))
+      return;
+    this.health.OnHit -= new Health.HitAction(this.OnHit);
+  }
+
   public void SetHealth()
   {
-    if ((Object) this.health != (Object) null)
+    if ((UnityEngine.Object) this.health != (UnityEngine.Object) null)
       return;
     this.health = this.GetComponent<Health>();
-    if (!((Object) this.health != (Object) null))
+    if (!((UnityEngine.Object) this.health != (UnityEngine.Object) null))
       return;
     this.health.OnHit += new Health.HitAction(this.OnHit);
   }
@@ -35,7 +43,7 @@ public class DropLootOnHit : BaseMonoBehaviour
   {
     if (this.LootToDrop == InventoryItem.ITEM_TYPE.NONE)
       return;
-    if (this.LootToDrop == InventoryItem.ITEM_TYPE.BLACK_SOUL && (Object) this.health != (Object) null && (Object) playerFarming != (Object) null)
+    if (this.LootToDrop == InventoryItem.ITEM_TYPE.BLACK_SOUL && (UnityEngine.Object) this.health != (UnityEngine.Object) null && (UnityEngine.Object) playerFarming != (UnityEngine.Object) null)
     {
       if (this.DontDropOnPlayerFullAmmo && (double) playerFarming.playerSpells.faithAmmo.Ammo >= (double) playerFarming.playerSpells.faithAmmo.Total)
         return;
@@ -43,31 +51,33 @@ public class DropLootOnHit : BaseMonoBehaviour
       {
         if (AttackType == Health.AttackTypes.Projectile)
           return;
-        BlackSoul blackSoul = InventoryItem.SpawnBlackSoul(Mathf.RoundToInt(Random.Range(this.randomAmount.x, this.randomAmount.y + 1f) * TrinketManager.GetBlackSoulsMultiplier(playerFarming)), this.transform.position, simulated: true);
-        if (!(bool) (Object) blackSoul)
+        BlackSoul blackSoul = InventoryItem.SpawnBlackSoul(Mathf.RoundToInt(UnityEngine.Random.Range(this.randomAmount.x, this.randomAmount.y + 1f) * TrinketManager.GetBlackSoulsMultiplier(playerFarming)), this.transform.position, simulated: true);
+        if (!(bool) (UnityEngine.Object) blackSoul)
           return;
-        blackSoul.SetAngle((float) Random.Range(0, 360), new Vector2(this.randomForce.x, this.randomForce.y));
+        blackSoul.SetAngle((float) UnityEngine.Random.Range(0, 360), new Vector2(this.randomForce.x, this.randomForce.y));
       }
       else
       {
-        BlackSoul blackSoul = InventoryItem.SpawnBlackSoul(Mathf.RoundToInt(Random.Range(this.randomAmount.x, this.randomAmount.y + 1f) * TrinketManager.GetBlackSoulsMultiplier(playerFarming)), this.transform.position, simulated: true);
-        if (!(bool) (Object) blackSoul)
+        BlackSoul blackSoul = InventoryItem.SpawnBlackSoul(Mathf.RoundToInt(UnityEngine.Random.Range(this.randomAmount.x, this.randomAmount.y + 1f) * TrinketManager.GetBlackSoulsMultiplier(playerFarming)), this.transform.position, simulated: true);
+        if (!(bool) (UnityEngine.Object) blackSoul)
           return;
-        blackSoul.SetAngle((float) Random.Range(0, 360), new Vector2(this.randomForce.x, this.randomForce.y));
+        blackSoul.SetAngle((float) UnityEngine.Random.Range(0, 360), new Vector2(this.randomForce.x, this.randomForce.y));
       }
     }
     else
     {
-      int num1 = Mathf.RoundToInt(Random.Range(this.randomAmount.x, this.randomAmount.y + 1f));
+      int num = Mathf.RoundToInt(UnityEngine.Random.Range(this.randomAmount.x, this.randomAmount.y + 1f));
       if (this.IsNaturalResource)
       {
-        if ((Object) playerFarming != (Object) null)
-          num1 += TrinketManager.GetLootIncreaseModifier(this.LootToDrop, playerFarming);
-        num1 += UpgradeSystem.GetForageIncreaseModifier;
+        if ((UnityEngine.Object) playerFarming != (UnityEngine.Object) null)
+          num += TrinketManager.GetLootIncreaseModifier(this.LootToDrop, playerFarming);
+        num += UpgradeSystem.GetForageIncreaseModifier;
       }
-      int num2 = -1;
-      while (++num2 < num1)
-        InventoryItem.Spawn(this.LootToDrop, 1, this.transform.position);
+      Vector3 position = Vector3.zero;
+      if ((UnityEngine.Object) this.transform != (UnityEngine.Object) null)
+        position = this.transform.position;
+      for (int index = 0; index < num; ++index)
+        InventoryItem.Spawn(this.LootToDrop, 1, position);
     }
   }
 
@@ -77,13 +87,20 @@ public class DropLootOnHit : BaseMonoBehaviour
     Health.AttackTypes AttackType,
     bool FromBehind = false)
   {
-    if ((Object) Attacker != (Object) null)
+    if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null)
     {
       Health component = Attacker.GetComponent<Health>();
-      if ((Object) component != (Object) null && component.team != Health.Team.PlayerTeam)
+      if ((UnityEngine.Object) component != (UnityEngine.Object) null && component.team != Health.Team.PlayerTeam)
         return;
     }
     PlayerFarming farmingComponent = PlayerFarming.GetPlayerFarmingComponent(Attacker);
-    this.Play(AttackType, farmingComponent);
+    try
+    {
+      this.Play(AttackType, farmingComponent);
+    }
+    catch (NullReferenceException ex)
+    {
+      Debug.LogError((object) ex.Message);
+    }
   }
 }

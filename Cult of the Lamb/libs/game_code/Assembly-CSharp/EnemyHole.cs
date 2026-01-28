@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyHole
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -566,37 +566,38 @@ public class EnemyHole : UnitObject
   public IEnumerator AttackRoutine()
   {
     EnemyHole enemyHole = this;
+    Health target = (Health) null;
     while (true)
     {
       do
       {
-        Health closestTarget = enemyHole.GetClosestTarget();
-        if (!((UnityEngine.Object) closestTarget == (UnityEngine.Object) null))
+        target = enemyHole.GetClosestTarget();
+        if (!((UnityEngine.Object) target == (UnityEngine.Object) null))
         {
-          float num1 = Vector2.Distance((Vector2) enemyHole.transform.position, (Vector2) closestTarget.transform.position);
+          float num1 = Vector2.Distance((Vector2) enemyHole.transform.position, (Vector2) target.transform.position);
           Debug.Log((object) ("Player distaince is " + num1.ToString()));
           float num2 = enemyHole.lastAttackWasSlam ? 0.2f : 0.8f;
           if (((double) num1 > (double) enemyHole.sideSlamDistance || (double) enemyHole.slamTimer < (double) enemyHole.slamFrequency ? 0 : ((double) UnityEngine.Random.value < (double) num2 ? 1 : 0)) != 0)
           {
             enemyHole.slamTimer = 0.0f;
             enemyHole.lastAttackWasSlam = true;
-            yield return (object) enemyHole.TriggerSideSlam(closestTarget.gameObject);
+            yield return (object) enemyHole.TriggerSideSlam(target.gameObject);
           }
           else if ((double) UnityEngine.Random.value < 0.33000001311302185)
           {
             enemyHole.lastAttackWasSlam = false;
-            yield return (object) enemyHole.TriggerShootAttack(closestTarget.gameObject);
+            yield return (object) enemyHole.TriggerShootAttack(target.gameObject);
           }
           else if (!enemyHole.IsBoss)
           {
             enemyHole.lastAttackWasSlam = false;
-            yield return (object) enemyHole.TriggerRunningAttack(closestTarget.gameObject);
+            yield return (object) enemyHole.TriggerRunningAttack(target.gameObject);
           }
           else if ((double) UnityEngine.Random.value < 0.33000001311302185 && (double) enemyHole.burrowTimer >= (double) enemyHole.burrowFrequency)
           {
             enemyHole.burrowTimer = 0.0f;
             enemyHole.lastAttackWasSlam = false;
-            yield return (object) enemyHole.TriggerChaseAttack(closestTarget.gameObject);
+            yield return (object) enemyHole.TriggerChaseAttack(target.gameObject);
           }
           else
           {
@@ -615,13 +616,13 @@ public class EnemyHole : UnitObject
           }
         }
         else
-          goto label_16;
+          goto label_17;
       }
       while ((double) enemyHole.transform.position.x <= 0.0);
       yield return (object) enemyHole.TriggerChaseAttack((GameObject) null, new Vector3(-6f, 0.0f, 0.0f));
       yield return (object) enemyHole.TriggerSideSlam((GameObject) null, Vector3.left);
     }
-label_16:
+label_17:
     yield return (object) CoroutineStatics.WaitForScaledSeconds(0.1f, enemyHole.Spine);
     enemyHole.health.invincible = true;
     yield return (object) CoroutineStatics.WaitForScaledSeconds(0.5f, enemyHole.Spine);
@@ -644,6 +645,11 @@ label_16:
       }
     }
     Debug.Log((object) $"took {newLocationAttempts.ToString()} attempts");
+    if ((UnityEngine.Object) target == (UnityEngine.Object) null)
+    {
+      enemyHole.health.invincible = false;
+      enemyHole.attackRoutineRef = enemyHole.StartCoroutine((IEnumerator) enemyHole.AttackRoutine());
+    }
   }
 
   public IEnumerator TriggerRunningAttack(GameObject target)

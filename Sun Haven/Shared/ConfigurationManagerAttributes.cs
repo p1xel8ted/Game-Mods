@@ -1,4 +1,7 @@
-﻿namespace Shared;
+﻿using System;
+using BepInEx.Configuration;
+
+namespace Shared;
 
 /// <summary>
 /// Class that specifies how a setting should be displayed inside the ConfigurationManager settings window.

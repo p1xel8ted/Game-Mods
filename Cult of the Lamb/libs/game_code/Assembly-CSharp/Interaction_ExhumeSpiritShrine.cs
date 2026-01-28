@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_ExhumeSpiritShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -77,11 +77,16 @@ public class Interaction_ExhumeSpiritShrine : Interaction
     GameManager.GetInstance().OnConversationNext(exhumeSpiritShrine.state.gameObject);
     exhumeSpiritShrine.leafParticles.Play();
     yield return (object) new WaitForSeconds(0.5f);
+    int num = 100;
     List<FollowerSelectEntry> followerSelectEntries = new List<FollowerSelectEntry>();
     foreach (FollowerInfo followerInfo in DataManager.Instance.Followers_Dead)
     {
       if (!followerInfo.FrozeToDeath || !StructureManager.HasFollowerDeadWorshipper(followerInfo.ID))
+      {
         followerSelectEntries.Add(new FollowerSelectEntry(followerInfo));
+        if (followerSelectEntries.Count >= num)
+          break;
+      }
     }
     UIExhumeSpiritsMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.ExhumeSpriritMenuTemplate.Instantiate<UIExhumeSpiritsMenuController>();
     MonoSingleton<UINavigatorNew>.Instance.AllowInputOnlyFromPlayer = exhumeSpiritShrine._playerFarming;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: NotificationBase
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -68,7 +68,9 @@ public abstract class NotificationBase : MonoBehaviour
     this.ResetScale();
     this.gameObject.SetActive(true);
     this.StopAllCoroutines();
-    if (instant)
+    if (this._description.text.Contains("This is a Notification"))
+      this.Hide(true);
+    else if (instant)
     {
       this._contentRectTransform.anchoredPosition = this._onScreenPosition;
       this._canvasGroup.alpha = 1f;

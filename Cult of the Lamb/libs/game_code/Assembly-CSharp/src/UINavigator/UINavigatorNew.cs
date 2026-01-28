@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UINavigator.UINavigatorNew
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -51,6 +51,8 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
   public int _consecutiveHold;
   public IMMSelectable _currentSelectable;
   public Vector3 _previousMouseInput;
+  public const float inactiveCursorVisibiliyMaxTime = 3f;
+  public float inactiveCursorVisilibtyTimer = 3f;
 
   public PlayerFarming AllowInputOnlyFromPlayer
   {
@@ -128,6 +130,10 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
               this._inputModule.allowMouseInput = true;
             bool flag1 = Input.mousePosition != this._previousMouseInput;
             bool flag2 = Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2);
+            if (flag1 | flag2)
+              this.inactiveCursorVisilibtyTimer = 0.0f;
+            else if ((activeController1.type == ControllerType.Keyboard || activeController1.type == ControllerType.Mouse) && (double) this.inactiveCursorVisilibtyTimer < 3.0)
+              this.inactiveCursorVisilibtyTimer += Time.deltaTime;
             if (!this._inputModule.allowMouseInput)
             {
               if (flag1 | flag2)
@@ -180,18 +186,9 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
               }
               else if (flag4)
               {
-                PlayerFarming playerFarming = this.AllowInputOnlyFromPlayer ?? PlayerFarming.Instance;
-                if ((UnityEngine.Object) playerFarming != (UnityEngine.Object) null && playerFarming.canUseKeyboard)
-                {
-                  flag5 = true;
-                  InputManager.General.MouseInputActive = true;
-                }
-                else
-                {
-                  bool flag6 = flag1 | flag2;
-                  flag5 = flag6;
-                  InputManager.General.MouseInputActive = flag6;
-                }
+                bool flag6 = flag1 | flag2;
+                flag5 = flag6 || (double) this.inactiveCursorVisilibtyTimer < 3.0;
+                InputManager.General.MouseInputActive = flag6;
               }
               else
               {
@@ -206,15 +203,15 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
                       case ControllerType.Keyboard:
                       case ControllerType.Mouse:
                         flag7 = true;
-                        goto label_34;
+                        goto label_36;
                       default:
                         continue;
                     }
                   }
                 }
-label_34:
+label_36:
                 bool flag8 = flag1 | flag2;
-                flag5 = flag7 | flag8;
+                flag5 = flag7 | flag8 || (double) this.inactiveCursorVisilibtyTimer < 3.0;
                 InputManager.General.MouseInputActive = flag5;
               }
               Cursor.visible = flag5;

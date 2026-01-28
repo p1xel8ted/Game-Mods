@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: InventoryItem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -417,7 +417,7 @@ public class InventoryItem
     if (!DataManager.Instance.ShowLoyaltyBars && (type == InventoryItem.ITEM_TYPE.GIFT_SMALL || type == InventoryItem.ITEM_TYPE.GIFT_MEDIUM))
       type = InventoryItem.ITEM_TYPE.BLACK_GOLD;
     if (type == InventoryItem.ITEM_TYPE.LIGHTNING_SHARD && !DataManager.Instance.OnboardedLightningShardDungeon)
-      type = InventoryItem.ITEM_TYPE.BLACK_GOLD;
+      DataManager.Instance.OnboardedLightningShardDungeon = true;
     if (type == InventoryItem.ITEM_TYPE.BLACK_GOLD)
     {
       List<PlayerFarming> players = PlayerFarming.players;

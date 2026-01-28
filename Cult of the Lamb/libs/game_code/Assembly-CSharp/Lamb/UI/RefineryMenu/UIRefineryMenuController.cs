@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.RefineryMenu.UIRefineryMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -42,7 +42,6 @@ public class UIRefineryMenuController : UIMenuBase
   public Tween _queuedTextTween;
   public StructuresData _structureInfo;
   public Interaction_Refinery _interactionRefinery;
-  public Dictionary<InventoryItem.ITEM_TYPE, int> InventoryPendingChangesCache = new Dictionary<InventoryItem.ITEM_TYPE, int>();
   public InventoryItem.ITEM_TYPE[] _refinableResources = new InventoryItem.ITEM_TYPE[9]
   {
     InventoryItem.ITEM_TYPE.LOG_REFINED,
@@ -125,7 +124,7 @@ public class UIRefineryMenuController : UIMenuBase
 
   public void OnItemSelected(RefineryItem item)
   {
-    if (!this.CanAffordWithPendingChanges(item.Type, item.Variant) || this._structureInfo.QueuedResources.Count >= this.kMaxItems)
+    if (!item.CanAfford || this._structureInfo.QueuedResources.Count >= this.kMaxItems)
       return;
     if (this._structureInfo.QueuedResources.Count >= this.kMaxItems)
     {
@@ -162,13 +161,12 @@ public class UIRefineryMenuController : UIMenuBase
   public void AddToQueue(RefineryItem item)
   {
     this._structureInfo.QueuedResources.Add(item.Type);
-    this._structureInfo.QueuedRefineryVariants.Add(item.Variant);
+    if (this._structureInfo.QueuedRefineryVariants.Count > this._structureInfo.QueuedResources.Count)
+      this._structureInfo.QueuedRefineryVariants[this._structureInfo.QueuedResources.Count - 1] = item.Variant;
+    else
+      this._structureInfo.QueuedRefineryVariants.Add(item.Variant);
     foreach (StructuresData.ItemCost itemCost in Structures_Refinery.GetCost(item.Type, item.Variant))
-    {
-      if (!this.InventoryPendingChangesCache.ContainsKey(itemCost.CostItem))
-        this.InventoryPendingChangesCache[itemCost.CostItem] = 0;
-      this.InventoryPendingChangesCache[itemCost.CostItem] -= itemCost.CostValue;
-    }
+      Inventory.ChangeItemQuantity((int) itemCost.CostItem, -itemCost.CostValue);
     RefineryItem refineryItem1 = this.MakeQueuedItem(item.Type, item.Variant);
     Vector3 localScale = refineryItem1.RectTransform.localScale;
     refineryItem1.RectTransform.localScale = Vector3.one * 1.2f;
@@ -183,22 +181,7 @@ public class UIRefineryMenuController : UIMenuBase
     if (item.Type == InventoryItem.ITEM_TYPE.YEW_HOLY)
       ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.RefineChargedRostone);
     foreach (RefineryItem refineryItem2 in this._refineryItems)
-      refineryItem2.Button.Confirmable = this._queuedItems.Count < this.kMaxItems && this.CanAffordWithPendingChanges(refineryItem2.Type, refineryItem2.Variant);
-  }
-
-  public bool CanAffordWithPendingChanges(InventoryItem.ITEM_TYPE type, int variant)
-  {
-    if (CheatConsole.BuildingsFree)
-      return true;
-    foreach (StructuresData.ItemCost itemCost in Structures_Refinery.GetCost(type, variant))
-    {
-      int itemQuantity = Inventory.GetItemQuantity((int) itemCost.CostItem);
-      if (this.InventoryPendingChangesCache.ContainsKey(itemCost.CostItem))
-        itemQuantity += this.InventoryPendingChangesCache[itemCost.CostItem];
-      if (itemQuantity < itemCost.CostValue)
-        return false;
-    }
-    return true;
+      refineryItem2.Button.Confirmable = this._queuedItems.Count < this.kMaxItems && refineryItem2.CanAfford;
   }
 
   public RefineryItem MakeQueuedItem(InventoryItem.ITEM_TYPE resource, int variant)
@@ -232,11 +215,7 @@ public class UIRefineryMenuController : UIMenuBase
     this._structureInfo.QueuedResources.RemoveAt(index);
     this._structureInfo.QueuedRefineryVariants.RemoveAt(index);
     foreach (StructuresData.ItemCost itemCost in Structures_Refinery.GetCost(item.Type, item.Variant))
-    {
-      if (!this.InventoryPendingChangesCache.ContainsKey(itemCost.CostItem))
-        this.InventoryPendingChangesCache[itemCost.CostItem] = 0;
-      this.InventoryPendingChangesCache[itemCost.CostItem] += itemCost.CostValue;
-    }
+      Inventory.AddItem((int) itemCost.CostItem, itemCost.CostValue);
     this._queuedItems.Remove(item);
     this._vacantSlots[this._queuedItems.Count].SetActive(true);
     if (index == 0 && this._queuedItems.Count > 0)
@@ -272,12 +251,6 @@ public class UIRefineryMenuController : UIMenuBase
   {
     base.OnHideStarted();
     UIManager.PlayAudio("event:/ui/close_menu");
-    foreach (KeyValuePair<InventoryItem.ITEM_TYPE, int> keyValuePair in this.InventoryPendingChangesCache)
-    {
-      if (keyValuePair.Value != 0)
-        Inventory.ChangeItemQuantity((int) keyValuePair.Key, keyValuePair.Value);
-    }
-    this.InventoryPendingChangesCache.Clear();
   }
 
   public override void OnHideCompleted() => UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);

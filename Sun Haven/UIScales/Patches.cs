@@ -207,9 +207,11 @@ public static class Patches
         }
     }
 
+    // NOTE: LoadBust is now a coroutine (IEnumerator) with 4 bool parameters
+    // The scaling/positioning is now handled in LateUpdate which runs every frame
     [HarmonyPostfix]
     [HarmonyPatch(typeof(DialogueController), nameof(DialogueController.LoadBust))]
-    public static void DialogueController_LoadBust(ref DialogueController __instance)
+    public static void DialogueController_LoadBust(ref DialogueController __instance, bool isMarriageBust, bool isSwimsuitBust, bool isHalloweenBust, bool isWitherballBust)
     {
         Plugin.Bust = __instance._bust.gameObject.transform;
         if (!Plugin.ScalePortraitAdjustments.Value) return;

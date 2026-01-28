@@ -1,0 +1,67 @@
+
+<!-- saved from url=(0041)https://www.fandom.com/silver-surfer.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><title>silver-surfer-storage-html</title>
+
+</head><body class="cross-domain-storage">
+	<script>
+		function getQueryVar(varName) {
+			// Grab and unescape the query string - appending an '&' keeps the RegExp simple
+			// for the sake of this example.
+			var queryStr = unescape(window.location.search) + '&';
+
+			// Dynamic replacement RegExp
+			var regex = new RegExp('.*?[&\\?]' + varName + '=(.*?)&.*');
+
+			// Apply RegExp to the query string
+			var val = queryStr.replace(regex, '$1');
+
+			// If the string is the same, we didn't find a match - return false
+			return val === queryStr ? false : val;
+		}
+
+		var isDev =
+			window.location.host.includes('fandom-dev') ||
+			window.location.host.includes('localhost') ||
+			window.location.hostname === '127.0.0.1';
+
+		var hasCanaryQueryParam = window.location.search.includes('ss_canary=true');
+		var bustCacheQueryParam = window.location.search.includes('ss_clear_cache=true');
+
+		var BRANCH_DEPLOY_NAME = 'ss_branch_deploy';
+		var isBranchBuild = window.location.search.includes(BRANCH_DEPLOY_NAME);
+		var branchName = isBranchBuild ? getQueryVar(BRANCH_DEPLOY_NAME).replace(/[^a-zA-Z0-9-_]/g, '').slice(0, 100) : '';
+
+		function scriptLocation(path) {
+			var ROOT_PATH = 'https://static.wikia.nocookie.net/silversurfer/';
+			var version = hasCanaryQueryParam ? 'canary' : 'latest';
+			var cachebuster =
+				bustCacheQueryParam || hasCanaryQueryParam || isBranchBuild ? '?cb='.concat(Date.now().toString()) : '';
+			var branchBuildString = isBranchBuild ? 'branch/'.concat(branchName) : '';
+
+			if (isBranchBuild) {
+				return ''
+					.concat(ROOT_PATH)
+					.concat(isDev ? 'dev' : 'prod', '/')
+					.concat(branchBuildString, '/')
+					.concat(path)
+					.concat(cachebuster);
+			}
+
+			return ''
+				.concat(ROOT_PATH)
+				.concat(isDev ? 'dev' : 'prod', '/')
+				.concat(branchBuildString)
+				.concat(version, '/')
+				.concat(path)
+				.concat(cachebuster);
+		}
+
+		// We do not want to load this script asynchronously
+		// because the page that embeds it uses iframe
+		// onLoad to call this script's functionality
+		var s = document.createElement('script');
+		s.setAttribute('src', scriptLocation('sdk-cross-domain.js'));
+		document.body.appendChild(s);
+	</script><script src="./sdk-cross-domain.js.download"></script>
+
+</body></html>

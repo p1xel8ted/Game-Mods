@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_IceSculpture
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -23,7 +23,7 @@ public class FollowerTask_IceSculpture : FollowerTask
   public Structures_IceSculpture targetSculpture;
   public Interaction_IceSculpture sculptureInteraction;
   public Follower sculptor;
-  public Slot chiselSlot;
+  public Spine.Slot chiselSlot;
   public const float maxTargetSculptureAwaitTimer = 5f;
   public float targetsulptureAwaitTimer;
   public bool isFirstStageFinished;

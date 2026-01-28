@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWolfBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -513,6 +513,8 @@ label_28:
     GameManager.GetInstance().OnConversationNew();
     GameManager.GetInstance().OnConversationNext(enemyWolfBoss.cameraTarget, 12f);
     UIBossHUD.Hide();
+    int currentDlcDungeonId = DataManager.Instance.CurrentDLCDungeonID;
+    bool beatenWolf = DataManager.Instance.BeatenWolf && DataManager.Instance.BossesCompleted.Contains(FollowerLocation.Dungeon1_5) && (currentDlcDungeonId == -1 || DataManager.Instance.DLCDungeonNodesCompleted.Contains(currentDlcDungeonId));
     foreach (TrapFleshRock fleshRock in enemyWolfBoss.fleshRocks)
     {
       if ((UnityEngine.Object) fleshRock != (UnityEngine.Object) null && (UnityEngine.Object) fleshRock.TrapHealth != (UnityEngine.Object) null)
@@ -533,7 +535,7 @@ label_28:
     enemyWolfBoss.GetComponent<Collider2D>().enabled = false;
     PlayerFarming.Instance.GoToAndStop(enemyWolfBoss.transform.position + Vector3.down * 2f);
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyWolfBoss.Spine);
-    if (!DataManager.Instance.BeatenWolf)
+    if (!beatenWolf)
     {
       List<ConversationEntry> Entries1 = new List<ConversationEntry>()
       {
@@ -594,8 +596,8 @@ label_28:
     enemyWolfBoss.armParasites[1].SubSpine.AnimationState.SetAnimation(0, "mouth_open", false);
     enemyWolfBoss.armParasites[1].SubSpine.AnimationState.AddAnimation(0, "mouth_open_loop", true, 0.0f);
     yield return (object) new UnityEngine.WaitForSeconds(0.5f);
-    string animationName1 = DataManager.Instance.BeatenWolf ? "die-end-noheart" : "die-end";
-    string animationName2 = DataManager.Instance.BeatenWolf ? "dead-noheart" : "dead";
+    string animationName1 = beatenWolf ? "die-end-noheart" : "die-end";
+    string animationName2 = beatenWolf ? "dead-noheart" : "dead";
     enemyWolfBoss.Spine.AnimationState.SetAnimation(0, animationName1, false);
     enemyWolfBoss.Spine.AnimationState.AddAnimation(0, animationName2, true, 0.0f);
     float dur = 1.66666663f;
@@ -648,7 +650,7 @@ label_28:
     enemyWolfBoss.armParasites[0].transform.DOMove(new Vector3(-5f, 0.8800063f, -1f), 0.75f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBounce);
     enemyWolfBoss.armParasites[1].transform.DOMove(new Vector3(5f, 0.8800063f, -1f), 0.75f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBounce);
     yield return (object) new UnityEngine.WaitForSeconds(2f);
-    if (!DataManager.Instance.BeatenWolf)
+    if (!beatenWolf)
     {
       DataManager.Instance.BeatenWolf = true;
       enemyWolfBoss.GetComponent<Interaction_MonsterHeart>().enabled = true;

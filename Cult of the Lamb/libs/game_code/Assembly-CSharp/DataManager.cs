@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DataManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -4600,9 +4600,106 @@ public class DataManager
       DataManager.Instance.HasAcceptedPilgrimPart1 = true;
     if (!DataManager.Instance.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99997, true) != null && FollowerInfo.GetInfoByID(99999, true) != null)
       DataManager.Instance.HasAcceptedPilgrimPart2 = true;
-    if (!UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FollowerWedding) && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Wedding))
+    if (UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FollowerWedding) || UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Wedding))
+      UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Ritual_Divorce);
+    if (DataManager.Instance.BeatenWolf && !this.DiedToYngyaBoss && DataManager.Instance.TotalShrineGhostJuice < 80 /*0x50*/ && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) == 0 && this.DLCDungeonNodesCompleted.Contains(11))
+    {
+      this.BossesCompleted.Add(FollowerLocation.Boss_Wolf);
+      Inventory.AddItem(InventoryItem.ITEM_TYPE.YNGYA_GHOST, 4);
+      StructuresData.CompleteResearch(StructureBrain.TYPES.DECORATION_BOSS_TROPHY_DLC_WOLF);
+      StructuresData.SetRevealed(StructureBrain.TYPES.DECORATION_BOSS_TROPHY_DLC_WOLF);
+      if (DataManager.Instance.GivenUpHeartToWolf)
+      {
+        ++DataManager.Instance.RedHeartShrineLevel;
+        ++DataManager.Instance.PLAYER_HEALTH_MODIFIED;
+      }
+    }
+    int num = 0;
+    if (DataManager.instance.UnlockedFleeces.Contains(1))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(2))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(3))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(4))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(5))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(6))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(7))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(8))
+      ++num;
+    if (DataManager.instance.UnlockedFleeces.Contains(9))
+      ++num;
+    if (num == 8 && Inventory.KeyPieces == 3 && DataManager.Instance.TalismanPiecesReceivedFromMysticShop >= 12 && DataManager.instance.PlimboStoryProgress >= 11 && (DataManager.instance.RatauKilled || DataManager.instance.RatauFoundSkin) && DataManager.instance.RatooFishingProgress >= 3 && DataManager.instance.MidasFollowerStatueCount >= 4 && DataManager.instance.SozoStoryProgress >= 4)
+    {
+      Inventory.KeyPieces = 0;
+      Inventory.AddItem(InventoryItem.ITEM_TYPE.TALISMAN, 1);
+    }
+    if (DataManager.instance.HasProducedChosenOne)
+    {
+      List<Structures_EggFollower> structuresOfType1 = StructureManager.GetAllStructuresOfType<Structures_EggFollower>();
+      bool flag1 = true;
+      foreach (Structures_EggFollower structuresEggFollower in structuresOfType1)
+      {
+        if (structuresEggFollower != null && structuresEggFollower.Data != null && structuresEggFollower.Data.EggInfo != null && structuresEggFollower.Data.EggInfo.Traits != null && structuresEggFollower.Data.EggInfo.Traits.Contains(FollowerTrait.TraitType.ChosenOne))
+          flag1 = false;
+      }
+      if (flag1)
+      {
+        List<Structures_Hatchery> structuresOfType2 = StructureManager.GetAllStructuresOfType<Structures_Hatchery>();
+        bool flag2 = true;
+        foreach (Structures_Hatchery structuresHatchery in structuresOfType2)
+        {
+          if (structuresHatchery != null && structuresHatchery.Data != null && structuresHatchery.Data.EggInfo != null && structuresHatchery.Data.EggInfo.Traits != null && structuresHatchery.Data.EggInfo.Traits.Contains(FollowerTrait.TraitType.ChosenOne))
+            flag2 = false;
+        }
+        if (flag2)
+          DataManager.instance.HasProducedChosenOne = false;
+      }
+    }
+    if (DataManager.instance.GaveChosenChildQuest && !DataManager.Instance.ChosenChildLeftInTheMidasCave && !ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.LegendarySword) && !DataManager.Instance.FollowerSkinsUnlocked.Contains("ChosenChild"))
+    {
+      Objectives_Custom objective = new Objectives_Custom("Objectives/GroupTitles/Quest", global::Objectives.CustomQuestTypes.LegendarySword, 100000);
+      objective.FailLocked = true;
+      ObjectiveManager.Add((ObjectivesData) objective, true, true);
+    }
+    if (!DataManager.Instance.OnboardedBaseExpansion && (DataManager.instance.YngyaOffering >= 2 || DataManager.instance.YngyaOffering < 0))
+      DataManager.Instance.OnboardedBaseExpansion = true;
+    if (DataManager.Instance.NPCRescueRoomsCompleted >= 1 && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_RANCHER) <= 0 && !DataManager.instance.NPCGhostRancherRescued)
+      Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_RANCHER, 1);
+    if (DataManager.Instance.NPCRescueRoomsCompleted >= 2)
+    {
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_LAMBWAR) <= 0 && !DataManager.instance.NPCGhostFlockadeRescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_LAMBWAR, 1);
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_TAROT) <= 0 && !DataManager.instance.NPCGhostTarotRescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_TAROT, 1);
+    }
+    if (DataManager.Instance.NPCRescueRoomsCompleted >= 4)
+    {
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_DECORATION) <= 0 && !DataManager.instance.NPCGhostDecoRescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_DECORATION, 1);
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_BLACKSMITH) <= 0 && !DataManager.instance.NPCGhostBlacksmithRescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_BLACKSMITH, 1);
+    }
+    if (DataManager.Instance.NPCRescueRoomsCompleted >= 6 && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_6) <= 0 && !DataManager.instance.NPCGhostGraveyardRescued)
+      Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_6, 1);
+    if (DataManager.Instance.NPCRescueRoomsCompleted >= 7)
+    {
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_7) <= 0 && !DataManager.instance.NPCGhostGeneric7Rescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_8, 1);
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_8) <= 0 && !DataManager.instance.NPCGhostGeneric8Rescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_8, 1);
+    }
+    if (DataManager.Instance.NPCRescueRoomsCompleted < 9)
       return;
-    UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Ritual_Divorce);
+    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_9) <= 0 && !DataManager.instance.NPCGhostGeneric9Rescued)
+      Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_9, 1);
+    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_10) > 0 || DataManager.instance.NPCGhostGeneric10Rescued)
+      return;
+    Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_10, 1);
   }
 
   public void AddToCompletedQuestHistory(ObjectivesDataFinalized finalizedData)
@@ -5449,7 +5546,7 @@ label_16:
     List<string> stringList = new List<string>();
     foreach (WorshipperData.SkinAndData skinAndData in WorshipperData.Instance.GetSkinsAll())
     {
-      if (!DataManager.GetFollowerSkinUnlocked(skinAndData.Skin[0].Skin) && !stringList.Contains(skinAndData.Skin[0].Skin) && !DataManager.instance.DLCSkins.Contains(skinAndData.Skin[0].Skin) && !DataManager.instance.SpecialEventSkins.Contains<string>(skinAndData.Skin[0].Skin))
+      if (!DataManager.GetFollowerSkinUnlocked(skinAndData.Skin[0].Skin) && !stringList.Contains(skinAndData.Skin[0].Skin) && !DataManager.instance.DLCSkins.Contains(skinAndData.Skin[0].Skin) && !DataManager.instance.SpecialEventSkins.Contains<string>(skinAndData.Skin[0].Skin) && !DataManager.instance.MajorDLCSkins.Contains(skinAndData.Skin[0].Skin))
         stringList.Add(skinAndData.Skin[0].Skin);
     }
     return stringList.Count > 0;
@@ -5637,6 +5734,13 @@ label_16:
   public bool HasBeatenAllBeholderBosses()
   {
     return this.KilledBosses.Contains("Boss Beholder 1") && this.KilledBosses.Contains("Boss Beholder 2") && this.KilledBosses.Contains("Boss Beholder 3") && this.KilledBosses.Contains("Boss Beholder 4") && this.KilledBosses.Contains("Boss Beholder 1_P2") && this.KilledBosses.Contains("Boss Beholder 2_P2") && this.KilledBosses.Contains("Boss Beholder 3_P2") && this.KilledBosses.Contains("Boss Beholder 4_P2");
+  }
+
+  public static void CheckAllLegendaryWeaponsUnlocked()
+  {
+    if (!DataManager.Instance.WeaponPool.Contains(EquipmentType.Axe_Legendary) || !DataManager.Instance.WeaponPool.Contains(EquipmentType.Blunderbuss_Legendary) || !DataManager.Instance.WeaponPool.Contains(EquipmentType.Chain_Legendary) || !DataManager.Instance.WeaponPool.Contains(EquipmentType.Dagger_Legendary) || !DataManager.Instance.WeaponPool.Contains(EquipmentType.Gauntlet_Legendary) || !DataManager.Instance.WeaponPool.Contains(EquipmentType.Hammer_Legendary) || !DataManager.Instance.WeaponPool.Contains(EquipmentType.Sword_Legendary))
+      return;
+    AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup(AchievementsWrapper.Tags.ALL_LEGENDARY_WEAPONS));
   }
 
   public void AddWeapon(EquipmentType weapon)

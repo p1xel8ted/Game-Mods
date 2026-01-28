@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Quests
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -1188,15 +1188,35 @@ label_171:
           storyDataItem.Objective.CompleteTerm = storyDataItem.StoryObjectiveData.CompleteQuestTerm;
           List<string> stringList = new List<string>();
           if (storyDataItem.TargetFollowerID_1 != -1 && storyDataItem.TargetFollowerID_1 != storyDataItem.QuestGiverFollowerID && (storyDataItem.StoryObjectiveData.RequireTarget_1 || storyDataItem.StoryObjectiveData.TargetQuestGiver))
-            stringList.Add(FollowerInfo.GetInfoByID(!storyDataItem.StoryObjectiveData.TargetQuestGiver || storyDataItem.StoryObjectiveData.RequireTarget_1 ? storyDataItem.TargetFollowerID_1 : storyDataItem.QuestGiverFollowerID, true).Name);
+          {
+            FollowerInfo infoById = FollowerInfo.GetInfoByID(!storyDataItem.StoryObjectiveData.TargetQuestGiver || storyDataItem.StoryObjectiveData.RequireTarget_1 ? storyDataItem.TargetFollowerID_1 : storyDataItem.QuestGiverFollowerID, true);
+            if (infoById != null)
+              stringList.Add(infoById.Name);
+          }
           if (storyDataItem.TargetFollowerID_2 != -1 && storyDataItem.StoryObjectiveData.RequireTarget_2)
-            stringList.Add(FollowerInfo.GetInfoByID(storyDataItem.TargetFollowerID_2, true).Name);
+          {
+            FollowerInfo infoById = FollowerInfo.GetInfoByID(storyDataItem.TargetFollowerID_2, true);
+            if (infoById != null)
+              stringList.Add(infoById.Name);
+          }
           if (storyDataItem.DeadFollowerID != -1 && storyDataItem.StoryObjectiveData.RequireTarget_Deadbody && FollowerInfo.GetInfoByID(storyDataItem.DeadFollowerID, true) != null)
-            stringList.Add(FollowerInfo.GetInfoByID(storyDataItem.DeadFollowerID, true).Name);
+          {
+            FollowerInfo infoById = FollowerInfo.GetInfoByID(storyDataItem.DeadFollowerID, true);
+            if (infoById != null)
+              stringList.Add(infoById.Name);
+          }
           if (storyDataItem.CachedTargetFollowerID_1 != -1)
-            stringList.Add(FollowerInfo.GetInfoByID(storyDataItem.CachedTargetFollowerID_1, true).Name);
+          {
+            FollowerInfo infoById = FollowerInfo.GetInfoByID(storyDataItem.CachedTargetFollowerID_1, true);
+            if (infoById != null)
+              stringList.Add(infoById.Name);
+          }
           if (storyDataItem.CachedTargetFollowerID_2 != -1)
-            stringList.Add(FollowerInfo.GetInfoByID(storyDataItem.CachedTargetFollowerID_2, true).Name);
+          {
+            FollowerInfo infoById = FollowerInfo.GetInfoByID(storyDataItem.CachedTargetFollowerID_2, true);
+            if (infoById != null)
+              stringList.Add(infoById.Name);
+          }
           string[] array = stringList.ToArray();
           storyDataItem.Objective.CompleteTermArguments = array;
           return storyDataItem;

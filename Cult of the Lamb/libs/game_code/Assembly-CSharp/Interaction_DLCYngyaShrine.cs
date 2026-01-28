@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCYngyaShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -443,6 +443,8 @@ public class Interaction_DLCYngyaShrine : Interaction
         }));
       }
     }
+    else if (this.ghostsInAir <= 0)
+      GameManager.GetInstance().OnConversationEnd();
     if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) + this.ghostsInAir <= 0 && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_RANCHER) <= 0 && DataManager.Instance.TotalShrineGhostJuice >= 12)
       BaseGoopDoor.WoolhavenDoor.CheckWoolhavenDoor();
     Interaction_DLCYngyaShrine.OnDepositEvent onDepositGhosts = this.OnDepositGhosts;

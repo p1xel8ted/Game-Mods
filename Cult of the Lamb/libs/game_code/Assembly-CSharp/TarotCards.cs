@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TarotCards
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -54,9 +54,8 @@ public class TarotCards
     TarotCards.Card.CoopGoodTiming,
     TarotCards.Card.CoopExplosive
   };
-  public static TarotCards.Card[] DLCWithBlueBack = new TarotCards.Card[13]
+  public static TarotCards.Card[] DLCWithBlueBack = new TarotCards.Card[12]
   {
-    TarotCards.Card.CursedIce,
     TarotCards.Card.EasyMoney,
     TarotCards.Card.EmptyFervourCritical,
     TarotCards.Card.FlameHeart,
@@ -70,10 +69,9 @@ public class TarotCards
     TarotCards.Card.RoomEnterCritter,
     TarotCards.Card.SummonGhost
   };
-  public static TarotCards.Card[] MajorDLCCards = new TarotCards.Card[20]
+  public static TarotCards.Card[] MajorDLCCards = new TarotCards.Card[19]
   {
     TarotCards.Card.FrostedEnemies,
-    TarotCards.Card.CursedIce,
     TarotCards.Card.LastChance,
     TarotCards.Card.Joker,
     TarotCards.Card.FrostHeart,

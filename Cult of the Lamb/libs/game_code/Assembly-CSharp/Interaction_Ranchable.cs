@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranchable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1416,7 +1416,7 @@ public class Interaction_Ranchable : Interaction
       this.colours = AnimalData.Instance.GetAnimalColors(this.animal.Type);
     foreach (WorshipperData.SlotAndColor slotAndColour in this.colours[Mathf.Clamp(this.animal.Colour, 0, this.colours.Length - 1)].SlotAndColours)
     {
-      Slot slot = this.spine.Skeleton.FindSlot(slotAndColour.Slot);
+      Spine.Slot slot = this.spine.Skeleton.FindSlot(slotAndColour.Slot);
       if (slot != null)
         slot.SetColor(slotAndColour.color);
     }

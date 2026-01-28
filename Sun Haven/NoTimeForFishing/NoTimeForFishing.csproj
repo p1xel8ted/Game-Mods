@@ -7,126 +7,29 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DefineConstants>TRACE;NTFF</DefineConstants>
+        <DefineConstants>TRACE;NTFF</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DefineConstants>TRACE;NTFF</DefineConstants>
+        <DefineConstants>TRACE;NTFF</DefineConstants>
     </PropertyGroup>
+
     <Import Project="..\zip.target"/>
 
+    <!-- Project-specific references -->
     <ItemGroup>
-      <Reference Include="DOTween">
-        <HintPath>$(ManagedPath)\DOTween.dll</HintPath>
-      </Reference>
-      <Reference Include="DOTweenPro">
-        <HintPath>$(ManagedPath)\DOTweenPro.dll</HintPath>
-      </Reference>
-      <Reference Include="PSS.Database">
-        <HintPath>$(ManagedPath)\PSS.Database.dll</HintPath>
-        <publicize>true</publicize>
-      </Reference>
-      <Reference Include="QFSW.QC">
-        <HintPath>$(ManagedPath)\QFSW.QC.dll</HintPath>
-        <publicize>true</publicize>
-      </Reference>
-      <Reference Include="Sirenix.Serialization">
-        <HintPath>$(ManagedPath)\Sirenix.Serialization.dll</HintPath>
-      </Reference>
-      <Reference Include="SunHaven.Core">
-        <HintPath>$(ManagedPath)\SunHaven.Core.dll</HintPath>
-        <publicize>true</publicize>
-      </Reference>
-      <Reference Include="Unity.2D.Tilemap.Extras">
-        <HintPath>$(ManagedPath)\Unity.2D.Tilemap.Extras.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.Addressables">
-        <HintPath>$(ManagedPath)\Unity.Addressables.dll</HintPath>
-      </Reference>
-      <Reference Include="Unity.ResourceManager">
-        <HintPath>$(ManagedPath)\Unity.ResourceManager.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine">
-        <HintPath>$(ManagedPath)\UnityEngine.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.AnimationModule">
-        <HintPath>$(ManagedPath)\UnityEngine.AnimationModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.AudioModule">
-        <HintPath>$(ManagedPath)\UnityEngine.AudioModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.CoreModule">
-        <HintPath>$(ManagedPath)\UnityEngine.CoreModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.ImageConversionModule">
-        <HintPath>$(ManagedPath)\UnityEngine.ImageConversionModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.IMGUIModule">
-        <HintPath>$(ManagedPath)\UnityEngine.IMGUIModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.InputLegacyModule">
-        <HintPath>$(ManagedPath)\UnityEngine.InputLegacyModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.ParticleSystemModule">
-        <HintPath>$(ManagedPath)\UnityEngine.ParticleSystemModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.Physics2DModule">
-        <HintPath>$(ManagedPath)\UnityEngine.Physics2DModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.PhysicsModule">
-        <HintPath>$(ManagedPath)\UnityEngine.PhysicsModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.SharedInternalsModule">
-        <HintPath>$(ManagedPath)\UnityEngine.SharedInternalsModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.TextRenderingModule">
-        <HintPath>$(ManagedPath)\UnityEngine.TextRenderingModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.TilemapModule">
-        <HintPath>$(ManagedPath)\UnityEngine.TilemapModule.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UI">
-        <HintPath>$(ManagedPath)\UnityEngine.UI.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine.UIModule">
-        <HintPath>$(ManagedPath)\UnityEngine.UIModule.dll</HintPath>
-      </Reference>
+        <Reference Include="DOTween">
+            <HintPath>..\libs\DOTween.dll</HintPath>
+        </Reference>
+        <Reference Include="DOTweenPro">
+            <HintPath>..\libs\DOTweenPro.dll</HintPath>
+        </Reference>
     </ItemGroup>
+
     <ItemGroup>
-      <None Remove="thumb.png" />
-      <None Remove="logo.png" />
-      <None Remove="settings.png" />
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Remove="Costura.Fody" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
-        <Link>Shared\ConfigurationManagerAttributes.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\Extensions.cs">
-        <Link>Shared\Extensions.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\FileLoader.cs">
-        <Link>Shared\FileLoader.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\GlobalUsings.cs">
-        <Link>Shared\GlobalUsings.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\SpriteUtil.cs">
-        <Link>Shared\SpriteUtil.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\Utils.cs">
-        <Link>Shared\Utils.cs</Link>
-      </Compile>
-      <Compile Include="..\Shared\WriteOnce.cs">
-        <Link>Shared\WriteOnce.cs</Link>
-      </Compile>
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include="..\Shared\Shared.csproj">
-        <Link>Shared\Shared.csproj</Link>
-      </Content>
+        <None Remove="thumb.png" />
+        <None Remove="logo.png" />
+        <None Remove="settings.png" />
     </ItemGroup>
 
 </Project>

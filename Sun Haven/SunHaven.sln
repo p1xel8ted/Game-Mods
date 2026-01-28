@@ -13,27 +13,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyLiving", "EasyLiving\Ea
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeepAlive", "KeepAlive\KeepAlive.csproj", "{977FB946-2A30-43D8-AE7C-DE76E5C2BBC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoTools", "AutoTools\AutoTools.csproj", "{F18B025C-BA42-45A8-AB8D-2F0467A42944}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoTools", "AutoTools\AutoTools.csproj", "{F18B025C-BA42-45A8-AB8D-2F0467A42944}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuseumSellPriceRedux", "MuseumSellPriceRedux\MuseumSellPriceRedux.csproj", "{0FB260D3-92C5-43D5-B234-6BDBA793EF9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MuseumSellPriceRedux", "MuseumSellPriceRedux\MuseumSellPriceRedux.csproj", "{0FB260D3-92C5-43D5-B234-6BDBA793EF9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreScythesRedux", "MoreScythesRedux\MoreScythesRedux.csproj", "{15756077-200B-421B-8116-1C8021293792}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoreScythesRedux", "MoreScythesRedux\MoreScythesRedux.csproj", "{15756077-200B-421B-8116-1C8021293792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoTimeToStopAndEat", "NoTimeToStopAndEat\NoTimeToStopAndEat.csproj", "{991BBE68-47C9-4495-8551-0DDE7F265602}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoTimeToStopAndEat", "NoTimeToStopAndEat\NoTimeToStopAndEat.csproj", "{991BBE68-47C9-4495-8551-0DDE7F265602}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreJewelry", "MoreJewelry\MoreJewelry.csproj", "{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoreJewelry", "MoreJewelry\MoreJewelry.csproj", "{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModMenu", "ModMenu\ModMenu.csproj", "{0F0EC65A-625A-4680-9F5A-9C6519ABD6DB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharacterEditRedux", "CharacterEditRedux\CharacterEditRedux.csproj", "{060B202F-EC5A-43D4-957A-1F86DF52EB28}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wip", "wip", "{35D0EAFB-7B3D-49FB-8E3F-DA4808DCB1A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharacterEditRedux", "CharacterEditRedux\CharacterEditRedux.csproj", "{060B202F-EC5A-43D4-957A-1F86DF52EB28}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "needs_fixing", "needs_fixing", "{4A2FDED9-89A7-4E7D-9F4E-126B56204D68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreTheMerrier", "MoreTheMerrier\MoreTheMerrier.csproj", "{A73D03D5-DCF3-4D7C-A776-BCA3A4297324}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoreTheMerrier", "MoreTheMerrier\MoreTheMerrier.csproj", "{A73D03D5-DCF3-4D7C-A776-BCA3A4297324}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seedify", "Seedify\Seedify.csproj", "{99ECB1E0-647B-45DC-BE2F-4236655395A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seedify", "Seedify\Seedify.csproj", "{99ECB1E0-647B-45DC-BE2F-4236655395A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,10 +77,6 @@ Global
 		{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F0EC65A-625A-4680-9F5A-9C6519ABD6DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F0EC65A-625A-4680-9F5A-9C6519ABD6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F0EC65A-625A-4680-9F5A-9C6519ABD6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F0EC65A-625A-4680-9F5A-9C6519ABD6DB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{060B202F-EC5A-43D4-957A-1F86DF52EB28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{060B202F-EC5A-43D4-957A-1F86DF52EB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{060B202F-EC5A-43D4-957A-1F86DF52EB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -102,7 +94,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0F0EC65A-625A-4680-9F5A-9C6519ABD6DB} = {35D0EAFB-7B3D-49FB-8E3F-DA4808DCB1A2}
 		{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562} = {4A2FDED9-89A7-4E7D-9F4E-126B56204D68}
 	EndGlobalSection
 EndGlobal

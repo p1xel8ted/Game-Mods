@@ -415,14 +415,14 @@ public static class Patches
         };
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(MainMenuLoader), nameof(MainMenuLoader.MainLoadingRoutine))]
-    private static void MaineMenuLoader_MainLoadingRoutine(ref IEnumerator __result)
-    {
-        if (!Plugin.QuickBoot.Value) return;
-
-        __result = Utils.FilterByMethodName(__result, "RunLogoAnimationRoutine");
-    }
+    // NOTE: MainMenuLoader class was removed in a game update - Quick Boot feature disabled
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(MainMenuLoader), nameof(MainMenuLoader.MainLoadingRoutine))]
+    // private static void MaineMenuLoader_MainLoadingRoutine(ref IEnumerator __result)
+    // {
+    //     if (!Plugin.QuickBoot.Value) return;
+    //     __result = Utils.FilterByMethodName(__result, "RunLogoAnimationRoutine");
+    // }
 
     internal static void CreateContinueButton(MainMenuController mmc)
     {

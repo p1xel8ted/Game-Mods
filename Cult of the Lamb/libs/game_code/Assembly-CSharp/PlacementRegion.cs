@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlacementRegion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1837,6 +1837,7 @@ label_152:
       component2.StructureInfo.Rotation = this.Rotation;
       component2.StructureInfo.Inventory = this.CurrentStructureToUpgrade.Inventory;
       component2.StructureInfo.QueuedResources = this.CurrentStructureToUpgrade.Structure_Info.QueuedResources;
+      component2.StructureInfo.QueuedRefineryVariants = this.CurrentStructureToUpgrade.Structure_Info.QueuedRefineryVariants;
       component2.StructureInfo.ToBuildType = this.StructureType;
       component2.StructureInfo.FollowerID = infoByType.FollowerID;
       component2.StructureInfo.Bounds = this.placementObject.Bounds;
@@ -1846,7 +1847,6 @@ label_152:
       component2.StructureInfo.MultipleFollowerIDs = this.CurrentStructureToUpgrade.Structure_Info.MultipleFollowerIDs;
       component2.StructureInfo.ClaimedByPlayer = this.CurrentStructureToUpgrade.Structure_Info.ClaimedByPlayer;
       component2.StructureInfo.Inventory = this.CurrentStructureToUpgrade.Structure_Info.Inventory;
-      component2.StructureInfo.QueuedResources = this.CurrentStructureToUpgrade.Structure_Info.QueuedResources;
       if (infoByType.IsUpgradeDestroyPrevious)
       {
         Debug.Log((object) "REMOVE!");
@@ -1864,6 +1864,7 @@ label_152:
       component3.StructureInfo.Rotation = this.Rotation;
       component3.StructureInfo.Inventory = this.CurrentStructureToUpgrade.Inventory;
       component3.StructureInfo.QueuedResources = this.CurrentStructureToUpgrade.Structure_Info.QueuedResources;
+      component3.StructureInfo.QueuedRefineryVariants = this.CurrentStructureToUpgrade.Structure_Info.QueuedRefineryVariants;
       component3.StructureInfo.ToBuildType = this.StructureType;
       component3.StructureInfo.Bounds = this.placementObject.Bounds;
       component3.StructureInfo.FollowerID = infoByType.FollowerID;
@@ -1874,7 +1875,6 @@ label_152:
       component3.StructureInfo.MultipleFollowerIDs = this.CurrentStructureToUpgrade.Structure_Info.MultipleFollowerIDs;
       component3.StructureInfo.ClaimedByPlayer = this.CurrentStructureToUpgrade.Structure_Info.ClaimedByPlayer;
       component3.StructureInfo.Inventory = this.CurrentStructureToUpgrade.Structure_Info.Inventory;
-      component3.StructureInfo.QueuedResources = this.CurrentStructureToUpgrade.Structure_Info.QueuedResources;
       if (this.CurrentStructureToUpgrade.Structure_Info.IsUpgradeDestroyPrevious)
       {
         this.CurrentStructureToUpgrade.RemoveStructure();

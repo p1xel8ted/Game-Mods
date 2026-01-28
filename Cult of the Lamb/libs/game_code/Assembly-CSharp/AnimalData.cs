@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: AnimalData
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI.RanchSelect;
@@ -159,7 +159,7 @@ public class AnimalData : BaseMonoBehaviour
     WorshipperData.SlotsAndColours[] animalColors = AnimalData.Instance.GetAnimalColors(info.Type);
     foreach (WorshipperData.SlotAndColor slotAndColour in animalColors[Mathf.Clamp(info.Colour, 0, animalColors.Length - 1)].SlotAndColours)
     {
-      Slot slot = skeletonGraphic.Skeleton.FindSlot(slotAndColour.Slot);
+      Spine.Slot slot = skeletonGraphic.Skeleton.FindSlot(slotAndColour.Slot);
       if (slot != null)
         slot.SetColor(slotAndColour.color);
     }

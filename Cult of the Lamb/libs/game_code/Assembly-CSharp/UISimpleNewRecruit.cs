@@ -1,13 +1,12 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UISimpleNewRecruit
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
-using Spine;
 using Spine.Unity;
 using System.Collections;
 using System.Collections.Generic;
@@ -253,7 +252,7 @@ public class UISimpleNewRecruit : BaseMonoBehaviour
       componentInChildren.Skeleton.SetSkin(character.Skin[Mathf.Min(0, character.Skin.Count - 1)].Skin);
       foreach (WorshipperData.SlotAndColor slotAndColour in character.SlotAndColours[Mathf.Min(0, character.SlotAndColours.Count - 1)].SlotAndColours)
       {
-        Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour.Slot);
+        Spine.Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour.Slot);
         if (slot != null)
           slot.SetColor(slotAndColour.color);
       }
@@ -287,7 +286,7 @@ public class UISimpleNewRecruit : BaseMonoBehaviour
       componentInChildren.Skeleton.SetSkin(character.Skin[Mathf.Min(0, character.Skin.Count - 1)].Skin);
       foreach (WorshipperData.SlotAndColor slotAndColour in character.SlotAndColours[Mathf.Min(index, character.SlotAndColours.Count - 1)].SlotAndColours)
       {
-        Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour.Slot);
+        Spine.Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour.Slot);
         if (slot != null)
           slot.SetColor(slotAndColour.color);
       }
@@ -308,7 +307,7 @@ public class UISimpleNewRecruit : BaseMonoBehaviour
       componentInChildren.Skeleton.SetSkin(character.Skin[Mathf.Min(this.variants[index].SkinVariationIndex, character.Skin.Count - 1)].Skin);
       foreach (WorshipperData.SlotAndColor slotAndColour in character.SlotAndColours[Mathf.Min(this.colorIndex, character.SlotAndColours.Count - 1)].SlotAndColours)
       {
-        Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour.Slot);
+        Spine.Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour.Slot);
         if (slot != null)
           slot.SetColor(slotAndColour.color);
       }
@@ -335,7 +334,7 @@ public class UISimpleNewRecruit : BaseMonoBehaviour
       WorshipperData.SlotsAndColours slotAndColour1 = character.SlotAndColours[this.colorIndex];
       foreach (WorshipperData.SlotAndColor slotAndColour2 in character.SlotAndColours[Mathf.Min(this.variants[index].SkinVariationIndex, character.SlotAndColours.Count - 1)].SlotAndColours)
       {
-        Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour2.Slot);
+        Spine.Slot slot = componentInChildren.Skeleton.FindSlot(slotAndColour2.Slot);
         if (slot != null)
           slot.SetColor(slotAndColour1.AllColor);
       }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BreakableSpiderNest
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -12,7 +12,6 @@ using Spine;
 using Spine.Unity;
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -145,6 +144,7 @@ public class BreakableSpiderNest : BaseMonoBehaviour
   {
     if (this.spawned || BiomeGenerator.Instance.CurrentRoom.Completed)
       return;
+    Vector3 pos = this.transform.position;
     this.spawned = true;
     AudioManager.Instance.PlayOneShot("event:/boss/frog/tongue_impact", this.gameObject);
     Interaction_Chest.Instance?.Enemies.Add((Health) null);
@@ -163,7 +163,8 @@ public class BreakableSpiderNest : BaseMonoBehaviour
           EnemySpider component = obj.Result.GetComponent<EnemySpider>();
           Interaction_Chest.Instance?.AddEnemy(component.health);
           EnemyRoundsBase.Instance?.AddEnemyToRound(component.health);
-          component.health.CanIncreaseDamageMultiplier = this.health.CanIncreaseDamageMultiplier;
+          if ((bool) (UnityEngine.Object) this.health)
+            component.health.CanIncreaseDamageMultiplier = this.health.CanIncreaseDamageMultiplier;
           foreach (SkeletonAnimation componentsInChild in component.GetComponentsInChildren<SkeletonAnimation>())
           {
             if ((double) this.growDuration != 0.0)
@@ -180,10 +181,14 @@ public class BreakableSpiderNest : BaseMonoBehaviour
           }
           component.StartCoroutine((IEnumerator) this.SpawnAnimIE(component));
           component.StartCoroutine((IEnumerator) this.DelayedEnemyHealthEnable((UnitObject) component));
-          UnityEngine.Object.Instantiate<GameObject>(this.spawnParticle, this.transform.position, Quaternion.identity);
+          UnityEngine.Object.Instantiate<GameObject>(this.spawnParticle, pos, Quaternion.identity);
+          if (!(bool) (UnityEngine.Object) this.hpBar)
+            return;
           this.hpBar.DestroyHPBar();
         }
       }));
+    if (!(bool) (UnityEngine.Object) this.health)
+      return;
     this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position);
   }
 
@@ -194,11 +199,10 @@ public class BreakableSpiderNest : BaseMonoBehaviour
     Health.AttackTypes AttackType,
     Health.AttackFlags AttackFlags)
   {
-    this.gameObject.SetActive(false);
     Health.team2.Remove(this.health);
-    Interaction_Chest.Instance?.Enemies.Remove(this.health);
     Bounds bounds = this.GetComponent<Collider2D>().bounds;
     AstarPath.active.UpdateGraphs(bounds);
+    UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);
   }
 
   public IEnumerator SpawnAnimIE(EnemySpider enemy)
@@ -246,40 +250,4 @@ public class BreakableSpiderNest : BaseMonoBehaviour
   }
 
   public void OnDrawGizmos() => Utils.DrawCircleXY(this.transform.position, this.radius, Color.red);
-
-  [CompilerGenerated]
-  public void \u003CSpawnEnemies\u003Eb__27_0(AsyncOperationHandle<GameObject> obj)
-  {
-    if (BiomeGenerator.Instance.CurrentRoom.Completed)
-    {
-      UnityEngine.Object.Destroy((UnityEngine.Object) obj.Result);
-      Addressables.Release<GameObject>(obj);
-    }
-    else
-    {
-      Interaction_Chest.Instance?.Enemies.Remove((Health) null);
-      EnemySpider component = obj.Result.GetComponent<EnemySpider>();
-      Interaction_Chest.Instance?.AddEnemy(component.health);
-      EnemyRoundsBase.Instance?.AddEnemyToRound(component.health);
-      component.health.CanIncreaseDamageMultiplier = this.health.CanIncreaseDamageMultiplier;
-      foreach (SkeletonAnimation componentsInChild in component.GetComponentsInChildren<SkeletonAnimation>())
-      {
-        if ((double) this.growDuration != 0.0)
-        {
-          Vector3 localScale = componentsInChild.transform.localScale;
-          componentsInChild.transform.localScale = Vector3.zero;
-          componentsInChild.transform.DOScale(localScale, this.growDuration).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.Linear);
-        }
-        if (!string.IsNullOrEmpty(this.spawnAnimation))
-        {
-          componentsInChild.AnimationState.SetAnimation(0, this.spawnAnimation, false);
-          componentsInChild.AnimationState.AddAnimation(0, "idle", true, 0.0f);
-        }
-      }
-      component.StartCoroutine((IEnumerator) this.SpawnAnimIE(component));
-      component.StartCoroutine((IEnumerator) this.DelayedEnemyHealthEnable((UnitObject) component));
-      UnityEngine.Object.Instantiate<GameObject>(this.spawnParticle, this.transform.position, Quaternion.identity);
-      this.hpBar.DestroyHPBar();
-    }
-  }
 }

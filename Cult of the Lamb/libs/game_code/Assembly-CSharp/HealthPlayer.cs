@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HealthPlayer
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -138,10 +138,14 @@ public class HealthPlayer : Health
     DataManager.Instance.PLAYER_BLUE_HEARTS = this.playerFarming.isLamb ? 0.0f : DataManager.Instance.PLAYER_BLUE_HEARTS;
     DataManager.Instance.PLAYER_BLACK_HEARTS = this.playerFarming.isLamb ? 0.0f : DataManager.Instance.PLAYER_BLACK_HEARTS;
     DataManager.Instance.PLAYER_SPIRIT_TOTAL_HEARTS = this.playerFarming.isLamb ? 0.0f : DataManager.Instance.PLAYER_SPIRIT_TOTAL_HEARTS;
+    DataManager.Instance.PLAYER_FIRE_HEARTS = this.playerFarming.isLamb ? 0.0f : DataManager.Instance.PLAYER_FIRE_HEARTS;
+    DataManager.Instance.PLAYER_ICE_HEARTS = this.playerFarming.isLamb ? 0.0f : DataManager.Instance.PLAYER_ICE_HEARTS;
     DataManager.Instance.PLAYER_REMOVED_HEARTS = this.playerFarming.isLamb ? 0.0f : DataManager.Instance.PLAYER_REMOVED_HEARTS;
     DataManager.Instance.COOP_PLAYER_BLUE_HEARTS = !this.playerFarming.isLamb ? 0.0f : DataManager.Instance.COOP_PLAYER_BLUE_HEARTS;
     DataManager.Instance.COOP_PLAYER_BLACK_HEARTS = !this.playerFarming.isLamb ? 0.0f : DataManager.Instance.COOP_PLAYER_BLACK_HEARTS;
     DataManager.Instance.COOP_PLAYER_SPIRIT_TOTAL_HEARTS = !this.playerFarming.isLamb ? 0.0f : DataManager.Instance.COOP_PLAYER_SPIRIT_TOTAL_HEARTS;
+    DataManager.Instance.COOP_PLAYER_FIRE_HEARTS = !this.playerFarming.isLamb ? 0.0f : DataManager.Instance.COOP_PLAYER_FIRE_HEARTS;
+    DataManager.Instance.COOP_PLAYER_ICE_HEARTS = !this.playerFarming.isLamb ? 0.0f : DataManager.Instance.COOP_PLAYER_ICE_HEARTS;
     DataManager.Instance.COOP_PLAYER_REMOVED_HEARTS = !this.playerFarming.isLamb ? 0.0f : DataManager.Instance.COOP_PLAYER_REMOVED_HEARTS;
   }
 

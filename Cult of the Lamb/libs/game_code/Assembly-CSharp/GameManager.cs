@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GameManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -234,11 +234,6 @@ public class GameManager : MonoBehaviour
   {
     this.SetGlobalShaders();
     SteamAPI.Init();
-    if (!DataManager.CheckIfThereAreSkinsAvailableAll())
-    {
-      Debug.Log((object) "Follower Skin Achievement Unlocked");
-      AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup("ALL_SKINS_UNLOCKED"));
-    }
     this.CheckDLCStatus();
     SeasonsManager.Initialise();
     if (DataManager.Instance.eggsHatched < 1)
@@ -277,18 +272,25 @@ public class GameManager : MonoBehaviour
     int num1 = 0;
     for (int index = 0; index < DataManager.Instance.PlayerFoundTrinkets.Count; ++index)
     {
-      if (!TarotCards.CoopCards.Contains<TarotCards.Card>(DataManager.Instance.PlayerFoundTrinkets[index]))
+      if (!TarotCards.CoopCards.Contains<TarotCards.Card>(DataManager.Instance.PlayerFoundTrinkets[index]) && !TarotCards.MajorDLCCards.Contains<TarotCards.Card>(DataManager.Instance.PlayerFoundTrinkets[index]))
         ++num1;
     }
     int num2 = 0;
     for (int index = 0; index < DataManager.AllTrinkets.Count; ++index)
     {
-      if (!TarotCards.CoopCards.Contains<TarotCards.Card>(DataManager.AllTrinkets[index]))
+      if (!TarotCards.CoopCards.Contains<TarotCards.Card>(DataManager.AllTrinkets[index]) && !TarotCards.MajorDLCCards.Contains<TarotCards.Card>(DataManager.AllTrinkets[index]))
         ++num2;
     }
-    if (num1 < num2)
-      return;
-    AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup("ALL_TAROTS_UNLOCKED"));
+    if (num1 >= num2)
+      AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup("ALL_TAROTS_UNLOCKED"));
+    if (!DataManager.CheckIfThereAreSkinsAvailableAll())
+    {
+      Debug.Log((object) "Follower Skin Achievement Unlocked");
+      AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup("ALL_SKINS_UNLOCKED"));
+    }
+    if (DataManager.Instance.BeatenExecutioner)
+      AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup(AchievementsWrapper.Tags.BEAT_EXECUTIONER));
+    DataManager.CheckAllLegendaryWeaponsUnlocked();
   }
 
   public static bool AuthenticateCultistDLC()

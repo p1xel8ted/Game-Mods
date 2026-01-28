@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: I2.Loc.ResourceManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A2AB015A-5AB3-4BBD-8AD6-CE3D7C83DC19
+// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -19,6 +19,7 @@ namespace I2.Loc;
 
 public class ResourceManager : MonoBehaviour
 {
+  public static bool initialising;
   public static ResourceManager mInstance;
   public List<IResourceManager_Bundles> mBundleManagers = new List<IResourceManager_Bundles>();
   public UnityEngine.Object[] Assets;
@@ -31,6 +32,11 @@ public class ResourceManager : MonoBehaviour
     get
     {
       bool flag = (UnityEngine.Object) ResourceManager.mInstance == (UnityEngine.Object) null;
+      if (!ResourceManager.initialising)
+      {
+        Addressables.InitializeAsync();
+        ResourceManager.initialising = true;
+      }
       if ((UnityEngine.Object) ResourceManager.mInstance == (UnityEngine.Object) null)
         ResourceManager.mInstance = (ResourceManager) UnityEngine.Object.FindObjectOfType((System.Type) typeof (ResourceManager));
       if ((UnityEngine.Object) ResourceManager.mInstance == (UnityEngine.Object) null)
