@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TailorManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -50,11 +50,11 @@ public static class TailorManager
     int clothingCount = 0;
     foreach (global::ClothingData clothingData in TailorManager.ClothingData)
     {
-      if (includeNormal && !clothingData.SpecialClothing && !clothingData.IsDLC)
+      if (includeNormal && !clothingData.SpecialClothing && !clothingData.IsDLC && !clothingData.IsMajorDLC)
         ++clothingCount;
-      if (includeSpecial && clothingData.SpecialClothing && !clothingData.IsDLC)
+      if (includeSpecial && clothingData.SpecialClothing && !clothingData.IsDLC && !clothingData.IsMajorDLC)
         ++clothingCount;
-      if (includeDLC && clothingData.IsDLC)
+      if (includeDLC && clothingData.IsDLC && !clothingData.IsMajorDLC)
         ++clothingCount;
       if (includeMajorDLC && clothingData.IsMajorDLC)
         ++clothingCount;
@@ -127,7 +127,7 @@ public static class TailorManager
     List<global::ClothingData> unavailableWeatherClothing = new List<global::ClothingData>((IEnumerable<global::ClothingData>) TailorManager.ClothingData);
     for (int index = unavailableWeatherClothing.Count - 1; index >= 0; --index)
     {
-      if (unavailableWeatherClothing[index].HideOnTailorMenu || unavailableWeatherClothing[index].SpecialClothing || DataManager.Instance.UnlockedClothing.Contains(unavailableWeatherClothing[index].ClothingType))
+      if (unavailableWeatherClothing[index].HideOnTailorMenu || unavailableWeatherClothing[index].IsDLC || unavailableWeatherClothing[index].IsMajorDLC || unavailableWeatherClothing[index].SpecialClothing || DataManager.Instance.UnlockedClothing.Contains(unavailableWeatherClothing[index].ClothingType))
         unavailableWeatherClothing.RemoveAt(index);
     }
     return unavailableWeatherClothing;
@@ -495,12 +495,17 @@ public static class TailorManager
 
   public static bool HasUnlockedAllClothing()
   {
-    int num = 0;
+    int num1 = 0;
+    int num2 = 0;
     foreach (global::ClothingData clothingData in TailorManager.ClothingData)
     {
-      if ((DataManager.Instance.DLC_Cultist_Pack || !DataManager.Instance.Cultist_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType)) && (DataManager.Instance.DLC_Heretic_Pack || !DataManager.Instance.Heretic_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType)) && (DataManager.Instance.DLC_Pilgrim_Pack || !DataManager.Instance.Pilgrim_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType)) && (DataManager.Instance.DLC_Sinful_Pack || !DataManager.Instance.Sinful_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType)) && (DataManager.Instance.MAJOR_DLC || !DataManager.Instance.Major_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType)))
-        ++num;
+      if (!DataManager.Instance.Cultist_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType) && !DataManager.Instance.Heretic_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType) && !DataManager.Instance.Pilgrim_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType) && !DataManager.Instance.Sinful_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType) && !DataManager.Instance.Major_DLC_Clothing.Contains<FollowerClothingType>(clothingData.ClothingType))
+      {
+        if (DataManager.Instance.UnlockedClothing.Contains(clothingData.ClothingType))
+          ++num2;
+        ++num1;
+      }
     }
-    return DataManager.Instance.UnlockedClothing.Count >= num;
+    return num2 >= num1;
   }
 }

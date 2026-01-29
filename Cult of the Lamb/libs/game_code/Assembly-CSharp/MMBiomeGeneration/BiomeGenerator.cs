@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMBiomeGeneration.BiomeGenerator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -1797,7 +1797,7 @@ public class BiomeGenerator : BaseMonoBehaviour
 
   public static Vector3 GetRandomPositionInIsland()
   {
-    LayerMask layerMask = (LayerMask) ((int) (LayerMask) ((int) new LayerMask() | 1 << LayerMask.NameToLayer("Island")) | 1 << LayerMask.NameToLayer("Obstacles Player Ignore"));
+    LayerMask layerMask = (LayerMask) ((int) (LayerMask) ((int) (LayerMask) ((int) new LayerMask() | 1 << LayerMask.NameToLayer("Island")) | 1 << LayerMask.NameToLayer("Obstacles Player Ignore")) | 1 << LayerMask.NameToLayer("Obstacles"));
     float x = Physics2D.Raycast((Vector2) Vector3.zero, (Vector2) Vector3.right, 100f, (int) layerMask).point.x;
     float y = Physics2D.Raycast((Vector2) Vector3.zero, (Vector2) Vector3.up, 100f, (int) layerMask).point.y;
     int num = 10;
@@ -1814,7 +1814,7 @@ public class BiomeGenerator : BaseMonoBehaviour
 
   public static bool PointWithinIsland(Vector3 point, out Vector3 closestPoint)
   {
-    LayerMask layerMask = (LayerMask) ((int) (LayerMask) ((int) new LayerMask() | 1 << LayerMask.NameToLayer("Island")) | 1 << LayerMask.NameToLayer("Obstacles Player Ignore"));
+    LayerMask layerMask = (LayerMask) ((int) (LayerMask) ((int) (LayerMask) ((int) new LayerMask() | 1 << LayerMask.NameToLayer("Island")) | 1 << LayerMask.NameToLayer("Obstacles Player Ignore")) | 1 << LayerMask.NameToLayer("Obstacles"));
     RaycastHit2D raycastHit2D = Physics2D.Raycast((Vector2) Vector3.zero, (Vector2) point.normalized, point.magnitude, (int) layerMask);
     closestPoint = (UnityEngine.Object) raycastHit2D.collider != (UnityEngine.Object) null ? (Vector3) raycastHit2D.point : point;
     return (UnityEngine.Object) raycastHit2D.collider == (UnityEngine.Object) null;

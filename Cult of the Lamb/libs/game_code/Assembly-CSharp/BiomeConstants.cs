@@ -1,13 +1,14 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BiomeConstants
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using MMBiomeGeneration;
+using Spine;
 using Spine.Unity;
 using System;
 using System.Collections;
@@ -777,10 +778,10 @@ public class BiomeConstants : BaseMonoBehaviour
     {
       component1.Spine.UseDeltaTime = useDeltaTime;
       SkeletonRenderer component2 = component1.Spine.GetComponent<SkeletonRenderer>();
-      Spine.Slot slot1 = component2.Skeleton.FindSlot("SlashPlayer_0");
-      Spine.Slot slot2 = component2.Skeleton.FindSlot("Swipe_1");
-      Spine.Slot slot3 = component2.Skeleton.FindSlot("Swipe_2");
-      Spine.Slot slot4 = component2.Skeleton.FindSlot("Swipe 3");
+      Slot slot1 = component2.Skeleton.FindSlot("SlashPlayer_0");
+      Slot slot2 = component2.Skeleton.FindSlot("Swipe_1");
+      Slot slot3 = component2.Skeleton.FindSlot("Swipe_2");
+      Slot slot4 = component2.Skeleton.FindSlot("Swipe 3");
       slot1.SetColor(StaticColors.GreenColor);
       slot2.SetColor(StaticColors.GreenColor);
       slot3.SetColor(StaticColors.GreenColor);

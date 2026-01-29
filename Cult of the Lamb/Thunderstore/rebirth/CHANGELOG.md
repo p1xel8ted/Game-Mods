@@ -1,6 +1,7 @@
 ### 1.1.2 - 29/01/2026
 
-* Unique followers (Webber, Sozo, Ratau, etc.) now retain their original skin, traits, and name when reborn.
+* Added "Preserve Unique Followers" option (enabled by default) to control whether unique followers (Webber, Sozo, Ratau, etc.) keep their skin and traits when reborn.
+* Names are now always randomized for all followers, including unique ones.
 
 ### 1.1.1 - 24/01/2026
 

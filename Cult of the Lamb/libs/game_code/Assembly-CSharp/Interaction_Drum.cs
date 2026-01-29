@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Drum
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -425,16 +425,20 @@ public class Interaction_Drum : Interaction
       while (cDisplayClass370.winningFollower.InGiveSinSequence)
         yield return (object) null;
       // ISSUE: reference to a compiler-generated field
-      if (cDisplayClass370.winningFollower.Brain.HasTrait(FollowerTrait.TraitType.MusicLover))
+      if ((UnityEngine.Object) cDisplayClass370.winningFollower != (UnityEngine.Object) null)
       {
         // ISSUE: reference to a compiler-generated field
-        cDisplayClass370.winningFollower.GiveSinToPlayer((System.Action) null);
+        if (cDisplayClass370.winningFollower.Brain.HasTrait(FollowerTrait.TraitType.MusicLover))
+        {
+          // ISSUE: reference to a compiler-generated field
+          cDisplayClass370.winningFollower.GiveSinToPlayer((System.Action) null);
+        }
+        // ISSUE: reference to a compiler-generated field
+        while (cDisplayClass370.winningFollower.InGiveSinSequence)
+          yield return (object) null;
+        // ISSUE: reference to a compiler-generated field
+        cDisplayClass370.winningFollower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_ManualControl());
       }
-      // ISSUE: reference to a compiler-generated field
-      while (cDisplayClass370.winningFollower.InGiveSinSequence)
-        yield return (object) null;
-      // ISSUE: reference to a compiler-generated field
-      cDisplayClass370.winningFollower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_ManualControl());
       drum.playerFarming.Spine.transform.DOLocalMove(Vector3.zero, 0.5f);
       yield return (object) new WaitForSeconds(1f);
       ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.DrumCircle);

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SpiderBossIntroRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -10,6 +10,7 @@ using DG.Tweening.Plugins.Options;
 using I2.Loc;
 using Lamb.UI;
 using MMTools;
+using Spine;
 using Spine.Unity;
 using src.UINavigator;
 using System.Collections;
@@ -485,7 +486,7 @@ public class SpiderBossIntroRitual : BaseMonoBehaviour
       follower.Follower.Spine.Skeleton.SetSkin(follower.FollowerBrain.Info.SkinName);
       foreach (WorshipperData.SlotAndColor slotAndColour in WorshipperData.Instance.GetColourData(follower.FollowerBrain.Info.SkinName).SlotAndColours[follower.FollowerBrain.Info.SkinColour].SlotAndColours)
       {
-        Spine.Slot slot = follower.Follower.Spine.Skeleton.FindSlot(slotAndColour.Slot);
+        Slot slot = follower.Follower.Spine.Skeleton.FindSlot(slotAndColour.Slot);
         if (slot != null)
           slot.SetColor(slotAndColour.color);
       }

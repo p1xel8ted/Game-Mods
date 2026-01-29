@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: interaction_FollowerInteraction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1435,1001 +1435,1008 @@ public class interaction_FollowerInteraction : Interaction
 
   public void OnFollowerCommandFinalized(params FollowerCommands[] followerCommands)
   {
-    FollowerCommands followerCommand = followerCommands[0];
-    FollowerCommands preFinalCommand = followerCommands.Length > 1 ? followerCommands[1] : FollowerCommands.None;
-    Debug.Log((object) $"Follower Command Finalized with {followerCommand} and {preFinalCommand}".Colour(Color.green));
-    switch (followerCommand)
+    if ((UnityEngine.Object) this.follower == (UnityEngine.Object) null || !this.follower.gameObject.activeInHierarchy)
     {
-      case FollowerCommands.GiveWorkerCommand_2:
-      case FollowerCommands.MakeDemand:
-        if (this.follower.Brain.Info.CursedState == Thought.OldAge)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("TooOldToWork");
+      this.Close(false, reshowMenu: false);
+    }
+    else
+    {
+      FollowerCommands followerCommand = followerCommands[0];
+      FollowerCommands preFinalCommand = followerCommands.Length > 1 ? followerCommands[1] : FollowerCommands.None;
+      Debug.Log((object) $"Follower Command Finalized with {followerCommand} and {preFinalCommand}".Colour(Color.green));
+      switch (followerCommand)
+      {
+        case FollowerCommands.GiveWorkerCommand_2:
+        case FollowerCommands.MakeDemand:
+          if (this.follower.Brain.Info.CursedState == Thought.OldAge)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("TooOldToWork");
+            break;
+          }
+          if (this.follower.Brain.Info.CursedState == Thought.Ill)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("TooIllToWork");
+            break;
+          }
+          if (this.follower.Brain.Info.CursedState == Thought.BecomeStarving)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("TooHungryToWork");
+            break;
+          }
+          if (FollowerBrainStats.IsHoliday)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("HolidayIsActive");
+            break;
+          }
+          if (FollowerBrainStats.IsNudism)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("NudismIsActive");
+            break;
+          }
+          if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.JiltedLover))
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("JiltedLoverRefuseToWork");
+            break;
+          }
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.ChangeRole:
+        case FollowerCommands.Talk:
+          if (followerCommands.Length == 1 && followerCommands[0] == FollowerCommands.GiveWorkerCommand_2)
+          {
+            if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard && !this.follower.Brain.CanWork)
+            {
+              this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+              this.CloseAndSpeak("TooColdToWork");
+              break;
+            }
+            if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter && (double) WarmthBar.WarmthNormalized <= 0.0)
+            {
+              this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+              this.CloseAndSpeak("TooColdToWork/Heket");
+              break;
+            }
+            if (this.follower.Brain.Info.CursedState == Thought.Injured)
+            {
+              this.CloseAndSpeak("TooInjuredToWork");
+              break;
+            }
+            this.CloseAndSpeak("NoTasksAvailable");
+            break;
+          }
+          this.Close(true, reshowMenu: false);
+          if (!this.follower.Brain.HasTrait(FollowerTrait.TraitType.Drowsy) || (double) UnityEngine.Random.value >= 0.89999997615814209 || this.follower.Brain.Info.FollowerRole != FollowerRole.Worker && this.follower.Brain.Info.FollowerRole != FollowerRole.Lumberjack && this.follower.Brain.Info.FollowerRole != FollowerRole.Bartender && this.follower.Brain.Info.FollowerRole != FollowerRole.Chef && this.follower.Brain.Info.FollowerRole != FollowerRole.Farmer && this.follower.Brain.Info.FollowerRole != FollowerRole.Forager && this.follower.Brain.Info.FollowerRole != FollowerRole.Janitor && this.follower.Brain.Info.FollowerRole != FollowerRole.Monk && this.follower.Brain.Info.FollowerRole != FollowerRole.Refiner && this.follower.Brain.Info.FollowerRole != FollowerRole.StoneMiner && this.follower.Brain.Info.FollowerRole != FollowerRole.Undertaker && this.follower.Brain.Info.FollowerRole != FollowerRole.Rancher && this.follower.Brain.Info.FollowerRole != FollowerRole.Medic && this.follower.Brain.Info.FollowerRole != FollowerRole.Worshipper)
+            break;
+          this.DoDrowsySleepAfterCommandGiven();
           break;
-        }
-        if (this.follower.Brain.Info.CursedState == Thought.Ill)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("TooIllToWork");
+        case FollowerCommands.BedRest:
+          if (this.follower.Brain.Info.CursedState == Thought.Ill)
+          {
+            this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+            List<Structures_HealingBay> structuresOfType = StructureManager.GetAllStructuresOfType<Structures_HealingBay>(FollowerLocation.Base);
+            bool flag = false;
+            for (int index = structuresOfType.Count - 1; index >= 0; --index)
+            {
+              if (!structuresOfType[index].CheckIfOccupied() || structuresOfType[index].Data.FollowerID == this.follower.Brain.Info.ID)
+              {
+                flag = true;
+                break;
+              }
+            }
+            if (!flag && this.follower.Brain.HasHome && (UnityEngine.Object) Dwelling.GetDwellingByID(this.follower.Brain._directInfoAccess.DwellingID) != (UnityEngine.Object) null && Dwelling.GetDwellingByID(this.follower.Brain._directInfoAccess.DwellingID).StructureBrain.IsCollapsed)
+            {
+              this.CloseAndSpeak("SendToBedRest/BrokenBed", (System.Action) (() =>
+              {
+                this.follower.Brain.CompleteCurrentTask();
+                this.follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_SleepBedRest());
+                this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.SleepBedRest);
+              }));
+              break;
+            }
+            if (this.previousTaskType != FollowerTaskType.ClaimDwelling)
+            {
+              this.follower.Brain.CompleteCurrentTask();
+              this.follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_SleepBedRest());
+              this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.SleepBedRest);
+              goto case FollowerCommands.ChangeRole;
+            }
+            this.StartCoroutine((IEnumerator) this.DelayCallback(1f, (System.Action) (() => this.follower.Brain.CurrentOverrideTaskType = FollowerTaskType.SleepBedRest)));
+            goto case FollowerCommands.ChangeRole;
+          }
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.ExtortMoney:
+          if (this.follower.Brain.Stats.PaidTithes)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            Debug.Log((object) "ALREADY TITHES!");
+            this.CloseAndSpeak("AlreadyPaidTithes");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.Stats.PaidTithes = true;
+          this.StartCoroutine((IEnumerator) this.ExtortMoneyRoutine());
+          AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.transform.position);
           break;
-        }
-        if (this.follower.Brain.Info.CursedState == Thought.BecomeStarving)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("TooHungryToWork");
+        case FollowerCommands.Dance:
+          if (this.follower.Brain.Stats.Inspired)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("AlreadyInspired");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.Stats.Inspired = true;
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.DanceRoutine(true))));
           break;
-        }
-        if (FollowerBrainStats.IsHoliday)
-        {
+        case FollowerCommands.Gift:
           this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("HolidayIsActive");
+          this.CloseAndSpeak("NoGifts");
           break;
-        }
-        if (FollowerBrainStats.IsNudism)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("NudismIsActive");
+        case FollowerCommands.Imprison:
+          BiomeConstants.Instance.DepthOfFieldTween(1.5f, 5f, 10f, 1f, 145f);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          double num1 = (double) this.follower.SetBodyAnimation("picked-up-hate", true);
+          Prison ClosestPrison = this.GetClosestPrison();
+          ClosestPrison.StructureInfo.FollowerID = this.follower.Brain.Info.ID;
+          this.playerFarming.PickUpFollower(this.follower);
+          this.playerFarming.GoToAndStop(ClosestPrison.PrisonerLocation.gameObject, ClosestPrison.gameObject, true, true, (System.Action) (() =>
+          {
+            this.playerFarming.DropFollower();
+            foreach (FollowerBrain allBrain in FollowerBrain.AllBrains)
+            {
+              if (allBrain.Location == this.follower.Brain.Location && allBrain != this.follower.Brain)
+              {
+                if ((double) this.follower.Brain.Stats.Reeducation > 0.0)
+                {
+                  if (allBrain.CurrentTaskType == FollowerTaskType.Sleep)
+                    allBrain.AddThought(Thought.DissenterImprisonedSleeping);
+                  else if (allBrain.HasTrait(FollowerTrait.TraitType.Libertarian))
+                    allBrain.AddThought(Thought.ImprisonedLibertarian);
+                  else
+                    allBrain.AddThought(Thought.DissenterImprisoned);
+                }
+                else if (allBrain.CurrentTaskType == FollowerTaskType.Sleep)
+                  allBrain.AddThought(Thought.InnocentImprisonedSleeping);
+                else if (allBrain.HasTrait(FollowerTrait.TraitType.Disciplinarian))
+                  allBrain.AddThought(Thought.InnocentImprisonedDisciplinarian);
+                else if (allBrain.HasTrait(FollowerTrait.TraitType.Libertarian))
+                  allBrain.AddThought(Thought.ImprisonedLibertarian);
+                else
+                  allBrain.AddThought(Thought.InnocentImprisoned);
+              }
+            }
+            if (this.follower.Brain.Info.CursedState != Thought.Dissenter)
+            {
+              bool flag1 = false;
+              foreach (ObjectivesData objective in DataManager.Instance.Objectives)
+              {
+                if (objective.Type == Objectives.TYPES.CUSTOM && ((Objectives_Custom) objective).CustomQuestType == Objectives.CustomQuestTypes.SendFollowerToPrison && ((Objectives_Custom) objective).TargetFollowerID == this.follower.Brain.Info.ID)
+                {
+                  flag1 = true;
+                  break;
+                }
+              }
+              bool flag2 = true;
+              if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.Spy))
+              {
+                flag2 = false;
+              }
+              else
+              {
+                foreach (Follower follower in Follower.Followers)
+                {
+                  if (follower.Brain._directInfoAccess.MurderedBy == this.follower.Brain.Info.ID)
+                  {
+                    flag2 = false;
+                    break;
+                  }
+                }
+              }
+              if (!flag1 & flag2)
+              {
+                if (DataManager.Instance.CultTraits.Contains(FollowerTrait.TraitType.Disciplinarian))
+                  CultFaithManager.AddThought(Thought.Cult_Imprison_Trait);
+                else
+                  CultFaithManager.AddThought(Thought.Cult_Imprison);
+              }
+            }
+            ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.SendFollowerToPrison, this.follower.Brain.Info.ID);
+            AudioManager.Instance.PlayOneShot("event:/followers/imprison", this.follower.transform.position);
+            this.follower.Brain.TransitionToTask((FollowerTask) new FollowerTask_Imprisoned(ClosestPrison.StructureInfo.ID));
+            int imprisonedDay = this.follower.Brain._directInfoAccess.ImprisonedDay;
+            this.follower.Brain._directInfoAccess.ImprisonedDay = TimeManager.CurrentDay;
+            ClosestPrison.StructureInfo.FollowerID = this.follower.Brain.Info.ID;
+            ClosestPrison.StructureInfo.FollowerImprisonedTimestamp = TimeManager.TotalElapsedGameTime;
+            ClosestPrison.StructureInfo.FollowerImprisonedFaith = this.follower.Brain.Stats.Reeducation;
+            if (!DataManager.Instance.Followers_Imprisoned_IDs.Contains(this.follower.Brain.Info.ID))
+              DataManager.Instance.Followers_Imprisoned_IDs.Add(this.follower.Brain.Info.ID);
+            if (this.follower.Brain.Info.ID == 99996 && this.follower.Brain._directInfoAccess.SozoBrainshed && this.follower.Brain.Info.CursedState == Thought.Dissenter && TimeManager.CurrentDay - imprisonedDay >= 1)
+            {
+              List<ConversationEntry> Entries = new List<ConversationEntry>()
+              {
+                new ConversationEntry(this.gameObject, "Conversation_NPC/SozoFollower/Imprisoned/0")
+              };
+              foreach (ConversationEntry conversationEntry in Entries)
+              {
+                conversationEntry.CharacterName = ScriptLocalization.NAMES.Sozo;
+                conversationEntry.DefaultAnimation = this.follower.Spine.AnimationState.GetCurrent(1).Animation.Name;
+              }
+              MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() =>
+              {
+                this.Close(false, reshowMenu: false);
+                this.follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "Prison/stocks");
+              })));
+            }
+            else
+              this.Close(false, reshowMenu: false);
+          }), 30f);
           break;
-        }
-        if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.JiltedLover))
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("JiltedLoverRefuseToWork");
-          break;
-        }
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.ChangeRole:
-      case FollowerCommands.Talk:
-        if (followerCommands.Length == 1 && followerCommands[0] == FollowerCommands.GiveWorkerCommand_2)
-        {
+        case FollowerCommands.CutTrees:
+        case FollowerCommands.ForageBerries:
+        case FollowerCommands.ClearWeeds:
+        case FollowerCommands.ClearRubble:
+        case FollowerCommands.WorshipAtShrine:
+        case FollowerCommands.Cook_2:
+        case FollowerCommands.Farmer_2:
+        case FollowerCommands.FaithEnforcer:
+        case FollowerCommands.TaxEnforcer:
+        case FollowerCommands.CollectTax:
+        case FollowerCommands.Janitor_2:
+        case FollowerCommands.Refiner_2:
+        case FollowerCommands.Undertaker:
+        case FollowerCommands.Brew:
+        case FollowerCommands.Medic:
+        case FollowerCommands.Rancher:
+        case FollowerCommands.Logistics:
+        case FollowerCommands.Handyman:
+        case FollowerCommands.TraitManipulator:
+        case FollowerCommands.MineRotstone:
           if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard && !this.follower.Brain.CanWork)
           {
             this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
             this.CloseAndSpeak("TooColdToWork");
             break;
           }
-          if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter && (double) WarmthBar.WarmthNormalized <= 0.0)
-          {
-            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-            this.CloseAndSpeak("TooColdToWork/Heket");
-            break;
-          }
-          if (this.follower.Brain.Info.CursedState == Thought.Injured)
-          {
-            this.CloseAndSpeak("TooInjuredToWork");
-            break;
-          }
-          this.CloseAndSpeak("NoTasksAvailable");
-          break;
-        }
-        this.Close(true, reshowMenu: false);
-        if (!this.follower.Brain.HasTrait(FollowerTrait.TraitType.Drowsy) || (double) UnityEngine.Random.value >= 0.89999997615814209 || this.follower.Brain.Info.FollowerRole != FollowerRole.Worker && this.follower.Brain.Info.FollowerRole != FollowerRole.Lumberjack && this.follower.Brain.Info.FollowerRole != FollowerRole.Bartender && this.follower.Brain.Info.FollowerRole != FollowerRole.Chef && this.follower.Brain.Info.FollowerRole != FollowerRole.Farmer && this.follower.Brain.Info.FollowerRole != FollowerRole.Forager && this.follower.Brain.Info.FollowerRole != FollowerRole.Janitor && this.follower.Brain.Info.FollowerRole != FollowerRole.Monk && this.follower.Brain.Info.FollowerRole != FollowerRole.Refiner && this.follower.Brain.Info.FollowerRole != FollowerRole.StoneMiner && this.follower.Brain.Info.FollowerRole != FollowerRole.Undertaker && this.follower.Brain.Info.FollowerRole != FollowerRole.Rancher && this.follower.Brain.Info.FollowerRole != FollowerRole.Medic && this.follower.Brain.Info.FollowerRole != FollowerRole.Worshipper)
-          break;
-        this.DoDrowsySleepAfterCommandGiven();
-        break;
-      case FollowerCommands.BedRest:
-        if (this.follower.Brain.Info.CursedState == Thought.Ill)
-        {
+          this.ConvertToWorker();
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-          List<Structures_HealingBay> structuresOfType = StructureManager.GetAllStructuresOfType<Structures_HealingBay>(FollowerLocation.Base);
-          bool flag = false;
-          for (int index = structuresOfType.Count - 1; index >= 0; --index)
+          this.follower.Brain.Stats.WorkerBeenGivenOrders = true;
+          FollowerRole followerRole = this.follower.Brain.Info.FollowerRole;
+          FollowerRole NewRole = followerRole;
+          switch (followerCommand)
           {
-            if (!structuresOfType[index].CheckIfOccupied() || structuresOfType[index].Data.FollowerID == this.follower.Brain.Info.ID)
-            {
-              flag = true;
+            case FollowerCommands.CutTrees:
+              NewRole = FollowerRole.Lumberjack;
               break;
-            }
-          }
-          if (!flag && this.follower.Brain.HasHome && (UnityEngine.Object) Dwelling.GetDwellingByID(this.follower.Brain._directInfoAccess.DwellingID) != (UnityEngine.Object) null && Dwelling.GetDwellingByID(this.follower.Brain._directInfoAccess.DwellingID).StructureBrain.IsCollapsed)
-          {
-            this.CloseAndSpeak("SendToBedRest/BrokenBed", (System.Action) (() =>
-            {
-              this.follower.Brain.CompleteCurrentTask();
-              this.follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_SleepBedRest());
-              this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.SleepBedRest);
-            }));
-            break;
-          }
-          if (this.previousTaskType != FollowerTaskType.ClaimDwelling)
-          {
-            this.follower.Brain.CompleteCurrentTask();
-            this.follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_SleepBedRest());
-            this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.SleepBedRest);
-            goto case FollowerCommands.ChangeRole;
-          }
-          this.StartCoroutine((IEnumerator) this.DelayCallback(1f, (System.Action) (() => this.follower.Brain.CurrentOverrideTaskType = FollowerTaskType.SleepBedRest)));
-          goto case FollowerCommands.ChangeRole;
-        }
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.ExtortMoney:
-        if (this.follower.Brain.Stats.PaidTithes)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          Debug.Log((object) "ALREADY TITHES!");
-          this.CloseAndSpeak("AlreadyPaidTithes");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.Stats.PaidTithes = true;
-        this.StartCoroutine((IEnumerator) this.ExtortMoneyRoutine());
-        AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.transform.position);
-        break;
-      case FollowerCommands.Dance:
-        if (this.follower.Brain.Stats.Inspired)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("AlreadyInspired");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.Stats.Inspired = true;
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.DanceRoutine(true))));
-        break;
-      case FollowerCommands.Gift:
-        this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-        this.CloseAndSpeak("NoGifts");
-        break;
-      case FollowerCommands.Imprison:
-        BiomeConstants.Instance.DepthOfFieldTween(1.5f, 5f, 10f, 1f, 145f);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        double num1 = (double) this.follower.SetBodyAnimation("picked-up-hate", true);
-        Prison ClosestPrison = this.GetClosestPrison();
-        ClosestPrison.StructureInfo.FollowerID = this.follower.Brain.Info.ID;
-        this.playerFarming.PickUpFollower(this.follower);
-        this.playerFarming.GoToAndStop(ClosestPrison.PrisonerLocation.gameObject, ClosestPrison.gameObject, true, true, (System.Action) (() =>
-        {
-          this.playerFarming.DropFollower();
-          foreach (FollowerBrain allBrain in FollowerBrain.AllBrains)
-          {
-            if (allBrain.Location == this.follower.Brain.Location && allBrain != this.follower.Brain)
-            {
-              if ((double) this.follower.Brain.Stats.Reeducation > 0.0)
+            case FollowerCommands.ForageBerries:
+              NewRole = FollowerRole.Forager;
+              break;
+            case FollowerCommands.ClearRubble:
+              NewRole = FollowerRole.StoneMiner;
+              break;
+            case FollowerCommands.WorshipAtShrine:
+              NewRole = FollowerRole.Worshipper;
+              if (followerRole != NewRole)
               {
-                if (allBrain.CurrentTaskType == FollowerTaskType.Sleep)
-                  allBrain.AddThought(Thought.DissenterImprisonedSleeping);
-                else if (allBrain.HasTrait(FollowerTrait.TraitType.Libertarian))
-                  allBrain.AddThought(Thought.ImprisonedLibertarian);
-                else
-                  allBrain.AddThought(Thought.DissenterImprisoned);
-              }
-              else if (allBrain.CurrentTaskType == FollowerTaskType.Sleep)
-                allBrain.AddThought(Thought.InnocentImprisonedSleeping);
-              else if (allBrain.HasTrait(FollowerTrait.TraitType.Disciplinarian))
-                allBrain.AddThought(Thought.InnocentImprisonedDisciplinarian);
-              else if (allBrain.HasTrait(FollowerTrait.TraitType.Libertarian))
-                allBrain.AddThought(Thought.ImprisonedLibertarian);
-              else
-                allBrain.AddThought(Thought.InnocentImprisoned);
-            }
-          }
-          if (this.follower.Brain.Info.CursedState != Thought.Dissenter)
-          {
-            bool flag1 = false;
-            foreach (ObjectivesData objective in DataManager.Instance.Objectives)
-            {
-              if (objective.Type == Objectives.TYPES.CUSTOM && ((Objectives_Custom) objective).CustomQuestType == Objectives.CustomQuestTypes.SendFollowerToPrison && ((Objectives_Custom) objective).TargetFollowerID == this.follower.Brain.Info.ID)
-              {
-                flag1 = true;
+                this.follower.Brain.CheckChangeTask();
+                this.ShowDivineInspirationTutorialOnClose = true;
                 break;
               }
-            }
-            bool flag2 = true;
-            if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.Spy))
-            {
-              flag2 = false;
-            }
-            else
-            {
-              foreach (Follower follower in Follower.Followers)
-              {
-                if (follower.Brain._directInfoAccess.MurderedBy == this.follower.Brain.Info.ID)
-                {
-                  flag2 = false;
-                  break;
-                }
-              }
-            }
-            if (!flag1 & flag2)
-            {
-              if (DataManager.Instance.CultTraits.Contains(FollowerTrait.TraitType.Disciplinarian))
-                CultFaithManager.AddThought(Thought.Cult_Imprison_Trait);
-              else
-                CultFaithManager.AddThought(Thought.Cult_Imprison);
-            }
-          }
-          ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.SendFollowerToPrison, this.follower.Brain.Info.ID);
-          AudioManager.Instance.PlayOneShot("event:/followers/imprison", this.follower.transform.position);
-          this.follower.Brain.TransitionToTask((FollowerTask) new FollowerTask_Imprisoned(ClosestPrison.StructureInfo.ID));
-          int imprisonedDay = this.follower.Brain._directInfoAccess.ImprisonedDay;
-          this.follower.Brain._directInfoAccess.ImprisonedDay = TimeManager.CurrentDay;
-          ClosestPrison.StructureInfo.FollowerID = this.follower.Brain.Info.ID;
-          ClosestPrison.StructureInfo.FollowerImprisonedTimestamp = TimeManager.TotalElapsedGameTime;
-          ClosestPrison.StructureInfo.FollowerImprisonedFaith = this.follower.Brain.Stats.Reeducation;
-          if (!DataManager.Instance.Followers_Imprisoned_IDs.Contains(this.follower.Brain.Info.ID))
-            DataManager.Instance.Followers_Imprisoned_IDs.Add(this.follower.Brain.Info.ID);
-          if (this.follower.Brain.Info.ID == 99996 && this.follower.Brain._directInfoAccess.SozoBrainshed && this.follower.Brain.Info.CursedState == Thought.Dissenter && TimeManager.CurrentDay - imprisonedDay >= 1)
-          {
-            List<ConversationEntry> Entries = new List<ConversationEntry>()
-            {
-              new ConversationEntry(this.gameObject, "Conversation_NPC/SozoFollower/Imprisoned/0")
-            };
-            foreach (ConversationEntry conversationEntry in Entries)
-            {
-              conversationEntry.CharacterName = ScriptLocalization.NAMES.Sozo;
-              conversationEntry.DefaultAnimation = this.follower.Spine.AnimationState.GetCurrent(1).Animation.Name;
-            }
-            MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() =>
-            {
-              this.Close(false, reshowMenu: false);
-              this.follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "Prison/stocks");
-            })));
-          }
-          else
-            this.Close(false, reshowMenu: false);
-        }), 30f);
-        break;
-      case FollowerCommands.CutTrees:
-      case FollowerCommands.ForageBerries:
-      case FollowerCommands.ClearWeeds:
-      case FollowerCommands.ClearRubble:
-      case FollowerCommands.WorshipAtShrine:
-      case FollowerCommands.Cook_2:
-      case FollowerCommands.Farmer_2:
-      case FollowerCommands.FaithEnforcer:
-      case FollowerCommands.TaxEnforcer:
-      case FollowerCommands.CollectTax:
-      case FollowerCommands.Janitor_2:
-      case FollowerCommands.Refiner_2:
-      case FollowerCommands.Undertaker:
-      case FollowerCommands.Brew:
-      case FollowerCommands.Medic:
-      case FollowerCommands.Rancher:
-      case FollowerCommands.Logistics:
-      case FollowerCommands.Handyman:
-      case FollowerCommands.TraitManipulator:
-      case FollowerCommands.MineRotstone:
-        if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard && !this.follower.Brain.CanWork)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("TooColdToWork");
-          break;
-        }
-        this.ConvertToWorker();
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.Stats.WorkerBeenGivenOrders = true;
-        FollowerRole followerRole = this.follower.Brain.Info.FollowerRole;
-        FollowerRole NewRole = followerRole;
-        switch (followerCommand)
-        {
-          case FollowerCommands.CutTrees:
-            NewRole = FollowerRole.Lumberjack;
-            break;
-          case FollowerCommands.ForageBerries:
-            NewRole = FollowerRole.Forager;
-            break;
-          case FollowerCommands.ClearRubble:
-            NewRole = FollowerRole.StoneMiner;
-            break;
-          case FollowerCommands.WorshipAtShrine:
-            NewRole = FollowerRole.Worshipper;
-            if (followerRole != NewRole)
-            {
-              this.follower.Brain.CheckChangeTask();
-              this.ShowDivineInspirationTutorialOnClose = true;
               break;
-            }
-            break;
-          case FollowerCommands.Cook_2:
-            NewRole = FollowerRole.Chef;
-            break;
-          case FollowerCommands.Farmer_2:
-            NewRole = FollowerRole.Farmer;
-            break;
-          case FollowerCommands.CollectTax:
-            for (int index = 0; index < this.follower.Brain._directInfoAccess.TaxCollected; ++index)
-              ResourceCustomTarget.Create(this.playerFarming.gameObject, this.follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, (System.Action) null);
-            AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.follower.transform.position);
-            Inventory.AddItem(20, this.follower.Brain._directInfoAccess.TaxCollected);
-            this.follower.Brain._directInfoAccess.TaxCollected = 0;
-            break;
-          case FollowerCommands.Janitor_2:
-            NewRole = FollowerRole.Janitor;
-            break;
-          case FollowerCommands.Refiner_2:
-            NewRole = FollowerRole.Refiner;
-            break;
-          case FollowerCommands.Undertaker:
-            NewRole = FollowerRole.Undertaker;
-            break;
-          case FollowerCommands.Brew:
-            NewRole = FollowerRole.Bartender;
-            break;
-          case FollowerCommands.Medic:
-            NewRole = FollowerRole.Medic;
-            break;
-          case FollowerCommands.Rancher:
-            NewRole = FollowerRole.Rancher;
-            break;
-          case FollowerCommands.Logistics:
-            NewRole = FollowerRole.Logistics;
-            break;
-          case FollowerCommands.Handyman:
-            NewRole = FollowerRole.Handyman;
-            break;
-          case FollowerCommands.TraitManipulator:
-            NewRole = FollowerRole.TraitManipulator;
-            break;
-          case FollowerCommands.MineRotstone:
-            NewRole = FollowerRole.RotstoneMiner;
-            break;
-        }
-        if (NewRole != followerRole)
-        {
-          this.follower.Brain.NewRoleSet(NewRole);
-          this.follower.Brain.SetPersonalOverrideTask(FollowerTask.GetFollowerTaskFromRole(NewRole));
-          this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+            case FollowerCommands.Cook_2:
+              NewRole = FollowerRole.Chef;
+              break;
+            case FollowerCommands.Farmer_2:
+              NewRole = FollowerRole.Farmer;
+              break;
+            case FollowerCommands.CollectTax:
+              for (int index = 0; index < this.follower.Brain._directInfoAccess.TaxCollected; ++index)
+                ResourceCustomTarget.Create(this.playerFarming.gameObject, this.follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, (System.Action) null);
+              AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.follower.transform.position);
+              Inventory.AddItem(20, this.follower.Brain._directInfoAccess.TaxCollected);
+              this.follower.Brain._directInfoAccess.TaxCollected = 0;
+              break;
+            case FollowerCommands.Janitor_2:
+              NewRole = FollowerRole.Janitor;
+              break;
+            case FollowerCommands.Refiner_2:
+              NewRole = FollowerRole.Refiner;
+              break;
+            case FollowerCommands.Undertaker:
+              NewRole = FollowerRole.Undertaker;
+              break;
+            case FollowerCommands.Brew:
+              NewRole = FollowerRole.Bartender;
+              break;
+            case FollowerCommands.Medic:
+              NewRole = FollowerRole.Medic;
+              break;
+            case FollowerCommands.Rancher:
+              NewRole = FollowerRole.Rancher;
+              break;
+            case FollowerCommands.Logistics:
+              NewRole = FollowerRole.Logistics;
+              break;
+            case FollowerCommands.Handyman:
+              NewRole = FollowerRole.Handyman;
+              break;
+            case FollowerCommands.TraitManipulator:
+              NewRole = FollowerRole.TraitManipulator;
+              break;
+            case FollowerCommands.MineRotstone:
+              NewRole = FollowerRole.RotstoneMiner;
+              break;
+          }
+          if (NewRole != followerRole)
           {
-            if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.Drowsy) && this.follower.Brain.CurrentTask.Type == FollowerTaskType.Sleep)
-              return;
-            this.follower.Brain.Info.FollowerRole = NewRole;
+            this.follower.Brain.NewRoleSet(NewRole);
+            this.follower.Brain.SetPersonalOverrideTask(FollowerTask.GetFollowerTaskFromRole(NewRole));
+            this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+            {
+              if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.Drowsy) && this.follower.Brain.CurrentTask.Type == FollowerTaskType.Sleep)
+                return;
+              this.follower.Brain.Info.FollowerRole = NewRole;
+              this.follower.Brain.Info.Outfit = FollowerOutfitType.Follower;
+              this.follower.SetOutfit(FollowerOutfitType.Follower, false);
+              List<FollowerTask> unoccupiedTasksOfType = FollowerBrain.GetAllUnoccupiedTasksOfType(FollowerTask.GetFollowerTaskFromRole(NewRole));
+              if (unoccupiedTasksOfType.Count <= 0)
+                return;
+              this.follower.Brain.HardSwapToTask(unoccupiedTasksOfType[UnityEngine.Random.Range(0, unoccupiedTasksOfType.Count)]);
+            })));
+            goto case FollowerCommands.ChangeRole;
+          }
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.Romance:
+          if (this.follower.Brain.Stats.KissedAction)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("AlreadySmooched");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.Stats.KissedAction = true;
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.RomanceRoutine())));
+          break;
+        case FollowerCommands.WakeUp:
+          if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter && this.follower.Brain.HasTrait(FollowerTrait.TraitType.Hibernation) && !this.follower.Brain._directInfoAccess.WorkThroughNight)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("SleepUntilSummer");
+            break;
+          }
+          if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Spring && this.follower.Brain.HasTrait(FollowerTrait.TraitType.Aestivation) && !this.follower.Brain._directInfoAccess.WorkThroughNight)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("SleepUntilWinter");
+            break;
+          }
+          if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard && !this.follower.Brain.CanWork)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("TooColdToWork");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          if (this.previousTaskType == FollowerTaskType.Sleep && this.follower.Brain.CurrentOverrideTaskType == FollowerTaskType.Sleep || this.previousTaskType == FollowerTaskType.SleepBedRest && this.follower.Brain.CurrentOverrideTaskType == FollowerTaskType.SleepBedRest)
+            this.follower.Brain.ClearPersonalOverrideTaskProvider();
+          if (TimeManager.IsNight)
+            this.follower.Brain.AddThought(Thought.SleepInterrupted);
+          this.follower.Brain._directInfoAccess.BrainwashedUntil = TimeManager.CurrentDay;
+          float faithMultiplier = this.follower.Brain.HasTrait(FollowerTrait.TraitType.Drowsy) ? 0.0f : 1f;
+          if (TimeManager.IsNight)
+            CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, this.follower.Brain.Info.ID, faithMultiplier);
+          this.Close(false, reshowMenu: false);
+          this.enabled = true;
+          this.follower.TimedAnimation("tantrum", 3.16666675f, (System.Action) (() =>
+          {
+            this.follower.Brain.CompleteCurrentTask();
+            this.follower.Brain._directInfoAccess.WakeUpDay = TimeManager.CurrentDay;
+            this.follower.Brain.CheckChangeTask();
+          }));
+          break;
+        case FollowerCommands.EatSomething:
+          if (FollowerBrainStats.Fasting)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("CantEatFasting");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+          this.CloseAndSpeak("NoMeals");
+          break;
+        case FollowerCommands.Sleep:
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Sleep);
+          this.follower.Brain.CompleteCurrentTask();
+          this.follower.Brain._directInfoAccess.WakeUpDay = -1;
+          if (this.follower.Brain.Info.IsDrunk && this.previousTaskType != FollowerTaskType.Sleep)
+          {
+            CultFaithManager.AddThought(Thought.Cult_SentDrunkFollowerToSleep, this.follower.Brain.Info.ID);
+            goto case FollowerCommands.ChangeRole;
+          }
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.Build:
+          int num2 = StructureManager.GetAllStructuresOfType<Structures_BuildSite>(in PlayerFarming.Location).Count + StructureManager.GetAllStructuresOfType<Structures_BuildSiteProject>(in PlayerFarming.Location).Count;
+          this.follower.Brain.Stats.WorkerBeenGivenOrders = true;
+          if (num2 > 0)
+          {
+            this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+            this.ConvertToWorker();
+            this.follower.Brain.Info.WorkerPriority = WorkerPriority.None;
+            this.follower.Brain.CompleteCurrentTask();
+            goto case FollowerCommands.ChangeRole;
+          }
+          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+          this.CloseAndSpeak("NoBuildingSites");
+          break;
+        case FollowerCommands.Meal:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealGrass:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GRASS);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GRASS);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealPoop:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_POOP);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_POOP);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealGoodFish:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GOOD_FISH);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GOOD_FISH);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealFollowerMeat:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_FOLLOWER_MEAT);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_FOLLOWER_MEAT);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealGreat:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMushrooms:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MUSHROOMS);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MUSHROOMS);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMeat:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MEAT);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MEAT);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.AreYouSureYes:
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() =>
+          {
+            switch (preFinalCommand)
+            {
+              case FollowerCommands.Murder:
+                this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+                this.playerFarming.StartCoroutine((IEnumerator) this.MurderFollower());
+                break;
+              case FollowerCommands.Ascend:
+                this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+                this.playerFarming.StartCoroutine((IEnumerator) this.AscendFollower());
+                break;
+            }
+          }));
+          break;
+        case FollowerCommands.Study:
+          if (this.follower.Brain.Info.FollowerRole != FollowerRole.Monk)
+          {
+            this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+            this.follower.Brain.Info.FollowerRole = FollowerRole.Monk;
             this.follower.Brain.Info.Outfit = FollowerOutfitType.Follower;
             this.follower.SetOutfit(FollowerOutfitType.Follower, false);
-            List<FollowerTask> unoccupiedTasksOfType = FollowerBrain.GetAllUnoccupiedTasksOfType(FollowerTask.GetFollowerTaskFromRole(NewRole));
-            if (unoccupiedTasksOfType.Count <= 0)
-              return;
-            this.follower.Brain.HardSwapToTask(unoccupiedTasksOfType[UnityEngine.Random.Range(0, unoccupiedTasksOfType.Count)]);
-          })));
-          goto case FollowerCommands.ChangeRole;
-        }
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.Romance:
-        if (this.follower.Brain.Stats.KissedAction)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("AlreadySmooched");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.Stats.KissedAction = true;
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.RomanceRoutine())));
-        break;
-      case FollowerCommands.WakeUp:
-        if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter && this.follower.Brain.HasTrait(FollowerTrait.TraitType.Hibernation) && !this.follower.Brain._directInfoAccess.WorkThroughNight)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("SleepUntilSummer");
-          break;
-        }
-        if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Spring && this.follower.Brain.HasTrait(FollowerTrait.TraitType.Aestivation) && !this.follower.Brain._directInfoAccess.WorkThroughNight)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("SleepUntilWinter");
-          break;
-        }
-        if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard && !this.follower.Brain.CanWork)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("TooColdToWork");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        if (this.previousTaskType == FollowerTaskType.Sleep && this.follower.Brain.CurrentOverrideTaskType == FollowerTaskType.Sleep || this.previousTaskType == FollowerTaskType.SleepBedRest && this.follower.Brain.CurrentOverrideTaskType == FollowerTaskType.SleepBedRest)
-          this.follower.Brain.ClearPersonalOverrideTaskProvider();
-        if (TimeManager.IsNight)
-          this.follower.Brain.AddThought(Thought.SleepInterrupted);
-        this.follower.Brain._directInfoAccess.BrainwashedUntil = TimeManager.CurrentDay;
-        float faithMultiplier = this.follower.Brain.HasTrait(FollowerTrait.TraitType.Drowsy) ? 0.0f : 1f;
-        if (TimeManager.IsNight)
-          CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, this.follower.Brain.Info.ID, faithMultiplier);
-        this.Close(false, reshowMenu: false);
-        this.enabled = true;
-        this.follower.TimedAnimation("tantrum", 3.16666675f, (System.Action) (() =>
-        {
-          this.follower.Brain.CompleteCurrentTask();
-          this.follower.Brain._directInfoAccess.WakeUpDay = TimeManager.CurrentDay;
-          this.follower.Brain.CheckChangeTask();
-        }));
-        break;
-      case FollowerCommands.EatSomething:
-        if (FollowerBrainStats.Fasting)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("CantEatFasting");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-        this.CloseAndSpeak("NoMeals");
-        break;
-      case FollowerCommands.Sleep:
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Sleep);
-        this.follower.Brain.CompleteCurrentTask();
-        this.follower.Brain._directInfoAccess.WakeUpDay = -1;
-        if (this.follower.Brain.Info.IsDrunk && this.previousTaskType != FollowerTaskType.Sleep)
-        {
-          CultFaithManager.AddThought(Thought.Cult_SentDrunkFollowerToSleep, this.follower.Brain.Info.ID);
-          goto case FollowerCommands.ChangeRole;
-        }
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.Build:
-        int num2 = StructureManager.GetAllStructuresOfType<Structures_BuildSite>(in PlayerFarming.Location).Count + StructureManager.GetAllStructuresOfType<Structures_BuildSiteProject>(in PlayerFarming.Location).Count;
-        this.follower.Brain.Stats.WorkerBeenGivenOrders = true;
-        if (num2 > 0)
-        {
-          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-          this.ConvertToWorker();
-          this.follower.Brain.Info.WorkerPriority = WorkerPriority.None;
-          this.follower.Brain.CompleteCurrentTask();
-          goto case FollowerCommands.ChangeRole;
-        }
-        this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-        this.CloseAndSpeak("NoBuildingSites");
-        break;
-      case FollowerCommands.Meal:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealGrass:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GRASS);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GRASS);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealPoop:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_POOP);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_POOP);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealGoodFish:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GOOD_FISH);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GOOD_FISH);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealFollowerMeat:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_FOLLOWER_MEAT);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_FOLLOWER_MEAT);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealGreat:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMushrooms:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MUSHROOMS);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MUSHROOMS);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMeat:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MEAT);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MEAT);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.AreYouSureYes:
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() =>
-        {
-          switch (preFinalCommand)
-          {
-            case FollowerCommands.Murder:
-              this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-              this.playerFarming.StartCoroutine((IEnumerator) this.MurderFollower());
-              break;
-            case FollowerCommands.Ascend:
-              this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-              this.playerFarming.StartCoroutine((IEnumerator) this.AscendFollower());
-              break;
+            this.follower.Brain.CheckChangeTask();
           }
-        }));
-        break;
-      case FollowerCommands.Study:
-        if (this.follower.Brain.Info.FollowerRole != FollowerRole.Monk)
-        {
-          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-          this.follower.Brain.Info.FollowerRole = FollowerRole.Monk;
-          this.follower.Brain.Info.Outfit = FollowerOutfitType.Follower;
-          this.follower.SetOutfit(FollowerOutfitType.Follower, false);
-          this.follower.Brain.CheckChangeTask();
-        }
-        this.follower.Brain.Stats.WorkerBeenGivenOrders = true;
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.Intimidate:
-        if (this.follower.Brain.Stats.Intimidated)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("AlreadyIntimidated");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.Stats.Intimidated = true;
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.IntimidateRoutine(true, this.playerFarming))));
-        break;
-      case FollowerCommands.Bribe:
-        if (this.follower.Brain.Stats.Bribed)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          Debug.Log((object) "ALREADY BRIBED! ");
-          this.CloseAndSpeak("AlreadyBribed");
-          break;
-        }
-        if (Inventory.GetItemQuantity(20) < 3)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("NoGoldBribe");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.StartCoroutine((IEnumerator) this.BribeRoutine());
-        break;
-      case FollowerCommands.Ascend:
-        if ((double) this.follower.Brain.Stats.Happiness >= 80.0)
-          break;
-        this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-        this.CloseAndSpeak("AscendFaithTooLow");
-        break;
-      case FollowerCommands.Surveillance:
-        UIFollowerInteractionWheelOverlayController activeMenu = UIManager.GetActiveMenu<UIFollowerInteractionWheelOverlayController>();
-        if ((UnityEngine.Object) activeMenu != (UnityEngine.Object) null)
-          activeMenu.OnHidden = (System.Action) null;
-        if ((double) this.transform.position.x < (double) this.state.transform.position.x)
-          GameManager.GetInstance().CameraSetOffset(new Vector3(-1f, 0.0f, -1f));
-        else
-          GameManager.GetInstance().CameraSetOffset(new Vector3(-2.5f, 0.0f, -1f));
-        UIFollowerSummaryMenuController followerSummaryMenuInstance = MonoSingleton<UIManager>.Instance.ShowFollowerSummaryMenu(this.follower);
-        UIFollowerSummaryMenuController summaryMenuController = followerSummaryMenuInstance;
-        summaryMenuController.OnHidden = summaryMenuController.OnHidden + (System.Action) (() =>
-        {
-          followerSummaryMenuInstance = (UIFollowerSummaryMenuController) null;
-          ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.ReadMind);
-          this.Close(true, reshowMenu: false);
-        });
-        HUD_Manager.Instance.Hide(false, 0);
-        break;
-      case FollowerCommands.Gift_Small:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_SMALL));
-        break;
-      case FollowerCommands.Gift_Medium:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_MEDIUM));
-        break;
-      case FollowerCommands.Gift_Necklace1:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_1));
-        break;
-      case FollowerCommands.Gift_Necklace2:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_2));
-        break;
-      case FollowerCommands.Gift_Necklace3:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_3));
-        break;
-      case FollowerCommands.Gift_Necklace4:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_4));
-        break;
-      case FollowerCommands.Gift_Necklace5:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_5));
-        break;
-      case FollowerCommands.Bless:
-        if (this.follower.Brain.Stats.ReceivedBlessing)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("AlreadyGivenBlessing");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.Stats.ReceivedBlessing = true;
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.BlessRoutine(true, this.playerFarming))));
-        break;
-      case FollowerCommands.MealGreatFish:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT_FISH);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT_FISH);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealBadFish:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BAD_FISH);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BAD_FISH);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.RemoveNecklace:
-        this.StartCoroutine((IEnumerator) this.RemoveNecklaceRoutine());
-        break;
-      case FollowerCommands.Reeducate:
-        if (this.follower.Brain.Stats.ReeducatedAction)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("AlreadyReeducated");
-          break;
-        }
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.Stats.ReeducatedAction = true;
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.ReeducateRoutine())));
-        break;
-      case FollowerCommands.MealBerries:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BERRIES);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BERRIES);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMediumVeg:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MEDIUM_VEG);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MEDIUM_VEG);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMixedLow:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BAD_MIXED);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BAD_MIXED);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMixedMedium:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MEDIUM_MIXED);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MEDIUM_MIXED);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMixedHigh:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT_MIXED);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT_MIXED);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealDeadly:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_DEADLY);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_DEADLY);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMeatLow:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BAD_MEAT);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BAD_MEAT);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMeatHigh:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT_MEAT);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT_MEAT);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.ViewTraits:
-        this.Close(true, reshowMenu: false);
-        MonoSingleton<UIManager>.Instance.ShowFollowerSummaryMenu(this.follower);
-        break;
-      case FollowerCommands.PetDog:
-        if (this.follower.Brain.Stats.PetDog)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.Close(true, reshowMenu: false);
-          break;
-        }
-        this.follower.Brain.Stats.PetDog = true;
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.PetDogRoutine())));
-        break;
-      case FollowerCommands.Gift_Necklace_Light:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Light));
-        break;
-      case FollowerCommands.Gift_Necklace_Dark:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Dark));
-        break;
-      case FollowerCommands.Gift_Necklace_Missionary:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Missionary));
-        break;
-      case FollowerCommands.Gift_Necklace_Demonic:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Demonic));
-        break;
-      case FollowerCommands.Gift_Necklace_Loyalty:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Loyalty));
-        break;
-      case FollowerCommands.Gift_Necklace_Gold_Skull:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Gold_Skull));
-        break;
-      case FollowerCommands.GiveLeaderItem:
-        FollowerLocation location = FollowerLocation.Dungeon1_1;
-        InventoryItem.ITEM_TYPE item = InventoryItem.ITEM_TYPE.FLOWER_RED;
-        if (this.follower.Brain.Info.ID == 99991)
-        {
-          location = FollowerLocation.Dungeon1_2;
-          item = InventoryItem.ITEM_TYPE.MUSHROOM_SMALL;
-        }
-        else if (this.follower.Brain.Info.ID == 99992)
-        {
-          location = FollowerLocation.Dungeon1_3;
-          item = InventoryItem.ITEM_TYPE.CRYSTAL;
-        }
-        else if (this.follower.Brain.Info.ID == 99993)
-        {
-          location = FollowerLocation.Dungeon1_4;
-          item = InventoryItem.ITEM_TYPE.SPIDER_WEB;
-        }
-        else if (this.follower.Brain.Info.ID == 100007)
-        {
-          location = FollowerLocation.Dungeon1_5;
-          item = InventoryItem.ITEM_TYPE.WOOL;
-        }
-        GameManager.GetInstance().OnConversationNew();
-        GameManager.GetInstance().OnConversationNext(this.gameObject, 4f);
-        DataManager.Instance.SecretItemsGivenToFollower.Add(location);
-        GameManager.GetInstance().WaitForSeconds(1f, (System.Action) (() =>
-        {
-          Inventory.ChangeItemQuantity(item, -1);
-          ResourceCustomTarget.Create(this.follower.gameObject, this.playerFarming.CameraBone.transform.position, item, (System.Action) (() =>
+          this.follower.Brain.Stats.WorkerBeenGivenOrders = true;
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.Intimidate:
+          if (this.follower.Brain.Stats.Intimidated)
           {
-            List<ConversationEntry> Entries = new List<ConversationEntry>()
-            {
-              new ConversationEntry(this.gameObject, $"Conversation_NPC/{location}/SecretQuest/0")
-            };
-            Entries[0].pitchValue = this.follower.Brain._directInfoAccess.follower_pitch;
-            Entries[0].vibratoValue = this.follower.Brain._directInfoAccess.follower_vibrato;
-            Entries[0].soundPath = this.generalTalkVO;
-            Entries[0].SkeletonData = this.follower.Spine;
-            Entries[0].CharacterName = $"<color=yellow>{this.follower.Brain.Info.Name}</color>";
-            Entries[0].SetZoom = true;
-            Entries[0].Zoom = 4f;
-            int num4 = 0;
-            while (LocalizationManager.GetTermData(ConversationEntry.Clone(Entries[0]).TermToSpeak.Replace("0", (++num4).ToString())) != null)
-            {
-              ConversationEntry conversationEntry = ConversationEntry.Clone(Entries[0]);
-              conversationEntry.TermToSpeak = conversationEntry.TermToSpeak.Replace("0", num4.ToString());
-              Entries.Add(conversationEntry);
-            }
-            foreach (ConversationEntry conversationEntry in Entries)
-              conversationEntry.soundPath = this.PlayVO ? conversationEntry.soundPath : "";
-            MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() => this.Close(true, reshowMenu: false))));
-            MMConversation.PlayVO = this.PlayVO;
-          }));
-        }));
-        break;
-      case FollowerCommands.MealBurnt:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BURNED);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BURNED);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.Bully:
-        if (this.follower.Brain.Stats.ScaredTraitInteracted)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.Close(true, reshowMenu: false);
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("AlreadyIntimidated");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.Stats.Intimidated = true;
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.IntimidateRoutine(true, this.playerFarming))));
           break;
-        }
-        this.follower.Brain.Stats.ScaredTraitInteracted = true;
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.BullyRoutine())), forcePositionOnTimeout: true);
-        break;
-      case FollowerCommands.Reassure:
-        if (this.follower.Brain.Stats.ScaredTraitInteracted)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.Close(true, reshowMenu: false);
+        case FollowerCommands.Bribe:
+          if (this.follower.Brain.Stats.Bribed)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            Debug.Log((object) "ALREADY BRIBED! ");
+            this.CloseAndSpeak("AlreadyBribed");
+            break;
+          }
+          if (Inventory.GetItemQuantity(20) < 3)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("NoGoldBribe");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.StartCoroutine((IEnumerator) this.BribeRoutine());
           break;
-        }
-        this.follower.Brain.Stats.ScaredTraitInteracted = true;
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.ReassureRoutine())), forcePositionOnTimeout: true);
-        break;
-      case FollowerCommands.MealEgg:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_EGG);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_EGG);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkSomething:
-        this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-        this.CloseAndSpeak("NoDrinks");
-        break;
-      case FollowerCommands.DrinkBeer:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_BEER);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_BEER);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkGin:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_GIN);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_GIN);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkCocktail:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_COCKTAIL);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_COCKTAIL);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkWine:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_WINE);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_WINE);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkMushroomJuice:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_MUSHROOM_JUICE);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_MUSHROOMJUICE);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkPoopJuice:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_POOP_JUICE);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_POOPJUICE);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkEggnog:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_EGGNOG);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_EGGNOG);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.CuddleBaby:
-        if (this.follower.Brain.Stats.Cuddled || this.follower.Brain.Info.Age >= 18)
-        {
+        case FollowerCommands.Ascend:
+          if ((double) this.follower.Brain.Stats.Happiness >= 80.0)
+            break;
           this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.Close(true, reshowMenu: false);
+          this.CloseAndSpeak("AscendFaithTooLow");
           break;
-        }
-        CultFaithManager.AddThought(Thought.ChildCuddle_0, this.follower.Brain.Info.ID);
-        this.follower.Brain.AddThought((Thought) UnityEngine.Random.Range(393, 397));
-        ++this.follower.Brain._directInfoAccess.CuddledAmount;
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        if (!this.follower.Brain.Info.HasTrait(FollowerTrait.TraitType.Zombie))
-          this.follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, this.follower.Brain.Info.Age < 10 ? "Baby/baby-crawl" : "Baby/baby-walk");
-        if (this.Task != null)
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) null);
-        GameManager.GetInstance().WaitForSeconds(this.Task != null ? 2f : 0.0f, (System.Action) (() => this.StartCoroutine((IEnumerator) this.CuddleBabyRoutine())));
-        break;
-      case FollowerCommands.HideNecklace:
-      case FollowerCommands.ShowNecklace:
-        this.follower.Brain.Info.ShowingNecklace = !this.follower.Brain.Info.ShowingNecklace;
-        FollowerBrain.SetFollowerCostume(this.follower.Spine.Skeleton, this.follower.Brain._directInfoAccess, forceUpdate: true);
-        this.Close(false, false);
-        break;
-      case FollowerCommands.SendToDaycare:
-        if (this.follower.Brain.Info.Age >= 14)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.CloseAndSpeak("CantSendToNursery");
-          break;
-        }
-        BiomeConstants.Instance.DepthOfFieldTween(1.5f, 5f, 10f, 1f, 145f);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        double num5 = (double) this.follower.SetBodyAnimation("picked-up-hate", true);
-        Interaction_Daycare ClosestDaycare = this.GetClosestDaycare();
-        ClosestDaycare.Structure.Brain.Data.FollowerID = this.follower.Brain.Info.ID;
-        this.playerFarming.PickUpFollower(this.follower);
-        this.playerFarming.GoToAndStop(ClosestDaycare.MiddlePosition, ClosestDaycare.gameObject, true, true, (System.Action) (() =>
-        {
-          this.playerFarming.DropFollower();
-          if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.Zombie))
-            this.follower.Brain.TransitionToTask((FollowerTask) new FollowerTask_ChildZombie(ClosestDaycare.Structure.Brain));
+        case FollowerCommands.Surveillance:
+          UIFollowerInteractionWheelOverlayController activeMenu = UIManager.GetActiveMenu<UIFollowerInteractionWheelOverlayController>();
+          if ((UnityEngine.Object) activeMenu != (UnityEngine.Object) null)
+            activeMenu.OnHidden = (System.Action) null;
+          if ((double) this.transform.position.x < (double) this.state.transform.position.x)
+            GameManager.GetInstance().CameraSetOffset(new Vector3(-1f, 0.0f, -1f));
           else
-            this.follower.Brain.TransitionToTask((FollowerTask) new FollowerTask_Child(ClosestDaycare.Structure.Brain));
-          ClosestDaycare.Structure.Brain.Data.MultipleFollowerIDs.Add(this.follower.Brain.Info.ID);
-          this.Interactable = false;
-          this.follower.HideAllFollowerIcons();
-          this.Close(false, reshowMenu: false);
-        }), 30f);
-        break;
-      case FollowerCommands.PetFollower:
-        if (this.follower.Brain.Stats.PetDog)
-        {
-          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
-          this.Close(true, reshowMenu: false);
+            GameManager.GetInstance().CameraSetOffset(new Vector3(-2.5f, 0.0f, -1f));
+          UIFollowerSummaryMenuController followerSummaryMenuInstance = MonoSingleton<UIManager>.Instance.ShowFollowerSummaryMenu(this.follower);
+          UIFollowerSummaryMenuController summaryMenuController = followerSummaryMenuInstance;
+          summaryMenuController.OnHidden = summaryMenuController.OnHidden + (System.Action) (() =>
+          {
+            followerSummaryMenuInstance = (UIFollowerSummaryMenuController) null;
+            ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.ReadMind);
+            this.Close(true, reshowMenu: false);
+          });
+          HUD_Manager.Instance.Hide(false, 0);
           break;
-        }
-        this.follower.Brain.Stats.PetDog = true;
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        if (!(bool) (UnityEngine.Object) this.playerFarming)
-          this.playerFarming = PlayerFarming.FindClosestPlayer(this.transform.position);
-        this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.PetDogRoutine())));
-        break;
-      case FollowerCommands.MealSpicy:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_SPICY);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_SPICY);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealSnowFruit:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_SNOW_FRUIT);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_SNOW_FRUIT);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.Gift_Necklace_Deaths_Door:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Deaths_Door));
-        break;
-      case FollowerCommands.Gift_Necklace_Winter:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Winter));
-        break;
-      case FollowerCommands.Gift_Necklace_Frozen:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Frozen));
-        break;
-      case FollowerCommands.Gift_Necklace_Weird:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Weird));
-        break;
-      case FollowerCommands.Gift_Necklace_Targeted:
-        this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Targeted));
-        break;
-      case FollowerCommands.DrinkChilli:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_CHILLI);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_CHILLI);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkLightning:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_LIGHTNING);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_LIGHTNING);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkSin:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_SIN);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_SIN);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.DrinkGrass:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_GRASS);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_GRASS);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMilkBad:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MILK_BAD);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MILK_BAD);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMilkGood:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MILK_GOOD);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MILK_GOOD);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.MealMilkGreat:
-        this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MILK_GREAT);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MILK_GREAT);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      case FollowerCommands.Give_Goat_Pet:
-        this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_GOAT));
-        break;
-      case FollowerCommands.Give_Cow_Pet:
-        this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_COW));
-        break;
-      case FollowerCommands.Give_Spider_Pet:
-        this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SPIDER));
-        break;
-      case FollowerCommands.Give_Llama_Pet:
-        this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_LLAMA));
-        break;
-      case FollowerCommands.Give_Crab_Pet:
-        this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_CRAB));
-        break;
-      case FollowerCommands.Give_Snail_Pet:
-        this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SNAIL));
-        break;
-      case FollowerCommands.Give_Turtle_Pet:
-        this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_TURTLE));
-        break;
-      case FollowerCommands.DrinkMilkshake:
-        this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_MILKSHAKE);
-        this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-        this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_MILKSHAKE);
-        this.follower.Brain.CompleteCurrentTask();
-        goto case FollowerCommands.ChangeRole;
-      default:
-        Debug.Log((object) $"Warning! Unhandled Follower Command: {followerCommand}".Colour(Color.red));
-        goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.Gift_Small:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_SMALL));
+          break;
+        case FollowerCommands.Gift_Medium:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_MEDIUM));
+          break;
+        case FollowerCommands.Gift_Necklace1:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_1));
+          break;
+        case FollowerCommands.Gift_Necklace2:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_2));
+          break;
+        case FollowerCommands.Gift_Necklace3:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_3));
+          break;
+        case FollowerCommands.Gift_Necklace4:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_4));
+          break;
+        case FollowerCommands.Gift_Necklace5:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_5));
+          break;
+        case FollowerCommands.Bless:
+          if (this.follower.Brain.Stats.ReceivedBlessing)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("AlreadyGivenBlessing");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.Stats.ReceivedBlessing = true;
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.BlessRoutine(true, this.playerFarming))));
+          break;
+        case FollowerCommands.MealGreatFish:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT_FISH);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT_FISH);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealBadFish:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BAD_FISH);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BAD_FISH);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.RemoveNecklace:
+          this.StartCoroutine((IEnumerator) this.RemoveNecklaceRoutine());
+          break;
+        case FollowerCommands.Reeducate:
+          if (this.follower.Brain.Stats.ReeducatedAction)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("AlreadyReeducated");
+            break;
+          }
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.Stats.ReeducatedAction = true;
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.ReeducateRoutine())));
+          break;
+        case FollowerCommands.MealBerries:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BERRIES);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BERRIES);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMediumVeg:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MEDIUM_VEG);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MEDIUM_VEG);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMixedLow:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BAD_MIXED);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BAD_MIXED);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMixedMedium:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MEDIUM_MIXED);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MEDIUM_MIXED);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMixedHigh:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT_MIXED);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT_MIXED);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealDeadly:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_DEADLY);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_DEADLY);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMeatLow:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BAD_MEAT);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BAD_MEAT);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMeatHigh:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT_MEAT);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_GREAT_MEAT);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.ViewTraits:
+          this.Close(true, reshowMenu: false);
+          MonoSingleton<UIManager>.Instance.ShowFollowerSummaryMenu(this.follower);
+          break;
+        case FollowerCommands.PetDog:
+          if (this.follower.Brain.Stats.PetDog)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.Close(true, reshowMenu: false);
+            break;
+          }
+          this.follower.Brain.Stats.PetDog = true;
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.PetDogRoutine())));
+          break;
+        case FollowerCommands.Gift_Necklace_Light:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Light));
+          break;
+        case FollowerCommands.Gift_Necklace_Dark:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Dark));
+          break;
+        case FollowerCommands.Gift_Necklace_Missionary:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Missionary));
+          break;
+        case FollowerCommands.Gift_Necklace_Demonic:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Demonic));
+          break;
+        case FollowerCommands.Gift_Necklace_Loyalty:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Loyalty));
+          break;
+        case FollowerCommands.Gift_Necklace_Gold_Skull:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Gold_Skull));
+          break;
+        case FollowerCommands.GiveLeaderItem:
+          FollowerLocation location = FollowerLocation.Dungeon1_1;
+          InventoryItem.ITEM_TYPE item = InventoryItem.ITEM_TYPE.FLOWER_RED;
+          if (this.follower.Brain.Info.ID == 99991)
+          {
+            location = FollowerLocation.Dungeon1_2;
+            item = InventoryItem.ITEM_TYPE.MUSHROOM_SMALL;
+          }
+          else if (this.follower.Brain.Info.ID == 99992)
+          {
+            location = FollowerLocation.Dungeon1_3;
+            item = InventoryItem.ITEM_TYPE.CRYSTAL;
+          }
+          else if (this.follower.Brain.Info.ID == 99993)
+          {
+            location = FollowerLocation.Dungeon1_4;
+            item = InventoryItem.ITEM_TYPE.SPIDER_WEB;
+          }
+          else if (this.follower.Brain.Info.ID == 100007)
+          {
+            location = FollowerLocation.Dungeon1_5;
+            item = InventoryItem.ITEM_TYPE.WOOL;
+          }
+          GameManager.GetInstance().OnConversationNew();
+          GameManager.GetInstance().OnConversationNext(this.gameObject, 4f);
+          DataManager.Instance.SecretItemsGivenToFollower.Add(location);
+          GameManager.GetInstance().WaitForSeconds(1f, (System.Action) (() =>
+          {
+            Inventory.ChangeItemQuantity(item, -1);
+            ResourceCustomTarget.Create(this.follower.gameObject, this.playerFarming.CameraBone.transform.position, item, (System.Action) (() =>
+            {
+              List<ConversationEntry> Entries = new List<ConversationEntry>()
+              {
+                new ConversationEntry(this.gameObject, $"Conversation_NPC/{location}/SecretQuest/0")
+              };
+              Entries[0].pitchValue = this.follower.Brain._directInfoAccess.follower_pitch;
+              Entries[0].vibratoValue = this.follower.Brain._directInfoAccess.follower_vibrato;
+              Entries[0].soundPath = this.generalTalkVO;
+              Entries[0].SkeletonData = this.follower.Spine;
+              Entries[0].CharacterName = $"<color=yellow>{this.follower.Brain.Info.Name}</color>";
+              Entries[0].SetZoom = true;
+              Entries[0].Zoom = 4f;
+              int num4 = 0;
+              while (LocalizationManager.GetTermData(ConversationEntry.Clone(Entries[0]).TermToSpeak.Replace("0", (++num4).ToString())) != null)
+              {
+                ConversationEntry conversationEntry = ConversationEntry.Clone(Entries[0]);
+                conversationEntry.TermToSpeak = conversationEntry.TermToSpeak.Replace("0", num4.ToString());
+                Entries.Add(conversationEntry);
+              }
+              foreach (ConversationEntry conversationEntry in Entries)
+                conversationEntry.soundPath = this.PlayVO ? conversationEntry.soundPath : "";
+              MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() => this.Close(true, reshowMenu: false))));
+              MMConversation.PlayVO = this.PlayVO;
+            }));
+          }));
+          break;
+        case FollowerCommands.MealBurnt:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BURNED);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_BURNED);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.Bully:
+          if (this.follower.Brain.Stats.ScaredTraitInteracted)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.Close(true, reshowMenu: false);
+            break;
+          }
+          this.follower.Brain.Stats.ScaredTraitInteracted = true;
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.BullyRoutine())), forcePositionOnTimeout: true);
+          break;
+        case FollowerCommands.Reassure:
+          if (this.follower.Brain.Stats.ScaredTraitInteracted)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.Close(true, reshowMenu: false);
+            break;
+          }
+          this.follower.Brain.Stats.ScaredTraitInteracted = true;
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.ReassureRoutine())), forcePositionOnTimeout: true);
+          break;
+        case FollowerCommands.MealEgg:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_EGG);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_EGG);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkSomething:
+          this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+          this.CloseAndSpeak("NoDrinks");
+          break;
+        case FollowerCommands.DrinkBeer:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_BEER);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_BEER);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkGin:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_GIN);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_GIN);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkCocktail:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_COCKTAIL);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_COCKTAIL);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkWine:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_WINE);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_WINE);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkMushroomJuice:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_MUSHROOM_JUICE);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_MUSHROOMJUICE);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkPoopJuice:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_POOP_JUICE);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_POOPJUICE);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkEggnog:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_EGGNOG);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_EGGNOG);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.CuddleBaby:
+          if (this.follower.Brain.Stats.Cuddled || this.follower.Brain.Info.Age >= 18)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.Close(true, reshowMenu: false);
+            break;
+          }
+          CultFaithManager.AddThought(Thought.ChildCuddle_0, this.follower.Brain.Info.ID);
+          this.follower.Brain.AddThought((Thought) UnityEngine.Random.Range(393, 397));
+          ++this.follower.Brain._directInfoAccess.CuddledAmount;
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          if (!this.follower.Brain.Info.HasTrait(FollowerTrait.TraitType.Zombie))
+            this.follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, this.follower.Brain.Info.Age < 10 ? "Baby/baby-crawl" : "Baby/baby-walk");
+          if (this.Task != null)
+            this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) null);
+          GameManager.GetInstance().WaitForSeconds(this.Task != null ? 2f : 0.0f, (System.Action) (() => this.StartCoroutine((IEnumerator) this.CuddleBabyRoutine())));
+          break;
+        case FollowerCommands.HideNecklace:
+        case FollowerCommands.ShowNecklace:
+          this.follower.Brain.Info.ShowingNecklace = !this.follower.Brain.Info.ShowingNecklace;
+          FollowerBrain.SetFollowerCostume(this.follower.Spine.Skeleton, this.follower.Brain._directInfoAccess, forceUpdate: true);
+          this.Close(false, false);
+          break;
+        case FollowerCommands.SendToDaycare:
+          if (this.follower.Brain.Info.Age >= 14)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.CloseAndSpeak("CantSendToNursery");
+            break;
+          }
+          BiomeConstants.Instance.DepthOfFieldTween(1.5f, 5f, 10f, 1f, 145f);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          double num5 = (double) this.follower.SetBodyAnimation("picked-up-hate", true);
+          Interaction_Daycare ClosestDaycare = this.GetClosestDaycare();
+          ClosestDaycare.Structure.Brain.Data.FollowerID = this.follower.Brain.Info.ID;
+          this.playerFarming.PickUpFollower(this.follower);
+          this.playerFarming.GoToAndStop(ClosestDaycare.MiddlePosition, ClosestDaycare.gameObject, true, true, (System.Action) (() =>
+          {
+            this.playerFarming.DropFollower();
+            if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.Zombie))
+              this.follower.Brain.TransitionToTask((FollowerTask) new FollowerTask_ChildZombie(ClosestDaycare.Structure.Brain));
+            else
+              this.follower.Brain.TransitionToTask((FollowerTask) new FollowerTask_Child(ClosestDaycare.Structure.Brain));
+            ClosestDaycare.Structure.Brain.Data.MultipleFollowerIDs.Add(this.follower.Brain.Info.ID);
+            this.Interactable = false;
+            this.follower.HideAllFollowerIcons();
+            this.Close(false, reshowMenu: false);
+          }), 30f);
+          break;
+        case FollowerCommands.PetFollower:
+          if (this.follower.Brain.Stats.PetDog)
+          {
+            this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
+            this.Close(true, reshowMenu: false);
+            break;
+          }
+          this.follower.Brain.Stats.PetDog = true;
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          if (!(bool) (UnityEngine.Object) this.playerFarming)
+            this.playerFarming = PlayerFarming.FindClosestPlayer(this.transform.position);
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.PetDogRoutine())));
+          break;
+        case FollowerCommands.MealSpicy:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_SPICY);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_SPICY);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealSnowFruit:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_SNOW_FRUIT);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_SNOW_FRUIT);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.Gift_Necklace_Deaths_Door:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Deaths_Door));
+          break;
+        case FollowerCommands.Gift_Necklace_Winter:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Winter));
+          break;
+        case FollowerCommands.Gift_Necklace_Frozen:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Frozen));
+          break;
+        case FollowerCommands.Gift_Necklace_Weird:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Weird));
+          break;
+        case FollowerCommands.Gift_Necklace_Targeted:
+          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Targeted));
+          break;
+        case FollowerCommands.DrinkChilli:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_CHILLI);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_CHILLI);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkLightning:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_LIGHTNING);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_LIGHTNING);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkSin:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_SIN);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_SIN);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.DrinkGrass:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_GRASS);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_GRASS);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMilkBad:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MILK_BAD);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MILK_BAD);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMilkGood:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MILK_GOOD);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MILK_GOOD);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.MealMilkGreat:
+          this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_MILK_GREAT);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.EatMeal, StructureBrain.TYPES.MEAL_MILK_GREAT);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        case FollowerCommands.Give_Goat_Pet:
+          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_GOAT));
+          break;
+        case FollowerCommands.Give_Cow_Pet:
+          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_COW));
+          break;
+        case FollowerCommands.Give_Spider_Pet:
+          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SPIDER));
+          break;
+        case FollowerCommands.Give_Llama_Pet:
+          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_LLAMA));
+          break;
+        case FollowerCommands.Give_Crab_Pet:
+          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_CRAB));
+          break;
+        case FollowerCommands.Give_Snail_Pet:
+          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SNAIL));
+          break;
+        case FollowerCommands.Give_Turtle_Pet:
+          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_TURTLE));
+          break;
+        case FollowerCommands.DrinkMilkshake:
+          this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_MILKSHAKE);
+          this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
+          this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.Drinking, StructureBrain.TYPES.DRINK_MILKSHAKE);
+          this.follower.Brain.CompleteCurrentTask();
+          goto case FollowerCommands.ChangeRole;
+        default:
+          Debug.Log((object) $"Warning! Unhandled Follower Command: {followerCommand}".Colour(Color.red));
+          goto case FollowerCommands.ChangeRole;
+      }
     }
   }
 
@@ -3877,78 +3884,89 @@ public class interaction_FollowerInteraction : Interaction
     }
     this.AutomaticallyInteract = false;
     GameManager.GetInstance().CamFollowTarget.SnappyMovement = false;
-    if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Ill)
-      this.follower.Brain.MakeSick();
-    else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.BecomeStarving)
-      this.follower.Brain.MakeStarve();
-    else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Dissenter)
-      this.follower.Brain.MakeDissenter();
-    else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Freezing)
-      this.follower.Brain.MakeFreezing();
-    else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.OldAge)
+    if ((UnityEngine.Object) this.follower == (UnityEngine.Object) null || this.follower.Brain == null)
     {
-      this.follower.Brain.ApplyCurseState(Thought.OldAge);
-      this.follower.Brain.Info.Age = this.follower.Brain.Info.LifeExpectancy;
-    }
-    else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Injured)
-      this.follower.Brain.MakeInjured();
-    if (this.follower.Brain.Info.ID == 99997 && this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Injured)
-    {
-      Follower followerById = FollowerManager.FindFollowerByID(99998);
-      if ((UnityEngine.Object) followerById != (UnityEngine.Object) null && !FollowerManager.FollowerLocked(99998))
-        this.follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_HugFollower(followerById.Brain));
-    }
-    this.follower.Brain._directInfoAccess.StartingCursedState = Thought.None;
-    if (this.GiveDoctrinePieceOnClose && DoctrineUpgradeSystem.TrySermonsStillAvailable() && DoctrineUpgradeSystem.TryGetStillDoctrineStone() && DataManager.Instance.GetVariable(DataManager.Variables.FirstDoctrineStone))
-    {
-      Debug.Log((object) "CALL BACK 2!");
-      PickUp pickUp = InventoryItem.Spawn(InventoryItem.ITEM_TYPE.DOCTRINE_STONE, 1, this.transform.position);
-      if ((UnityEngine.Object) pickUp != (UnityEngine.Object) null)
-      {
-        Interaction_DoctrineStone component = pickUp.GetComponent<Interaction_DoctrineStone>();
-        if ((UnityEngine.Object) component != (UnityEngine.Object) null)
-        {
-          component.MagnetToPlayer();
-          component.AutomaticallyInteract = true;
-        }
-      }
-    }
-    if (this.ShowDivineInspirationTutorialOnClose && DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.DivineInspiration))
-    {
-      this.ShowDivineInspirationTutorialOnClose = false;
-      MonoSingleton<UIManager>.Instance.ShowTutorialOverlay(TutorialTopic.DivineInspiration);
-    }
-    if ((UnityEngine.Object) this.follower.WorshipperBubble != (UnityEngine.Object) null)
-    {
-      this.follower.WorshipperBubble.StopAllCoroutines();
-      this.follower.WorshipperBubble.Close();
-    }
-    this.ShowOtherFollowers();
-    this.HasChanged = true;
-    if (reshowMenu)
-    {
-      this.follower.AdorationUI.Hide();
-      this.follower.PleasureUI.Hide();
-      this.follower.GetComponentInChildren<UIFollowerName>()?.Hide();
-      this.OnInteract(this.state);
+      GameManager.GetInstance().OnConversationEnd();
+      MonoSingleton<UINavigatorNew>.Instance.AllowInputOnlyFromPlayer = (PlayerFarming) null;
+      if (!(bool) (UnityEngine.Object) this.followerInteractionWheelInstance)
+        return;
+      this.followerInteractionWheelInstance.Hide();
     }
     else
     {
-      if (this.follower.Brain.Info.CursedState != Thought.Child || this.follower.Brain.Info.Age < 18 || this.complaintType != Follower.ComplaintType.GiveOnboarding || this.follower.Brain.Info.ID == 100000)
-        return;
-      if (this.follower.Brain.Info.IsSnowman)
-        this.follower.Brain.MakeAdult();
-      else if (this.follower.Brain._directInfoAccess.BabyIgnored && !this.follower.Brain.HasTrait(FollowerTrait.TraitType.Mutated))
-      {
-        this.follower.Brain.MakeAdult();
+      if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Ill)
+        this.follower.Brain.MakeSick();
+      else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.BecomeStarving)
+        this.follower.Brain.MakeStarve();
+      else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Dissenter)
         this.follower.Brain.MakeDissenter();
-        this.follower.Brain.Stats.Reeducation = 100f;
-        float itemQuantity = (float) Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD);
-        this.follower.Brain.Stats.DissentGold = Mathf.Floor(UnityEngine.Random.Range(itemQuantity * 0.1f, itemQuantity * 0.25f));
-        this.follower.Brain.LeavingCult = true;
+      else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Freezing)
+        this.follower.Brain.MakeFreezing();
+      else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.OldAge)
+      {
+        this.follower.Brain.ApplyCurseState(Thought.OldAge);
+        this.follower.Brain.Info.Age = this.follower.Brain.Info.LifeExpectancy;
+      }
+      else if (this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Injured)
+        this.follower.Brain.MakeInjured();
+      if (this.follower.Brain.Info.ID == 99997 && this.follower.Brain._directInfoAccess.StartingCursedState == Thought.Injured)
+      {
+        Follower followerById = FollowerManager.FindFollowerByID(99998);
+        if ((UnityEngine.Object) followerById != (UnityEngine.Object) null && !FollowerManager.FollowerLocked(99998))
+          this.follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_HugFollower(followerById.Brain));
+      }
+      this.follower.Brain._directInfoAccess.StartingCursedState = Thought.None;
+      if (this.GiveDoctrinePieceOnClose && DoctrineUpgradeSystem.TrySermonsStillAvailable() && DoctrineUpgradeSystem.TryGetStillDoctrineStone() && DataManager.Instance.GetVariable(DataManager.Variables.FirstDoctrineStone))
+      {
+        Debug.Log((object) "CALL BACK 2!");
+        PickUp pickUp = InventoryItem.Spawn(InventoryItem.ITEM_TYPE.DOCTRINE_STONE, 1, this.transform.position);
+        if ((UnityEngine.Object) pickUp != (UnityEngine.Object) null)
+        {
+          Interaction_DoctrineStone component = pickUp.GetComponent<Interaction_DoctrineStone>();
+          if ((UnityEngine.Object) component != (UnityEngine.Object) null)
+          {
+            component.MagnetToPlayer();
+            component.AutomaticallyInteract = true;
+          }
+        }
+      }
+      if (this.ShowDivineInspirationTutorialOnClose && DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.DivineInspiration))
+      {
+        this.ShowDivineInspirationTutorialOnClose = false;
+        MonoSingleton<UIManager>.Instance.ShowTutorialOverlay(TutorialTopic.DivineInspiration);
+      }
+      if ((UnityEngine.Object) this.follower.WorshipperBubble != (UnityEngine.Object) null)
+      {
+        this.follower.WorshipperBubble.StopAllCoroutines();
+        this.follower.WorshipperBubble.Close();
+      }
+      this.ShowOtherFollowers();
+      this.HasChanged = true;
+      if (reshowMenu)
+      {
+        this.follower.AdorationUI.Hide();
+        this.follower.PleasureUI.Hide();
+        this.follower.GetComponentInChildren<UIFollowerName>()?.Hide();
+        this.OnInteract(this.state);
       }
       else
-        this.StartCoroutine((IEnumerator) this.SimpleNewRecruitRoutine());
+      {
+        if (this.follower.Brain.Info.CursedState != Thought.Child || this.follower.Brain.Info.Age < 18 || this.complaintType != Follower.ComplaintType.GiveOnboarding || this.follower.Brain.Info.ID == 100000)
+          return;
+        if (this.follower.Brain.Info.IsSnowman)
+          this.follower.Brain.MakeAdult();
+        else if (this.follower.Brain._directInfoAccess.BabyIgnored && !this.follower.Brain.HasTrait(FollowerTrait.TraitType.Mutated))
+        {
+          this.follower.Brain.MakeAdult();
+          this.follower.Brain.MakeDissenter();
+          this.follower.Brain.Stats.Reeducation = 100f;
+          float itemQuantity = (float) Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD);
+          this.follower.Brain.Stats.DissentGold = Mathf.Floor(UnityEngine.Random.Range(itemQuantity * 0.1f, itemQuantity * 0.25f));
+          this.follower.Brain.LeavingCult = true;
+        }
+        else
+          this.StartCoroutine((IEnumerator) this.SimpleNewRecruitRoutine());
+      }
     }
   }
 

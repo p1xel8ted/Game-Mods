@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.MainMenu.UIMainMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -223,7 +223,7 @@ public class UIMainMenuController : UIMenuBase
 
   public IEnumerator WaitForDLCCheck()
   {
-    yield return (object) new WaitUntil((Func<bool>) (() => SessionManager.instance.HasStarted));
+    yield return (object) new WaitUntil((Func<bool>) (() => (UnityEngine.Object) SessionManager.instance != (UnityEngine.Object) null && SessionManager.instance.HasStarted));
     yield return (object) GameManager.WaitForTime(0.02f, (System.Action) null);
     this._comicAlert.gameObject.SetActive(PersistenceManager.PersistentData.RevealedComic && !PersistenceManager.PersistentData.OpenedComic);
     this._comicButton.gameObject.SetActive(GameManager.AuthenticatePilgrimDLC());

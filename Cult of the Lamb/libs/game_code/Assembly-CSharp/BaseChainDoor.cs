@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BaseChainDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -105,6 +105,8 @@ public class BaseChainDoor : BaseMonoBehaviour
       {
         case FollowerLocation.Dungeon1_5:
         case FollowerLocation.Dungeon1_6:
+        case FollowerLocation.Boss_Yngya:
+        case FollowerLocation.Boss_Wolf:
           continue;
         default:
           ++bossesCompleted;

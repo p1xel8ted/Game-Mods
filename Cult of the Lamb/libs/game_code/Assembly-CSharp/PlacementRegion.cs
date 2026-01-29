@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlacementRegion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1211,6 +1211,27 @@ label_181:
     return surroundingTiles;
   }
 
+  public static List<PlacementRegion.TileGridTile> GetTilesInRange(
+    PlacementRegion.TileGridTile tile,
+    int range)
+  {
+    List<PlacementRegion.TileGridTile> tilesInRange = new List<PlacementRegion.TileGridTile>();
+    Vector2Int position = tile.Position;
+    for (int index1 = -range; index1 <= range; ++index1)
+    {
+      for (int index2 = -range; index2 <= range; ++index2)
+      {
+        if (Mathf.Abs(index1) + Mathf.Abs(index2) <= range && (index1 != 0 || index2 != 0))
+        {
+          PlacementRegion.TileGridTile tileGridTile = PlacementRegion.Instance.GetTileGridTile(new Vector2Int(position.x + index1, position.y + index2));
+          if (tileGridTile != null)
+            tilesInRange.Add(tileGridTile);
+        }
+      }
+    }
+    return tilesInRange;
+  }
+
   public IEnumerator PlaceObject_o()
   {
     PlacementRegion placementRegion = this;
@@ -1359,7 +1380,7 @@ label_181:
             }
             if ((double) Mathf.Abs(vector2.x) >= 0.30000001192092896 || (double) Mathf.Abs(vector2.y) >= 0.30000001192092896 || placementRegion.mouseActive)
             {
-              Vector3 direction = PlacementRegion.\u003CPlaceObject_o\u003Eg__GetDirection\u007C139_0((Vector3) vector2.normalized);
+              Vector3 direction = PlacementRegion.\u003CPlaceObject_o\u003Eg__GetDirection\u007C140_0((Vector3) vector2.normalized);
               bool flag1 = false;
               if ((double) vector2.magnitude <= 0.0 && placementRegion.mouseActive)
               {
@@ -1367,7 +1388,7 @@ label_181:
                 PlacementTile tileAtWorldPosition = placementRegion.GetClosestTileAtWorldPosition(placementRegion.placementObject.transform.position);
                 if ((double) Vector3.Distance(placementRegion.transform.TransformPoint(tileAtWorldPosition.Position), mousePositionWorld) > (double) Mathf.Max((float) placementRegion.placementObject.Bounds.x / 2f, 1.5f))
                 {
-                  direction = PlacementRegion.\u003CPlaceObject_o\u003Eg__GetDirection\u007C139_0((mousePositionWorld - placementRegion.placementObject.transform.position).normalized);
+                  direction = PlacementRegion.\u003CPlaceObject_o\u003Eg__GetDirection\u007C140_0((mousePositionWorld - placementRegion.placementObject.transform.position).normalized);
                 }
                 else
                 {
@@ -1391,8 +1412,8 @@ label_181:
               }
               if (((UnityEngine.Object) placementRegion.CurrentTile == (UnityEngine.Object) null || !placementRegion.IsValidPlacement(placementRegion.CurrentTile.Position, false, true)) && (UnityEngine.Object) placementRegion.PreviousTile != (UnityEngine.Object) null && placementRegion.mouseActive)
                 placementRegion.CurrentTile = placementRegion.PreviousTile;
-              if ((UnityEngine.Object) placementRegion.CurrentTile != (UnityEngine.Object) null && !(direction == (Vector3) Vector3Int.zero) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(placementRegion.CurrentTile.Position, direction) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(placementRegion.CurrentTile.Position, direction + Vector3.left) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(placementRegion.CurrentTile.Position, direction + Vector3.right) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(placementRegion.CurrentTile.Position, direction + Vector3.up) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(placementRegion.CurrentTile.Position, direction + Vector3.down) && ((double) vector2.y <= 0.0 || !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(placementRegion.CurrentTile.Position, (Vector3) PlacementRegion.Up)) && (double) vector2.y < 0.0)
-                placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(placementRegion.CurrentTile.Position, (Vector3) PlacementRegion.Down);
+              if ((UnityEngine.Object) placementRegion.CurrentTile != (UnityEngine.Object) null && !(direction == (Vector3) Vector3Int.zero) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(placementRegion.CurrentTile.Position, direction) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(placementRegion.CurrentTile.Position, direction + Vector3.left) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(placementRegion.CurrentTile.Position, direction + Vector3.right) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(placementRegion.CurrentTile.Position, direction + Vector3.up) && !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(placementRegion.CurrentTile.Position, direction + Vector3.down) && ((double) vector2.y <= 0.0 || !placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(placementRegion.CurrentTile.Position, (Vector3) PlacementRegion.Up)) && (double) vector2.y < 0.0)
+                placementRegion.\u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(placementRegion.CurrentTile.Position, (Vector3) PlacementRegion.Down);
               if (placementRegion.shakeTween != null)
               {
                 placementRegion.shakeTween.Kill();
@@ -2287,7 +2308,7 @@ label_152:
   }
 
   [CompilerGenerated]
-  public static Vector3 \u003CPlaceObject_o\u003Eg__GetDirection\u007C139_0(Vector3 inputDir)
+  public static Vector3 \u003CPlaceObject_o\u003Eg__GetDirection\u007C140_0(Vector3 inputDir)
   {
     if ((double) inputDir.x > 0.0 && (double) inputDir.y < 0.5 && (double) inputDir.y > -0.5)
       return (Vector3) PlacementRegion.Right;
@@ -2310,7 +2331,7 @@ label_152:
   }
 
   [CompilerGenerated]
-  public bool \u003CPlaceObject_o\u003Eg__SetTile\u007C139_1(Vector3 position, Vector3 direction)
+  public bool \u003CPlaceObject_o\u003Eg__SetTile\u007C140_1(Vector3 position, Vector3 direction)
   {
     if (this.IsValidPlacement(position + direction, false, true))
     {
@@ -2326,10 +2347,10 @@ label_152:
   }
 
   [CompilerGenerated]
-  public void \u003CBuild\u003Eb__154_0(GameObject r) => this.UpdateFenceablePositions();
+  public void \u003CBuild\u003Eb__155_0(GameObject r) => this.UpdateFenceablePositions();
 
   [CompilerGenerated]
-  public void \u003CClearPrefabs\u003Eb__156_0()
+  public void \u003CClearPrefabs\u003Eb__157_0()
   {
     if (this.isEditingBuildings)
       return;

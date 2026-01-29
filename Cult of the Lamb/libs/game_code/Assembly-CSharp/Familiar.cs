@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Familiar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -72,6 +72,7 @@ public class Familiar : MonoBehaviour
   public float wanderDirection;
   [CompilerGenerated]
   public float \u003CDamageMultiplier\u003Ek__BackingField = 1f;
+  public int wanderCount;
   public GameObject whiteFlash;
   public Coroutine hitEffectsRoutine;
 
@@ -231,8 +232,9 @@ public class Familiar : MonoBehaviour
     {
       if ((double) Time.time > (double) this.wanderTimestamp)
       {
+        ++this.wanderCount;
         int num2 = 0;
-        this.wanderPos = BiomeGenerator.GetRandomPositionInIsland();
+        this.wanderPos = this.combatType != Familiar.CombatType.Decoy || this.wanderCount % 3 != 0 ? BiomeGenerator.GetRandomPositionInIsland() : new Vector3(UnityEngine.Random.Range(-3f, 3f), UnityEngine.Random.Range(-3f, 3f));
         if (this.combatType == Familiar.CombatType.Decoy)
         {
           while (num2 < 10)
@@ -311,7 +313,7 @@ public class Familiar : MonoBehaviour
         }
       }
     }
-    if ((UnityEngine.Object) playerFarming == (UnityEngine.Object) null)
+    if ((UnityEngine.Object) playerFarming == (UnityEngine.Object) null || this.combatType == Familiar.CombatType.Decoy)
       return true;
     LayerMask mask = (LayerMask) LayerMask.GetMask("Island", "Obstacles");
     Vector2 vector2_1 = (Vector2) playerFarming.transform.position - (Vector2) this.transform.position;
@@ -440,6 +442,11 @@ public class Familiar : MonoBehaviour
   public void BiomeGenerator_OnBiomeChangeRoom()
   {
     this.transform.position = (!((UnityEngine.Object) this.master == (UnityEngine.Object) null) ? this.master.transform : PlayerFarming.Instance.transform).position + Vector3.right;
+    if (this.combatType != Familiar.CombatType.Decoy)
+      return;
+    this.wanderPos = new Vector3(UnityEngine.Random.Range(-3f, 3f), UnityEngine.Random.Range(-3f, 3f));
+    this.wanderTimestamp = Time.time + 2f;
+    this.wanderCount = 0;
   }
 
   public IEnumerator Delay(float seconds, System.Action callback)

@@ -86,7 +86,7 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
     {
         var originalBrainInfo = follower.Brain.Info;
         var originalFollowerInfo = originalBrainInfo._info;
-        var isUnique = Helper.IsUniqueFollower(originalBrainInfo);
+        var isUnique = Plugin.PreserveUniqueFollowers.Value && Helper.IsUniqueFollower(originalBrainInfo);
 
         BiomeBaseManager.Instance.SpawnExistingRecruits = true;
         NotificationCentre.NotificationsEnabled = false;
@@ -105,11 +105,10 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         {
             if (isUnique)
             {
-                // Preserve unique follower attributes
+                // Preserve unique follower skin and traits (name is always randomized)
                 fi.SkinColour = originalFollowerInfo.SkinColour;
                 fi.Traits = new List<FollowerTrait.TraitType>(originalFollowerInfo.Traits);
-                fi.Name = name; // Keep original name
-                Plugin.Log.LogInfo($"Unique follower rebirth: {name} (skin: {originalFollowerInfo.SkinName}, traits: {string.Join(", ", originalFollowerInfo.Traits)})");
+                Plugin.Log.LogInfo($"Unique follower rebirth: {name} -> {fi.Name} (skin: {originalFollowerInfo.SkinName}, traits: {string.Join(", ", originalFollowerInfo.Traits)})");
             }
 
             GameManager.GetInstance().StartCoroutine(GiveFollowerIE(fi, follower));

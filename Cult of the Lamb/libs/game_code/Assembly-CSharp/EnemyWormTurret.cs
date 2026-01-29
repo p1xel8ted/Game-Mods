@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWormTurret
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -220,7 +220,7 @@ public class EnemyWormTurret : UnitObject
 
   public virtual void OnDamageTriggerEnter(Collider2D collider)
   {
-    Health component = collider.GetComponent<Health>();
+    Health component = collider?.GetComponent<Health>();
     if (!((UnityEngine.Object) component != (UnityEngine.Object) null) || component.team == this.health.team && !this.health.IsCharmedEnemy)
       return;
     component.DealDamage(1f, this.gameObject, component.transform.position);

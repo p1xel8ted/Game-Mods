@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCYngyaShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -22,6 +22,7 @@ using UnityEngine.Events;
 public class Interaction_DLCYngyaShrine : Interaction
 {
   public static Interaction_DLCYngyaShrine Instance;
+  public const int TOTAL_GHOSTS = 80 /*0x50*/;
   public SpriteXPBar XPBar;
   [SerializeField]
   public GameObject cameraTarget;
@@ -69,6 +70,7 @@ public class Interaction_DLCYngyaShrine : Interaction
   public GameObject activatedShrine;
   [SerializeField]
   public GameObject deactivatedShrine;
+  public bool CanRevealDLCHeart;
   public bool Active;
   public int ghostsInAir;
 
@@ -111,10 +113,12 @@ public class Interaction_DLCYngyaShrine : Interaction
       BaseGoopDoor.WoolhavenDoor.SetDoorUp();
     this.XPBar.UpdateBar((float) DataManager.Instance.ShrineGhostJuice / (float) Interaction_DLCYngyaShrine.GetAmountRequiredForUpgrade());
     this.CheckReturnLastLambObjective();
-  }
-
-  public void Start()
-  {
+    this.CanRevealDLCHeart = SeasonsManager.WinterSeverity >= 5 && DataManager.Instance.TotalShrineGhostJuice >= 80 /*0x50*/ && DataManager.Instance.BeatenWolf && !DataManager.Instance.EnabledDLCMapHeart;
+    if (!this.CanRevealDLCHeart)
+      return;
+    this.AutomaticallyInteract = true;
+    this.ActivateDistance = 10f;
+    this.Interactable = true;
   }
 
   public override void OnBecomeCurrent(PlayerFarming playerFarming)
@@ -133,7 +137,9 @@ public class Interaction_DLCYngyaShrine : Interaction
   public override void GetLabel()
   {
     base.GetLabel();
-    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) > 0)
+    if (this.CanRevealDLCHeart)
+      this.Label = ScriptLocalization.Interactions.Look;
+    else if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) > 0)
       this.Label = this.Interactable ? LocalizationManager.GetTranslation("Interactions/DepositYngyaGhost") : "";
     else
       this.Label = "";
@@ -171,8 +177,16 @@ public class Interaction_DLCYngyaShrine : Interaction
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.InteractYngyaShrine);
     if (this.Active)
       return;
-    this.Active = true;
-    this.StartCoroutine((IEnumerator) this.GiveGhostJuice());
+    if (this.CanRevealDLCHeart)
+    {
+      this.Active = true;
+      this.StartCoroutine((IEnumerator) this.EnableHeartFallbackIE());
+    }
+    else
+    {
+      this.Active = true;
+      this.StartCoroutine((IEnumerator) this.GiveGhostJuice());
+    }
   }
 
   public override void OnSecondaryInteract(StateMachine state)
@@ -289,7 +303,7 @@ public class Interaction_DLCYngyaShrine : Interaction
         }
       }
       AudioManager.Instance.PlayOneShot("event:/dlc/env/yngya_shrine/ghost_fly", PlayerFarming.Instance.transform.position);
-      SoulCustomTarget.Create(interactionDlcYngyaShrine.ReceivePosition, position, StaticColors.OffWhiteColor, new System.Action(interactionDlcYngyaShrine.\u003CGiveGhostJuice\u003Eb__55_0), sfxPath: " ", playDefaultSFX: false);
+      SoulCustomTarget.Create(interactionDlcYngyaShrine.ReceivePosition, position, StaticColors.OffWhiteColor, new System.Action(interactionDlcYngyaShrine.\u003CGiveGhostJuice\u003Eb__56_0), sfxPath: " ", playDefaultSFX: false);
       if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) <= 0)
       {
         GameManager.GetInstance().OnConversationNew();
@@ -414,14 +428,24 @@ public class Interaction_DLCYngyaShrine : Interaction
         Interaction_DLCYngyaShrine.Instance.beatenWolfConvo.Play();
         Interaction_DLCYngyaShrine.Instance.beatenWolfConvo.Callback.AddListener((UnityAction) (() =>
         {
-          MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
-          GameManager.SetGlobalOcclusionActive(true);
+          if (SeasonsManager.WinterSeverity < 6)
+          {
+            Interaction_DLCYngyaShrine.Instance.requireLambsConvo.Play();
+            Interaction_DLCYngyaShrine.Instance.requireLambsConvo.Callback.AddListener((UnityAction) (() =>
+            {
+              MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
+              GameManager.SetGlobalOcclusionActive(true);
+              GameManager.GetInstance().OnConversationEnd();
+            }));
+            ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/BuryLostGhost", Objectives.CustomQuestTypes.ReturnLastLambGhosts), true, true);
+          }
+          else
+          {
+            MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
+            GameManager.SetGlobalOcclusionActive(true);
+            GameManager.GetInstance().OnConversationEnd();
+          }
         }));
-        if (SeasonsManager.WinterSeverity < 6)
-        {
-          Interaction_DLCYngyaShrine.Instance.requireLambsConvo.Play();
-          ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/BuryLostGhost", Objectives.CustomQuestTypes.ReturnLastLambGhosts), true, true);
-        }
       }
       else if (playFlavourConvo && DataManager.Instance.YngyaMiscConvoIndex < this.miscConvos.Length && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) <= 0)
       {
@@ -511,8 +535,8 @@ public class Interaction_DLCYngyaShrine : Interaction
     yield return (object) new WaitForEndOfFrame();
     MMConversation.CURRENT_CONVERSATION = new ConversationObject((List<ConversationEntry>) null, (List<MMTools.Response>) null, (System.Action) null, new List<DoctrineResponse>()
     {
-      new DoctrineResponse(SermonCategory.Special, 7, true, new System.Action(interactionDlcYngyaShrine.\u003CGiveRotChoiceIE\u003Eb__66_0)),
-      new DoctrineResponse(SermonCategory.Special, 8, false, new System.Action(interactionDlcYngyaShrine.\u003CGiveRotChoiceIE\u003Eb__66_1))
+      new DoctrineResponse(SermonCategory.Special, 7, true, new System.Action(interactionDlcYngyaShrine.\u003CGiveRotChoiceIE\u003Eb__67_0)),
+      new DoctrineResponse(SermonCategory.Special, 8, false, new System.Action(interactionDlcYngyaShrine.\u003CGiveRotChoiceIE\u003Eb__67_1))
     });
     UIDoctrineChoicesMenuController doctrineChoicesInstance = MonoSingleton<UIManager>.Instance.DoctrineChoicesMenuTemplate.Instantiate<UIDoctrineChoicesMenuController>();
     doctrineChoicesInstance.Show();
@@ -534,18 +558,60 @@ public class Interaction_DLCYngyaShrine : Interaction
     ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/YngyaDoctrine", Objectives.CustomQuestTypes.DeclareDoctrine_WINTER), true, true);
   }
 
-  [CompilerGenerated]
-  public void \u003CGiveGhostJuice\u003Eb__55_0() => this.ReceiveGhostJuice();
+  public IEnumerator EnableHeartFallbackIE()
+  {
+    Interaction_DLCYngyaShrine interactionDlcYngyaShrine = this;
+    GameManager.GetInstance().OnConversationNew();
+    GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.gameObject);
+    PlayerFarming.Instance.GoToAndStop(interactionDlcYngyaShrine.transform.position + Vector3.down);
+    yield return (object) null;
+    while (PlayerFarming.AnyPlayerGotoAndStopping())
+      yield return (object) null;
+    int ghostsQuantity = Inventory.GetItemQuantities(InventoryItem.ITEM_TYPE.YNGYA_GHOST);
+    for (int x = 0; x < ghostsQuantity; ++x)
+    {
+      GameObject gameObject = GameObject.Find("GhostLostLamb");
+      Vector3 position = interactionDlcYngyaShrine.playerFarming.transform.position;
+      if ((UnityEngine.Object) gameObject != (UnityEngine.Object) null && gameObject.activeInHierarchy)
+      {
+        Transform parent = gameObject.transform.parent;
+        if ((UnityEngine.Object) parent != (UnityEngine.Object) null)
+        {
+          position = parent.position;
+          BiomeConstants.Instance.EmitHitVFXSoul(parent.transform.position, Quaternion.identity);
+          CameraManager.instance.ShakeCameraForDuration(0.25f, 0.5f, 0.1f);
+          UnityEngine.Object.Destroy((UnityEngine.Object) parent.gameObject, 0.1f);
+        }
+        else
+        {
+          position = gameObject.transform.position;
+          UnityEngine.Object.Destroy((UnityEngine.Object) gameObject, 0.1f);
+        }
+      }
+      AudioManager.Instance.PlayOneShot("event:/dlc/env/yngya_shrine/ghost_fly", PlayerFarming.Instance.transform.position);
+      SoulCustomTarget.Create(interactionDlcYngyaShrine.ReceivePosition, position, StaticColors.OffWhiteColor, (System.Action) null, sfxPath: " ", playDefaultSFX: false);
+      yield return (object) new WaitForSeconds(0.2f);
+    }
+    DataManager.Instance.ShrineGhostJuice = 0;
+    Inventory.ChangeItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST, -ghostsQuantity);
+    WoolhavenYngyaStatue.PlayWinterIncrementGlobal();
+    interactionDlcYngyaShrine.CanRevealDLCHeart = false;
+    interactionDlcYngyaShrine.AutomaticallyInteract = false;
+    interactionDlcYngyaShrine.Active = false;
+  }
 
   [CompilerGenerated]
-  public void \u003CGiveRotChoiceIE\u003Eb__66_0()
+  public void \u003CGiveGhostJuice\u003Eb__56_0() => this.ReceiveGhostJuice();
+
+  [CompilerGenerated]
+  public void \u003CGiveRotChoiceIE\u003Eb__67_0()
   {
     DoctrineUpgradeSystem.UnlockAbility(DoctrineUpgradeSystem.DoctrineType.Special_EmbraceRot);
     this.embraceRotConvo.Play();
   }
 
   [CompilerGenerated]
-  public void \u003CGiveRotChoiceIE\u003Eb__66_1()
+  public void \u003CGiveRotChoiceIE\u003Eb__67_1()
   {
     DoctrineUpgradeSystem.UnlockAbility(DoctrineUpgradeSystem.DoctrineType.Special_RejectRot);
     this.rejectRotConvo.Play();

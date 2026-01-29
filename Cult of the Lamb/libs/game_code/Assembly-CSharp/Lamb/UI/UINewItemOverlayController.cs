@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UINewItemOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -87,7 +87,7 @@ public class UINewItemOverlayController : UIMenuBase
       WorshipperData.SkinAndData characters = WorshipperData.Instance.GetCharacters(skinName);
       foreach (WorshipperData.SlotAndColor slotAndColour in characters.SlotAndColours[Mathf.Min(0, characters.SlotAndColours.Count - 1)].SlotAndColours)
       {
-        Spine.Slot slot = this.FollowerSpine.Skeleton.FindSlot(slotAndColour.Slot);
+        Slot slot = this.FollowerSpine.Skeleton.FindSlot(slotAndColour.Slot);
         if (slot != null)
           slot.SetColor(slotAndColour.color);
       }
@@ -122,7 +122,7 @@ public class UINewItemOverlayController : UIMenuBase
     this.Description.isRightToLeftText = this.Subtitle.isRightToLeftText = this.Title.isRightToLeftText = LocalizeIntegration.IsArabic();
     foreach (WorshipperData.SlotAndColor slotAndColour in slotAndColours[Mathf.Min(0, slotAndColours.Count - 1)].SlotAndColours)
     {
-      Spine.Slot slot = this.ClothingSpine.Skeleton.FindSlot(slotAndColour.Slot);
+      Slot slot = this.ClothingSpine.Skeleton.FindSlot(slotAndColour.Slot);
       if (slot != null)
         slot.SetColor(slotAndColour.color);
     }

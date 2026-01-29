@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_IceSculpture
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -168,8 +168,11 @@ public class Interaction_IceSculpture : Interaction
 
   public void Hit(Vector3 position)
   {
-    this.iceHitParticle.transform.position = position;
-    this.iceHitParticle.Play();
+    if ((bool) (UnityEngine.Object) this.iceHitParticle)
+    {
+      this.iceHitParticle.transform.position = position;
+      this.iceHitParticle.Play();
+    }
     this.transform.DOShakePosition(0.1f, 0.1f, 5, fadeOut: false);
   }
 }

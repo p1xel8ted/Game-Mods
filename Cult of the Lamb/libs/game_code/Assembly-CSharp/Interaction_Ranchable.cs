@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranchable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -117,6 +117,7 @@ public class Interaction_Ranchable : Interaction
   public List<PlacementRegion.TileGridTile> topPriorityTiles = new List<PlacementRegion.TileGridTile>();
   public List<PlacementRegion.TileGridTile> lowPriorityTiles = new List<PlacementRegion.TileGridTile>();
   public List<PlacementRegion.TileGridTile> excludedTiles = new List<PlacementRegion.TileGridTile>();
+  public List<PlacementRegion.TileGridTile> reservedTiles = new List<PlacementRegion.TileGridTile>();
   public StructuresData.Ranchable_Animal animal;
   public UIFollowerInteractionWheelOverlayController animalInteractionWheel;
   public Interaction_Ranch ranch;
@@ -1105,41 +1106,32 @@ public class Interaction_Ranchable : Interaction
         this.topPriorityTiles.Clear();
         this.lowPriorityTiles.Clear();
         this.excludedTiles.Clear();
-        PlacementRegion.TileGridTile tileGridTile1 = (PlacementRegion.TileGridTile) null;
-        for (int index1 = 0; index1 < Interaction_Ranchable.Ranchables.Count; ++index1)
+        for (int index = 0; index < Interaction_Ranchable.Ranchables.Count; ++index)
         {
-          if (Interaction_Ranchable.Ranchables[index1].CurrentTile != null)
+          if (Interaction_Ranchable.Ranchables[index].CurrentTile != null)
           {
-            tileGridTile1 = (PlacementRegion.TileGridTile) null;
-            if ((UnityEngine.Object) Interaction_Ranchable.Ranchables[index1] != (UnityEngine.Object) this)
-            {
-              for (int index2 = 0; index2 < Interaction_Ranchable.positionCheckMoveDirections.Length; ++index2)
-              {
-                PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(Interaction_Ranchable.Ranchables[index1].CurrentTile.WorldPosition + Interaction_Ranchable.positionCheckMoveDirections[index2]);
-                if (tileAtWorldPosition != null)
-                  this.excludedTiles.Add(tileAtWorldPosition);
-              }
-            }
-            this.excludedTiles.Add(Interaction_Ranchable.Ranchables[index1].CurrentTile);
+            if ((UnityEngine.Object) Interaction_Ranchable.Ranchables[index] != (UnityEngine.Object) this)
+              this.excludedTiles.AddRange((IEnumerable<PlacementRegion.TileGridTile>) Interaction_Ranchable.Ranchables[index].reservedTiles);
+            this.excludedTiles.Add(Interaction_Ranchable.Ranchables[index].CurrentTile);
           }
         }
         if ((UnityEngine.Object) this.ranch != (UnityEngine.Object) null && this.ranch.Brain != null)
         {
-          for (int index3 = 0; index3 < this.ranch.Brain.RanchingTiles.Count; ++index3)
+          for (int index1 = 0; index1 < this.ranch.Brain.RanchingTiles.Count; ++index1)
           {
-            PlacementRegion.TileGridTile ranchingTile = this.ranch.Brain.RanchingTiles[index3];
+            PlacementRegion.TileGridTile ranchingTile = this.ranch.Brain.RanchingTiles[index1];
             if (!this.excludedTiles.Contains(ranchingTile) && !this.ranch.Brain.ContainsFence(ranchingTile) && !this.IsTileBlocked(ranchingTile) && (double) Vector2Int.Distance(this.currentTile.Position, ranchingTile.Position) < 10.0)
             {
-              for (int index4 = 0; index4 < Interaction_Ranchable.Ranchables.Count; ++index4)
+              for (int index2 = 0; index2 < Interaction_Ranchable.Ranchables.Count; ++index2)
               {
-                if (Interaction_Ranchable.Ranchables[index4].CurrentTile != null && (double) Vector3.Distance(this.ranch.Brain.RanchingTiles[index3].WorldPosition, Interaction_Ranchable.Ranchables[index4].CurrentTile.WorldPosition) <= 1.0)
+                if (Interaction_Ranchable.Ranchables[index2].CurrentTile != null && (double) Vector3.Distance(this.ranch.Brain.RanchingTiles[index1].WorldPosition, Interaction_Ranchable.Ranchables[index2].CurrentTile.WorldPosition) <= 1.0)
                 {
-                  this.lowPriorityTiles.Add(this.ranch.Brain.RanchingTiles[index3]);
+                  this.lowPriorityTiles.Add(this.ranch.Brain.RanchingTiles[index1]);
                   break;
                 }
               }
-              if (!this.lowPriorityTiles.Contains(this.ranch.Brain.RanchingTiles[index3]))
-                this.topPriorityTiles.Add(this.ranch.Brain.RanchingTiles[index3]);
+              if (!this.lowPriorityTiles.Contains(this.ranch.Brain.RanchingTiles[index1]))
+                this.topPriorityTiles.Add(this.ranch.Brain.RanchingTiles[index1]);
             }
           }
         }
@@ -1160,14 +1152,14 @@ public class Interaction_Ranchable : Interaction
           else
             Debug.Log((object) "NO TILES AVAILALBLE = FALL BACK!");
         }
-        PlacementRegion.TileGridTile tileGridTile2 = (PlacementRegion.TileGridTile) null;
+        PlacementRegion.TileGridTile tileGridTile = (PlacementRegion.TileGridTile) null;
         if (this.targetHutch != null)
         {
           foreach (PlacementRegion.TileGridTile ranchingTile in this.ranch.Brain.RanchingTiles)
           {
             if (ranchingTile.ObjectID == this.targetHutch.Data.ID)
             {
-              tileGridTile2 = ranchingTile;
+              tileGridTile = ranchingTile;
               break;
             }
           }
@@ -1181,7 +1173,7 @@ public class Interaction_Ranchable : Interaction
             {
               if (ranchingTile.Position == structuresRanchTrough.Data.GridTilePosition)
               {
-                tileGridTile2 = ranchingTile;
+                tileGridTile = ranchingTile;
                 this.targetTrough = structuresRanchTrough;
                 flag = true;
                 break;
@@ -1196,15 +1188,17 @@ public class Interaction_Ranchable : Interaction
           this.CurrentState = Interaction_Ranchable.State.Default;
           this.unitObject.givePath(new Vector3(0.0f, 10f, 0.0f));
         }
-        else if (tileGridTile2 != null)
+        else if (tileGridTile != null)
         {
-          this.CurrentTile = tileGridTile2;
+          this.CurrentTile = tileGridTile;
           this.unitObject.givePath(this.CurrentTile.WorldPosition);
+          this.UpdateReservedTiles();
         }
         else if (this.topPriorityTiles.Count > 0)
         {
           this.CurrentTile = this.topPriorityTiles[UnityEngine.Random.Range(0, this.topPriorityTiles.Count)];
           this.unitObject.givePath(this.CurrentTile.WorldPosition, forceAStar: true);
+          this.UpdateReservedTiles();
         }
         else
           this.spine.AnimationState.SetAnimation(0, this.idle_anim, true);
@@ -1416,7 +1410,7 @@ public class Interaction_Ranchable : Interaction
       this.colours = AnimalData.Instance.GetAnimalColors(this.animal.Type);
     foreach (WorshipperData.SlotAndColor slotAndColour in this.colours[Mathf.Clamp(this.animal.Colour, 0, this.colours.Length - 1)].SlotAndColours)
     {
-      Spine.Slot slot = this.spine.Skeleton.FindSlot(slotAndColour.Slot);
+      Slot slot = this.spine.Skeleton.FindSlot(slotAndColour.Slot);
       if (slot != null)
         slot.SetColor(slotAndColour.color);
     }
@@ -2062,6 +2056,10 @@ public class Interaction_Ranchable : Interaction
     interactionRanchable._playerFarming.playerChoreXPBarController.AddChoreXP(interactionRanchable.playerFarming);
     CameraManager.instance.ShakeCameraForDuration(0.3f, 0.4f, 0.3f);
     GameManager.GetInstance().OnConversationEnd();
+    interactionRanchable.enabled = false;
+    interactionRanchable.isBeingFed = true;
+    interactionRanchable.Interactable = false;
+    interactionRanchable.HasChanged = true;
     interactionRanchable.StartCoroutine((IEnumerator) interactionRanchable.RemoveAnimal());
   }
 
@@ -3448,8 +3446,21 @@ label_6:
     AudioManager.Instance.SetEventInstanceParameter(this.ridingLoopSFX, this.ridingSpeedParameter, Mathf.InverseLerp(0.0f, 1f, playerSpeed));
   }
 
+  public void UpdateReservedTiles()
+  {
+    this.reservedTiles.Clear();
+    if (!((UnityEngine.Object) this.ranch != (UnityEngine.Object) null) || this.CurrentState == Interaction_Ranchable.State.BreakingOut)
+      return;
+    for (int index = 0; index < Interaction_Ranchable.positionCheckMoveDirections.Length; ++index)
+    {
+      PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(this.CurrentTile.WorldPosition + Interaction_Ranchable.positionCheckMoveDirections[index]);
+      if (tileAtWorldPosition != null)
+        this.reservedTiles.Add(tileAtWorldPosition);
+    }
+  }
+
   [CompilerGenerated]
-  public void \u003COnDisable\u003Eb__131_0()
+  public void \u003COnDisable\u003Eb__132_0()
   {
     if (this.destroyed || this.CurrentState != Interaction_Ranchable.State.BreakingOut)
       return;
@@ -3458,16 +3469,16 @@ label_6:
   }
 
   [CompilerGenerated]
-  public void \u003CBeginRiding\u003Eb__160_0()
+  public void \u003CBeginRiding\u003Eb__161_0()
   {
     this.animalNameParent.gameObject.SetActive(false);
   }
 
   [CompilerGenerated]
-  public void \u003CUpdateMovingToAttack\u003Eb__167_1() => this.ResetAnimalState();
+  public void \u003CUpdateMovingToAttack\u003Eb__168_1() => this.ResetAnimalState();
 
   [CompilerGenerated]
-  public void \u003CPoop\u003Eb__202_0()
+  public void \u003CPoop\u003Eb__203_0()
   {
     if (!((UnityEngine.Object) this.ranch != (UnityEngine.Object) null) || this.ranch.Brain == null)
       return;
@@ -3475,7 +3486,7 @@ label_6:
   }
 
   [CompilerGenerated]
-  public void \u003CEat\u003Eb__204_0()
+  public void \u003CEat\u003Eb__205_0()
   {
     this.postFeedRoutine = (Coroutine) null;
     AudioManager.Instance.StopLoop(this.eatingLoopSFX);
@@ -3484,10 +3495,10 @@ label_6:
   }
 
   [CompilerGenerated]
-  public void \u003CEat\u003Eb__204_1() => this.isBeingFed = false;
+  public void \u003CEat\u003Eb__205_1() => this.isBeingFed = false;
 
   [CompilerGenerated]
-  public void \u003CHitWithSnowball\u003Eb__252_0()
+  public void \u003CHitWithSnowball\u003Eb__253_0()
   {
     if (this.CurrentState != Interaction_Ranchable.State.Animating)
       return;

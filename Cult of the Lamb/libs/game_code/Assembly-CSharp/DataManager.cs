@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DataManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -983,7 +983,8 @@ public class DataManager
     TutorialTopic.MutatedFollower,
     TutorialTopic.WinterAbility,
     TutorialTopic.Midwinter,
-    TutorialTopic.JobBoards
+    TutorialTopic.JobBoards,
+    TutorialTopic.SacrificeTable
   };
   [Key(399)]
   public List<StructuresData.ResearchObject> CurrentResearch = new List<StructuresData.ResearchObject>();
@@ -2959,7 +2960,18 @@ public class DataManager
     "DragonFive",
     "ChosenChild",
     "Executioner",
-    "Wombat"
+    "Wombat",
+    "Jackalope",
+    "Mammoth",
+    "Armadillo",
+    "Ibex",
+    "Moth",
+    "Lizard",
+    "Maggot",
+    "NakedMoleRat",
+    "Hyena",
+    "SnowMonkey",
+    "Beluga"
   };
   [XmlIgnore]
   [IgnoreMember]
@@ -4602,7 +4614,7 @@ public class DataManager
       DataManager.Instance.HasAcceptedPilgrimPart2 = true;
     if (UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FollowerWedding) || UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Wedding))
       UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Ritual_Divorce);
-    if (DataManager.Instance.BeatenWolf && !this.DiedToYngyaBoss && DataManager.Instance.TotalShrineGhostJuice < 80 /*0x50*/ && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) == 0 && this.DLCDungeonNodesCompleted.Contains(11))
+    if (DataManager.Instance.BeatenWolf && !this.DiedToYngyaBoss && DataManager.Instance.TotalShrineGhostJuice < 80 /*0x50*/ && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) == 0 && this.DLCDungeonNodesCompleted.Contains(11) && !this.BossesCompleted.Contains(FollowerLocation.Boss_Wolf))
     {
       this.BossesCompleted.Add(FollowerLocation.Boss_Wolf);
       Inventory.AddItem(InventoryItem.ITEM_TYPE.YNGYA_GHOST, 4);
@@ -4633,7 +4645,7 @@ public class DataManager
       ++num;
     if (DataManager.instance.UnlockedFleeces.Contains(9))
       ++num;
-    if (num == 8 && Inventory.KeyPieces == 3 && DataManager.Instance.TalismanPiecesReceivedFromMysticShop >= 12 && DataManager.instance.PlimboStoryProgress >= 11 && (DataManager.instance.RatauKilled || DataManager.instance.RatauFoundSkin) && DataManager.instance.RatooFishingProgress >= 3 && DataManager.instance.MidasFollowerStatueCount >= 4 && DataManager.instance.SozoStoryProgress >= 4)
+    if (num == 8 && Inventory.KeyPieces == 3 && DataManager.Instance.TalismanPiecesReceivedFromMysticShop >= 12 && DataManager.instance.PlimboStoryProgress >= 11 && DataManager.instance.RatauKilled && DataManager.instance.RatooFishingProgress >= 3 && DataManager.instance.MidasFollowerStatueCount >= 4 && DataManager.instance.SozoStoryProgress >= 4)
     {
       Inventory.KeyPieces = 0;
       Inventory.AddItem(InventoryItem.ITEM_TYPE.TALISMAN, 1);
@@ -4693,13 +4705,24 @@ public class DataManager
       if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_8) <= 0 && !DataManager.instance.NPCGhostGeneric8Rescued)
         Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_8, 1);
     }
-    if (DataManager.Instance.NPCRescueRoomsCompleted < 9)
+    if (DataManager.Instance.NPCRescueRoomsCompleted >= 9)
+    {
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_9) <= 0 && !DataManager.instance.NPCGhostGeneric9Rescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_9, 1);
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_10) <= 0 && !DataManager.instance.NPCGhostGeneric10Rescued)
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_10, 1);
+    }
+    if (DataManager.instance.FullWoolhavenFlowerPots.Count >= 10 && DataManager.instance.HasYngyaFlowerBasketQuestAccepted && !DataManager.instance.HasFinishedYngyaFlowerBasketQuest)
+      DataManager.instance.HasFinishedYngyaFlowerBasketQuest = true;
+    if (DataManager.instance.GaveLeshyHealingQuest && !DataManager.instance.LeshyHealQuestCompleted && !ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Leshy))
+      ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Leshy, 99990), true);
+    if (DataManager.instance.GaveHeketHealingQuest && !DataManager.instance.HeketHealQuestCompleted && !ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Heket))
+      ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Heket, 99991), true);
+    if (DataManager.instance.GaveKallamarHealingQuest && !DataManager.instance.KallamarHealQuestCompleted && !ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Kallamar))
+      ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Kallamar, 99992), true);
+    if (!DataManager.instance.GaveShamuraHealingQuest || DataManager.instance.ShamuraHealQuestCompleted || ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Shamura))
       return;
-    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_9) <= 0 && !DataManager.instance.NPCGhostGeneric9Rescued)
-      Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_9, 1);
-    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_10) > 0 || DataManager.instance.NPCGhostGeneric10Rescued)
-      return;
-    Inventory.AddItem(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_10, 1);
+    ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Shamura, 99993), true);
   }
 
   public void AddToCompletedQuestHistory(ObjectivesDataFinalized finalizedData)

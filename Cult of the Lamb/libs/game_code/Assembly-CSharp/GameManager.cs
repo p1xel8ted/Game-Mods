@@ -1,11 +1,12 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GameManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
 using DG.Tweening.Core;
+using I2.Loc;
 using Lamb.UI;
 using Lamb.UI.Assets;
 using Lamb.UI.PauseMenu;
@@ -20,7 +21,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Unify;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
@@ -267,7 +267,7 @@ public class GameManager : MonoBehaviour
 
   public void CheckAchievements()
   {
-    if ((UnityEngine.Object) Achievements.Instance == (UnityEngine.Object) null)
+    if ((UnityEngine.Object) Unify.Achievements.Instance == (UnityEngine.Object) null)
       return;
     int num1 = 0;
     for (int index = 0; index < DataManager.Instance.PlayerFoundTrinkets.Count; ++index)
@@ -282,14 +282,16 @@ public class GameManager : MonoBehaviour
         ++num2;
     }
     if (num1 >= num2)
-      AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup("ALL_TAROTS_UNLOCKED"));
+      AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup("ALL_TAROTS_UNLOCKED"));
     if (!DataManager.CheckIfThereAreSkinsAvailableAll())
     {
       Debug.Log((object) "Follower Skin Achievement Unlocked");
-      AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup("ALL_SKINS_UNLOCKED"));
+      AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup("ALL_SKINS_UNLOCKED"));
     }
     if (DataManager.Instance.BeatenExecutioner)
-      AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup(AchievementsWrapper.Tags.BEAT_EXECUTIONER));
+      AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup(AchievementsWrapper.Tags.BEAT_EXECUTIONER));
+    if (TailorManager.HasUnlockedAllClothing())
+      AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup("ALL_OUTFITS"));
     DataManager.CheckAllLegendaryWeaponsUnlocked();
   }
 
@@ -1491,6 +1493,14 @@ public class GameManager : MonoBehaviour
     System.Action action = callback;
     if (action != null)
       action();
+  }
+
+  public static void ForceFontReload()
+  {
+    LocalizationManager.ForceLoadSynchronous = true;
+    LocalizationManager.EnableChangingCultureInfo(true);
+    LocalizationManager.SetupFonts();
+    LocalizationManager.ForceLoadSynchronous = false;
   }
 
   [CompilerGenerated]

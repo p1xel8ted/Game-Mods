@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MidasKilled
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -29,7 +29,13 @@ public class MidasKilled : Interaction
   public SkeletonAnimation portalSpine;
   public EventInstance receiveLoop;
 
-  public override void OnEnable() => base.OnEnable();
+  public override void OnEnable()
+  {
+    base.OnEnable();
+    if (!((UnityEngine.Object) this.enemy != (UnityEngine.Object) null))
+      return;
+    this.enemy.health.untouchable = true;
+  }
 
   public override void OnDisable() => base.OnDisable();
 
@@ -87,6 +93,7 @@ public class MidasKilled : Interaction
     yield return (object) new WaitForSeconds(1f);
     if ((UnityEngine.Object) midasKilled.enemy != (UnityEngine.Object) null)
     {
+      midasKilled.enemy.health.untouchable = false;
       midasKilled.enemy.enabled = true;
       midasKilled.enemy.DashParticles.gameObject.SetActive(true);
       midasKilled.enemy.transform.localScale = Vector3.one;

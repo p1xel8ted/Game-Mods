@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerPet
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MessagePack;
@@ -265,7 +265,7 @@ public class FollowerPet : MonoBehaviour
     WorshipperData.SlotsAndColours[] animalColors = AnimalData.Instance.GetAnimalColors(this.dlcPetData.ItemType);
     foreach (WorshipperData.SlotAndColor slotAndColour in animalColors[Mathf.Clamp(this.dlcPetData.Colour, 0, animalColors.Length - 1)].SlotAndColours)
     {
-      Spine.Slot slot = this.spine.Skeleton.FindSlot(slotAndColour.Slot);
+      Slot slot = this.spine.Skeleton.FindSlot(slotAndColour.Slot);
       if (slot != null)
         slot.SetColor(slotAndColour.color);
     }

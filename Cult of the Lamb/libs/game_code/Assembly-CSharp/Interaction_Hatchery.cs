@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Hatchery
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -505,7 +505,7 @@ public class Interaction_Hatchery : Interaction
     int skinIndex = this.GetSkinIndex(skinName1);
     int num2 = num1 >= 0.5 ? eggInfo.Parent_2_SkinVariant : eggInfo.Parent_1_SkinVariant;
     bool flag1 = FollowerManager.UniqueFollowerIDs.Contains(eggInfo.Parent_1_ID);
-    if (flag1 && (FollowerManager.PilrgrimIDs.Contains(eggInfo.Parent_1_ID) || FollowerManager.PalworldIDs.Contains(eggInfo.Parent_1_ID) || eggInfo.Parent_1_ID == 100006) || eggInfo.Parent_2_ID == 10009)
+    if (flag1 && (FollowerManager.PilrgrimIDs.Contains(eggInfo.Parent_1_ID) || FollowerManager.PalworldIDs.Contains(eggInfo.Parent_1_ID) || eggInfo.Parent_1_ID == 100006) || eggInfo.Parent_1_ID == 10009)
       flag1 = false;
     bool flag2 = FollowerManager.UniqueFollowerIDs.Contains(eggInfo.Parent_2_ID);
     if (flag2 && (FollowerManager.PilrgrimIDs.Contains(eggInfo.Parent_2_ID) || FollowerManager.PalworldIDs.Contains(eggInfo.Parent_2_ID) || eggInfo.Parent_2_ID == 100006) || eggInfo.Parent_2_ID == 10009)

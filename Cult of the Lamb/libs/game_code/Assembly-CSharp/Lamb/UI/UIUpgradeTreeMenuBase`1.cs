@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIUpgradeTreeMenuBase`1
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -629,6 +629,7 @@ public abstract class UIUpgradeTreeMenuBase<T> : UIMenuBase where T : UIUpgradeU
 
   public override void OnHideStarted()
   {
+    DOTween.KillAll();
     foreach (UpgradeTreeNode treeNode in this._treeNodes)
       treeNode.OnUpgradeNodeSelected -= new Action<UpgradeTreeNode>(this.OnNodeSelected);
     MonoSingleton<MMLogger>.Instance.AddToLog("HIDE STARTED 000001");
@@ -640,6 +641,7 @@ public abstract class UIUpgradeTreeMenuBase<T> : UIMenuBase where T : UIUpgradeU
 
   public override void OnHideCompleted()
   {
+    DOTween.KillAll();
     MonoSingleton<MMLogger>.Instance.AddToLog("HIDE ENDED 000002");
     AudioManager.Instance.ResumePausedLoopsAndSFX();
     if (this._didCancel)

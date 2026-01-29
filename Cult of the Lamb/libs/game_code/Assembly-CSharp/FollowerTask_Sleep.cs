@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Sleep
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -111,13 +111,38 @@ public class FollowerTask_Sleep : FollowerTask
     this.hibernating = true;
     this.passedOut = true;
     if (PlayerFarming.Location == FollowerLocation.Base)
-    {
-      Vector2 direction = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(0.0f, -1f));
-      LayerMask layerMask = (LayerMask) ((int) new LayerMask() | 1 << LayerMask.NameToLayer("Island"));
-      this.targetSleepPosition = (Vector3) (Physics2D.Raycast((Vector2) Vector3.zero, direction, 1000f, (int) layerMask).point + -direction * UnityEngine.Random.Range(2f, 4f));
-    }
+      this.targetSleepPosition = this.GetEmptyTileInRange();
     else
       this.targetSleepPosition = new Vector3(UnityEngine.Random.Range(PlacementRegion.X_Constraints.x, PlacementRegion.X_Constraints.y), UnityEngine.Random.Range(PlacementRegion.Y_Constraints.x, PlacementRegion.Y_Constraints.y), 0.0f);
+  }
+
+  public Vector3 GetEmptyTileInRange()
+  {
+    Vector3 zero = Vector3.zero;
+    PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(zero);
+    List<PlacementRegion.TileGridTile> tilesInRange = PlacementRegion.GetTilesInRange(tileAtWorldPosition, 15);
+    float num = -1f;
+    PlacementRegion.TileGridTile tileGridTile = (PlacementRegion.TileGridTile) null;
+    bool flag = false;
+    foreach (PlacementRegion.TileGridTile tile in tilesInRange)
+    {
+      if (!this.IsTileBlocked(tile))
+      {
+        float sqrMagnitude = (tile.WorldPosition - zero).sqrMagnitude;
+        if (!flag || (double) sqrMagnitude > (double) num)
+        {
+          num = sqrMagnitude;
+          tileGridTile = tile;
+          flag = true;
+        }
+      }
+    }
+    return !flag ? tileAtWorldPosition.WorldPosition : tileGridTile.WorldPosition;
+  }
+
+  public bool IsTileBlocked(PlacementRegion.TileGridTile tile)
+  {
+    return tile == null || tile.ObjectID != -1;
   }
 
   public FollowerTask_Sleep(Vector3 pos)

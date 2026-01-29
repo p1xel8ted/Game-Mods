@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranch
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -123,6 +123,13 @@ public class Interaction_Ranch : Interaction
     this.Structure.OnBrainAssigned -= new System.Action(this.OnBrainAssigned);
     this.Brain.OnAnimalAdded += new Structures_Ranch.AnimalEvent(this.Brain_OnAnimalAdded);
     this.CheckValidEnclosure((StructuresData) null);
+    if (!((UnityEngine.Object) PlacementRegion.Instance != (UnityEngine.Object) null) || PlacementRegion.Instance.structureBrain == null)
+      return;
+    PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(this.transform.position);
+    if (tileAtWorldPosition == null || tileAtWorldPosition.ObjectID == this.Brain.Data.ID)
+      return;
+    this.Brain.Data.GridTilePosition = tileAtWorldPosition.Position;
+    PlacementRegion.Instance.structureBrain.AddStructureToGrid(this.Brain.Data, tileAtWorldPosition.Position);
   }
 
   public int GetAnimalCount()

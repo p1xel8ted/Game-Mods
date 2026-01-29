@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BreakableDecorationObject
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -27,48 +27,66 @@ public class BreakableDecorationObject : BaseMonoBehaviour
 
   public IEnumerator Load()
   {
-    BreakableDecorationObject decorationObject = this;
-    if ((Object) decorationObject.DestroyPlaceholder != (Object) null)
-      Object.Destroy((Object) decorationObject.DestroyPlaceholder);
-    GameObject original;
-    if (BreakableDecorationObject.AssignedDecorationObject.ContainsKey(decorationObject.DestructableAsset))
+    BreakableDecorationObject context = this;
+    if ((Object) context.DestructableAsset == (Object) null)
+      Debug.LogError((object) "Load(): DestructableAsset is null", (Object) context);
+    else if (BreakableDecorationObject.AssignedDecorationObject == null || BreakableDecorationObject.AssignedDecorationReference == null)
+      Debug.LogError((object) "Load(): decoration dictionaries not initialized", (Object) context);
+    else if (context.DestructableAsset.GameObjectAndProbabilities == null || context.DestructableAsset.GameObjectAndProbabilities.Count == 0)
     {
-      original = BreakableDecorationObject.AssignedDecorationObject[decorationObject.DestructableAsset].gameObject;
+      Debug.LogError((object) "Load(): GameObjectAndProbabilities missing/empty", (Object) context);
     }
     else
     {
-      int index = -1;
-      int[] weights = new int[decorationObject.DestructableAsset.GameObjectAndProbabilities.Count];
-      while (++index < decorationObject.DestructableAsset.GameObjectAndProbabilities.Count)
-        weights[index] = decorationObject.DestructableAsset.GameObjectAndProbabilities[index].Probability;
-      int randomWeightedIndex = Utils.GetRandomWeightedIndex(weights);
-      AssetReferenceGameObject assetReference = decorationObject.DestructableAsset.GameObjectAndProbabilities[randomWeightedIndex].GameObjectAddr;
-      bool spawnByReference = false;
-      if (!BreakableDecorationObject.AssignedDecorationReference.ContainsKey(decorationObject.DestructableAsset))
+      if ((Object) context.DestroyPlaceholder != (Object) null)
+        Object.Destroy((Object) context.DestroyPlaceholder);
+      GameObject original;
+      if (BreakableDecorationObject.AssignedDecorationObject.ContainsKey(context.DestructableAsset))
       {
-        BreakableDecorationObject.AssignedDecorationReference.Add(decorationObject.DestructableAsset, assetReference);
-        spawnByReference = true;
-      }
-      yield return (object) null;
-      if (spawnByReference)
-      {
-        AsyncOperationHandle<GameObject> asyncOperationHandle = Addressables.LoadAssetAsync<GameObject>((object) assetReference);
-        decorationObject.handle = asyncOperationHandle;
-        asyncOperationHandle.WaitForCompletion();
-        original = asyncOperationHandle.Result;
-        if (!BreakableDecorationObject.AssignedDecorationObject.ContainsKey(decorationObject.DestructableAsset))
-          BreakableDecorationObject.AssignedDecorationObject.Add(decorationObject.DestructableAsset, original);
+        original = BreakableDecorationObject.AssignedDecorationObject[context.DestructableAsset].gameObject;
       }
       else
       {
-        while (!BreakableDecorationObject.AssignedDecorationObject.ContainsKey(decorationObject.DestructableAsset))
-          yield return (object) null;
-        original = BreakableDecorationObject.AssignedDecorationObject[decorationObject.DestructableAsset].gameObject;
+        int index = -1;
+        int[] weights = new int[context.DestructableAsset.GameObjectAndProbabilities.Count];
+        while (++index < context.DestructableAsset.GameObjectAndProbabilities.Count)
+          weights[index] = context.DestructableAsset.GameObjectAndProbabilities[index].Probability;
+        int randomWeightedIndex = Utils.GetRandomWeightedIndex(weights);
+        AssetReferenceGameObject assetReference = context.DestructableAsset.GameObjectAndProbabilities[randomWeightedIndex].GameObjectAddr;
+        bool spawnByReference = false;
+        if (!BreakableDecorationObject.AssignedDecorationReference.ContainsKey(context.DestructableAsset))
+        {
+          BreakableDecorationObject.AssignedDecorationReference.Add(context.DestructableAsset, assetReference);
+          spawnByReference = true;
+        }
+        yield return (object) null;
+        if (spawnByReference)
+        {
+          AsyncOperationHandle<GameObject> asyncOperationHandle = Addressables.LoadAssetAsync<GameObject>((object) assetReference);
+          context.handle = asyncOperationHandle;
+          asyncOperationHandle.WaitForCompletion();
+          original = asyncOperationHandle.Result;
+          if (!BreakableDecorationObject.AssignedDecorationObject.ContainsKey(context.DestructableAsset))
+            BreakableDecorationObject.AssignedDecorationObject.Add(context.DestructableAsset, original);
+        }
+        else
+        {
+          while (!BreakableDecorationObject.AssignedDecorationObject.ContainsKey(context.DestructableAsset))
+            yield return (object) null;
+          original = BreakableDecorationObject.AssignedDecorationObject[context.DestructableAsset].gameObject;
+        }
+        assetReference = (AssetReferenceGameObject) null;
       }
-      assetReference = (AssetReferenceGameObject) null;
+      if ((Object) original == (Object) null)
+      {
+        Debug.LogError((object) "Load(): spawnable is null (addressables load failed or missing asset)", (Object) context);
+      }
+      else
+      {
+        context.SpawnedDecoration = Object.Instantiate<GameObject>(original, context.transform);
+        BiomeGenerator.OnBiomeLeftRoom += new BiomeGenerator.BiomeAction(context.OnBiomeLeftRoom);
+      }
     }
-    decorationObject.SpawnedDecoration = Object.Instantiate<GameObject>(original, decorationObject.transform);
-    BiomeGenerator.OnBiomeLeftRoom += new BiomeGenerator.BiomeAction(decorationObject.OnBiomeLeftRoom);
   }
 
   public void OnDestroy()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerRelic
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -2336,72 +2336,61 @@ public class PlayerRelic : MonoBehaviour
       return;
     this.TrailsTimer = 0.0f;
     this.t = (GameObject) null;
-    if (relicType == RelicType.FieryBurrow)
+    if (this.FieryTrails == null)
+      this.FieryTrails = new List<GameObject>();
+    if (this.IceyTrails == null)
+      this.IceyTrails = new List<GameObject>();
+    List<GameObject> gameObjectList = relicType == RelicType.FieryBurrow ? this.FieryTrails : this.IceyTrails;
+    for (int index = 0; index < gameObjectList.Count; ++index)
     {
-      if (this.FieryTrails.Count > 0)
+      GameObject gameObject = gameObjectList[index];
+      if (!((UnityEngine.Object) gameObject == (UnityEngine.Object) null) && !gameObject.activeSelf)
       {
-        foreach (GameObject fieryTrail in this.FieryTrails)
+        this.t = gameObject;
+        this.t.transform.position = this.transform.position;
+        this.t.SetActive(true);
+        SimpleSpineSkineRandomiser componentInChildren = this.t.GetComponentInChildren<SimpleSpineSkineRandomiser>();
+        if ((UnityEngine.Object) componentInChildren != (UnityEngine.Object) null)
         {
-          if (!fieryTrail.activeSelf)
-          {
-            this.t = fieryTrail;
-            this.t.transform.position = this.transform.position;
-            this.t.SetActive(true);
-            this.t.GetComponentInChildren<SimpleSpineSkineRandomiser>().Start();
-            if (relicType == RelicType.FieryBurrow)
-            {
-              AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_spawn", this.t.transform.position);
-              GameManager.GetInstance().WaitForSeconds(0.5f, (System.Action) (() => AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_despawn", this.t.transform.position)));
-              break;
-            }
-            break;
-          }
-        }
-      }
-    }
-    else if (this.IceyTrails.Count > 0)
-    {
-      foreach (GameObject iceyTrail in this.IceyTrails)
-      {
-        if (!iceyTrail.activeSelf)
-        {
-          this.t = iceyTrail;
-          this.t.transform.position = this.transform.position;
-          this.t.SetActive(true);
-          this.t.GetComponentInChildren<SimpleSpineSkineRandomiser>().Start();
-          if (relicType != RelicType.IceyBurrow)
-          {
-            if (relicType != RelicType.IceSpikes)
-              break;
-          }
-          AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_spawn", this.t.transform.position);
-          GameManager.GetInstance().WaitForSeconds(0.5f, (System.Action) (() => AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_despawn", this.t.transform.position)));
+          componentInChildren.Start();
           break;
         }
+        break;
       }
     }
     if ((UnityEngine.Object) this.t == (UnityEngine.Object) null)
     {
       Transform parent = this.transform.parent;
-      if (BiomeGenerator.Instance.CurrentRoom != null && (UnityEngine.Object) BiomeGenerator.Instance.CurrentRoom.generateRoom != (UnityEngine.Object) null)
-        parent = BiomeGenerator.Instance.CurrentRoom.generateRoom.transform;
-      if (relicType == RelicType.FieryBurrow)
-      {
-        this.t = UnityEngine.Object.Instantiate<GameObject>(this.FieryTrailPrefab, this.transform.position, Quaternion.identity, parent);
-        this.FieryTrails.Add(this.t);
-      }
-      else
-      {
-        this.t = UnityEngine.Object.Instantiate<GameObject>(this.IceyTrailPrefab, this.transform.position, Quaternion.identity, parent);
-        this.IceyTrails.Add(this.t);
-        AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_spawn", this.t.transform.position);
-        GameManager.GetInstance().WaitForSeconds(0.5f, (System.Action) (() => AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_despawn", this.t.transform.position)));
-      }
+      BiomeGenerator instance = BiomeGenerator.Instance;
+      if ((UnityEngine.Object) instance != (UnityEngine.Object) null && instance.CurrentRoom != null && (UnityEngine.Object) instance.CurrentRoom.generateRoom != (UnityEngine.Object) null)
+        parent = instance.CurrentRoom.generateRoom.transform;
+      GameObject original = relicType == RelicType.FieryBurrow ? this.FieryTrailPrefab : this.IceyTrailPrefab;
+      if ((UnityEngine.Object) original == (UnityEngine.Object) null)
+        return;
+      this.t = UnityEngine.Object.Instantiate<GameObject>(original, this.transform.position, Quaternion.identity, parent);
+      gameObjectList.Add(this.t);
       ColliderEvents componentInChildren = this.t.GetComponentInChildren<ColliderEvents>();
-      if ((bool) (UnityEngine.Object) componentInChildren)
+      if ((UnityEngine.Object) componentInChildren != (UnityEngine.Object) null)
         componentInChildren.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnBurrowDamageTriggerEnter);
     }
-    this.previousSpawnPosition = this.t.transform.position;
+    if (relicType == RelicType.FieryBurrow || relicType == RelicType.IceyBurrow || relicType == RelicType.IceSpikes)
+    {
+      string soundPath = relicType == RelicType.FieryBurrow ? "event:/dlc/tarot/verglasshard_icespike_spawn" : "event:/dlc/tarot/verglasshard_icespike_spawn";
+      string despawnSFX = relicType == RelicType.FieryBurrow ? "event:/dlc/tarot/verglasshard_icespike_despawn" : "event:/dlc/tarot/verglasshard_icespike_despawn";
+      AudioManager instance1 = AudioManager.Instance;
+      if ((UnityEngine.Object) instance1 != (UnityEngine.Object) null)
+        instance1.PlayOneShot(soundPath, this.t.transform.position);
+      GameManager instance2 = GameManager.GetInstance();
+      if ((UnityEngine.Object) instance2 != (UnityEngine.Object) null)
+        instance2.WaitForSeconds(0.5f, (System.Action) (() =>
+        {
+          AudioManager instance3 = AudioManager.Instance;
+          if (!((UnityEngine.Object) instance3 != (UnityEngine.Object) null))
+            return;
+          instance3.PlayOneShot(despawnSFX, this.t.transform.position);
+        }));
+    }
+    this.previousSpawnPosition = (UnityEngine.Object) this.t != (UnityEngine.Object) null ? this.t.transform.position : this.previousSpawnPosition;
   }
 
   public void OnBurrowDamageTriggerEnter(Collider2D collider)
@@ -2444,24 +2433,6 @@ public class PlayerRelic : MonoBehaviour
     float damage = EquipmentManager.GetCurseData(EquipmentType.Tentacles_Ice).Damage * PlayerSpells.GetCurseDamageMultiplier(this.playerFarming) * TrinketManager.GetRelicDamageMultiplier(this.playerFarming);
     component.Play(0.0f, 0.5f, damage, this.playerFarming.health.team, false, 0, true, playExitSFX: false, playLoop: false);
     AudioManager.Instance.PlayOneShot(this.relicIceSpikesSingleBurstSFX, component.gameObject);
-  }
-
-  [CompilerGenerated]
-  public void \u003CSpawnTrails\u003Eb__139_0()
-  {
-    AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_despawn", this.t.transform.position);
-  }
-
-  [CompilerGenerated]
-  public void \u003CSpawnTrails\u003Eb__139_1()
-  {
-    AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_despawn", this.t.transform.position);
-  }
-
-  [CompilerGenerated]
-  public void \u003CSpawnTrails\u003Eb__139_2()
-  {
-    AudioManager.Instance.PlayOneShot("event:/dlc/tarot/verglasshard_icespike_despawn", this.t.transform.position);
   }
 
   public delegate void RelicEvent(RelicData relic, PlayerFarming target = null);

@@ -21,6 +21,7 @@ public class Plugin : BaseUnityPlugin
 
     // 01. Rebirth
     internal static ConfigEntry<bool> RebirthOldFollowers { get; private set; }
+    internal static ConfigEntry<bool> PreserveUniqueFollowers { get; private set; }
     internal static ConfigEntry<int> XpPenaltyChance { get; private set; }
     internal static ConfigEntry<int> XpPenaltyMultiplier { get; private set; }
     internal static ConfigEntry<int> TokenCost { get; private set; }
@@ -72,6 +73,7 @@ public class Plugin : BaseUnityPlugin
     {
         // 01. Rebirth
         RebirthOldFollowers = Config.Bind("01. Rebirth", "Rebirth Old Followers", false, "Allow old followers to be reborn.");
+        PreserveUniqueFollowers = Config.Bind("01. Rebirth", "Preserve Unique Followers", true, "When enabled, unique followers (Webber, Sozo, Ratau, etc.) retain their original skin and traits when reborn. Names are always randomized.");
         XpPenaltyChance = Config.Bind("01. Rebirth", "XP Penalty Chance", 20, new ConfigDescription("Chance (%) of losing XP during rebirth.", new AcceptableValueRange<int>(0, 100)));
         XpPenaltyMultiplier = Config.Bind("01. Rebirth", "XP Kept On Penalty", 50, new ConfigDescription("Percentage of XP kept when penalty triggers.", new AcceptableValueRange<int>(10, 90)));
         TokenCost = Config.Bind("01. Rebirth", "Token Cost", 25, new ConfigDescription("Tokens required for subsequent rebirths.", new AcceptableValueRange<int>(1, 100)));
@@ -100,6 +102,7 @@ public class Plugin : BaseUnityPlugin
     {
         // 01. Rebirth
         CustomSettingsManager.AddBepInExConfig("Rebirth", "Rebirth Old Followers", RebirthOldFollowers);
+        CustomSettingsManager.AddBepInExConfig("Rebirth", "Preserve Unique Followers", PreserveUniqueFollowers);
         CustomSettingsManager.AddBepInExConfig("Rebirth", "XP Penalty Chance", XpPenaltyChance, 1, MMSlider.ValueDisplayFormat.RawValue);
         CustomSettingsManager.AddBepInExConfig("Rebirth", "XP Kept On Penalty", XpPenaltyMultiplier, 5, MMSlider.ValueDisplayFormat.RawValue);
         CustomSettingsManager.AddBepInExConfig("Rebirth", "Token Cost", TokenCost, 1, MMSlider.ValueDisplayFormat.RawValue);

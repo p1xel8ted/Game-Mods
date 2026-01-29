@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DLCMapConnection
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 023F7ED3-0437-4ADB-A778-0C302DE53340
+// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -135,7 +135,9 @@ public class DLCMapConnection : MonoBehaviour
     if (this.State == desiredState)
       return;
     this.State = desiredState;
-    this.ForEachLineRenderer((Action<MMUILineRenderer>) (lr => lr.gameObject.SetActive(false)));
+    this.ForEachLineRenderer((Action<MMUILineRenderer>) (lr => lr?.gameObject.SetActive(false)));
+    if (!((UnityEngine.Object) this.CurrentLineRenderer != (UnityEngine.Object) null))
+      return;
     this.CurrentLineRenderer.gameObject.SetActive(true);
     Color color = this.CurrentLineRenderer.Color with
     {
