@@ -36,7 +36,10 @@ public class MiscPatches
         "Follower eat stored food",
         "Required atlas size exceeds supported max",
         "MEAL_",
-        "SKIP CAPTURED MOVE"
+        "SKIP CAPTURED MOVE",
+        "NO TILES AVAILALBLE",
+        "Target player is already Instance",
+        "Complete task!"
     };
     
     [HarmonyTranspiler]

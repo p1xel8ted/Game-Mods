@@ -12,6 +12,13 @@ namespace Shared;
 
 public static class Helpers
 {
+    /// <summary>
+    /// Case-insensitive contains check for .NET Framework compatibility.
+    /// </summary>
+    private static bool ContainsIgnoreCase(this string source, string value)
+    {
+        return source?.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
 
     public static void PrintModLoaded(string plugin, ManualLogSource logger)
     {
@@ -119,5 +126,83 @@ public static class Helpers
                 yield return current;
             }
         }
+    }
+
+    /// <summary>
+    /// Logs the call stack methods for debugging purposes.
+    /// </summary>
+    /// <param name="logger">Logger to output the call stack methods.</param>
+    /// <param name="skipFrames">Number of frames to skip (default 3: this method, caller, Harmony internals).</param>
+    /// <param name="maxFrames">Maximum frames to search (default 10).</param>
+    public static void LogCallStack(ManualLogSource logger, int skipFrames = 3, int maxFrames = 10)
+    {
+        var stackTrace = new StackTrace(false);
+        var frameCount = stackTrace.FrameCount;
+
+        for (var i = skipFrames; i < frameCount && i < maxFrames; i++)
+        {
+            var method = stackTrace.GetFrame(i)?.GetMethod();
+            var declaringType = method?.DeclaringType;
+            logger.LogWarning($"[Frame {i}] {declaringType?.FullName}.{method?.Name}");
+        }
+    }
+
+    /// <summary>
+    /// Checks the call stack to see if any of the target types are in the call chain.
+    /// Returns the first matching type if found, null otherwise.
+    /// </summary>
+    /// <param name="targetTypes">Collection of types to search for in the call stack.</param>
+    /// <param name="skipFrames">Number of frames to skip (default 3: this method, caller, Harmony internals).</param>
+    /// <param name="maxFrames">Maximum frames to search (default 10).</param>
+    public static Type GetCallingType(ICollection<Type> targetTypes, int skipFrames = 3, int maxFrames = 10)
+    {
+        var stackTrace = new StackTrace(false);
+        var frameCount = stackTrace.FrameCount;
+
+        for (var i = skipFrames; i < frameCount && i < maxFrames; i++)
+        {
+            var declaringType = stackTrace.GetFrame(i)?.GetMethod()?.DeclaringType;
+            if (declaringType != null && targetTypes.Contains(declaringType))
+            {
+                return declaringType;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Checks if any frame in the call stack has a type/method name containing the specified strings.
+    /// Useful for matching compiler-generated types like coroutine state machines.
+    /// </summary>
+    /// <param name="typeNameContains">String to search for in the declaring type's full name.</param>
+    /// <param name="methodNameContains">Optional string to search for in the method name.</param>
+    /// <param name="skipFrames">Number of frames to skip (default 3: this method, caller, Harmony internals).</param>
+    /// <param name="maxFrames">Maximum frames to search (default 10).</param>
+    public static bool IsCalledFrom(string typeNameContains, string methodNameContains = null, int skipFrames = 3, int maxFrames = 10)
+    {
+        var stackTrace = new StackTrace(false);
+        var frameCount = stackTrace.FrameCount;
+
+        for (var i = skipFrames; i < frameCount && i < maxFrames; i++)
+        {
+            var method = stackTrace.GetFrame(i)?.GetMethod();
+            var declaringType = method?.DeclaringType;
+
+            if (declaringType == null)
+            {
+                continue;
+            }
+
+            var typeMatches = declaringType.FullName.ContainsIgnoreCase(typeNameContains);
+            var methodMatches = methodNameContains == null || method.Name.ContainsIgnoreCase(methodNameContains);
+
+            if (typeMatches && methodMatches)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

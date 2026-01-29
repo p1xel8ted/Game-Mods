@@ -138,6 +138,7 @@ public partial class Plugin
 
     // internal static ConfigEntry<bool> MassHarvest{ get; private set;}
     internal static ConfigEntry<bool> MassLevelUp { get; private set; }
+    internal static ConfigEntry<bool> MassLevelUpInstantSouls { get; private set; }
 
     internal static ConfigEntry<bool> MakeOldFollowersWork { get; private set; }
 
@@ -160,6 +161,8 @@ public partial class Plugin
     public static ConfigEntry<int> FarmStationRange { get; private set; }
     
     public static ConfigEntry<int> FarmPlotSignRange { get; private set; }
+    public static ConfigEntry<int> LightningRodRangeLvl1 { get; private set; }
+    public static ConfigEntry<int> LightningRodRangeLvl2 { get; private set; }
     public static ConfigEntry<int> SinBossLimit { get; private set; }
     
     public static ConfigEntry<int> MinRangeLifeExpectancy { get; private set; }

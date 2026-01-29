@@ -9,7 +9,6 @@ public static class NewTotemPatches
     public static void HarvestTotem_Patches(HarvestTotem __instance)
     {
         HarvestTotem.EFFECTIVE_DISTANCE = Plugin.HarvestTotemRange.Value;
-        __instance.DistanceRadius = Plugin.HarvestTotemRange.Value;
 
         if (!Mathf.Approximately(__instance.RangeSprite.size.x, HarvestTotem.EFFECTIVE_DISTANCE))
         {
@@ -23,7 +22,6 @@ public static class NewTotemPatches
     public static void PropagandaSpeaker_Patches(PropagandaSpeaker __instance)
     {
         Structures_PropagandaSpeaker.EFFECTIVE_DISTANCE = Plugin.PropagandaSpeakerRange.Value;
-        __instance.DistanceRadius = Plugin.PropagandaSpeakerRange.Value;
 
         if (!Mathf.Approximately(__instance.RangeSprite.size.x, Structures_PropagandaSpeaker.EFFECTIVE_DISTANCE))
         {
@@ -36,8 +34,6 @@ public static class NewTotemPatches
     [HarmonyPrefix, HarmonyPatch(typeof(FarmStation), nameof(FarmStation.Update))]
     public static void FarmStation_Patches(FarmStation __instance)
     {
-        __instance.DistanceRadius = Plugin.FarmStationRange.Value;
-
         if (!Mathf.Approximately(__instance.RangeSprite.size.x, Plugin.FarmStationRange.Value))
         {
             __instance.RangeSprite.size = new Vector2(Plugin.FarmStationRange.Value, Plugin.FarmStationRange.Value);
@@ -48,11 +44,28 @@ public static class NewTotemPatches
     [HarmonyPrefix, HarmonyPatch(typeof(Interaction_FarmPlotSign), nameof(Interaction_FarmPlotSign.Update))]
     public static void Interaction_FarmPlotSign_Patches(Interaction_FarmPlotSign __instance)
     {
-        __instance.DistanceRadius = Plugin.FarmPlotSignRange.Value;
-
         if (!Mathf.Approximately(__instance.RangeSprite.size.x, Plugin.FarmPlotSignRange.Value))
         {
             __instance.RangeSprite.size = new Vector2(Plugin.FarmPlotSignRange.Value, Plugin.FarmPlotSignRange.Value);
+        }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Interaction_LightningRod), nameof(Interaction_LightningRod.OnEnableInteraction))]
+    [HarmonyPatch(typeof(Interaction_LightningRod), nameof(Interaction_LightningRod.Update))]
+    public static void Interaction_LightningRod_Patches(Interaction_LightningRod __instance)
+    {
+        Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1 = Plugin.LightningRodRangeLvl1.Value;
+        Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2 = Plugin.LightningRodRangeLvl2.Value;
+
+        // Determine which level this rod is
+        var effectiveDistance = __instance.Brain?.Data?.Type == StructureBrain.TYPES.LIGHTNING_ROD
+            ? Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1
+            : Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2;
+
+        if (!Mathf.Approximately(__instance.RangeSprite.size.x, effectiveDistance))
+        {
+            __instance.RangeSprite.size = new Vector2(effectiveDistance, effectiveDistance);
         }
     }
 

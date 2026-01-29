@@ -1,3 +1,13 @@
+### 2.3.7 - 29/01/2026
+
+* Fixed game speed resetting to 1x when changing locations or taking damage.
+* Fixed game speed wrapping from minimum (0.25x) to maximum (5x) when decreasing - now stays at minimum.
+* Reverted a change that broke mass level up and potentially other mass actions.
+* Mass level up now processes all followers simultaneously for faster completion.
+* Added "Mass Level Up Instant Souls" option to instantly collect souls during mass level up instead of waiting for them to fly to you (enabled by default).
+* Added configurable lightning rod range (basic and upgraded variants).
+* Fixed structure range indicators (harvest totem, propaganda speaker, farm station, farm plot sign) unintentionally showing from further away during normal gameplay.
+
 ### 2.3.6 - 28/01/2026
 
 * Fixed resource chest sound muting not working for lumberjack and mining station chests.

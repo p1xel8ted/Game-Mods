@@ -11,7 +11,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.3.6";
+    private const string PluginVer = "2.3.7";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string GeneralSection = "01. General";
@@ -203,21 +203,27 @@ public partial class Plugin : BaseUnityPlugin
         HarvestTotemRange.SettingChanged += (_, _) => { HarvestTotem.EFFECTIVE_DISTANCE = Mathf.RoundToInt(HarvestTotemRange.Value); };
         FarmStationRange = ConfigInstance.Bind(StructureSection, "Farm Station Range", 6, new ConfigDescription("The range of the farm station. Default is 6.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 10 }));
         FarmPlotSignRange = ConfigInstance.Bind(StructureSection, "Farm Plot Sign Range", 5, new ConfigDescription("The range of the farm plot sign. Default is 5.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 9 }));
+        var lightningRodRangeLvl1 = Mathf.RoundToInt(Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1);
+        var lightningRodRangeLvl2 = Mathf.RoundToInt(Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2);
+        LightningRodRangeLvl1 = ConfigInstance.Bind(StructureSection, "Lightning Rod Range (Basic)", lightningRodRangeLvl1, new ConfigDescription($"The range of the basic lightning rod. Default is {lightningRodRangeLvl1}.", new AcceptableValueRange<int>(10, 100), new ConfigurationManagerAttributes { Order = 8 }));
+        LightningRodRangeLvl1.SettingChanged += (_, _) => { Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1 = LightningRodRangeLvl1.Value; };
+        LightningRodRangeLvl2 = ConfigInstance.Bind(StructureSection, "Lightning Rod Range (Upgraded)", lightningRodRangeLvl2, new ConfigDescription($"The range of the upgraded lightning rod. Default is {lightningRodRangeLvl2}.", new AcceptableValueRange<int>(10, 100), new ConfigurationManagerAttributes { Order = 7 }));
+        LightningRodRangeLvl2.SettingChanged += (_, _) => { Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2 = LightningRodRangeLvl2.Value; };
 
         // Cooking
-        CookedMeatMealsContainBone = ConfigInstance.Bind(StructureSection, "Cooked Meat Meals Contain Bone", false, new ConfigDescription("Meat + fish meals will spawn 1 - 3 bones when cooked.", null, new ConfigurationManagerAttributes { Order = 8 }));
+        CookedMeatMealsContainBone = ConfigInstance.Bind(StructureSection, "Cooked Meat Meals Contain Bone", false, new ConfigDescription("Meat + fish meals will spawn 1 - 3 bones when cooked.", null, new ConfigurationManagerAttributes { Order = 6 }));
         CookedMeatMealsContainBone.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.CookedMeatMealsContainBone);
 
         // Offering Shrines
-        AddSpiderWebsToOfferings = ConfigInstance.Bind(StructureSection, "Add Spider Webs To Offerings", false, new ConfigDescription("Adds Spider Webs to the Offering Shrines default offerings.", null, new ConfigurationManagerAttributes { Order = 7 }));
+        AddSpiderWebsToOfferings = ConfigInstance.Bind(StructureSection, "Add Spider Webs To Offerings", false, new ConfigDescription("Adds Spider Webs to the Offering Shrines default offerings.", null, new ConfigurationManagerAttributes { Order = 5 }));
         AddSpiderWebsToOfferings.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AddSpiderWebsToOfferings);
-        AddCrystalShardsToOfferings = ConfigInstance.Bind(StructureSection, "Add Crystals To Offerings", false, new ConfigDescription("Adds Crystal Shards to the Offering Shrines rare offerings.", null, new ConfigurationManagerAttributes { Order = 6 }));
+        AddCrystalShardsToOfferings = ConfigInstance.Bind(StructureSection, "Add Crystals To Offerings", false, new ConfigDescription("Adds Crystal Shards to the Offering Shrines rare offerings.", null, new ConfigurationManagerAttributes { Order = 4 }));
         AddCrystalShardsToOfferings.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AddCrystalShardsToOfferings);
 
         // Lumber Station
-        ProduceSpiderWebsFromLumber = ConfigInstance.Bind(StructureSection, "Lumber Stations Produce Spider Webs", false, new ConfigDescription("Lumber stations will produce spider webs from logs collected.", null, new ConfigurationManagerAttributes { Order = 5 }));
+        ProduceSpiderWebsFromLumber = ConfigInstance.Bind(StructureSection, "Lumber Stations Produce Spider Webs", false, new ConfigDescription("Lumber stations will produce spider webs from logs collected.", null, new ConfigurationManagerAttributes { Order = 3 }));
         ProduceSpiderWebsFromLumber.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ProduceSpiderWebsFromLumber);
-        SpiderWebsPerLogs = ConfigInstance.Bind(StructureSection, "Spider Webs Per Logs", 5, new ConfigDescription("Number of logs needed to produce 1 spider web.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 4 }));
+        SpiderWebsPerLogs = ConfigInstance.Bind(StructureSection, "Spider Webs Per Logs", 5, new ConfigDescription("Number of logs needed to produce 1 spider web.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 2 }));
         SpiderWebsPerLogs.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.SpiderWebsPerLogs);
 
         // Mining Station
@@ -228,7 +234,7 @@ public partial class Plugin : BaseUnityPlugin
 
         //Speed - 10
         EnableGameSpeedManipulation = ConfigInstance.Bind(GameSpeedSection, "Enable Game Speed Manipulation", false, new ConfigDescription("Use left/right arrows keys to increase/decrease game speed in 0.25 increments. Up arrow to reset to default.", null, new ConfigurationManagerAttributes { Order = 8 }));
-        ShortenGameSpeedIncrements = ConfigInstance.Bind(GameSpeedSection, "Shorten Game Speed Increments", false, new ConfigDescription("Increments in steps of 1, instead of 0.25.", null, new ConfigurationManagerAttributes { Order = 7 }));
+        ShortenGameSpeedIncrements = ConfigInstance.Bind(GameSpeedSection, "Shorten Game Speed Increments", false, new ConfigDescription("When enabled, speed changes in large steps (0.25x, 1x, 2x, 3x, 4x, 5x). When disabled (default), speed changes in fine 0.25x increments (0.25x, 0.5x, 0.75x, 1x, 1.25x... up to 5x).", null, new ConfigurationManagerAttributes { Order = 7 }));
         ResetTimeScaleKey = ConfigInstance.Bind(GameSpeedSection, "Reset Time Scale Key", new KeyboardShortcut(KeyCode.UpArrow), new ConfigDescription("The keyboard shortcut to reset the game speed to 1.", null, new ConfigurationManagerAttributes { Order = 6 }));
         IncreaseGameSpeedKey = ConfigInstance.Bind(GameSpeedSection, "Increase Game Speed Key", new KeyboardShortcut(KeyCode.RightArrow), new ConfigDescription("The keyboard shortcut to increase the game speed.", null, new ConfigurationManagerAttributes { Order = 5 }));
         DecreaseGameSpeedKey = ConfigInstance.Bind(GameSpeedSection, "Decrease Game Speed Key", new KeyboardShortcut(KeyCode.LeftArrow), new ConfigDescription("The keyboard shortcut to decrease the game speed.", null, new ConfigurationManagerAttributes { Order = 4 }));
@@ -515,6 +521,11 @@ public partial class Plugin : BaseUnityPlugin
             DispName = "Mass Level Up**", Order = -1
         }));
         MassLevelUp.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassLevelUpInstantSouls = ConfigInstance.Bind(MassSection, "Mass Level Up Instant Souls", true, new ConfigDescription("Instantly collect souls during mass level up instead of having them fly to you.", null, new ConfigurationManagerAttributes
+        {
+            Order = -2
+        }));
 
         //Loot - 17
         AllLootMagnets = ConfigInstance.Bind(LootSection, "All Loot Magnets", false, new ConfigDescription("All loot is magnetized to you.", null, new ConfigurationManagerAttributes
