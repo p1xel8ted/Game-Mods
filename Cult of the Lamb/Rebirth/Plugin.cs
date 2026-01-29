@@ -11,7 +11,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.rebirth";
     private const string PluginName = "Rebirth";
-    private const string PluginVer = "1.1.1";
+    private const string PluginVer = "1.1.2";
 
     public static ManualLogSource Log { get; private set; }
     public static string PluginPath { get; private set; }

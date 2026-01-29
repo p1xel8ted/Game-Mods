@@ -75,7 +75,7 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         yield return new WaitForSeconds(3f);
         DataManager.Instance.Followers_Recruit.Add(f);
         FollowerManager.SpawnExistingRecruits(BiomeBaseManager.Instance.RecruitSpawnLocation.transform.position);
-        Object.FindObjectOfType<FollowerRecruit>()?.ManualTriggerAnimateIn();
+        UnityEngine.Object.FindObjectOfType<FollowerRecruit>()?.ManualTriggerAnimateIn();
         BiomeBaseManager.Instance.SpawnExistingRecruits = true;
         NotificationCentre.NotificationsEnabled = true;
         yield return new WaitForSeconds(2f);
@@ -84,20 +84,36 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
 
     internal static void SpawnRecruit(Follower follower)
     {
+        var originalBrainInfo = follower.Brain.Info;
+        var originalFollowerInfo = originalBrainInfo._info;
+        var isUnique = Helper.IsUniqueFollower(originalBrainInfo);
+
         BiomeBaseManager.Instance.SpawnExistingRecruits = true;
         NotificationCentre.NotificationsEnabled = false;
-        var name = follower.Brain.Info.Name;
-        var oldId = follower.Brain.Info.ID;
-        var oldXp = follower.Brain.Info.XPLevel;
+        var name = originalBrainInfo.Name;
+        var oldId = originalBrainInfo.ID;
+        var oldXp = originalBrainInfo.XPLevel;
         var newXp = Mathf.CeilToInt(oldXp * Plugin.XpPenaltyMultiplier.Value / 100f);
         var halfXp = Helper.DoHalfStats();
 
-        var fi = FollowerInfo.NewCharacter(FollowerLocation.Base);
+        // Create new follower - force skin if unique follower
+        var fi = isUnique
+            ? FollowerInfo.NewCharacter(FollowerLocation.Base, originalFollowerInfo.SkinName)
+            : FollowerInfo.NewCharacter(FollowerLocation.Base);
 
         if (fi != null)
         {
+            if (isUnique)
+            {
+                // Preserve unique follower attributes
+                fi.SkinColour = originalFollowerInfo.SkinColour;
+                fi.Traits = new List<FollowerTrait.TraitType>(originalFollowerInfo.Traits);
+                fi.Name = name; // Keep original name
+                Plugin.Log.LogInfo($"Unique follower rebirth: {name} (skin: {originalFollowerInfo.SkinName}, traits: {string.Join(", ", originalFollowerInfo.Traits)})");
+            }
+
             GameManager.GetInstance().StartCoroutine(GiveFollowerIE(fi, follower));
-            Plugin.Log.LogInfo($"New follower: {fi.Name}");
+            Plugin.Log.LogInfo($"New follower: {fi.Name} (unique: {isUnique})");
             SaveData.AddBornAgainFollower(fi);
             fi.XPLevel = halfXp ? newXp : oldXp;
         }

@@ -1,3 +1,7 @@
+### 1.1.2 - 29/01/2026
+
+* Unique followers (Webber, Sozo, Ratau, etc.) now retain their original skin, traits, and name when reborn.
+
 ### 1.1.1 - 24/01/2026
 
 * Woolhaven update.
