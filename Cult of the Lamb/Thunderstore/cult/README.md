@@ -57,7 +57,7 @@
 ### Mass Actions
 - Mass inspire, bless, bribe, extort, intimidate
 - Mass fertilize, water
-- Mass level up
+- Mass level up (with optional instant soul collection)
 - Mass bully, reassure, reeducate
 - Mass romance, pet dog
 - Mass pet farm animals
@@ -71,6 +71,7 @@
 - Customise Propaganda Speaker radius (and disable audio/night mode)
 - Customise Farm Station radius
 - Customise Farm Plot Sign radius
+- Customise Lightning Rod radius (level 1 and 2)
 - Heal exhausted followers in Healing Bay
 - Hide healthy followers from Healing Bay
 - Show only dissenters in Prison

@@ -14,7 +14,7 @@ public static class FollowerPatches
     {
         return Plugin.MaxRangeLifeExpectancy.Value;
     }
-    
+
     [HarmonyTranspiler]
     [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.NewCharacter))]
     public static IEnumerable<CodeInstruction> FollowerInfo_NewCharacter_Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -430,53 +430,56 @@ public static class FollowerPatches
         GameManager.GetInstance().StartCoroutine(MassLevelUpAll(originalFollower));
     }
 
+
+    private static readonly HashSet<SoulCustomTarget> LevelUpSouls = [];
+    
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(SoulCustomTarget), nameof(SoulCustomTarget.Create),
+        typeof(GameObject), typeof(Vector3), typeof(Color), typeof(Action),
+        typeof(float), typeof(float), typeof(bool), typeof(bool), typeof(bool),
+        typeof(string), typeof(string), typeof(bool))]
+    public static void SoulCustomTarget_Create(GameObject __result)
+    {
+        if (!Plugin.MassLevelUpInstantSouls.Value) return;
+        if (!Helpers.IsCalledFrom("LevelUpRoutine")) return;
+
+        var soul = __result.GetComponent<SoulCustomTarget>();
+        if (soul)
+        {
+            LevelUpSouls.Add(soul);
+        }
+    }
+    
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(SoulCustomTarget), nameof(SoulCustomTarget.FixedUpdate))]
+    public static void SoulCustomTarget_FixedUpdate(SoulCustomTarget __instance)
+    {
+        if (!Plugin.MassLevelUpInstantSouls.Value) return;
+        if (!LevelUpSouls.Remove(__instance)) return;
+
+        if (!__instance.isCollected)
+        {
+            __instance.CollectMe();
+        }
+    }
+
     private static IEnumerator MassLevelUpAll(Follower original)
     {
         MassLevelUpRunning = true;
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.5f);
 
-        try
+        var eligible = Helpers.AllFollowers
+            .Where(f => f != original && f.Brain.CanLevelUp() && f.Interaction_FollowerInteraction)
+            .ToList();
+
+        foreach (var follower in eligible)
         {
-            var leveledUp = 0;
-            foreach (var follower in Helpers.AllFollowers)
-            {
-                if (follower == original) continue;
-                if (!follower.Brain.CanLevelUp()) continue;
-
-                // Apply level-up effects directly instead of calling LevelUpRoutine
-                // This avoids the slow animations and player bouncing
-
-                // Reset adoration and increment level
-                follower.Brain.Stats.Adoration = 0f;
-                follower.Brain.Info.XPLevel++;
-
-                // Give rewards directly (20 souls worth of divine inspiration, or black gold if no unlock available)
-                if (GameManager.HasUnlockAvailable() || DataManager.Instance.DeathCatBeaten)
-                {
-                    PlayerFarming.Instance.GetSoul(20);
-                }
-                else
-                {
-                    Inventory.ChangeItemQuantity((int)InventoryItem.ITEM_TYPE.BLACK_GOLD, 20);
-                }
-
-                // Complete current task
-                follower.Brain.CompleteCurrentTask();
-
-                // Visual feedback - show adoration UI briefly and emit effect
-                follower.AdorationUI.BarController.SetBarSize(0f, false, false);
-                BiomeConstants.Instance.EmitHeartPickUpVFX(follower.transform.position, 0f, "fuchsia", "burst_big");
-                AudioManager.Instance.PlayOneShot("event:/followers/gain_loyalty", follower.transform.position);
-
-                leveledUp++;
-            }
-
-            Plugin.L($"[MassLevelUp] Leveled up {leveledUp} additional followers");
+            var interaction = follower.Interaction_FollowerInteraction;
+            interaction.playerFarming = PlayerFarming.Instance;
+            interaction.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, false, false));
         }
-        finally
-        {
-            MassLevelUpRunning = false;
-        }
+
+        MassLevelUpRunning = false;
     }
 
     [HarmonyPrefix]

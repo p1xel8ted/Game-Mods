@@ -6,6 +6,7 @@ public static class GameSpeedManipulationPatches
     private static float _newGameSpeed;
     private static int _newSpeed;
     private static bool _timeMessageShown;
+    private static bool _hasInitialized;
 
     private static readonly List<float> GameSpeedShort = [0.25f, 1, 2, 3, 4, 5];
 
@@ -62,9 +63,19 @@ public static class GameSpeedManipulationPatches
     [HarmonyPatch(typeof(GameManager), nameof(GameManager.Start))]
     public static void GameManager_Start(GameManager __instance)
     {
-        if (__instance)
+        if (!__instance) return;
+        if (!Plugin.EnableGameSpeedManipulation.Value) return;
+
+        if (!_hasInitialized)
         {
+            // First time - reset to default speed
             ResetTime();
+            _hasInitialized = true;
+        }
+        else
+        {
+            // Scene change - restore current speed setting
+            GameManager.SetTimeScale(_newGameSpeed);
         }
     }
 
@@ -73,6 +84,9 @@ public static class GameSpeedManipulationPatches
     public static void GameManager_Update(GameManager __instance)
     {
         if (!__instance) return;
+
+        // Debug keys should work regardless of game speed manipulation setting
+        HandleDebugKeys();
 
         if (!Mathf.Approximately(Plugin.SlowDownTimeMultiplier.Value, 1.0f) && !_timeMessageShown)
         {
@@ -104,9 +118,11 @@ public static class GameSpeedManipulationPatches
             return;
         }
 
-        if (_newGameSpeed <= 0 || _newSpeed < 0 || __instance.CurrentGameSpeed < 0)
+        // Only reset if we haven't initialized yet (prevents unwanted resets during gameplay)
+        if (!_hasInitialized && (_newGameSpeed <= 0 || _newSpeed < 0))
         {
             ResetTime();
+            _hasInitialized = true;
         }
 
         __instance.CurrentGameSpeed = _newSpeed;
@@ -114,13 +130,60 @@ public static class GameSpeedManipulationPatches
 
         void UpdateGameSpeed(int newSpeedIndex)
         {
-            _newSpeed = ((newSpeedIndex % speedCount) + speedCount) % speedCount;
+            // Clamp instead of wrap - don't loop around at min/max
+            _newSpeed = Mathf.Clamp(newSpeedIndex, 0, speedCount - 1);
             _newGameSpeed = speedList[_newSpeed];
             GameManager.SetTimeScale(_newGameSpeed);
             NotificationCentre.Instance.PlayGenericNotification(
                 Math.Abs(_newGameSpeed - 1) < 0.001f
                     ? $"Returned game speed to {_newGameSpeed} (default)"
                     : $"Adjusted game speed to {_newGameSpeed}");
+        }
+    }
+
+    private static void HandleDebugKeys()
+    {
+        // F9: Set all followers to max adoration (ready for level up)
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            var count = 0;
+            foreach (var follower in Helpers.AllFollowers)
+            {
+                if (follower.Brain.Stats.Adoration < follower.Brain.Stats.MAX_ADORATION)
+                {
+                    follower.Brain.Stats.Adoration = follower.Brain.Stats.MAX_ADORATION;
+                    follower.AdorationUI.BarController.SetBarSize(1f, false, false);
+                    count++;
+                }
+            }
+
+            NotificationCentre.Instance.PlayGenericNotification($"[DEBUG] Set {count} followers to max adoration.");
+            Plugin.Log.LogInfo($"[DEBUG] Set {count} followers to max adoration.");
+        }
+
+        // F10: Fill all outhouses with poop
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            var count = 0;
+            foreach (var interaction in Interaction.interactions.ToList())
+            {
+                if (interaction is Interaction_Outhouse outhouse && outhouse && outhouse.StructureBrain is { } brain)
+                {
+                    var capacity = Structures_Outhouse.Capacity(brain.Data.Type);
+                    var currentPoop = brain.GetPoopCount();
+                    var toAdd = capacity - currentPoop;
+
+                    if (toAdd > 0)
+                    {
+                        // Add poop to inventory (item type 39 = POOP)
+                        brain.Data.Inventory.Add(new InventoryItem { type = 39, quantity = toAdd });
+                        count++;
+                    }
+                }
+            }
+
+            NotificationCentre.Instance.PlayGenericNotification($"[DEBUG] Filled {count} outhouses with poop.");
+            Plugin.Log.LogInfo($"[DEBUG] Filled {count} outhouses with poop.");
         }
     }
 }

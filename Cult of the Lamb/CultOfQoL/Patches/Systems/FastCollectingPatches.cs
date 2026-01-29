@@ -14,19 +14,19 @@ public static class FastCollectingPatches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.Update))]
-    public static void BuildingShrine_Update(ref float ___ReduceDelay, ref float ___Delay)
+    public static void BuildingShrine_Update(BuildingShrine __instance)
     {
         if (!Plugin.FastCollecting.Value) return;
-        ___ReduceDelay = 0.0f;
-        ___Delay = 0.0f;
+        __instance.ReduceDelay = 0.0f;
+        __instance.Delay = 0.0f;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrinePassive), nameof(BuildingShrinePassive.Update))]
-    public static void BuildingShrinePassive_Update(ref float ___Delay)
+    public static void BuildingShrinePassive_Update(BuildingShrinePassive __instance)
     {
         if (!Plugin.FastCollecting.Value) return;
-        ___Delay = 0.0f;
+        __instance.Delay = 0.0f;
     }
 
     [HarmonyPostfix]
