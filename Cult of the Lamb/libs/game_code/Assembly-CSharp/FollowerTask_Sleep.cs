@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Sleep
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -23,6 +23,8 @@ public class FollowerTask_Sleep : FollowerTask
   public bool sleepingOnFloor;
   public bool passedOut;
   public bool isForced;
+  public static Dictionary<PlacementRegion.TileGridTile, int> s_sleepClaims = new Dictionary<PlacementRegion.TileGridTile, int>(2048 /*0x0800*/);
+  public PlacementRegion.TileGridTile _claimedTile;
   public bool hibernating;
   public float forceTimeStamp = -1f;
   public Vector3 targetSleepPosition = Vector3.zero;
@@ -121,28 +123,41 @@ public class FollowerTask_Sleep : FollowerTask
     Vector3 zero = Vector3.zero;
     PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(zero);
     List<PlacementRegion.TileGridTile> tilesInRange = PlacementRegion.GetTilesInRange(tileAtWorldPosition, 15);
+    int ownerId = this.OwnerId;
+    FollowerTask_Sleep.Release(this._claimedTile, ownerId);
+    this._claimedTile = (PlacementRegion.TileGridTile) null;
     float num = -1f;
-    PlacementRegion.TileGridTile tileGridTile = (PlacementRegion.TileGridTile) null;
-    bool flag = false;
-    foreach (PlacementRegion.TileGridTile tile in tilesInRange)
+    PlacementRegion.TileGridTile tile1 = (PlacementRegion.TileGridTile) null;
+    int maxExclusive = 0;
+    foreach (PlacementRegion.TileGridTile tile2 in tilesInRange)
     {
-      if (!this.IsTileBlocked(tile))
+      if (!this.IsTileBlocked(tile2, ownerId))
       {
-        float sqrMagnitude = (tile.WorldPosition - zero).sqrMagnitude;
-        if (!flag || (double) sqrMagnitude > (double) num)
+        float sqrMagnitude = (tile2.WorldPosition - zero).sqrMagnitude;
+        if (tile1 == null || (double) sqrMagnitude > (double) num + 9.9999997473787516E-05)
         {
           num = sqrMagnitude;
-          tileGridTile = tile;
-          flag = true;
+          tile1 = tile2;
+          maxExclusive = 1;
+        }
+        else if ((double) Mathf.Abs(sqrMagnitude - num) <= 9.9999997473787516E-05)
+        {
+          ++maxExclusive;
+          if (UnityEngine.Random.Range(0, maxExclusive) == 0)
+            tile1 = tile2;
         }
       }
     }
-    return !flag ? tileAtWorldPosition.WorldPosition : tileGridTile.WorldPosition;
+    if (tile1 == null)
+      return tileAtWorldPosition.WorldPosition;
+    FollowerTask_Sleep.Claim(tile1, ownerId);
+    this._claimedTile = tile1;
+    return tile1.WorldPosition;
   }
 
-  public bool IsTileBlocked(PlacementRegion.TileGridTile tile)
+  public bool IsTileBlocked(PlacementRegion.TileGridTile tile, int ownerID)
   {
-    return tile == null || tile.ObjectID != -1;
+    return tile == null || tile.ObjectID != -1 || FollowerTask_Sleep.IsClaimedByOther(tile, ownerID);
   }
 
   public FollowerTask_Sleep(Vector3 pos)
@@ -465,6 +480,8 @@ public class FollowerTask_Sleep : FollowerTask
       this.SetState(FollowerTaskState.GoingTo);
     else
       base.OnEnd();
+    FollowerTask_Sleep.Release(this._claimedTile, this.OwnerId);
+    this._claimedTile = (PlacementRegion.TileGridTile) null;
   }
 
   public void SetFollowerAnimation(Follower follower)
@@ -547,17 +564,20 @@ public class FollowerTask_Sleep : FollowerTask
         dwelling.SetBedImage(dwellingAndSlot.dwellingslot, Dwelling.SlotState.CLAIMED);
       }
     }
-    if (!(bool) (UnityEngine.Object) follower)
-      return;
-    follower.InsomniacIcon.gameObject.SetActive(false);
-    follower.DrowsyIcon.gameObject.SetActive(false);
-    follower.AestivationIcon.gameObject.SetActive(false);
-    follower.HibernationIcon.gameObject.SetActive(false);
-    follower.IllnessAura.SetActive(false);
-    follower.OverridingEmotions = false;
-    follower.SetEmotionAnimation();
-    foreach (FollowerPet dlcFollowerPet in follower.DLCFollowerPets)
-      dlcFollowerPet.StopSleeping();
+    if ((bool) (UnityEngine.Object) follower)
+    {
+      follower.InsomniacIcon.gameObject.SetActive(false);
+      follower.DrowsyIcon.gameObject.SetActive(false);
+      follower.AestivationIcon.gameObject.SetActive(false);
+      follower.HibernationIcon.gameObject.SetActive(false);
+      follower.IllnessAura.SetActive(false);
+      follower.OverridingEmotions = false;
+      follower.SetEmotionAnimation();
+      foreach (FollowerPet dlcFollowerPet in follower.DLCFollowerPets)
+        dlcFollowerPet.StopSleeping();
+    }
+    FollowerTask_Sleep.Release(this._claimedTile, this.OwnerId);
+    this._claimedTile = (PlacementRegion.TileGridTile) null;
   }
 
   public override void SimCleanup(SimFollower simFollower) => base.SimCleanup(simFollower);
@@ -632,6 +652,35 @@ public class FollowerTask_Sleep : FollowerTask
       while ((double) Vector3.Distance(vector3, followerTaskSleep._brain.LastPosition) < 5.0);
       follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_Sleep(vector3));
     }
+  }
+
+  public int OwnerId
+  {
+    get
+    {
+      return this._brain == null || this._brain.Info == null ? this.GetHashCode() : this._brain.Info.ID;
+    }
+  }
+
+  public static bool IsClaimedByOther(PlacementRegion.TileGridTile tile, int ownerId)
+  {
+    int num;
+    return tile != null && FollowerTask_Sleep.s_sleepClaims.TryGetValue(tile, out num) && num != ownerId;
+  }
+
+  public static void Claim(PlacementRegion.TileGridTile tile, int ownerId)
+  {
+    if (tile == null)
+      return;
+    FollowerTask_Sleep.s_sleepClaims[tile] = ownerId;
+  }
+
+  public static void Release(PlacementRegion.TileGridTile tile, int ownerId)
+  {
+    int num;
+    if (tile == null || !FollowerTask_Sleep.s_sleepClaims.TryGetValue(tile, out num) || num != ownerId)
+      return;
+    FollowerTask_Sleep.s_sleepClaims.Remove(tile);
   }
 
   [CompilerGenerated]

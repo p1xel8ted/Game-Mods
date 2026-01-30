@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyLambFlesh
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -268,7 +268,8 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
   {
     EnemyLambFlesh enemyLambFlesh = this;
     enemyLambFlesh.MyState = EnemyLambFlesh.State.Dodging;
-    enemyLambFlesh.state.LookAngle = Utils.GetAngle(enemyLambFlesh.transform.position, attacker.transform.position);
+    if ((bool) (UnityEngine.Object) attacker)
+      enemyLambFlesh.state.LookAngle = Utils.GetAngle(enemyLambFlesh.transform.position, attacker.transform.position);
     enemyLambFlesh.Spine.skeleton.ScaleX = (double) enemyLambFlesh.state.LookAngle <= 90.0 || (double) enemyLambFlesh.state.LookAngle >= 270.0 ? -1f : 1f;
     enemyLambFlesh.state.LookAngle = enemyLambFlesh.state.facingAngle = 270f;
     enemyLambFlesh.dodgedTimestamp = Time.time + UnityEngine.Random.Range(enemyLambFlesh.dodgeCooldownRange.x, enemyLambFlesh.dodgeCooldownRange.y);
@@ -280,10 +281,13 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     if (!string.IsNullOrEmpty(enemyLambFlesh.JumpSFX))
       AudioManager.Instance.PlayOneShot(enemyLambFlesh.JumpSFX);
     Vector3 currentPosition = enemyLambFlesh.transform.position;
-    enemyLambFlesh.CurrentDodgeTargetPosition = enemyLambFlesh.CalcualteCurrentDodgeTargetPosition(attacker);
-    enemyLambFlesh.currentIndicator = ObjectPool.Spawn(enemyLambFlesh.loadedIndicator);
-    if ((UnityEngine.Object) enemyLambFlesh.currentIndicator != (UnityEngine.Object) null)
-      enemyLambFlesh.currentIndicator.transform.position = enemyLambFlesh.CurrentDodgeTargetPosition;
+    enemyLambFlesh.CurrentDodgeTargetPosition = (UnityEngine.Object) attacker != (UnityEngine.Object) null ? enemyLambFlesh.CalculateCurrentDodgeTargetPosition(attacker) : currentPosition;
+    if ((UnityEngine.Object) enemyLambFlesh.loadedIndicator != (UnityEngine.Object) null)
+    {
+      enemyLambFlesh.currentIndicator = ObjectPool.Spawn(enemyLambFlesh.loadedIndicator);
+      if ((UnityEngine.Object) enemyLambFlesh.currentIndicator != (UnityEngine.Object) null)
+        enemyLambFlesh.currentIndicator.transform.position = enemyLambFlesh.CurrentDodgeTargetPosition;
+    }
     float time = 0.0f;
     while ((double) (time += Time.deltaTime) < (double) dodgeDuration)
     {
@@ -297,7 +301,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     enemyLambFlesh.DealLandingDamage();
     if ((UnityEngine.Object) enemyLambFlesh.currentIndicator != (UnityEngine.Object) null)
       enemyLambFlesh.currentIndicator.Recycle();
-    yield return (object) new WaitForSeconds(0.1f);
+    yield return (object) CoroutineStatics.WaitForScaledSeconds(0.1f, enemyLambFlesh.Spine);
     enemyLambFlesh.health.untouchable = false;
     enemyLambFlesh.health.invincible = false;
     enemyLambFlesh.SimpleSpineFlash.FlashWhite(false);
@@ -307,7 +311,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     enemyLambFlesh.WaitForTargetRoutine = enemyLambFlesh.StartCoroutine((IEnumerator) enemyLambFlesh.WaitForTarget());
   }
 
-  public Vector3 CalcualteCurrentDodgeTargetPosition(GameObject attacker)
+  public Vector3 CalculateCurrentDodgeTargetPosition(GameObject attacker)
   {
     Vector3 b = this.transform.position;
     Vector3 position = this.transform.position;

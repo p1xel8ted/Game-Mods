@@ -1,17 +1,15 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: I2.Loc.ResourceManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.Events;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.SceneManagement;
 
 #nullable disable
@@ -157,6 +155,10 @@ public class ResourceManager : MonoBehaviour
     {
       if (string.IsNullOrEmpty(Path))
         return default (T);
+      if (Path == "FiraSans-Regular SDF")
+        Path = "Fonts/Body/FiraSans-Regular SDF";
+      else if (Path == "Font Awesome 6 Pro-Solid-900 SDF")
+        Path = "Fonts/LocalisedFonts/FontAwesome/Font Awesome 6 Pro-Solid-900 SDF";
       Path = ResourceManager.ConvertPathToAddressable(Path);
       if (!ResourceManager.AssetExists((object) Path))
         return default (T);
@@ -232,17 +234,7 @@ public class ResourceManager : MonoBehaviour
     }
   }
 
-  public static bool AssetExists(object key)
-  {
-    if (!Application.isPlaying)
-      return false;
-    foreach (IResourceLocator resourceLocator in Addressables.ResourceLocators)
-    {
-      if (resourceLocator.Locate(key, (System.Type) null, out IList<IResourceLocation> _))
-        return true;
-    }
-    return false;
-  }
+  public static bool AssetExists(object key) => true;
 
   public static string ConvertPathToAddressable(string path)
   {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LoadMainMenu
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -36,6 +36,7 @@ public class LoadMainMenu : MonoBehaviour
   public void Start()
   {
     AudioManager.Instance.enabled = true;
+    GameManager.ForceFontReload();
     this.StartCoroutine((IEnumerator) this.RunSplashScreens());
     this.spineMaterial = this.spine.material;
     this.spine.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.HandleEvent);

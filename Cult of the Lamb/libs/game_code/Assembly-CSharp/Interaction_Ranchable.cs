@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranchable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -353,7 +353,7 @@ public class Interaction_Ranchable : Interaction
     base.OnDestroy();
     this.UnitObject.NewPath -= new UnitObject.Action(this.UnitObject_NewPath);
     Interaction_Ranchable.Ranchables.Remove(this);
-    Interaction_Ranchable.DeadRanchables.Add(this);
+    Interaction_Ranchable.DeadRanchables.Remove(this);
     TimeManager.OnNewDayStarted -= new System.Action(this.OnNewDayStarted);
     TimeManager.OnNewPhaseStarted -= new System.Action(this.OnNewPhaseStarted);
     Interaction_Ranch.OnRanchUpdated -= new Interaction_Ranch.RanchEvent(this.CheckBreakingOut);

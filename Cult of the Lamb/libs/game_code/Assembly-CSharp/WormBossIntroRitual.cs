@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WormBossIntroRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -455,6 +455,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
     demon.gameObject.SetActive(false);
     double num1 = (double) follower.Follower.SetBodyAnimation("Reactions/react-admire" + UnityEngine.Random.Range(1, 4).ToString(), false);
     follower.Follower.AddBodyAnimation("idle", true, 0.0f);
+    MMConversation.ClearEventListenerSFX(follower.Follower.gameObject, "VO/talk short nice");
     yield return (object) new WaitForSeconds(2f);
     List<ConversationEntry> Entries1 = new List<ConversationEntry>()
     {
@@ -484,7 +485,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
       conversationEntry.CharacterName = follower.FollowerFakeInfo.Name;
       conversationEntry.Animation = "Conversations/talk-nice" + UnityEngine.Random.Range(1, 3).ToString();
       conversationEntry.LoopAnimation = false;
-      conversationEntry.soundPath = " ";
+      conversationEntry.soundPath = "event:/dialogue/followers/boss/fol_leshy";
     }
     MMConversation.Play(new ConversationObject(Entries1, Responses, (System.Action) null), false);
     while (MMConversation.isPlaying || !answered)
@@ -530,7 +531,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
         conversationEntry.CharacterName = follower.FollowerFakeInfo.Name;
         conversationEntry.Animation = "Conversations/talk-nice" + UnityEngine.Random.Range(1, 3).ToString();
         conversationEntry.LoopAnimation = false;
-        conversationEntry.soundPath = " ";
+        conversationEntry.soundPath = "event:/dialogue/followers/boss/fol_leshy";
       }
       MMConversation.Play(new ConversationObject(Entries2, (List<MMTools.Response>) null, (System.Action) null), false);
       while (MMConversation.isPlaying)
@@ -551,7 +552,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
         conversationEntry.CharacterName = follower.FollowerFakeInfo.Name;
         conversationEntry.Animation = "Conversations/talk-nice" + UnityEngine.Random.Range(1, 3).ToString();
         conversationEntry.LoopAnimation = false;
-        conversationEntry.soundPath = " ";
+        conversationEntry.soundPath = "event:/dialogue/followers/boss/fol_leshy";
       }
       MMConversation.Play(new ConversationObject(Entries3, (List<MMTools.Response>) null, (System.Action) null), false);
       while (MMConversation.isPlaying)

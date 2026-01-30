@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySwordsman
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -684,126 +684,133 @@ public class EnemySwordsman : UnitObject, IAttackResilient
   public IEnumerator FightPlayer(float AttackDistance = 1.5f, bool signpost = true, bool canChangeDirection = true)
   {
     EnemySwordsman enemySwordsman = this;
-    enemySwordsman.MyState = EnemySwordsman.State.Attacking;
-    enemySwordsman.UsePathing = true;
-    enemySwordsman.givePath(enemySwordsman.TargetObject.transform.position);
-    enemySwordsman.Spine.AnimationState.SetAnimation(0, "run-charge", true);
-    if (!string.IsNullOrEmpty(enemySwordsman.DrawBackBladeSFX))
-      AudioManager.Instance.PlayOneShot(enemySwordsman.DrawBackBladeSFX, enemySwordsman.gameObject);
-    enemySwordsman.RepathTimer = 0.0f;
-    int NumAttacks = enemySwordsman.DoubleAttack ? 2 : 1;
-    int AttackCount = 1;
-    float MaxAttackSpeed = 15f;
-    float AttackSpeed = MaxAttackSpeed;
-    bool Loop = true;
-    float SignPostDelay = 0.5f;
-    if (!signpost)
-      SignPostDelay = 0.0f;
-    while (Loop)
+    if ((UnityEngine.Object) enemySwordsman.TargetObject == (UnityEngine.Object) null)
     {
-      if ((UnityEngine.Object) enemySwordsman.Spine == (UnityEngine.Object) null || enemySwordsman.Spine.AnimationState == null || enemySwordsman.Spine.Skeleton == null)
-        yield return (object) null;
-      else if (enemySwordsman.isSnowman && EnemySwordsman.SnowmanConvoTriggered)
+      enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+    }
+    else
+    {
+      enemySwordsman.MyState = EnemySwordsman.State.Attacking;
+      enemySwordsman.UsePathing = true;
+      enemySwordsman.givePath(enemySwordsman.TargetObject.transform.position);
+      enemySwordsman.Spine.AnimationState.SetAnimation(0, "run-charge", true);
+      if (!string.IsNullOrEmpty(enemySwordsman.DrawBackBladeSFX))
+        AudioManager.Instance.PlayOneShot(enemySwordsman.DrawBackBladeSFX, enemySwordsman.gameObject);
+      enemySwordsman.RepathTimer = 0.0f;
+      int NumAttacks = enemySwordsman.DoubleAttack ? 2 : 1;
+      int AttackCount = 1;
+      float MaxAttackSpeed = 15f;
+      float AttackSpeed = MaxAttackSpeed;
+      bool Loop = true;
+      float SignPostDelay = 0.5f;
+      if (!signpost)
+        SignPostDelay = 0.0f;
+      while (Loop)
       {
-        yield return (object) null;
-      }
-      else
-      {
-        enemySwordsman.Seperate(0.5f);
-        switch (enemySwordsman.state.CURRENT_STATE)
+        if ((UnityEngine.Object) enemySwordsman.Spine == (UnityEngine.Object) null || enemySwordsman.Spine.AnimationState == null || enemySwordsman.Spine.Skeleton == null)
+          yield return (object) null;
+        else if (enemySwordsman.isSnowman && EnemySwordsman.SnowmanConvoTriggered)
         {
-          case StateMachine.State.Idle:
-            enemySwordsman.TargetObject = (GameObject) null;
-            enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
-            yield break;
-          case StateMachine.State.Moving:
-            if ((bool) (UnityEngine.Object) enemySwordsman.TargetObject & canChangeDirection && (double) enemySwordsman.Spine.timeScale > 1.0 / 1000.0)
-            {
-              enemySwordsman.state.LookAngle = Utils.GetAngle(enemySwordsman.transform.position, enemySwordsman.TargetObject.transform.position);
-              enemySwordsman.Spine.skeleton.ScaleX = (double) enemySwordsman.state.LookAngle <= 90.0 || (double) enemySwordsman.state.LookAngle >= 270.0 ? -1f : 1f;
-              enemySwordsman.state.LookAngle = enemySwordsman.state.facingAngle = Utils.GetAngle(enemySwordsman.transform.position, enemySwordsman.TargetObject.transform.position);
-            }
-            if (enemySwordsman.health.team == Health.Team.PlayerTeam && (double) (enemySwordsman.ObstacleRaycastDelay -= Time.deltaTime * enemySwordsman.Spine.timeScale) <= 0.0)
-              enemySwordsman.DoCustomBoneWallCheck();
-            if ((UnityEngine.Object) enemySwordsman.TargetObject != (UnityEngine.Object) null && (double) Vector2.Distance((Vector2) enemySwordsman.transform.position, (Vector2) enemySwordsman.TargetObject.transform.position) < (double) AttackDistance)
-            {
-              enemySwordsman.state.CURRENT_STATE = StateMachine.State.SignPostAttack;
-              enemySwordsman.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? "grunt-attack-charge2" : "grunt-attack-charge", false);
-            }
-            else
-            {
-              if ((double) (enemySwordsman.RepathTimer += Time.deltaTime * enemySwordsman.Spine.timeScale) > 0.20000000298023224 && (bool) (UnityEngine.Object) enemySwordsman.TargetObject)
+          yield return (object) null;
+        }
+        else
+        {
+          enemySwordsman.Seperate(0.5f);
+          switch (enemySwordsman.state.CURRENT_STATE)
+          {
+            case StateMachine.State.Idle:
+              enemySwordsman.TargetObject = (GameObject) null;
+              enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+              yield break;
+            case StateMachine.State.Moving:
+              if ((bool) (UnityEngine.Object) enemySwordsman.TargetObject & canChangeDirection && (double) enemySwordsman.Spine.timeScale > 1.0 / 1000.0)
               {
-                enemySwordsman.RepathTimer = 0.0f;
-                enemySwordsman.givePath(enemySwordsman.TargetObject.transform.position);
+                enemySwordsman.state.LookAngle = Utils.GetAngle(enemySwordsman.transform.position, enemySwordsman.TargetObject.transform.position);
+                enemySwordsman.Spine.skeleton.ScaleX = (double) enemySwordsman.state.LookAngle <= 90.0 || (double) enemySwordsman.state.LookAngle >= 270.0 ? -1f : 1f;
+                enemySwordsman.state.LookAngle = enemySwordsman.state.facingAngle = Utils.GetAngle(enemySwordsman.transform.position, enemySwordsman.TargetObject.transform.position);
+              }
+              if (enemySwordsman.health.team == Health.Team.PlayerTeam && (double) (enemySwordsman.ObstacleRaycastDelay -= Time.deltaTime * enemySwordsman.Spine.timeScale) <= 0.0)
+                enemySwordsman.DoCustomBoneWallCheck();
+              if ((UnityEngine.Object) enemySwordsman.TargetObject != (UnityEngine.Object) null && (double) Vector2.Distance((Vector2) enemySwordsman.transform.position, (Vector2) enemySwordsman.TargetObject.transform.position) < (double) AttackDistance)
+              {
+                enemySwordsman.state.CURRENT_STATE = StateMachine.State.SignPostAttack;
+                enemySwordsman.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? "grunt-attack-charge2" : "grunt-attack-charge", false);
+              }
+              else
+              {
+                if ((double) (enemySwordsman.RepathTimer += Time.deltaTime * enemySwordsman.Spine.timeScale) > 0.20000000298023224 && (bool) (UnityEngine.Object) enemySwordsman.TargetObject)
+                {
+                  enemySwordsman.RepathTimer = 0.0f;
+                  enemySwordsman.givePath(enemySwordsman.TargetObject.transform.position);
+                }
+                if ((UnityEngine.Object) enemySwordsman.damageColliderEvents != (UnityEngine.Object) null)
+                {
+                  if ((double) enemySwordsman.state.Timer < 0.20000000298023224 && !enemySwordsman.health.WasJustParried)
+                    enemySwordsman.damageColliderEvents.SetActive(true);
+                  else
+                    enemySwordsman.damageColliderEvents.SetActive(false);
+                }
               }
               if ((UnityEngine.Object) enemySwordsman.damageColliderEvents != (UnityEngine.Object) null)
               {
-                if ((double) enemySwordsman.state.Timer < 0.20000000298023224 && !enemySwordsman.health.WasJustParried)
-                  enemySwordsman.damageColliderEvents.SetActive(true);
-                else
-                  enemySwordsman.damageColliderEvents.SetActive(false);
-              }
-            }
-            if ((UnityEngine.Object) enemySwordsman.damageColliderEvents != (UnityEngine.Object) null)
-            {
-              enemySwordsman.damageColliderEvents.SetActive(false);
-              break;
-            }
-            break;
-          case StateMachine.State.SignPostAttack:
-            if ((UnityEngine.Object) enemySwordsman.damageColliderEvents != (UnityEngine.Object) null)
-              enemySwordsman.damageColliderEvents.SetActive(false);
-            enemySwordsman.SimpleSpineFlash.FlashWhite(enemySwordsman.state.Timer / SignPostDelay);
-            enemySwordsman.state.Timer += Time.deltaTime * enemySwordsman.Spine.timeScale;
-            if ((double) enemySwordsman.state.Timer >= (double) SignPostDelay - (double) EnemySwordsman.signPostParryWindow)
-              enemySwordsman.canBeParried = true;
-            if ((double) enemySwordsman.state.Timer >= (double) SignPostDelay)
-            {
-              enemySwordsman.SimpleSpineFlash.FlashWhite(false);
-              CameraManager.shakeCamera(0.4f, enemySwordsman.state.LookAngle);
-              enemySwordsman.state.CURRENT_STATE = StateMachine.State.RecoverFromAttack;
-              enemySwordsman.speed = AttackSpeed * 0.0166666675f;
-              enemySwordsman.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? "grunt-attack-impact2" : "grunt-attack-impact", false);
-              enemySwordsman.canBeParried = true;
-              enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.EnableDamageCollider(0.0f));
-              if (!string.IsNullOrEmpty(enemySwordsman.attackSoundPath))
-                AudioManager.Instance.PlayOneShot(enemySwordsman.attackSoundPath, enemySwordsman.transform.position);
-              if (!string.IsNullOrEmpty(enemySwordsman.AttackVO))
-              {
-                AudioManager.Instance.PlayOneShot(enemySwordsman.AttackVO, enemySwordsman.transform.position);
+                enemySwordsman.damageColliderEvents.SetActive(false);
                 break;
               }
               break;
-            }
-            break;
-          case StateMachine.State.RecoverFromAttack:
-            if ((double) AttackSpeed > 0.0)
-              AttackSpeed -= 1f * GameManager.DeltaTime * enemySwordsman.Spine.timeScale;
-            enemySwordsman.speed = AttackSpeed * Time.deltaTime * enemySwordsman.Spine.timeScale;
-            enemySwordsman.SimpleSpineFlash.FlashWhite(false);
-            enemySwordsman.canBeParried = (double) enemySwordsman.state.Timer <= (double) EnemySwordsman.attackParryWindow;
-            if ((double) (enemySwordsman.state.Timer += Time.deltaTime * enemySwordsman.Spine.timeScale) >= (AttackCount + 1 <= NumAttacks ? 0.5 : 1.0))
-            {
-              if (++AttackCount <= NumAttacks)
+            case StateMachine.State.SignPostAttack:
+              if ((UnityEngine.Object) enemySwordsman.damageColliderEvents != (UnityEngine.Object) null)
+                enemySwordsman.damageColliderEvents.SetActive(false);
+              enemySwordsman.SimpleSpineFlash.FlashWhite(enemySwordsman.state.Timer / SignPostDelay);
+              enemySwordsman.state.Timer += Time.deltaTime * enemySwordsman.Spine.timeScale;
+              if ((double) enemySwordsman.state.Timer >= (double) SignPostDelay - (double) EnemySwordsman.signPostParryWindow)
+                enemySwordsman.canBeParried = true;
+              if ((double) enemySwordsman.state.Timer >= (double) SignPostDelay)
               {
-                AttackSpeed = MaxAttackSpeed + (float) ((3 - NumAttacks) * 2);
-                enemySwordsman.state.CURRENT_STATE = StateMachine.State.SignPostAttack;
-                enemySwordsman.Spine.AnimationState.SetAnimation(0, "grunt-attack-charge2", false);
-                SignPostDelay = 0.3f;
+                enemySwordsman.SimpleSpineFlash.FlashWhite(false);
+                CameraManager.shakeCamera(0.4f, enemySwordsman.state.LookAngle);
+                enemySwordsman.state.CURRENT_STATE = StateMachine.State.RecoverFromAttack;
+                enemySwordsman.speed = AttackSpeed * 0.0166666675f;
+                enemySwordsman.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? "grunt-attack-impact2" : "grunt-attack-impact", false);
+                enemySwordsman.canBeParried = true;
+                enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.EnableDamageCollider(0.0f));
+                if (!string.IsNullOrEmpty(enemySwordsman.attackSoundPath))
+                  AudioManager.Instance.PlayOneShot(enemySwordsman.attackSoundPath, enemySwordsman.transform.position);
+                if (!string.IsNullOrEmpty(enemySwordsman.AttackVO))
+                {
+                  AudioManager.Instance.PlayOneShot(enemySwordsman.AttackVO, enemySwordsman.transform.position);
+                  break;
+                }
                 break;
               }
-              Loop = false;
-              enemySwordsman.SimpleSpineFlash.FlashWhite(false);
               break;
-            }
-            break;
+            case StateMachine.State.RecoverFromAttack:
+              if ((double) AttackSpeed > 0.0)
+                AttackSpeed -= 1f * GameManager.DeltaTime * enemySwordsman.Spine.timeScale;
+              enemySwordsman.speed = AttackSpeed * Time.deltaTime * enemySwordsman.Spine.timeScale;
+              enemySwordsman.SimpleSpineFlash.FlashWhite(false);
+              enemySwordsman.canBeParried = (double) enemySwordsman.state.Timer <= (double) EnemySwordsman.attackParryWindow;
+              if ((double) (enemySwordsman.state.Timer += Time.deltaTime * enemySwordsman.Spine.timeScale) >= (AttackCount + 1 <= NumAttacks ? 0.5 : 1.0))
+              {
+                if (++AttackCount <= NumAttacks)
+                {
+                  AttackSpeed = MaxAttackSpeed + (float) ((3 - NumAttacks) * 2);
+                  enemySwordsman.state.CURRENT_STATE = StateMachine.State.SignPostAttack;
+                  enemySwordsman.Spine.AnimationState.SetAnimation(0, "grunt-attack-charge2", false);
+                  SignPostDelay = 0.3f;
+                  break;
+                }
+                Loop = false;
+                enemySwordsman.SimpleSpineFlash.FlashWhite(false);
+                break;
+              }
+              break;
+          }
+          yield return (object) null;
         }
-        yield return (object) null;
       }
+      enemySwordsman.TargetObject = (GameObject) null;
+      enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
     }
-    enemySwordsman.TargetObject = (GameObject) null;
-    enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
   }
 
   public void BiomeGenerator_OnBiomeChangeRoom()

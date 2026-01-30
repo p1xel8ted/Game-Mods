@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FrogBossIntroRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -408,6 +408,7 @@ public class FrogBossIntroRitual : BaseMonoBehaviour
     follower.Follower.SetFaceAnimation("Emotions/emotion-angry", true);
     double num1 = (double) follower.Follower.SetBodyAnimation("Conversations/react-mean1", false);
     follower.Follower.AddBodyAnimation("idle", true, 0.0f);
+    MMConversation.ClearEventListenerSFX(follower.Follower.gameObject, "VO/talk short nice");
     yield return (object) new WaitForSeconds(2f);
     List<ConversationEntry> Entries1 = new List<ConversationEntry>()
     {

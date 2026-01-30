@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GameManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour
 
   public void Awake()
   {
+    GameManager.ForceFontReload();
     GameManager.instance = this;
     this.boxCollider = this.gameObject.AddComponent<BoxCollider2D>();
     this.boxCollider.isTrigger = true;

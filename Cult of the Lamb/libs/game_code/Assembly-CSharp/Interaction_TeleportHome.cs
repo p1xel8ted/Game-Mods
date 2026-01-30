@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TeleportHome
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -26,6 +26,8 @@ public class Interaction_TeleportHome : Interaction
   public RunResults RunResults;
   public bool Activating;
   public Transform PlayerPosition;
+  public Coroutine enableTeleporterCoroutine;
+  public Coroutine emitSmokeCoroutine;
   public bool Debug_WarpIn;
   public bool TeleportOutOnlyInteractingPlayer;
   public SkeletonAnimation skeletonAnimation;
@@ -97,6 +99,17 @@ public class Interaction_TeleportHome : Interaction
 
   public void DisableTeleporter()
   {
+    this.transform.DOKill();
+    if (this.enableTeleporterCoroutine != null)
+    {
+      GameManager.GetInstance().StopCoroutine(this.enableTeleporterCoroutine);
+      this.enableTeleporterCoroutine = (Coroutine) null;
+    }
+    if (this.emitSmokeCoroutine != null)
+    {
+      this.StopCoroutine(this.emitSmokeCoroutine);
+      this.emitSmokeCoroutine = (Coroutine) null;
+    }
     this.animator.SetBool("isEnabled", false);
     this.Activating = true;
     Debug.Log((object) ("transform.position: " + this.transform.position.ToString()));
@@ -107,14 +120,29 @@ public class Interaction_TeleportHome : Interaction
 
   public void EnableTeleporter(bool doSpawnVFX = true)
   {
-    this.gameObject.SetActive(true);
-    this.StartCoroutine((IEnumerator) this.IEnableTeleporter(Vector3.one, doSpawnVFX));
+    this.EnableTeleporter(Vector3.one, doSpawnVFX);
   }
 
   public void EnableTeleporter(Vector3 scale, bool doSpawnVFX = true)
   {
-    this.gameObject.SetActive(true);
-    this.StartCoroutine((IEnumerator) this.IEnableTeleporter(scale, doSpawnVFX));
+    this.transform.DOKill();
+    if (this.enableTeleporterCoroutine != null)
+    {
+      GameManager.GetInstance().StopCoroutine(this.enableTeleporterCoroutine);
+      this.enableTeleporterCoroutine = (Coroutine) null;
+    }
+    if (this.emitSmokeCoroutine != null)
+    {
+      this.StopCoroutine(this.emitSmokeCoroutine);
+      this.emitSmokeCoroutine = (Coroutine) null;
+    }
+    Transform transform = this.transform;
+    for (int index = 0; index < 100 && (UnityEngine.Object) transform != (UnityEngine.Object) null; ++index)
+    {
+      transform.gameObject.SetActive(true);
+      transform = transform.parent;
+    }
+    this.enableTeleporterCoroutine = GameManager.GetInstance().StartCoroutine((IEnumerator) this.IEnableTeleporter(scale, doSpawnVFX));
   }
 
   public IEnumerator IEnableTeleporter(Vector3 scale, bool doSpawnVFX)
@@ -123,13 +151,14 @@ public class Interaction_TeleportHome : Interaction
     interactionTeleportHome.Activating = false;
     if (doSpawnVFX)
     {
-      interactionTeleportHome.StartCoroutine((IEnumerator) interactionTeleportHome.EmitSmoke());
+      interactionTeleportHome.emitSmokeCoroutine = interactionTeleportHome.StartCoroutine((IEnumerator) interactionTeleportHome.EmitSmoke());
       interactionTeleportHome.transform.DOMove(interactionTeleportHome.CachePosition, 2f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuad);
       interactionTeleportHome.transform.DOScale(scale, 2f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuad);
       yield return (object) new WaitForSeconds(1f);
     }
     interactionTeleportHome.animator.SetBool("isEnabled", true);
     AudioManager.Instance.PlayOneShot(interactionTeleportHome.TeleporterOnSFX, interactionTeleportHome.gameObject);
+    interactionTeleportHome.enableTeleporterCoroutine = (Coroutine) null;
   }
 
   public IEnumerator EmitSmoke()
@@ -145,6 +174,7 @@ public class Interaction_TeleportHome : Interaction
       Timer += Time.deltaTime;
       yield return (object) null;
     }
+    interactionTeleportHome.emitSmokeCoroutine = (Coroutine) null;
   }
 
   public override void OnDestroy()
@@ -421,7 +451,7 @@ public class Interaction_TeleportHome : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__43_0()
+  public void \u003COnInteract\u003Eb__45_0()
   {
     PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive, PlayerNotToInclude: this.playerFarming);
     if (this.TeleportOutOnlyInteractingPlayer)
@@ -439,13 +469,13 @@ public class Interaction_TeleportHome : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__43_1()
+  public void \u003COnInteract\u003Eb__45_1()
   {
     this.StartCoroutine((IEnumerator) this.DoTeleportOut(this.playerFarming));
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__43_2()
+  public void \u003COnInteract\u003Eb__45_2()
   {
     this.StartCoroutine((IEnumerator) this.DoTeleportIn());
   }

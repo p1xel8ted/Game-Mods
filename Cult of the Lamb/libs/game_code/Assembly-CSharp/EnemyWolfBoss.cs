@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWolfBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1387,12 +1387,16 @@ label_28:
     EnemyWolfBoss enemyWolfBoss = this;
     enemyWolfBoss.ClearPaths();
     enemyWolfBoss.moving = false;
-    Vector3 direction = (enemyWolfBoss.GetClosestTarget().transform.position - enemyWolfBoss.transform.position).normalized;
+    Health closestTarget = enemyWolfBoss.GetClosestTarget();
+    Vector3 direction = (((UnityEngine.Object) closestTarget != (UnityEngine.Object) null ? closestTarget.transform.position : Vector3.down) - enemyWolfBoss.transform.position).normalized;
     direction *= 10f;
     direction.z = -1.5f;
-    enemyWolfBoss.arrowIndicator.gameObject.SetActive(true);
-    float z = Mathf.Atan2(direction.y, direction.x) * 57.29578f;
-    enemyWolfBoss.arrowIndicator.rotation = Quaternion.Euler(0.0f, 0.0f, z);
+    if ((UnityEngine.Object) enemyWolfBoss.arrowIndicator != (UnityEngine.Object) null)
+    {
+      enemyWolfBoss.arrowIndicator.gameObject.SetActive(true);
+      float z = Mathf.Atan2(direction.y, direction.x) * 57.29578f;
+      enemyWolfBoss.arrowIndicator.rotation = Quaternion.Euler(0.0f, 0.0f, z);
+    }
     enemyWolfBoss.Spine.AnimationState.SetAnimation(0, "worm_attack_start", false);
     enemyWolfBoss.Spine.AnimationState.AddAnimation(0, "worm-attack-loop", true, 0.0f);
     AudioManager.Instance.PlayOneShot(enemyWolfBoss.attackTentacleStartSFX, enemyWolfBoss.gameObject);
@@ -1409,7 +1413,7 @@ label_28:
     float timer = 0.0f;
     while ((double) timer <= 2.0)
     {
-      if ((double) timer > 0.25 && enemyWolfBoss.arrowIndicator.gameObject.activeSelf)
+      if ((UnityEngine.Object) enemyWolfBoss.arrowIndicator != (UnityEngine.Object) null && (double) timer > 0.25 && enemyWolfBoss.arrowIndicator.gameObject.activeSelf)
         enemyWolfBoss.arrowIndicator.gameObject.SetActive(false);
       timer += Time.deltaTime * enemyWolfBoss.Spine.timeScale;
       yield return (object) null;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Onboarding
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -55,7 +55,7 @@ public class Onboarding : BaseMonoBehaviour
   [SerializeField]
   public Interaction_PurchaseLand baseExpansionSign;
   public SkeletonAnimation RatauSpine;
-  public float timeBetweenFollowerQuestCheck = 10f;
+  public float timeBetweenFollowerQuestCheck = 30f;
   public float timestamp;
   public bool onboardingFollowerSin;
   public string DEBUG_MESSAGE = "";
@@ -203,10 +203,17 @@ public class Onboarding : BaseMonoBehaviour
 
   public void Update()
   {
-    if ((double) TimeManager.TotalElapsedGameTime <= (double) this.timestamp)
-      return;
-    this.timestamp = TimeManager.TotalElapsedGameTime + this.timeBetweenFollowerQuestCheck;
-    this.TryGiveFollowerOnboardingQuest();
+    if (MMConversation.isPlaying || LetterBox.IsPlaying)
+    {
+      this.timestamp = TimeManager.TotalElapsedGameTime + this.timeBetweenFollowerQuestCheck;
+    }
+    else
+    {
+      if ((double) TimeManager.TotalElapsedGameTime <= (double) this.timestamp)
+        return;
+      this.timestamp = TimeManager.TotalElapsedGameTime + this.timeBetweenFollowerQuestCheck;
+      this.TryGiveFollowerOnboardingQuest();
+    }
   }
 
   public void OnDisable()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJellySpawner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -667,11 +667,21 @@ public class EnemyJellySpawner : EnemyJellyCharger
     base.OnDestroy();
     if (this.loadedAddressableAssets != null)
     {
-      foreach (AsyncOperationHandle<GameObject> addressableAsset in this.loadedAddressableAssets)
-        Addressables.Release((AsyncOperationHandle) addressableAsset);
+      for (int index = 0; index < this.loadedAddressableAssets.Count; ++index)
+      {
+        AsyncOperationHandle<GameObject> addressableAsset = this.loadedAddressableAssets[index];
+        if (addressableAsset.IsValid())
+        {
+          Addressables.Release<GameObject>(addressableAsset);
+          this.loadedAddressableAssets[index] = new AsyncOperationHandle<GameObject>();
+        }
+      }
       this.loadedAddressableAssets.Clear();
     }
+    if (!this.trapBomb.IsValid())
+      return;
     Addressables.Release<GameObject>(this.trapBomb);
+    this.trapBomb = new AsyncOperationHandle<GameObject>();
   }
 
   [CompilerGenerated]

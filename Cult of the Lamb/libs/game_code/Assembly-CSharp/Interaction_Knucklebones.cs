@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Knucklebones
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -633,6 +633,8 @@ public class Interaction_Knucklebones : Interaction
       if ((UnityEngine.Object) MonoSingleton<UIManager>.Instance.PlayerUpgradesMenuTemplate == (UnityEngine.Object) null)
         MonoSingleton<UIManager>.Instance.LoadPlayerUpgradesMenu();
       yield return (object) new WaitForSeconds(0.5f);
+      while ((UnityEngine.Object) MonoSingleton<UIManager>.Instance.PlayerUpgradesMenuTemplate == (UnityEngine.Object) null)
+        yield return (object) null;
       Time.timeScale = 0.0f;
       interactionKnucklebones.enabled = true;
       DataManager.Instance.RatauStaffQuestWonGame = true;
@@ -643,6 +645,7 @@ public class Interaction_Knucklebones : Interaction
         Time.timeScale = 1f;
         GameManager.GetInstance().OnConversationEnd();
       });
+      upgradesMenuController.OnDestroyed = upgradesMenuController.OnDestroyed + (System.Action) (() => MonoSingleton<UIManager>.Instance.UnloadPlayerUpgradesMenu());
       upgradesMenuController.ShowNewFleecesUnlocked(new PlayerFleeceManager.FleeceType[1]
       {
         PlayerFleeceManager.FleeceType.RatauCloak

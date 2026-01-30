@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerSpells
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -1074,7 +1074,7 @@ public class PlayerSpells : BaseMonoBehaviour
         Vector3 targetPosition1 = targetPosition;
         if (path.path.Count > 0)
           targetPosition1 = (Vector3) path.path[path.path.Count - 1].position;
-        bool flag = RoomLockController.IsPositionOutOfRoom(targetPosition);
+        bool flag = RoomLockController.IsPositionOutOfRoom(targetPosition, true);
         if (((node == null ? 1 : (path.path.Count == 0 ? 1 : 0)) | (flag ? 1 : 0)) != 0)
         {
           RaycastHit2D raycastHit2D = Physics2D.Raycast((Vector2) this.transform.position, raycastDirection, 30f, (int) (LayerMask) ((int) (LayerMask) (1 << LayerMask.NameToLayer("Island")) | 1 << LayerMask.NameToLayer("Obstacles")));

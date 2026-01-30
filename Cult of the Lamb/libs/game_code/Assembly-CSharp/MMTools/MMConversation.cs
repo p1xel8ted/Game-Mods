@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMTools.MMConversation
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -14,6 +14,7 @@ using Lamb.UI;
 using Lamb.UI.Menus.DoctrineChoicesMenu;
 using Rewired;
 using Spine.Unity;
+using Spine.Unity.Examples;
 using src.Extensions;
 using src.UINavigator;
 using System;
@@ -490,6 +491,23 @@ public class MMConversation : MonoBehaviour
       CustomCallbacks();
     MMConversation.isPlaying = false;
     MMConversation.isBark = false;
+  }
+
+  public static void ClearEventListenerSFX(GameObject followerObject, string eventName)
+  {
+    FollowerSpineEventListener componentInChildren = followerObject?.GetComponentInChildren<FollowerSpineEventListener>(true);
+    if ((UnityEngine.Object) componentInChildren == (UnityEngine.Object) null)
+    {
+      Debug.Log((object) $"Couldn't find SpineEventListener as child of: {followerObject}");
+    }
+    else
+    {
+      foreach (followerSpineEventListeners spineEventListener in componentInChildren.spineEventListeners)
+      {
+        if (spineEventListener.eventName == "VO/talk short nice")
+          spineEventListener.soundPath = " ";
+      }
+    }
   }
 
   public void SetSpineAnimation(

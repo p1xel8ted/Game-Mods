@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: interaction_FollowerInteraction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -4278,6 +4278,30 @@ public class interaction_FollowerInteraction : Interaction
     followerInteraction.OnRecruitFinished();
   }
 
+  public static void CancelAllLightningStrikes()
+  {
+    foreach (Follower follower in Follower.Followers)
+    {
+      if (!((UnityEngine.Object) follower == (UnityEngine.Object) null))
+      {
+        interaction_FollowerInteraction component = follower.GetComponent<interaction_FollowerInteraction>();
+        if ((UnityEngine.Object) component != (UnityEngine.Object) null && component.lightningIncoming)
+          component.CancelLightningStrike();
+      }
+    }
+  }
+
+  public void CancelLightningStrike()
+  {
+    if (this.lightningStrikeRoutine != null)
+      this.StopCoroutine(this.lightningStrikeRoutine);
+    this.lightningStrikeRoutine = (Coroutine) null;
+    this.lightningIncoming = false;
+    if ((UnityEngine.Object) this.LightningContainer != (UnityEngine.Object) null)
+      this.LightningContainer.gameObject.SetActive(false);
+    AudioManager.Instance.StopLoop(this.lightningLoopSfx);
+  }
+
   public void LightningStrikeIncoming()
   {
     if ((UnityEngine.Object) this.follower != (UnityEngine.Object) null)
@@ -4329,7 +4353,10 @@ public class interaction_FollowerInteraction : Interaction
     this.lightningStrikeRoutine = (Coroutine) null;
     this.lightningIncoming = false;
     if (cancelled)
+    {
       Debug.Log((object) "Queued Lightning cancelled");
+      this.LightningContainer.gameObject.SetActive(false);
+    }
     else
       this.LightningStrike();
   }

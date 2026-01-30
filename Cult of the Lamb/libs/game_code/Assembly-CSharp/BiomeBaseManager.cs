@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BiomeBaseManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1105,35 +1105,44 @@ public class BiomeBaseManager : MonoBehaviour
         if (ranch.Brain.Data.Animals.Count > 0 && ((UnityEngine.Object) interactionRanch == (UnityEngine.Object) null || ranch.Brain.Data.Animals.Count > interactionRanch.Brain.Data.Animals.Count))
           interactionRanch = ranch;
       }
-      if (!((UnityEngine.Object) interactionRanch == (UnityEngine.Object) null))
+      GameObject obj = new GameObject();
+      if ((UnityEngine.Object) interactionRanch != (UnityEngine.Object) null)
       {
         List<Interaction_Ranchable> animals = interactionRanch.GetAnimals();
         Vector3 zero = Vector3.zero;
         foreach (Interaction_Ranchable interactionRanchable in animals)
           zero += interactionRanchable.transform.position;
-        Vector3 vector3 = zero / (float) animals.Count;
-        GameObject obj = new GameObject();
-        obj.transform.position = vector3;
-        GameManager.GetInstance().OnConversationNew();
-        GameManager.GetInstance().OnConversationNext(obj, 7f);
-        yield return (object) new WaitForSeconds(2f);
-        foreach (Interaction_Ranchable ranchable in Interaction_Ranchable.Ranchables)
-        {
-          if (ranchable.CurrentState != Interaction_Ranchable.State.BabyInHutch && ranchable.CurrentState != Interaction_Ranchable.State.Dead)
-          {
-            ranchable.AddAdoration(50f);
-            BiomeConstants.Instance.EmitHeartPickUpVFX(ranchable.transform.position, 0.0f, "red", "burst_small");
-            AudioManager.Instance.PlayOneShot("event:/dlc/animal/shared/love_hearts", ranchable.transform.position);
-          }
-          yield return (object) new WaitForSeconds(0.2f);
-        }
-        yield return (object) new WaitForSeconds(1f);
-        this.InitMusic();
-        GameManager.GetInstance().OnConversationEnd();
-        Interaction_WolfBase.ResetWolvesEnounterData();
-        UnityEngine.Object.Destroy((UnityEngine.Object) obj);
-        this.wolvesSucceeded = false;
+        obj.transform.position = zero / (float) animals.Count;
       }
+      else if (Interaction_Ranchable.Ranchables.Count > 0)
+      {
+        int index = UnityEngine.Random.Range(0, Interaction_Ranchable.Ranchables.Count);
+        obj.transform.position = Interaction_Ranchable.Ranchables[index].transform.position;
+      }
+      else
+      {
+        Debug.LogError((object) "No Ranchables after wolves attack!");
+        obj.transform.position = PlayerFarming.Instance.transform.position;
+      }
+      GameManager.GetInstance().OnConversationNew();
+      GameManager.GetInstance().OnConversationNext(obj, 7f);
+      yield return (object) new WaitForSeconds(2f);
+      foreach (Interaction_Ranchable ranchable in Interaction_Ranchable.Ranchables)
+      {
+        if (ranchable.CurrentState != Interaction_Ranchable.State.BabyInHutch && ranchable.CurrentState != Interaction_Ranchable.State.Dead)
+        {
+          ranchable.AddAdoration(50f);
+          BiomeConstants.Instance.EmitHeartPickUpVFX(ranchable.transform.position, 0.0f, "red", "burst_small");
+          AudioManager.Instance.PlayOneShot("event:/dlc/animal/shared/love_hearts", ranchable.transform.position);
+        }
+        yield return (object) new WaitForSeconds(0.2f);
+      }
+      yield return (object) new WaitForSeconds(1f);
+      this.InitMusic();
+      GameManager.GetInstance().OnConversationEnd();
+      Interaction_WolfBase.ResetWolvesEnounterData();
+      UnityEngine.Object.Destroy((UnityEngine.Object) obj);
+      this.wolvesSucceeded = false;
     }
   }
 

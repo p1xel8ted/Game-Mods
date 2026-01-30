@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RoomLockController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 1F1BB429-82E6-41C3-9004-EF845C927D09
+// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -223,7 +223,7 @@ public class RoomLockController : BaseMonoBehaviour
     entity.position = roomLockController1.BlockingCollider.transform.position - roomLockController1.BlockingCollider.transform.up * 0.5f;
   }
 
-  public static bool IsPositionOutOfRoom(Vector3 position)
+  public static bool IsPositionOutOfRoom(Vector3 position, bool isTeleport = false)
   {
     RoomLockController roomLockController1 = (RoomLockController) null;
     float num1 = float.PositiveInfinity;
@@ -239,7 +239,7 @@ public class RoomLockController : BaseMonoBehaviour
         }
       }
     }
-    if ((Object) roomLockController1 != (Object) null && !roomLockController1.Open)
+    if ((Object) roomLockController1 != (Object) null && !roomLockController1.Open | isTeleport)
     {
       Vector2 normalized = (Vector2) (position - roomLockController1.BlockingCollider.transform.position).normalized;
       if ((double) Vector2.Angle((Vector2) -roomLockController1.BlockingCollider.transform.up, normalized) >= 90.0)
