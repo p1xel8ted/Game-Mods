@@ -2,6 +2,8 @@
 
 * Fixed lore tablets not being awarded when interacting with lore stones while menus were open.
 * Added "Auto Repair Missing Lore" option (in Fixes section) to restore lore tablets that weren't unlocked due to the above bug. Plays the full tablet animation for each restored tablet.
+* Added "Mass Open Scarecrows" option - opening one scarecrow trap opens all traps with caught birds.
+* Added "Mass Fill Bear Traps" option - filling one bear trap with bait fills all empty traps with the same bait type.
 
 ### 2.3.7 - 29/01/2026
 

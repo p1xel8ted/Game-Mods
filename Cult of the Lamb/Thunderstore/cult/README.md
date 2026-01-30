@@ -61,6 +61,8 @@
 - Mass bully, reassure, reeducate
 - Mass romance, pet dog
 - Mass pet farm animals
+- Mass open scarecrow traps
+- Mass fill bear traps with bait
 
 ### Mass Collect
 - Mass collect from beds, outhouses, offering shrines

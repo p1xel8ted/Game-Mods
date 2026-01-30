@@ -148,6 +148,8 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassCollectFromPassiveShrines { get; private set; }
     internal static ConfigEntry<bool> MassCollectFromCompost { get; private set; }
     internal static ConfigEntry<bool> MassCollectFromHarvestTotems { get; private set; }
+    internal static ConfigEntry<bool> MassOpenScarecrows { get; private set; }
+    internal static ConfigEntry<bool> MassFillBearTraps { get; private set; }
 
     internal static WriteOnce<float> RunSpeed { get; } = new();
     internal static WriteOnce<float> DodgeSpeed { get; } = new();

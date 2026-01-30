@@ -490,9 +490,18 @@ public partial class Plugin : BaseUnityPlugin
 
         MassCollectFromHarvestTotems = ConfigInstance.Bind(MassSection, "Mass Collect From Harvest Totems", false, new ConfigDescription("When collecting resources from a harvest totem, all harvest totems are collected from at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 4
+            Order = 6
         }));
 
+        MassOpenScarecrows = ConfigInstance.Bind(MassSection, "Mass Open Scarecrows", false, new ConfigDescription("When opening a scarecrow trap, all scarecrow traps with caught birds are opened at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 5
+        }));
+
+        MassFillBearTraps = ConfigInstance.Bind(MassSection, "Mass Fill Bear Traps", false, new ConfigDescription("When filling a bear trap with bait, all empty bear traps are filled with the same bait type.", null, new ConfigurationManagerAttributes
+        {
+            Order = 4
+        }));
 
         MassRomance = ConfigInstance.Bind(MassSection, "Mass Romance", false, new ConfigDescription("When romancing a follower, all followers are romanced at once.", null, new ConfigurationManagerAttributes
         {

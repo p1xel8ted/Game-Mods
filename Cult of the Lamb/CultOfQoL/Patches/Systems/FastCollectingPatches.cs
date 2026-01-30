@@ -391,4 +391,100 @@ public static class FastCollectingPatches
             return original;
         }
     }
+
+    #region Mass Scarecrow Traps
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Scarecrow), nameof(Scarecrow.OnInteract))]
+    public static void Scarecrow_OnInteract(Scarecrow __instance)
+    {
+        if (!Plugin.MassOpenScarecrows.Value)
+        {
+            return;
+        }
+
+        foreach (var scarecrow in Scarecrow.Scarecrows.ToList())
+        {
+            if (scarecrow == null || scarecrow == __instance || !scarecrow.Brain.HasBird)
+            {
+                continue;
+            }
+
+            scarecrow.OpenTrap();
+            scarecrow.Brain.EmptyTrap();
+            InventoryItem.Spawn(InventoryItem.ITEM_TYPE.MEAT, Random.Range(2, 5), scarecrow.transform.position);
+        }
+    }
+
+    #endregion
+
+    #region Mass Bear Traps
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_WolfTrap), nameof(Interaction_WolfTrap.OnInteract))]
+    public static void Interaction_WolfTrap_OnInteract(Interaction_WolfTrap __instance)
+    {
+        if (!Plugin.MassFillBearTraps.Value)
+        {
+            return;
+        }
+
+        // Only trigger on fill action (not harvest - harvest already gives meat from the triggered trap)
+        if (__instance.structure.Brain.Data.HasBird)
+        {
+            return;
+        }
+
+        // Hook into the item selector that's about to show
+        GI.StartCoroutine(HookBaitSelection(__instance));
+    }
+
+    private static IEnumerator HookBaitSelection(Interaction_WolfTrap triggered)
+    {
+        yield return new WaitForEndOfFrame();
+
+        // Find the UIItemSelectorOverlayController that was just opened
+        var selector = MonoSingleton<UIManager>.Instance.GetComponentInChildren<UIItemSelectorOverlayController>();
+        if (selector == null)
+        {
+            yield break;
+        }
+
+        // Store original callback
+        var originalCallback = selector.OnItemChosen;
+
+        selector.OnItemChosen = chosenItem =>
+        {
+            // Call original first (for the triggered trap)
+            originalCallback?.Invoke(chosenItem);
+
+            // Then fill all other empty traps
+            FillAllBearTraps(triggered, chosenItem);
+        };
+    }
+
+    private static void FillAllBearTraps(Interaction_WolfTrap triggered, InventoryItem.ITEM_TYPE baitType)
+    {
+        var emptyTraps = Interaction_WolfTrap.Traps
+            .Where(t => t != null && t != triggered &&
+                        !t.structure.Brain.Data.HasBird &&
+                        t.structure.Brain.Data.Inventory.Count == 0)
+            .ToList();
+
+        foreach (var trap in emptyTraps)
+        {
+            // Check player has bait
+            if (Inventory.GetItemQuantity(baitType) <= 0)
+            {
+                break;
+            }
+
+            // Deposit bait
+            Inventory.ChangeItemQuantity((int)baitType, -1);
+            trap.structure.Brain.Data.Inventory.Add(new InventoryItem(baitType, 1));
+            trap.UpdateVisuals();
+        }
+    }
+
+    #endregion
 }
