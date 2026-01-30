@@ -314,8 +314,9 @@ public static class TraitWeights
             availableTraits.Remove(FollowerTrait.TraitType.BornToTheRot);
         }
 
-        // Always filter out BishopOfCult - it's a special story trait
+        // Always filter out special traits that require game state setup or are story-related
         availableTraits.Remove(FollowerTrait.TraitType.BishopOfCult);
+        availableTraits.Remove(FollowerTrait.TraitType.Spy); // Requires SpyJoinedDay to be set or spies leave immediately
 
         // Remove single-use traits that are already in use (unless AllowMultipleUniqueTraits is enabled)
         // This includes both SingleTraits (Lazy, Snorer, etc.) and UniqueTraits (Immortal, Disciple, etc.)

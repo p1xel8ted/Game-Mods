@@ -1,11 +1,13 @@
-### 0.1.3 - 28/01/2026
+### 0.1.3 - 30/01/2026
 
+* Fixed Spy followers immediately leaving the cult when assigned via random trait selection. The Spy trait is now excluded from the trait pool since it requires special game state setup that only occurs through the normal spy storyline.
 * Added new configuration examples to the README for accessing all traits and creating a cult full of immortals.
 * Fixed several README scenarios that were missing "Use All Traits Pool" setting (required for traits not in vanilla's default pools).
 * Increased maximum trait weight from 10 to 100 so rare traits like Immortal can actually appear reliably when using the full trait pool.
 * Added "Guarantee" checkboxes for each unique trait (Immortal, Disciple, Dont Starve, Blind, Born To The Rot) that force new followers to receive that trait regardless of weights.
 * Added "Allow Multiple Unique Traits" option to let multiple followers have the same trait that's normally limited to one follower (Immortal, Disciple, Lazy, Snorer, etc.). Use trait weights to control distribution.
 * Reorganized config sections so Notifications appears before Trait Weights.
+* Indented "Guarantee" config entries under their parent trait toggles for better readability.
 
 ### 0.1.2 - 27/01/2026
 
