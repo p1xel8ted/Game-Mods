@@ -22,6 +22,7 @@ public partial class Plugin
 
     // Trait Weights settings
     internal static ConfigEntry<bool> EnableTraitWeights { get; private set; }
+    internal static ConfigEntry<bool> IncludeStoryEventTraits { get; private set; }
     internal static ConfigEntry<bool> UseAllTraits { get; private set; }
     internal static Dictionary<FollowerTrait.TraitType, ConfigEntry<float>> TraitWeights { get; } = new();
     internal static List<FollowerTrait.TraitType> AllTraitsList { get; } = [];

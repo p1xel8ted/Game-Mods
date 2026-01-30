@@ -40,6 +40,30 @@ Control how likely each trait is to appear on new followers. Each trait has a we
 
 The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.
 
+### Excluded Traits
+
+Some traits are excluded from the weights list because they require special game state or are granted through gameplay events:
+
+**Always Excluded** (cannot be randomly assigned):
+
+| Trait | Reason |
+|-------|--------|
+| Spy | Requires SpyJoinedDay to be set or followers leave immediately |
+| BishopOfCult | Story-related, granted when converting a bishop |
+
+**Event Traits** (excluded by default, enable "Include Event Traits" to add them):
+
+| Category | Traits |
+|----------|--------|
+| Marriage | MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedMurderouslyJealous |
+| Parenting | ProudParent, OverworkedParent |
+| Widowing | HappilyWidowed, GrievingWidow, JiltedLover |
+| Criminal | CriminalEvangelizing, CriminalHardened, CriminalReformed, CriminalScarred |
+| Missionary | MissionaryExcited, MissionaryInspired, MissionaryTerrified |
+| Special | ExCultLeader, ExistentialDread |
+| DLC/Snowman | InfusibleSnowman, MasterfulSnowman, ShoddySnowman |
+| DLC/Other | MutatedVisual, PureBlood, PureBlood_1/2/3, FreezeImmune, FurnaceAnimal, FurnaceFollower |
+
 ### Notifications
 Optional notifications when trait replacement adds or removes traits.
 

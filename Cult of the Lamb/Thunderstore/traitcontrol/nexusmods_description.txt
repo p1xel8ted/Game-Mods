@@ -42,6 +42,27 @@
 [/list]
 [size=3]The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.[/size]
 
+[size=3][b]Excluded Traits[/b][/size]
+[size=3]Some traits are excluded from the weights list because they require special game state or are granted through gameplay events:[/size]
+
+[size=3][u]Always Excluded[/u] (cannot be randomly assigned):[/size]
+[list]
+[*][size=3][b]Spy[/b] - Requires SpyJoinedDay to be set or followers leave immediately[/size]
+[*][size=3][b]BishopOfCult[/b] - Story-related, granted when converting a bishop[/size]
+[/list]
+
+[size=3][u]Event Traits[/u] (excluded by default, enable "Include Event Traits" to add them):[/size]
+[list]
+[*][size=3][b]Marriage[/b] - MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedMurderouslyJealous[/size]
+[*][size=3][b]Parenting[/b] - ProudParent, OverworkedParent[/size]
+[*][size=3][b]Widowing[/b] - HappilyWidowed, GrievingWidow, JiltedLover[/size]
+[*][size=3][b]Criminal[/b] - CriminalEvangelizing, CriminalHardened, CriminalReformed, CriminalScarred[/size]
+[*][size=3][b]Missionary[/b] - MissionaryExcited, MissionaryInspired, MissionaryTerrified[/size]
+[*][size=3][b]Special[/b] - ExCultLeader, ExistentialDread[/size]
+[*][size=3][b]DLC/Snowman[/b] - InfusibleSnowman, MasterfulSnowman, ShoddySnowman[/size]
+[*][size=3][b]DLC/Other[/b] - MutatedVisual, PureBlood, PureBlood_1/2/3, FreezeImmune, FurnaceAnimal, FurnaceFollower[/size]
+[/list]
+
 [size=3][b]Notifications[/b][/size]
 [size=3]Optional notifications when trait replacement adds or removes traits.[/size]
 

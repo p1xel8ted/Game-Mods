@@ -1,6 +1,9 @@
 ### 0.1.3 - 30/01/2026
 
 * Fixed Spy followers immediately leaving the cult when assigned via random trait selection. The Spy trait is now excluded from the trait pool since it requires special game state setup that only occurs through the normal spy storyline.
+* Excluded BishopOfCult trait from trait selection (story-related, granted when converting a bishop).
+* Added "Include Event Traits" config option to optionally include story/event-granted traits in the weights list.
+* Event traits are now excluded by default: marriage traits, parenting traits, widowing traits, criminal traits, missionary traits, and various DLC/special traits. These traits are normally granted through gameplay events rather than random selection.
 * Added new configuration examples to the README for accessing all traits and creating a cult full of immortals.
 * Fixed several README scenarios that were missing "Use All Traits Pool" setting (required for traits not in vanilla's default pools).
 * Increased maximum trait weight from 10 to 100 so rare traits like Immortal can actually appear reliably when using the full trait pool.

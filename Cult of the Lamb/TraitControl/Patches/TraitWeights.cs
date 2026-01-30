@@ -1,5 +1,3 @@
-using System.Reflection.Emit;
-
 namespace TraitControl.Patches;
 
 /// <summary>
@@ -314,9 +312,18 @@ public static class TraitWeights
             availableTraits.Remove(FollowerTrait.TraitType.BornToTheRot);
         }
 
-        // Always filter out special traits that require game state setup or are story-related
-        availableTraits.Remove(FollowerTrait.TraitType.BishopOfCult);
+        // Always filter out special traits that require game state setup
+        availableTraits.Remove(FollowerTrait.TraitType.BishopOfCult); // Story-related, granted when converting a bishop
         availableTraits.Remove(FollowerTrait.TraitType.Spy); // Requires SpyJoinedDay to be set or spies leave immediately
+
+        // Filter out story/event traits unless config allows them
+        if (!Plugin.IncludeStoryEventTraits.Value)
+        {
+            foreach (var trait in Plugin.StoryEventTraits)
+            {
+                availableTraits.Remove(trait);
+            }
+        }
 
         // Remove single-use traits that are already in use (unless AllowMultipleUniqueTraits is enabled)
         // This includes both SingleTraits (Lazy, Snorer, etc.) and UniqueTraits (Immortal, Disciple, etc.)

@@ -1,3 +1,6 @@
+using System.Text.RegularExpressions;
+using BepInEx.Bootstrap;
+
 namespace TraitControl;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -19,6 +22,55 @@ public partial class Plugin : BaseUnityPlugin
     internal static ManualLogSource Log { get; private set; }
     private static ConfigFile ConfigInstance { get; set; }
     private static bool? _isNothingNegativePresentCache;
+
+    /// <summary>
+    /// Traits that are granted through gameplay events and shouldn't be randomly assigned by default.
+    /// </summary>
+    internal static readonly HashSet<FollowerTrait.TraitType> StoryEventTraits =
+    [
+        // Marriage
+        FollowerTrait.TraitType.MarriedHappily,
+        FollowerTrait.TraitType.MarriedUnhappily,
+        FollowerTrait.TraitType.MarriedJealous,
+        FollowerTrait.TraitType.MarriedMurderouslyJealous,
+
+        // Parenting
+        FollowerTrait.TraitType.ProudParent,
+        FollowerTrait.TraitType.OverworkedParent,
+
+        // Widowing
+        FollowerTrait.TraitType.HappilyWidowed,
+        FollowerTrait.TraitType.GrievingWidow,
+        FollowerTrait.TraitType.JiltedLover,
+
+        // Criminal
+        FollowerTrait.TraitType.CriminalEvangelizing,
+        FollowerTrait.TraitType.CriminalHardened,
+        FollowerTrait.TraitType.CriminalReformed,
+        FollowerTrait.TraitType.CriminalScarred,
+
+        // Missionary
+        FollowerTrait.TraitType.MissionaryExcited,
+        FollowerTrait.TraitType.MissionaryInspired,
+        FollowerTrait.TraitType.MissionaryTerrified,
+
+        // Other event traits
+        FollowerTrait.TraitType.ExCultLeader,
+        FollowerTrait.TraitType.ExistentialDread,
+
+        // DLC/Special
+        FollowerTrait.TraitType.InfusibleSnowman,
+        FollowerTrait.TraitType.MasterfulSnowman,
+        FollowerTrait.TraitType.ShoddySnowman,
+        FollowerTrait.TraitType.MutatedVisual,
+        FollowerTrait.TraitType.PureBlood,
+        FollowerTrait.TraitType.PureBlood_1,
+        FollowerTrait.TraitType.PureBlood_2,
+        FollowerTrait.TraitType.PureBlood_3,
+        FollowerTrait.TraitType.FreezeImmune,
+        FollowerTrait.TraitType.FurnaceAnimal,
+        FollowerTrait.TraitType.FurnaceFollower
+    ];
 
     private void Awake()
     {
@@ -165,6 +217,10 @@ public partial class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { Order = 100 }));
         EnableTraitWeights.SettingChanged += (_, _) => UpdateTraitWeightVisibility();
 
+        IncludeStoryEventTraits = ConfigInstance.Bind(TraitWeightsSection, "Include Event Traits", false,
+            new ConfigDescription("Include traits normally granted through gameplay events (marriage, parenting, criminal, missionary, etc.) in the weights list. Requires game restart to regenerate config entries.", null,
+                new ConfigurationManagerAttributes { Order = 99 }));
+
         // Generate dynamic trait weight configs
         GenerateTraitWeightConfigs();
 
@@ -195,6 +251,16 @@ public partial class Plugin : BaseUnityPlugin
 
         // Remove None if present
         allTraits.Remove(FollowerTrait.TraitType.None);
+
+        // Always exclude - these require special game state setup
+        allTraits.Remove(FollowerTrait.TraitType.Spy); // Requires SpyJoinedDay or spies leave immediately
+        allTraits.Remove(FollowerTrait.TraitType.BishopOfCult); // Story-related, granted when converting a bishop
+
+        // Exclude story/event traits unless config allows them
+        if (!IncludeStoryEventTraits.Value)
+        {
+            allTraits.ExceptWith(StoryEventTraits);
+        }
 
         // Store for use by patches
         AllTraitsList.Clear();
@@ -292,7 +358,7 @@ public partial class Plugin : BaseUnityPlugin
         if (string.IsNullOrEmpty(input)) return input;
 
         // Remove all XML-style tags like <color=#FFD201>, </color>, <sprite name="icon">, etc.
-        return System.Text.RegularExpressions.Regex.Replace(input, "<[^>]+>", string.Empty).Trim();
+        return Regex.Replace(input, "<[^>]+>", string.Empty).Trim();
     }
 
     private static Plugin _instance;
@@ -330,7 +396,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static BaseUnityPlugin GetConfigurationManager()
     {
-        return (from pluginInfo in BepInEx.Bootstrap.Chainloader.PluginInfos.Values where pluginInfo.Metadata.GUID == "com.bepis.bepinex.configurationmanager" select pluginInfo.Instance).FirstOrDefault();
+        return (from pluginInfo in Chainloader.PluginInfos.Values where pluginInfo.Metadata.GUID == "com.bepis.bepinex.configurationmanager" select pluginInfo.Instance).FirstOrDefault();
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
@@ -388,7 +454,7 @@ public partial class Plugin : BaseUnityPlugin
 
     internal static bool IsNothingNegativePresent()
     {
-        _isNothingNegativePresentCache ??= BepInEx.Bootstrap.Chainloader.PluginInfos.Any(plugin => plugin.Value.Instance.Info.Metadata.GUID.Equals("NothingNegative", StringComparison.OrdinalIgnoreCase));
+        _isNothingNegativePresentCache ??= Chainloader.PluginInfos.Any(plugin => plugin.Value.Instance.Info.Metadata.GUID.Equals("NothingNegative", StringComparison.OrdinalIgnoreCase));
         return _isNothingNegativePresentCache.Value;
     }
 

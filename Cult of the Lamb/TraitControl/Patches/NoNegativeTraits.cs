@@ -306,7 +306,7 @@ public static class NoNegativeTraits
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(FollowerBrain), MethodType.Constructor, [typeof(FollowerInfo)])]
+    [HarmonyPatch(typeof(FollowerBrain), MethodType.Constructor, typeof(FollowerInfo))]
     private static void FollowerBrain_Constructor(ref FollowerBrain __instance)
     {
         if (Plugin.IsNothingNegativePresent()) return;
