@@ -1,3 +1,8 @@
+### 2.3.8 - 30/01/2026
+
+* Fixed lore tablets not being awarded when interacting with lore stones while menus were open.
+* Added "Auto Repair Missing Lore" option (in Fixes section) to restore lore tablets that weren't unlocked due to the above bug. Plays the full tablet animation for each restored tablet.
+
 ### 2.3.7 - 29/01/2026
 
 * Fixed game speed resetting to 1x when changing locations or taking damage.

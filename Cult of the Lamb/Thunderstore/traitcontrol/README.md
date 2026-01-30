@@ -21,13 +21,22 @@ Control whether special/crossover traits can appear in trait pools:
 - **Blind** - crossover trait
 - **Born To The Rot** - crossover trait
 
+Each unique trait has two options:
+- **Include** - allows the trait to appear in trait pools
+- **Guarantee** - forces every new follower to receive this trait (until one already has it)
+
+Additional option:
+- **Allow Multiple Unique Traits** - normally only one follower can have each unique/single-use trait (Immortal, Disciple, Lazy, Snorer, etc.). Enable this to allow multiple followers to have the same trait.
+
 ### Trait Weights
-Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 10. Weights are relative to each other - a trait with weight 10 is 10x more likely to appear than a trait with weight 1.
+Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 100. Weights are relative to each other.
 
 - **Higher weight = more likely relative to other traits**
 - **Lower weight = less likely relative to other traits**
 - **Weight of 0 = disabled** - that trait will never appear
 - All traits default to 1.0 (equal chance)
+
+**Understanding the math:** With "Use All Traits Pool" enabled, there are ~85 traits competing. If all are at weight 1 and you set Immortal to weight 50, the probability is: 50/(84+50) ≈ 37% per follower. At weight 100: 100/(84+100) ≈ 54% per follower.
 
 The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.
 
@@ -118,7 +127,7 @@ Optional notifications when trait replacement adds or removes traits.
 | Prefer Exclusive Counterparts | ON |
 | Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
-| Industrious (in Good Traits) | 10.0 |
+| Industrious (in Good Traits) | 50-100 |
 | Lazy (in Bad Traits) | 0 |
 
 **Result:** Existing Lazy followers become Industrious. New followers are much more likely to be Industrious and will never be Lazy. Note: Industrious is not in the default trait pools, so "Use All Traits Pool" is needed for weighting to work.
@@ -129,29 +138,39 @@ Optional notifications when trait replacement adds or removes traits.
 | Use All Traits Pool | ON |
 | Include Immortal | ON |
 | Enable Trait Weights | ON |
-| Immortal (in Good Traits) | 10.0 |
+| Immortal (in Good Traits) | 50-100 |
 
-**Result:** Immortal trait is available and heavily favored.
+**Result:** Immortal trait is available and heavily favored (~37-54% chance per follower).
 
-### "I want a cult full of immortals"
+### "I want a cult full of immortals (guaranteed)"
+| Setting | Value |
+|---------|-------|
+| Include Immortal | ON |
+| Guarantee Immortal | ON |
+| Allow Multiple Unique Traits | ON |
+
+**Result:** Every new follower will have the Immortal trait, guaranteed. No weights needed.
+
+### "I want a cult full of immortals (weights method)"
 | Setting | Value |
 |---------|-------|
 | Use All Traits Pool | ON |
 | Include Immortal | ON |
+| Allow Multiple Unique Traits | ON |
 | Enable Trait Weights | ON |
-| Immortal (in Good Traits) | 10.0 |
+| Immortal (in Good Traits) | 100 |
 | Other traits | 0 |
 
-**Result:** Every new follower will have the Immortal trait.
+**Result:** Every new follower will have the Immortal trait via weighted selection.
 
 ### "I want a zealous cult"
 | Setting | Value |
 |---------|-------|
 | Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
-| Faithful (in Good Traits) | 10.0 |
+| Faithful (in Good Traits) | 50 |
 | Faithless (in Bad Traits) | 0 |
-| SacrificeEnthusiast (in Good Traits) | 5.0 |
+| SacrificeEnthusiast (in Good Traits) | 25 |
 
 **Result:** New followers strongly favor Faithful and SacrificeEnthusiast traits. Note: These traits are not in the default pools, so "Use All Traits Pool" is needed.
 
@@ -178,7 +197,7 @@ Optional notifications when trait replacement adds or removes traits.
 |---------|-------|
 | Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
-| RoyalPooper (in Good Traits) | 10.0 |
+| RoyalPooper (in Good Traits) | 100 |
 | Other traits | 0 |
 
 **Result:** New followers will have the RoyalPooper trait (produces gold instead of poop). Note: RoyalPooper is only in the Rare/Faithful pools, so "Use All Traits Pool" must be enabled for it to appear on regular new followers.

@@ -184,4 +184,7 @@ public partial class Plugin
     // Sound
     internal static ConfigEntry<bool> ResourceChestDepositSounds { get; private set; }
     internal static ConfigEntry<bool> ResourceChestCollectSounds { get; private set; }
+
+    // Fixes
+    internal static ConfigEntry<bool> AutoRepairMissingLore { get; private set; }
 }

@@ -11,10 +11,10 @@ public partial class Plugin : BaseUnityPlugin
 
     private const string TraitReplacementSection = "01. Trait Replacement";
     private const string UniqueTraitsSection = "02. Unique Traits";
-    private const string TraitWeightsSection = "03. Trait Weights";
-    private const string GoodTraitsSection = "04. Good Traits";
-    private const string BadTraitsSection = "05. Bad Traits";
-    private const string NotificationsSection = "06. Notifications";
+    private const string NotificationsSection = "03. Notifications";
+    private const string TraitWeightsSection = "04. Trait Weights";
+    private const string GoodTraitsSection = "05. Good Traits";
+    private const string BadTraitsSection = "06. Bad Traits";
 
     internal static ManualLogSource Log { get; private set; }
     private static ConfigFile ConfigInstance { get; set; }
@@ -46,52 +46,120 @@ public partial class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { Order = 7 }));
 
         // Unique Traits - 02
+        AllowMultipleUniqueTraits = ConfigInstance.Bind(UniqueTraitsSection, "Allow Multiple Unique Traits", false,
+            new ConfigDescription("Allow multiple followers to have the same unique trait (Immortal, Disciple, etc.). Normally only one follower can have each unique trait.", null,
+                new ConfigurationManagerAttributes { Order = 100 }));
+
         IncludeImmortal = ConfigInstance.Bind(UniqueTraitsSection, "Include Immortal", false,
             new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Immortal, "normally a special reward"), null,
-                new ConfigurationManagerAttributes { Order = 10 }));
+                new ConfigurationManagerAttributes { Order = 20 }));
         IncludeImmortal.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
             UpdateTraitWeightVisibility();
         };
 
+        GuaranteeImmortal = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Immortal", false,
+            new ConfigDescription("New followers will always receive the Immortal trait (ignores weights). Only one follower can have this trait.", null,
+                new ConfigurationManagerAttributes { Order = 19, DispName = "    └ Guarantee Immortal" }));
+        GuaranteeImmortal.SettingChanged += (_, _) =>
+        {
+            if (GuaranteeImmortal.Value && !IncludeImmortal.Value)
+            {
+                IncludeImmortal.Value = true;
+            }
+        };
+
         IncludeDisciple = ConfigInstance.Bind(UniqueTraitsSection, "Include Disciple", false,
             new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Disciple, "normally a special reward"), null,
-                new ConfigurationManagerAttributes { Order = 9 }));
+                new ConfigurationManagerAttributes { Order = 18 }));
         IncludeDisciple.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
             UpdateTraitWeightVisibility();
         };
 
+        GuaranteeDisciple = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Disciple", false,
+            new ConfigDescription("New followers will always receive the Disciple trait (ignores weights). Only one follower can have this trait.", null,
+                new ConfigurationManagerAttributes { Order = 17, DispName = "    └ Guarantee Disciple" }));
+        GuaranteeDisciple.SettingChanged += (_, _) =>
+        {
+            if (GuaranteeDisciple.Value && !IncludeDisciple.Value)
+            {
+                IncludeDisciple.Value = true;
+            }
+        };
+
         IncludeDontStarve = ConfigInstance.Bind(UniqueTraitsSection, "Include Dont Starve", false,
             new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.DontStarve, "crossover reward"), null,
-                new ConfigurationManagerAttributes { Order = 8 }));
+                new ConfigurationManagerAttributes { Order = 16 }));
         IncludeDontStarve.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
             UpdateTraitWeightVisibility();
         };
 
+        GuaranteeDontStarve = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Dont Starve", false,
+            new ConfigDescription("New followers will always receive the Dont Starve trait (ignores weights). Only one follower can have this trait.", null,
+                new ConfigurationManagerAttributes { Order = 15, DispName = "    └ Guarantee Dont Starve" }));
+        GuaranteeDontStarve.SettingChanged += (_, _) =>
+        {
+            if (GuaranteeDontStarve.Value && !IncludeDontStarve.Value)
+            {
+                IncludeDontStarve.Value = true;
+            }
+        };
+
         IncludeBlind = ConfigInstance.Bind(UniqueTraitsSection, "Include Blind", false,
             new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Blind, "crossover reward"), null,
-                new ConfigurationManagerAttributes { Order = 7 }));
+                new ConfigurationManagerAttributes { Order = 14 }));
         IncludeBlind.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
             UpdateTraitWeightVisibility();
         };
 
+        GuaranteeBlind = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Blind", false,
+            new ConfigDescription("New followers will always receive the Blind trait (ignores weights). Only one follower can have this trait.", null,
+                new ConfigurationManagerAttributes { Order = 13, DispName = "    └ Guarantee Blind" }));
+        GuaranteeBlind.SettingChanged += (_, _) =>
+        {
+            if (GuaranteeBlind.Value && !IncludeBlind.Value)
+            {
+                IncludeBlind.Value = true;
+            }
+        };
+
         IncludeBornToTheRot = ConfigInstance.Bind(UniqueTraitsSection, "Include Born To The Rot", false,
             new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.BornToTheRot, "crossover reward"), null,
-                new ConfigurationManagerAttributes { Order = 6 }));
+                new ConfigurationManagerAttributes { Order = 12 }));
         IncludeBornToTheRot.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
             UpdateTraitWeightVisibility();
         };
 
-        // Trait Weights - 03
+        GuaranteeBornToTheRot = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Born To The Rot", false,
+            new ConfigDescription("New followers will always receive the Born To The Rot trait (ignores weights). Only one follower can have this trait.", null,
+                new ConfigurationManagerAttributes { Order = 11, DispName = "    └ Guarantee Born To The Rot" }));
+        GuaranteeBornToTheRot.SettingChanged += (_, _) =>
+        {
+            if (GuaranteeBornToTheRot.Value && !IncludeBornToTheRot.Value)
+            {
+                IncludeBornToTheRot.Value = true;
+            }
+        };
+
+        // Notifications - 03
+        ShowNotificationsWhenRemovingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Removing Traits", false,
+            new ConfigDescription("Show notifications when trait replacement removes negative traits.", null,
+                new ConfigurationManagerAttributes { Order = 2 }));
+
+        ShowNotificationsWhenAddingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Adding Traits", false,
+            new ConfigDescription("Show notifications when trait replacement adds positive traits.", null,
+                new ConfigurationManagerAttributes { Order = 1 }));
+
+        // Trait Weights - 04
         EnableTraitWeights = ConfigInstance.Bind(TraitWeightsSection, "Enable Trait Weights", false,
             new ConfigDescription("Enable weighted random selection for new followers. When enabled, you can configure how often each trait appears below. Set a weight to 0 to disable that trait entirely. This does not override settings in the sections above.", null,
                 new ConfigurationManagerAttributes { Order = 100 }));
@@ -102,15 +170,6 @@ public partial class Plugin : BaseUnityPlugin
 
         // Apply initial visibility (handles unique trait toggles)
         UpdateTraitWeightVisibility();
-
-        // Notifications - 06
-        ShowNotificationsWhenRemovingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Removing Traits", false,
-            new ConfigDescription("Show notifications when trait replacement removes negative traits.", null,
-                new ConfigurationManagerAttributes { Order = 2 }));
-
-        ShowNotificationsWhenAddingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Adding Traits", false,
-            new ConfigDescription("Show notifications when trait replacement adds positive traits.", null,
-                new ConfigurationManagerAttributes { Order = 1 }));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
@@ -168,8 +227,8 @@ public partial class Plugin : BaseUnityPlugin
     {
         var traitDescription = GetTraitDescription(trait);
         var configDescription = string.IsNullOrEmpty(traitDescription)
-            ? $"Weight for {trait}. Higher = more likely. Set to 0 to disable. Default is 1.0."
-            : $"{traitDescription}\n\nWeight: Higher = more likely. Set to 0 to disable. Default is 1.0.";
+            ? $"Weight for {trait}. Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%."
+            : $"{traitDescription}\n\nWeight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.";
 
         var weight = ConfigInstance.Bind(
             section,
@@ -177,7 +236,7 @@ public partial class Plugin : BaseUnityPlugin
             1.0f,
             new ConfigDescription(
                 configDescription,
-                new AcceptableValueRange<float>(0f, 10f),
+                new AcceptableValueRange<float>(0f, 100f),
                 new ConfigurationManagerAttributes { Order = order, Browsable = !isHidden }
             )
         );

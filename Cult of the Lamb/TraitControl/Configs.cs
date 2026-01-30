@@ -6,11 +6,17 @@ public partial class Plugin
     internal static ConfigEntry<bool> NoNegativeTraits { get; private set; }
     internal static ConfigEntry<bool> UseUnlockedTraitsOnly { get; private set; }
     internal static ConfigEntry<bool> PreferExclusiveCounterparts { get; private set; }
+    internal static ConfigEntry<bool> AllowMultipleUniqueTraits { get; private set; }
     internal static ConfigEntry<bool> IncludeImmortal { get; private set; }
+    internal static ConfigEntry<bool> GuaranteeImmortal { get; private set; }
     internal static ConfigEntry<bool> IncludeDisciple { get; private set; }
+    internal static ConfigEntry<bool> GuaranteeDisciple { get; private set; }
     internal static ConfigEntry<bool> IncludeDontStarve { get; private set; }
+    internal static ConfigEntry<bool> GuaranteeDontStarve { get; private set; }
     internal static ConfigEntry<bool> IncludeBlind { get; private set; }
+    internal static ConfigEntry<bool> GuaranteeBlind { get; private set; }
     internal static ConfigEntry<bool> IncludeBornToTheRot { get; private set; }
+    internal static ConfigEntry<bool> GuaranteeBornToTheRot { get; private set; }
     internal static ConfigEntry<bool> ShowNotificationsWhenRemovingTraits { get; private set; }
     internal static ConfigEntry<bool> ShowNotificationsWhenAddingTraits { get; private set; }
 

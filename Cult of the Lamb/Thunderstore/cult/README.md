@@ -119,6 +119,9 @@
 - Toggle resource chest deposit sounds (when followers deposit)
 - Toggle resource chest collect sounds (when collecting from chests)
 
+### Fixes
+- Auto-repair missing lore tablets (for saves affected by a previous bug)
+
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)

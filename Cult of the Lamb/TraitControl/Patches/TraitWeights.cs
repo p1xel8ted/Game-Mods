@@ -122,15 +122,106 @@ public static class TraitWeights
     /// <summary>
     /// Selects a trait using either weighted or random selection based on config.
     /// Filtering (unique toggles, single-use, game restrictions) always applies.
+    /// Guaranteed traits take priority over all other selection methods.
     /// </summary>
     private static FollowerTrait.TraitType SelectTrait(IEnumerable<FollowerTrait.TraitType> sourceTraits)
     {
+        // Check for guaranteed traits first (bypasses all other selection)
+        var guaranteed = GetGuaranteedTrait();
+        if (guaranteed != FollowerTrait.TraitType.None)
+        {
+            return guaranteed;
+        }
+
         if (Plugin.EnableTraitWeights.Value)
         {
             return GetWeightedTrait(sourceTraits);
         }
 
         return GetRandomTrait(sourceTraits);
+    }
+
+    /// <summary>
+    /// Checks if any guaranteed trait is enabled and available.
+    /// Returns the first available guaranteed trait, or None if none are available.
+    /// </summary>
+    private static FollowerTrait.TraitType GetGuaranteedTrait()
+    {
+        // Check each guaranteed trait in order
+        if (Plugin.GuaranteeImmortal.Value && Plugin.IncludeImmortal.Value)
+        {
+            if (IsTraitAvailable(FollowerTrait.TraitType.Immortal))
+            {
+                return FollowerTrait.TraitType.Immortal;
+            }
+        }
+
+        if (Plugin.GuaranteeDisciple.Value && Plugin.IncludeDisciple.Value)
+        {
+            if (IsTraitAvailable(FollowerTrait.TraitType.Disciple))
+            {
+                return FollowerTrait.TraitType.Disciple;
+            }
+        }
+
+        if (Plugin.GuaranteeDontStarve.Value && Plugin.IncludeDontStarve.Value)
+        {
+            if (IsTraitAvailable(FollowerTrait.TraitType.DontStarve))
+            {
+                return FollowerTrait.TraitType.DontStarve;
+            }
+        }
+
+        if (Plugin.GuaranteeBlind.Value && Plugin.IncludeBlind.Value)
+        {
+            if (IsTraitAvailable(FollowerTrait.TraitType.Blind))
+            {
+                return FollowerTrait.TraitType.Blind;
+            }
+        }
+
+        if (Plugin.GuaranteeBornToTheRot.Value && Plugin.IncludeBornToTheRot.Value)
+        {
+            if (IsTraitAvailable(FollowerTrait.TraitType.BornToTheRot))
+            {
+                return FollowerTrait.TraitType.BornToTheRot;
+            }
+        }
+
+        return FollowerTrait.TraitType.None;
+    }
+
+    /// <summary>
+    /// Checks if a trait is available (not already in use if single-use, not unavailable by game rules).
+    /// </summary>
+    private static bool IsTraitAvailable(FollowerTrait.TraitType trait)
+    {
+        // Check single-use restrictions (SingleTraits and UniqueTraits)
+        // Skip this check if AllowMultipleUniqueTraits is enabled
+        if (!Plugin.AllowMultipleUniqueTraits.Value)
+        {
+            if (FollowerTrait.SingleTraits.Contains(trait) || FollowerTrait.UniqueTraits.Contains(trait))
+            {
+                if (FollowerBrain.AllBrains.Any(b => b.HasTrait(trait)))
+                {
+                    return false;
+                }
+            }
+        }
+
+        // Check game restrictions (DLC requirements, day requirements, etc.)
+        if (FollowerTrait.IsTraitUnavailable(trait))
+        {
+            return false;
+        }
+
+        // Check cult-wide traits (applied via doctrines)
+        if (DataManager.Instance.CultTraits.Contains(trait))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -226,18 +317,22 @@ public static class TraitWeights
         // Always filter out BishopOfCult - it's a special story trait
         availableTraits.Remove(FollowerTrait.TraitType.BishopOfCult);
 
-        // Remove single-use traits that are already in use
-        for (var i = availableTraits.Count - 1; i >= 0; i--)
+        // Remove single-use traits that are already in use (unless AllowMultipleUniqueTraits is enabled)
+        // This includes both SingleTraits (Lazy, Snorer, etc.) and UniqueTraits (Immortal, Disciple, etc.)
+        if (!Plugin.AllowMultipleUniqueTraits.Value)
         {
-            var trait = availableTraits[i];
-
-            // Check if any existing follower has this single-use trait
-            foreach (var brain in FollowerBrain.AllBrains)
+            for (var i = availableTraits.Count - 1; i >= 0; i--)
             {
-                if (brain.HasTrait(trait) && FollowerTrait.SingleTraits.Contains(trait))
+                var trait = availableTraits[i];
+
+                foreach (var brain in FollowerBrain.AllBrains)
                 {
-                    availableTraits.RemoveAt(i);
-                    break;
+                    if (brain.HasTrait(trait) &&
+                        (FollowerTrait.SingleTraits.Contains(trait) || FollowerTrait.UniqueTraits.Contains(trait)))
+                    {
+                        availableTraits.RemoveAt(i);
+                        break;
+                    }
                 }
             }
         }

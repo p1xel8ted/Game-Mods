@@ -58,6 +58,12 @@ public static class NewTotemPatches
         Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1 = Plugin.LightningRodRangeLvl1.Value;
         Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2 = Plugin.LightningRodRangeLvl2.Value;
 
+        // Structure is set in OnEnableInteraction, so it may be null during prefix
+        if (__instance.Structure == null)
+        {
+            return;
+        }
+
         // Determine which level this rod is
         var effectiveDistance = __instance.Brain?.Data?.Type == StructureBrain.TYPES.LIGHTNING_ROD
             ? Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1

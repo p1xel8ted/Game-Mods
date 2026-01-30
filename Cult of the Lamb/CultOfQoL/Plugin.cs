@@ -11,9 +11,10 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.3.7";
+    private const string PluginVer = "2.3.8";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
+    private const string BackupSaveMessage = "IMPORTANT: Please back up your save files before enabling this option.\n\nThis feature will attempt to repair missing lore tablets on your next visit to the base. While it should be safe, backing up your saves first is recommended.";
     private const string GeneralSection = "01. General";
     private const string MenuCleanupSection = "02. Menu Cleanup";
     private const string GoldenFleeceSection = "03. Golden Fleece";
@@ -44,6 +45,7 @@ public partial class Plugin : BaseUnityPlugin
     private const string GameMechanicsSection = "04. Game Mechanics";
     private const string ResetAllSettingsSection = "20. Reset All Settings";
     private const string SoundSection = "21. Sound";
+    private const string FixesSection = "22. Fixes";
     internal static ManualLogSource Log { get; private set; }
 
     // internal static CanvasScaler GameCanvasScaler { get; set; }
@@ -568,6 +570,14 @@ public partial class Plugin : BaseUnityPlugin
         ResourceChestCollectSounds = ConfigInstance.Bind(SoundSection, "Resource Chest Collect Sounds", true, new ConfigDescription("Play sounds when collecting resources from chests.", null, new ConfigurationManagerAttributes { Order = 1 }));
         ResourceChestCollectSounds.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ResourceChestCollectSounds);
 
+        //Fixes - 22
+        AutoRepairMissingLore = ConfigInstance.Bind(FixesSection, "Auto Repair Missing Lore", false, new ConfigDescription("Automatically repair missing lore tablets that weren't unlocked due to a previous bug.", null, new ConfigurationManagerAttributes { Order = 1 }));
+        AutoRepairMissingLore.SettingChanged += (_, _) =>
+        {
+            ShowBackupWarning();
+            LoreRepairPatches.OnSettingChanged();
+        };
+
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -769,6 +779,14 @@ public partial class Plugin : BaseUnityPlugin
         if (!PopupManager.ShowPopup)
         {
             PopupManager.ShowPopupDlg(RestartGameMessage, true);
+        }
+    }
+
+    private static void ShowBackupWarning()
+    {
+        if (!PopupManager.ShowPopup && AutoRepairMissingLore.Value)
+        {
+            PopupManager.ShowPopupDlg(BackupSaveMessage, true);
         }
     }
 
