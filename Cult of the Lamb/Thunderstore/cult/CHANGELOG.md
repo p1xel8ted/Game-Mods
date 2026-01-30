@@ -1,9 +1,17 @@
-### 2.3.8 - 30/01/2026
+### 2.3.8 - 31/01/2026
 
 * Fixed lore tablets not being awarded when interacting with lore stones while menus were open.
-* Added "Auto Repair Missing Lore" option (in Fixes section) to restore lore tablets that weren't unlocked due to the above bug. Plays the full tablet animation for each restored tablet.
+* Added "Auto Repair Missing Lore" option (in Fixes section) to restore lore tablets that weren't unlocked due to the above bug. Only repairs tablets for fleece quests where the reward was actually claimed at the job board.
+* Fixed game graphics settings (Chromatic Aberration, Bloom, Vignette, Depth of Field) not applying in DLC zones.
 * Added "Mass Open Scarecrows" option - opening one scarecrow trap opens all traps with caught birds.
-* Added "Mass Fill Bear Traps" option - filling one bear trap with bait fills all empty traps with the same bait type.
+* Added "Mass Fill Wolf Traps" option - filling one wolf trap with bait fills all empty traps with the same bait type.
+* Added "Mass Feed Animals" option - feeding one animal feeds all hungry animals the same food (consumes one item per animal).
+* Added "Mass Milk Animals" option - milking one animal milks all animals ready for milking.
+* Added "Mass Shear Animals" option - shearing one animal shears all animals ready for shearing.
+* Added "Collect Shrine Devotion Instantly" option - collect all devotion from the shrine with a single tap instead of holding.
+* Removed redundant "Random Weather Change When Exiting Area" option (now covered by "Weather Change Trigger" setting).
+* Reorganized some config settings for better grouping.
+* Adjusted speed of mass water and mass fertilize for smoother animations.
 
 ### 2.3.7 - 29/01/2026
 

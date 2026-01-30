@@ -76,6 +76,9 @@
 [*][size=3]Mass bully, reassure, reeducate[/size]
 [*][size=3]Mass romance, pet dog[/size]
 [*][size=3]Mass pet farm animals[/size]
+[*][size=3]Mass feed, milk, and shear farm animals[/size]
+[*][size=3]Mass open scarecrow traps[/size]
+[*][size=3]Mass fill wolf traps with bait[/size]
 [/list]
 
 [size=3][b]Mass Collect[/b][/size]
@@ -117,6 +120,7 @@
 [*][size=3]Auto-loot from lumber/mine/farm/refinery chests when nearby[/size]
 [*][size=3]Customise trigger amount and range[/size]
 [*][size=3]Fast collection speed from shrines, beds, and chests[/size]
+[*][size=3]Instant shrine devotion collection (single tap instead of holding)[/size]
 [/list]
 
 [size=3][b]Crafting Stations[/b][/size]
@@ -128,8 +132,7 @@
 
 [size=3][b]Weather[/b][/size]
 [list]
-[*][size=3]Random weather changes on area exit[/size]
-[*][size=3]Weather changes on day phase change[/size]
+[*][size=3]Weather change triggers (on location change, phase change, or both)[/size]
 [*][size=3]Customise weather overlay colors[/size]
 [*][size=3]Weather and phase change notifications[/size]
 [/list]
@@ -149,7 +152,8 @@
 
 [size=3][b]Post Processing[/b][/size]
 [list]
-[*][size=3]Remove vignette effect[/size]
+[*][size=3]Remove vignette UI overlay[/size]
+[*][size=3]Fix game graphics settings not applying in DLC zones[/size]
 [/list]
 
 [size=3][b]Sound[/b][/size]

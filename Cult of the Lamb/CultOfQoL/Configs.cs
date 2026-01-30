@@ -3,6 +3,14 @@ using CultOfQoL.Patches.Systems;
 
 namespace CultOfQoL;
 
+public enum MassWolfTrapMode
+{
+    Disabled,
+    FillOnly,
+    CollectOnly,
+    Both
+}
+
 public partial class Plugin
 {
     private static ConfigEntry<bool> EnableLogging { get; set; }
@@ -76,8 +84,8 @@ public partial class Plugin
     internal static ConfigEntry<bool> NotifyOfNoFuel { get; private set; }
     internal static ConfigEntry<bool> NotifyOfBedCollapse { get; private set; }
     internal static ConfigEntry<bool> GiveFollowersNewNecklaces { get; private set; }
-    internal static ConfigEntry<bool> RandomWeatherChangeWhenExitingArea { get; private set; }
-    internal static ConfigEntry<bool> ChangeWeatherOnPhaseChange { get; private set; }
+    internal static ConfigEntry<WeatherChangeTrigger> WeatherChangeTrigger { get; private set; }
+    internal static ConfigEntry<bool> UnlockAllWeatherTypes { get; private set; }
     internal static ConfigEntry<Color> LightSnowColor { get; private set; }
     internal static ConfigEntry<Color> LightWindColor { get; private set; }
     internal static ConfigEntry<Color> LightRainColor { get; private set; }
@@ -149,14 +157,21 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassCollectFromCompost { get; private set; }
     internal static ConfigEntry<bool> MassCollectFromHarvestTotems { get; private set; }
     internal static ConfigEntry<bool> MassOpenScarecrows { get; private set; }
-    internal static ConfigEntry<bool> MassFillBearTraps { get; private set; }
+    internal static ConfigEntry<MassWolfTrapMode> MassWolfTraps { get; private set; }
+    internal static ConfigEntry<bool> CollectAllGodTearsAtOnce { get; private set; }
+    internal static ConfigEntry<bool> MassSinExtract { get; private set; }
+    internal static ConfigEntry<bool> MassCleanAnimals { get; private set; }
+    internal static ConfigEntry<bool> MassFeedAnimals { get; private set; }
+    internal static ConfigEntry<bool> MassMilkAnimals { get; private set; }
+    internal static ConfigEntry<bool> MassShearAnimals { get; private set; }
+    internal static ConfigEntry<bool> CollectShrineDevotionInstantly { get; private set; }
 
     internal static WriteOnce<float> RunSpeed { get; } = new();
     internal static WriteOnce<float> DodgeSpeed { get; } = new();
     internal static UIMainMenuController UIMainMenuController { get; set; }
     public static ConfigEntry<bool> VignetteEffect { get; private set; }
     public static ConfigEntry<bool> ReverseEnrichmentNerf { get; private set; }
-    
+
     public static ConfigEntry<int> HarvestTotemRange { get; private set; }
     public static ConfigEntry<int> PropagandaSpeakerRange { get; private set; }
     

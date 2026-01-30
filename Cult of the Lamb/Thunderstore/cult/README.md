@@ -61,8 +61,9 @@
 - Mass bully, reassure, reeducate
 - Mass romance, pet dog
 - Mass pet farm animals
+- Mass feed, milk, and shear farm animals
 - Mass open scarecrow traps
-- Mass fill bear traps with bait
+- Mass fill wolf traps with bait
 
 ### Mass Collect
 - Mass collect from beds, outhouses, offering shrines
@@ -94,14 +95,14 @@
 - Auto-loot from lumber/mine/farm/refinery chests when nearby
 - Customise trigger amount and range
 - Fast collection speed from shrines, beds, and chests
+- Instant shrine devotion collection (single tap instead of holding)
 
 ### Crafting Stations
 - Halve refinery material requirements
 - Mass fill refinery, cooking fire, kitchen, and pub queues with one click
 
 ### Weather
-- Random weather changes on area exit
-- Weather changes on day phase change
+- Weather change triggers (on location change, phase change, or both)
 - Customise weather overlay colors
 - Weather and phase change notifications
 
@@ -115,7 +116,8 @@
 - Customise Sin Unlock boss amount
 
 ### Post Processing
-- Remove vignette effect
+- Remove vignette UI overlay
+- Fix game graphics settings not applying in DLC zones
 
 ### Sound
 - Toggle resource chest deposit sounds (when followers deposit)

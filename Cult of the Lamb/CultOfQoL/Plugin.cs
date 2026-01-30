@@ -1,4 +1,5 @@
-﻿using CultOfQoL.Core;
+﻿using BepInEx.Bootstrap;
+using CultOfQoL.Core;
 using CultOfQoL.Patches.Gameplay;
 using CultOfQoL.Patches.Systems;
 using CultOfQoL.Patches.UI;
@@ -40,12 +41,12 @@ public partial class Plugin : BaseUnityPlugin
     private const string MassSection = "16. Mass Actions";
     private const string StructureSection = "09. Structures";
     private const string LootSection = "17. Loot";
-    private const string PostProcessingSection = "18. Post Processing";
+    internal const string PostProcessingSection = "18. Post Processing";
     private const string RitualSection = "19. Rituals";
     private const string GameMechanicsSection = "04. Game Mechanics";
-    private const string ResetAllSettingsSection = "20. Reset All Settings";
-    private const string SoundSection = "21. Sound";
-    private const string FixesSection = "22. Fixes";
+    private const string SoundSection = "20. Sound";
+    private const string FixesSection = "21. Fixes";
+    private const string ResetAllSettingsSection = "ZZ. Reset All Settings";
     internal static ManualLogSource Log { get; private set; }
 
     // internal static CanvasScaler GameCanvasScaler { get; set; }
@@ -109,8 +110,8 @@ public partial class Plugin : BaseUnityPlugin
         BaseDamageMultiplier.SettingChanged += (_, _) => { BaseDamageMultiplier.Value = Mathf.Round(BaseDamageMultiplier.Value * 4) / 4; };
         RunSpeedMulti = ConfigInstance.Bind(PlayerSection, "Run Speed Multiplier", 1.0f, new ConfigDescription("How much faster the player runs.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 7 }));
         RunSpeedMulti.SettingChanged += (_, _) => { RunSpeedMulti.Value = Mathf.Round(RunSpeedMulti.Value * 4) / 4; };
-        DisableRunSpeedInDungeons = ConfigInstance.Bind(PlayerSection, "Disable Run Speed In Dungeons", true, new ConfigDescription("Disables the run speed multiplier in dungeons.", null, new ConfigurationManagerAttributes { Order = 6 }));
-        DisableRunSpeedInCombat = ConfigInstance.Bind(PlayerSection, "Disable Run Speed In Combat", true, new ConfigDescription("Disables the run speed multiplier in combat.", null, new ConfigurationManagerAttributes { Order = 5 }));
+        DisableRunSpeedInDungeons = ConfigInstance.Bind(PlayerSection, "Disable Run Speed In Dungeons", true, new ConfigDescription("Disables the run speed multiplier in dungeons.", null, new ConfigurationManagerAttributes { Order = 6, DispName = "    └ Disable Run Speed In Dungeons" }));
+        DisableRunSpeedInCombat = ConfigInstance.Bind(PlayerSection, "Disable Run Speed In Combat", true, new ConfigDescription("Disables the run speed multiplier in combat.", null, new ConfigurationManagerAttributes { Order = 5, DispName = "    └ Disable Run Speed In Combat" }));
         DodgeSpeedMulti = ConfigInstance.Bind(PlayerSection, "Dodge Speed Multiplier", 1.0f, new ConfigDescription("How much faster the player dodges.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 3 }));
         DodgeSpeedMulti.SettingChanged += (_, _) => { DodgeSpeedMulti.Value = Mathf.Round(DodgeSpeedMulti.Value * 4) / 4; };
         LungeSpeedMulti = ConfigInstance.Bind(PlayerSection, "Lunge Speed Multiplier", 1.0f, new ConfigDescription("How much faster the player lunges.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 1 }));
@@ -123,18 +124,18 @@ public partial class Plugin : BaseUnityPlugin
         HideNewGameButtons = ConfigInstance.Bind(SavesSection, "Hide New Game Button (s)", false, new ConfigDescription("Hides the new game button if you have at least one save game.", null, new ConfigurationManagerAttributes { Order = 6 }));
         EnableQuickSaveShortcut = ConfigInstance.Bind(SavesSection, "Enable Quick Save Shortcut", false, new ConfigDescription("Enable/disable the quick save keyboard shortcut.", null, new ConfigurationManagerAttributes { Order = 5 }));
         EnableQuickSaveShortcut.SettingChanged += (_, _) => InvalidateConfigCache();
-        SaveKeyboardShortcut = ConfigInstance.Bind(SavesSection, "Save Keyboard Shortcut", new KeyboardShortcut(KeyCode.F5), new ConfigDescription("The keyboard shortcut to save the game.", null, new ConfigurationManagerAttributes { Order = 4 }));
+        SaveKeyboardShortcut = ConfigInstance.Bind(SavesSection, "Save Keyboard Shortcut", new KeyboardShortcut(KeyCode.F5), new ConfigDescription("The keyboard shortcut to save the game.", null, new ConfigurationManagerAttributes { Order = 4, DispName = "    └ Save Keyboard Shortcut" }));
         SaveKeyboardShortcut.SettingChanged += (_, _) => InvalidateConfigCache();
         DirectLoadSave = ConfigInstance.Bind(SavesSection, "Direct Load Save", false, new ConfigDescription("Directly load the specified save game instead of showing the save menu.", null, new ConfigurationManagerAttributes { Order = 3 }));
         DirectLoadSave.SettingChanged += (_, _) => InvalidateConfigCache();
-        DirectLoadSkipKey = ConfigInstance.Bind(SavesSection, "Direct Load Skip Key", new KeyboardShortcut(KeyCode.LeftShift), new ConfigDescription("The keyboard shortcut to skip the auto-load when loading the game.", null, new ConfigurationManagerAttributes { Order = 2 }));
+        DirectLoadSkipKey = ConfigInstance.Bind(SavesSection, "Direct Load Skip Key", new KeyboardShortcut(KeyCode.LeftShift), new ConfigDescription("The keyboard shortcut to skip the auto-load when loading the game.", null, new ConfigurationManagerAttributes { Order = 2, DispName = "    └ Direct Load Skip Key" }));
         DirectLoadSkipKey.SettingChanged += (_, _) => InvalidateConfigCache();
-        SaveSlotToLoad = ConfigInstance.Bind(SavesSection, "Save Slot To Load", 1, new ConfigDescription("The save slot to load.", new AcceptableValueList<int>(1, 2, 3), new ConfigurationManagerAttributes { Order = 1 }));
+        SaveSlotToLoad = ConfigInstance.Bind(SavesSection, "Save Slot To Load", 1, new ConfigDescription("The save slot to load.", new AcceptableValueList<int>(1, 2, 3), new ConfigurationManagerAttributes { Order = 1, DispName = "    └ Save Slot To Load" }));
         SaveSlotToLoad.SettingChanged += (_, _) =>
         {
             if (!SaveAndLoad.SaveExist(SaveSlotToLoad.Value))
             {
-                L($"The slot you have select doesn't contain a save game.");
+                L("The slot you have select doesn't contain a save game.");
                 return;
             }
 
@@ -143,10 +144,8 @@ public partial class Plugin : BaseUnityPlugin
 
 
         //Weather - 07
-        ChangeWeatherOnPhaseChange = ConfigInstance.Bind(WeatherSection, "Change Weather On Phase Change", false, new ConfigDescription("By default, the game changes weather when you exit a structure, or on a new day. Enabling this makes the weather change on each phase i.e. morning, noon, evening, night.", null, new ConfigurationManagerAttributes { Order = 9 }));
-        ChangeWeatherOnPhaseChange.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ChangeWeatherOnPhaseChange);
-        RandomWeatherChangeWhenExitingArea = ConfigInstance.Bind(WeatherSection, "Random Weather Change When Exiting Area", false, new ConfigDescription("When exiting a building/area, the weather will change to a random weather type instead of the previous weather.", null, new ConfigurationManagerAttributes { Order = 8 }));
-        RandomWeatherChangeWhenExitingArea.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.RandomWeatherChangeWhenExitingArea);
+        WeatherChangeTrigger = ConfigInstance.Bind(WeatherSection, "Weather Change Trigger", Patches.Systems.WeatherChangeTrigger.Disabled, new ConfigDescription("When should weather randomly change? Disabled = vanilla (once per day). Location Change = dungeons/fast travel. Phase Change = every phase. Both = location AND phase change.", null, new ConfigurationManagerAttributes { Order = 10 }));
+        UnlockAllWeatherTypes = ConfigInstance.Bind(WeatherSection, "Unlock All Weather Types", false, new ConfigDescription("Allow all weather types (including snow) to appear regardless of season or game progression.", null, new ConfigurationManagerAttributes { Order = 9 }));
 
         LightSnowColor = ConfigInstance.Bind(WeatherSection, "Light Snow Color", new Color(0.016f, 0f, 1f, 0.15f), new ConfigDescription("Control the colour of the screen when there is light snow.", null, new ConfigurationManagerAttributes { Order = 7 }));
 
@@ -240,10 +239,12 @@ public partial class Plugin : BaseUnityPlugin
         ResetTimeScaleKey = ConfigInstance.Bind(GameSpeedSection, "Reset Time Scale Key", new KeyboardShortcut(KeyCode.UpArrow), new ConfigDescription("The keyboard shortcut to reset the game speed to 1.", null, new ConfigurationManagerAttributes { Order = 6 }));
         IncreaseGameSpeedKey = ConfigInstance.Bind(GameSpeedSection, "Increase Game Speed Key", new KeyboardShortcut(KeyCode.RightArrow), new ConfigDescription("The keyboard shortcut to increase the game speed.", null, new ConfigurationManagerAttributes { Order = 5 }));
         DecreaseGameSpeedKey = ConfigInstance.Bind(GameSpeedSection, "Decrease Game Speed Key", new KeyboardShortcut(KeyCode.LeftArrow), new ConfigDescription("The keyboard shortcut to decrease the game speed.", null, new ConfigurationManagerAttributes { Order = 4 }));
-        FastCollecting = ConfigInstance.Bind(GameSpeedSection, "Speed Up Collection", false, new ConfigDescription("Increases the rate you can collect from the shrines, and other structures.", null, new ConfigurationManagerAttributes { DispName = "Speed Up Collection**", Order = 3 }));
+        FastCollecting = ConfigInstance.Bind(GameSpeedSection, "Speed Up Collection", false, new ConfigDescription("Increases the rate you can collect from the shrines, and other structures.", null, new ConfigurationManagerAttributes { DispName = "Speed Up Collection**", Order = 4 }));
         FastCollecting.SettingChanged += (_, _) => ShowRestartMessage();
 
-        SlowDownTimeMultiplier = ConfigInstance.Bind(GameSpeedSection, "Slow Down Time Multiplier", 1.0f, new ConfigDescription("The multiplier to use for slow down time. For example, the default value of 2 is making the day twice as long.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 1 }));
+        CollectShrineDevotionInstantly = ConfigInstance.Bind(GameSpeedSection, "Collect Shrine Devotion Instantly", false, new ConfigDescription("When collecting devotion from the shrine, collect all instantly instead of holding to collect.", null, new ConfigurationManagerAttributes { Order = 3 }));
+
+        SlowDownTimeMultiplier = ConfigInstance.Bind(GameSpeedSection, "Slow Down Time Multiplier", 1.0f, new ConfigDescription("The multiplier to use for slow down time. For example, the default value of 2 is making the day twice as long.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 2 }));
         SlowDownTimeMultiplier.SettingChanged += (_, _) => { SlowDownTimeMultiplier.Value = Mathf.Round(SlowDownTimeMultiplier.Value * 4) / 4; };
         FastRitualSermons = ConfigInstance.Bind(GameSpeedSection, "Fast Rituals & Sermons", false, new ConfigDescription("Speeds up rituals and sermons.", null, new ConfigurationManagerAttributes { Order = 0 }));
         FastRitualSermons.SettingChanged += (_, _) =>
@@ -280,15 +281,15 @@ public partial class Plugin : BaseUnityPlugin
         EnableAutoCollect.SettingChanged += (_, _) => ShowRestartMessage();
         AutoCollectFromFarmStationChests = ConfigInstance.Bind(AutoInteractSection, "Auto Collect From Farm Station Chests", false, new ConfigDescription("Automatically collect from farm station chests.", null, new ConfigurationManagerAttributes
         {
-            Order = 5
+            Order = 5, DispName = "    └ Auto Collect From Farm Station Chests"
         }));
         TriggerAmount = ConfigInstance.Bind(AutoInteractSection, "Trigger Amount", 5, new ConfigDescription("The amount of resources needed to trigger the auto-interact.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes
         {
-            Order = 4, ShowRangeAsPercent = false
+            Order = 4, ShowRangeAsPercent = false, DispName = "    └ Trigger Amount"
         }));
         AutoInteractRangeMulti = ConfigInstance.Bind(AutoInteractSection, "Loot Magnet Range Multiplier", 1.0f, new ConfigDescription("Enter a multiplier to use for auto-collect range when using custom range.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes
         {
-            Order = 1
+            Order = 1, DispName = "    └ Loot Magnet Range Multiplier"
         }));
         AutoInteractRangeMulti.SettingChanged += (_, _) => { AutoInteractRangeMulti.Value = Mathf.Round(AutoInteractRangeMulti.Value * 4) / 4; };
 
@@ -324,7 +325,7 @@ public partial class Plugin : BaseUnityPlugin
         }));
         AllowCriticalNotifications = ConfigInstance.Bind(NotificationsSection, "Allow Critical Notifications", true, new ConfigDescription("When 'Disable All Notifications' is enabled, still show critical notifications (deaths, weapon destruction, dissenters).", null, new ConfigurationManagerAttributes
         {
-            Order = 9
+            Order = 9, DispName = "    └ Allow Critical Notifications"
         }));
         NotifyOfScarecrowTraps = ConfigInstance.Bind(NotificationsSection, "Notify of Scarecrow Traps", false, new ConfigDescription("Display a notification when the farm scarecrows have caught a trap!", null, new ConfigurationManagerAttributes
         {
@@ -403,139 +404,164 @@ public partial class Plugin : BaseUnityPlugin
         );
         MaxRangeLifeExpectancy.SettingChanged += (_, _) => { EnforceRangeSanity(); };
 
+        // Follower Mass Interactions
+        MassBribe = ConfigInstance.Bind(FollowersSection, "Mass Bribe", false, new ConfigDescription("When bribing a follower, all followers are bribed at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Bribe**", Order = -1
+        }));
+        MassBribe.SettingChanged += (_, _) => ShowRestartMessage();
 
-        //Mass Section - 16
+        MassBless = ConfigInstance.Bind(FollowersSection, "Mass Bless", false, new ConfigDescription("When blessing a follower, all followers are blessed at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Bless**", Order = -2
+        }));
+        MassBless.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassExtort = ConfigInstance.Bind(FollowersSection, "Mass Extort", false, new ConfigDescription("When extorting a follower, all followers are extorted at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Extort**", Order = -3
+        }));
+        MassExtort.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassIntimidate = ConfigInstance.Bind(FollowersSection, "Mass Intimidate", false, new ConfigDescription("When intimidating a follower, all followers are intimidated at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Intimidate**", Order = -4
+        }));
+        MassIntimidate.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassInspire = ConfigInstance.Bind(FollowersSection, "Mass Inspire", false, new ConfigDescription("When inspiring a follower, all followers are inspired at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Inspire**", Order = -5
+        }));
+        MassInspire.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassRomance = ConfigInstance.Bind(FollowersSection, "Mass Romance", false, new ConfigDescription("When romancing a follower, all followers are romanced at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Romance**", Order = -6
+        }));
+        MassRomance.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassBully = ConfigInstance.Bind(FollowersSection, "Mass Bully", false, new ConfigDescription("When bullying a follower, all followers are bullied at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Bully**", Order = -7
+        }));
+        MassBully.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassReassure = ConfigInstance.Bind(FollowersSection, "Mass Reassure", false, new ConfigDescription("When reassuring a follower, all followers are reassured at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Reassure**", Order = -8
+        }));
+        MassReassure.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassReeducate = ConfigInstance.Bind(FollowersSection, "Mass Reeducate", false, new ConfigDescription("When reeducating a follower, all followers are reeducated at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Reeducate**", Order = -9
+        }));
+        MassReeducate.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassLevelUp = ConfigInstance.Bind(FollowersSection, "Mass Level Up", false, new ConfigDescription("When leveling up a follower, all eligible followers are leveled up at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Level Up**", Order = -10
+        }));
+        MassLevelUp.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassLevelUpInstantSouls = ConfigInstance.Bind(FollowersSection, "Mass Level Up Instant Souls", true, new ConfigDescription("Instantly collect souls during mass level up instead of having them fly to you.", null, new ConfigurationManagerAttributes
+        {
+            Order = -11, DispName = "    └ Mass Level Up Instant Souls"
+        }));
+
+        MassPetDog = ConfigInstance.Bind(FollowersSection, "Mass Pet Dog", false, new ConfigDescription("When petting a dog follower, all dog followers are petted at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Pet Dog**", Order = -12
+        }));
+        MassPetDog.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassSinExtract = ConfigInstance.Bind(FollowersSection, "Mass Sin Extract", false, new ConfigDescription("When extracting sin from a follower, all eligible followers have their sin extracted at once.", null, new ConfigurationManagerAttributes
+        {
+            DispName = "Mass Sin Extract**", Order = -13
+        }));
+        MassSinExtract.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassCleanAnimals = ConfigInstance.Bind(MassSection, "Mass Clean Animals", false, new ConfigDescription("When cleaning a stinky animal, all stinky animals are cleaned at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 5
+        }));
+
+        MassFeedAnimals = ConfigInstance.Bind(MassSection, "Mass Feed Animals", false, new ConfigDescription("When feeding an animal, all hungry animals are fed the same food at once (consumes one item per animal).", null, new ConfigurationManagerAttributes
+        {
+            Order = 4
+        }));
+
+        MassMilkAnimals = ConfigInstance.Bind(MassSection, "Mass Milk Animals", false, new ConfigDescription("When milking an animal, all animals ready for milking are milked at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 3
+        }));
+
+        MassShearAnimals = ConfigInstance.Bind(MassSection, "Mass Shear Animals", false, new ConfigDescription("When shearing an animal, all animals ready for shearing are sheared at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 2
+        }));
+
+        //Mass Section - 16 (Farm & Structure Mass Actions)
         MassFertilize = ConfigInstance.Bind(MassSection, "Mass Fertilize", false, new ConfigDescription("When fertilizing a plot, all farm plots are fertilized at once.", null, new ConfigurationManagerAttributes
         {
             Order = 17
         }));
-
 
         MassWater = ConfigInstance.Bind(MassSection, "Mass Water", false, new ConfigDescription("When watering a plot, all farm plots are watered at once.", null, new ConfigurationManagerAttributes
         {
             Order = 16
         }));
 
-        MassBribe = ConfigInstance.Bind(MassSection, "Mass Bribe", false, new ConfigDescription("When bribing a follower, all followers are bribed at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Bribe**", Order = 15
-        }));
-        MassBribe.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassBless = ConfigInstance.Bind(MassSection, "Mass Bless", false, new ConfigDescription("When blessing a follower, all followers are blessed at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Bless**", Order = 14
-        }));
-        MassBless.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassExtort = ConfigInstance.Bind(MassSection, "Mass Extort", false, new ConfigDescription("When extorting a follower, all followers are extorted at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Extort**", Order = 13
-        }));
-        MassExtort.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassPetDog = ConfigInstance.Bind(MassSection, "Mass Pet Dog", false, new ConfigDescription("When petting a dog follower, all dog followers are petted at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Pet Dog**", Order = 13
-        }));
-        MassPetDog.SettingChanged += (_, _) => ShowRestartMessage();
-
         MassPetAnimals = ConfigInstance.Bind(MassSection, "Mass Pet Animals", false, new ConfigDescription("When petting a farm animal, all farm animals are petted at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Pet Animals**", Order = 12
+            DispName = "Mass Pet Animals**", Order = 15
         }));
         MassPetAnimals.SettingChanged += (_, _) => ShowRestartMessage();
 
-        MassIntimidate = ConfigInstance.Bind(MassSection, "Mass Intimidate", false, new ConfigDescription("When intimidating a follower, all followers are intimidated at once.", null, new ConfigurationManagerAttributes
+        CollectAllGodTearsAtOnce = ConfigInstance.Bind(MassSection, "Collect All God Tears At Once", false, new ConfigDescription("When collecting god tears from the shrine, collect all available at once instead of one per interaction.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Intimidate**", Order = 11
+            Order = 14
         }));
-        MassIntimidate.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassInspire = ConfigInstance.Bind(MassSection, "Mass Inspire", false, new ConfigDescription("When inspiring a follower, all followers are inspired at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Inspire**", Order = 10
-        }));
-        MassInspire.SettingChanged += (_, _) => ShowRestartMessage();
 
         MassCollectFromBeds = ConfigInstance.Bind(MassSection, "Mass Collect From Beds", false, new ConfigDescription("When collecting resources from a bed, all beds are collected from at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 13
+        }));
+
+        MassCollectFromOuthouses = ConfigInstance.Bind(MassSection, "Mass Collect From Outhouses", false, new ConfigDescription("When collecting resources from an outhouse, all outhouses are collected from at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 12
+        }));
+
+        MassCollectFromOfferingShrines = ConfigInstance.Bind(MassSection, "Mass Collect From Offering Shrines", false, new ConfigDescription("When collecting resources from an offering shrine, all offering shrines are collected from at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 11
+        }));
+
+        MassCollectFromPassiveShrines = ConfigInstance.Bind(MassSection, "Mass Collect From Passive Shrines", false, new ConfigDescription("When collecting resources from a passive shrine, all passive shrines are collected from at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 10
+        }));
+
+        MassCollectFromCompost = ConfigInstance.Bind(MassSection, "Mass Collect From Compost", false, new ConfigDescription("When collecting resources from a compost, all composts are collected from at once.", null, new ConfigurationManagerAttributes
         {
             Order = 9
         }));
 
-
-        MassCollectFromOuthouses = ConfigInstance.Bind(MassSection, "Mass Collect From Outhouses", false, new ConfigDescription("When collecting resources from an outhouse, all outhouses are collected from at once.", null, new ConfigurationManagerAttributes
+        MassCollectFromHarvestTotems = ConfigInstance.Bind(MassSection, "Mass Collect From Harvest Totems", false, new ConfigDescription("When collecting resources from a harvest totem, all harvest totems are collected from at once.", null, new ConfigurationManagerAttributes
         {
             Order = 8
         }));
 
-
-        MassCollectFromOfferingShrines = ConfigInstance.Bind(MassSection, "Mass Collect From Offering Shrines", false, new ConfigDescription("When collecting resources from an offering shrine, all offering shrines are collected from at once.", null, new ConfigurationManagerAttributes
+        MassOpenScarecrows = ConfigInstance.Bind(MassSection, "Mass Open Scarecrows", false, new ConfigDescription("When opening a scarecrow trap, all scarecrow traps with caught birds are opened at once.", null, new ConfigurationManagerAttributes
         {
             Order = 7
         }));
 
-
-        MassCollectFromPassiveShrines = ConfigInstance.Bind(MassSection, "Mass Collect From Passive Shrines", false, new ConfigDescription("When collecting resources from a passive shrine, all passive shrines are collected from at once.", null, new ConfigurationManagerAttributes
+        MassWolfTraps = ConfigInstance.Bind(MassSection, "Mass Wolf Traps", MassWolfTrapMode.Disabled, new ConfigDescription("Fill Only: Fill all empty traps with the same bait. Collect Only: Collect from all traps with caught wolves. Both: Do both actions.", null, new ConfigurationManagerAttributes
         {
             Order = 6
-        }));
-
-
-        MassCollectFromCompost = ConfigInstance.Bind(MassSection, "Mass Collect From Compost", false, new ConfigDescription("When collecting resources from a compost, all composts are collected from at once.", null, new ConfigurationManagerAttributes
-        {
-            Order = 5
-        }));
-
-
-        MassCollectFromHarvestTotems = ConfigInstance.Bind(MassSection, "Mass Collect From Harvest Totems", false, new ConfigDescription("When collecting resources from a harvest totem, all harvest totems are collected from at once.", null, new ConfigurationManagerAttributes
-        {
-            Order = 6
-        }));
-
-        MassOpenScarecrows = ConfigInstance.Bind(MassSection, "Mass Open Scarecrows", false, new ConfigDescription("When opening a scarecrow trap, all scarecrow traps with caught birds are opened at once.", null, new ConfigurationManagerAttributes
-        {
-            Order = 5
-        }));
-
-        MassFillBearTraps = ConfigInstance.Bind(MassSection, "Mass Fill Bear Traps", false, new ConfigDescription("When filling a bear trap with bait, all empty bear traps are filled with the same bait type.", null, new ConfigurationManagerAttributes
-        {
-            Order = 4
-        }));
-
-        MassRomance = ConfigInstance.Bind(MassSection, "Mass Romance", false, new ConfigDescription("When romancing a follower, all followers are romanced at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Romance**", Order = 3
-        }));
-        MassRomance.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassBully = ConfigInstance.Bind(MassSection, "Mass Bully", false, new ConfigDescription("When bullying a follower, all followers are bullied at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Bully**", Order = 2
-        }));
-        MassBully.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassReassure = ConfigInstance.Bind(MassSection, "Mass Reassure", false, new ConfigDescription("When reassuring a follower, all followers are reassured at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Reassure**", Order = 1
-        }));
-        MassReassure.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassReeducate = ConfigInstance.Bind(MassSection, "Mass Reeducate", false, new ConfigDescription("When reeducating a follower, all followers are reeducated at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Reeducate**", Order = 0
-        }));
-        MassReeducate.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassLevelUp = ConfigInstance.Bind(MassSection, "Mass Level Up", false, new ConfigDescription("When leveling up a follower, all eligible followers are leveled up at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Level Up**", Order = -1
-        }));
-        MassLevelUp.SettingChanged += (_, _) => ShowRestartMessage();
-
-        MassLevelUpInstantSouls = ConfigInstance.Bind(MassSection, "Mass Level Up Instant Souls", true, new ConfigDescription("Instantly collect souls during mass level up instead of having them fly to you.", null, new ConfigurationManagerAttributes
-        {
-            Order = -2
         }));
 
         //Loot - 17
@@ -557,9 +583,10 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         //Post Processing
-        VignetteEffect = ConfigInstance.Bind(PostProcessingSection, "Vignette Effect", true, new ConfigDescription("Enable/disable the vignette effect.", null, new ConfigurationManagerAttributes
+
+        VignetteEffect = ConfigInstance.Bind(PostProcessingSection, "Vignette UI Overlay", true, new ConfigDescription("Enable/disable the vignette UI overlay images (separate from the post-processing vignette effect).", null, new ConfigurationManagerAttributes
         {
-            Order = 0
+            Order = 90
         }));
         VignetteEffect.SettingChanged += (_, _) => { PostProcessing.ToggleVignette(); };
 
@@ -568,24 +595,25 @@ public partial class Plugin : BaseUnityPlugin
             Order = 0
         }));
 
-        ConfigInstance.Bind(ResetAllSettingsSection, "Reset All Settings", false, new ConfigDescription("Set this to true and save the config file to reset all settings to default.", null, new ConfigurationManagerAttributes
-        {
-            Order = 0, HideDefaultButton = true, CustomDrawer = ResetAll
-        }));
-
-        //Sound - 21
+        //Sound - 20
         ResourceChestDepositSounds = ConfigInstance.Bind(SoundSection, "Resource Chest Deposit Sounds", true, new ConfigDescription("Play sounds when followers deposit resources into chests.", null, new ConfigurationManagerAttributes { Order = 2 }));
         ResourceChestDepositSounds.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ResourceChestDepositSounds);
         ResourceChestCollectSounds = ConfigInstance.Bind(SoundSection, "Resource Chest Collect Sounds", true, new ConfigDescription("Play sounds when collecting resources from chests.", null, new ConfigurationManagerAttributes { Order = 1 }));
         ResourceChestCollectSounds.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ResourceChestCollectSounds);
 
-        //Fixes - 22
+        //Fixes - 21
         AutoRepairMissingLore = ConfigInstance.Bind(FixesSection, "Auto Repair Missing Lore", false, new ConfigDescription("Automatically repair missing lore tablets that weren't unlocked due to a previous bug.", null, new ConfigurationManagerAttributes { Order = 1 }));
         AutoRepairMissingLore.SettingChanged += (_, _) =>
         {
             ShowBackupWarning();
             LoreRepairPatches.OnSettingChanged();
         };
+
+        //Reset - ZZ (bound last to appear at bottom)
+        ConfigInstance.Bind(ResetAllSettingsSection, "Reset All Settings", false, new ConfigDescription("Set this to true and save the config file to reset all settings to default.", null, new ConfigurationManagerAttributes
+        {
+            Order = 0, HideDefaultButton = true, CustomDrawer = ResetAll
+        }));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
@@ -801,9 +829,9 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void HideBepInEx()
     {
-        BepInEx.Bootstrap.Chainloader.ManagerObject.hideFlags = HideFlags.HideAndDontSave;
+        Chainloader.ManagerObject.hideFlags = HideFlags.HideAndDontSave;
         ThreadingHelper.Instance.gameObject.hideFlags = HideFlags.HideAndDontSave;
-        DontDestroyOnLoad(BepInEx.Bootstrap.Chainloader.ManagerObject);
+        DontDestroyOnLoad(Chainloader.ManagerObject);
         DontDestroyOnLoad(ThreadingHelper.Instance.gameObject);
     }
 

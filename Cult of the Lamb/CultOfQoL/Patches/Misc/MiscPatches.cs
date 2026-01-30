@@ -1,3 +1,5 @@
+using Spine.Unity;
+
 namespace CultOfQoL.Patches.Misc;
 
 [Harmony]
@@ -31,6 +33,7 @@ public class MiscPatches
         "DLC is installed, hiding button",
         "Releasing gameobject",
         "WAITING",
+        "REPLACE! Fasting  Fasting",
         "WeatherSystemController: Same system transition",
         "Max Tweens reached",
         "Follower eat stored food",
@@ -88,8 +91,8 @@ public class MiscPatches
         try
         {
             var codes = new List<CodeInstruction>(original);
-            var ctor = AccessTools.Constructor(typeof(Spine.Unity.AnimationReferenceAsset));
-            var createInstance = AccessTools.Method(typeof(ScriptableObject), nameof(ScriptableObject.CreateInstance), Type.EmptyTypes, [typeof(Spine.Unity.AnimationReferenceAsset)]);
+            var ctor = AccessTools.Constructor(typeof(AnimationReferenceAsset));
+            var createInstance = AccessTools.Method(typeof(ScriptableObject), nameof(ScriptableObject.CreateInstance), Type.EmptyTypes, [typeof(AnimationReferenceAsset)]);
             var found = false;
 
             for (var i = 0; i < codes.Count; i++)
