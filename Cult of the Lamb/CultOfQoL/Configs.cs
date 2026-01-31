@@ -67,6 +67,7 @@ public partial class Plugin
 
     internal static ConfigEntry<bool> TurnOffSpeakersAtNight { get; private set; }
     internal static ConfigEntry<bool> ThriceMultiplyTarotCardLuck { get; private set; }
+    internal static ConfigEntry<float> TarotLuckMultiplier { get; private set; }
     internal static ConfigEntry<bool> RareTarotCardsOnly { get; private set; }
   //  internal static ConfigEntry<bool> FiftyPercentIncreaseToLifespanInstead { get; private set; }
 
@@ -190,6 +191,7 @@ public partial class Plugin
     public static ConfigEntry<int> AnimalOldAgeDeathThreshold { get; private set; }
     
     public static ConfigEntry<float> RitualCooldownTime { get; private set; }
+    public static ConfigEntry<float> RitualCostMultiplier { get; private set; }
     public static ConfigEntry<bool> AddSpiderWebsToOfferings { get; set; }
 
     public static ConfigEntry<bool> AddCrystalShardsToOfferings { get; set; }

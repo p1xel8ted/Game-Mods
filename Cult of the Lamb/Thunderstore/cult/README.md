@@ -38,7 +38,7 @@
 - Slow down time (make days longer)
 
 ### Tarot Cards
-- 3x rare card draw chance
+- Customisable rare card draw chance multiplier (1x to 5x)
 - Rare cards only mode
 
 ### Loot

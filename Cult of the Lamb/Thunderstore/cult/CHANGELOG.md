@@ -1,5 +1,6 @@
 ### 2.3.9 - 31/01/2026
 
+* Replaced fixed "3x Tarot Luck" toggle with customisable luck multiplier slider (1x to 5x in 0.5 increments, default 2x).
 * Fixed vanilla bug: Crash when opening the Priest job board after claiming all fleece quest rewards.
 * Fixed "Reverse Enrichment Nerf" option giving far fewer coins than expected.
 * Added Blacksmith NPC Spine animation warning to log spam filter.

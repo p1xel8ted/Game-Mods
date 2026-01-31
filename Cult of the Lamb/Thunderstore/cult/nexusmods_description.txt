@@ -49,7 +49,7 @@
 
 [size=3][b]Tarot Cards[/b][/size]
 [list]
-[*][size=3]3x rare card draw chance[/size]
+[*][size=3]Customisable rare card draw chance multiplier (1x to 5x)[/size]
 [*][size=3]Rare cards only mode[/size]
 [/list]
 

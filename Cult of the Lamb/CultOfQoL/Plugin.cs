@@ -569,7 +569,9 @@ public partial class Plugin : BaseUnityPlugin
         CrystalShardsPerStone.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.CrystalShardsPerStone);
 
         // ── Tarot ──
-        ThriceMultiplyTarotCardLuck = ConfigInstance.Bind(TarotSection, "3x Tarot Luck", false, new ConfigDescription("Luck changes with game difficulty, this will multiply your luck multiplier by 3 for drawing rarer tarot cards.", null, new ConfigurationManagerAttributes { Order = 2 }));
+        ThriceMultiplyTarotCardLuck = ConfigInstance.Bind(TarotSection, "Increase Tarot Luck", false, new ConfigDescription("Multiply your luck for drawing rarer tarot cards by the value below.", null, new ConfigurationManagerAttributes { Order = 3 }));
+        TarotLuckMultiplier = ConfigInstance.Bind(TarotSection, "Tarot Luck Multiplier", 2.0f, new ConfigDescription("Luck multiplier for rare tarot card draws. Higher = more rare cards.", new AcceptableValueRange<float>(1.0f, 5.0f), new ConfigurationManagerAttributes { Order = 2, DispName = "    └ Tarot Luck Multiplier" }));
+        TarotLuckMultiplier.SettingChanged += (_, _) => { TarotLuckMultiplier.Value = Mathf.Round(TarotLuckMultiplier.Value * 2) / 2; }; // 0.5 increments
         RareTarotCardsOnly = ConfigInstance.Bind(TarotSection, "Rare Tarot Cards Only", false, new ConfigDescription("Only draw rare tarot cards.", null, new ConfigurationManagerAttributes { Order = 1 }));
 
         // ── Weather ──

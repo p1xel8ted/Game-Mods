@@ -29,7 +29,7 @@ public static class TarotCardPatches
         
         if (DataManager.Instance.dungeonRun >= 5)
         {
-            var luckChance = 0.275f * DataManager.Instance.GetLuckMultiplier() * 3f;
+            var luckChance = 0.275f * DataManager.Instance.GetLuckMultiplier() * Plugin.TarotLuckMultiplier.Value;
             while (Random.Range(0f, 1f) < luckChance)
             {
                 upgradeLevel++;
