@@ -8,6 +8,16 @@
 * Improved stability for mass actions when PlayerFarming reference is unavailable.
 * Renamed "Mass Pet Dog" to "Mass Pet Follower" - now pets all followers at once, not just dogs.
 * Added "Mass Nurture" option - nurturing children at one daycare also nurtures children at all other daycares.
+* Fixed "Collect Shrine Devotion Instantly" only collecting a fraction of stored devotion (e.g., 11 out of 120).
+* Added "Ritual Cost Multiplier" option to increase or decrease ritual material costs for balance adjustments.
+* Reorganized config sections with cleaner formatting and alphabetical ordering.
+* Renamed confusing toggle settings for clarity:
+  * "Disable Animal Old Age Death" → "Immortal Farm Animals"
+  * "Disable Fishing Mini-Game" → "Easy Fishing"
+  * "Disable Ads" → "Hide Ads"
+  * "Disable All Notifications" → "Hide All Notifications"
+  * "Disable Run Speed In Dungeons/Combat" → "Exclude Dungeons/Combat"
+  * "Disable Propaganda Speaker Audio" → "Mute Propaganda Speakers"
 
 ### 2.3.8 - 31/01/2026
 
@@ -108,7 +118,7 @@
 * Customise Life Expectancy range
 * Customise Sin Unlock Boss amount
 * Make wood silos produce spider webs (configurable)
-* Make stone silos produce crystal shards (configurableconfigurable)
+* Make stone silos produce crystal shards (configurable)
 * Make kitchen produce bones (configurable)
 * Make Offering Shrines generate webs, silks, and crystals.
 

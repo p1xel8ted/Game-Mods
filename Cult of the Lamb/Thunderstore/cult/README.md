@@ -5,11 +5,10 @@
 ### Menu & UI
 - Remove menu clutter (Discord, bug report, Twitch buttons)
 - Remove pause menu buttons (Help, Twitch, Photo Mode)
-- Disable main menu ads and logos
-- Disable main menu dark mode glitch effect
+- Hide main menu ads
+- Toggle main menu dark mode glitch effect
 - Hide New Game button when saves exist
-- Disable all notifications (with option to allow critical ones like deaths)
-- Customise notification scale
+- Hide all notifications (with option to allow critical ones like deaths)
 
 ### Saves
 - Auto-load into a specific save slot on game start
@@ -18,21 +17,24 @@
 
 ### Gameplay
 - Easy fishing (auto-reel, no button mashing)
-- Disable game over mechanic
+- Prevent game over when at zero followers
+
+### Rituals
 - Fast rituals and sermons
 - Reverse Ritual of Enrichment nerf (coins scale with follower level)
 - Customise ritual cooldowns
+- Customise ritual costs (increase or decrease material requirements)
 
 ### Combat & Movement
 - Modify run, dodge, and lunge speeds
-- Disable speed boosts in dungeons or combat
+- Exclude dungeons or combat from run speed boost
 - Modify base damage multiplier
 - Reverse Golden Fleece damage cap (patch 1.0.13)
 - Customise Golden Fleece damage multiplier
 
 ### Game Speed
 - Manipulate game speed with keybinds (up to 5x)
-- Shorten speed increments (1 instead of 0.25)
+- Use large speed steps (1x, 2x, 3x) instead of fine 0.25x increments
 - Slow down time (make days longer)
 
 ### Tarot Cards
@@ -55,7 +57,7 @@
 - Auto-select best mating pair in Mating Tent
 
 ### Animals
-- Disable animal old age death entirely
+- Immortal farm animals (prevent old age death)
 - Customise minimum age before animals can die of old age
 - Mass pet farm animals
 - Mass clean stinky animals
@@ -69,17 +71,19 @@
 - Mass level up (with optional instant soul collection)
 - Mass bully, reassure, reeducate
 - Mass romance, pet follower (dogs and non-dogs)
+- Mass sin extract
 - Mass nurture children across all daycares
 - Mass open scarecrow traps
-- Mass fill wolf traps with bait
+- Mass fill/collect wolf traps
 
 ### Mass Collect
 - Mass collect from beds, outhouses, offering shrines
 - Mass collect from passive shrines, compost bins, harvest totems
+- Collect all god tears at once
 
 ### Structures
 - Customise Harvest Totem radius
-- Customise Propaganda Speaker radius (and disable audio/night mode)
+- Customise Propaganda Speaker radius (mute audio, turn off at night)
 - Customise Farm Station radius
 - Customise Farm Plot Sign radius
 - Customise Lightning Rod radius (level 1 and 2)
@@ -89,10 +93,10 @@
 
 ### Resource Production
 - Lumber/stone mines: extend lifespan (50%, 100%, or unlimited)
-- Wood silos produce spider webs
-- Stone silos produce crystal shards
+- Lumber stations produce spider webs
+- Mining stations produce crystal shards
 - Kitchens produce bones from meat meals
-- Offering shrines generate webs, silks, and crystals
+- Offering shrines can generate spider webs and crystals
 
 ### Capacities
 - Customise soul capacity multiplier
@@ -111,6 +115,7 @@
 
 ### Weather
 - Weather change triggers (on location change, phase change, or both)
+- Unlock all weather types (including snow) regardless of season
 - Customise weather overlay colors
 - Weather and phase change notifications
 
@@ -137,7 +142,7 @@
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
-* Install [Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/)
+* Install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/)
 * Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Configuration
