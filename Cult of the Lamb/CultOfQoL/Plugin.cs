@@ -26,6 +26,7 @@ public partial class Plugin : BaseUnityPlugin
     private const string GameMechanicsSection = "── Game Mechanics ──";
     private const string GameSpeedSection = "── Game Speed ──";
     private const string GoldenFleeceSection = "── Golden Fleece ──";
+    private const string KnucklebonesSection = "── Knucklebones ──";
     private const string LootSection = "── Loot ──";
     private const string MassAnimalSection = "── Mass Animal ──";
     private const string MassCollectSection = "── Mass Collect ──";
@@ -224,6 +225,14 @@ public partial class Plugin : BaseUnityPlugin
         FleeceDamageMulti = ConfigInstance.Bind(GoldenFleeceSection, "Fleece Damage Multiplier", 1.0f, new ConfigDescription("The custom damage multiplier to use. Based off the games default 5%.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes { Order = 1 }));
         FleeceDamageMulti.SettingChanged += (_, _) => { FleeceDamageMulti.Value = Mathf.Round(FleeceDamageMulti.Value * 4) / 4; };
 
+        // ── Knucklebones ──
+        KnucklebonesSpeedMultiplier = ConfigInstance.Bind(KnucklebonesSection, "Animation Speed Multiplier", 1.0f, new ConfigDescription("Speed up Knucklebones animations. 1.0 = normal speed, 2.0 = twice as fast, etc.", new AcceptableValueRange<float>(1f, 5f), new ConfigurationManagerAttributes { Order = 1 }));
+        KnucklebonesSpeedMultiplier.SettingChanged += (_, _) =>
+        {
+            KnucklebonesSpeedMultiplier.Value = Mathf.Round(KnucklebonesSpeedMultiplier.Value * 4) / 4;
+            ConfigCache.MarkDirty(ConfigCache.Keys.KnucklebonesSpeedMultiplier);
+        };
+
         // ── Loot ──
         AllLootMagnets = ConfigInstance.Bind(LootSection, "All Loot Magnets", false, new ConfigDescription("All loot is magnetized to you.", null, new ConfigurationManagerAttributes
         {
@@ -237,7 +246,7 @@ public partial class Plugin : BaseUnityPlugin
         MagnetRangeMultiplier.SettingChanged += (_, _) =>
         {
             {
-                MagnetRangeMultiplier.Value = MagnetRangeMultiplier.Value * 4f / 4f;
+                MagnetRangeMultiplier.Value = Mathf.Round(MagnetRangeMultiplier.Value * 4) / 4;
                 UpdateCustomMagnet();
             }
         };
@@ -525,6 +534,11 @@ public partial class Plugin : BaseUnityPlugin
         ResourceChestCollectSounds.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.ResourceChestCollectSounds);
 
         // ── Structures ──
+        // Shrine Fuel & Warmth
+        EnableRotburnAsShrineFuel = ConfigInstance.Bind(StructureSection, "Rotburn as Shrine Fuel", false, new ConfigDescription("Allow Rotburn (MAGMA_STONE) to be used as fuel for the Shrine brazier.", null, new ConfigurationManagerAttributes { Order = 30 }));
+        RotburnShrineFuelWeight = ConfigInstance.Bind(StructureSection, "Rotburn Fuel Weight", 13, new ConfigDescription("Fuel value when adding Rotburn to shrine. Default matches LOG (13). Vanilla MAGMA_STONE is 14700.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 29, ShowRangeAsPercent = false, DispName = "    └ Rotburn Fuel Weight" }));
+        EnableShrineWarmth = ConfigInstance.Bind(StructureSection, "Shrine Provides Warmth", true, new ConfigDescription("When the shrine brazier is fully fueled, it provides warmth during winter (20% contribution).", null, new ConfigurationManagerAttributes { Order = 28 }));
+
         AdjustRefineryRequirements = ConfigInstance.Bind(StructureSection, "Adjust Refinery Requirements", false, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 27 }));
         AdjustRefineryRequirements.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AdjustRefineryRequirements);
         RefineryMassFill = ConfigInstance.Bind(StructureSection, "Refinery Mass Fill", false, new ConfigDescription("When adding an item to the refinery queue, automatically fill all available slots with that item.", null, new ConfigurationManagerAttributes { Order = 26 }));

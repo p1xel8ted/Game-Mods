@@ -36,6 +36,7 @@
 - Manipulate game speed with keybinds (up to 5x)
 - Use large speed steps (1x, 2x, 3x) instead of fine 0.25x increments
 - Slow down time (make days longer)
+- Speed up Knucklebones animations (1x to 5x multiplier)
 
 ### Tarot Cards
 - Customisable rare card draw chance multiplier (1x to 5x)
@@ -82,6 +83,8 @@
 - Collect all god tears at once
 
 ### Structures
+- Use Rotburn as shrine brazier fuel (configurable fuel weight)
+- Fueled shrine brazier provides warmth during winter
 - Customise Harvest Totem radius
 - Customise Propaganda Speaker radius (mute audio, turn off at night)
 - Customise Farm Station radius

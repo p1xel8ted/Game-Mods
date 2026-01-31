@@ -1,6 +1,10 @@
 ### 2.3.9 - 31/01/2026
 
+* Added Knucklebones animation speed multiplier (1x to 5x) - speed up all dice rolling, turn transitions, and announcements.
+* Added "Rotburn as Shrine Fuel" option - use excess Rotburn (MAGMA_STONE) to fuel the shrine brazier with configurable fuel weight.
+* Added "Shrine Provides Warmth" option - fueled shrine brazier now contributes 20% warmth during winter (fixes vanilla oversight where shrine warmth was defined but never applied).
 * Replaced fixed "3x Tarot Luck" toggle with customisable luck multiplier slider (1x to 5x in 0.5 increments, default 2x).
+* Fixed Magnet Range Multiplier slider not rounding to 0.25 increments like other float settings.
 * Fixed vanilla bug: Crash when opening the Priest job board after claiming all fleece quest rewards.
 * Fixed "Reverse Enrichment Nerf" option giving far fewer coins than expected.
 * Added Blacksmith NPC Spine animation warning to log spam filter.

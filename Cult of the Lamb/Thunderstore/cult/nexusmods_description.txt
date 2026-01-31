@@ -45,6 +45,7 @@
 [*][size=3]Manipulate game speed with keybinds (up to 5x)[/size]
 [*][size=3]Use large speed steps (1x, 2x, 3x) instead of fine 0.25x increments[/size]
 [*][size=3]Slow down time (make days longer)[/size]
+[*][size=3]Speed up Knucklebones animations (1x to 5x multiplier)[/size]
 [/list]
 
 [size=3][b]Tarot Cards[/b][/size]
@@ -105,6 +106,8 @@
 
 [size=3][b]Structures[/b][/size]
 [list]
+[*][size=3]Use Rotburn as shrine brazier fuel (configurable fuel weight)[/size]
+[*][size=3]Fueled shrine brazier provides warmth during winter[/size]
 [*][size=3]Customise Harvest Totem radius[/size]
 [*][size=3]Customise Propaganda Speaker radius (mute audio, turn off at night)[/size]
 [*][size=3]Customise Farm Station radius[/size]

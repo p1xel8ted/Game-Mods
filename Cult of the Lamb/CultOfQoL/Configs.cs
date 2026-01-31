@@ -204,9 +204,17 @@ public partial class Plugin
     public static ConfigEntry<bool> ProduceCrystalShardsFromStone { get; set; }
     public static ConfigEntry<int> CrystalShardsPerStone { get; set; }
 
+    // Shrine Fuel
+    internal static ConfigEntry<bool> EnableRotburnAsShrineFuel { get; set; }
+    internal static ConfigEntry<int> RotburnShrineFuelWeight { get; set; }
+    internal static ConfigEntry<bool> EnableShrineWarmth { get; set; }
+
     // Sound
     internal static ConfigEntry<bool> ResourceChestDepositSounds { get; private set; }
     internal static ConfigEntry<bool> ResourceChestCollectSounds { get; private set; }
+
+    // Knucklebones
+    internal static ConfigEntry<float> KnucklebonesSpeedMultiplier { get; private set; }
 
     // Fixes
     internal static ConfigEntry<bool> AutoRepairMissingLore { get; private set; }

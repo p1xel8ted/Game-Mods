@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace CultOfQoL.Core;
 
 /// <summary>
@@ -43,10 +40,8 @@ internal static class ConfigCache
     {
         public const string EnableLogging = nameof(EnableLogging);
         public const string CookedMeatMealsContainBone = nameof(CookedMeatMealsContainBone);
-        public const string ChangeWeatherOnPhaseChange = nameof(ChangeWeatherOnPhaseChange);
         public const string ShowPhaseNotifications = nameof(ShowPhaseNotifications);
         public const string ShowWeatherChangeNotifications = nameof(ShowWeatherChangeNotifications);
-        public const string RandomWeatherChangeWhenExitingArea = nameof(RandomWeatherChangeWhenExitingArea);
         public const string LumberAndMiningStationsDontAge = nameof(LumberAndMiningStationsDontAge);
         public const string LumberAndMiningStationsAgeMultiplier = nameof(LumberAndMiningStationsAgeMultiplier);
         public const string TurnOffSpeakersAtNight = nameof(TurnOffSpeakersAtNight);
@@ -63,5 +58,6 @@ internal static class ConfigCache
         public const string CrystalShardsPerStone = nameof(CrystalShardsPerStone);
         public const string ResourceChestDepositSounds = nameof(ResourceChestDepositSounds);
         public const string ResourceChestCollectSounds = nameof(ResourceChestCollectSounds);
+        public const string KnucklebonesSpeedMultiplier = nameof(KnucklebonesSpeedMultiplier);
     }
 }
