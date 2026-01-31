@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using CultOfQoL.Core;
 
 namespace CultOfQoL.Patches.Systems;

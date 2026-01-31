@@ -85,8 +85,9 @@ public static class GameSpeedManipulationPatches
     {
         if (!__instance) return;
 
-        // Debug keys should work regardless of game speed manipulation setting
+#if DEBUG
         HandleDebugKeys();
+#endif
 
         if (!Mathf.Approximately(Plugin.SlowDownTimeMultiplier.Value, 1.0f) && !_timeMessageShown)
         {
@@ -141,8 +142,34 @@ public static class GameSpeedManipulationPatches
         }
     }
 
+#if DEBUG
     private static void HandleDebugKeys()
     {
+        // F8: Unlock all structures, rituals, and upgrades
+        if (Input.GetKeyDown(KeyCode.F8))
+        {
+            // Unlock all structures
+            foreach (StructureBrain.TYPES type in Enum.GetValues(typeof(StructureBrain.TYPES)))
+            {
+                if (!StructuresData.GetUnlocked(type))
+                {
+                    DataManager.Instance.UnlockedStructures.Add(type);
+                }
+            }
+
+            // Unlock all rituals
+            CheatConsole.UnlockAllRituals = true;
+
+            // Unlock all upgrade abilities
+            foreach (UpgradeSystem.Type type in Enum.GetValues(typeof(UpgradeSystem.Type)))
+            {
+                UpgradeSystem.UnlockAbility(type);
+            }
+
+            NotificationCentre.Instance.PlayGenericNotification("[DEBUG] Unlocked all structures, rituals, and upgrades.");
+            Plugin.Log.LogInfo("[DEBUG] Unlocked all structures, rituals, and upgrades.");
+        }
+
         // F9: Set all followers to max adoration (ready for level up)
         if (Input.GetKeyDown(KeyCode.F9))
         {
@@ -152,7 +179,7 @@ public static class GameSpeedManipulationPatches
                 if (follower.Brain.Stats.Adoration < follower.Brain.Stats.MAX_ADORATION)
                 {
                     follower.Brain.Stats.Adoration = follower.Brain.Stats.MAX_ADORATION;
-                    follower.AdorationUI.BarController.SetBarSize(1f, false, false);
+                    follower.AdorationUI.BarController.SetBarSize(1f, false);
                     count++;
                 }
             }
@@ -185,5 +212,59 @@ public static class GameSpeedManipulationPatches
             NotificationCentre.Instance.PlayGenericNotification($"[DEBUG] Filled {count} outhouses with poop.");
             Plugin.Log.LogInfo($"[DEBUG] Filled {count} outhouses with poop.");
         }
+
+        // F11: Fill all scarecrows with birds
+        if (Input.GetKeyDown(KeyCode.F11))
+        {
+            var count = 0;
+            foreach (var scarecrow in Scarecrow.Scarecrows.ToList())
+            {
+                if (scarecrow == null || scarecrow.Brain == null || scarecrow.Brain.HasBird)
+                {
+                    continue;
+                }
+
+                if (scarecrow.TrapOpen == null || scarecrow.TrapShut == null)
+                {
+                    continue;
+                }
+
+                scarecrow.Brain.HasBird = true;
+                scarecrow.ShutTrap();
+                count++;
+            }
+
+            NotificationCentre.Instance.PlayGenericNotification($"[DEBUG] Filled {count} scarecrows with birds.");
+            Plugin.Log.LogInfo($"[DEBUG] Filled {count} scarecrows with birds.");
+        }
+
+        // F12: Trigger all wolf traps (catch wolves instantly)
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            var count = 0;
+            foreach (var trap in Interaction_WolfTrap.Traps.ToList())
+            {
+                if (trap == null || trap.structure?.Brain?.Data == null)
+                {
+                    continue;
+                }
+
+                // Skip if already caught something
+                if (trap.structure.Brain.Data.HasBird)
+                {
+                    continue;
+                }
+
+                // Trigger the catch (HasBird is reused for wolf caught)
+                trap.structure.Brain.Data.HasBird = true;
+                trap.structure.Brain.Data.Inventory.Clear();
+                trap.UpdateVisuals();
+                count++;
+            }
+
+            NotificationCentre.Instance.PlayGenericNotification($"[DEBUG] Triggered {count} wolf traps.");
+            Plugin.Log.LogInfo($"[DEBUG] Triggered {count} wolf traps.");
+        }
     }
+#endif
 }

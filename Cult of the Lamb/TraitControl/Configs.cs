@@ -7,6 +7,9 @@ public partial class Plugin
     internal static ConfigEntry<bool> UseUnlockedTraitsOnly { get; private set; }
     internal static ConfigEntry<bool> PreferExclusiveCounterparts { get; private set; }
     internal static ConfigEntry<bool> AllowMultipleUniqueTraits { get; private set; }
+    internal static ConfigEntry<int> MinimumTraits { get; private set; }
+    internal static ConfigEntry<int> MaximumTraits { get; private set; }
+    internal static ConfigEntry<bool> RandomizeTraitsOnReindoctrination { get; private set; }
     internal static ConfigEntry<bool> IncludeImmortal { get; private set; }
     internal static ConfigEntry<bool> GuaranteeImmortal { get; private set; }
     internal static ConfigEntry<bool> IncludeDisciple { get; private set; }

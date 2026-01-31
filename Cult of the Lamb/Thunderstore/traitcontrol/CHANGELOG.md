@@ -1,3 +1,28 @@
+### 0.1.5 - 31/01/2026
+
+* Added "Reset All Settings" button to reset all configuration to defaults (vanilla behavior).
+* Added "Minimum Traits" and "Maximum Traits" config options - configure how many traits new followers receive (vanilla is 2-3, now configurable 2-8). Also applies to re-indoctrination which normally caps at 6.
+* Added "Randomize Traits on Re-indoctrination" option - randomize follower traits when re-indoctrinating at the altar (vanilla only changes appearance/name).
+* Fixed "Use Unlocked Traits Only" - now correctly filters by game progression requirements (Tailor unlocked, Pleasure district enabled, etc.) instead of incorrectly checking cult-wide doctrine traits.
+* Fixed potential crash on main menu when no save is loaded.
+* Fixed infinite loop when "Use Unlocked Traits Only" was enabled with certain config combinations.
+* Fixed exclusive trait replacement for negative-to-negative pairs (e.g., Aestivation/Hibernation) - now correctly falls back to random positive trait.
+* Trait weights menu now hides traits that aren't available based on game progression when "Use Unlocked Traits Only" is enabled.
+* "Include Event Traits" now excludes negative event traits when "Enable Trait Replacement" is also enabled.
+* Event traits in the trait replacement pool now respect the "Include Event Traits" config (only positive event traits are used as replacements when enabled).
+* Added warning when not enough traits are unlocked to meet the minimum trait count config.
+* Updated trait category display format - now shows "Found in: Starting, Rare, Faithful" at end of description.
+* Traits not in any pool now show "Granted via other means (rituals, events, etc.)".
+* Added warning to "Include Event Traits" description about potential nonsensical trait assignments.
+* Limited maximum traits to 8 due to UI constraints.
+* Fixed traits not appearing in trait weights - now collects ALL traits from the game enum instead of only those in predefined lists. This adds missing traits like Chionophile and Heliophile.
+* Fixed "Include Event Traits" requiring game restart - event traits now show/hide immediately when the setting is changed.
+* Added startup logging of all trait internal names with their in-game display names (check BepInEx log). This helps identify which config entry corresponds to which trait you see in-game.
+* Trait names in Configuration Manager now show localized display names alongside the internal name, e.g. "Lover of Cold (Chionophile)". This makes it easier to find traits in non-English languages.
+* Trait display names update automatically when you change the game language.
+* Traits with missing localization are marked with an asterisk (*) prefix. This indicates the trait is not fully implemented in the game itself.
+* Improved slider snapping - values below 0.1 now snap directly to 0, making it easier to disable traits.
+
 ### 0.1.4 - 31/01/2026
 
 * Fixed guaranteed traits causing followers to only receive one trait instead of the normal 2-3 traits.

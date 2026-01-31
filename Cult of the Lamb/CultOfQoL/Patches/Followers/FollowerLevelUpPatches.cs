@@ -53,7 +53,7 @@ public static class FollowerLevelUpPatches
         // Recalculate with actual XPLevel
         const float clampedFactor = (float)(1.0 + (10.0 - 1.0) / 5.0);
         var traitMultiplier = __result / clampedFactor;
-        var unclampedFactor = (float)(1.0 + ((double)__instance.XPLevel - 1.0) / 5.0);
+        var unclampedFactor = (float)(1.0 + (__instance.XPLevel - 1.0) / 5.0);
         __result = unclampedFactor * traitMultiplier;
     }
 

@@ -63,13 +63,13 @@ internal class PopupManager : MonoBehaviour
         // Center and create the first button
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace(); // Add flexible space before the button
-        if (GUILayout.Button("OK", [GUILayout.Width(100), GUILayout.Height(40)]))
+        if (GUILayout.Button("OK", GUILayout.Width(100), GUILayout.Height(40)))
         {
             ShowPopup = false;
         }
         if (!_ignoreDontShow)
         {
-            if (GUILayout.Button("Close & Don't Show Again This Session", [GUILayout.Width(250), GUILayout.Height(40)]))
+            if (GUILayout.Button("Close & Don't Show Again This Session", GUILayout.Width(250), GUILayout.Height(40)))
             {
                 _dontShowAgainThisSession = true;
                 ShowPopup = false;

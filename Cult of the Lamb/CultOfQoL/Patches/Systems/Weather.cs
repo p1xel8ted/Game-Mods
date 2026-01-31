@@ -3,6 +3,14 @@ using CultOfQoL.Patches.UI;
 
 namespace CultOfQoL.Patches.Systems;
 
+public enum WeatherChangeTrigger
+{
+    Disabled,
+    OnLocationChange,
+    OnPhaseChange,
+    Both
+}
+
 [Harmony]
 public static class Weather
 {
@@ -22,11 +30,11 @@ public static class Weather
     [HarmonyPatch(typeof(TimeManager), nameof(TimeManager.StartNewPhase))]
     public static void TimeManager_StartNewPhase(TimeManager __instance, ref DayPhase phase)
     {
-        // Performance optimization: Cache config values to avoid repeated access
-        var changeWeatherOnPhaseChange = ConfigCache.GetCachedValue(ConfigCache.Keys.ChangeWeatherOnPhaseChange, () => Plugin.ChangeWeatherOnPhaseChange.Value);
+        var trigger = Plugin.WeatherChangeTrigger.Value;
+        var changeWeatherOnPhaseChange = trigger == WeatherChangeTrigger.OnPhaseChange || trigger == WeatherChangeTrigger.Both;
         var showPhaseNotifications = ConfigCache.GetCachedValue(ConfigCache.Keys.ShowPhaseNotifications, () => Plugin.ShowPhaseNotifications.Value);
         var changeWeatherAndShowNotification = changeWeatherOnPhaseChange && showPhaseNotifications;
-        
+
         if (changeWeatherOnPhaseChange)
         {
             if (WeatherSystemControllerInstance)
@@ -38,7 +46,6 @@ public static class Weather
                 {
                     if (Notifications.ShouldSuppressNotification()) return;
 
-                    // Performance optimization: Use cached string and pre-built message
                     var phaseString = phase.ToString();
                     var weatherString = WeatherStringCache.TryGetValue(weather.WeatherType, out var cached) ? cached : string.Empty;
                     var message = $"{phaseString} has started and it brings {weather.WeatherStrength} {weatherString}!";
@@ -59,6 +66,47 @@ public static class Weather
 
             NotificationCentre.Instance.PlayGenericNotification(message);
         }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WeatherSystemController), nameof(WeatherSystemController.Start))]
+    public static void WeatherSystemController_Start_Postfix()
+    {
+        LocationManager.OnPlayerLocationSet -= OnLocationChanged;
+        LocationManager.OnPlayerLocationSet += OnLocationChanged;
+    }
+
+    private static void OnLocationChanged()
+    {
+        var trigger = Plugin.WeatherChangeTrigger.Value;
+        if (trigger != WeatherChangeTrigger.OnLocationChange && trigger != WeatherChangeTrigger.Both) return;
+        if (!WeatherSystemControllerInstance) return;
+
+        var weather = WeatherSystemControllerInstance.weatherData.RandomElement();
+        WeatherSystemControllerInstance.SetWeather(weather.WeatherType, weather.WeatherStrength, 3f);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(WeatherSystemController), nameof(WeatherSystemController.ChooseWeather))]
+    public static bool WeatherSystemController_ChooseWeather_Prefix(WeatherSystemController __instance)
+    {
+        if (!Plugin.UnlockAllWeatherTypes.Value) return true;
+
+        if (__instance.currentWeatherType != WeatherSystemController.WeatherType.None) return false;
+
+        var weatherData = __instance.ChooseRandomWeather();
+        if (weatherData == null) return false;
+
+        if (!LocationManager.IndoorLocations.Contains(PlayerFarming.Location))
+        {
+            __instance.SetWeather(weatherData.WeatherType, weatherData.WeatherStrength, __instance.RandomWeatherTransitionLength);
+        }
+        else
+        {
+            __instance.SetWeather(weatherData.WeatherType, weatherData.WeatherStrength, 0f);
+        }
+
+        return false;
     }
 
     private static Color? GetWeatherColor(WeatherSystemController.WeatherType weatherType, WeatherSystemController.WeatherStrength weatherStrength)
@@ -99,17 +147,6 @@ public static class Weather
         }
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(WeatherSystemController), nameof(WeatherSystemController.ExitedBuilding))]
-    public static void WeatherSystemController_ExitedBuilding(WeatherSystemController __instance)
-    {
-        // Performance optimization: Use cached config value
-        if (ConfigCache.GetCachedValue(ConfigCache.Keys.RandomWeatherChangeWhenExitingArea, () => Plugin.RandomWeatherChangeWhenExitingArea.Value))
-        {
-            var weather = __instance.weatherData.Random();
-            __instance.SetWeather(weather.WeatherType, weather.WeatherStrength, 0f);
-        }
-    }
 
     private static string GetWeatherString(WeatherSystemController.WeatherType weatherType)
     {

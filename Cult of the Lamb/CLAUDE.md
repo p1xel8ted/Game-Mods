@@ -22,6 +22,16 @@ dotnet build "CultOfTheLambMods.sln" -c Release-Thunderstore
 
 Output goes directly to `G:\SteamLibrary\steamapps\common\Cult of the Lamb\BepInEx\plugins\<ProjectName>` for all configurations. The `Release-Thunderstore` configuration additionally copies DLLs/assets to `Thunderstore/<modname>/plugins/`, updates `manifest.json` version, and creates a versioned zip archive. There are no tests or linting configured.
 
+## Compacting
+Before any compact operation (manual or auto), ALWAYS create or update `summary-*.md` with:
+- Current task and goal
+- Recent changes made
+- Open issues/bugs
+- Key decisions
+- Files modified
+
+Do this BEFORE the compact happens, not after.
+
 ## Solution Architecture
 
 Four mods sharing common utilities via linked source files:
@@ -74,6 +84,7 @@ Each mod has a `GlobalUsings.cs` with project-wide `global using` statements. Cu
 ## Workflow
 
 - **Always explain before implementing:** After identifying a problem and devising a solution, explain what the problem is and how the proposed fix addresses it. Let the user decide whether to proceed with the implementation.
+- **Check summary files:** When investigating bugs or looking for previous fixes, check `summary-*.md` files in the project root. These contain detailed notes on recent development work, including problems, solutions, root cause analysis, and files modified.
 
 ## Git
 
@@ -95,4 +106,8 @@ When bumping versions, update all three locations:
 
 ## Distribution
 
-Thunderstore packages in `Thunderstore/<modname>/` containing manifest.json, icon.png, README.md, CHANGELOG.md, and the compiled plugin DLL. The CultOfQoL mod depends on `BepInEx-BepInExPack_CultOfTheLamb-5.4.2101` and `p1xel8ted-BepInEx_Configuration_Manager-18.3.0`.
+Thunderstore packages in `Thunderstore/<modname>/` containing manifest.json, icon.png, README.md, CHANGELOG.md, and the compiled plugin DLL. The CultOfQoL mod depends on `BepInEx-BepInExPack_CultOfTheLamb-5.4.2101` and `p1xel8ted-ConfigurationManagerEnhanced-1.0.0`.
+
+### ConfigurationManagerEnhanced (CME)
+
+Source code for the custom Configuration Manager fork is in `libs/cme_code/`. This is a modified version with enhanced features for the mods in this solution.

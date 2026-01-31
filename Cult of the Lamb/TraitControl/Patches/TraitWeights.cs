@@ -25,6 +25,115 @@ public static class TraitWeights
     }
 
     /// <summary>
+    /// Refreshes AllTraitsList when a save is loaded to pick up CultTraits changes.
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(BiomeBaseManager), nameof(BiomeBaseManager.Start))]
+    private static void BiomeBaseManager_Start()
+    {
+        RefreshAllTraitsList();
+        Plugin.RefreshTraitWeightVisibility();
+    }
+
+    /// <summary>
+    /// Refreshes trait lists when a cult trait is added (via doctrines, trait manipulator, etc.).
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerTrait), nameof(FollowerTrait.AddCultTrait))]
+    private static void AddCultTrait_Postfix()
+    {
+        RefreshAllTraitsList();
+        NoNegativeTraits.GenerateAvailableTraits();
+        Plugin.RefreshTraitWeightVisibility();
+    }
+
+    /// <summary>
+    /// Refreshes the AllTraitsList used for trait selection.
+    /// Called when save loads or relevant configs change.
+    /// </summary>
+    internal static void RefreshAllTraitsList()
+    {
+        Plugin.AllTraitsList.Clear();
+        var allTraits = Enum.GetValues(typeof(FollowerTrait.TraitType))
+            .Cast<FollowerTrait.TraitType>()
+            .Where(t => t != FollowerTrait.TraitType.None &&
+                        t != FollowerTrait.TraitType.Spy &&
+                        t != FollowerTrait.TraitType.BishopOfCult)
+            .ToList();
+        IEnumerable<FollowerTrait.TraitType> traitsForPatches = allTraits;
+        if (!Plugin.IncludeStoryEventTraits.Value)
+        {
+            traitsForPatches = traitsForPatches.Where(t => !Plugin.StoryEventTraits.Contains(t));
+        }
+        Plugin.AllTraitsList.AddRange(traitsForPatches);
+        Plugin.Log.LogInfo($"[RefreshAllTraitsList] Refreshed AllTraitsList with {Plugin.AllTraitsList.Count} traits");
+    }
+
+    /// <summary>
+    /// Adds extra traits after vanilla assignment if min/max trait count is configured higher.
+    /// Vanilla assigns 2-3 traits; this postfix adds more to meet the configured minimum/maximum.
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerBrain), MethodType.Constructor, typeof(FollowerInfo))]
+    private static void FollowerBrain_Constructor_Postfix(FollowerBrain __instance)
+    {
+        var min = Plugin.MinimumTraits.Value;
+        var max = Plugin.MaximumTraits.Value;
+
+        Plugin.Log.LogInfo($"[FollowerBrain Constructor] Follower: {__instance.Info.Name}");
+        Plugin.Log.LogInfo($"[FollowerBrain Constructor] Config: min={min}, max={max}");
+        Plugin.Log.LogInfo($"[FollowerBrain Constructor] Initial traits ({__instance.Info.Traits.Count}): {string.Join(", ", __instance.Info.Traits)}");
+
+        // Skip if vanilla behavior (2-3 traits)
+        if (min <= 2 && max <= 3)
+        {
+            Plugin.Log.LogInfo("[FollowerBrain Constructor] Using vanilla behavior (min<=2 && max<=3), skipping extra traits");
+            return;
+        }
+
+        var currentCount = __instance.Info.Traits.Count;
+        var targetCount = Random.Range(min, max + 1);
+
+        Plugin.Log.LogInfo($"[FollowerBrain Constructor] Target: {targetCount} traits (random between {min}-{max})");
+
+        // Already have enough traits
+        if (currentCount >= targetCount)
+        {
+            Plugin.Log.LogInfo($"[FollowerBrain Constructor] Already has {currentCount} traits >= target {targetCount}, skipping");
+            return;
+        }
+
+        var sourceTraits = Plugin.UseAllTraits.Value ? Plugin.AllTraitsList : FollowerTrait.StartingTraits;
+        var attempts = 0;
+
+        while (currentCount < targetCount && attempts < 100)
+        {
+            attempts++;
+            var trait = SelectTrait(sourceTraits);
+
+            if (trait == FollowerTrait.TraitType.None)
+            {
+                Plugin.Log.LogInfo($"[FollowerBrain Constructor] SelectTrait returned None, stopping");
+                break; // No more valid traits available
+            }
+
+            if (!__instance.HasTrait(trait))
+            {
+                __instance.Info.Traits.Add(trait);
+                currentCount++;
+                Plugin.Log.LogInfo($"[FollowerBrain Constructor] Added trait {trait} (now {currentCount}/{targetCount})");
+            }
+        }
+
+        if (currentCount < targetCount)
+        {
+            Plugin.Log.LogWarning($"[FollowerBrain Constructor] Could only assign {currentCount}/{targetCount} traits. Not enough unlocked/available traits to meet minimum.");
+        }
+
+        Plugin.Log.LogInfo($"[FollowerBrain Constructor] Final traits ({__instance.Info.Traits.Count}): {string.Join(", ", __instance.Info.Traits)}");
+    }
+
+    /// <summary>
     /// Prefix patch for GetStartingTrait. Always runs our selection logic to ensure
     /// unique trait toggles work regardless of whether weighting is enabled.
     /// </summary>
@@ -153,12 +262,16 @@ public static class TraitWeights
             }
         }
 
+        // Debug: Log source traits count
+        var sourceList = sourceTraits.ToList();
+        Plugin.Log.LogInfo($"[SelectTrait] Source traits count: {sourceList.Count}, UseAllTraits: {Plugin.UseAllTraits.Value}");
+
         if (Plugin.EnableTraitWeights.Value)
         {
-            return GetWeightedTrait(sourceTraits);
+            return GetWeightedTrait(sourceList);
         }
 
-        return GetRandomTrait(sourceTraits);
+        return GetRandomTrait(sourceList);
     }
 
     /// <summary>
@@ -235,12 +348,6 @@ public static class TraitWeights
             return false;
         }
 
-        // Check cult-wide traits (applied via doctrines)
-        if (DataManager.Instance.CultTraits.Contains(trait))
-        {
-            return false;
-        }
-
         return true;
     }
 
@@ -258,10 +365,8 @@ public static class TraitWeights
         {
             var trait = availableTraits[Random.Range(0, availableTraits.Count)];
 
-            // Check game restrictions (same as vanilla):
-            // - IsTraitUnavailable: checks DLC requirements, day requirements, etc.
-            // - CultTraits: traits already applied cult-wide via doctrines
-            if (!FollowerTrait.IsTraitUnavailable(trait) && !DataManager.Instance.CultTraits.Contains(trait))
+            // Check game restrictions (DLC requirements, day requirements, etc.)
+            if (!FollowerTrait.IsTraitUnavailable(trait))
             {
                 return trait;
             }
@@ -288,10 +393,8 @@ public static class TraitWeights
                 break; // No valid traits available
             }
 
-            // Check game restrictions (same as vanilla):
-            // - IsTraitUnavailable: checks DLC requirements, day requirements, etc.
-            // - CultTraits: traits already applied cult-wide via doctrines
-            if (!FollowerTrait.IsTraitUnavailable(trait) && !DataManager.Instance.CultTraits.Contains(trait))
+            // Check game restrictions (DLC requirements, day requirements, etc.)
+            if (!FollowerTrait.IsTraitUnavailable(trait))
             {
                 return trait;
             }
@@ -307,6 +410,7 @@ public static class TraitWeights
     private static List<FollowerTrait.TraitType> GetFilteredTraits(IEnumerable<FollowerTrait.TraitType> sourceTraits)
     {
         var availableTraits = new List<FollowerTrait.TraitType>(sourceTraits);
+        var initialCount = availableTraits.Count;
 
         // Filter unique traits based on section 01 configs
         if (!Plugin.IncludeImmortal.Value)
@@ -338,13 +442,43 @@ public static class TraitWeights
         availableTraits.Remove(FollowerTrait.TraitType.BishopOfCult); // Story-related, granted when converting a bishop
         availableTraits.Remove(FollowerTrait.TraitType.Spy); // Requires SpyJoinedDay to be set or spies leave immediately
 
-        // Filter out story/event traits unless config allows them
+        // Filter out traits without localization (not fully implemented in the game)
+        for (var i = availableTraits.Count - 1; i >= 0; i--)
+        {
+            var trait = availableTraits[i];
+            var localizedName = FollowerTrait.GetLocalizedTitle(trait);
+            if (string.IsNullOrEmpty(localizedName) || localizedName.StartsWith("Traits/"))
+            {
+                availableTraits.RemoveAt(i);
+            }
+        }
+
+        // Filter out story/event traits
         if (!Plugin.IncludeStoryEventTraits.Value)
         {
+            // Setting disabled: remove all event traits
             foreach (var trait in Plugin.StoryEventTraits)
             {
                 availableTraits.Remove(trait);
             }
+        }
+        else if (Plugin.NoNegativeTraits.Value)
+        {
+            // Event traits enabled but trait replacement also enabled:
+            // Remove negative event traits (they'd just get replaced anyway)
+            foreach (var trait in Plugin.StoryEventTraits)
+            {
+                if (!FollowerTrait.IsPositiveTrait(trait))
+                {
+                    availableTraits.Remove(trait);
+                }
+            }
+        }
+
+        // Filter by game unlock requirements if enabled
+        if (Plugin.UseUnlockedTraitsOnly.Value)
+        {
+            availableTraits.RemoveAll(t => FollowerTrait.IsTraitUnavailable(t));
         }
 
         // Remove single-use traits that are already in use (unless AllowMultipleUniqueTraits is enabled)
@@ -366,6 +500,8 @@ public static class TraitWeights
                 }
             }
         }
+
+        Plugin.Log.LogInfo($"[GetFilteredTraits] {initialCount} -> {availableTraits.Count} traits after filtering");
 
         return availableTraits;
     }
@@ -430,5 +566,142 @@ public static class TraitWeights
 
         // Default weight for traits not in the config (e.g., dynamically added traits)
         return 1.0f;
+    }
+
+    /// <summary>
+    /// Transpiler for RandomisedTraits - patches the vanilla formula to use configurable min/max.
+    /// Vanilla: max=6, range from (Traits.Count-1) to (Traits.Count+2), clamped to [1, max]
+    /// Patched: max=config, range from configMin to configMax+1 (exclusive upper bound)
+    /// </summary>
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.RandomisedTraits))]
+    private static IEnumerable<CodeInstruction> RandomisedTraits_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        var codes = new List<CodeInstruction>(instructions);
+        var getMaxMethod = AccessTools.Method(typeof(TraitWeights), nameof(GetMaxTraitCount));
+        var getMinMethod = AccessTools.Method(typeof(TraitWeights), nameof(GetMinTraitCount));
+        var getMaxPlusOneMethod = AccessTools.Method(typeof(TraitWeights), nameof(GetMaxPlusOneTraitCount));
+
+        var patchedMax = false;
+        var patchedMin = false;
+        var patchedMaxPlusOne = false;
+
+        for (var i = 0; i < codes.Count; i++)
+        {
+            // Replace ldc.i4.6 (max = 6)
+            if (!patchedMax && codes[i].opcode == OpCodes.Ldc_I4_6)
+            {
+                codes[i] = new CodeInstruction(OpCodes.Call, getMaxMethod);
+                patchedMax = true;
+                Plugin.Log.LogInfo("[Transpiler] RandomisedTraits: Replaced max=6 with GetMaxTraitCount()");
+            }
+            // Replace ldc.i4.1, sub pattern (Traits.Count - 1)
+            else if (!patchedMin && codes[i].opcode == OpCodes.Ldc_I4_1 &&
+                     i + 1 < codes.Count &&
+                     codes[i + 1].opcode == OpCodes.Sub)
+            {
+                codes[i] = new CodeInstruction(OpCodes.Pop); // Remove Traits.Count from stack
+                codes[i + 1] = new CodeInstruction(OpCodes.Call, getMinMethod); // Push our min
+                patchedMin = true;
+                Plugin.Log.LogInfo("[Transpiler] RandomisedTraits: Replaced Traits.Count-1 with GetMinTraitCount()");
+            }
+            // Replace ldc.i4.2, add pattern (Traits.Count + 2)
+            else if (!patchedMaxPlusOne && codes[i].opcode == OpCodes.Ldc_I4_2 &&
+                     i + 1 < codes.Count &&
+                     codes[i + 1].opcode == OpCodes.Add)
+            {
+                codes[i] = new CodeInstruction(OpCodes.Pop); // Remove Traits.Count from stack
+                codes[i + 1] = new CodeInstruction(OpCodes.Call, getMaxPlusOneMethod); // Push max+1
+                patchedMaxPlusOne = true;
+                Plugin.Log.LogInfo("[Transpiler] RandomisedTraits: Replaced Traits.Count+2 with GetMaxPlusOneTraitCount()");
+            }
+        }
+
+        if (!patchedMax)
+        {
+            Plugin.Log.LogWarning("[Transpiler] RandomisedTraits: Could not find ldc.i4.6 to patch.");
+        }
+
+        if (!patchedMin)
+        {
+            Plugin.Log.LogWarning("[Transpiler] RandomisedTraits: Could not find ldc.i4.1/sub pattern to patch.");
+        }
+
+        if (!patchedMaxPlusOne)
+        {
+            Plugin.Log.LogWarning("[Transpiler] RandomisedTraits: Could not find ldc.i4.2/add pattern to patch.");
+        }
+
+        return codes;
+    }
+
+    /// <summary>
+    /// Returns the configured minimum trait count for RandomisedTraits transpiler.
+    /// </summary>
+    public static int GetMinTraitCount() => Plugin.MinimumTraits.Value;
+
+    /// <summary>
+    /// Returns a high value (100) to effectively disable the Clamp in RandomisedTraits.
+    /// The vanilla code uses Clamp(value, 1, max) which caps both lower and upper bounds.
+    /// By setting max=100, we let our min/max+1 values control the range directly.
+    /// </summary>
+    public static int GetMaxTraitCount() => 100;
+
+    /// <summary>
+    /// Returns max+1 for exclusive upper bound in Random.Range for RandomisedTraits transpiler.
+    /// </summary>
+    public static int GetMaxPlusOneTraitCount() => Plugin.MaximumTraits.Value + 1;
+
+    /// <summary>
+    /// Debug postfix to log before/after traits during re-indoctrination.
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.RandomisedTraits))]
+    private static void RandomisedTraits_Postfix(FollowerInfo __instance, int seed, List<FollowerTrait.TraitType> __result)
+    {
+        Plugin.Log.LogInfo($"[RandomisedTraits] Follower: {__instance.Name}");
+        Plugin.Log.LogInfo($"[RandomisedTraits] Before: {__instance.Traits.Count} traits - {string.Join(", ", __instance.Traits)}");
+        Plugin.Log.LogInfo($"[RandomisedTraits] After: {__result.Count} traits - {string.Join(", ", __result)}");
+        Plugin.Log.LogInfo($"[RandomisedTraits] Config: min={Plugin.MinimumTraits.Value}, max={Plugin.MaximumTraits.Value}");
+    }
+
+    /// <summary>
+    /// Prefix patch for re-indoctrination to randomize traits before the menu is shown.
+    /// Vanilla re-indoctrination only changes appearance/name - this adds trait randomization.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Interaction_Reindoctrinate), nameof(Interaction_Reindoctrinate.SimpleNewRecruitRoutine))]
+    private static void Reindoctrinate_Prefix(Interaction_Reindoctrinate __instance, bool customise)
+    {
+        if (!Plugin.RandomizeTraitsOnReindoctrination.Value)
+        {
+            return;
+        }
+
+        if (!customise || __instance.sacrificeFollower == null)
+        {
+            return;
+        }
+
+        var followerInfo = __instance.sacrificeFollower.Brain._directInfoAccess;
+        Plugin.Log.LogInfo($"[Reindoctrinate] Starting re-indoctrination for {followerInfo.Name}");
+        Plugin.Log.LogInfo($"[Reindoctrinate] Current traits ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+
+        // Generate new randomized traits using the patched RandomisedTraits method
+        var seed = followerInfo.ID + TimeManager.CurrentDay;
+        var newTraits = followerInfo.RandomisedTraits(seed);
+
+        // Replace the follower's traits with the new randomized ones
+        followerInfo.Traits.Clear();
+        followerInfo.Traits.AddRange(newTraits);
+
+        Plugin.Log.LogInfo($"[Reindoctrinate] New traits ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+
+        // Apply trait replacement if enabled (replaces negative traits with positive ones)
+        if (Plugin.NoNegativeTraits.Value)
+        {
+            NoNegativeTraits.ProcessTraitReplacement(__instance.sacrificeFollower.Brain);
+            Plugin.Log.LogInfo($"[Reindoctrinate] After trait replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+        }
     }
 }

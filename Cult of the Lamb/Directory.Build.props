@@ -35,10 +35,17 @@
         </PackageReference>
     </ItemDefinitionGroup>
 
-    <!-- Common packages -->
+    <!-- BepInEx references -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
-        <PackageReference Include="BepInEx.BaseLib" Version="5.4.21"/>
+        <Reference Include="BepInEx">
+            <HintPath>..\libs\bepinex\BepInEx.dll</HintPath>
+        </Reference>
+        <Reference Include="0Harmony">
+            <HintPath>..\libs\bepinex\0Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="MonoMod.Utils">
+            <HintPath>..\libs\bepinex\MonoMod.Utils.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <!-- Common game/Unity references -->

@@ -1,10 +1,10 @@
 {
     "name":  "Trait_Control",
-    "version_number":  "0.1.4",
+    "version_number":  "0.1.5",
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/58?tab=description",
     "description":  "Control follower traits - replace negative with positive, customize how often each trait appears - even stop certain traits altogether.",
     "dependencies":  [
                          "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
-                         "p1xel8ted-BepInEx_Configuration_Manager-18.4.1"
+                         "p1xel8ted-ConfigurationManagerEnhanced-1.0.0"
                      ]
 }

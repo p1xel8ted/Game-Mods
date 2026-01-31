@@ -1,4 +1,6 @@
-﻿namespace Rebirth;
+﻿using Object = UnityEngine.Object;
+
+namespace Rebirth;
 
 internal class RebirthFollowerCommand : CustomFollowerCommand
 {
@@ -75,7 +77,7 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         yield return new WaitForSeconds(3f);
         DataManager.Instance.Followers_Recruit.Add(f);
         FollowerManager.SpawnExistingRecruits(BiomeBaseManager.Instance.RecruitSpawnLocation.transform.position);
-        UnityEngine.Object.FindObjectOfType<FollowerRecruit>()?.ManualTriggerAnimateIn();
+        Object.FindObjectOfType<FollowerRecruit>()?.ManualTriggerAnimateIn();
         BiomeBaseManager.Instance.SpawnExistingRecruits = true;
         NotificationCentre.NotificationsEnabled = true;
         yield return new WaitForSeconds(2f);
@@ -154,6 +156,10 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         yield return new WaitForSeconds(1f);
         follower.SetBodyAnimation("wave", true);
         yield return new WaitForSeconds(0.75f);
+
+        // Set death cause to "old age" so it doesn't show as "murdered" in graveyard
+        // This doesn't affect murder stats - those are only incremented by the actual Murder command
+        follower.Brain._directInfoAccess.DiedOfOldAge = true;
 
         follower.Die(NotificationCentre.NotificationType.None, force: true);
     }

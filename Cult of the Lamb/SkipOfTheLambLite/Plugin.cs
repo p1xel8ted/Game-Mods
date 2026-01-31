@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.skipofthelamblite";
     private const string PluginName = "Skip of the Lamb Lite";
-    private const string PluginVer = "0.1.0";
+    private const string PluginVer = "0.1.1";
 
     internal static ManualLogSource Log { get; private set; }
 

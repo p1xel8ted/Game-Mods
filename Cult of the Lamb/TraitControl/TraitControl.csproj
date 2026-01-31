@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.4</Version>
+        <Version>0.1.5</Version>
         <ThunderstoreDir>traitcontrol</ThunderstoreDir>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Newtonsoft.Json">
             <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
         </Reference>
-        <Reference Include="ConfigurationManager">
-            <HintPath>..\libs\ConfigurationManager.dll</HintPath>
+        <Reference Include="ConfigurationManagerEnhanced">
+            <HintPath>..\libs\ConfigurationManagerEnhanced.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>

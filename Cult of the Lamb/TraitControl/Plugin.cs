@@ -4,13 +4,13 @@ using BepInEx.Bootstrap;
 namespace TraitControl;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
+[BepInDependency("com.p1xel8ted.configurationmanagerenhanced", "1.0")]
 [BepInIncompatibility("NothingNegative")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.traitcontrol";
     internal const string PluginName = "Trait Control";
-    private const string PluginVer = "0.1.4";
+    private const string PluginVer = "0.1.5";
 
     private const string TraitReplacementSection = "01. Trait Replacement";
     private const string UniqueTraitsSection = "02. Unique Traits";
@@ -18,10 +18,12 @@ public partial class Plugin : BaseUnityPlugin
     private const string TraitWeightsSection = "04. Trait Weights";
     private const string GoodTraitsSection = "05. Good Traits";
     private const string BadTraitsSection = "06. Bad Traits";
+    private const string ResetSettingsSection = "07. Reset Settings";
 
     internal static ManualLogSource Log { get; private set; }
     private static ConfigFile ConfigInstance { get; set; }
     private static bool? _isNothingNegativePresentCache;
+    private static bool _showResetConfirmation;
 
     /// <summary>
     /// Traits that are granted through gameplay events and shouldn't be randomly assigned by default.
@@ -32,6 +34,7 @@ public partial class Plugin : BaseUnityPlugin
         FollowerTrait.TraitType.MarriedHappily,
         FollowerTrait.TraitType.MarriedUnhappily,
         FollowerTrait.TraitType.MarriedJealous,
+        FollowerTrait.TraitType.MarriedDevoted,
         FollowerTrait.TraitType.MarriedMurderouslyJealous,
 
         // Parenting
@@ -58,18 +61,18 @@ public partial class Plugin : BaseUnityPlugin
         FollowerTrait.TraitType.ExCultLeader,
         FollowerTrait.TraitType.ExistentialDread,
 
-        // DLC/Special
+        // DLC/Special - Snowmen
         FollowerTrait.TraitType.InfusibleSnowman,
         FollowerTrait.TraitType.MasterfulSnowman,
         FollowerTrait.TraitType.ShoddySnowman,
+
+        // DLC/Special - Other
         FollowerTrait.TraitType.MutatedVisual,
         FollowerTrait.TraitType.PureBlood,
         FollowerTrait.TraitType.PureBlood_1,
         FollowerTrait.TraitType.PureBlood_2,
         FollowerTrait.TraitType.PureBlood_3,
-        FollowerTrait.TraitType.FreezeImmune,
-        FollowerTrait.TraitType.FurnaceAnimal,
-        FollowerTrait.TraitType.FurnaceFollower
+        FollowerTrait.TraitType.FreezeImmune
     ];
 
     private void Awake()
@@ -87,15 +90,50 @@ public partial class Plugin : BaseUnityPlugin
         UseUnlockedTraitsOnly = ConfigInstance.Bind(TraitReplacementSection, "Use Unlocked Traits Only", true,
             new ConfigDescription("Only use traits you have unlocked. Applies to both trait replacement and new follower trait selection.", null,
                 new ConfigurationManagerAttributes { Order = 9 }));
-        UseUnlockedTraitsOnly.SettingChanged += (_, _) => Patches.NoNegativeTraits.GenerateAvailableTraits();
+        UseUnlockedTraitsOnly.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            Patches.TraitWeights.RefreshAllTraitsList();
+            UpdateTraitWeightVisibility();
+        };
 
         UseAllTraits = ConfigInstance.Bind(TraitReplacementSection, "Use All Traits Pool", false,
-            new ConfigDescription("Pull from ALL traits instead of the game's separate pools (Starting, Rare, Faithful). If 'Use Unlocked Traits Only' is enabled, only unlocked traits will be used. Unique traits require their individual toggles to be enabled.", null,
+            new ConfigDescription("Merge all trait pools into one, bypassing vanilla's normal/rare split. Without this, vanilla assigns traits from separate pools (normal pool for first 2 traits, ~20% chance of rare pool for 3rd trait). Enable this for trait weights to have full control over distribution. Unique traits require their individual toggles.", null,
                 new ConfigurationManagerAttributes { Order = 8 }));
 
         PreferExclusiveCounterparts = ConfigInstance.Bind(TraitReplacementSection, "Prefer Exclusive Counterparts", true,
             new ConfigDescription("When replacing negative traits, exclusive traits (like Lazy) are replaced with their positive counterpart (Industrious) instead of a random trait.", null,
                 new ConfigurationManagerAttributes { Order = 7 }));
+
+        MinimumTraits = ConfigInstance.Bind(TraitReplacementSection, "Minimum Traits", 2,
+            new ConfigDescription("Minimum number of traits new followers will have. Vanilla is 2.",
+                new AcceptableValueRange<int>(2, 8),
+                new ConfigurationManagerAttributes { Order = 6 }));
+
+        MaximumTraits = ConfigInstance.Bind(TraitReplacementSection, "Maximum Traits", 3,
+            new ConfigDescription("Maximum number of traits new followers will have. Vanilla is 3. Limited to 8 due to UI constraints.",
+                new AcceptableValueRange<int>(2, 8),
+                new ConfigurationManagerAttributes { Order = 5 }));
+
+        // Ensure max >= min
+        MaximumTraits.SettingChanged += (_, _) =>
+        {
+            if (MaximumTraits.Value < MinimumTraits.Value)
+            {
+                MaximumTraits.Value = MinimumTraits.Value;
+            }
+        };
+        MinimumTraits.SettingChanged += (_, _) =>
+        {
+            if (MinimumTraits.Value > MaximumTraits.Value)
+            {
+                MaximumTraits.Value = MinimumTraits.Value;
+            }
+        };
+
+        RandomizeTraitsOnReindoctrination = ConfigInstance.Bind(TraitReplacementSection, "Randomize Traits on Re-indoctrination", false,
+            new ConfigDescription("When re-indoctrinating an existing follower (at the altar), randomize their traits using the configured min/max. Vanilla re-indoctrination only changes appearance/name.", null,
+                new ConfigurationManagerAttributes { Order = 4 }));
 
         // Unique Traits - 02
         AllowMultipleUniqueTraits = ConfigInstance.Bind(UniqueTraitsSection, "Allow Multiple Unique Traits", false,
@@ -213,13 +251,19 @@ public partial class Plugin : BaseUnityPlugin
 
         // Trait Weights - 04
         EnableTraitWeights = ConfigInstance.Bind(TraitWeightsSection, "Enable Trait Weights", false,
-            new ConfigDescription("Enable weighted random selection for new followers. When enabled, you can configure how often each trait appears below. Set a weight to 0 to disable that trait entirely. This does not override settings in the sections above.", null,
+            new ConfigDescription("Enable weighted random selection for new followers. Weights affect trait selection within each pool. For full control over all traits, enable 'Use All Traits Pool' - otherwise vanilla's normal/rare pool split still applies (rare pool has ~20% chance for 3rd trait). Set a weight to 0 to disable a trait.", null,
                 new ConfigurationManagerAttributes { Order = 100 }));
         EnableTraitWeights.SettingChanged += (_, _) => UpdateTraitWeightVisibility();
 
         IncludeStoryEventTraits = ConfigInstance.Bind(TraitWeightsSection, "Include Event Traits", false,
-            new ConfigDescription("Include traits normally granted through gameplay events (marriage, parenting, criminal, missionary, etc.) in the weights list. Requires game restart to regenerate config entries.", null,
+            new ConfigDescription("Include traits normally granted through gameplay events (marriage, parenting, criminal, missionary, etc.) in the weights list. Only applies when 'Use All Traits Pool' is enabled. Warning: This can result in nonsensical assignments (e.g., ProudParent on followers who have never had children).", null,
                 new ConfigurationManagerAttributes { Order = 99 }));
+        IncludeStoryEventTraits.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            Patches.TraitWeights.RefreshAllTraitsList();
+            UpdateTraitWeightVisibility();
+        };
 
         // Generate dynamic trait weight configs
         GenerateTraitWeightConfigs();
@@ -227,44 +271,56 @@ public partial class Plugin : BaseUnityPlugin
         // Apply initial visibility (handles unique trait toggles)
         UpdateTraitWeightVisibility();
 
+        // Reset Settings - 07
+        ConfigInstance.Bind(ResetSettingsSection, "Reset All Settings", false,
+            new ConfigDescription("Click to reset all settings to defaults (vanilla behavior).", null,
+                new ConfigurationManagerAttributes { Order = 0, HideDefaultButton = true, CustomDrawer = ResetAllSettings }));
+
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
         Log.LogInfo($"{PluginName} loaded.");
     }
 
+    internal static void LogAllTraitNames()
+    {
+        Log.LogInfo("=== Trait Enum Names and Display Names ===");
+        foreach (var trait in Enum.GetValues(typeof(FollowerTrait.TraitType)).Cast<FollowerTrait.TraitType>())
+        {
+            if (trait == FollowerTrait.TraitType.None)
+            {
+                continue;
+            }
+
+            var displayName = FollowerTrait.GetLocalizedTitle(trait);
+            // Check if localization returned the raw key (not translated)
+            var isLocalized = !string.IsNullOrEmpty(displayName) && !displayName.StartsWith("Traits/");
+            Log.LogInfo($"  {trait} => \"{displayName}\"{(isLocalized ? "" : " [NOT LOCALIZED]")}");
+        }
+        Log.LogInfo("=== End Trait List ===");
+    }
+
     private static void GenerateTraitWeightConfigs()
     {
-        // Merge all trait lists into one unique set
-        var allTraits = new HashSet<FollowerTrait.TraitType>();
+        // Get ALL traits from the enum instead of just those in lists
+        var allTraits = Enum.GetValues(typeof(FollowerTrait.TraitType))
+            .Cast<FollowerTrait.TraitType>()
+            .ToHashSet();
 
-        var traitFields = AccessTools.GetDeclaredFields(typeof(FollowerTrait))
-            .Where(f => f.FieldType == typeof(List<FollowerTrait.TraitType>))
-            .ToList();
-
-        foreach (var field in traitFields)
-        {
-            if (field.GetValue(null) is List<FollowerTrait.TraitType> traitList)
-            {
-                allTraits.UnionWith(traitList);
-            }
-        }
-
-        // Remove None if present
+        // Remove None
         allTraits.Remove(FollowerTrait.TraitType.None);
 
         // Always exclude - these require special game state setup
         allTraits.Remove(FollowerTrait.TraitType.Spy); // Requires SpyJoinedDay or spies leave immediately
         allTraits.Remove(FollowerTrait.TraitType.BishopOfCult); // Story-related, granted when converting a bishop
 
-        // Exclude story/event traits unless config allows them
+        // Store all traits (excluding event traits based on config) for use by patches
+        AllTraitsList.Clear();
+        IEnumerable<FollowerTrait.TraitType> traitsForPatches = allTraits;
         if (!IncludeStoryEventTraits.Value)
         {
-            allTraits.ExceptWith(StoryEventTraits);
+            traitsForPatches = traitsForPatches.Except(StoryEventTraits);
         }
-
-        // Store for use by patches
-        AllTraitsList.Clear();
-        AllTraitsList.AddRange(allTraits);
+        AllTraitsList.AddRange(traitsForPatches);
 
         // Separate into good and bad traits
         var goodTraits = allTraits.Where(t => FollowerTrait.GoodTraits.Contains(t)).OrderBy(t => t.ToString()).ToList();
@@ -293,25 +349,31 @@ public partial class Plugin : BaseUnityPlugin
     {
         var categories = GetTraitCategories(trait);
         var traitDescription = GetTraitDescription(trait);
+        var internalName = trait.ToString();
+
+        // Get localized display name for Configuration Manager UI
+        var localizedName = GetTraitTitle(trait);
+        var displayName = !string.IsNullOrEmpty(localizedName) ? $"{localizedName} ({internalName})" : null;
+
         var configDescription = string.IsNullOrEmpty(traitDescription)
-            ? $"{categories}Weight for {trait}. Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%."
-            : $"{categories}{traitDescription}\n\nWeight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.";
+            ? $"Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.{categories}"
+            : $"{traitDescription}\n\nWeight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.{categories}";
 
         var weight = ConfigInstance.Bind(
             section,
-            trait.ToString(),
+            internalName,  // Use internal name as key (stable for config file)
             1.0f,
             new ConfigDescription(
                 configDescription,
                 new AcceptableValueRange<float>(0f, 100f),
-                new ConfigurationManagerAttributes { Order = order, Browsable = !isHidden }
+                new ConfigurationManagerAttributes { Order = order, Browsable = !isHidden, DispName = displayName }
             )
         );
 
-        // Snap to 0.05 increments so users can set exactly 0 to disable
+        // Snap to 0.05 increments, with values below 0.1 snapping directly to 0
         weight.SettingChanged += (_, _) =>
         {
-            var rounded = Mathf.Round(weight.Value / 0.05f) * 0.05f;
+            var rounded = weight.Value < 0.1f ? 0f : Mathf.Round(weight.Value / 0.05f) * 0.05f;
             if (!Mathf.Approximately(weight.Value, rounded))
             {
                 weight.Value = rounded;
@@ -379,7 +441,7 @@ public partial class Plugin : BaseUnityPlugin
             categories.Add("Unlock");
         }
 
-        return categories.Count > 0 ? $"[{string.Join(", ", categories)}] " : "";
+        return categories.Count > 0 ? $"\n\nFound in: {string.Join(", ", categories)}" : "\n\nGranted via other means (doctrines, rituals, events, etc.)";
     }
 
     /// <summary>
@@ -396,6 +458,30 @@ public partial class Plugin : BaseUnityPlugin
         }
 
         return baseDescription;
+    }
+
+    /// <summary>
+    /// Attempts to get the localized title for a trait.
+    /// Returns null if localization is not available or returns the raw key.
+    /// </summary>
+    private static string GetTraitTitle(FollowerTrait.TraitType trait)
+    {
+        try
+        {
+            var title = FollowerTrait.GetLocalizedTitle(trait);
+            // I2 Localization returns the key itself if no translation exists
+            if (string.IsNullOrWhiteSpace(title) || title.StartsWith("Traits/"))
+            {
+                return null;
+            }
+
+            return StripRichText(title);
+        }
+        catch
+        {
+            // Localization system not ready
+            return null;
+        }
     }
 
     /// <summary>
@@ -433,7 +519,34 @@ public partial class Plugin : BaseUnityPlugin
         return Regex.Replace(input, "<[^>]+>", string.Empty).Trim();
     }
 
+    /// <summary>
+    /// Sanitizes a string for use as a BepInEx config key.
+    /// BepInEx cannot use: = \n \t \ " ' [ ]
+    /// </summary>
+    private static string SanitizeConfigKey(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return null;
+
+        // Remove or replace invalid characters
+        var sanitized = input
+            .Replace("=", "-")
+            .Replace("\n", " ")
+            .Replace("\t", " ")
+            .Replace("\\", "-")
+            .Replace("\"", "")
+            .Replace("'", "")
+            .Replace("[", "(")
+            .Replace("]", ")");
+
+        return string.IsNullOrWhiteSpace(sanitized) ? null : sanitized.Trim();
+    }
+
     private static Plugin _instance;
+
+    /// <summary>
+    /// Public wrapper for UpdateTraitWeightVisibility, callable from patches.
+    /// </summary>
+    internal static void RefreshTraitWeightVisibility() => UpdateTraitWeightVisibility();
 
     private static void UpdateTraitWeightVisibility()
     {
@@ -445,7 +558,7 @@ public partial class Plugin : BaseUnityPlugin
             {
                 var show = weightsEnabled;
 
-                // Also check unique trait toggles
+                // Check unique trait toggles
                 if (show)
                 {
                     show = kvp.Key switch
@@ -459,7 +572,48 @@ public partial class Plugin : BaseUnityPlugin
                     };
                 }
 
+                // Check event traits toggle
+                if (show && StoryEventTraits.Contains(kvp.Key))
+                {
+                    show = IncludeStoryEventTraits.Value;
+                }
+
+                // Check unlocked traits toggle - hide traits not available based on game unlock requirements
+                if (show && UseUnlockedTraitsOnly.Value)
+                {
+                    show = !FollowerTrait.IsTraitUnavailable(kvp.Key);
+                }
+
                 attrs.Browsable = show;
+            }
+        }
+
+        _instance?.StartCoroutine(RefreshConfigurationManager());
+    }
+
+    /// <summary>
+    /// Updates the display names of trait weight configs with localized names.
+    /// Called when localization initializes or language changes.
+    /// Adds an asterisk (*) if localization failed for a trait.
+    /// </summary>
+    internal static void UpdateTraitDisplayNames()
+    {
+        foreach (var kvp in TraitWeights)
+        {
+            if (kvp.Value.Description?.Tags?.Length > 0 && kvp.Value.Description.Tags[0] is ConfigurationManagerAttributes attrs)
+            {
+                var internalName = kvp.Key.ToString();
+                var localizedName = GetTraitTitle(kvp.Key);
+
+                if (!string.IsNullOrEmpty(localizedName))
+                {
+                    attrs.DispName = $"{localizedName} ({internalName})";
+                }
+                else
+                {
+                    // Asterisk indicates localization not available
+                    attrs.DispName = $"* {internalName}";
+                }
             }
         }
 
@@ -468,7 +622,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static BaseUnityPlugin GetConfigurationManager()
     {
-        return (from pluginInfo in Chainloader.PluginInfos.Values where pluginInfo.Metadata.GUID == "com.bepis.bepinex.configurationmanager" select pluginInfo.Instance).FirstOrDefault();
+        return (from pluginInfo in Chainloader.PluginInfos.Values where pluginInfo.Metadata.GUID == "com.p1xel8ted.configurationmanagerenhanced" select pluginInfo.Instance).FirstOrDefault();
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
@@ -533,5 +687,52 @@ public partial class Plugin : BaseUnityPlugin
     internal static void L(string message)
     {
         Log.LogInfo(message);
+    }
+
+    private static void ResetAllSettings(ConfigEntryBase entry)
+    {
+        if (_showResetConfirmation)
+        {
+            DisplayResetConfirmation();
+        }
+        else
+        {
+            if (GUILayout.Button("Reset All Settings", GUILayout.ExpandWidth(true)))
+            {
+                _showResetConfirmation = true;
+            }
+        }
+    }
+
+    private static void DisplayResetConfirmation()
+    {
+        GUILayout.Label("Are you sure? This will reset all settings to defaults.");
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Yes", GUILayout.ExpandWidth(true)))
+        {
+            ResetAllToDefaults();
+            _showResetConfirmation = false;
+        }
+        if (GUILayout.Button("No", GUILayout.ExpandWidth(true)))
+        {
+            _showResetConfirmation = false;
+        }
+        GUILayout.EndHorizontal();
+    }
+
+    private static void ResetAllToDefaults()
+    {
+        foreach (var entry in ConfigInstance.Entries
+                     .Where(e => e.Value.BoxedValue != e.Value.DefaultValue)
+                     .Where(e => e.Key.Section != ResetSettingsSection))
+        {
+            entry.Value.BoxedValue = entry.Value.DefaultValue;
+            Log.LogInfo($"Reset {entry.Key} to default: {entry.Value.DefaultValue}");
+        }
+
+        // Regenerate traits and refresh UI
+        Patches.NoNegativeTraits.GenerateAvailableTraits();
+        Patches.TraitWeights.RefreshAllTraitsList();
+        UpdateTraitWeightVisibility();
     }
 }

@@ -39,9 +39,12 @@
 [*][size=3][b]Lower weight = less likely relative to other traits[/b][/size]
 [*][size=3][b]Weight of 0 = disabled[/b] - that trait will never appear[/size]
 [*][size=3]All traits default to 1.0 (equal chance).[/size]
-[*][size=3]Sliders snap to 0.05 increments for precise control.[/size]
+[*][size=3]Sliders snap to 0.05 increments for precise control (values below 0.1 snap to 0).[/size]
 [/list]
 [size=3]The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.[/size]
+
+[size=3][b]Localization Support[/b][/size]
+[size=3]Trait names display in your current game language alongside the internal name, e.g. "Lover of Cold (Chionophile)". Names update automatically when you change languages. Traits with missing translations are marked with an asterisk (*), indicating they are not fully implemented in the game itself.[/size]
 
 [size=3][b]Trait Categories[/b][/size]
 [size=3]Each trait in the configuration shows category tags indicating which game lists it belongs to. This helps you understand which traits are safe to disable without affecting unlocks.[/size]
@@ -52,7 +55,7 @@
 [*][size=3][b]Faithful[/b] - Granted when a follower becomes faithful (spider web interaction)[/size]
 [*][size=3][b]Unique[/b] - Special reward traits - only one follower can have each (Immortal, Disciple, etc.)[/size]
 [*][size=3][b]Single[/b] - Only one follower in your cult can have this trait at a time[/size]
-[*][size=3][b]Sin[/b] - Sin district traits (requires Pleasure district to be enabled)[/size]
+[*][size=3][b]Sin[/b] - Sin traits (requires Pleasure Shrine from Sins of the Flesh DLC)[/size]
 [*][size=3][b]DLC[/b] - Requires DLC content to be active[/size]
 [*][size=3][b]Winter[/b] - Winter/seasons-specific traits[/size]
 [*][size=3][b]Event[/b] - Granted through gameplay events (marriage, parenting, criminal, etc.)[/size]
@@ -78,11 +81,14 @@
 [*][size=3][b]Missionary[/b] - MissionaryExcited, MissionaryInspired, MissionaryTerrified[/size]
 [*][size=3][b]Special[/b] - ExCultLeader, ExistentialDread[/size]
 [*][size=3][b]DLC/Snowman[/b] - InfusibleSnowman, MasterfulSnowman, ShoddySnowman[/size]
-[*][size=3][b]DLC/Other[/b] - MutatedVisual, PureBlood, PureBlood_1/2/3, FreezeImmune, FurnaceAnimal, FurnaceFollower[/size]
+[*][size=3][b]DLC/Other[/b] - MutatedVisual, PureBlood, PureBlood_1/2/3, FreezeImmune[/size]
 [/list]
 
 [size=3][b]Notifications[/b][/size]
 [size=3]Optional notifications when trait replacement adds or removes traits.[/size]
+
+[size=3][b]Reset Settings[/b][/size]
+[size=3]Reset all configuration options to their default values (vanilla game behavior) with a single click. Found in section "07. Reset Settings" in the Configuration Manager.[/size]
 
 [size=4][b]Configuration Examples[/b][/size]
 
@@ -117,12 +123,12 @@
 [/list]
 [size=3][i]Result: Lazy gets replaced with a random positive trait instead of Industrious.[/i][/size]
 
-[size=3][b]"I only want traits I've unlocked via doctrines"[/b][/size]
+[size=3][b]"I only want traits available at my game progression"[/b][/size]
 [list]
 [*][size=3]Enable Trait Replacement: ON[/size]
 [*][size=3]Use Unlocked Traits Only: ON[/size]
 [/list]
-[size=3][i]Result: Only traits you've unlocked through doctrines will be used as replacements.[/i][/size]
+[size=3][i]Result: Traits are filtered by game progression (e.g., Fashionable requires Tailor, Sin traits require Pleasure Shrine, some traits require Day 7+).[/i][/size]
 
 [size=3][b]"I want to pull from all traits, but not unique ones"[/b][/size]
 [list]
@@ -133,7 +139,7 @@
 [*][size=3]Include Blind: OFF[/size]
 [*][size=3]Include Born To The Rot: OFF[/size]
 [/list]
-[size=3][i]Result: Trait selection uses all trait pools combined, but unique/crossover traits are excluded.[/i][/size]
+[size=3][i]Result: Trait selection uses all trait pools combined, but unique/crossover traits are excluded. Event traits are also excluded by default.[/i][/size]
 
 [size=3][b]"I want access to every single trait in the game"[/b][/size]
 [list]
@@ -143,8 +149,9 @@
 [*][size=3]Include Dont Starve: ON[/size]
 [*][size=3]Include Blind: ON[/size]
 [*][size=3]Include Born To The Rot: ON[/size]
+[*][size=3]Include Event Traits: ON[/size]
 [/list]
-[size=3][i]Result: Every trait in the game can appear on new followers, including special/crossover traits.[/i][/size]
+[size=3][i]Result: Every trait in the game can appear on new followers, including special/crossover and event traits.[/i][/size]
 
 [size=3][b]"I never want Materialistic followers"[/b][/size]
 [list]
@@ -153,16 +160,14 @@
 [/list]
 [size=3][i]Result: Materialistic trait will never appear on new followers. No more gift demands.[/i][/size]
 
-[size=3][b]"I want a cult of hard workers"[/b][/size]
+[size=3][b]"I want no lazy followers"[/b][/size]
 [list]
 [*][size=3]Enable Trait Replacement: ON[/size]
 [*][size=3]Prefer Exclusive Counterparts: ON[/size]
-[*][size=3]Use All Traits Pool: ON[/size]
 [*][size=3]Enable Trait Weights: ON[/size]
-[*][size=3]Industrious (in Good Traits): 50-100[/size]
 [*][size=3]Lazy (in Bad Traits): 0[/size]
 [/list]
-[size=3][i]Result: Existing Lazy followers become Industrious. New followers are much more likely to be Industrious and will never be Lazy. Note: Industrious is not in the default trait pools, so "Use All Traits Pool" is needed for weighting to work.[/i][/size]
+[size=3][i]Result: Existing Lazy followers get their trait replaced. New followers will never have the Lazy trait.[/i][/size]
 
 [size=3][b]"I want followers who never die of old age"[/b][/size]
 [list]
@@ -192,15 +197,14 @@
 [/list]
 [size=3][i]Result: Every new follower will have the Immortal trait via weighted selection.[/i][/size]
 
-[size=3][b]"I want a zealous cult"[/b][/size]
+[size=3][b]"I want a faithful cult"[/b][/size]
 [list]
 [*][size=3]Use All Traits Pool: ON[/size]
 [*][size=3]Enable Trait Weights: ON[/size]
 [*][size=3]Faithful (in Good Traits): 50[/size]
 [*][size=3]Faithless (in Bad Traits): 0[/size]
-[*][size=3]SacrificeEnthusiast (in Good Traits): 25[/size]
 [/list]
-[size=3][i]Result: New followers strongly favor Faithful and SacrificeEnthusiast traits. Note: These traits are not in the default pools, so "Use All Traits Pool" is needed.[/i][/size]
+[size=3][i]Result: New followers strongly favor the Faithful trait and will never be Faithless. Note: Faithful is in the Rare pool (20% chance for third trait slot in vanilla). "Use All Traits Pool" makes it equally likely as any other trait.[/i][/size]
 
 [size=3][b]"I want to keep negative traits but control which ones appear"[/b][/size]
 [list]
@@ -231,7 +235,7 @@
 
 [list]
 [*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
-[*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/]Configuration Manager[/url][/size]
+[*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/]Configuration Manager Enhanced[/url][/size]
 [*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
 [/list]
 

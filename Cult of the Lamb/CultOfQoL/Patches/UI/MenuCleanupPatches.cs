@@ -85,8 +85,15 @@ public static class MenuCleanupPatches
     {
         var one = GameObject.Find("Main Menu Controller/Main Menu/MainMenuContainer/Right/Ad/Outline");
         var two = GameObject.Find("Main Menu Controller/Main Menu/MainMenuContainer/Right/Ad/Transform");
-        if (one) one.SetActive(!Plugin.RemoveMenuClutter.Value);
-        if (two) two.SetActive(!Plugin.RemoveMenuClutter.Value);
+        if (one)
+        {
+            one.SetActive(!Plugin.RemoveMenuClutter.Value);
+        }
+
+        if (two)
+        {
+            two.SetActive(!Plugin.RemoveMenuClutter.Value);
+        }
     }
 
     [HarmonyPostfix]

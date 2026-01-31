@@ -1,3 +1,5 @@
+using Spine.Unity;
+
 namespace CultOfQoL.Patches.UI;
 
 [Harmony]
@@ -170,7 +172,7 @@ public static class Notifications
     /// </summary>
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SpineExtensions), nameof(SpineExtensions.ConfigureFollowerSkin),
-        typeof(Spine.Unity.SkeletonGraphic), typeof(FollowerInfo))]
+        typeof(SkeletonGraphic), typeof(FollowerInfo))]
     public static bool SpineExtensions_ConfigureFollowerSkin(FollowerInfo followerInfo)
     {
         if (followerInfo == null || string.IsNullOrEmpty(followerInfo.SkinName))

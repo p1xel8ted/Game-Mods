@@ -17,7 +17,7 @@
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
 * Install [COTL API](https://thunderstore.io/c/cult-of-the-lamb/p/xhayper/COTL_API/)
-* Install [Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/)
+* Install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/)
 * Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Configuration

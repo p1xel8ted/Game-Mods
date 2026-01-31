@@ -42,7 +42,8 @@ public class MiscPatches
         "SKIP CAPTURED MOVE",
         "NO TILES AVAILALBLE",
         "Target player is already Instance",
-        "Complete task!"
+        "Complete task!",
+        "queue a skeleton on thread more than once"
     };
     
     [HarmonyTranspiler]

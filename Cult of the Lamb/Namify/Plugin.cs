@@ -1,10 +1,9 @@
-using MonoMod.Utils;
 using Shared;
 
 namespace Namify;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
+[BepInDependency("com.p1xel8ted.configurationmanagerenhanced", "1.0")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
@@ -166,7 +165,7 @@ public class Plugin : BaseUnityPlugin
                 }
                 catch (Exception e)
                 {
-                    PopupManagerInstance.ShowPopup($"Error in reloading names. Check log for more details.");
+                    PopupManagerInstance.ShowPopup("Error in reloading names. Check log for more details.");
                     Log.LogError($"Error in reloading names: {e.Message}");
                 }
                 ShowReloadConfirmationDialog = false;

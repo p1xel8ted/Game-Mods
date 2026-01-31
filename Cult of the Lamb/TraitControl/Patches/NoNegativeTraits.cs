@@ -31,21 +31,14 @@ public static class NoNegativeTraits
         allTraits.UnionWith(FollowerTrait.StartingTraits);
         allTraits.UnionWith(FollowerTrait.ExcludedFromMating);
 
-        var cultTraits = DataManager.Instance.CultTraits;
-        if (Plugin.UseUnlockedTraitsOnly.Value && cultTraits is { Count: > 0 })
-        {
-            Plugin.L("Using unlocked traits only for available traits.");
-            var unlockedPositiveTraits = allTraits.Where(a => cultTraits.Contains(a) && FollowerTrait.IsPositiveTrait(a)).ToHashSet();
-            if (unlockedPositiveTraits.Count > 0)
-            {
-                allTraits = unlockedPositiveTraits;
-            }
-            else
-            {
-                Plugin.L("No unlocked positive traits found. Falling back to all positive traits.");
-            }
-        }
         allTraits.RemoveWhere(a => !FollowerTrait.IsPositiveTrait(a));
+
+        // Filter by game unlock requirements if enabled
+        if (Plugin.UseUnlockedTraitsOnly.Value)
+        {
+            Plugin.L("Using unlocked traits only - filtering by game unlock requirements.");
+            allTraits.RemoveWhere(t => FollowerTrait.IsTraitUnavailable(t));
+        }
 
         allTraits.RemoveWhere(a => a == FollowerTrait.TraitType.BishopOfCult);
 
@@ -77,6 +70,17 @@ public static class NoNegativeTraits
         {
             Plugin.L("Removing BornToTheRot trait from available traits.");
             allTraits.Remove(FollowerTrait.TraitType.BornToTheRot);
+        }
+
+        // Remove event traits from replacement pool unless config allows them
+        if (!Plugin.IncludeStoryEventTraits.Value)
+        {
+            allTraits.RemoveWhere(a => Plugin.StoryEventTraits.Contains(a));
+        }
+        else
+        {
+            // Even with event traits enabled, only include positive ones for replacement
+            allTraits.RemoveWhere(a => Plugin.StoryEventTraits.Contains(a) && !FollowerTrait.IsPositiveTrait(a));
         }
 
         Plugin.L("All 'positive' traits currently available based on your configuration:");
@@ -187,7 +191,7 @@ public static class NoNegativeTraits
     /// This avoids NullReferenceExceptions during early game loading when singletons like
     /// TwitchFollowers or NotificationCentre may not be initialized.
     /// </param>
-    private static void ProcessTraitReplacement(FollowerBrain brain, bool directManipulation = false)
+    internal static void ProcessTraitReplacement(FollowerBrain brain, bool directManipulation = false)
     {
         CreateTraitBackup(brain);
 
@@ -203,7 +207,10 @@ public static class NoNegativeTraits
                 continue;
             }
 
-            if (Plugin.PreferExclusiveCounterparts.Value && IsExclusiveTrait(trait) && TryReplaceExclusiveTrait(trait, out var replacement))
+            // Only use exclusive counterpart if it's actually positive (e.g., Lazy→Industrious)
+            // Skip if counterpart is also negative (e.g., Hibernation→Aestivation are both negative)
+            // Skip if counterpart is an event trait (e.g., OverworkedParent→ProudParent requires having kids)
+            if (Plugin.PreferExclusiveCounterparts.Value && IsExclusiveTrait(trait) && TryReplaceExclusiveTrait(trait, out var replacement) && FollowerTrait.IsPositiveTrait(replacement) && !Plugin.StoryEventTraits.Contains(replacement))
             {
                 if (directManipulation)
                 {

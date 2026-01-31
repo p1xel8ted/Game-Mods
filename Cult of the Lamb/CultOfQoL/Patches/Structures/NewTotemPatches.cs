@@ -50,30 +50,46 @@ public static class NewTotemPatches
         }
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Interaction_LightningRod), nameof(Interaction_LightningRod.OnEnableInteraction))]
-    [HarmonyPatch(typeof(Interaction_LightningRod), nameof(Interaction_LightningRod.Update))]
-    public static void Interaction_LightningRod_Patches(Interaction_LightningRod __instance)
-    {
-        Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1 = Plugin.LightningRodRangeLvl1.Value;
-        Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2 = Plugin.LightningRodRangeLvl2.Value;
-
-        // Structure is set in OnEnableInteraction, so it may be null during prefix
-        if (__instance.Structure == null)
-        {
-            return;
-        }
-
-        // Determine which level this rod is
-        var effectiveDistance = __instance.Brain?.Data?.Type == StructureBrain.TYPES.LIGHTNING_ROD
-            ? Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1
-            : Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2;
-
-        if (!Mathf.Approximately(__instance.RangeSprite.size.x, effectiveDistance))
-        {
-            __instance.RangeSprite.size = new Vector2(effectiveDistance, effectiveDistance);
-        }
-    }
+    // TODO: Lightning rod range config - needs investigation, patches keep breaking vanilla behavior
+    //
+    // /// <summary>
+    // /// Update the static EFFECTIVE_DISTANCE values from config.
+    // /// </summary>
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(Interaction_LightningRod), nameof(Interaction_LightningRod.OnEnableInteraction))]
+    // public static void Interaction_LightningRod_OnEnableInteraction_Postfix()
+    // {
+    //     Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1 = Plugin.LightningRodRangeLvl1.Value;
+    //     Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2 = Plugin.LightningRodRangeLvl2.Value;
+    // }
+    //
+    // /// <summary>
+    // /// Update the visual indicator size to match the configured range.
+    // /// Done in Update postfix since Brain may not be assigned during OnEnableInteraction.
+    // /// </summary>
+    // [HarmonyPostfix]
+    // [HarmonyPatch(typeof(Interaction_LightningRod), nameof(Interaction_LightningRod.Update))]
+    // public static void Interaction_LightningRod_Update_Postfix(Interaction_LightningRod __instance)
+    // {
+    //     // Update static values in case config changed
+    //     Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1 = Plugin.LightningRodRangeLvl1.Value;
+    //     Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2 = Plugin.LightningRodRangeLvl2.Value;
+    //
+    //     // Update the visual indicator size if needed
+    //     if (__instance.RangeSprite == null || __instance.Brain?.Data == null)
+    //     {
+    //         return;
+    //     }
+    //
+    //     var effectiveDistance = __instance.Brain.Data.Type == StructureBrain.TYPES.LIGHTNING_ROD
+    //         ? Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL1
+    //         : Interaction_LightningRod.EFFECTIVE_DISTANCE_LVL2;
+    //
+    //     if (!Mathf.Approximately(__instance.RangeSprite.size.x, effectiveDistance))
+    //     {
+    //         __instance.RangeSprite.size = new Vector2(effectiveDistance, effectiveDistance);
+    //     }
+    // }
 
     public static float GetFarmPlotSignRange()
     {

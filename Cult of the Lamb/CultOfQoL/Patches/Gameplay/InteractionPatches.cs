@@ -74,7 +74,7 @@ public static class InteractionPatches
             {
                 plot.UpdateCropImage();
             }
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.05f);
         }
     }
 
@@ -97,7 +97,7 @@ public static class InteractionPatches
             plot.StructureBrain.AddFertilizer(chosenItem);
             ResourceCustomTarget.Create(plot.gameObject, PlayerFarming.Instance.transform.position, chosenItem, plot.AddFertilizer);
             Inventory.ChangeItemQuantity((int)chosenItem, -1);
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.05f);
         }
     }
 }

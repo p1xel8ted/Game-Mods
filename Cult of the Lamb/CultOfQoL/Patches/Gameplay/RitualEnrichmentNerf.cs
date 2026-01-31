@@ -51,37 +51,43 @@ public static class RitualEnrichmentNerf
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(RitualDonation), nameof(RitualDonation.GiveCoins))]
-    private static bool RitualDonation_GiveCoins(ref IEnumerator __result, Follower follower, float totalTime, float delay)
+    private static bool RitualDonation_GiveCoins(ref IEnumerator __result, Follower follower, float totalTime, float delay, int coinPerFollower, int totalFollowers)
     {
         if (!Plugin.ReverseEnrichmentNerf.Value)
         {
             return true;
         }
 
-        __result = CustomGiveCoins(follower, totalTime, delay);
+        Plugin.L($"[EnrichmentNerf] Processing follower, vanilla would give {coinPerFollower} coins (total followers: {totalFollowers})");
+        __result = CustomGiveCoins(follower, totalTime, delay, coinPerFollower);
         return false;
     }
 
-    private static IEnumerator CustomGiveCoins(Follower follower, float totalTime, float delay)
+    private static IEnumerator CustomGiveCoins(Follower follower, float totalTime, float delay, int vanillaCoinPerFollower)
     {
         if (!follower)
         {
+            Plugin.L("[EnrichmentNerf] Follower is null, skipping");
             yield break;
         }
 
-        var coinsPerFollower = follower.Brain.Info.XPLevel * 10;
+        // Pre-nerf formula was 10 * level, vanilla now gives 3 + level
+        // We'll give 10 * level (the pre-nerf amount)
+        var level = follower.Brain.Info.XPLevel;
+        var enhancedCoins = level * 10;
+
+        Plugin.L($"[EnrichmentNerf] {follower.Brain.Info.Name} (L{level}): vanilla={vanillaCoinPerFollower}, enhanced={enhancedCoins}");
 
         yield return new WaitForSeconds(delay);
 
-        var increment = (totalTime - delay) / coinsPerFollower;
-        for (var i = 0; i < coinsPerFollower; i++)
+        var increment = (totalTime - delay) / enhancedCoins;
+        for (var i = 0; i < enhancedCoins; i++)
         {
             AudioManager.Instance.PlayOneShot("event:/followers/pop_in", follower.transform.position);
             ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
             yield return new WaitForSeconds(increment);
         }
 
-        Inventory.AddItem(InventoryItem.ITEM_TYPE.BLACK_GOLD, coinsPerFollower * 2);
-        Plugin.L($"RitualEnrichmentNerf: {follower.Brain.Info.Name} donated {coinsPerFollower * 2} coins (level {follower.Brain.Info.XPLevel}).");
+        Inventory.AddItem(InventoryItem.ITEM_TYPE.BLACK_GOLD, enhancedCoins);
     }
 }

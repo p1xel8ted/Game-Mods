@@ -33,7 +33,6 @@ internal static class TwitchItems
     }
     
     [Harmony]
-    [UsedImplicitly]
     public static class Drops
     {
         private const string AuthenticateMethodPrefix = "Authenticate";
@@ -48,7 +47,6 @@ internal static class TwitchItems
             "Major"
         };
 
-        [UsedImplicitly]
         [HarmonyTargetMethods]
         public static IEnumerable<MethodBase> TargetMethods()
         {
@@ -64,12 +62,13 @@ internal static class TwitchItems
             }
         }
 
-        [UsedImplicitly]
         [HarmonyPostfix]
         public static void Authenticate(ref bool __result)
         {
             if (Plugin.UnlockTwitchItems.Value)
+            {
                 __result = true;
+            }
         }
     }
 }

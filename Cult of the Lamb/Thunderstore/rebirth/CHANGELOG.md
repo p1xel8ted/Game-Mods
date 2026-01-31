@@ -1,7 +1,8 @@
-### 1.1.2 - 29/01/2026
+### 1.1.2 - 01/02/2026
 
 * Added "Preserve Unique Followers" option (enabled by default) to control whether unique followers (Webber, Sozo, Ratau, etc.) keep their skin and traits when reborn.
-* Names are now always randomized for all followers, including unique ones.
+* Fixed reborn followers showing as "murdered" in the graveyard - now shows "died of old age" instead. Note: Rebirth has never counted towards murder statistics.
+* Switched to ConfigurationManagerEnhanced dependency.
 
 ### 1.1.1 - 24/01/2026
 

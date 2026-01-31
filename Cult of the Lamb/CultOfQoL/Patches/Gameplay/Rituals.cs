@@ -16,6 +16,28 @@ public static class Rituals
         duration = scaledDuration;
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UpgradeSystem), nameof(UpgradeSystem.GetCost))]
+    public static void UpgradeSystem_GetCost_Postfix(UpgradeSystem.Type Type, ref List<StructuresData.ItemCost> __result)
+    {
+        var multiplier = Plugin.RitualCostMultiplier.Value;
+        if (Math.Abs(multiplier - 1.0f) < 0.01f) return;
+
+        foreach (var cost in __result)
+        {
+            if (cost.CostItem is InventoryItem.ITEM_TYPE.FOLLOWERS
+                or InventoryItem.ITEM_TYPE.DOCTRINE_STONE
+                or InventoryItem.ITEM_TYPE.DISCIPLE_POINTS)
+            {
+                continue;
+            }
+
+            var original = cost.CostValue;
+            cost.CostValue = Mathf.Max(1, Mathf.RoundToInt(original * multiplier));
+            Plugin.L($"[RitualCost] {Type}: {cost.CostItem} {original} -> {cost.CostValue} (x{multiplier:F2})");
+        }
+    }
+
 
     public static int GetBossLimit()
     {

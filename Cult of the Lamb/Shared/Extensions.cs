@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-namespace Shared;
+﻿namespace Shared;
 
 /// <summary>
 /// This file is shared between multiple projects and should be copied as a link. Any edits in this file will affect all projects using it.

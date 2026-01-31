@@ -37,6 +37,12 @@ public static class Patches
         _hasSkippedDevIntros = true;
 
         AudioManager.Instance.enabled = true;
+
+        // Initialize fonts that would normally be set up during splash screens
+        // Without this, localized fonts (Russian, CJK, Arabic) fail to load
+        GameManager.ForceFontReload();
+        LocalizationManager.SetupFonts();
+
         MMTransition.Play(
             MMTransition.TransitionType.ChangeSceneAutoResume,
             MMTransition.Effect.BlackFade,
@@ -73,7 +79,7 @@ public static class Patches
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(MMTransition), nameof(MMTransition.Play), typeof(MMTransition.TransitionType), typeof(MMTransition.Effect), typeof(string), typeof(float), typeof(string), typeof(System.Action), typeof(System.Action))]
+    [HarmonyPatch(typeof(MMTransition), nameof(MMTransition.Play), typeof(MMTransition.TransitionType), typeof(MMTransition.Effect), typeof(string), typeof(float), typeof(string), typeof(Action), typeof(Action))]
     public static void MMTransition_Play(ref string SceneToLoad)
     {
         var stackTrace = new StackTrace();
@@ -86,7 +92,7 @@ public static class Patches
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(MMVideoPlayer), nameof(MMVideoPlayer.Play), typeof(string), typeof(System.Action), typeof(MMVideoPlayer.Options), typeof(MMVideoPlayer.Options), typeof(bool), typeof(bool))]
+    [HarmonyPatch(typeof(MMVideoPlayer), nameof(MMVideoPlayer.Play), typeof(string), typeof(Action), typeof(MMVideoPlayer.Options), typeof(MMVideoPlayer.Options), typeof(bool), typeof(bool))]
     public static void MMVideoPlayer_Play(string _FileName)
     {
         var stackTrace = new StackTrace();

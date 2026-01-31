@@ -28,6 +28,16 @@ Each unique trait has two options:
 Additional option:
 - **Allow Multiple Unique Traits** - normally only one follower can have each unique/single-use trait (Immortal, Disciple, Lazy, Snorer, etc.). Enable this to allow multiple followers to have the same trait.
 
+### Trait Count
+Control how many traits followers receive:
+- **Minimum Traits** (2-8) - the minimum number of traits a new follower will have
+- **Maximum Traits** (2-8) - the maximum number of traits a new follower will have
+- **Randomize Traits on Re-indoctrination** - when re-indoctrinating an existing follower at the altar, randomize their traits using the configured min/max (vanilla only changes appearance/name)
+
+Vanilla behavior is 2-3 traits for new followers, with a cap of 6 during re-indoctrination. Increase these values to give followers more traits (limited to 8 due to UI constraints). The maximum setting also affects re-indoctrination, removing the vanilla cap of 6.
+
+**Note:** If "Use Unlocked Traits Only" is enabled and you don't have enough traits unlocked, followers may receive fewer traits than the minimum. A warning will appear in the log when this happens.
+
 ### Trait Weights
 Control how likely each trait is to appear on new followers. Each trait has a weight slider from 0 to 100. Weights are relative to each other.
 
@@ -35,7 +45,9 @@ Control how likely each trait is to appear on new followers. Each trait has a we
 - **Lower weight = less likely relative to other traits**
 - **Weight of 0 = disabled** - that trait will never appear
 - All traits default to 1.0 (equal chance)
-- Sliders snap to 0.05 increments for precise control
+- Sliders snap to 0.05 increments for precise control (values below 0.1 snap to 0)
+
+**Localization:** Trait names display in your current game language alongside the internal name, e.g. "Lover of Cold (Chionophile)". Names update automatically when you change languages. Traits with missing translations are marked with an asterisk (*), indicating they are not fully implemented in the game itself.
 
 **Understanding the math:** With "Use All Traits Pool" enabled, there are ~85 traits competing. If all are at weight 1 and you set Immortal to weight 50, the probability is: 50/(84+50) ≈ 37% per follower. At weight 100: 100/(84+100) ≈ 54% per follower.
 
@@ -43,7 +55,7 @@ The trait list is dynamically generated from the game, so new traits added by th
 
 ### Trait Categories
 
-Each trait in the configuration shows category tags indicating which game lists it belongs to. This helps you understand which traits are safe to disable without affecting unlocks.
+Each trait in the configuration shows which game lists it belongs to at the end of the description, e.g. "Found in: Starting, Rare, Faithful". Traits not in any pool show "Granted via other means (rituals, events, etc.)". This helps you understand which traits are safe to disable without affecting unlocks.
 
 | Category | Description |
 |----------|-------------|
@@ -52,7 +64,7 @@ Each trait in the configuration shows category tags indicating which game lists 
 | Faithful | Granted when a follower becomes faithful (spider web interaction) |
 | Unique | Special reward traits - only one follower can have each (Immortal, Disciple, etc.) |
 | Single | Only one follower in your cult can have this trait at a time |
-| Sin | Sin district traits (requires Pleasure district to be enabled) |
+| Sin | Sin traits (requires Pleasure Shrine from Sins of the Flesh DLC) |
 | DLC | Requires DLC content to be active |
 | Winter | Winter/seasons-specific traits |
 | Event | Granted through gameplay events (marriage, parenting, criminal, etc.) |
@@ -82,10 +94,13 @@ Some traits are excluded from the weights list because they require special game
 | Missionary | MissionaryExcited, MissionaryInspired, MissionaryTerrified |
 | Special | ExCultLeader, ExistentialDread |
 | DLC/Snowman | InfusibleSnowman, MasterfulSnowman, ShoddySnowman |
-| DLC/Other | MutatedVisual, PureBlood, PureBlood_1/2/3, FreezeImmune, FurnaceAnimal, FurnaceFollower |
+| DLC/Other | MutatedVisual, PureBlood, PureBlood_1/2/3, FreezeImmune |
 
 ### Notifications
 Optional notifications when trait replacement adds or removes traits.
+
+### Reset Settings
+Reset all configuration options to their default values (vanilla game behavior) with a single click. Found in section "07. Reset Settings" in the Configuration Manager.
 
 ## Configuration Examples
 
@@ -124,13 +139,13 @@ Optional notifications when trait replacement adds or removes traits.
 
 **Result:** Lazy gets replaced with a random positive trait instead of Industrious.
 
-### "I only want traits I've unlocked via doctrines"
+### "I only want traits available at my game progression"
 | Setting | Value |
 |---------|-------|
 | Enable Trait Replacement | ON |
 | Use Unlocked Traits Only | ON |
 
-**Result:** Only traits you've unlocked through doctrines will be used as replacements.
+**Result:** Traits are filtered by game progression (e.g., Fashionable requires Tailor, Sin traits require Pleasure Shrine, some traits require Day 7+).
 
 ### "I want to pull from all traits, but not unique ones"
 | Setting | Value |
@@ -142,7 +157,7 @@ Optional notifications when trait replacement adds or removes traits.
 | Include Blind | OFF |
 | Include Born To The Rot | OFF |
 
-**Result:** Trait selection uses all trait pools combined, but unique/crossover traits are excluded.
+**Result:** Trait selection uses all trait pools combined, but unique/crossover traits are excluded. Event traits are also excluded by default.
 
 ### "I want access to every single trait in the game"
 | Setting | Value |
@@ -153,8 +168,9 @@ Optional notifications when trait replacement adds or removes traits.
 | Include Dont Starve | ON |
 | Include Blind | ON |
 | Include Born To The Rot | ON |
+| Include Event Traits | ON |
 
-**Result:** Every trait in the game can appear on new followers, including special/crossover traits.
+**Result:** Every trait in the game can appear on new followers, including special/crossover and event traits.
 
 ### "I never want Materialistic followers"
 | Setting | Value |
@@ -164,17 +180,15 @@ Optional notifications when trait replacement adds or removes traits.
 
 **Result:** Materialistic trait will never appear on new followers. No more gift demands.
 
-### "I want a cult of hard workers"
+### "I want no lazy followers"
 | Setting | Value |
 |---------|-------|
 | Enable Trait Replacement | ON |
 | Prefer Exclusive Counterparts | ON |
-| Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
-| Industrious (in Good Traits) | 50-100 |
 | Lazy (in Bad Traits) | 0 |
 
-**Result:** Existing Lazy followers become Industrious. New followers are much more likely to be Industrious and will never be Lazy. Note: Industrious is not in the default trait pools, so "Use All Traits Pool" is needed for weighting to work.
+**Result:** Existing Lazy followers get their trait replaced. New followers will never have the Lazy trait.
 
 ### "I want followers who never die of old age"
 | Setting | Value |
@@ -207,16 +221,15 @@ Optional notifications when trait replacement adds or removes traits.
 
 **Result:** Every new follower will have the Immortal trait via weighted selection.
 
-### "I want a zealous cult"
+### "I want a faithful cult"
 | Setting | Value |
 |---------|-------|
 | Use All Traits Pool | ON |
 | Enable Trait Weights | ON |
 | Faithful (in Good Traits) | 50 |
 | Faithless (in Bad Traits) | 0 |
-| SacrificeEnthusiast (in Good Traits) | 25 |
 
-**Result:** New followers strongly favor Faithful and SacrificeEnthusiast traits. Note: These traits are not in the default pools, so "Use All Traits Pool" is needed.
+**Result:** New followers strongly favor the Faithful trait and will never be Faithless. Note: Faithful is in the Rare pool (20% chance for third trait slot in vanilla). "Use All Traits Pool" makes it equally likely as any other trait.
 
 ### "I want to keep negative traits but control which ones appear"
 | Setting | Value |
@@ -246,10 +259,18 @@ Optional notifications when trait replacement adds or removes traits.
 
 **Result:** New followers will have the RoyalPooper trait (produces gold instead of poop). Note: RoyalPooper is only in the Rare/Faithful pools, so "Use All Traits Pool" must be enabled for it to appear on regular new followers.
 
+### "I want followers with lots of traits"
+| Setting | Value |
+|---------|-------|
+| Minimum Traits | 5 |
+| Maximum Traits | 8 |
+
+**Result:** New followers will have 5-8 traits instead of the vanilla 2-3. (Maximum is 8 due to UI constraints.)
+
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
-* Install [Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/)
+* Install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/)
 * Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Configuration
