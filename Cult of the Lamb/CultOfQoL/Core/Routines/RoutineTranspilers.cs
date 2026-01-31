@@ -37,7 +37,7 @@ public static class RoutinesTranspilers
         [ReeducateRoutine] = () => Plugin.MassReeducate,
         [BlessRoutine] = () => Plugin.MassBless,
         [DanceRoutine] = () => Plugin.MassInspire,
-        [PetDogRoutine] = () => Plugin.MassPetDog,
+        [PetDogRoutine] = () => Plugin.MassPetFollower,
         [RomanceRoutine] = () => Plugin.MassRomance,
         [ExtortMoneyRoutine] = () => Plugin.MassExtort,
         [LevelUpRoutine] = () => Plugin.MassLevelUp
@@ -129,7 +129,7 @@ public static class RoutinesTranspilers
 
         if (!__instance.playerFarming)
         {
-            __instance.playerFarming = PlayerFarming.Instance;
+            __instance.playerFarming = PlayerFarming.Instance ??= Object.FindObjectOfType<PlayerFarming>();
         }
     }
 

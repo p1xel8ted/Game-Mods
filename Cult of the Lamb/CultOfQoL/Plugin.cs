@@ -12,7 +12,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.3.8";
+    private const string PluginVer = "2.3.9";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
     private const string BackupSaveMessage = "IMPORTANT: Please back up your save files before enabling this option.\n\nThis feature will attempt to repair missing lore tablets on your next visit to the base. While it should be safe, backing up your saves first is recommended.";
@@ -29,6 +29,7 @@ public partial class Plugin : BaseUnityPlugin
     private const string NotificationsSection = "13. Notifications";
 
     private const string FollowersSection = "14. Followers";
+    private const string AnimalsSection = "15. Animals";
 
     // private const string FarmSection = "12. Farm";
     private const string GameSpeedSection = "10. Game Speed";
@@ -470,11 +471,11 @@ public partial class Plugin : BaseUnityPlugin
             Order = -11, DispName = "    └ Mass Level Up Instant Souls"
         }));
 
-        MassPetDog = ConfigInstance.Bind(FollowersSection, "Mass Pet Dog", false, new ConfigDescription("When petting a dog follower, all dog followers are petted at once.", null, new ConfigurationManagerAttributes
+        MassPetFollower = ConfigInstance.Bind(FollowersSection, "Mass Pet Follower", false, new ConfigDescription("When petting any follower, all followers are petted at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Pet Dog**", Order = -12
+            DispName = "Mass Pet Follower**", Order = -12
         }));
-        MassPetDog.SettingChanged += (_, _) => ShowRestartMessage();
+        MassPetFollower.SettingChanged += (_, _) => ShowRestartMessage();
 
         MassSinExtract = ConfigInstance.Bind(FollowersSection, "Mass Sin Extract", false, new ConfigDescription("When extracting sin from a follower, all eligible followers have their sin extracted at once.", null, new ConfigurationManagerAttributes
         {
@@ -482,24 +483,56 @@ public partial class Plugin : BaseUnityPlugin
         }));
         MassSinExtract.SettingChanged += (_, _) => ShowRestartMessage();
 
-        MassCleanAnimals = ConfigInstance.Bind(MassSection, "Mass Clean Animals", false, new ConfigDescription("When cleaning a stinky animal, all stinky animals are cleaned at once.", null, new ConfigurationManagerAttributes
+        // Animals Section - 15
+        DisableAnimalOldAgeDeath = ConfigInstance.Bind(
+            AnimalsSection,
+            "Disable Animal Old Age Death", false,
+            new ConfigDescription(
+                "Completely prevents animals from dying of old age.",
+                null,
+                new ConfigurationManagerAttributes { Order = 2 }
+            )
+        );
+
+        AnimalOldAgeDeathThreshold = ConfigInstance.Bind(
+            AnimalsSection,
+            "Animal Old Age Death Threshold", 15,
+            new ConfigDescription(
+                "The minimum age (in days) before animals can die of old age. Vanilla default is 15. At any age above this, there is a chance per day equal to age/100 (e.g., at age 50, 50% chance).",
+                new AcceptableValueRange<int>(15, 100),
+                new ConfigurationManagerAttributes { ShowRangeAsPercent = false, Order = 1 }
+            )
+        );
+
+        MassPetAnimals = ConfigInstance.Bind(AnimalsSection, "Mass Pet Animals", false, new ConfigDescription("When petting a farm animal, all farm animals are petted at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 5
+            DispName = "Mass Pet Animals**", Order = 0
+        }));
+        MassPetAnimals.SettingChanged += (_, _) => ShowRestartMessage();
+
+        MassCleanAnimals = ConfigInstance.Bind(AnimalsSection, "Mass Clean Animals", false, new ConfigDescription("When cleaning a stinky animal, all stinky animals are cleaned at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = -1
         }));
 
-        MassFeedAnimals = ConfigInstance.Bind(MassSection, "Mass Feed Animals", false, new ConfigDescription("When feeding an animal, all hungry animals are fed the same food at once (consumes one item per animal).", null, new ConfigurationManagerAttributes
+        MassFeedAnimals = ConfigInstance.Bind(AnimalsSection, "Mass Feed Animals", false, new ConfigDescription("When feeding an animal, all hungry animals are fed the same food at once (consumes one item per animal).", null, new ConfigurationManagerAttributes
         {
-            Order = 4
+            Order = -2
         }));
 
-        MassMilkAnimals = ConfigInstance.Bind(MassSection, "Mass Milk Animals", false, new ConfigDescription("When milking an animal, all animals ready for milking are milked at once.", null, new ConfigurationManagerAttributes
+        MassMilkAnimals = ConfigInstance.Bind(AnimalsSection, "Mass Milk Animals", false, new ConfigDescription("When milking an animal, all animals ready for milking are milked at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 3
+            Order = -3
         }));
 
-        MassShearAnimals = ConfigInstance.Bind(MassSection, "Mass Shear Animals", false, new ConfigDescription("When shearing an animal, all animals ready for shearing are sheared at once.", null, new ConfigurationManagerAttributes
+        MassShearAnimals = ConfigInstance.Bind(AnimalsSection, "Mass Shear Animals", false, new ConfigDescription("When shearing an animal, all animals ready for shearing are sheared at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 2
+            Order = -4
+        }));
+
+        MassNurture = ConfigInstance.Bind(AnimalsSection, "Mass Nurture", false, new ConfigDescription("When nurturing children at one daycare, children at all other daycares are also nurtured.", null, new ConfigurationManagerAttributes
+        {
+            Order = -5
         }));
 
         //Mass Section - 16 (Farm & Structure Mass Actions)
@@ -512,12 +545,6 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 16
         }));
-
-        MassPetAnimals = ConfigInstance.Bind(MassSection, "Mass Pet Animals", false, new ConfigDescription("When petting a farm animal, all farm animals are petted at once.", null, new ConfigurationManagerAttributes
-        {
-            DispName = "Mass Pet Animals**", Order = 15
-        }));
-        MassPetAnimals.SettingChanged += (_, _) => ShowRestartMessage();
 
         CollectAllGodTearsAtOnce = ConfigInstance.Bind(MassSection, "Collect All God Tears At Once", false, new ConfigDescription("When collecting god tears from the shrine, collect all available at once instead of one per interaction.", null, new ConfigurationManagerAttributes
         {
@@ -666,15 +693,9 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void RecommendedSettingsAction()
     {
-        // var entries =  BepInEx.Configuration.ConfigFile.Entries.ToList(); //property (get only) is protected
-        // protected Dictionary<ConfigDefinition, ConfigEntryBase> Entries { get; } = new Dictionary<ConfigDefinition, ConfigEntryBase>();
-        if (AccessTools.PropertyGetter(typeof(ConfigFile), "Entries").Invoke(ConfigInstance, null) is not Dictionary<ConfigDefinition, ConfigEntryBase> entries)
-        {
-            Log.LogError("[Config] Unable to access config entries for reset.");
-            return;
-        }
-
-        foreach (var ent in entries.Where(ent => ent.Value.BoxedValue != ent.Value.DefaultValue).Where(ent => ent.Key.Section != ResetAllSettingsSection))
+        foreach (var ent in ConfigInstance.Entries
+                     .Where(ent => ent.Value.BoxedValue != ent.Value.DefaultValue)
+                     .Where(ent => ent.Key.Section != ResetAllSettingsSection))
         {
             ent.Value.BoxedValue = ent.Value.DefaultValue;
             Log.LogInfo($"[Config] Resetting {ent.Key} to default value: {ent.Value.DefaultValue}");

@@ -132,11 +132,11 @@ public static class FollowerPatches
         return notBribed > 1;
     }
 
-    private static bool ShouldMassPetDog(FollowerCommands followerCommands)
+    private static bool ShouldMassPetFollower(FollowerCommands followerCommands)
     {
-        if (!Plugin.MassPetDog.Value) return false;
-        if (followerCommands != FollowerCommands.PetDog) return false;
-        var notPetted = Follower.Followers.Count(follower => FollowerCommandItems.PetDog().IsAvailable(follower) && IsFollowerADog(follower.Brain));
+        if (!Plugin.MassPetFollower.Value) return false;
+        if (followerCommands is not (FollowerCommands.PetDog or FollowerCommands.PetFollower)) return false;
+        var notPetted = Follower.Followers.Count(follower => FollowerCommandItems.PetDog().IsAvailable(follower));
         return notPetted > 1;
     }
 
@@ -237,7 +237,7 @@ public static class FollowerPatches
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnFollowerCommandFinalized), typeof(FollowerCommands[]))]
     public static void interaction_FollowerInteraction_OnFollowerCommandFinalized_Postfix(ref interaction_FollowerInteraction __instance, params FollowerCommands[] followerCommands)
     {
-        if (followerCommands[0] is not (FollowerCommands.Reassure or FollowerCommands.Reeducate or FollowerCommands.Bully or FollowerCommands.Romance or FollowerCommands.PetDog or FollowerCommands.ExtortMoney or FollowerCommands.Dance or FollowerCommands.Intimidate or FollowerCommands.Bless or FollowerCommands.Bribe))
+        if (followerCommands[0] is not (FollowerCommands.Reassure or FollowerCommands.Reeducate or FollowerCommands.Bully or FollowerCommands.Romance or FollowerCommands.PetDog or FollowerCommands.PetFollower or FollowerCommands.ExtortMoney or FollowerCommands.Dance or FollowerCommands.Intimidate or FollowerCommands.Bless or FollowerCommands.Bribe))
         {
             Plugin.L($"Skipping mass command because {followerCommands[0]} is not a mass command!");
             return;
@@ -250,7 +250,7 @@ public static class FollowerPatches
 
         foreach (var f in followers.Where(f => f.Interaction_FollowerInteraction))
         {
-            f.Interaction_FollowerInteraction.playerFarming ??= PlayerFarming.Instance;
+            f.Interaction_FollowerInteraction.playerFarming ??= PlayerFarming.Instance ??= Object.FindObjectOfType<PlayerFarming>();
         }
 
         if (cmd == FollowerCommands.Reassure && ShouldMassReassure(followerCommands[0]))
@@ -305,13 +305,11 @@ public static class FollowerPatches
             }
         }
 
-        if (cmd == FollowerCommands.PetDog && ShouldMassPetDog(followerCommands[0]))
+        if (cmd is (FollowerCommands.PetDog or FollowerCommands.PetFollower) && ShouldMassPetFollower(followerCommands[0]))
         {
             foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
             {
-                var isDog = IsFollowerADog(interaction.follower.Brain);
-                Plugin.L($"Is {interaction.follower.name} a dog? {isDog}");
-                var run = FollowerCommandItems.PetDog().IsAvailable(interaction.follower) && isDog && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
+                var run = FollowerCommandItems.PetDog().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
                 interaction.StartCoroutine(RunEnumerator(run, interaction.PetDogRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.PetDog = true;
@@ -427,6 +425,7 @@ public static class FollowerPatches
         var eligibleCount = Helpers.AllFollowers.Count(f => f != originalFollower && f.Brain.CanLevelUp());
         if (eligibleCount < 1) return;
 
+        Plugin.L($"[MassLevelUp] Triggered by {originalFollower.Brain.Info.Name}, {eligibleCount} other followers eligible.");
         GameManager.GetInstance().StartCoroutine(MassLevelUpAll(originalFollower));
     }
 
@@ -472,13 +471,17 @@ public static class FollowerPatches
             .Where(f => f != original && f.Brain.CanLevelUp() && f.Interaction_FollowerInteraction)
             .ToList();
 
+        Plugin.L($"[MassLevelUp] Starting level up for {eligible.Count} followers.");
+
         foreach (var follower in eligible)
         {
             var interaction = follower.Interaction_FollowerInteraction;
-            interaction.playerFarming = PlayerFarming.Instance;
+            interaction.playerFarming = PlayerFarming.Instance ??= Object.FindObjectOfType<PlayerFarming>();
+            Plugin.L($"[MassLevelUp] Leveling up {follower.Brain.Info.Name}.");
             interaction.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, false, false));
         }
 
+        Plugin.L("[MassLevelUp] All level up routines started.");
         MassLevelUpRunning = false;
     }
 

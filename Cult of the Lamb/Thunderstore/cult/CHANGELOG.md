@@ -1,3 +1,14 @@
+### 2.3.9 - 31/01/2026
+
+* Fixed vanilla bug: Crash when opening the Priest job board after claiming all fleece quest rewards.
+* Fixed "Reverse Enrichment Nerf" option giving far fewer coins than expected.
+* Added Blacksmith NPC Spine animation warning to log spam filter.
+* Added animal lifespan controls: disable old age death entirely, or adjust the minimum age before animals can die of old age (default 15 days).
+* Added new "Animals" config section - animal-related settings moved here for better organization.
+* Improved stability for mass actions when PlayerFarming reference is unavailable.
+* Renamed "Mass Pet Dog" to "Mass Pet Follower" - now pets all followers at once, not just dogs.
+* Added "Mass Nurture" option - nurturing children at one daycare also nurtures children at all other daycares.
+
 ### 2.3.8 - 31/01/2026
 
 * Fixed lore tablets not being awarded when interacting with lore stones while menus were open.

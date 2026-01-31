@@ -54,14 +54,22 @@
 - Prioritize followers with active requests in selection lists
 - Auto-select best mating pair in Mating Tent
 
+### Animals
+- Disable animal old age death entirely
+- Customise minimum age before animals can die of old age
+- Mass pet farm animals
+- Mass clean stinky animals
+- Mass feed hungry animals
+- Mass milk animals
+- Mass shear animals
+
 ### Mass Actions
 - Mass inspire, bless, bribe, extort, intimidate
 - Mass fertilize, water
 - Mass level up (with optional instant soul collection)
 - Mass bully, reassure, reeducate
-- Mass romance, pet dog
-- Mass pet farm animals
-- Mass feed, milk, and shear farm animals
+- Mass romance, pet follower (dogs and non-dogs)
+- Mass nurture children across all daycares
 - Mass open scarecrow traps
 - Mass fill wolf traps with bait
 

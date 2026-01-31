@@ -34,7 +34,6 @@ internal static class StructurePatches
     public static class PropagandaSpeakerPatches
     {
         [HarmonyPrefix]
-        [UsedImplicitly]
         public static bool Prefix()
         {
             if (!ConfigCache.GetCachedValue(ConfigCache.Keys.TurnOffSpeakersAtNight, () => Plugin.TurnOffSpeakersAtNight.Value)) return true;
@@ -43,7 +42,6 @@ internal static class StructurePatches
 
 
         [HarmonyPostfix]
-        [UsedImplicitly]
         public static void Postfix(ref PropagandaSpeaker __instance)
         {
             if (!ConfigCache.GetCachedValue(ConfigCache.Keys.DisablePropagandaSpeakerAudio, () => Plugin.DisablePropagandaSpeakerAudio.Value)) return;
@@ -563,4 +561,43 @@ internal static class StructurePatches
             _cookingFireMassFillInProgress = false;
         }
     }
+
+    #region Mass Nurture
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIDaycareMenu), nameof(UIDaycareMenu.OnNurturePressed))]
+    public static void UIDaycareMenu_OnNurturePressed_Postfix(UIDaycareMenu __instance)
+    {
+        if (!Plugin.MassNurture.Value) return;
+
+      
+
+        var sourceDaycare = __instance._structuresBrain;
+
+        foreach (var daycare in StructureManager.GetAllStructuresOfType<Structures_Daycare>())
+        {
+            if (daycare == sourceDaycare) continue;
+
+            foreach (var childId in daycare.Data.MultipleFollowerIDs.ToList())
+            {
+                var follower = FollowerManager.FindFollowerByID(childId);
+                if (follower == null) continue;
+                if (follower.Brain.Stats.Cuddled) continue;
+                if (!FollowerManager.IsChild(childId)) continue;
+
+                // Apply nurture effects (same as NurtureIE lines 183-190)
+                CultFaithManager.AddThought(Thought.ChildCuddle_0, follower.Brain.Info.ID);
+                follower.Brain.AddThought((Thought)Random.Range(393, 397));
+                AudioManager.Instance.PlayOneShot("event:/followers/love_hearts", follower.transform.position);
+                BiomeConstants.Instance.EmitHeartPickUpVFX(follower.transform.position, 0f, "red", "burst_big");
+                follower.Brain.Stats.Cuddled = true;
+                follower.Brain._directInfoAccess.CuddledAmount++;
+                follower.Brain.AddAdoration(FollowerBrain.AdorationActions.CuddleBaby, null);
+
+                Plugin.L($"[MassNurture] Nurtured {follower.Brain.Info.Name} in another daycare!");
+            }
+        }
+    }
+
+    #endregion
 }

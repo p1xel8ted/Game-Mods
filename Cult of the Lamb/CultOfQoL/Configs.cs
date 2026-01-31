@@ -138,7 +138,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassReassure { get; private set; }
     internal static ConfigEntry<bool> MassReeducate { get; private set; }
     internal static ConfigEntry<bool> MassExtort { get; private set; }
-    internal static ConfigEntry<bool> MassPetDog { get; private set; }
+    internal static ConfigEntry<bool> MassPetFollower { get; private set; }
     internal static ConfigEntry<bool> MassPetAnimals { get; private set; }
     internal static ConfigEntry<bool> MassIntimidate { get; private set; }
     internal static ConfigEntry<bool> MassInspire { get; private set; }
@@ -164,6 +164,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassFeedAnimals { get; private set; }
     internal static ConfigEntry<bool> MassMilkAnimals { get; private set; }
     internal static ConfigEntry<bool> MassShearAnimals { get; private set; }
+    internal static ConfigEntry<bool> MassNurture { get; private set; }
     internal static ConfigEntry<bool> CollectShrineDevotionInstantly { get; private set; }
 
     internal static WriteOnce<float> RunSpeed { get; } = new();
@@ -184,6 +185,9 @@ public partial class Plugin
     
     public static ConfigEntry<int> MinRangeLifeExpectancy { get; private set; }
     public static ConfigEntry<int> MaxRangeLifeExpectancy { get; private set; }
+
+    public static ConfigEntry<bool> DisableAnimalOldAgeDeath { get; private set; }
+    public static ConfigEntry<int> AnimalOldAgeDeathThreshold { get; private set; }
     
     public static ConfigEntry<float> RitualCooldownTime { get; private set; }
     public static ConfigEntry<bool> AddSpiderWebsToOfferings { get; set; }
