@@ -1,3 +1,9 @@
+### 0.1.4 - 31/01/2026
+
+* Fixed guaranteed traits causing followers to only receive one trait instead of the normal 2-3 traits.
+* Added category tags to trait descriptions showing which game lists each trait belongs to, e.g. `[Single, Starting, DLC]`.
+* Trait weight sliders now snap to 0.05 increments so you can set exactly 0 to disable a trait.
+
 ### 0.1.3 - 30/01/2026
 
 * Fixed Spy followers immediately leaving the cult when assigned via random trait selection. The Spy trait is now excluded from the trait pool since it requires special game state setup that only occurs through the normal spy storyline.

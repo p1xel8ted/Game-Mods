@@ -8,6 +8,23 @@ namespace TraitControl.Patches;
 public static class TraitWeights
 {
     /// <summary>
+    /// Tracks whether the guaranteed trait has already been given during the current follower's creation.
+    /// Reset by the FollowerBrain constructor prefix before trait assignment begins.
+    /// </summary>
+    private static bool _guaranteedTraitGivenThisSession;
+
+    /// <summary>
+    /// Resets the guarantee flag before trait assignment begins for a new follower.
+    /// This ensures the guaranteed trait is only given once per follower, not on every trait roll.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(FollowerBrain), MethodType.Constructor, typeof(FollowerInfo))]
+    private static void FollowerBrain_Constructor_Prefix()
+    {
+        _guaranteedTraitGivenThisSession = false;
+    }
+
+    /// <summary>
     /// Prefix patch for GetStartingTrait. Always runs our selection logic to ensure
     /// unique trait toggles work regardless of whether weighting is enabled.
     /// </summary>
@@ -120,15 +137,20 @@ public static class TraitWeights
     /// <summary>
     /// Selects a trait using either weighted or random selection based on config.
     /// Filtering (unique toggles, single-use, game restrictions) always applies.
-    /// Guaranteed traits take priority over all other selection methods.
+    /// Guaranteed traits take priority over all other selection methods, but only once per follower.
     /// </summary>
     private static FollowerTrait.TraitType SelectTrait(IEnumerable<FollowerTrait.TraitType> sourceTraits)
     {
         // Check for guaranteed traits first (bypasses all other selection)
-        var guaranteed = GetGuaranteedTrait();
-        if (guaranteed != FollowerTrait.TraitType.None)
+        // Only give the guaranteed trait once per follower - subsequent trait rolls use normal selection
+        if (!_guaranteedTraitGivenThisSession)
         {
-            return guaranteed;
+            var guaranteed = GetGuaranteedTrait();
+            if (guaranteed != FollowerTrait.TraitType.None)
+            {
+                _guaranteedTraitGivenThisSession = true;
+                return guaranteed;
+            }
         }
 
         if (Plugin.EnableTraitWeights.Value)

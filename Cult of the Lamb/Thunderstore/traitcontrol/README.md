@@ -35,10 +35,30 @@ Control how likely each trait is to appear on new followers. Each trait has a we
 - **Lower weight = less likely relative to other traits**
 - **Weight of 0 = disabled** - that trait will never appear
 - All traits default to 1.0 (equal chance)
+- Sliders snap to 0.05 increments for precise control
 
 **Understanding the math:** With "Use All Traits Pool" enabled, there are ~85 traits competing. If all are at weight 1 and you set Immortal to weight 50, the probability is: 50/(84+50) ≈ 37% per follower. At weight 100: 100/(84+100) ≈ 54% per follower.
 
 The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.
+
+### Trait Categories
+
+Each trait in the configuration shows category tags indicating which game lists it belongs to. This helps you understand which traits are safe to disable without affecting unlocks.
+
+| Category | Description |
+|----------|-------------|
+| Starting | Naturally appears on new followers (default pool) |
+| Rare | 20% chance to appear instead of a third starting trait |
+| Faithful | Granted when a follower becomes faithful (spider web interaction) |
+| Unique | Special reward traits - only one follower can have each (Immortal, Disciple, etc.) |
+| Single | Only one follower in your cult can have this trait at a time |
+| Sin | Sin district traits (requires Pleasure district to be enabled) |
+| DLC | Requires DLC content to be active |
+| Winter | Winter/seasons-specific traits |
+| Event | Granted through gameplay events (marriage, parenting, criminal, etc.) |
+| Unlock | Requires at least one boss defeated |
+
+Traits can belong to multiple categories. For example, `[Single, Starting]` means the trait appears in the starting pool but only one follower can have it.
 
 ### Excluded Traits
 

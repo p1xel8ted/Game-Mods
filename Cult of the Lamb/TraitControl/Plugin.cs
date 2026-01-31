@@ -10,7 +10,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.traitcontrol";
     internal const string PluginName = "Trait Control";
-    private const string PluginVer = "0.1.3";
+    private const string PluginVer = "0.1.4";
 
     private const string TraitReplacementSection = "01. Trait Replacement";
     private const string UniqueTraitsSection = "02. Unique Traits";
@@ -291,10 +291,11 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void CreateTraitWeightConfig(FollowerTrait.TraitType trait, string section, int order, bool isHidden)
     {
+        var categories = GetTraitCategories(trait);
         var traitDescription = GetTraitDescription(trait);
         var configDescription = string.IsNullOrEmpty(traitDescription)
-            ? $"Weight for {trait}. Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%."
-            : $"{traitDescription}\n\nWeight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.";
+            ? $"{categories}Weight for {trait}. Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%."
+            : $"{categories}{traitDescription}\n\nWeight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.";
 
         var weight = ConfigInstance.Bind(
             section,
@@ -307,7 +308,78 @@ public partial class Plugin : BaseUnityPlugin
             )
         );
 
+        // Snap to 0.05 increments so users can set exactly 0 to disable
+        weight.SettingChanged += (_, _) =>
+        {
+            var rounded = Mathf.Round(weight.Value / 0.05f) * 0.05f;
+            if (!Mathf.Approximately(weight.Value, rounded))
+            {
+                weight.Value = rounded;
+            }
+        };
+
         TraitWeights[trait] = weight;
+    }
+
+    /// <summary>
+    /// Returns category tags for a trait based on which game lists it belongs to.
+    /// Traits can have multiple tags if they appear in multiple lists.
+    /// </summary>
+    private static string GetTraitCategories(FollowerTrait.TraitType trait)
+    {
+        var categories = new List<string>();
+
+        if (StoryEventTraits.Contains(trait))
+        {
+            categories.Add("Event");
+        }
+
+        if (FollowerTrait.UniqueTraits.Contains(trait))
+        {
+            categories.Add("Unique");
+        }
+
+        if (FollowerTrait.SingleTraits.Contains(trait))
+        {
+            categories.Add("Single");
+        }
+
+        if (FollowerTrait.RareStartingTraits.Contains(trait))
+        {
+            categories.Add("Rare");
+        }
+
+        if (FollowerTrait.StartingTraits.Contains(trait))
+        {
+            categories.Add("Starting");
+        }
+
+        if (FollowerTrait.FaithfulTraits.Contains(trait))
+        {
+            categories.Add("Faithful");
+        }
+
+        if (FollowerTrait.MajorDLCTraits.Contains(trait))
+        {
+            categories.Add("DLC");
+        }
+
+        if (FollowerTrait.WinterSpecificTraits.Contains(trait))
+        {
+            categories.Add("Winter");
+        }
+
+        if (FollowerTrait.SinTraits.Contains(trait))
+        {
+            categories.Add("Sin");
+        }
+
+        if (FollowerTrait.RequiresOnboardingCompleted.Contains(trait))
+        {
+            categories.Add("Unlock");
+        }
+
+        return categories.Count > 0 ? $"[{string.Join(", ", categories)}] " : "";
     }
 
     /// <summary>
