@@ -6,12 +6,9 @@ namespace CultOfQoL.Patches.Gameplay;
 [Harmony]
 public static class KnucklebonesSpeedPatches
 {
-    private static float SpeedMultiplier =>
-        ConfigCache.GetCachedValue(ConfigCache.Keys.KnucklebonesSpeedMultiplier,
-            () => Plugin.KnucklebonesSpeedMultiplier.Value);
+    private static float SpeedMultiplier => ConfigCache.GetCachedValue(ConfigCache.Keys.KnucklebonesSpeedMultiplier, () => Plugin.KnucklebonesSpeedMultiplier.Value);
 
-    private static readonly FieldInfo WaitSecondsField =
-        AccessTools.Field(typeof(WaitForSecondsRealtime), "m_Seconds");
+    private static readonly FieldInfo WaitSecondsField = AccessTools.Field(typeof(WaitForSecondsRealtime), "<waitTime>k__BackingField");
 
     /// <summary>
     /// Wraps an enumerator and scales all WaitForSecondsRealtime yields by the speed multiplier.

@@ -5,13 +5,13 @@ namespace Rebirth;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("io.github.xhayper.COTL_API", "0.3.1")]
-[BepInDependency("com.p1xel8ted.configurationmanagerenhanced", "1.0")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 [HarmonyPatch]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.rebirth";
     private const string PluginName = "Rebirth";
-    private const string PluginVer = "1.1.2";
+    private const string PluginVer = "1.1.3";
 
     public static ManualLogSource Log { get; private set; }
     public static string PluginPath { get; private set; }

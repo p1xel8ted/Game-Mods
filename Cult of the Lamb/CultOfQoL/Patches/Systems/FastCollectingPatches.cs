@@ -194,7 +194,7 @@ public static class FastCollectingPatches
             .Where(s => s && s != __instance && s.StructureInfo?.Inventory?.Count > 0)
             .ToList();
 
-        Plugin.L($"[MassCollectOfferingShrines] Collecting from {shrines.Count} additional shrines");
+        Plugin.WriteLog($"[MassCollectOfferingShrines] Collecting from {shrines.Count} additional shrines");
 
         foreach (var shrine in shrines)
         {
@@ -210,7 +210,7 @@ public static class FastCollectingPatches
             }
             catch (Exception ex)
             {
-                Plugin.LE($"[MassCollectOfferingShrines] Error collecting from shrine: {ex.Message}");
+                Plugin.WriteLog($"[MassCollectOfferingShrines] Error collecting from shrine: {ex.Message}", Plugin.LogType.Error);
             }
         }
 

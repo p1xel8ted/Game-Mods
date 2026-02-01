@@ -165,7 +165,8 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassFeedAnimals { get; private set; }
     internal static ConfigEntry<bool> MassMilkAnimals { get; private set; }
     internal static ConfigEntry<bool> MassShearAnimals { get; private set; }
-    internal static ConfigEntry<bool> MassNurture { get; private set; }
+    // TODO: Re-enable after testing
+    // internal static ConfigEntry<bool> MassNurture { get; private set; }
     internal static ConfigEntry<bool> CollectShrineDevotionInstantly { get; private set; }
 
     internal static WriteOnce<float> RunSpeed { get; } = new();

@@ -37,7 +37,7 @@ public static class NoNegativeTraits
         if (Plugin.UseUnlockedTraitsOnly.Value)
         {
             Plugin.L("Using unlocked traits only - filtering by game unlock requirements.");
-            allTraits.RemoveWhere(t => FollowerTrait.IsTraitUnavailable(t));
+            allTraits.RemoveWhere(FollowerTrait.IsTraitUnavailable);
         }
 
         allTraits.RemoveWhere(a => a == FollowerTrait.TraitType.BishopOfCult);

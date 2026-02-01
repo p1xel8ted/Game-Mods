@@ -18,5 +18,6 @@ global using COTL_API.CustomSettings;
 global using COTL_API.Helpers;
 global using COTL_API.Saves;
 global using HarmonyLib;
+global using I2.Loc;
 global using UnityEngine;
 global using Random = UnityEngine.Random;

@@ -4,13 +4,13 @@ using BepInEx.Bootstrap;
 namespace TraitControl;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.p1xel8ted.configurationmanagerenhanced", "1.0")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 [BepInIncompatibility("NothingNegative")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.traitcontrol";
     internal const string PluginName = "Trait Control";
-    private const string PluginVer = "0.1.5";
+    private const string PluginVer = "0.1.4";
 
     private const string TraitReplacementSection = "01. Trait Replacement";
     private const string UniqueTraitsSection = "02. Unique Traits";
@@ -134,6 +134,10 @@ public partial class Plugin : BaseUnityPlugin
         RandomizeTraitsOnReindoctrination = ConfigInstance.Bind(TraitReplacementSection, "Randomize Traits on Re-indoctrination", false,
             new ConfigDescription("When re-indoctrinating an existing follower (at the altar), randomize their traits using the configured min/max. Vanilla re-indoctrination only changes appearance/name.", null,
                 new ConfigurationManagerAttributes { Order = 4 }));
+
+        TraitRerollOnReeducation = ConfigInstance.Bind(TraitReplacementSection, "Trait Reroll via Reeducation", false,
+            new ConfigDescription("Adds the Re-educate command to normal followers. Using it will re-roll their traits using the configured min/max and weights.", null,
+                new ConfigurationManagerAttributes { Order = 3 }));
 
         // Unique Traits - 02
         AllowMultipleUniqueTraits = ConfigInstance.Bind(UniqueTraitsSection, "Allow Multiple Unique Traits", false,

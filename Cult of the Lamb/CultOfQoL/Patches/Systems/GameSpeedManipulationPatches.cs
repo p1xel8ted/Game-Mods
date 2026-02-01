@@ -145,6 +145,117 @@ public static class GameSpeedManipulationPatches
 #if DEBUG
     private static void HandleDebugKeys()
     {
+        // F6: Add 10x Rotburn (MAGMA_STONE) / Shift+F6: Empty shrine fuel
+        // Ctrl+F6: Clear warmth ritual / Shift+Ctrl+F6: Remove Cold Enthusiast
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl))
+            {
+                // Remove Cold Enthusiast doctrine
+                if (DataManager.Instance.CultTraits.Remove(FollowerTrait.TraitType.ColdEnthusiast))
+                {
+                    NotificationCentre.Instance.PlayGenericNotification("[DEBUG] Removed Cold Enthusiast doctrine");
+                    Plugin.Log.LogInfo("[DEBUG] Removed Cold Enthusiast doctrine from cult");
+                }
+                else
+                {
+                    NotificationCentre.Instance.PlayGenericNotification("[DEBUG] Cold Enthusiast not active");
+                    Plugin.Log.LogInfo("[DEBUG] Cold Enthusiast doctrine was not in cult traits");
+                }
+            }
+            else if (Input.GetKey(KeyCode.LeftControl))
+            {
+                // Clear warmth ritual
+                DataManager.Instance.LastWarmthRitualDeclared = 0f;
+                NotificationCentre.Instance.PlayGenericNotification("[DEBUG] Cleared warmth ritual");
+                Plugin.Log.LogInfo("[DEBUG] Cleared warmth ritual (LastWarmthRitualDeclared set to 0)");
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))
+            {
+                // Empty all shrine fuel
+                var count = 0;
+                foreach (var shrine in BuildingShrine.Shrines)
+                {
+                    if (shrine?.Structure?.Structure_Info == null) continue;
+
+                    if (shrine.Structure.Structure_Info.Fuel > 0)
+                    {
+                        shrine.Structure.Structure_Info.Fuel = 0;
+                        shrine.Structure.Structure_Info.FullyFueled = false;
+                        shrine.UpdateBar();
+                        count++;
+                    }
+                }
+
+                NotificationCentre.Instance.PlayGenericNotification($"[DEBUG] Emptied fuel from {count} shrines");
+                Plugin.Log.LogInfo($"[DEBUG] Emptied fuel from {count} shrines");
+            }
+            else
+            {
+                // Add Rotburn
+                Inventory.AddItem(InventoryItem.ITEM_TYPE.MAGMA_STONE, 10);
+                NotificationCentre.Instance.PlayGenericNotification("[DEBUG] Added 10x Rotburn (MAGMA_STONE)");
+                Plugin.Log.LogInfo("[DEBUG] Added 10x Rotburn (MAGMA_STONE)");
+            }
+        }
+
+        // F7: Set season to Winter (Shift+F7: Cycle seasons, Ctrl+F7: Show warmth info)
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            if (Input.GetKey(KeyCode.LeftControl))
+            {
+                // Display warmth info
+                var warmth = WarmthBar.WarmthNormalized;
+                var warmthPercent = warmth * 100f;
+                var shrinesFueled = 0;
+
+                foreach (var shrine in BuildingShrine.Shrines)
+                {
+                    if (shrine?.Structure?.Structure_Info?.FullyFueled == true)
+                    {
+                        shrinesFueled++;
+                    }
+                }
+
+                var lockedReason = "";
+                if (FollowerBrainStats.LockedWarmth)
+                {
+                    if (FollowerBrainStats.IsWarmthRitual)
+                    {
+                        lockedReason = " [LOCKED: Warmth Ritual Active]";
+                    }
+                    else if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard &&
+                             DataManager.Instance.CultTraits.Contains(FollowerTrait.TraitType.ColdEnthusiast))
+                    {
+                        lockedReason = " [LOCKED: Blizzard + Cold Enthusiast]";
+                    }
+                }
+
+                var message = $"[DEBUG] Warmth: {warmthPercent:F1}%{lockedReason} | Season: {SeasonsManager.CurrentSeason} | Shrines: {shrinesFueled}";
+                NotificationCentre.Instance.PlayGenericNotification(message);
+                Plugin.Log.LogInfo(message);
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))
+            {
+                // Cycle seasons
+                var currentSeason = SeasonsManager.CurrentSeason;
+                var nextSeason = currentSeason == SeasonsManager.Season.Spring
+                    ? SeasonsManager.Season.Winter
+                    : SeasonsManager.Season.Spring;
+
+                SeasonsManager.CurrentSeason = nextSeason;
+                NotificationCentre.Instance.PlayGenericNotification($"[DEBUG] Changed season: {currentSeason} → {nextSeason}");
+                Plugin.Log.LogInfo($"[DEBUG] Changed season from {currentSeason} to {nextSeason}");
+            }
+            else
+            {
+                // Just set to winter
+                SeasonsManager.CurrentSeason = SeasonsManager.Season.Winter;
+                NotificationCentre.Instance.PlayGenericNotification("[DEBUG] Set season to Winter");
+                Plugin.Log.LogInfo("[DEBUG] Set season to Winter");
+            }
+        }
+
         // F8: Unlock all structures, rituals, and upgrades
         if (Input.GetKeyDown(KeyCode.F8))
         {

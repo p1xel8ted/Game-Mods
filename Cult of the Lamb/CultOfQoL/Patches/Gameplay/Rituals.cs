@@ -11,7 +11,7 @@ public static class Rituals
         var originalDuration = duration;
         var scaledDuration = originalDuration * multiplier;
 
-        Plugin.L($"[UpgradeSystem_AddCooldown] Type: {type} | Original: {originalDuration:F2}s | Multiplier: {multiplier:F2} | New: {scaledDuration:F2}s");
+        Plugin.WriteLog($"[UpgradeSystem_AddCooldown] Type: {type} | Original: {originalDuration:F2}s | Multiplier: {multiplier:F2} | New: {scaledDuration:F2}s");
 
         duration = scaledDuration;
     }
@@ -23,18 +23,21 @@ public static class Rituals
         var multiplier = Plugin.RitualCostMultiplier.Value;
         if (Math.Abs(multiplier - 1.0f) < 0.01f) return;
 
+        Plugin.WriteLog($"[Ritual Cost] Calculating costs for: {Type} (Multiplier: {multiplier:F2}x)");
+
         foreach (var cost in __result)
         {
             if (cost.CostItem is InventoryItem.ITEM_TYPE.FOLLOWERS
                 or InventoryItem.ITEM_TYPE.DOCTRINE_STONE
                 or InventoryItem.ITEM_TYPE.DISCIPLE_POINTS)
             {
+                Plugin.WriteLog($"  - {cost.CostItem}: {cost.CostValue} (EXCLUDED from multiplier)");
                 continue;
             }
 
             var original = cost.CostValue;
             cost.CostValue = Mathf.Max(1, Mathf.RoundToInt(original * multiplier));
-            Plugin.L($"[RitualCost] {Type}: {cost.CostItem} {original} -> {cost.CostValue} (x{multiplier:F2})");
+            Plugin.WriteLog($"  - {cost.CostItem}: {original} → {cost.CostValue} (x{multiplier:F2})");
         }
     }
 
@@ -60,7 +63,7 @@ public static class Rituals
         var noFollowers = followerCount <= 0;
         var firePitNotUnlocked = !firePitUnlocked;
 
-        Plugin.L(
+        Plugin.WriteLog(
             $"[Sin Unlock] OnboardSin Check:\n" +
             $"  - BossesCompleted.Count = {bossCount} (needs >= {bossLimit})   => {(notEnoughBosses ? "FAIL (Not enough bosses)" : "OK")}\n" +
             $"  - PleasureRevealed = {pleasureRevealed}                      => {(pleasureRevealed ? "FAIL (Already revealed)" : "OK")}\n" +
@@ -70,11 +73,11 @@ public static class Rituals
 
         if (notEnoughBosses || pleasureRevealed || noFollowers || firePitNotUnlocked)
         {
-            Plugin.L("[Sin Unlock] => Skipping onboarding ritual (one or more requirements not met)");
+            Plugin.WriteLog("[Sin Unlock] => Skipping onboarding ritual (one or more requirements not met)");
         }
         else
         {
-            Plugin.L("[Sin Unlock] => Proceeding to onboarding ritual (all requirements met)");
+            Plugin.WriteLog("[Sin Unlock] => Proceeding to onboarding ritual (all requirements met)");
         }
     }
 

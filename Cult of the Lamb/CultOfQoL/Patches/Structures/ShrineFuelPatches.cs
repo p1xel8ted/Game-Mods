@@ -4,6 +4,12 @@ namespace CultOfQoL.Patches.Structures;
 public static class ShrineFuelPatches
 {
     /// <summary>
+    /// Tracks which shrines were fueled with Rotburn (MAGMA_STONE).
+    /// Key: Shrine structure UID, Value: true if fueled with Rotburn
+    /// </summary>
+    private static readonly Dictionary<int, bool> RotburnFueledShrines = new();
+
+    /// <summary>
     /// Adds MAGMA_STONE (Rotburn) to the shrine's fuel list when enabled.
     /// </summary>
     [HarmonyPostfix]
@@ -61,6 +67,7 @@ public static class ShrineFuelPatches
 
     /// <summary>
     /// Recalculates fuel with custom weight for MAGMA_STONE in shrines.
+    /// Also tracks which shrines are fueled with Rotburn for warmth calculation.
     /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_AddFuel), nameof(Interaction_AddFuel.AddFuel))]
@@ -69,6 +76,25 @@ public static class ShrineFuelPatches
         InventoryItem.ITEM_TYPE itemType,
         int __state)
     {
+        // Handle any shrine fuel addition to track fuel type
+        if (__instance.structure?.Type is (StructureBrain.TYPES.SHRINE or
+            StructureBrain.TYPES.SHRINE_II or StructureBrain.TYPES.SHRINE_III or
+            StructureBrain.TYPES.SHRINE_IV))
+        {
+            var shrineId = __instance.structure.Structure_Info.ID;
+
+            // Track if this shrine is using Rotburn
+            if (itemType == InventoryItem.ITEM_TYPE.MAGMA_STONE && Plugin.EnableRotburnAsShrineFuel.Value)
+            {
+                RotburnFueledShrines[shrineId] = true;
+            }
+            else
+            {
+                // Regular fuel (logs) was added - mark as NOT Rotburn-fueled
+                RotburnFueledShrines[shrineId] = false;
+            }
+        }
+
         if (__state < 0)
         {
             return;
@@ -106,7 +132,8 @@ public static class ShrineFuelPatches
     [HarmonyPatch(typeof(WarmthBar), nameof(WarmthBar.WarmthNormalized), MethodType.Getter)]
     private static void WarmthBar_WarmthNormalized_Postfix(ref float __result)
     {
-        if (!Plugin.EnableShrineWarmth.Value)
+        // Only add warmth if both features are enabled (shrine warmth + rotburn fuel)
+        if (!Plugin.EnableShrineWarmth.Value || !Plugin.EnableRotburnAsShrineFuel.Value)
         {
             return;
         }
@@ -116,13 +143,27 @@ public static class ShrineFuelPatches
             return; // Already at max warmth
         }
 
-        // Check if any shrine is fueled and add warmth contribution
+        // Check if any shrine is fully fueled AND was fueled with Rotburn
         foreach (var shrine in BuildingShrine.Shrines)
         {
-            if (shrine?.Structure?.Structure_Info?.FullyFueled == true)
+            if (shrine?.Structure?.Structure_Info?.FullyFueled != true)
             {
+                continue;
+            }
+
+            var shrineId = shrine.Structure.Structure_Info.ID;
+
+            // Only add warmth if this shrine was fueled with Rotburn
+            if (RotburnFueledShrines.TryGetValue(shrineId, out var isRotburnFueled) && isRotburnFueled)
+            {
+                var originalWarmth = __result;
                 // Shrine provides 20 warmth out of 100 max = 0.2 contribution
                 __result = Mathf.Clamp01(__result + 0.2f);
+
+                #if DEBUG
+                Plugin.Log.LogInfo($"[Shrine Warmth] Added +20% warmth from Rotburn-fueled shrine (before: {originalWarmth:F2}, after: {__result:F2})");
+                #endif
+
                 break; // One fueled shrine is enough
             }
         }

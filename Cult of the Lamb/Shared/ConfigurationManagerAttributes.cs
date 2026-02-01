@@ -128,14 +128,6 @@ internal sealed class ConfigurationManagerAttributes
     public int? Order;
 
     /// <summary>
-    /// Order of the category relative to other categories. 0 by default.
-    /// Negative values pin to top, positive values pin to bottom.
-    /// Categories with the same order are sorted by the selected method (alphabetical/registration).
-    /// Applies to the entire category - set on any setting within the category.
-    /// </summary>
-    public int? CategoryOrder;
-
-    /// <summary>
     /// Only show the value, don't allow editing it.
     /// </summary>
     public bool? ReadOnly;

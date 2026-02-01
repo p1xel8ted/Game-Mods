@@ -1,7 +1,7 @@
 # Changelog
 
 ## v0.1.1 - 31/01/2026
-- Fixed localized fonts (Russian, Chinese, Japanese, Korean, Arabic) not loading correctly, causing corrupted/missing characters.
+- Potential fix for localized character display issues (Russian, Chinese, Japanese, Korean, Arabic).
 
 ## v0.1.0 - 25/01/2026
 - Initial release

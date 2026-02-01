@@ -36,6 +36,8 @@ Control how many traits followers receive:
 
 Vanilla behavior is 2-3 traits for new followers, with a cap of 6 during re-indoctrination. Increase these values to give followers more traits (limited to 8 due to UI constraints). The maximum setting also affects re-indoctrination, removing the vanilla cap of 6.
 
+- **Trait Reroll via Reeducation** - adds the Re-educate command to normal followers (dissenters already have this in vanilla). Using it will re-roll their traits using your configured min/max and weights. Works with "Enable Trait Replacement" to replace negative traits.
+
 **Note:** If "Use Unlocked Traits Only" is enabled and you don't have enough traits unlocked, followers may receive fewer traits than the minimum. A warning will appear in the log when this happens.
 
 ### Trait Weights

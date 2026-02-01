@@ -148,6 +148,14 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
 
     private static IEnumerator DieRoutine(Follower follower)
     {
+        var followerId = follower.Brain.Info.ID;
+        var followerName = follower.Brain.Info.Name;
+
+        Plugin.Log.LogInfo($"[Rebirth] DieRoutine started for '{followerName}' (ID: {followerId})");
+
+        // Mark this follower for rebirth (used by GetDeathText patch)
+        Patches.MarkFollowerForRebirth(followerId);
+
         follower.HideAllFollowerIcons();
         yield return new WaitForSeconds(0.5f);
 
@@ -161,7 +169,11 @@ internal class RebirthFollowerCommand : CustomFollowerCommand
         // This doesn't affect murder stats - those are only incremented by the actual Murder command
         follower.Brain._directInfoAccess.DiedOfOldAge = true;
 
+        Plugin.Log.LogInfo($"[Rebirth] Calling Die() for '{followerName}' (ID: {followerId})");
         follower.Die(NotificationCentre.NotificationType.None, force: true);
+
+        Plugin.Log.LogInfo($"[Rebirth] Die() completed for '{followerName}' (ID: {followerId})");
+        Plugin.Log.LogInfo($"[Rebirth] Follower will be unmarked when GetDeathText is called during death animation");
     }
 
 

@@ -25,7 +25,7 @@ internal static class StructurePatches
         if (!Mathf.Approximately(Plugin.LumberAndMiningStationsAgeMultiplier.Value, 1.0f))
         {
             __result = Mathf.CeilToInt(__result * Mathf.Abs(Plugin.LumberAndMiningStationsAgeMultiplier.Value));
-            Plugin.L($"[Structures_LumberjackStation_LifeSpawn] Adjusted life spawn to: {__result}");
+            Plugin.WriteLog($"[Structures_LumberjackStation_LifeSpawn] Adjusted life spawn to: {__result}");
         }
     }
 
@@ -93,7 +93,7 @@ internal static class StructurePatches
             {
                 LOGCollectionCounts[__instance] = 0;
                 InventoryItem.Spawn(InventoryItem.ITEM_TYPE.SPIDER_WEB, 1, spawnPosition, 0f);
-                Plugin.L($"Spawned spider web at lumber station after {logsPerSpiderWeb} logs collected");
+                Plugin.WriteLog($"Spawned spider web at lumber station after {logsPerSpiderWeb} logs collected");
             }
         }
         else if (type == InventoryItem.ITEM_TYPE.STONE)
@@ -104,7 +104,7 @@ internal static class StructurePatches
             {
                 LOGCollectionCounts[__instance] = 0;
                 InventoryItem.Spawn(InventoryItem.ITEM_TYPE.CRYSTAL, 1, spawnPosition, 0f);
-                Plugin.L($"Spawned crystal shard at mining station after {stonePerCrystal} stone collected");
+                Plugin.WriteLog($"Spawned crystal shard at mining station after {stonePerCrystal} stone collected");
             }
         }
     }
@@ -116,7 +116,7 @@ internal static class StructurePatches
     {
         // Clean up tracking dictionary to prevent memory leaks
         LOGCollectionCounts.Remove(__instance);
-        Plugin.L("Removed lumber station from spider web tracking dictionary on disable");
+        Plugin.WriteLog("Removed lumber station from spider web tracking dictionary on disable");
     }
 
     private static bool IsWoodOrLogType(InventoryItem.ITEM_TYPE type)
@@ -306,7 +306,7 @@ internal static class StructurePatches
         if (!ConfigCache.GetCachedValue(ConfigCache.Keys.LumberAndMiningStationsDontAge, () => Plugin.LumberAndMiningStationsDontAge.Value)) return;
 
         __instance.Data.Age = 0;
-        Plugin.L("Resetting age of lumber/mining station to 0!");
+        Plugin.WriteLog("Resetting age of lumber/mining station to 0!");
     }
 
 
@@ -431,7 +431,7 @@ internal static class StructurePatches
                 .Where(r => r && r != pettedAnimal && !r.animal.PetToday)
                 .ToList();
 
-            Plugin.L($"[MassPetAnimals] Petting {animals.Count} additional animals");
+            Plugin.WriteLog($"[MassPetAnimals] Petting {animals.Count} additional animals");
 
             foreach (var animal in animals)
             {
@@ -473,7 +473,7 @@ internal static class StructurePatches
                 currentCount = __instance._structureInfo.QueuedResources.Count;
             }
 
-            Plugin.L($"[RefineryMassFill] Filled queue with {item.Type} - {currentCount}/{maxItems} slots used");
+            Plugin.WriteLog($"[RefineryMassFill] Filled queue with {item.Type} - {currentCount}/{maxItems} slots used");
         }
         finally
         {
@@ -500,7 +500,7 @@ internal static class StructurePatches
                 currentCount = __instance._structureInfo.QueuedMeals.Count;
             }
 
-            Plugin.L($"[KitchenMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
+            Plugin.WriteLog($"[KitchenMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
         }
         finally
         {
@@ -527,7 +527,7 @@ internal static class StructurePatches
                 currentCount = __instance._structureInfo.QueuedMeals.Count;
             }
 
-            Plugin.L($"[PubMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
+            Plugin.WriteLog($"[PubMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
         }
         finally
         {
@@ -554,7 +554,7 @@ internal static class StructurePatches
                 currentCount = __instance._kitchenData.QueuedMeals.Count;
             }
 
-            Plugin.L($"[CookingFireMassFill] Filled queue with {recipe} - {currentCount}/{maxItems} slots used");
+            Plugin.WriteLog($"[CookingFireMassFill] Filled queue with {recipe} - {currentCount}/{maxItems} slots used");
         }
         finally
         {
@@ -562,6 +562,8 @@ internal static class StructurePatches
         }
     }
 
+    // TODO: Re-enable after testing
+    /*
     #region Mass Nurture
 
     [HarmonyPostfix]
@@ -570,7 +572,7 @@ internal static class StructurePatches
     {
         if (!Plugin.MassNurture.Value) return;
 
-      
+
 
         var sourceDaycare = __instance._structuresBrain;
 
@@ -594,10 +596,11 @@ internal static class StructurePatches
                 follower.Brain._directInfoAccess.CuddledAmount++;
                 follower.Brain.AddAdoration(FollowerBrain.AdorationActions.CuddleBaby, null);
 
-                Plugin.L($"[MassNurture] Nurtured {follower.Brain.Info.Name} in another daycare!");
+                Plugin.WriteLog($"[MassNurture] Nurtured {follower.Brain.Info.Name} in another daycare!");
             }
         }
     }
 
     #endregion
+    */
 }

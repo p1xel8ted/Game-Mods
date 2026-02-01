@@ -1,5 +1,6 @@
 namespace SkipOfTheLamb;
 
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInIncompatibility("p1xel8ted.cotl.skipofthelamblite")]
 public class Plugin : BaseUnityPlugin

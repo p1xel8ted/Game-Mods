@@ -89,13 +89,13 @@ public static class FollowerPatches
             }
             else
             {
-                Plugin.L($"No available work tasks for elderly follower {__instance.Info.Name}.");
+                Plugin.WriteLog($"No available work tasks for elderly follower {__instance.Info.Name}.");
             }
         }
 
         if (found)
         {
-            Plugin.L($"Elderly follower {__instance.Info.Name} set to work on {__result}.");
+            Plugin.WriteLog($"Elderly follower {__instance.Info.Name} set to work on {__result}.");
         }
     }
 
@@ -207,28 +207,28 @@ public static class FollowerPatches
     private static bool IsFollowerADog(FollowerBrain brain)
     {
         if (brain.Info.SkinName.Contains("Dog", StringComparison.OrdinalIgnoreCase)) return true;
-        Plugin.L($"Skipping {brain.Info.Name} because they are not a dog!");
+        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are not a dog!");
         return false;
     }
 
     private static bool IsFollowerDissenting(FollowerBrain brain)
     {
         if (brain.Info.CursedState is not Thought.Dissenter) return false;
-        Plugin.L($"Skipping {brain.Info.Name} because they are dissenting!");
+        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are dissenting!");
         return true;
     }
 
     private static bool IsFollowerImprisoned(FollowerBrain brain)
     {
         if (!brain.Info.CursedState.ToString().Contains("Imprison", StringComparison.OrdinalIgnoreCase)) return false;
-        Plugin.L($"Skipping {brain.Info.Name} because they are in prison!");
+        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are in prison!");
         return true;
     }
 
     private static bool IsFollowerAvailable(FollowerBrain brain)
     {
         if (brain.CurrentTaskType is not (FollowerTaskType.Sleep or FollowerTaskType.SleepBedRest or FollowerTaskType.Mating)) return true;
-        Plugin.L($"Skipping {brain.Info.Name} because they are busy with task: {brain.CurrentTaskType.ToString()}");
+        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are busy with task: {brain.CurrentTaskType.ToString()}");
         return false;
     }
 
@@ -239,7 +239,7 @@ public static class FollowerPatches
     {
         if (followerCommands[0] is not (FollowerCommands.Reassure or FollowerCommands.Reeducate or FollowerCommands.Bully or FollowerCommands.Romance or FollowerCommands.PetDog or FollowerCommands.PetFollower or FollowerCommands.ExtortMoney or FollowerCommands.Dance or FollowerCommands.Intimidate or FollowerCommands.Bless or FollowerCommands.Bribe))
         {
-            Plugin.L($"Skipping mass command because {followerCommands[0]} is not a mass command!");
+            Plugin.WriteLog($"Skipping mass command because {followerCommands[0]} is not a mass command!");
             return;
         }
 
@@ -261,7 +261,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.ReassureRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.ScaredTraitInteracted = true;
-                    Plugin.L($"Reassured {interaction.follower.name}!");
+                    Plugin.WriteLog($"Reassured {interaction.follower.name}!");
                 }));
             }
         }
@@ -274,7 +274,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.ReeducateRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.ReeducatedAction = true;
-                    Plugin.L($"Re-educated {interaction.follower.name}!");
+                    Plugin.WriteLog($"Re-educated {interaction.follower.name}!");
                 }));
             }
         }
@@ -287,7 +287,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.BullyRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.ScaredTraitInteracted = true;
-                    Plugin.L($"Scared straight {interaction.follower.name}!");
+                    Plugin.WriteLog($"Scared straight {interaction.follower.name}!");
                 }));
             }
         }
@@ -300,7 +300,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.RomanceRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.KissedAction = true;
-                    Plugin.L($"Romanced {interaction.follower.name}!");
+                    Plugin.WriteLog($"Romanced {interaction.follower.name}!");
                 }));
             }
         }
@@ -313,7 +313,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.PetDogRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.PetDog = true;
-                    Plugin.L($"Petted {interaction.follower.name}!");
+                    Plugin.WriteLog($"Petted {interaction.follower.name}!");
                 }));
             }
         }
@@ -326,7 +326,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, ExtortMoneyRoutine(interaction), delegate
                 {
                     interaction.follower.Brain.Stats.PaidTithes = true;
-                    Plugin.L($"Extorted {interaction.follower.name}!");
+                    Plugin.WriteLog($"Extorted {interaction.follower.name}!");
                 }));
             }
         }
@@ -339,7 +339,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.DanceRoutine(false), delegate
                 {
                     interaction.follower.Brain.Stats.Inspired = true;
-                    Plugin.L($"Inspired {interaction.follower.name}!");
+                    Plugin.WriteLog($"Inspired {interaction.follower.name}!");
                 }));
             }
         }
@@ -352,7 +352,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.IntimidateRoutine(false, PlayerFarming.Instance), delegate
                 {
                     interaction.follower.Brain.Stats.Intimidated = true;
-                    Plugin.L($"Intimidated {interaction.follower.name}!");
+                    Plugin.WriteLog($"Intimidated {interaction.follower.name}!");
                 }));
             }
         }
@@ -367,7 +367,7 @@ public static class FollowerPatches
                 {
                     interaction.follower.Brain.Stats.ReceivedBlessing = true;
                     interaction.follower.Brain.Stats.LastBlessing = DataManager.Instance.CurrentDayIndex;
-                    Plugin.L($"Blessed {interaction.follower.name}!");
+                    Plugin.WriteLog($"Blessed {interaction.follower.name}!");
                 }));
             }
         }
@@ -381,7 +381,7 @@ public static class FollowerPatches
                 interaction.StartCoroutine(RunEnumerator(run, interaction.BribeRoutine(), delegate
                 {
                     interaction.follower.Brain.Stats.Bribed = true;
-                    Plugin.L($"Bribed {interaction.follower.name}!");
+                    Plugin.WriteLog($"Bribed {interaction.follower.name}!");
                 }));
             }
         }
@@ -399,7 +399,7 @@ public static class FollowerPatches
             __instance.follower.Brain.Stats.Exhaustion = 0f;
             var onExhaustionStateChanged = FollowerBrainStats.OnExhaustionStateChanged;
             onExhaustionStateChanged?.Invoke(__instance.follower.Brain._directInfoAccess.ID, FollowerStatState.Off, FollowerStatState.On);
-            Plugin.L($"Resetting follower {__instance.follower.name} from exhaustion!");
+            Plugin.WriteLog($"Resetting follower {__instance.follower.name} from exhaustion!");
         }
 
         if (__instance.follower.Brain.Stats.Illness > 0)
@@ -408,7 +408,7 @@ public static class FollowerPatches
             __instance.follower.Brain.Stats.Illness = 0f;
             var onIllnessStateChanged = FollowerBrainStats.OnIllnessStateChanged;
             onIllnessStateChanged?.Invoke(__instance.follower.Brain._directInfoAccess.ID, FollowerStatState.Off, FollowerStatState.On);
-            Plugin.L($"Resetting follower {__instance.follower.name} from illness!");
+            Plugin.WriteLog($"Resetting follower {__instance.follower.name} from illness!");
         }
     }
 
@@ -425,7 +425,7 @@ public static class FollowerPatches
         var eligibleCount = Helpers.AllFollowers.Count(f => f != originalFollower && f.Brain.CanLevelUp());
         if (eligibleCount < 1) return;
 
-        Plugin.L($"[MassLevelUp] Triggered by {originalFollower.Brain.Info.Name}, {eligibleCount} other followers eligible.");
+        Plugin.WriteLog($"[MassLevelUp] Triggered by {originalFollower.Brain.Info.Name}, {eligibleCount} other followers eligible.");
         GameManager.GetInstance().StartCoroutine(MassLevelUpAll(originalFollower));
     }
 
@@ -471,17 +471,17 @@ public static class FollowerPatches
             .Where(f => f != original && f.Brain.CanLevelUp() && f.Interaction_FollowerInteraction)
             .ToList();
 
-        Plugin.L($"[MassLevelUp] Starting level up for {eligible.Count} followers.");
+        Plugin.WriteLog($"[MassLevelUp] Starting level up for {eligible.Count} followers.");
 
         foreach (var follower in eligible)
         {
             var interaction = follower.Interaction_FollowerInteraction;
             interaction.playerFarming = PlayerFarming.Instance ??= Object.FindObjectOfType<PlayerFarming>();
-            Plugin.L($"[MassLevelUp] Leveling up {follower.Brain.Info.Name}.");
+            Plugin.WriteLog($"[MassLevelUp] Leveling up {follower.Brain.Info.Name}.");
             interaction.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, false, false));
         }
 
-        Plugin.L("[MassLevelUp] All level up routines started.");
+        Plugin.WriteLog("[MassLevelUp] All level up routines started.");
         MassLevelUpRunning = false;
     }
 
@@ -530,7 +530,7 @@ public static class FollowerPatches
             var task = FollowerBrain.GetDesiredTask_Work(__instance.follower.Brain.Location).Random();
             __instance.follower.Brain.HardSwapToTask(task);
             NotificationCentre.Instance.PlayGenericNotification($"{__instance.follower.Brain.Info.Name} sent to work on random task!", NotificationBase.Flair.Positive);
-            Plugin.L($"Old follower {__instance.follower.name} made to work on {task}");
+            Plugin.WriteLog($"Old follower {__instance.follower.name} made to work on {task}");
             __instance.Close(false, true, false);
             return false;
         }

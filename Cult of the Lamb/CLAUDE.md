@@ -95,6 +95,8 @@ Each mod has a `GlobalUsings.cs` with project-wide `global using` statements. Cu
 - **Never create a new version entry** in changelogs unless explicitly instructed by the user. Add changes to the existing unreleased version entry.
 - If unsure whether to create a new version or add to an existing one, ask the user before continuing.
 - **Use player-facing language**: Write changelog entries from the user's perspective, describing what they experience (e.g., "Fixed player getting stuck when petting animals") rather than technical implementation details (e.g., "Added null check for state field in PetIE coroutine").
+- **Development fixes vs user-facing features**: Don't mention bugs that were fixed during development of a new feature before it's released. If a feature is being added for the first time in a version, only describe the final working feature - users never experienced the broken version. Example: Don't say "Added feature X" and "Fixed bug in feature X" in the same release; just say "Added feature X" with the correct specifications.
+- **Technical details belong elsewhere**: Implementation notes, bug root causes, and fix details should go in commit messages and `summary-*.md` files, not user-facing changelogs. Changelogs describe the final experience, not the development journey.
 - **Always include dates**: Every version entry must have a date in DD/MM/YYYY format (e.g., `### 2.3.5 - 27/01/2026`), even if multiple versions are released on the same day.
 
 ## Version Bumps

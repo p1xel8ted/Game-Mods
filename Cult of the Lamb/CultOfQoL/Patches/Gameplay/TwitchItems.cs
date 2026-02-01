@@ -57,7 +57,7 @@ internal static class TwitchItems
                 // Skip if it's a paid DLC authentication method
                 if (PaidDlcKeywords.Any(dlc => method.Name.Contains(dlc, StringComparison.OrdinalIgnoreCase))) continue;
 
-                Plugin.L($"[Unlock Twitch Items] Patching {method.Name}");
+                Plugin.WriteLog($"[Unlock Twitch Items] Patching {method.Name}");
                 yield return method;
             }
         }

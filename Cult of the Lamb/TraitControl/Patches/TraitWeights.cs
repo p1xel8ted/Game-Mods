@@ -704,4 +704,77 @@ public static class TraitWeights
             Plugin.Log.LogInfo($"[Reindoctrinate] After trait replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
         }
     }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // Trait Reroll via Reeducation
+    // ══════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Adds the Reeducate command to normal followers when enabled.
+    /// Dissenters already have this command in vanilla.
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerCommandGroups), nameof(FollowerCommandGroups.NormalCommands))]
+    private static void FollowerCommandGroups_NormalCommands_AddReeducate(ref List<CommandItem> __result)
+    {
+        if (!Plugin.TraitRerollOnReeducation.Value) return;
+        __result.Add(FollowerCommandItems.Reeducate());
+    }
+
+    /// <summary>
+    /// Wraps the reeducation routine to re-roll traits after completion.
+    /// Only applies to normal followers (not dissenters).
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ReeducateRoutine))]
+    private static void ReeducateRoutine_Postfix(ref IEnumerator __result, interaction_FollowerInteraction __instance)
+    {
+        if (!Plugin.TraitRerollOnReeducation.Value) return;
+        if (__instance.follower.Brain.Info.CursedState == Thought.Dissenter) return;
+
+        __result = WrapReeducateRoutine(__result, __instance.follower.Brain);
+    }
+
+    /// <summary>
+    /// Wrapper that runs the original reeducation routine, then re-rolls the follower's traits.
+    /// Uses the already-patched RandomisedTraits method to respect TraitControl settings.
+    /// </summary>
+    private static IEnumerator WrapReeducateRoutine(IEnumerator original, FollowerBrain brain)
+    {
+        while (original.MoveNext())
+        {
+            yield return original.Current;
+        }
+
+        // Re-roll traits for normal followers
+        if (brain.Info.CursedState != Thought.Dissenter)
+        {
+            // Clamp Reeducation stat back to 0 to prevent negative values
+            if (brain.Stats.Reeducation < 0f)
+            {
+                brain.Stats.Reeducation = 0f;
+            }
+
+            var followerInfo = brain._directInfoAccess;
+            Plugin.Log.LogInfo($"[Reeducate] Starting trait reroll for {followerInfo.Name}");
+            Plugin.Log.LogInfo($"[Reeducate] Current traits ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+
+            // Generate new randomized traits using the patched RandomisedTraits method
+            var seed = followerInfo.ID + TimeManager.CurrentDay;
+            var newTraits = followerInfo.RandomisedTraits(seed);
+
+            // Replace the follower's traits with the new randomized ones
+            followerInfo.Traits.Clear();
+            followerInfo.Traits.AddRange(newTraits);
+
+            Plugin.Log.LogInfo($"[Reeducate] New traits ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+
+            // Apply trait replacement if enabled (replaces negative traits with positive ones)
+            if (Plugin.NoNegativeTraits.Value)
+            {
+                NoNegativeTraits.ProcessTraitReplacement(brain);
+                Plugin.Log.LogInfo($"[Reeducate] After trait replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+            }
+        }
+    }
 }

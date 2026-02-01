@@ -1,32 +1,27 @@
-### 2.3.9 - 31/01/2026
+### 2.3.9 - 01/02/2026
 
-* Added Knucklebones animation speed multiplier (1x to 5x) - speed up all dice rolling, turn transitions, and announcements.
-* Added "Rotburn as Shrine Fuel" option - use excess Rotburn (MAGMA_STONE) to fuel the shrine brazier with configurable fuel weight.
-* Added "Shrine Provides Warmth" option - fueled shrine brazier now contributes 20% warmth during winter (fixes vanilla oversight where shrine warmth was defined but never applied).
-* Replaced fixed "3x Tarot Luck" toggle with customisable luck multiplier slider (1x to 5x in 0.5 increments, default 2x).
-* Fixed Magnet Range Multiplier slider not rounding to 0.25 increments like other float settings.
-* Fixed vanilla bug: Crash when opening the Priest job board after claiming all fleece quest rewards.
-* Fixed "Reverse Enrichment Nerf" option giving far fewer coins than expected.
-* Added Blacksmith NPC Spine animation warning to log spam filter.
-* Added animal lifespan controls: disable old age death entirely, or adjust the minimum age before animals can die of old age (default 15 days).
-* Added new "Animals" config section - animal-related settings moved here for better organization.
-* Improved stability for mass actions when PlayerFarming reference is unavailable.
-* Renamed "Mass Pet Dog" to "Mass Pet Follower" - now pets all followers at once, not just dogs.
-* Added "Mass Nurture" option - nurturing children at one daycare also nurtures children at all other daycares.
-* Fixed "Collect Shrine Devotion Instantly" only collecting a fraction of stored devotion (e.g., 11 out of 120).
-* Added "Ritual Cost Multiplier" option to increase or decrease ritual material costs for balance adjustments.
-* Reorganized config sections with cleaner formatting and alphabetical ordering.
-* Renamed confusing toggle settings for clarity:
-  * "Disable Animal Old Age Death" → "Immortal Farm Animals"
-  * "Disable Fishing Mini-Game" → "Easy Fishing"
-  * "Disable Ads" → "Hide Ads"
-  * "Disable All Notifications" → "Hide All Notifications"
-  * "Disable Run Speed In Dungeons/Combat" → "Exclude Dungeons/Combat"
-  * "Disable Propaganda Speaker Audio" → "Mute Propaganda Speakers"
+**New Features:**
+* Added Knucklebones Speed Control - speed up dice rolls and animations (1x to 10x multiplier).
+* Added Rotburn as Shrine Fuel - use excess Rotburn to fuel shrine braziers, with shrines providing 20% warmth during winter.
+* Added Tarot Luck Multiplier - adjustable slider (1x to 5x) replacing the old fixed 3x toggle.
+* Added Animal Lifespan Controls - make farm animals immortal or adjust minimum age before death (default 15 days).
+* Added Ritual Cost Multiplier - adjust ritual material costs up or down for custom difficulty.
+
+**Improvements:**
+* Renamed "Mass Pet Dog" to "Mass Pet Follower" - now works on all followers, not just dogs.
+* Added dedicated Animals config section for better organization.
+* Reorganized config sections with clearer formatting and alphabetical ordering.
+* Clarified confusing setting names (Animal Old Age Death, Fishing, Ads, Notifications, Run Speed, Propaganda Speakers).
+
+**Fixes:**
+* Fixed Magnet Range slider not rounding to 0.25 increments like other sliders.
+* Fixed vanilla crash when opening the Priest job board after claiming all fleece quest rewards.
+* Fixed "Reverse Enrichment Nerf" giving far fewer coins than expected.
+* Fixed "Collect Shrine Devotion Instantly" only collecting ~10% of stored devotion instead of all.
 
 ### 2.3.8 - 31/01/2026
 
-* Fixed lore tablets not being awarded when interacting with lore stones while menus were open.
+* Fixed lore tablets not being awarded when handing in job board quests.
 * Added "Auto Repair Missing Lore" option (in Fixes section) to restore lore tablets that weren't unlocked due to the above bug. Only repairs tablets for fleece quests where the reward was actually claimed at the job board.
 * Fixed game graphics settings (Chromatic Aberration, Bloom, Vignette, Depth of Field) not applying in DLC zones.
 * Added "Mass Open Scarecrows" option - opening one scarecrow trap opens all traps with caught birds.

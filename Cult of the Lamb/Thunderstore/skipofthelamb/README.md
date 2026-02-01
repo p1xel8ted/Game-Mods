@@ -18,7 +18,7 @@ A mod to skip various cutscenes and intros in Cult of the Lamb.
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
-* Optionally install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/) for in-game configuration with F1.
+* Install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/) (required for configuration UI)
 * Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Configuration

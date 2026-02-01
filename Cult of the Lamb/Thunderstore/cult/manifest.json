@@ -4,7 +4,6 @@
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/1?tab=description",
     "description":  "Stop micromanaging your cult. Mass follower commands, auto-loot from structures, adjustable game speed, extended mine lifespans, customizable radii, and dozens of quality-of-life improvements.",
     "dependencies":  [
-                         "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
-                         "p1xel8ted-ConfigurationManagerEnhanced-1.0.0"
+                         "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101"
                      ]
 }

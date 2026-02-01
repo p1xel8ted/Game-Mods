@@ -1,8 +1,10 @@
+### 1.1.3 - 01/02/2026
+
+* Changed death notification during rebirth to show "succumbed to unknown forces..." (localized for all supported languages).
+
 ### 1.1.2 - 01/02/2026
 
 * Added "Preserve Unique Followers" option (enabled by default) to control whether unique followers (Webber, Sozo, Ratau, etc.) keep their skin and traits when reborn.
-* Fixed reborn followers showing as "murdered" in the graveyard - now shows "died of old age" instead. Note: Rebirth has never counted towards murder statistics.
-* Switched to ConfigurationManagerEnhanced dependency.
 
 ### 1.1.1 - 24/01/2026
 

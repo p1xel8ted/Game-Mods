@@ -8,7 +8,7 @@ public static class RitualEnrichmentNerf
         if (Plugin.ReverseEnrichmentNerf.Value)
         {
             // CustomGiveCoins handles coin addition per-follower
-            Plugin.L($"RitualEnrichmentNerf: Skipping RitualRoutine's AddItem({quantity} coins) - CustomGiveCoins handles it.");
+            Plugin.WriteLog($"RitualEnrichmentNerf: Skipping RitualRoutine's AddItem({quantity} coins) - CustomGiveCoins handles it.");
             return;
         }
         Inventory.AddItem(type, quantity, forceNormalInventory);
@@ -58,7 +58,7 @@ public static class RitualEnrichmentNerf
             return true;
         }
 
-        Plugin.L($"[EnrichmentNerf] Processing follower, vanilla would give {coinPerFollower} coins (total followers: {totalFollowers})");
+        Plugin.WriteLog($"[EnrichmentNerf] Processing follower, vanilla would give {coinPerFollower} coins (total followers: {totalFollowers})");
         __result = CustomGiveCoins(follower, totalTime, delay, coinPerFollower);
         return false;
     }
@@ -67,7 +67,7 @@ public static class RitualEnrichmentNerf
     {
         if (!follower)
         {
-            Plugin.L("[EnrichmentNerf] Follower is null, skipping");
+            Plugin.WriteLog("[EnrichmentNerf] Follower is null, skipping");
             yield break;
         }
 
@@ -76,7 +76,7 @@ public static class RitualEnrichmentNerf
         var level = follower.Brain.Info.XPLevel;
         var enhancedCoins = level * 10;
 
-        Plugin.L($"[EnrichmentNerf] {follower.Brain.Info.Name} (L{level}): vanilla={vanillaCoinPerFollower}, enhanced={enhancedCoins}");
+        Plugin.WriteLog($"[EnrichmentNerf] {follower.Brain.Info.Name} (L{level}): vanilla={vanillaCoinPerFollower}, enhanced={enhancedCoins}");
 
         yield return new WaitForSeconds(delay);
 

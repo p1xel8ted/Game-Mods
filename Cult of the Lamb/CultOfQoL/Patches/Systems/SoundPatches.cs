@@ -57,7 +57,7 @@ public static class SoundPatches
         }
 
         var action = shouldPlay ? "Playing" : "Blocked";
-        Plugin.L($"[SoundPatches] {action}: {soundPath} from {callingType.Name}");
+        Plugin.WriteLog($"[SoundPatches] {action}: {soundPath} from {callingType.Name}");
 
         return shouldPlay;
     }
