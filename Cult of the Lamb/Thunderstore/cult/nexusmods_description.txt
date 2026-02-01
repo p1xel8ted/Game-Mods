@@ -45,7 +45,7 @@
 [*][size=3]Manipulate game speed with keybinds (up to 5x)[/size]
 [*][size=3]Use large speed steps (1x, 2x, 3x) instead of fine 0.25x increments[/size]
 [*][size=3]Slow down time (make days longer)[/size]
-[*][size=3]Speed up Knucklebones animations (1x to 5x multiplier)[/size]
+[*][size=3]Speed up Knucklebones animations (1x to 10x multiplier)[/size]
 [/list]
 
 [size=3][b]Tarot Cards[/b][/size]
