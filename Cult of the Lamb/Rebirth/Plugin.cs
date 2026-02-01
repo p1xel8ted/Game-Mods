@@ -5,7 +5,7 @@ namespace Rebirth;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("io.github.xhayper.COTL_API", "0.3.1")]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
 [HarmonyPatch]
 public class Plugin : BaseUnityPlugin
 {

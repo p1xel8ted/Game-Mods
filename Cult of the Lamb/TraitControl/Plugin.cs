@@ -4,7 +4,7 @@ using BepInEx.Bootstrap;
 namespace TraitControl;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
+[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInIncompatibility("NothingNegative")]
 public partial class Plugin : BaseUnityPlugin
 {
