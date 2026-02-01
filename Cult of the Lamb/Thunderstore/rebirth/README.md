@@ -9,7 +9,7 @@
 - First rebirth is free; subsequent rebirths cost Rebirth Tokens (default: 25)
 - XP carries over with configurable penalty (default: 20% chance to keep only 50% XP)
 - Option to allow old/elderly followers to be reborn (disabled by default - old followers cannot be reborn)
-- Unique followers (Webber, Sozo, Ratau, etc.) can retain their original skin and traits when reborn
+- Unique followers (Webber, Sozo, Ratau, etc.) can retain their original skin and traits when reborn (names are always randomized)
 - Their old body stays after rebirth; compost it, eat it, up to you
 
 ### Token Sources
