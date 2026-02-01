@@ -36,7 +36,7 @@
 - Manipulate game speed with keybinds (up to 5x)
 - Use large speed steps (1x, 2x, 3x) instead of fine 0.25x increments
 - Slow down time (make days longer)
-- Speed up Knucklebones animations (1x to 5x multiplier)
+- Speed up Knucklebones animations (1x to 10x multiplier)
 
 ### Tarot Cards
 - Customisable rare card draw chance multiplier (1x to 5x)
