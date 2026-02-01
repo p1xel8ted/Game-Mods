@@ -73,7 +73,6 @@
 - Mass bully, reassure, reeducate
 - Mass romance, pet follower (dogs and non-dogs)
 - Mass sin extract
-- Mass nurture children across all daycares
 - Mass open scarecrow traps
 - Mass fill/collect wolf traps
 
@@ -145,7 +144,7 @@
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
-* Install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/)
+* Install [BepInEx Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/) (for in-game configuration)
 * Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Configuration

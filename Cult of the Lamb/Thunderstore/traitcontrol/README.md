@@ -23,7 +23,7 @@ Control whether special/crossover traits can appear in trait pools:
 
 Each unique trait has two options:
 - **Include** - allows the trait to appear in trait pools
-- **Guarantee** - forces every new follower to receive this trait (until one already has it)
+- **Guarantee** - new followers will always receive this trait (ignores weights). Only one follower can have this trait unless "Allow Multiple Unique Traits" is enabled.
 
 Additional option:
 - **Allow Multiple Unique Traits** - normally only one follower can have each unique/single-use trait (Immortal, Disciple, Lazy, Snorer, etc.). Enable this to allow multiple followers to have the same trait.
@@ -272,7 +272,7 @@ Reset all configuration options to their default values (vanilla game behavior) 
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
-* Install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/)
+* Install [BepInEx Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/) (for in-game configuration)
 * Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Configuration

@@ -2,22 +2,30 @@
 
 # Rebirth
 
-* Followers can be reborn, allowing you to change their names, looks etc.
-* First one is free; subsequent ones on the same follower require Rebirth Tokens obtained from crusading (default 25, configurable).
-* Source of the tokens is from killing enemies, destroying old bone piles, dungeon chests, offering shrines, and more.
-* The drop chance defaults to 5% (configurable).
-* The followers' XP carries over, but there is a 20% chance they lose some XP when reborn (configurable). There is a notification when this happens.
-* Their old body stays; compost it, eat it. Up to you.
-* Refine the tokens at your refineries from bones (default 15, configurable)!
-* Send your followers on a mission to get tokens!
-* Go on a quest yourself to get tokens!
-* All values are configurable via the in-game mod settings menu or the BepInEx config file.
+## Features
+
+### Rebirth Mechanic
+- Followers can be reborn, changing their name, appearance, and traits
+- First rebirth is free; subsequent rebirths cost Rebirth Tokens (default: 25)
+- XP carries over with configurable penalty (default: 20% chance to keep only 50% XP)
+- Option to allow elderly followers to be reborn (disabled by default)
+- Unique followers (Webber, Sozo, Ratau, etc.) can retain their original skin and traits when reborn
+- Their old body stays after rebirth; compost it, eat it, up to you
+
+### Token Sources
+- **Enemy drops**: 5% chance, 1-2 tokens per drop (configurable)
+- **Dungeon chests**: 5% chance, 4-7 tokens per chest (configurable)
+- **Refinery**: Craft from 15 bones, takes ~4 minutes (configurable)
+- **Missions**: Send followers to collect 15-25 tokens, 50% mission appearance chance (configurable)
+- **Quests**: Go on a quest yourself to collect tokens
+
+All values are configurable via the in-game mod settings menu (F1) or the BepInEx config file.
 
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
 * Install [COTL API](https://thunderstore.io/c/cult-of-the-lamb/p/xhayper/COTL_API/)
-* Install [Configuration Manager Enhanced](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/)
+* Install [BepInEx Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/) (for in-game configuration)
 * Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Configuration

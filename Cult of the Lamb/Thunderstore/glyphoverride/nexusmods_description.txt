@@ -35,7 +35,7 @@
 
 [list]
 [*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
-[*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/ConfigurationManagerEnhanced/]Configuration Manager Enhanced[/url][/size]
+[*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/]BepInEx Configuration Manager[/url] (for in-game configuration)[/size]
 [*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
 [/list]
 
