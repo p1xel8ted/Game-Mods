@@ -9,9 +9,9 @@ Control your followers' traits with this quality-of-life mod.
 ### Trait Replacement
 - Automatically replaces negative traits with positive ones on all followers (existing and new)
 - Backs up original traits and can restore them if feature is disabled
-- Option to use only unlocked traits for replacements
+- Option to use only unlocked traits for replacements (enabled by default)
 - Option to pull from all trait pools instead of the game's separate pools
-- Exclusive traits (like Lazy/Industrious) can be replaced with their counterpart or a random trait
+- Exclusive traits (like Lazy/Industrious) can be replaced with their counterpart (default behavior) or a random trait
 
 ### Unique Traits
 Control whether special/crossover traits can appear in trait pools:
@@ -30,11 +30,11 @@ Additional option:
 
 ### Trait Count
 Control how many traits followers receive:
-- **Minimum Traits** (2-8) - the minimum number of traits a new follower will have
-- **Maximum Traits** (2-8) - the maximum number of traits a new follower will have
+- **Minimum Traits** (2-8, default: 2) - the minimum number of traits a new follower will have
+- **Maximum Traits** (2-8, default: 3) - the maximum number of traits a new follower will have
 - **Randomize Traits on Re-indoctrination** - when re-indoctrinating an existing follower at the altar, randomize their traits using the configured min/max (vanilla only changes appearance/name)
 
-Vanilla behavior is 2-3 traits for new followers, with a cap of 6 during re-indoctrination. Increase these values to give followers more traits (limited to 8 due to UI constraints). The maximum setting also affects re-indoctrination, removing the vanilla cap of 6.
+Vanilla behavior is 2-3 traits for new followers (randomly chosen between min and max), with a cap of 6 during re-indoctrination. Increase these values to give followers more traits (limited to 8 due to UI constraints). The maximum setting also affects re-indoctrination, removing the vanilla cap of 6.
 
 - **Trait Reroll via Reeducation** - adds the Re-educate command to normal followers (dissenters already have this in vanilla). Using it will re-roll their traits using your configured min/max and weights. Works with "Enable Trait Replacement" to replace negative traits.
 
@@ -85,11 +85,11 @@ Some traits are excluded from the weights list because they require special game
 | Spy | Requires SpyJoinedDay to be set or followers leave immediately |
 | BishopOfCult | Story-related, granted when converting a bishop |
 
-**Event Traits** (excluded by default, enable "Include Event Traits" to add them):
+**Event Traits** (excluded by default, enable "Include Event Traits" to add them). Note: "Include Event Traits" only applies when "Use All Traits Pool" is enabled:
 
 | Category | Traits |
 |----------|--------|
-| Marriage | MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedMurderouslyJealous |
+| Marriage | MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedDevoted, MarriedMurderouslyJealous |
 | Parenting | ProudParent, OverworkedParent |
 | Widowing | HappilyWidowed, GrievingWidow, JiltedLover |
 | Criminal | CriminalEvangelizing, CriminalHardened, CriminalReformed, CriminalScarred |
@@ -110,10 +110,10 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Setting | Value |
 |---------|-------|
 | Enable Trait Replacement | ON |
-| Use Unlocked Traits Only | OFF |
-| Prefer Exclusive Counterparts | ON |
+| Use Unlocked Traits Only | OFF (default: ON) |
+| Prefer Exclusive Counterparts | ON (default) |
 
-**Result:** All negative traits are replaced. Lazy becomes Industrious, Faithless becomes Faithful, etc.
+**Result:** All negative traits are replaced. Lazy becomes Industrious, Faithless becomes Faithful, etc. Set "Use Unlocked Traits Only" to OFF to access all positive traits regardless of progression.
 
 ### "I want to allow Immortal trait on new followers"
 | Setting | Value |
@@ -137,7 +137,7 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Setting | Value |
 |---------|-------|
 | Enable Trait Replacement | ON |
-| Prefer Exclusive Counterparts | OFF |
+| Prefer Exclusive Counterparts | OFF (default: ON) |
 
 **Result:** Lazy gets replaced with a random positive trait instead of Industrious.
 
@@ -145,9 +145,9 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Setting | Value |
 |---------|-------|
 | Enable Trait Replacement | ON |
-| Use Unlocked Traits Only | ON |
+| Use Unlocked Traits Only | ON (default) |
 
-**Result:** Traits are filtered by game progression (e.g., Fashionable requires Tailor, Sin traits require Pleasure Shrine, some traits require Day 7+).
+**Result:** Traits are filtered by game progression (e.g., Fashionable requires Tailor, Sin traits require Pleasure Shrine, some traits require Day 7+). This is enabled by default.
 
 ### "I want to pull from all traits, but not unique ones"
 | Setting | Value |
