@@ -8,16 +8,16 @@
 - Followers can be reborn, changing their name, appearance, and traits
 - First rebirth is free; subsequent rebirths cost Rebirth Tokens (default: 25)
 - XP carries over with configurable penalty (default: 20% chance to keep only 50% XP)
-- Option to allow elderly followers to be reborn (disabled by default)
-- Unique followers (Webber, Sozo, Ratau, etc.) can retain their original skin and traits when reborn
+- Option to allow old/elderly followers to be reborn (disabled by default - old followers cannot be reborn)
+- Unique followers (Webber, Sozo, Ratau, etc.) can retain their original skin and traits when reborn (names are always randomized)
 - Their old body stays after rebirth; compost it, eat it, up to you
 
 ### Token Sources
 - **Enemy drops**: 5% chance, 1-2 tokens per drop (configurable)
 - **Dungeon chests**: 5% chance, 4-7 tokens per chest (configurable)
-- **Refinery**: Craft from 15 bones, takes ~4 minutes (configurable)
+- **Refinery**: Craft from 15 bones, takes ~4.3 minutes (configurable)
 - **Missions**: Send followers to collect 15-25 tokens, 50% mission appearance chance (configurable)
-- **Quests**: Go on a quest yourself to collect tokens
+- **Quests**: Go on a quest yourself to collect 15-25 tokens
 
 All values are configurable via the in-game mod settings menu (F1) or the BepInEx config file.
 

@@ -5,8 +5,8 @@
 [*][size=3]Followers can be reborn, changing their name, appearance, and traits[/size]
 [*][size=3]First rebirth is free; subsequent rebirths cost Rebirth Tokens (default: 25)[/size]
 [*][size=3]XP carries over with configurable penalty (default: 20% chance to keep only 50% XP)[/size]
-[*][size=3]Option to allow elderly followers to be reborn (disabled by default)[/size]
-[*][size=3]Unique followers (Webber, Sozo, Ratau, etc.) can retain their original skin and traits when reborn[/size]
+[*][size=3]Option to allow old/elderly followers to be reborn (disabled by default - old followers cannot be reborn)[/size]
+[*][size=3]Unique followers (Webber, Sozo, Ratau, etc.) can retain their original skin and traits when reborn (names are always randomized)[/size]
 [*][size=3]Their old body stays after rebirth; compost it, eat it, up to you[/size]
 [/list]
 
@@ -14,9 +14,9 @@
 [list]
 [*][size=3][b]Enemy drops[/b]: 5% chance, 1-2 tokens per drop (configurable)[/size]
 [*][size=3][b]Dungeon chests[/b]: 5% chance, 4-7 tokens per chest (configurable)[/size]
-[*][size=3][b]Refinery[/b]: Craft from 15 bones, takes ~4 minutes (configurable)[/size]
+[*][size=3][b]Refinery[/b]: Craft from 15 bones, takes ~4.3 minutes (configurable)[/size]
 [*][size=3][b]Missions[/b]: Send followers to collect 15-25 tokens, 50% mission appearance chance (configurable)[/size]
-[*][size=3][b]Quests[/b]: Go on a quest yourself to collect tokens[/size]
+[*][size=3][b]Quests[/b]: Go on a quest yourself to collect 15-25 tokens[/size]
 [/list]
 
 [size=3]All values are configurable via the in-game mod settings menu (F1) or the BepInEx config file.[/size]
