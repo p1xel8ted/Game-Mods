@@ -89,7 +89,7 @@ Some traits are excluded from the weights list because they require special game
 
 | Category | Traits |
 |----------|--------|
-| Marriage | MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedDevoted, MarriedMurderouslyJealous |
+| Marriage | MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedMurderouslyJealous |
 | Parenting | ProudParent, OverworkedParent |
 | Widowing | HappilyWidowed, GrievingWidow, JiltedLover |
 | Criminal | CriminalEvangelizing, CriminalHardened, CriminalReformed, CriminalScarred |

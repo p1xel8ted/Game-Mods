@@ -34,7 +34,6 @@ public partial class Plugin : BaseUnityPlugin
         FollowerTrait.TraitType.MarriedHappily,
         FollowerTrait.TraitType.MarriedUnhappily,
         FollowerTrait.TraitType.MarriedJealous,
-        FollowerTrait.TraitType.MarriedDevoted,
         FollowerTrait.TraitType.MarriedMurderouslyJealous,
 
         // Parenting

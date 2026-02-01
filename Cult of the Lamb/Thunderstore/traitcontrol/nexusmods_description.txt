@@ -83,7 +83,7 @@
 
 [size=3][u]Event Traits[/u] (excluded by default, enable "Include Event Traits" to add them). Note: "Include Event Traits" only applies when "Use All Traits Pool" is enabled:[/size]
 [list]
-[*][size=3][b]Marriage[/b] - MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedDevoted, MarriedMurderouslyJealous[/size]
+[*][size=3][b]Marriage[/b] - MarriedHappily, MarriedUnhappily, MarriedJealous, MarriedMurderouslyJealous[/size]
 [*][size=3][b]Parenting[/b] - ProudParent, OverworkedParent[/size]
 [*][size=3][b]Widowing[/b] - HappilyWidowed, GrievingWidow, JiltedLover[/size]
 [*][size=3][b]Criminal[/b] - CriminalEvangelizing, CriminalHardened, CriminalReformed, CriminalScarred[/size]
