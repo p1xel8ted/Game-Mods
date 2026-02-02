@@ -884,10 +884,18 @@ public static class TraitWeights
             [typeof(FollowerBrain.PleasureActions), typeof(float)]);
         var shouldSkipMethod = AccessTools.Method(typeof(TraitWeights), nameof(ShouldSkipReeducationPleasure));
 
+        Plugin.Log.LogInfo($"[Transpiler] ReeducateRoutine: AddPleasure method = {addPleasureMethod?.ToString() ?? "NULL"}");
+
         if (addPleasureMethod == null)
         {
             Plugin.Log.LogError("[Transpiler] ReeducateRoutine: Could not find AddPleasure method!");
             return codes;
+        }
+
+        // Debug: Log all callvirt instructions
+        foreach (var code in codes.Where(c => c.opcode == OpCodes.Callvirt))
+        {
+            Plugin.Log.LogInfo($"[Transpiler] ReeducateRoutine: Found callvirt: {code.operand}");
         }
 
         var patched = false;
