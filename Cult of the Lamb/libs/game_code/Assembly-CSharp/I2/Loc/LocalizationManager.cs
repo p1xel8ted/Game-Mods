@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: I2.Loc.LocalizationManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -987,7 +987,7 @@ public static class LocalizationManager
     }
     if (!LocalizationManager.FontsLoadedonce)
     {
-      LocalizationManager.\u003CSetupFonts\u003Eg__LoadFont\u007C104_0("Fonts/LocalisedFonts/Russian/NotoSans-Regular SDF", true);
+      LocalizationManager.\u003CSetupFonts\u003Eg__LoadFont\u007C104_0("Fonts/LocalisedFonts/Russian/notoSans-Regular SDF", true);
       LocalizationManager.\u003CSetupFonts\u003Eg__LoadFont\u007C104_0("Fonts/LocalisedFonts/FontAwesome/Font Awesome 6 Pro-Solid-900 SDF", true);
       LocalizationManager.\u003CSetupFonts\u003Eg__LoadFont\u007C104_0("Fonts/Headings/LaptureRegular", true);
       LocalizationManager.\u003CSetupFonts\u003Eg__LoadFont\u007C104_0("Fonts/Headings/Lapture-Bold", true);

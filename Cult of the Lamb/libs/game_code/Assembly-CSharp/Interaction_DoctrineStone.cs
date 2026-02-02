@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DoctrineStone
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -25,6 +25,17 @@ public class Interaction_DoctrineStone : Interaction
 
   public void Start()
   {
+    if (DataManager.Instance.DoctrineStoneTotalCount == 0)
+    {
+      PickUp component = this.GetComponent<PickUp>();
+      if ((UnityEngine.Object) component != (UnityEngine.Object) null && !component.MagnetToPlayer && (double) component.Speed == 0.0)
+      {
+        component.DisableSeperation = true;
+        component.enabled = false;
+        if ((UnityEngine.Object) component.child != (UnityEngine.Object) null)
+          component.child.transform.localScale = Vector3.one;
+      }
+    }
     this.ActivateDistance = 2f;
     this.UpdateLocalisation();
     this.SetSprite();

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BiomeConstants
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -391,8 +391,6 @@ public class BiomeConstants : BaseMonoBehaviour
 
   public void Start()
   {
-    if ((UnityEngine.Object) this.coOpSpawnScreenEffect != (UnityEngine.Object) null)
-      this.coOpSpawnScreenEffect.gameObject.SetActive(false);
     this.goopFade.gameObject.SetActive(false);
     this.psychedelicFade.gameObject.SetActive(false);
     this.impactFrame.gameObject.SetActive(false);

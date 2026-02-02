@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Explosion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -93,31 +93,35 @@ public class Explosion : BaseMonoBehaviour, ISpellOwning
     GameObject gameObject = ObjectPool.Spawn(explosionPrefab, (Transform) null, position, Quaternion.identity);
     if (playSFX)
       AudioManager.Instance.PlayOneShot("event:/explosion/explosion", gameObject.transform.position);
-    if ((UnityEngine.Object) Origin != (UnityEngine.Object) null && team == Health.Team.PlayerTeam && (UnityEngine.Object) Origin.GetComponent<PlayerFarming>() != (UnityEngine.Object) null)
+    if ((UnityEngine.Object) Origin != (UnityEngine.Object) null && team == Health.Team.PlayerTeam)
     {
-      MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, Origin.GetComponent<PlayerFarming>());
-      MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, Origin.GetComponent<PlayerFarming>());
+      PlayerFarming component = Origin.GetComponent<PlayerFarming>();
+      if ((UnityEngine.Object) component != (UnityEngine.Object) null)
+      {
+        MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, component);
+        MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, component);
+      }
     }
     gameObject.transform.position = position;
-    Explosion component = gameObject.GetComponent<Explosion>();
-    component.team = team;
-    foreach (Transform fxChild in component.FXChildren)
+    Explosion component1 = gameObject.GetComponent<Explosion>();
+    component1.team = team;
+    foreach (Transform fxChild in component1.FXChildren)
       fxChild.localScale = Vector3.one * (Size / 2f);
-    component.Origin = Origin;
-    component.Damage = Damage;
-    component.Team2Damage = Team2Damage;
-    component.DamageCollider.GetComponent<CircleCollider2D>().radius = Size * 0.5f;
-    component.DoKnockback = useKnockback;
-    component.DamageCollider.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(component.DamageCollider_OnTriggerEnterEvent);
-    component.DamageCollider.SetActive(false);
-    component.shakeMultiplier = shakeMultiplier;
-    component.Init = true;
-    component.attackFlags = attackFlags;
-    component.includeOwner = includeOwner;
-    component.playSFX = playSFX;
-    component.unitsToIgnore = unitsToIgnore;
+    component1.Origin = Origin;
+    component1.Damage = Damage;
+    component1.Team2Damage = Team2Damage;
+    component1.DamageCollider.GetComponent<CircleCollider2D>().radius = Size * 0.5f;
+    component1.DoKnockback = useKnockback;
+    component1.DamageCollider.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(component1.DamageCollider_OnTriggerEnterEvent);
+    component1.DamageCollider.SetActive(false);
+    component1.shakeMultiplier = shakeMultiplier;
+    component1.Init = true;
+    component1.attackFlags = attackFlags;
+    component1.includeOwner = includeOwner;
+    component1.playSFX = playSFX;
+    component1.unitsToIgnore = unitsToIgnore;
     if ((UnityEngine.Object) Origin != (UnityEngine.Object) null)
-      component.SetOwner(Origin.gameObject);
+      component1.SetOwner(Origin.gameObject);
     return gameObject;
   }
 
@@ -216,5 +220,5 @@ public class Explosion : BaseMonoBehaviour, ISpellOwning
 
   public Health GetOrigin() => this.Origin;
 
-  public void SetOwner(GameObject owner) => this.Origin = owner.GetComponent<Health>();
+  public void SetOwner(GameObject owner) => this.Origin = owner?.GetComponent<Health>();
 }

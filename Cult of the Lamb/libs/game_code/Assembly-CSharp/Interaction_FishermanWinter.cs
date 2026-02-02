@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FishermanWinter
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -32,7 +32,7 @@ public class Interaction_FishermanWinter : Interaction
   {
     get
     {
-      return DataManager.Instance.FishermanGaveWoolAmount < 5 && DataManager.Instance.DeliveredCharybisLetter && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.FISHING_ROD) == 0 && !DataManager.Instance.BroughtFishingRod && ObjectiveManager.GroupExists("Objectives/GroupTitles/LegendaryDagger") && this.HasPlayerAnyItem() && DataManager.Instance.BringFishermanWoolStarted;
+      return DataManager.Instance.DeliveredCharybisLetter && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.FISHING_ROD) == 0 && !DataManager.Instance.BroughtFishingRod && ObjectiveManager.GroupExists("Objectives/GroupTitles/LegendaryDagger") && (this.HasPlayerAnyItem() || DataManager.Instance.FishermanGaveWoolAmount >= 5) && DataManager.Instance.BringFishermanWoolStarted;
     }
   }
 
@@ -64,7 +64,16 @@ public class Interaction_FishermanWinter : Interaction
   public override void GetLabel()
   {
     if (this.canGiveItem)
-      this.Label = $"{ScriptLocalization.Interactions.Give}: {InventoryItem.CapacityString(InventoryItem.ITEM_TYPE.WOOL, 5)}";
+    {
+      if (DataManager.Instance.FishermanGaveWoolAmount >= 5)
+      {
+        this.Label = ScriptLocalization.Interactions.Talk;
+        this.AutomaticallyInteract = true;
+        this.ActivateDistance = 3f;
+      }
+      else
+        this.Label = $"{ScriptLocalization.Interactions.Give}: {InventoryItem.CapacityString(InventoryItem.ITEM_TYPE.WOOL, 5)}";
+    }
     else
       this.Label = "";
   }
@@ -72,7 +81,12 @@ public class Interaction_FishermanWinter : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.WOOL) >= 5)
+    if (DataManager.Instance.FishermanGaveWoolAmount >= 5 && this.canGiveItem)
+    {
+      this.CheckObjectiveInteractions();
+      this.AutomaticallyInteract = false;
+    }
+    else if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.WOOL) >= 5)
     {
       PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive);
       GameManager.GetInstance().OnConversationNew();

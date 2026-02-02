@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Quests
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -542,7 +542,7 @@ public static class Quests
 label_170:
                 objectivesDataList1[index1] = (ObjectivesData) null;
 label_171:
-                if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.SendFollowerToPrison && objectivesDataList1[index1] != null && FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID) != null && FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID).CursedState == Thought.OldAge)
+                if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.SendFollowerToPrison && objectivesDataList1[index1] != null && FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID) != null && (FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID).CursedState == Thought.OldAge || FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID).IsSnowman))
                   objectivesDataList1[index1] = (ObjectivesData) null;
                 if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.KillFollower && targetQuest == null)
                   objectivesDataList1[index1] = (ObjectivesData) null;

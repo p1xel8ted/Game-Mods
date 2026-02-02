@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LightningRingExplosion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -144,31 +144,36 @@ public class LightningRingExplosion : BaseMonoBehaviour, ISpellOwning
     params UnitObject[] unitsToIgnore)
   {
     GameObject gameObject = ObjectPool.Spawn(explosionPrefab, (UnityEngine.Object) BiomeGenerator.Instance != (UnityEngine.Object) null ? BiomeGenerator.Instance.CurrentRoom.generateRoom.transform : (Transform) null, position, Quaternion.identity);
-    if (team == Health.Team.PlayerTeam)
-      MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, Origin.GetComponent<PlayerFarming>());
-    if (team == Health.Team.PlayerTeam)
-      MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, Origin.GetComponent<PlayerFarming>());
+    if ((UnityEngine.Object) Origin != (UnityEngine.Object) null && team == Health.Team.PlayerTeam)
+    {
+      PlayerFarming component = Origin?.GetComponent<PlayerFarming>();
+      if ((UnityEngine.Object) component != (UnityEngine.Object) null)
+      {
+        MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, component);
+        MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, component);
+      }
+    }
     gameObject.transform.position = position;
-    LightningRingExplosion component = gameObject.GetComponent<LightningRingExplosion>();
-    AudioManager.Instance.PlayOneShot(component.LightningStrikeSFX, gameObject.transform.position);
-    component.team = team;
-    foreach (Transform fxChild in component.FXChildren)
+    LightningRingExplosion component1 = gameObject.GetComponent<LightningRingExplosion>();
+    AudioManager.Instance.PlayOneShot(component1.LightningStrikeSFX, gameObject.transform.position);
+    component1.team = team;
+    foreach (Transform fxChild in component1.FXChildren)
       fxChild.localScale = Vector3.one * 0.25f;
-    component.Origin = Origin;
-    component.Damage = Damage;
-    component.Team2Damage = Team2Damage;
-    component.DoKnockback = useKnockback;
-    component.DamageCollider.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(component.DamageCollider_OnTriggerEnterEvent);
-    component.DamageCollider.OnTriggerStayEvent += new ColliderEvents.TriggerEvent(component.DamageCollider_OnTriggerStayEvent);
-    component.DamageCollider.SetActive(true);
-    component.shakeMultiplier = shakeMultiplier;
-    component.Init = true;
-    component.attackFlags = attackFlags;
-    component.includeOwner = includeOwner;
-    component.unitsToIgnore = unitsToIgnore;
-    component.expansionSpeed = expansionSpeed;
-    component.maxRadius = maxRadiusTarget;
-    component.collisionDictionary = new Dictionary<Collider2D, float>();
+    component1.Origin = Origin;
+    component1.Damage = Damage;
+    component1.Team2Damage = Team2Damage;
+    component1.DoKnockback = useKnockback;
+    component1.DamageCollider.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(component1.DamageCollider_OnTriggerEnterEvent);
+    component1.DamageCollider.OnTriggerStayEvent += new ColliderEvents.TriggerEvent(component1.DamageCollider_OnTriggerStayEvent);
+    component1.DamageCollider.SetActive(true);
+    component1.shakeMultiplier = shakeMultiplier;
+    component1.Init = true;
+    component1.attackFlags = attackFlags;
+    component1.includeOwner = includeOwner;
+    component1.unitsToIgnore = unitsToIgnore;
+    component1.expansionSpeed = expansionSpeed;
+    component1.maxRadius = maxRadiusTarget;
+    component1.collisionDictionary = new Dictionary<Collider2D, float>();
     return gameObject;
   }
 

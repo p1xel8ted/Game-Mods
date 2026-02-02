@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySimpleGuardian
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -89,7 +89,7 @@ public class EnemySimpleGuardian : UnitObject
   public Coroutine spawningPetsRoutine;
   public DeadBodySliding deadBodySliding;
   public static List<EnemySimpleGuardian> SimpleGuardians = new List<EnemySimpleGuardian>();
-  public bool ChasingPlayer;
+  public bool chasingTarget;
   public bool AlwaysMoveToRandomPoint;
   public string WalkAnimation = "walk2";
   public float GlobalAttackDelay = 2f;
@@ -335,13 +335,13 @@ public class EnemySimpleGuardian : UnitObject
 
   public Vector3 LookAtTarget()
   {
-    Health closestTarget = this.GetClosestTarget();
-    if ((UnityEngine.Object) closestTarget == (UnityEngine.Object) null)
+    this.ReconsiderTarget();
+    if ((UnityEngine.Object) this.TargetObject == (UnityEngine.Object) null)
       return Vector3.zero;
-    float angle = Utils.GetAngle(this.transform.position, closestTarget.transform.position);
+    float angle = Utils.GetAngle(this.transform.position, this.TargetObject.transform.position);
     this.state.facingAngle = angle;
     this.state.LookAngle = angle;
-    return closestTarget.transform.position;
+    return this.TargetObject.transform.position;
   }
 
   public override void OnHit(
@@ -412,43 +412,48 @@ public class EnemySimpleGuardian : UnitObject
 
   public void GetPath()
   {
-    this.ChasingPlayer = false;
+    this.chasingTarget = false;
     if (this.AlwaysMoveToRandomPoint)
     {
       this.TargetPosition = BiomeGenerator.GetRandomPositionInIsland();
-      this.ChasingPlayer = false;
+      this.chasingTarget = false;
+    }
+    else if ((UnityEngine.Object) this.TargetObject == (UnityEngine.Object) null)
+    {
+      this.TargetPosition = BiomeGenerator.GetRandomPositionInIsland();
+      this.chasingTarget = false;
     }
     else if (EnemySimpleGuardian.SimpleGuardians.Count > 1)
     {
-      Debug.Log((object) "CHECK! ");
-      float num1 = float.MaxValue;
-      EnemySimpleGuardian enemySimpleGuardian = (EnemySimpleGuardian) null;
+      float num1 = Vector3.Distance(this.transform.position, this.TargetObject.transform.position);
+      EnemySimpleGuardian enemySimpleGuardian = this;
       foreach (EnemySimpleGuardian simpleGuardian in EnemySimpleGuardian.SimpleGuardians)
       {
-        float num2 = Vector3.Distance(simpleGuardian.transform.position, this.TargetObject.transform.position);
-        if ((double) num2 < (double) num1)
+        if (!((UnityEngine.Object) enemySimpleGuardian == (UnityEngine.Object) simpleGuardian) && !((UnityEngine.Object) simpleGuardian.TargetObject != (UnityEngine.Object) this.TargetObject) && !((UnityEngine.Object) simpleGuardian.TargetObject == (UnityEngine.Object) null))
         {
-          num1 = num2;
-          enemySimpleGuardian = simpleGuardian;
+          float num2 = Vector3.Distance(simpleGuardian.transform.position, this.TargetObject.transform.position);
+          if ((double) num2 < (double) num1)
+          {
+            num1 = num2;
+            enemySimpleGuardian = simpleGuardian;
+          }
         }
       }
       if ((UnityEngine.Object) enemySimpleGuardian == (UnityEngine.Object) this)
       {
         this.TargetPosition = this.TargetObject.transform.position;
-        this.ChasingPlayer = true;
+        this.chasingTarget = true;
       }
       else
       {
-        if (!enemySimpleGuardian.ChasingPlayer)
-          enemySimpleGuardian.GetPath();
         this.TargetPosition = BiomeGenerator.GetRandomPositionInIsland();
-        this.ChasingPlayer = false;
+        this.chasingTarget = false;
       }
     }
     else
     {
       this.TargetPosition = this.TargetObject.transform.position;
-      this.ChasingPlayer = true;
+      this.chasingTarget = true;
     }
     if ((double) Vector3.Distance(this.TargetPosition, this.transform.position) > (double) this.StoppingDistance)
     {
@@ -495,6 +500,25 @@ public class EnemySimpleGuardian : UnitObject
             enemySimpleGuardian.SpawnPet();
             yield break;
           }
+          if ((UnityEngine.Object) enemySimpleGuardian.TargetObject == (UnityEngine.Object) null)
+          {
+            if (enemySimpleGuardian.state.CURRENT_STATE == StateMachine.State.Idle)
+            {
+              if (enemySimpleGuardian.Spine.AnimationName != enemySimpleGuardian.idleAnim)
+                enemySimpleGuardian.Spine.AnimationState.SetAnimation(0, enemySimpleGuardian.idleAnim, true);
+              if ((double) (RepathTimer += Time.deltaTime * enemySimpleGuardian.Spine.timeScale) > 1.0)
+              {
+                RepathTimer = 0.0f;
+                enemySimpleGuardian.GetPath();
+              }
+            }
+            if ((UnityEngine.Object) enemySimpleGuardian.damageColliderEvents != (UnityEngine.Object) null)
+            {
+              enemySimpleGuardian.damageColliderEvents.SetActive(false);
+              break;
+            }
+            break;
+          }
           if ((double) Vector2.Distance((Vector2) enemySimpleGuardian.transform.position, (Vector2) enemySimpleGuardian.TargetObject.transform.position) < 3.0)
           {
             if ((double) GameManager.GetInstance().CurrentTime > ((double) EnemySimpleGuardian.LastSimpleGuardianAttacked + (double) enemySimpleGuardian.GlobalAttackDelay + (double) enemySimpleGuardian.LocalAttackDelay) / (double) enemySimpleGuardian.Spine.timeScale)
@@ -538,7 +562,7 @@ public class EnemySimpleGuardian : UnitObject
             enemySimpleGuardian.ProjectilePatternShot();
             yield break;
           }
-          if (enemySimpleGuardian.ChasingPlayer)
+          if (enemySimpleGuardian.chasingTarget)
           {
             if ((double) Vector2.Distance((Vector2) enemySimpleGuardian.transform.position, (Vector2) enemySimpleGuardian.TargetObject.transform.position) >= 3.0 && (double) (RepathTimer += Time.deltaTime * enemySimpleGuardian.Spine.timeScale) > 0.20000000298023224)
             {

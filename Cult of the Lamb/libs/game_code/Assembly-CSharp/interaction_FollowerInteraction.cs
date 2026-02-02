@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: interaction_FollowerInteraction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -4299,7 +4299,19 @@ public class interaction_FollowerInteraction : Interaction
     this.lightningIncoming = false;
     if ((UnityEngine.Object) this.LightningContainer != (UnityEngine.Object) null)
       this.LightningContainer.gameObject.SetActive(false);
+    if ((UnityEngine.Object) HUD_Manager.Instance != (UnityEngine.Object) null)
+      HUD_Manager.Instance.ClearLightningTarget();
+    this.StartCoroutine((IEnumerator) this.EnsureLightningOff());
     AudioManager.Instance.StopLoop(this.lightningLoopSfx);
+  }
+
+  public IEnumerator EnsureLightningOff()
+  {
+    yield return (object) new WaitForSeconds(3f);
+    if ((UnityEngine.Object) this.LightningContainer != (UnityEngine.Object) null)
+      this.LightningContainer.gameObject.SetActive(false);
+    if ((UnityEngine.Object) HUD_Manager.Instance != (UnityEngine.Object) null)
+      HUD_Manager.Instance.ClearLightningTarget();
   }
 
   public void LightningStrikeIncoming()

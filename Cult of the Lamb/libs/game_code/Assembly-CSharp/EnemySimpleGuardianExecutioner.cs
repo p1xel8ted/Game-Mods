@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySimpleGuardianExecutioner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -65,7 +65,7 @@ public class EnemySimpleGuardianExecutioner : EnemySimpleGuardian
             guardianExecutioner.ProjectileRings();
             yield break;
           }
-          if (guardianExecutioner.ChasingPlayer)
+          if (guardianExecutioner.chasingTarget)
           {
             if ((double) Vector2.Distance((Vector2) guardianExecutioner.transform.position, (Vector2) guardianExecutioner.TargetObject.transform.position) >= 3.0 && (double) (RepathTimer += Time.deltaTime * guardianExecutioner.Spine.timeScale) > 0.20000000298023224)
             {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Shrines
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 75F2F530-4272-42C6-BFDD-6995B78CAB72
+// MVID: B4944960-D044-4E12-B091-6A0422C77B16
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -406,6 +406,7 @@ public class Shrines : Interaction
     GameManager.GetInstance().RemoveAllFromCamera();
     GameManager.GetInstance().AddPlayersToCamera();
     PlayerFarming.SetStateForAllPlayers();
+    GameManager.GetInstance().UnFreezeAllies();
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E2__current = (object) null;
     // ISSUE: reference to a compiler-generated field
@@ -438,6 +439,7 @@ public class Shrines : Interaction
     shrines.state.CURRENT_STATE = StateMachine.State.Idle;
     playerFarming.SpineUseDeltaTime(true);
     SimpleSetCamera.EnableAll();
+    GameManager.GetInstance().UnFreezeAllies();
     GameManager.GetInstance().StartCoroutine((IEnumerator) shrines.DelayEffectsRoutine(playerFarming));
   }
 
