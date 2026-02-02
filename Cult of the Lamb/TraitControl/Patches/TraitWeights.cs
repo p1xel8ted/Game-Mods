@@ -33,6 +33,22 @@ public static class TraitWeights
     public static bool ShouldSkipReeducationPleasure() => _isTraitRerollReeducation;
 
     /// <summary>
+    /// Conditional wrapper for AddPleasure used by the transpiler.
+    /// Skips the call when this is a trait reroll (prevents sin accumulation and animation).
+    /// Allows the call through for normal dissenter reeducation.
+    /// </summary>
+    public static void ConditionalAddPleasure(FollowerBrain brain, FollowerBrain.PleasureActions action, float multiplier)
+    {
+        if (ShouldSkipReeducationPleasure())
+        {
+            Plugin.Log.LogInfo("[Reeducate] Skipping AddPleasure - this is a trait reroll, not dissenter conversion");
+            return;
+        }
+
+        brain.AddPleasure(action, multiplier);
+    }
+
+    /// <summary>
     /// Resets the guarantee flag before trait assignment begins for a new follower.
     /// This ensures the guaranteed trait is only given once per follower, not on every trait roll.
     /// </summary>
@@ -94,6 +110,7 @@ public static class TraitWeights
         {
             traitsForPatches = traitsForPatches.Where(t => !Plugin.StoryEventTraits.Contains(t));
         }
+
         Plugin.AllTraitsList.AddRange(traitsForPatches);
         Plugin.Log.LogInfo($"[RefreshAllTraitsList] Refreshed AllTraitsList with {Plugin.AllTraitsList.Count} traits");
     }
@@ -309,8 +326,8 @@ public static class TraitWeights
         if (result == FollowerTrait.TraitType.None && TraitsAssignedThisSession.Count > 0)
         {
             Plugin.Log.LogWarning($"[SelectTrait] Trait pool exhausted after {TraitsAssignedThisSession.Count} traits. " +
-                $"Follower will receive fewer traits than the configured minimum ({Plugin.MinimumTraits.Value}). " +
-                "Consider enabling more traits with non-zero weights.");
+                                  $"Follower will receive fewer traits than the configured minimum ({Plugin.MinimumTraits.Value}). " +
+                                  "Consider enabling more traits with non-zero weights.");
         }
 
         return result;
@@ -879,108 +896,27 @@ public static class TraitWeights
     private static IEnumerable<CodeInstruction> ReeducateRoutine_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var codes = new List<CodeInstruction>(instructions);
-        // Specify parameter types to avoid AmbiguousMatchException (game has multiple AddPleasure overloads)
-        var addPleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure),
-            [typeof(FollowerBrain.PleasureActions), typeof(float)]);
-        var shouldSkipMethod = AccessTools.Method(typeof(TraitWeights), nameof(ShouldSkipReeducationPleasure));
-
-        Plugin.Log.LogInfo($"[Transpiler] ReeducateRoutine: AddPleasure method = {addPleasureMethod?.ToString() ?? "NULL"}");
-
-        if (addPleasureMethod == null)
-        {
-            Plugin.Log.LogError("[Transpiler] ReeducateRoutine: Could not find AddPleasure method!");
-            return codes;
-        }
-
-        // Debug: Log all callvirt instructions
-        foreach (var code in codes.Where(c => c.opcode == OpCodes.Callvirt))
-        {
-            Plugin.Log.LogInfo($"[Transpiler] ReeducateRoutine: Found callvirt: {code.operand}");
-        }
-
+        var pleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure), [typeof(FollowerBrain.PleasureActions), typeof(float)]);
+        var conditionalMethod = AccessTools.Method(typeof(TraitWeights), nameof(ConditionalAddPleasure));
         var patched = false;
 
         for (var i = 0; i < codes.Count; i++)
         {
-            // Find the AddPleasure call
-            if (codes[i].Calls(addPleasureMethod))
+            if (codes[i].Calls(pleasureMethod))
             {
-                // Insert check before the call: if (ShouldSkipReeducationPleasure()) skip the call
-                // We need to find the start of this call sequence and wrap it in a conditional
-
-                // The pattern is roughly:
-                // ldarg/ldfld (get follower)
-                // ldfld Brain
-                // ldc.i4 (PleasureActions.RemovedDissent = 23)
-                // callvirt AddPleasure
-
-                // Find where the sequence starts by looking backwards for the pleasure action value
-                var sequenceStart = -1;
-                for (var j = i - 1; j >= 0 && j >= i - 10; j--)
-                {
-                    // Look for ldc.i4 23 (RemovedDissent) or ldc.i4.s 23
-                    if ((codes[j].opcode == OpCodes.Ldc_I4 && codes[j].operand is int intVal && intVal == 23) ||
-                        (codes[j].opcode == OpCodes.Ldc_I4_S && codes[j].operand is sbyte sbyteVal && sbyteVal == 23))
-                    {
-                        // Found the pleasure action, now find the brain load before it
-                        for (var k = j - 1; k >= 0 && k >= j - 5; k--)
-                        {
-                            if (codes[k].opcode == OpCodes.Ldfld)
-                            {
-                                var field = codes[k].operand as FieldInfo;
-                                if (field != null && field.Name == "Brain")
-                                {
-                                    // Found Brain field load, the sequence likely starts before this
-                                    sequenceStart = k - 1;
-                                    break;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                if (sequenceStart >= 0)
-                {
-                    // Insert: if (ShouldSkipReeducationPleasure()) goto skipLabel
-                    var skipLabel = new Label();
-                    var skipLabelInstruction = new CodeInstruction(OpCodes.Nop);
-                    skipLabelInstruction.labels.Add(skipLabel);
-
-                    // Insert check at sequenceStart
-                    var checkInstructions = new List<CodeInstruction>
-                    {
-                        new CodeInstruction(OpCodes.Call, shouldSkipMethod),
-                        new CodeInstruction(OpCodes.Brtrue, skipLabel)
-                    };
-
-                    // Preserve labels on the original instruction
-                    if (codes[sequenceStart].labels.Count > 0)
-                    {
-                        checkInstructions[0].labels.AddRange(codes[sequenceStart].labels);
-                        codes[sequenceStart].labels.Clear();
-                    }
-
-                    codes.InsertRange(sequenceStart, checkInstructions);
-
-                    // Find the instruction after AddPleasure and add the skip label
-                    // Account for the 2 instructions we just inserted
-                    var addPleasureIndex = i + 2;
-                    if (addPleasureIndex + 1 < codes.Count)
-                    {
-                        codes[addPleasureIndex + 1].labels.Add(skipLabel);
-                    }
-
-                    patched = true;
-                    Plugin.Log.LogInfo("[Transpiler] ReeducateRoutine: Patched AddPleasure to be conditional on trait reroll flag.");
-                    break;
-                }
+                // Replace callvirt AddPleasure with call ConditionalAddPleasure
+                // Stack is already: [brain] [PleasureActions] [float] - same params, just static instead of instance
+                codes[i].opcode = OpCodes.Call;
+                codes[i].operand = conditionalMethod;
+                patched = true;
+                Plugin.Log.LogInfo("[Transpiler] ReeducateRoutine: Replaced AddPleasure with ConditionalAddPleasure");
+                break;
             }
         }
 
         if (!patched)
         {
-            Plugin.Log.LogWarning("[Transpiler] ReeducateRoutine: Could not find AddPleasure(RemovedDissent) call to patch.");
+            Plugin.Log.LogWarning("[Transpiler] ReeducateRoutine: Could not find AddPleasure call to patch");
         }
 
         return codes;
