@@ -18,7 +18,7 @@ public static class TraitWeights
     /// Prevents infinite loops when the weighted trait pool is restricted to a small number of traits.
     /// Reset by FollowerBrain constructor prefix and before re-indoctrinate/re-educate trait generation.
     /// </summary>
-    private static readonly HashSet<FollowerTrait.TraitType> _traitsAssignedThisSession = [];
+    private static readonly HashSet<FollowerTrait.TraitType> TraitsAssignedThisSession = [];
 
     /// <summary>
     /// Tracks whether the current reeducation is a TraitControl trait reroll (not a vanilla dissenter re-education).
@@ -50,7 +50,7 @@ public static class TraitWeights
     internal static void ResetSessionTracking()
     {
         _guaranteedTraitGivenThisSession = false;
-        _traitsAssignedThisSession.Clear();
+        TraitsAssignedThisSession.Clear();
     }
 
     /// <summary>
@@ -306,9 +306,9 @@ public static class TraitWeights
         }
 
         // Log warning when no more traits available (user will get fewer traits than configured)
-        if (result == FollowerTrait.TraitType.None && _traitsAssignedThisSession.Count > 0)
+        if (result == FollowerTrait.TraitType.None && TraitsAssignedThisSession.Count > 0)
         {
-            Plugin.Log.LogWarning($"[SelectTrait] Trait pool exhausted after {_traitsAssignedThisSession.Count} traits. " +
+            Plugin.Log.LogWarning($"[SelectTrait] Trait pool exhausted after {TraitsAssignedThisSession.Count} traits. " +
                 $"Follower will receive fewer traits than the configured minimum ({Plugin.MinimumTraits.Value}). " +
                 "Consider enabling more traits with non-zero weights.");
         }
@@ -403,7 +403,7 @@ public static class TraitWeights
         var availableTraits = GetFilteredTraits(sourceTraits);
 
         // Remove traits already assigned this session to prevent infinite loops
-        availableTraits.RemoveAll(t => _traitsAssignedThisSession.Contains(t));
+        availableTraits.RemoveAll(t => TraitsAssignedThisSession.Contains(t));
 
         // Try to find a valid trait with random selection
         var attempts = 0;
@@ -414,7 +414,7 @@ public static class TraitWeights
             // Check game restrictions (DLC requirements, day requirements, etc.)
             if (!FollowerTrait.IsTraitUnavailable(trait))
             {
-                _traitsAssignedThisSession.Add(trait);
+                TraitsAssignedThisSession.Add(trait);
                 return trait;
             }
         }
@@ -583,7 +583,7 @@ public static class TraitWeights
         foreach (var trait in traits)
         {
             // Skip traits already assigned in this session to prevent infinite loops
-            if (_traitsAssignedThisSession.Contains(trait))
+            if (TraitsAssignedThisSession.Contains(trait))
             {
                 continue;
             }
@@ -612,14 +612,14 @@ public static class TraitWeights
             if (randomValue <= cumulative)
             {
                 var selected = validTraits[i];
-                _traitsAssignedThisSession.Add(selected);
+                TraitsAssignedThisSession.Add(selected);
                 return selected;
             }
         }
 
         // Fallback (shouldn't reach here)
         var fallback = validTraits[validTraits.Count - 1];
-        _traitsAssignedThisSession.Add(fallback);
+        TraitsAssignedThisSession.Add(fallback);
         return fallback;
     }
 
@@ -880,8 +880,15 @@ public static class TraitWeights
     {
         var codes = new List<CodeInstruction>(instructions);
         // Specify parameter types to avoid AmbiguousMatchException (game has multiple AddPleasure overloads)
-        var addPleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure), [typeof(FollowerBrain.PleasureActions), typeof(float)]);
+        var addPleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure),
+            new Type[] { typeof(FollowerBrain.PleasureActions), typeof(float) });
         var shouldSkipMethod = AccessTools.Method(typeof(TraitWeights), nameof(ShouldSkipReeducationPleasure));
+
+        if (addPleasureMethod == null)
+        {
+            Plugin.Log.LogError("[Transpiler] ReeducateRoutine: Could not find AddPleasure method!");
+            return instructions;
+        }
 
         var patched = false;
 
