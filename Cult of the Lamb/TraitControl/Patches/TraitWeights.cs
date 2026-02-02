@@ -879,7 +879,8 @@ public static class TraitWeights
     private static IEnumerable<CodeInstruction> ReeducateRoutine_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var codes = new List<CodeInstruction>(instructions);
-        var addPleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure));
+        // Specify parameter types to avoid AmbiguousMatchException (game has multiple AddPleasure overloads)
+        var addPleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure), [typeof(FollowerBrain.PleasureActions), typeof(float)]);
         var shouldSkipMethod = AccessTools.Method(typeof(TraitWeights), nameof(ShouldSkipReeducationPleasure));
 
         var patched = false;
