@@ -34,12 +34,15 @@ Do this BEFORE the compact happens, not after.
 
 ## Solution Architecture
 
-Four mods sharing common utilities via linked source files:
+Seven mods sharing common utilities via linked source files:
 
 - **CultOfQoL** - Large quality-of-life collection (~50 features) with extensive Harmony patches
-- **Rebirth** - Follower rebirth mechanic, depends on COTL_API
+- **Rebirth** - Follower rebirth mechanic with token-based subsequent rebirths; depends on COTL_API
 - **Namify** - Custom naming/labeling for game entities
-- **SkipOfTheLamb** - Standalone intro-skip plugin (detects CultOfQoL to avoid conflicts)
+- **SkipOfTheLamb** - Intro-skip plugin (detects CultOfQoL to avoid conflicts)
+- **SkipOfTheLambLite** - Lightweight version of intro-skip
+- **TraitControl** - Trait replacement and weighted trait selection system
+- **GlyphOverride** - Glyph/control override functionality
 
 ### Shared Code (Linked Source Files)
 

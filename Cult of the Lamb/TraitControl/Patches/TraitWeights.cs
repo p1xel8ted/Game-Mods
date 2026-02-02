@@ -14,6 +14,13 @@ public static class TraitWeights
     private static bool _guaranteedTraitGivenThisSession;
 
     /// <summary>
+    /// Tracks which traits have been assigned during the current follower's trait generation session.
+    /// Prevents infinite loops when the weighted trait pool is restricted to a small number of traits.
+    /// Reset by FollowerBrain constructor prefix and before re-indoctrinate/re-educate trait generation.
+    /// </summary>
+    private static readonly HashSet<FollowerTrait.TraitType> _traitsAssignedThisSession = [];
+
+    /// <summary>
     /// Resets the guarantee flag before trait assignment begins for a new follower.
     /// This ensures the guaranteed trait is only given once per follower, not on every trait roll.
     /// </summary>
@@ -21,7 +28,17 @@ public static class TraitWeights
     [HarmonyPatch(typeof(FollowerBrain), MethodType.Constructor, typeof(FollowerInfo))]
     private static void FollowerBrain_Constructor_Prefix()
     {
+        ResetSessionTracking();
+    }
+
+    /// <summary>
+    /// Resets session tracking for trait assignment.
+    /// Called before new follower creation and before re-indoctrinate/re-educate trait generation.
+    /// </summary>
+    internal static void ResetSessionTracking()
+    {
         _guaranteedTraitGivenThisSession = false;
+        _traitsAssignedThisSession.Clear();
     }
 
     /// <summary>
@@ -266,12 +283,25 @@ public static class TraitWeights
         var sourceList = sourceTraits.ToList();
         Plugin.Log.LogInfo($"[SelectTrait] Source traits count: {sourceList.Count}, UseAllTraits: {Plugin.UseAllTraits.Value}");
 
+        FollowerTrait.TraitType result;
         if (Plugin.EnableTraitWeights.Value)
         {
-            return GetWeightedTrait(sourceList);
+            result = GetWeightedTrait(sourceList);
+        }
+        else
+        {
+            result = GetRandomTrait(sourceList);
         }
 
-        return GetRandomTrait(sourceList);
+        // Log warning when no more traits available (user will get fewer traits than configured)
+        if (result == FollowerTrait.TraitType.None && _traitsAssignedThisSession.Count > 0)
+        {
+            Plugin.Log.LogWarning($"[SelectTrait] Trait pool exhausted after {_traitsAssignedThisSession.Count} traits. " +
+                $"Follower will receive fewer traits than the configured minimum ({Plugin.MinimumTraits.Value}). " +
+                "Consider enabling more traits with non-zero weights.");
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -354,10 +384,14 @@ public static class TraitWeights
     /// <summary>
     /// Selects a trait using random selection (no weighting).
     /// Still applies all filtering: unique toggles, single-use, game restrictions.
+    /// Excludes traits already assigned in the current session to prevent infinite loops.
     /// </summary>
     private static FollowerTrait.TraitType GetRandomTrait(IEnumerable<FollowerTrait.TraitType> sourceTraits)
     {
         var availableTraits = GetFilteredTraits(sourceTraits);
+
+        // Remove traits already assigned this session to prevent infinite loops
+        availableTraits.RemoveAll(t => _traitsAssignedThisSession.Contains(t));
 
         // Try to find a valid trait with random selection
         var attempts = 0;
@@ -368,6 +402,7 @@ public static class TraitWeights
             // Check game restrictions (DLC requirements, day requirements, etc.)
             if (!FollowerTrait.IsTraitUnavailable(trait))
             {
+                _traitsAssignedThisSession.Add(trait);
                 return trait;
             }
         }
@@ -508,6 +543,7 @@ public static class TraitWeights
 
     /// <summary>
     /// Performs weighted random selection from available traits.
+    /// Excludes traits already assigned in the current session to prevent infinite loops.
     /// </summary>
     private static FollowerTrait.TraitType SelectWeightedTrait(List<FollowerTrait.TraitType> traits)
     {
@@ -516,13 +552,19 @@ public static class TraitWeights
             return FollowerTrait.TraitType.None;
         }
 
-        // Build weight list
+        // Build weight list, excluding traits already assigned this session
         var weights = new List<float>();
         var validTraits = new List<FollowerTrait.TraitType>();
         var totalWeight = 0f;
 
         foreach (var trait in traits)
         {
+            // Skip traits already assigned in this session to prevent infinite loops
+            if (_traitsAssignedThisSession.Contains(trait))
+            {
+                continue;
+            }
+
             var weight = GetTraitWeight(trait);
             if (weight > 0f)
             {
@@ -546,12 +588,16 @@ public static class TraitWeights
             cumulative += weights[i];
             if (randomValue <= cumulative)
             {
-                return validTraits[i];
+                var selected = validTraits[i];
+                _traitsAssignedThisSession.Add(selected);
+                return selected;
             }
         }
 
         // Fallback (shouldn't reach here)
-        return validTraits[validTraits.Count - 1];
+        var fallback = validTraits[validTraits.Count - 1];
+        _traitsAssignedThisSession.Add(fallback);
+        return fallback;
     }
 
     /// <summary>
@@ -683,6 +729,9 @@ public static class TraitWeights
             return;
         }
 
+        // Reset session tracking before generating new traits to prevent infinite loops
+        ResetSessionTracking();
+
         var followerInfo = __instance.sacrificeFollower.Brain._directInfoAccess;
         Plugin.Log.LogInfo($"[Reindoctrinate] Starting re-indoctrination for {followerInfo.Name}");
         Plugin.Log.LogInfo($"[Reindoctrinate] Current traits ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
@@ -754,6 +803,9 @@ public static class TraitWeights
             {
                 brain.Stats.Reeducation = 0f;
             }
+
+            // Reset session tracking before generating new traits to prevent infinite loops
+            ResetSessionTracking();
 
             var followerInfo = brain._directInfoAccess;
             Plugin.Log.LogInfo($"[Reeducate] Starting trait reroll for {followerInfo.Name}");

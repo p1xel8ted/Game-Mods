@@ -1,3 +1,8 @@
+### 0.1.5 - 02/02/2026
+
+**Fixes:**
+* Fixed game freezing when using Re-educate or Re-indoctrinate with most trait weights set to zero.
+
 ### 0.1.4 - 01/02/2026
 
 **New Features:**

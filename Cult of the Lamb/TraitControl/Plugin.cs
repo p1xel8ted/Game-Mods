@@ -10,7 +10,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.traitcontrol";
     internal const string PluginName = "Trait Control";
-    private const string PluginVer = "0.1.4";
+    private const string PluginVer = "0.1.5";
 
     private const string TraitReplacementSection = "01. Trait Replacement";
     private const string UniqueTraitsSection = "02. Unique Traits";
