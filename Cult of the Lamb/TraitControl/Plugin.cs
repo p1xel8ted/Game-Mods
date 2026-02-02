@@ -625,7 +625,11 @@ public partial class Plugin : BaseUnityPlugin
 
     private static BaseUnityPlugin GetConfigurationManager()
     {
-        return (from pluginInfo in Chainloader.PluginInfos.Values where pluginInfo.Metadata.GUID == "com.p1xel8ted.configurationmanagerenhanced" select pluginInfo.Instance).FirstOrDefault();
+        // Check for enhanced version first, then fall back to standard
+        return Chainloader.PluginInfos.Values
+            .Where(p => p.Metadata.GUID is "com.p1xel8ted.configurationmanagerenhanced" or "com.bepis.bepinex.configurationmanager")
+            .Select(p => p.Instance)
+            .FirstOrDefault();
     }
 
     // ReSharper disable Unity.PerformanceAnalysis
