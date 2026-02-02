@@ -5,13 +5,19 @@ namespace Rebirth;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 [BepInDependency("io.github.xhayper.COTL_API", "0.3.1")]
-[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 [HarmonyPatch]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.rebirth";
     private const string PluginName = "Rebirth";
-    private const string PluginVer = "1.1.3";
+    private const string PluginVer = "1.1.4";
+
+    private const string RebirthSection = "── Rebirth ──";
+    private const string TokenDropsSection = "── Token Drops ──";
+    private const string DungeonChestsSection = "── Dungeon Chests ──";
+    private const string RefinerySection = "── Refinery ──";
+    private const string MissionsSection = "── Missions ──";
 
     public static ManualLogSource Log { get; private set; }
     public static string PluginPath { get; private set; }
@@ -19,28 +25,28 @@ public class Plugin : BaseUnityPlugin
     private CustomObjective RebirthCollectItemQuest { get; set; }
     public static readonly ModdedSaveData<List<int>> RebirthSaveData = new(PluginGuid);
 
-    // 01. Rebirth
+    // ── Rebirth ──
     internal static ConfigEntry<bool> RebirthOldFollowers { get; private set; }
     internal static ConfigEntry<bool> PreserveUniqueFollowers { get; private set; }
     internal static ConfigEntry<int> XpPenaltyChance { get; private set; }
     internal static ConfigEntry<int> XpPenaltyMultiplier { get; private set; }
     internal static ConfigEntry<int> TokenCost { get; private set; }
 
-    // 02. Token Drops
+    // ── Token Drops ──
     internal static ConfigEntry<int> EnemyDropRate { get; private set; }
     internal static ConfigEntry<int> DropMinQuantity { get; private set; }
     internal static ConfigEntry<int> DropMaxQuantity { get; private set; }
 
-    // 03. Dungeon Chests
+    // ── Dungeon Chests ──
     internal static ConfigEntry<int> ChestSpawnChance { get; private set; }
     internal static ConfigEntry<int> ChestMinAmount { get; private set; }
     internal static ConfigEntry<int> ChestMaxAmount { get; private set; }
 
-    // 04. Refinery
+    // ── Refinery ──
     internal static ConfigEntry<int> BoneCost { get; private set; }
     internal static ConfigEntry<int> RefineryDuration { get; private set; }
 
-    // 05. Missions
+    // ── Missions ──
     internal static ConfigEntry<int> MissionRewardMin { get; private set; }
     internal static ConfigEntry<int> MissionRewardMax { get; private set; }
     internal static ConfigEntry<int> MissionBaseChance { get; private set; }
@@ -71,31 +77,31 @@ public class Plugin : BaseUnityPlugin
 
     private void BindConfig()
     {
-        // 01. Rebirth
-        RebirthOldFollowers = Config.Bind("01. Rebirth", "Rebirth Old Followers", false, "Allow old followers to be reborn.");
-        PreserveUniqueFollowers = Config.Bind("01. Rebirth", "Preserve Unique Followers", true, "When enabled, unique followers (Webber, Sozo, Ratau, etc.) retain their original skin and traits when reborn. Names are always randomized.");
-        XpPenaltyChance = Config.Bind("01. Rebirth", "XP Penalty Chance", 20, new ConfigDescription("Chance (%) of losing XP during rebirth.", new AcceptableValueRange<int>(0, 100)));
-        XpPenaltyMultiplier = Config.Bind("01. Rebirth", "XP Kept On Penalty", 50, new ConfigDescription("Percentage of XP kept when penalty triggers.", new AcceptableValueRange<int>(10, 90)));
-        TokenCost = Config.Bind("01. Rebirth", "Token Cost", 25, new ConfigDescription("Tokens required for subsequent rebirths.", new AcceptableValueRange<int>(1, 100)));
+        // Rebirth
+        RebirthOldFollowers = Config.Bind(RebirthSection, "Rebirth Old Followers", false, new ConfigDescription("Allow old followers to be reborn.", null, new ConfigurationManagerAttributes { Order = 5 }));
+        PreserveUniqueFollowers = Config.Bind(RebirthSection, "Preserve Unique Followers", true, new ConfigDescription("When enabled, unique followers (Webber, Sozo, Ratau, etc.) retain their original skin and traits when reborn. Names are always randomized.", null, new ConfigurationManagerAttributes { Order = 4 }));
+        XpPenaltyChance = Config.Bind(RebirthSection, "XP Penalty Chance", 20, new ConfigDescription("Chance (%) of losing XP during rebirth.", new AcceptableValueRange<int>(0, 100), new ConfigurationManagerAttributes { Order = 3 }));
+        XpPenaltyMultiplier = Config.Bind(RebirthSection, "XP Kept On Penalty", 50, new ConfigDescription("Percentage of XP kept when penalty triggers.", new AcceptableValueRange<int>(10, 90), new ConfigurationManagerAttributes { Order = 2, DispName = "    └ XP Kept On Penalty" }));
+        TokenCost = Config.Bind(RebirthSection, "Token Cost", 25, new ConfigDescription("Tokens required for subsequent rebirths.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 1 }));
 
-        // 02. Token Drops
-        EnemyDropRate = Config.Bind("02. Token Drops", "Enemy Drop Rate", 5, new ConfigDescription("Chance (%) of tokens dropping from enemies.", new AcceptableValueRange<int>(1, 100)));
-        DropMinQuantity = Config.Bind("02. Token Drops", "Drop Min Quantity", 1, new ConfigDescription("Minimum tokens per drop.", new AcceptableValueRange<int>(1, 10)));
-        DropMaxQuantity = Config.Bind("02. Token Drops", "Drop Max Quantity", 2, new ConfigDescription("Maximum tokens per drop.", new AcceptableValueRange<int>(1, 20)));
+        // Token Drops
+        EnemyDropRate = Config.Bind(TokenDropsSection, "Enemy Drop Rate", 5, new ConfigDescription("Chance (%) of tokens dropping from enemies.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 3 }));
+        DropMinQuantity = Config.Bind(TokenDropsSection, "Drop Min Quantity", 1, new ConfigDescription("Minimum tokens per drop.", new AcceptableValueRange<int>(1, 10), new ConfigurationManagerAttributes { Order = 2, DispName = "    └ Drop Min Quantity" }));
+        DropMaxQuantity = Config.Bind(TokenDropsSection, "Drop Max Quantity", 2, new ConfigDescription("Maximum tokens per drop.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 1, DispName = "    └ Drop Max Quantity" }));
 
-        // 03. Dungeon Chests
-        ChestSpawnChance = Config.Bind("03. Dungeon Chests", "Chest Spawn Chance", 5, new ConfigDescription("Chance (%) of tokens appearing in dungeon chests.", new AcceptableValueRange<int>(1, 100)));
-        ChestMinAmount = Config.Bind("03. Dungeon Chests", "Chest Min Amount", 4, new ConfigDescription("Minimum tokens per chest.", new AcceptableValueRange<int>(1, 20)));
-        ChestMaxAmount = Config.Bind("03. Dungeon Chests", "Chest Max Amount", 7, new ConfigDescription("Maximum tokens per chest.", new AcceptableValueRange<int>(1, 50)));
+        // Dungeon Chests
+        ChestSpawnChance = Config.Bind(DungeonChestsSection, "Chest Spawn Chance", 5, new ConfigDescription("Chance (%) of tokens appearing in dungeon chests.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 3 }));
+        ChestMinAmount = Config.Bind(DungeonChestsSection, "Chest Min Amount", 4, new ConfigDescription("Minimum tokens per chest.", new AcceptableValueRange<int>(1, 20), new ConfigurationManagerAttributes { Order = 2, DispName = "    └ Chest Min Amount" }));
+        ChestMaxAmount = Config.Bind(DungeonChestsSection, "Chest Max Amount", 7, new ConfigDescription("Maximum tokens per chest.", new AcceptableValueRange<int>(1, 50), new ConfigurationManagerAttributes { Order = 1, DispName = "    └ Chest Max Amount" }));
 
-        // 04. Refinery
-        BoneCost = Config.Bind("04. Refinery", "Bone Cost", 15, new ConfigDescription("Bones required to refine a token.", new AcceptableValueRange<int>(1, 50)));
-        RefineryDuration = Config.Bind("04. Refinery", "Refinery Duration", 256, new ConfigDescription("Refinery duration in seconds.", new AcceptableValueRange<int>(10, 600)));
+        // Refinery
+        BoneCost = Config.Bind(RefinerySection, "Bone Cost", 15, new ConfigDescription("Bones required to refine a token.", new AcceptableValueRange<int>(1, 50), new ConfigurationManagerAttributes { Order = 2 }));
+        RefineryDuration = Config.Bind(RefinerySection, "Refinery Duration", 256, new ConfigDescription("Refinery duration in seconds.", new AcceptableValueRange<int>(10, 600), new ConfigurationManagerAttributes { Order = 1 }));
 
-        // 05. Missions
-        MissionRewardMin = Config.Bind("05. Missions", "Mission Reward Min", 15, new ConfigDescription("Minimum token reward from missions.", new AcceptableValueRange<int>(1, 50)));
-        MissionRewardMax = Config.Bind("05. Missions", "Mission Reward Max", 25, new ConfigDescription("Maximum token reward from missions.", new AcceptableValueRange<int>(1, 100)));
-        MissionBaseChance = Config.Bind("05. Missions", "Mission Base Chance", 50, new ConfigDescription("Mission appearance chance (%).", new AcceptableValueRange<int>(1, 100)));
+        // Missions
+        MissionBaseChance = Config.Bind(MissionsSection, "Mission Base Chance", 50, new ConfigDescription("Mission appearance chance (%).", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 3 }));
+        MissionRewardMin = Config.Bind(MissionsSection, "Mission Reward Min", 15, new ConfigDescription("Minimum token reward from missions.", new AcceptableValueRange<int>(1, 50), new ConfigurationManagerAttributes { Order = 2, DispName = "    └ Mission Reward Min" }));
+        MissionRewardMax = Config.Bind(MissionsSection, "Mission Reward Max", 25, new ConfigDescription("Maximum token reward from missions.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 1, DispName = "    └ Mission Reward Max" }));
     }
 
     private static void RegisterSettings()

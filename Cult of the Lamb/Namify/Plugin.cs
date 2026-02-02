@@ -3,7 +3,7 @@ using Shared;
 namespace Namify;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
@@ -111,7 +111,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 Localization.DescAddNameButton,
                 null,
-                new ConfigurationManagerAttributes { Order = 5, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = AddNameButton }
+                new ConfigurationManagerAttributes { Order = 5, DispName = "    └ Add Name", HideDefaultButton = true, CustomDrawer = AddNameButton }
             )
         );
 

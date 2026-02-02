@@ -1,3 +1,7 @@
+### 1.1.4 - 02/02/2026
+
+* Improved Configuration Manager UI formatting with visual section separators and sub-setting indentation.
+
 ### 1.1.3 - 01/02/2026
 
 * Changed death notification during rebirth to show "succumbed to unknown forces..." (localized for all supported languages).

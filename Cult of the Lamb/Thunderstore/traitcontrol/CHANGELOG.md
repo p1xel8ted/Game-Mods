@@ -1,5 +1,8 @@
 ### 0.1.5 - 02/02/2026
 
+**Improvements:**
+* Improved Configuration Manager UI formatting with visual section separators.
+
 **Fixes:**
 * Fixed game freezing when using Re-educate or Re-indoctrinate with most trait weights set to zero.
 * Fixed doctrine-granted traits (Fertility, Allegiance, etc.) appearing as individual follower traits when they already apply cult-wide.

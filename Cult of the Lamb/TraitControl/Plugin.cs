@@ -4,7 +4,7 @@ using BepInEx.Bootstrap;
 namespace TraitControl;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 [BepInIncompatibility("NothingNegative")]
 public partial class Plugin : BaseUnityPlugin
 {
@@ -12,13 +12,13 @@ public partial class Plugin : BaseUnityPlugin
     internal const string PluginName = "Trait Control";
     private const string PluginVer = "0.1.5";
 
-    private const string TraitReplacementSection = "01. Trait Replacement";
-    private const string UniqueTraitsSection = "02. Unique Traits";
-    private const string NotificationsSection = "03. Notifications";
-    private const string TraitWeightsSection = "04. Trait Weights";
-    private const string GoodTraitsSection = "05. Good Traits";
-    private const string BadTraitsSection = "06. Bad Traits";
-    private const string ResetSettingsSection = "07. Reset Settings";
+    private const string TraitReplacementSection = "── Trait Replacement ──";
+    private const string UniqueTraitsSection = "── Unique Traits ──";
+    private const string NotificationsSection = "── Notifications ──";
+    private const string TraitWeightsSection = "── Trait Weights ──";
+    private const string GoodTraitsSection = "── Good Traits ──";
+    private const string BadTraitsSection = "── Bad Traits ──";
+    private const string ResetSettingsSection = "── Reset Settings ──";
 
     internal static ManualLogSource Log { get; private set; }
     private static ConfigFile ConfigInstance { get; set; }

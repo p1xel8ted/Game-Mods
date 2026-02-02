@@ -7,12 +7,14 @@ namespace GlyphOverride;
 /// - Fixes Nintendo Switch controller A/B button prompts (physically swapped vs Xbox)
 /// </summary>
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.glyphoverride";
     private const string PluginName = "Glyph Override";
-    private const string PluginVer = "0.1.0";
+    private const string PluginVer = "0.1.1";
+
+    private const string ControllerSection = "── Controller ──";
 
     internal static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<ControllerPromptType> ForceControllerType { get; private set; }
@@ -22,7 +24,7 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
 
         ForceControllerType = Config.Bind(
-            "General",
+            ControllerSection,
             "Force Controller Prompts",
             ControllerPromptType.Auto,
             new ConfigDescription(

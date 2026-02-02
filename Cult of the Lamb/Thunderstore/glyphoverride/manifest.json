@@ -1,6 +1,6 @@
 {
     "name":  "Glyph_Override",
-    "version_number":  "0.1.0",
+    "version_number":  "0.1.1",
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/59?tab=description",
     "description":  "Force specific controller button prompts regardless of connected controller, plus Nintendo Switch A/B button fix",
     "dependencies":  [

@@ -1,3 +1,7 @@
+### 0.1.1 - 02/02/2026
+
+* Improved Configuration Manager UI formatting with visual section separators.
+
 ### 0.1.0 - 26/01/2026
 
 * Initial release

@@ -7,7 +7,7 @@ using CultOfQoL.Patches.UI;
 namespace CultOfQoL;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
@@ -76,7 +76,9 @@ public partial class Plugin : BaseUnityPlugin
         Log = Logger;
 
         var configResetDone = PlayerPrefs.GetInt(ResetConfigFlag, 0).ToBool();
-        if(PluginVer == "2.3.9" && !configResetDone)
+        var currentVersion = new Version(PluginVer);
+        var versionLimit = new Version("2.3.9");
+        if (currentVersion >= versionLimit && !configResetDone)
         {
             WriteLog("[Config Reset] Major configuration change detected. Resetting config to defaults.", LogType.Warning);
 
@@ -93,8 +95,8 @@ public partial class Plugin : BaseUnityPlugin
             PlayerPrefs.SetInt(ResetConfigFlag, 1);
             PlayerPrefs.Save();
         }
-      
-        
+
+
         PopupManager = gameObject.AddComponent<PopupManager>();
 
         // ══════════════════════════════════════════════════════════════════════
@@ -836,7 +838,7 @@ public partial class Plugin : BaseUnityPlugin
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
     }
-    
+
     private static void ShowRestartMessage()
     {
         if (!PopupManager.ShowPopup)

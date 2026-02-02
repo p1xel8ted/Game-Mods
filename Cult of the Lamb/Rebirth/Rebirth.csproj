@@ -1,9 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.1.3</Version>
+        <Version>1.1.4</Version>
         <ThunderstoreDir>rebirth</ThunderstoreDir>
         <ThunderstoreNestedPlugins>true</ThunderstoreNestedPlugins>
     </PropertyGroup>
+    <ItemGroup>
+      <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
+        <Link>ConfigurationManagerAttributes.cs</Link>
+      </Compile>
+    </ItemGroup>
     <ItemGroup>
       <None Remove="assets\rebirth_command.png" />
       <AdditionalFiles Include="assets\rebirth_command.png">

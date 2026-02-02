@@ -3,6 +3,7 @@
 * Added full localization support for all 15 game languages.
 * Button labels, confirmation dialogs, and popup messages now display in your game language.
 * Config descriptions are localized based on your language at game startup.
+* Improved Configuration Manager UI formatting with visual section separators and sub-setting indentation.
 * Fixed name files being saved in binary MessagePack format instead of human-readable JSON.
 * Name files are now saved as proper JSON that can be viewed and edited in any text editor.
 * Note: If you have old `.mp` files in your saves folder, delete them and the mod will regenerate names from the API.

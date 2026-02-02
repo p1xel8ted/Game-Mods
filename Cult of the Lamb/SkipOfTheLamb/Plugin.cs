@@ -9,6 +9,9 @@ public class Plugin : BaseUnityPlugin
     private const string PluginName = "Skip of the Lamb";
     private const string PluginVer = "0.1.1";
 
+    private const string PreRenderedVideosSection = "── Pre-Rendered Videos ──";
+    private const string InGameCutscenesSection = "── In-Game Cutscenes ──";
+
     internal static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<bool> SkipDevIntros { get; private set; }
     internal static ConfigEntry<bool> SkipCrownVideo { get; private set; }
@@ -22,33 +25,33 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
 
-        SkipDevIntros = Config.Bind("01. Pre-Rendered Videos", "Skip Splash Screens", false,
+        SkipDevIntros = Config.Bind(PreRenderedVideosSection, "Skip Splash Screens", false,
             new ConfigDescription("Skip developer/publisher logo videos on startup.", null,
                 new ConfigurationManagerAttributes { Order = 2 }));
 
-        SkipCrownVideo = Config.Bind("01. Pre-Rendered Videos", "Skip Crown Video", false,
+        SkipCrownVideo = Config.Bind(PreRenderedVideosSection, "Skip Crown Video", false,
             new ConfigDescription("Skip the video when the player first dies and is crowned by the death cat.", null,
                 new ConfigurationManagerAttributes { Order = 1 }));
 
-        SkipWoolhavenPrerenderedCinematic = Config.Bind("01. Pre-Rendered Videos", "Skip Woolhaven Video", false,
+        SkipWoolhavenPrerenderedCinematic = Config.Bind(PreRenderedVideosSection, "Skip Woolhaven Video", false,
             new ConfigDescription("Skip the pre-rendered video after completing the Woolhaven intro dungeon.", null,
                 new ConfigurationManagerAttributes { Order = 0 }));
 
-        SkipWoolhavenInGameFirstArrivalScene = Config.Bind("02. In-Game Cutscenes", "Skip Woolhaven Arrival", false,
+        SkipWoolhavenInGameFirstArrivalScene = Config.Bind(InGameCutscenesSection, "Skip Woolhaven Arrival", false,
             new ConfigDescription("Skip the in-game cutscene when first arriving in Woolhaven.", null,
                 new ConfigurationManagerAttributes { Order = 3 }));
 
-        SkipBossIntros = Config.Bind("02. In-Game Cutscenes", "Skip Main Boss Intros", false,
+        SkipBossIntros = Config.Bind(InGameCutscenesSection, "Skip Main Boss Intros", false,
             new ConfigDescription("Skip in-game boss ritual/transformation sequences.", null,
                 new ConfigurationManagerAttributes { Order = 2 }));
 
-        SkipMiniBossIntros = Config.Bind("02. In-Game Cutscenes", "Skip Mini-Boss Intros", false,
+        SkipMiniBossIntros = Config.Bind(InGameCutscenesSection, "Skip Mini-Boss Intros", false,
             new ConfigDescription("Skip in-game mini-boss roar/spawn sequences.", null,
                 new ConfigurationManagerAttributes { Order = 1 }));
 
-        IgnoreFirstEncounter = Config.Bind("02. In-Game Cutscenes", "Ignore First Encounter", false,
+        IgnoreFirstEncounter = Config.Bind(InGameCutscenesSection, "Ignore First Encounter", false,
             new ConfigDescription("Skip boss intros even on first encounter. Useful for veteran players on new saves.", null,
-                new ConfigurationManagerAttributes { Order = 0 }));
+                new ConfigurationManagerAttributes { Order = 0, DispName = "    └ Ignore First Encounter" }));
 
        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
