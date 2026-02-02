@@ -21,6 +21,18 @@ public static class TraitWeights
     private static readonly HashSet<FollowerTrait.TraitType> _traitsAssignedThisSession = [];
 
     /// <summary>
+    /// Tracks whether the current reeducation is a TraitControl trait reroll (not a vanilla dissenter re-education).
+    /// Used by the transpiler to conditionally skip AddPleasure - we don't want sin accumulation from trait rerolls.
+    /// </summary>
+    private static bool _isTraitRerollReeducation;
+
+    /// <summary>
+    /// Helper method for transpiler - returns true if the current reeducation is a trait reroll.
+    /// When true, the AddPleasure call should be skipped to prevent sin accumulation.
+    /// </summary>
+    public static bool ShouldSkipReeducationPleasure() => _isTraitRerollReeducation;
+
+    /// <summary>
     /// Resets the guarantee flag before trait assignment begins for a new follower.
     /// This ensures the guaranteed trait is only given once per follower, not on every trait roll.
     /// </summary>
@@ -510,6 +522,17 @@ public static class TraitWeights
             }
         }
 
+        // Filter out cult traits (doctrine-granted traits that apply cult-wide)
+        // These shouldn't be rolled as individual traits - they'd waste a slot
+        // Traits like Fertility, Allegiance, Cannibal, etc. from doctrines
+        if (DataManager.Instance?.CultTraits != null)
+        {
+            foreach (var cultTrait in DataManager.Instance.CultTraits)
+            {
+                availableTraits.Remove((FollowerTrait.TraitType)cultTrait);
+            }
+        }
+
         // Filter by game unlock requirements if enabled
         if (Plugin.UseUnlockedTraitsOnly.Value)
         {
@@ -779,7 +802,15 @@ public static class TraitWeights
     private static void ReeducateRoutine_Postfix(ref IEnumerator __result, interaction_FollowerInteraction __instance)
     {
         if (!Plugin.TraitRerollOnReeducation.Value) return;
+
+        // Defensive null checks to prevent crashes
+        if (__instance?.follower?.Brain?.Info == null) return;
+
         if (__instance.follower.Brain.Info.CursedState == Thought.Dissenter) return;
+
+        // Set flag to indicate this is a trait reroll, not a vanilla dissenter re-education
+        // This tells the transpiler to skip AddPleasure to prevent sin accumulation
+        _isTraitRerollReeducation = true;
 
         __result = WrapReeducateRoutine(__result, __instance.follower.Brain);
     }
@@ -828,5 +859,114 @@ public static class TraitWeights
                 Plugin.Log.LogInfo($"[Reeducate] After trait replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
             }
         }
+
+        // Clear the flag now that reeducation is complete
+        _isTraitRerollReeducation = false;
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // Reeducation Pleasure Skip Transpiler
+    // ══════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Transpiler for ReeducateRoutine - conditionally skips AddPleasure for trait rerolls.
+    /// Vanilla code adds 50 pleasure points when CursedState == None, which causes sin accumulation.
+    /// For trait rerolls (normal followers), we skip this to prevent unintended sin buildup.
+    /// For vanilla dissenter re-education, AddPleasure runs normally.
+    /// </summary>
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.ReeducateRoutine), MethodType.Enumerator)]
+    private static IEnumerable<CodeInstruction> ReeducateRoutine_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        var codes = new List<CodeInstruction>(instructions);
+        var addPleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure));
+        var shouldSkipMethod = AccessTools.Method(typeof(TraitWeights), nameof(ShouldSkipReeducationPleasure));
+
+        var patched = false;
+
+        for (var i = 0; i < codes.Count; i++)
+        {
+            // Find the AddPleasure call
+            if (codes[i].Calls(addPleasureMethod))
+            {
+                // Insert check before the call: if (ShouldSkipReeducationPleasure()) skip the call
+                // We need to find the start of this call sequence and wrap it in a conditional
+
+                // The pattern is roughly:
+                // ldarg/ldfld (get follower)
+                // ldfld Brain
+                // ldc.i4 (PleasureActions.RemovedDissent = 23)
+                // callvirt AddPleasure
+
+                // Find where the sequence starts by looking backwards for the pleasure action value
+                var sequenceStart = -1;
+                for (var j = i - 1; j >= 0 && j >= i - 10; j--)
+                {
+                    // Look for ldc.i4 23 (RemovedDissent) or ldc.i4.s 23
+                    if ((codes[j].opcode == OpCodes.Ldc_I4 && codes[j].operand is int intVal && intVal == 23) ||
+                        (codes[j].opcode == OpCodes.Ldc_I4_S && codes[j].operand is sbyte sbyteVal && sbyteVal == 23))
+                    {
+                        // Found the pleasure action, now find the brain load before it
+                        for (var k = j - 1; k >= 0 && k >= j - 5; k--)
+                        {
+                            if (codes[k].opcode == OpCodes.Ldfld)
+                            {
+                                var field = codes[k].operand as FieldInfo;
+                                if (field != null && field.Name == "Brain")
+                                {
+                                    // Found Brain field load, the sequence likely starts before this
+                                    sequenceStart = k - 1;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                if (sequenceStart >= 0)
+                {
+                    // Insert: if (ShouldSkipReeducationPleasure()) goto skipLabel
+                    var skipLabel = new Label();
+                    var skipLabelInstruction = new CodeInstruction(OpCodes.Nop);
+                    skipLabelInstruction.labels.Add(skipLabel);
+
+                    // Insert check at sequenceStart
+                    var checkInstructions = new List<CodeInstruction>
+                    {
+                        new CodeInstruction(OpCodes.Call, shouldSkipMethod),
+                        new CodeInstruction(OpCodes.Brtrue, skipLabel)
+                    };
+
+                    // Preserve labels on the original instruction
+                    if (codes[sequenceStart].labels.Count > 0)
+                    {
+                        checkInstructions[0].labels.AddRange(codes[sequenceStart].labels);
+                        codes[sequenceStart].labels.Clear();
+                    }
+
+                    codes.InsertRange(sequenceStart, checkInstructions);
+
+                    // Find the instruction after AddPleasure and add the skip label
+                    // Account for the 2 instructions we just inserted
+                    var addPleasureIndex = i + 2;
+                    if (addPleasureIndex + 1 < codes.Count)
+                    {
+                        codes[addPleasureIndex + 1].labels.Add(skipLabel);
+                    }
+
+                    patched = true;
+                    Plugin.Log.LogInfo("[Transpiler] ReeducateRoutine: Patched AddPleasure to be conditional on trait reroll flag.");
+                    break;
+                }
+            }
+        }
+
+        if (!patched)
+        {
+            Plugin.Log.LogWarning("[Transpiler] ReeducateRoutine: Could not find AddPleasure(RemovedDissent) call to patch.");
+        }
+
+        return codes;
     }
 }

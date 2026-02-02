@@ -73,12 +73,13 @@
 [size=3]Traits can belong to multiple categories. For example, [b][Single, Starting][/b] means the trait appears in the starting pool but only one follower can have it.[/size]
 
 [size=3][b]Excluded Traits[/b][/size]
-[size=3]Some traits are excluded from the weights list because they require special game state or are granted through gameplay events:[/size]
+[size=3]Some traits are excluded from the weights list because they require special game state, are granted through gameplay events, or already apply cult-wide:[/size]
 
 [size=3][u]Always Excluded[/u] (cannot be randomly assigned):[/size]
 [list]
 [*][size=3][b]Spy[/b] - Requires SpyJoinedDay to be set or followers leave immediately[/size]
 [*][size=3][b]BishopOfCult[/b] - Story-related, granted when converting a bishop[/size]
+[*][size=3][b]Doctrine Traits[/b] - Traits you've unlocked via doctrines (Fertility, Allegiance, Cannibal, etc.) are automatically excluded since they already apply to your entire cult. Rolling them as individual traits would waste a slot.[/size]
 [/list]
 
 [size=3][u]Event Traits[/u] (excluded by default, enable "Include Event Traits" to add them). Note: "Include Event Traits" only applies when "Use All Traits Pool" is enabled:[/size]

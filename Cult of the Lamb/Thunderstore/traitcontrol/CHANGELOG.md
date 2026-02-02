@@ -2,6 +2,8 @@
 
 **Fixes:**
 * Fixed game freezing when using Re-educate or Re-indoctrinate with most trait weights set to zero.
+* Fixed doctrine-granted traits (Fertility, Allegiance, etc.) appearing as individual follower traits when they already apply cult-wide.
+* Fixed Re-educate causing sin/pleasure accumulation on normal followers when used for trait rerolls.
 
 ### 0.1.4 - 01/02/2026
 
