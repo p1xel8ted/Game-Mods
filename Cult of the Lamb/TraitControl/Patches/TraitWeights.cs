@@ -881,13 +881,13 @@ public static class TraitWeights
         var codes = new List<CodeInstruction>(instructions);
         // Specify parameter types to avoid AmbiguousMatchException (game has multiple AddPleasure overloads)
         var addPleasureMethod = AccessTools.Method(typeof(FollowerBrain), nameof(FollowerBrain.AddPleasure),
-            new Type[] { typeof(FollowerBrain.PleasureActions), typeof(float) });
+            [typeof(FollowerBrain.PleasureActions), typeof(float)]);
         var shouldSkipMethod = AccessTools.Method(typeof(TraitWeights), nameof(ShouldSkipReeducationPleasure));
 
         if (addPleasureMethod == null)
         {
             Plugin.Log.LogError("[Transpiler] ReeducateRoutine: Could not find AddPleasure method!");
-            return instructions;
+            return codes;
         }
 
         var patched = false;
