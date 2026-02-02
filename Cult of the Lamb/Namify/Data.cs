@@ -6,68 +6,23 @@ public static class Data
 {
     internal const string NamifyDataPath = "namify_names.json";
     internal const string UserDataPath = "user_names.json";
+
     public static SortedSet<string> NamifyNames = [];
     public static SortedSet<string> UserNames = [];
-    private static readonly COTLDataReadWriter<List<string>> NamifyNameReadWriter = new();
-    private static readonly COTLDataReadWriter<List<string>> UserNameReadWriter = new();
-    static Data()
-    {
-        NamifyNameReadWriter.OnReadCompleted += names =>
-        {
-            NamifyNames = new SortedSet<string>(names);
-            Plugin.Log.LogInfo(NamifyNames.Count > 0 ? $"Loaded {NamifyNames.Count} Namify generated names." : "No saved names exist.");
-            RemoveFollowerNames();
-        };
 
-        NamifyNameReadWriter.OnReadError += delegate
-        {
-            Plugin.Log.LogWarning("Failed to load saved names!");
-        };
-
-        NamifyNameReadWriter.OnWriteCompleted += delegate
-        {
-            Plugin.Log.LogInfo($"Saved {NamifyNames.Count} Namify generated names!");
-        };
-
-        NamifyNameReadWriter.OnWriteError += error =>
-        {
-            Plugin.Log.LogError($"There was an issue saving Namify generated names: {error.Message}");
-        };
-        
-        
-        
-        UserNameReadWriter.OnReadCompleted += names =>
-        {
-            UserNames = new SortedSet<string>(names);
-            Plugin.Log.LogInfo(UserNames.Count > 0 ? $"Loaded {UserNames.Count} user-generated names." : "No saved names exist.");
-            RemoveFollowerNames();
-        };
-
-        UserNameReadWriter.OnReadError += delegate
-        {
-            Plugin.Log.LogWarning("Failed to load saved user-generated names!");
-        };
-
-        UserNameReadWriter.OnWriteCompleted += delegate
-        {
-            Plugin.Log.LogInfo($"Saved {UserNames.Count} user-generated names!");
-        };
-
-        UserNameReadWriter.OnWriteError += error =>
-        {
-            Plugin.Log.LogError($"There was an issue saving user-generated names: {error.Message}");
-        };
-    }
+    private static string SavesDirectory => Path.Combine(Application.persistentDataPath, "saves");
+    internal static string NamifyNamesFilePath => Path.Combine(SavesDirectory, NamifyDataPath);
+    internal static string UserNamesFilePath => Path.Combine(SavesDirectory, UserDataPath);
 
     private static void RemoveFollowerNames()
     {
         if (Follower.Followers == null) return;
-        
+
         foreach (var name in NamifyNames)
         {
             Follower.Followers.RemoveAll(a => a?.Brain?.Info?.Name == name);
         }
-        
+
         foreach (var name in UserNames)
         {
             Follower.Followers.RemoveAll(a => a?.Brain?.Info?.Name == name);
@@ -76,14 +31,73 @@ public static class Data
 
     internal static void LoadData()
     {
-        NamifyNameReadWriter.Read(NamifyDataPath);
-        UserNameReadWriter.Read(UserDataPath);
+        Directory.CreateDirectory(SavesDirectory);
+
+        // Load Namify names (try JSON first, then migrate from .mp if needed)
+        NamifyNames = LoadNamesFromFile(NamifyNamesFilePath);
+        if (NamifyNames.Count > 0)
+        {
+            Plugin.Log.LogInfo($"Loaded {NamifyNames.Count} Namify generated names.");
+        }
+
+        // Load User names
+        UserNames = LoadNamesFromFile(UserNamesFilePath);
+        if (UserNames.Count > 0)
+        {
+            Plugin.Log.LogInfo($"Loaded {UserNames.Count} user-generated names.");
+        }
+
+        RemoveFollowerNames();
+    }
+
+    private static SortedSet<string> LoadNamesFromFile(string jsonPath)
+    {
+        // Try loading .json file first
+        if (File.Exists(jsonPath))
+        {
+            try
+            {
+                var json = File.ReadAllText(jsonPath);
+                var names = JsonConvert.DeserializeObject<List<string>>(json);
+                return names != null ? new SortedSet<string>(names) : [];
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.LogWarning($"Failed to load {jsonPath}: {e.Message}");
+            }
+        }
+
+        // Check for old .mp file (MessagePack format from game's previous save system)
+        var mpPath = Path.ChangeExtension(jsonPath, ".mp");
+        if (File.Exists(mpPath))
+        {
+            Plugin.Log.LogWarning($"Found old format file: {Path.GetFileName(mpPath)}");
+            Plugin.Log.LogWarning("This file was created by the game's old save system and cannot be read.");
+            Plugin.Log.LogWarning("Please delete it and the mod will regenerate names from the API.");
+        }
+
+        return [];
     }
 
     internal static void SaveData()
     {
-        NamifyNameReadWriter.Write(NamifyNames.ToList(), NamifyDataPath, false);
-        UserNameReadWriter.Write(UserNames.ToList(), UserDataPath, false);
+        Directory.CreateDirectory(SavesDirectory);
+        SaveNamesToFile(NamifyNamesFilePath, NamifyNames);
+        SaveNamesToFile(UserNamesFilePath, UserNames);
+    }
+
+    private static void SaveNamesToFile(string path, SortedSet<string> names)
+    {
+        try
+        {
+            var json = JsonConvert.SerializeObject(names.ToList(), Formatting.Indented);
+            File.WriteAllText(path, json);
+            Plugin.Log.LogInfo($"Saved {names.Count} names to {Path.GetFileName(path)}");
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.LogError($"Failed to save {path}: {e.Message}");
+        }
     }
 
     internal static void GetNamifyNames(Action onFail = null, Action onComplete = null)
@@ -106,8 +120,8 @@ public static class Data
             if (req.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError or UnityWebRequest.Result.DataProcessingError)
             {
                 Plugin.Log.LogError($"{req.error}: {req.downloadHandler.text}");
-                NotificationCentre.Instance.PlayGenericNotification("There was an error retrieving names for Namify! Trying back-up source...");
-                
+                NotificationCentre.Instance.PlayGenericNotification(Localization.ApiError);
+
                 // Start backup request here, inside the error callback
                 var gameManagerRetry = GameManager.GetInstance();
                 if (gameManagerRetry != null)
@@ -128,7 +142,7 @@ public static class Data
                 }
 
                 SaveData();
-                NotificationCentre.Instance.PlayGenericNotification("Names retrieved for Namify!");
+                NotificationCentre.Instance.PlayGenericNotification(Localization.NamesRetrieved);
                 onComplete?.Invoke();
             }
         }));
@@ -143,7 +157,7 @@ public static class Data
                 if (req.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError or UnityWebRequest.Result.DataProcessingError)
                 {
                     Plugin.Log.LogError($"{req.error}: {req.downloadHandler.text}");
-                    NotificationCentre.Instance.PlayGenericNotification("There was an error retrieving names for Namify from the backup source!");
+                    NotificationCentre.Instance.PlayGenericNotification(Localization.ApiBackupError);
                     onFail?.Invoke();
                 }
                 else
@@ -155,7 +169,7 @@ public static class Data
                     }
 
                     SaveData();
-                    NotificationCentre.Instance.PlayGenericNotification("Names retrieved for Namify from the backup source!");
+                    NotificationCentre.Instance.PlayGenericNotification(Localization.NamesRetrievedBackup);
                     onComplete?.Invoke();
                 }
             }));

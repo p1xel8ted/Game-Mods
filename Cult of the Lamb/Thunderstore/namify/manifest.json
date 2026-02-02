@@ -1,6 +1,6 @@
 {
     "name":  "Namify",
-    "version_number":  "0.2.2",
+    "version_number":  "0.2.3",
     "website_url":  "https://www.nexusmods.com/cultofthelamb/mods/15?tab=description",
     "description":  "Expands follower naming with 1000+ random names from the web, plus support for your own custom names.",
     "dependencies":  [

@@ -8,9 +8,11 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.namify";
     internal const string PluginName = "Namify";
-    private const string PluginVer = "0.2.2";
-    private const string NamesSection = "Names";
-    private const string ApiSection = "API";
+    private const string PluginVer = "0.2.3";
+
+    // Section constants - match CultOfQoL format
+    private const string NamesSection = "── Names ──";
+    private const string ApiSection = "── API ──";
 
     public static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<string> PersonalApiKey { get; private set; }
@@ -19,10 +21,8 @@ public class Plugin : BaseUnityPlugin
     private static bool ShowGetNewConfirmationDialog { get; set; }
     private static bool ShowReloadConfirmationDialog { get; set; }
 
-    // private static string _namifyNamesFilePath { get; set; }
-    // private static string _userDataFilePath { get; set; }
-    private static string NamifyNamesFilePath => Path.Combine(Application.persistentDataPath, "saves", Data.NamifyDataPath);
-    private static string UserNameFilePath => Path.Combine(Application.persistentDataPath, "saves", Data.UserDataPath);
+    private static string NamifyNamesFilePath => Data.NamifyNamesFilePath;
+    private static string UserNameFilePath => Data.UserNamesFilePath;
     private static PopupManager PopupManagerInstance { get; set; }
 
     private void Awake()
@@ -40,7 +40,7 @@ public class Plugin : BaseUnityPlugin
         StartCoroutine(PreloadNamesCoroutine());
     }
 
-    private IEnumerator PreloadNamesCoroutine()
+    private static IEnumerator PreloadNamesCoroutine()
     {
         // Wait a few frames for GameManager to initialize
         for (int i = 0; i < 10; i++)
@@ -48,8 +48,13 @@ public class Plugin : BaseUnityPlugin
             yield return null;
         }
         
-        // Try to load existing names from file first
-        if (File.Exists(NamifyNamesFilePath) || File.Exists(UserNameFilePath))
+        // Try to load existing names from file first (check both .json and old .mp files)
+        var namifyJsonExists = File.Exists(NamifyNamesFilePath);
+        var namifyMpExists = File.Exists(Path.ChangeExtension(NamifyNamesFilePath, ".mp"));
+        var userJsonExists = File.Exists(UserNameFilePath);
+        var userMpExists = File.Exists(Path.ChangeExtension(UserNameFilePath, ".mp"));
+
+        if (namifyJsonExists || namifyMpExists || userJsonExists || userMpExists)
         {
             Log.LogInfo("Loading existing names from file...");
             Data.LoadData();
@@ -78,29 +83,101 @@ public class Plugin : BaseUnityPlugin
     private void InitializeConfigurations()
     {
         PopupManagerInstance = gameObject.AddComponent<PopupManager>();
-        AsterixNames = Config.Bind(NamesSection, "Asterisks Names", false, new ConfigDescription("Namified names will have an asterisk next to them in the indoctrination UI.", null, new ConfigurationManagerAttributes {Order = 12}));
-        
-        PersonalApiKey = Config.Bind(ApiSection, "Personal API Key", "ee5f806e1c1d458b99c934c0eb3de5b8", "The default API Key is mine, limited to 1000 requests per day. You can get your own at https://randommer.io/");
-        AddName = Config.Bind(NamesSection, "Add Name", "", new ConfigDescription("Adds a name to the list of names.", null, new ConfigurationManagerAttributes {Order = 10}));
-       
-        Config.Bind(NamesSection, "Add Name Button", true, new ConfigDescription("Add the name entered to the list.", null, new ConfigurationManagerAttributes {Order = 9, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = AddNameButton}));
-        Config.Bind(NamesSection, "Open Namify Names File", true, new ConfigDescription("Opens the Namify generated names file for viewing/editing.", null, new ConfigurationManagerAttributes {Order = 8, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = OpenNamifyNamesFile}));
-        Config.Bind(NamesSection, "Open User Names File", true, new ConfigDescription("Opens the user-generated names file for viewing/editing.", null, new ConfigurationManagerAttributes {Order = 7, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = OpenUserGeneratedNamesFile}));
-        Config.Bind(NamesSection, "Generate New Names", true, new ConfigDescription("Generates new Namify games. User-generated names are not changed.", null, new ConfigurationManagerAttributes {Order = 6, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = GenerateNewNamesButton}));
-        Config.Bind(NamesSection, "Reload Names", true, new ConfigDescription("Reloads names from file.", null, new ConfigurationManagerAttributes {Order = 5, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = ReloadNames}));
+
+        // ── Names ──
+        AsterixNames = Config.Bind(
+            NamesSection,
+            "Asterisk Names", false,
+            new ConfigDescription(
+                Localization.DescAsteriskNames,
+                null,
+                new ConfigurationManagerAttributes { Order = 7 }
+            )
+        );
+
+        AddName = Config.Bind(
+            NamesSection,
+            "Add Name", "",
+            new ConfigDescription(
+                Localization.DescAddName,
+                null,
+                new ConfigurationManagerAttributes { Order = 6 }
+            )
+        );
+
+        Config.Bind(
+            NamesSection,
+            "Add Name Button", true,
+            new ConfigDescription(
+                Localization.DescAddNameButton,
+                null,
+                new ConfigurationManagerAttributes { Order = 5, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = AddNameButton }
+            )
+        );
+
+        Config.Bind(
+            NamesSection,
+            "Open Namify Names File", true,
+            new ConfigDescription(
+                Localization.DescOpenNamifyFile,
+                null,
+                new ConfigurationManagerAttributes { Order = 4, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = OpenNamifyNamesFile }
+            )
+        );
+
+        Config.Bind(
+            NamesSection,
+            "Open User Names File", true,
+            new ConfigDescription(
+                Localization.DescOpenUserFile,
+                null,
+                new ConfigurationManagerAttributes { Order = 3, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = OpenUserGeneratedNamesFile }
+            )
+        );
+
+        Config.Bind(
+            NamesSection,
+            "Generate New Names", true,
+            new ConfigDescription(
+                Localization.DescGenerateNew,
+                null,
+                new ConfigurationManagerAttributes { Order = 2, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = GenerateNewNamesButton }
+            )
+        );
+
+        Config.Bind(
+            NamesSection,
+            "Reload Names", true,
+            new ConfigDescription(
+                Localization.DescReloadNames,
+                null,
+                new ConfigurationManagerAttributes { Order = 1, DispName = string.Empty, HideDefaultButton = true, CustomDrawer = ReloadNames }
+            )
+        );
+
+        // ── API ──
+        PersonalApiKey = Config.Bind(
+            ApiSection,
+            "Personal API Key", "ee5f806e1c1d458b99c934c0eb3de5b8",
+            new ConfigDescription(
+                Localization.DescApiKey,
+                null,
+                new ConfigurationManagerAttributes { Order = 1 }
+            )
+        );
     }
 
     private static void OpenNamifyNamesFile(ConfigEntryBase entry)
     {
-        if (GUILayout.Button("Open Namify List", GUILayout.ExpandWidth(true)))
+        if (GUILayout.Button(Localization.OpenNamifyList, GUILayout.ExpandWidth(true)))
         {
             TryOpenNamifyNamesFile();
         }
     }
-    
+
     private static void OpenUserGeneratedNamesFile(ConfigEntryBase entry)
     {
-        if (GUILayout.Button("Open User List", GUILayout.ExpandWidth(true)))
+        if (GUILayout.Button(Localization.OpenUserList, GUILayout.ExpandWidth(true)))
         {
             TryOpenUserNamesFile();
         }
@@ -114,7 +191,7 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            PopupManagerInstance.ShowPopup($"Names file ({NamifyNamesFilePath}) does not exist!");
+            PopupManagerInstance.ShowPopup(string.Format(Localization.FileNotFound, NamifyNamesFilePath));
         }
     }
 
@@ -126,23 +203,23 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            PopupManagerInstance.ShowPopup($"Names file ({UserNameFilePath}) does not exist!");
+            PopupManagerInstance.ShowPopup(string.Format(Localization.FileNotFound, UserNameFilePath));
         }
     }
 
     private static void DisplayGetNewConfirmationDialog()
     {
-        GUILayout.Label("Are you sure you want to generate new names?");
+        GUILayout.Label(Localization.ConfirmGenerateNew);
 
         GUILayout.BeginHorizontal();
         {
-            if (GUILayout.Button("Yes", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button(Localization.Yes, GUILayout.ExpandWidth(true)))
             {
                 GenerateNewNamesAction();
                 ShowGetNewConfirmationDialog = false;
             }
 
-            if (GUILayout.Button("No", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button(Localization.No, GUILayout.ExpandWidth(true)))
             {
                 ShowGetNewConfirmationDialog = false;
             }
@@ -152,26 +229,26 @@ public class Plugin : BaseUnityPlugin
 
     private static void DisplayReloadConfirmationDialog()
     {
-        GUILayout.Label("Are you sure you want to reload names from file?");
+        GUILayout.Label(Localization.ConfirmReload);
 
         GUILayout.BeginHorizontal();
         {
-            if (GUILayout.Button("Yes", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button(Localization.Yes, GUILayout.ExpandWidth(true)))
             {
                 try
                 {
                     Data.LoadData();
-                    PopupManagerInstance.ShowPopup("Names reloaded from file!");
+                    PopupManagerInstance.ShowPopup(Localization.NamesReloaded);
                 }
                 catch (Exception e)
                 {
-                    PopupManagerInstance.ShowPopup("Error in reloading names. Check log for more details.");
+                    PopupManagerInstance.ShowPopup(Localization.ErrorReloading);
                     Log.LogError($"Error in reloading names: {e.Message}");
                 }
                 ShowReloadConfirmationDialog = false;
             }
 
-            if (GUILayout.Button("No", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button(Localization.No, GUILayout.ExpandWidth(true)))
             {
                 ShowReloadConfirmationDialog = false;
             }
@@ -187,10 +264,10 @@ public class Plugin : BaseUnityPlugin
             Data.NamifyNames.Clear();
             Data.GetNamifyNames(() =>
             {
-                PopupManagerInstance.ShowPopup("Error in generating new names!");
+                PopupManagerInstance.ShowPopup(Localization.ErrorGenerating);
             }, () =>
             {
-                PopupManagerInstance.ShowPopup("New names generated!");
+                PopupManagerInstance.ShowPopup(Localization.NewNamesGenerated);
             });
         }
         catch (Exception ex)
@@ -201,22 +278,22 @@ public class Plugin : BaseUnityPlugin
 
     private static void AddNameButton(ConfigEntryBase entry)
     {
-        if (GUILayout.Button("Add Name", GUILayout.ExpandWidth(true)))
+        if (GUILayout.Button(Localization.AddNameButton, GUILayout.ExpandWidth(true)))
         {
             if (string.IsNullOrWhiteSpace(AddName.Value))
             {
-                PopupManagerInstance.ShowPopup("You haven't entered a name to add?");
+                PopupManagerInstance.ShowPopup(Localization.NoNameEntered);
                 return;
             }
 
             if (!Data.UserNames.Add(AddName.Value))
             {
-                PopupManagerInstance.ShowPopup($"'{AddName.Value}' already exists!");
+                PopupManagerInstance.ShowPopup(string.Format(Localization.NameExists, AddName.Value));
                 return;
             }
 
             Data.SaveData();
-            PopupManagerInstance.ShowPopup($"Added '{AddName.Value}' to available names!");
+            PopupManagerInstance.ShowPopup(string.Format(Localization.NameAdded, AddName.Value));
         }
     }
 
@@ -228,8 +305,7 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            var button = GUILayout.Button("Reload Names From File", GUILayout.ExpandWidth(true));
-            if (button)
+            if (GUILayout.Button(Localization.ReloadNamesFromFile, GUILayout.ExpandWidth(true)))
             {
                 ShowReloadConfirmationDialog = true;
             }
@@ -244,8 +320,7 @@ public class Plugin : BaseUnityPlugin
         }
         else
         {
-            var button = GUILayout.Button("Generate New Names", GUILayout.ExpandWidth(true));
-            if (button)
+            if (GUILayout.Button(Localization.GenerateNewNames, GUILayout.ExpandWidth(true)))
             {
                 ShowGetNewConfirmationDialog = true;
             }

@@ -11,6 +11,7 @@ global using BepInEx.Configuration;
 global using BepInEx.Logging;
 global using HarmonyLib;
 global using Lamb.UI;
+global using I2.Loc;
 global using Newtonsoft.Json;
 global using UnityEngine;
 global using UnityEngine.Networking;

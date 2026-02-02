@@ -1,4 +1,13 @@
-### 0.2.2 - 25 January 2026
+### 0.2.3 - 02/02/2026
+
+* Added full localization support for all 15 game languages.
+* Button labels, confirmation dialogs, and popup messages now display in your game language.
+* Config descriptions are localized based on your language at game startup.
+* Fixed name files being saved in binary MessagePack format instead of human-readable JSON.
+* Name files are now saved as proper JSON that can be viewed and edited in any text editor.
+* Note: If you have old `.mp` files in your saves folder, delete them and the mod will regenerate names from the API.
+
+### 0.2.2 - 25/01/2026
 
 * Fixed asterisk indicator not appearing after clicking "get name" button during indoctrination.
 * Updated Configuration Manager dependency to 18.4.1.
