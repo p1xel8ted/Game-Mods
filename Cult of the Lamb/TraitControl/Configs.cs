@@ -11,6 +11,7 @@ public partial class Plugin
     internal static ConfigEntry<int> MaximumTraits { get; private set; }
     internal static ConfigEntry<bool> RandomizeTraitsOnReindoctrination { get; private set; }
     internal static ConfigEntry<bool> TraitRerollOnReeducation { get; private set; }
+    internal static ConfigEntry<bool> ProtectTraitCountOnReroll { get; private set; }
     internal static ConfigEntry<bool> IncludeImmortal { get; private set; }
     internal static ConfigEntry<bool> GuaranteeImmortal { get; private set; }
     internal static ConfigEntry<bool> IncludeDisciple { get; private set; }
@@ -23,6 +24,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> GuaranteeBornToTheRot { get; private set; }
     internal static ConfigEntry<bool> ShowNotificationsWhenRemovingTraits { get; private set; }
     internal static ConfigEntry<bool> ShowNotificationsWhenAddingTraits { get; private set; }
+    internal static ConfigEntry<bool> ShowNotificationOnReeducateReroll { get; private set; }
 
     // Trait Weights settings
     internal static ConfigEntry<bool> EnableTraitWeights { get; private set; }

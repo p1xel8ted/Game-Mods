@@ -38,7 +38,8 @@
 [*][size=3][b]Minimum Traits[/b] (2-8, default: 2) - the minimum number of traits a new follower will have[/size]
 [*][size=3][b]Maximum Traits[/b] (2-8, default: 3) - the maximum number of traits a new follower will have[/size]
 [*][size=3][b]Randomize Traits on Re-indoctrination[/b] - when re-indoctrinating at the altar, randomize traits (vanilla only changes appearance/name)[/size]
-[*][size=3][b]Trait Reroll via Reeducation[/b] - adds the Re-educate command to normal followers to re-roll their traits using your configured settings[/size]
+[*][size=3][b]Trait Reroll via Reeducation[/b] - adds the Re-educate command to normal followers to re-roll their traits using your configured settings. A notification displays showing the follower's name and trait count change.[/size]
+[*][size=3][b]Protect Trait Count on Reroll[/b] - ensures followers don't end up with fewer traits than they started with when using reeducation or reindoctrination[/size]
 [/list]
 
 [size=3][b]Trait Weights (Trait Probability Control)[/b][/size]

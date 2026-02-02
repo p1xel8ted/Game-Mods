@@ -138,6 +138,10 @@ public partial class Plugin : BaseUnityPlugin
             new ConfigDescription("Adds the Re-educate command to normal followers. Using it will re-roll their traits using the configured min/max and weights.", null,
                 new ConfigurationManagerAttributes { Order = 3 }));
 
+        ProtectTraitCountOnReroll = ConfigInstance.Bind(TraitReplacementSection, "Protect Trait Count on Reroll", true,
+            new ConfigDescription("When rerolling traits (via reeducation or reindoctrination), ensure the follower doesn't end up with fewer traits than they started with.", null,
+                new ConfigurationManagerAttributes { Order = 2 }));
+
         // Unique Traits - 02
         AllowMultipleUniqueTraits = ConfigInstance.Bind(UniqueTraitsSection, "Allow Multiple Unique Traits", false,
             new ConfigDescription("Allow multiple followers to have the same unique trait (Immortal, Disciple, etc.). Normally only one follower can have each unique trait.", null,
@@ -251,6 +255,10 @@ public partial class Plugin : BaseUnityPlugin
         ShowNotificationsWhenAddingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Adding Traits", false,
             new ConfigDescription("Show notifications when trait replacement adds positive traits.", null,
                 new ConfigurationManagerAttributes { Order = 1 }));
+
+        ShowNotificationOnReeducateReroll = ConfigInstance.Bind(NotificationsSection, "Show On Reeducate Reroll", true,
+            new ConfigDescription("Show a notification when a follower's traits are rerolled via reeducation.", null,
+                new ConfigurationManagerAttributes { Order = 0 }));
 
         // Trait Weights - 04
         EnableTraitWeights = ConfigInstance.Bind(TraitWeightsSection, "Enable Trait Weights", false,

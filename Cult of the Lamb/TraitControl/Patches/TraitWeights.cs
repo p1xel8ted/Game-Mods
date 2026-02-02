@@ -773,8 +773,9 @@ public static class TraitWeights
         ResetSessionTracking();
 
         var followerInfo = __instance.sacrificeFollower.Brain._directInfoAccess;
+        var oldTraitCount = followerInfo.Traits.Count;
         Plugin.Log.LogInfo($"[Reindoctrinate] Starting re-indoctrination for {followerInfo.Name}");
-        Plugin.Log.LogInfo($"[Reindoctrinate] Current traits ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+        Plugin.Log.LogInfo($"[Reindoctrinate] Current traits ({oldTraitCount}): {string.Join(", ", followerInfo.Traits)}");
 
         // Generate new randomized traits using the patched RandomisedTraits method
         var seed = followerInfo.ID + TimeManager.CurrentDay;
@@ -791,6 +792,29 @@ public static class TraitWeights
         {
             NoNegativeTraits.ProcessTraitReplacement(__instance.sacrificeFollower.Brain);
             Plugin.Log.LogInfo($"[Reindoctrinate] After trait replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+        }
+
+        // Protect trait count if enabled - add more traits if we ended up with fewer
+        if (Plugin.ProtectTraitCountOnReroll.Value && followerInfo.Traits.Count < oldTraitCount)
+        {
+            var sourceTraits = Plugin.UseAllTraits.Value ? Plugin.AllTraitsList : FollowerTrait.StartingTraits;
+            var attempts = 0;
+            while (followerInfo.Traits.Count < oldTraitCount && attempts < 100)
+            {
+                attempts++;
+                var trait = SelectTrait(sourceTraits);
+                if (trait == FollowerTrait.TraitType.None)
+                {
+                    break;
+                }
+
+                if (!followerInfo.Traits.Contains(trait))
+                {
+                    followerInfo.Traits.Add(trait);
+                    Plugin.Log.LogInfo($"[Reindoctrinate] Protected trait count - added {trait}");
+                }
+            }
+            Plugin.Log.LogInfo($"[Reindoctrinate] After protection ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
         }
     }
 
@@ -856,8 +880,9 @@ public static class TraitWeights
             ResetSessionTracking();
 
             var followerInfo = brain._directInfoAccess;
+            var oldTraitCount = followerInfo.Traits.Count;
             Plugin.Log.LogInfo($"[Reeducate] Starting trait reroll for {followerInfo.Name}");
-            Plugin.Log.LogInfo($"[Reeducate] Current traits ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+            Plugin.Log.LogInfo($"[Reeducate] Current traits ({oldTraitCount}): {string.Join(", ", followerInfo.Traits)}");
 
             // Generate new randomized traits using the patched RandomisedTraits method
             var seed = followerInfo.ID + TimeManager.CurrentDay;
@@ -874,6 +899,36 @@ public static class TraitWeights
             {
                 NoNegativeTraits.ProcessTraitReplacement(brain);
                 Plugin.Log.LogInfo($"[Reeducate] After trait replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+            }
+
+            // Protect trait count if enabled - add more traits if we ended up with fewer
+            if (Plugin.ProtectTraitCountOnReroll.Value && followerInfo.Traits.Count < oldTraitCount)
+            {
+                var sourceTraits = Plugin.UseAllTraits.Value ? Plugin.AllTraitsList : FollowerTrait.StartingTraits;
+                var attempts = 0;
+                while (followerInfo.Traits.Count < oldTraitCount && attempts < 100)
+                {
+                    attempts++;
+                    var trait = SelectTrait(sourceTraits);
+                    if (trait == FollowerTrait.TraitType.None)
+                    {
+                        break;
+                    }
+
+                    if (!followerInfo.Traits.Contains(trait))
+                    {
+                        followerInfo.Traits.Add(trait);
+                        Plugin.Log.LogInfo($"[Reeducate] Protected trait count - added {trait}");
+                    }
+                }
+                Plugin.Log.LogInfo($"[Reeducate] After protection ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+            }
+
+            // Show notification if enabled
+            if (Plugin.ShowNotificationOnReeducateReroll.Value)
+            {
+                var newTraitCount = followerInfo.Traits.Count;
+                NotificationCentre.Instance?.PlayGenericNotification($"<color=#FFD201>{followerInfo.Name}</color>'s traits rerolled! ({oldTraitCount} > {newTraitCount})");
             }
         }
 
