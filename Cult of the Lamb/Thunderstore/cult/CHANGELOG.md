@@ -1,3 +1,8 @@
+### 2.4.0 - 02/02/2026
+
+**Fixes:**
+* Fixed Base Damage Multiplier not applying to the second player (Goat) in co-op mode.
+
 ### 2.3.9 - 01/02/2026
 
 **New Features:**

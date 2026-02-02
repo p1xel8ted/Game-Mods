@@ -3,8 +3,6 @@ namespace CultOfQoL.Patches.Player;
 [Harmony]
 public static class PlayerPatches
 {
-    private const string PlayerPrefab = "PlayerPrefab";
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerController), nameof(PlayerController.Start))]
     public static void PlayerController_Start(ref PlayerController __instance)
@@ -18,8 +16,8 @@ public static class PlayerPatches
     public static void Health_DealDamage(ref Health __instance, ref float Damage, ref GameObject Attacker)
     {
         if (__instance is null) return;
-        if (__instance.isPlayer) return; // Don't apply to player
-        if (!Attacker.name.Contains(PlayerPrefab)) return; // Only apply to player attacks
+        if (__instance.isPlayer) return; // Don't apply to player receiving damage
+        if (Attacker == null || Attacker.GetComponent<PlayerFarming>() == null) return; // Only apply to player attacks (works for both Lamb and co-op Goat)
 
         if (Helpers.IsMultiplierActive(Plugin.BaseDamageMultiplier.Value))
         {
