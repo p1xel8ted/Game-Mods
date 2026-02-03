@@ -32,7 +32,7 @@ Additional option:
 Control how many traits followers receive:
 - **Minimum Traits** (2-8, default: 2) - the minimum number of traits a new follower will have
 - **Maximum Traits** (2-8, default: 3) - the maximum number of traits a new follower will have
-- **Randomize Traits on Re-indoctrination** - when re-indoctrinating an existing follower at the altar, randomize their traits using the configured min/max (vanilla only changes appearance/name)
+- **Randomize Traits on Re-indoctrination** - when re-indoctrinating an existing follower at the altar, randomize their traits using the configured min/max (vanilla only changes appearance/name). A notification displays showing the trait count change.
 
 Vanilla behavior is 2-3 traits for new followers (randomly chosen between min and max), with a cap of 6 during re-indoctrination. Increase these values to give followers more traits (limited to 8 due to UI constraints). The maximum setting also affects re-indoctrination, removing the vanilla cap of 6.
 
