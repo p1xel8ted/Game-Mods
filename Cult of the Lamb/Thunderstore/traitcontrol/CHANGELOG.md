@@ -1,8 +1,8 @@
-### 0.1.5 - 02/02/2026
+### 0.1.5 - 03/02/2026
 
 **New Features:**
 * Added "Protect Trait Count on Reroll" option - ensures followers don't lose traits when rerolling via reeducation or reindoctrination.
-* Added notification when traits are rerolled via reeducation, showing the follower's name and trait count change.
+* Added notification when traits are rerolled via reeducation or reindoctrination, showing the follower's name and trait count change.
 
 **Improvements:**
 * Improved Configuration Manager UI formatting with visual section separators.

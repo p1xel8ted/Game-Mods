@@ -24,7 +24,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> GuaranteeBornToTheRot { get; private set; }
     internal static ConfigEntry<bool> ShowNotificationsWhenRemovingTraits { get; private set; }
     internal static ConfigEntry<bool> ShowNotificationsWhenAddingTraits { get; private set; }
-    internal static ConfigEntry<bool> ShowNotificationOnReeducateReroll { get; private set; }
+    internal static ConfigEntry<bool> ShowNotificationOnTraitReroll { get; private set; }
 
     // Trait Weights settings
     internal static ConfigEntry<bool> EnableTraitWeights { get; private set; }

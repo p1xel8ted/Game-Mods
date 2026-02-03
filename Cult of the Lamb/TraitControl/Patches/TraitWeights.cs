@@ -815,6 +815,20 @@ public static class TraitWeights
                 }
             }
             Plugin.Log.LogInfo($"[Reindoctrinate] After protection ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+
+            // Re-apply trait replacement to handle any negative traits added by protection
+            if (Plugin.NoNegativeTraits.Value)
+            {
+                NoNegativeTraits.ProcessTraitReplacement(__instance.sacrificeFollower.Brain);
+                Plugin.Log.LogInfo($"[Reindoctrinate] After post-protection replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+            }
+        }
+
+        // Show notification if enabled
+        if (Plugin.ShowNotificationOnTraitReroll.Value)
+        {
+            var newTraitCount = followerInfo.Traits.Count;
+            NotificationCentre.Instance?.PlayGenericNotification($"<color=#FFD201>{followerInfo.Name}</color>'s traits rerolled! ({oldTraitCount} → {newTraitCount})");
         }
     }
 
@@ -922,10 +936,17 @@ public static class TraitWeights
                     }
                 }
                 Plugin.Log.LogInfo($"[Reeducate] After protection ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+
+                // Re-apply trait replacement to handle any negative traits added by protection
+                if (Plugin.NoNegativeTraits.Value)
+                {
+                    NoNegativeTraits.ProcessTraitReplacement(brain);
+                    Plugin.Log.LogInfo($"[Reeducate] After post-protection replacement ({followerInfo.Traits.Count}): {string.Join(", ", followerInfo.Traits)}");
+                }
             }
 
             // Show notification if enabled
-            if (Plugin.ShowNotificationOnReeducateReroll.Value)
+            if (Plugin.ShowNotificationOnTraitReroll.Value)
             {
                 var newTraitCount = followerInfo.Traits.Count;
                 NotificationCentre.Instance?.PlayGenericNotification($"<color=#FFD201>{followerInfo.Name}</color>'s traits rerolled! ({oldTraitCount} > {newTraitCount})");

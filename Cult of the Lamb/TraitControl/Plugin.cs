@@ -256,8 +256,8 @@ public partial class Plugin : BaseUnityPlugin
             new ConfigDescription("Show notifications when trait replacement adds positive traits.", null,
                 new ConfigurationManagerAttributes { Order = 1 }));
 
-        ShowNotificationOnReeducateReroll = ConfigInstance.Bind(NotificationsSection, "Show On Reeducate Reroll", true,
-            new ConfigDescription("Show a notification when a follower's traits are rerolled via reeducation.", null,
+        ShowNotificationOnTraitReroll = ConfigInstance.Bind(NotificationsSection, "Show On Trait Reroll", true,
+            new ConfigDescription("Show a notification when a follower's traits are rerolled via reeducation or reindoctrination.", null,
                 new ConfigurationManagerAttributes { Order = 0 }));
 
         // Trait Weights - 04
