@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>0.1.0</Version>
+        <ThunderstoreDir>mysticassistantredux</ThunderstoreDir>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="Unity.TextMeshPro">
+            <HintPath>..\libs\Unity.TextMeshPro.dll</HintPath>
+        </Reference>
+        <Reference Include="Sirenix.Serialization">
+            <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
+    </ItemGroup>
+</Project>
