@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using BepInEx;
-using BepInEx.Logging;
 using MonoMod.Utils;
 using UnityEngine;
 

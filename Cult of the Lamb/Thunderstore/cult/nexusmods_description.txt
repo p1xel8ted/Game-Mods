@@ -84,8 +84,14 @@
 [*][size=3]Mass shear animals[/size]
 [/list]
 
+[size=3][b]Farm[/b][/size]
+[list]
+[*][size=3]Rot fertilizer decay - ground warming expires after configurable days instead of lasting forever[/size]
+[/list]
+
 [size=3][b]Mass Actions[/b][/size]
 [list]
+[*][size=3]Configurable mass action costs (gold, time advancement, faith reduction for Bless/Inspire)[/size]
 [*][size=3]Mass inspire, bless, bribe, extort, intimidate[/size]
 [*][size=3]Mass fertilize, water[/size]
 [*][size=3]Mass level up (with optional instant soul collection)[/size]
@@ -219,11 +225,13 @@
 
 [list]
 [*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/1]Cult of QoL[/url] - Massive quality-of-life overhaul with 100+ features[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/63]Mystic Assistant Redux[/url] - Buy specific Mystic Shop rewards instead of spinning the wheel[/size]
 [*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/8]Rebirth[/url] - Followers can be reborn with new names and appearances[/size]
 [*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/15]Namify[/url] - Random name generation from 1000+ names plus custom names[/size]
 [*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] - Skip intros, splash screens, and videos[/size]
 [*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/56]Skip of the Lamb Lite[/url] - Just skips splash screens, no config needed[/size]
 [*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/58]Trait Control[/url] - Replace negative traits, control trait probabilities[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/64]Quick Menus[/url] - Hotkey-based quick access to game menus from anywhere[/size]
 [*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/59]Glyph Override[/url] - Force specific controller button prompts[/size]
 [/list]
 

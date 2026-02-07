@@ -1,9 +1,11 @@
-### 2.4.1 - 05/02/2026
+### 2.4.1 - 07/02/2026
 
 **New Features:**
 * Added Elder Work Mode with three options: Disabled (vanilla), All Work, or Light Work Only. Light work allows elders to worship, cook, brew, and research while excluding physical labor like mining and body disposal.
 * Added "Exclude Grass From Seed Deposit" option - when using "Deposit All Seeds" on a seed silo, grass will not be deposited.
 * Added "Mass Notification Threshold" setting - when a mass action affects more than the configured number of followers (default 3), a single summary notification is shown instead of one per follower.
+* Added "Rot Fertilizer Decay" option - rot fertilizer ground warming now expires after a configurable number of days (1-30, default 5) instead of lasting forever. Disabled by default.
+* Added "Mass Action Costs" section with three optional per-follower costs for mass actions: gold per follower affected, game time per follower, and faith reduction percentage for mass Bless/Inspire. All default to 0 (free). The original single interaction is never affected.
 
 **Fixes:**
 * Fixed "Collect All God Tears At Once" collecting double the tears when only one was available.

@@ -24,12 +24,14 @@ public partial class Plugin : BaseUnityPlugin
     private const string AutoInteractSection = "── Auto-Interact (Chests) ──";
     private const string CapacitySection = "── Capacities ──";
     private const string CollectionSection = "── Collection ──";
+    private const string FarmSection = "── Farm ──";
     private const string FollowersSection = "── Followers ──";
     private const string GameMechanicsSection = "── Game Mechanics ──";
     private const string GameSpeedSection = "── Game Speed ──";
     private const string GoldenFleeceSection = "── Golden Fleece ──";
     private const string KnucklebonesSection = "── Knucklebones ──";
     private const string LootSection = "── Loot ──";
+    private const string MassActionCostsSection = "── Mass Action Costs ──";
     private const string MassAnimalSection = "── Mass Animal ──";
     private const string MassCollectSection = "── Mass Collect ──";
     private const string MassFarmSection = "── Mass Farm ──";
@@ -307,6 +309,20 @@ public partial class Plugin : BaseUnityPlugin
         //     Order = 1
         // }));
 
+        // ── Mass Action Costs ──
+        MassActionGoldCost = _configInstance.Bind(MassActionCostsSection, "Gold Cost", 0, new ConfigDescription("Gold deducted per follower/target affected by a mass action. Set to 0 for free. If you can't afford the total, the mass action is skipped but the original single interaction still works.", new AcceptableValueRange<int>(0, 50), new ConfigurationManagerAttributes
+        {
+            Order = 3
+        }));
+        MassActionTimeCost = _configInstance.Bind(MassActionCostsSection, "Time Cost (Game Minutes)", 0, new ConfigDescription("Game minutes that pass per follower/target affected by a mass action. Set to 0 for no time cost. 240 minutes = 1 game phase.", new AcceptableValueRange<int>(0, 120), new ConfigurationManagerAttributes
+        {
+            Order = 2
+        }));
+        MassFaithReduction = _configInstance.Bind(MassActionCostsSection, "Faith Reduction (%)", 0, new ConfigDescription("Reduces faith gained per follower from mass Bless and Inspire. 0 = full faith, 50 = half faith, 100 = no faith. The original single interaction always gives full faith.", new AcceptableValueRange<int>(0, 100), new ConfigurationManagerAttributes
+        {
+            Order = 1
+        }));
+
         // ── Mass Collect ──
         CollectAllGodTearsAtOnce = _configInstance.Bind(MassCollectSection, "Collect All God Tears At Once", false, new ConfigDescription("When collecting god tears from the shrine, collect all available at once instead of one per interaction.", null, new ConfigurationManagerAttributes
         {
@@ -351,6 +367,16 @@ public partial class Plugin : BaseUnityPlugin
             Order = 2
         }));
         MassWolfTraps = _configInstance.Bind(MassFarmSection, "Mass Wolf Traps", MassWolfTrapMode.Disabled, new ConfigDescription("Fill Only: Fill all empty traps with the same bait. Collect Only: Collect from all traps with caught wolves. Both: Do both actions.", null, new ConfigurationManagerAttributes
+        {
+            Order = 1
+        }));
+
+        // ── Farm ──
+        RotFertilizerDecay = _configInstance.Bind(FarmSection, "Rot Fertilizer Decay", false, new ConfigDescription("When enabled, rot fertilizer warming on farm plots expires after a set number of days instead of lasting forever.", null, new ConfigurationManagerAttributes
+        {
+            Order = 2
+        }));
+        RotFertilizerDuration = _configInstance.Bind(FarmSection, "Rot Fertilizer Duration (Days)", 5, new ConfigDescription("Number of days before rot fertilizer warming expires. Crops on expired plots will wither during winter unless near a Crop Grower.", new AcceptableValueRange<int>(1, 30), new ConfigurationManagerAttributes
         {
             Order = 1
         }));

@@ -1,4 +1,5 @@
 // using CultOfQoL.Core.Routines;
+using CultOfQoL.Core;
 
 namespace CultOfQoL.Patches.Followers;
 
@@ -279,6 +280,7 @@ public static class FollowerPatches
                 MassActionEffects.IsAvailable(f.Brain) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (reassureEligible.Count == 0 || !MassActionCosts.TryDeductCosts(reassureEligible.Count)) return;
             NotifySuppressBegin(reassureEligible.Count);
             foreach (var follower in reassureEligible)
             {
@@ -296,6 +298,7 @@ public static class FollowerPatches
                 FollowerCommandItems.Reeducate().IsAvailable(f) &&
                 MassActionEffects.IsAvailable(f.Brain) &&
                 (MassActionEffects.IsImprisoned(f.Brain) || MassActionEffects.IsDissenting(f.Brain))).ToList();
+            if (reeducateEligible.Count == 0 || !MassActionCosts.TryDeductCosts(reeducateEligible.Count)) return;
             NotifySuppressBegin(reeducateEligible.Count);
             foreach (var follower in reeducateEligible)
             {
@@ -314,6 +317,7 @@ public static class FollowerPatches
                 MassActionEffects.IsAvailable(f.Brain) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (bullyEligible.Count == 0 || !MassActionCosts.TryDeductCosts(bullyEligible.Count)) return;
             NotifySuppressBegin(bullyEligible.Count);
             foreach (var follower in bullyEligible)
             {
@@ -335,6 +339,7 @@ public static class FollowerPatches
                 MassActionEffects.IsAvailable(f.Brain) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (romanceEligible.Count == 0 || !MassActionCosts.TryDeductCosts(romanceEligible.Count)) return;
             NotifySuppressBegin(romanceEligible.Count);
             foreach (var follower in romanceEligible)
             {
@@ -357,6 +362,7 @@ public static class FollowerPatches
                 MassActionEffects.IsAvailable(f.Brain) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (petEligible.Count == 0 || !MassActionCosts.TryDeductCosts(petEligible.Count)) return;
             NotifySuppressBegin(petEligible.Count);
             foreach (var follower in petEligible)
             {
@@ -375,6 +381,7 @@ public static class FollowerPatches
                 MassActionEffects.IsAvailable(f.Brain) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (extortEligible.Count == 0 || !MassActionCosts.TryDeductCosts(extortEligible.Count)) return;
             NotifySuppressBegin(extortEligible.Count);
             foreach (var follower in extortEligible)
             {
@@ -396,6 +403,7 @@ public static class FollowerPatches
                 !f.Brain.HasTrait(FollowerTrait.TraitType.Mutated) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (inspireEligible.Count == 0 || !MassActionCosts.TryDeductCosts(inspireEligible.Count)) return;
             NotifySuppressBegin(inspireEligible.Count);
             foreach (var follower in inspireEligible)
             {
@@ -416,6 +424,7 @@ public static class FollowerPatches
                 !f.Brain.HasTrait(FollowerTrait.TraitType.Mutated) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (intimidateEligible.Count == 0 || !MassActionCosts.TryDeductCosts(intimidateEligible.Count)) return;
             NotifySuppressBegin(intimidateEligible.Count);
             foreach (var follower in intimidateEligible)
             {
@@ -437,6 +446,7 @@ public static class FollowerPatches
                 !f.Brain.HasTrait(FollowerTrait.TraitType.Mutated) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (blessEligible.Count == 0 || !MassActionCosts.TryDeductCosts(blessEligible.Count)) return;
             NotifySuppressBegin(blessEligible.Count);
             foreach (var follower in blessEligible)
             {
@@ -456,6 +466,7 @@ public static class FollowerPatches
                 MassActionEffects.IsAvailable(f.Brain) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            if (bribeEligible.Count == 0 || !MassActionCosts.TryDeductCosts(bribeEligible.Count)) return;
             NotifySuppressBegin(bribeEligible.Count);
             foreach (var follower in bribeEligible)
             {

@@ -148,6 +148,14 @@ public partial class Plugin
 
 
     internal static ConfigEntry<bool> MassBribe { get; private set; }
+
+    internal static ConfigEntry<int> MassActionGoldCost { get; private set; }
+    internal static ConfigEntry<int> MassActionTimeCost { get; private set; }
+    internal static ConfigEntry<int> MassFaithReduction { get; private set; }
+
+    internal static ConfigEntry<bool> RotFertilizerDecay { get; private set; }
+    internal static ConfigEntry<int> RotFertilizerDuration { get; private set; }
+
     internal static ConfigEntry<bool> MassFertilize { get; private set; }
     internal static ConfigEntry<bool> MassBless { get; private set; }
     internal static ConfigEntry<bool> MassRomance { get; private set; }

@@ -1,3 +1,5 @@
+using CultOfQoL.Core;
+
 namespace CultOfQoL.Patches.Systems;
 
 [Harmony]
@@ -640,18 +642,13 @@ public static class FastCollectingPatches
 
     private static void MassCleanAllAnimals(Interaction_Ranchable triggeredAnimal)
     {
-        foreach (var animal in Interaction_Ranchable.Ranchables.ToList())
+        var stinkyAnimals = Interaction_Ranchable.Ranchables
+            .Where(a => a && a != triggeredAnimal && a.Animal.Ailment == Interaction_Ranchable.Ailment.Stinky)
+            .ToList();
+        if (stinkyAnimals.Count == 0 || !MassActionCosts.TryDeductCosts(stinkyAnimals.Count)) return;
+
+        foreach (var animal in stinkyAnimals)
         {
-            if (!animal || animal == triggeredAnimal)
-            {
-                continue;
-            }
-
-            if (animal.Animal.Ailment != Interaction_Ranchable.Ailment.Stinky)
-            {
-                continue;
-            }
-
             animal.Clean(false);
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("Notifications/RanchAnimalNotStinky", animal.Animal.GetName());
         }
@@ -665,22 +662,10 @@ public static class FastCollectingPatches
         }
 
         // Count how many we can feed (excluding the one already fed by vanilla)
-        var hungryAnimals = new List<Interaction_Ranchable>();
-        foreach (var animal in Interaction_Ranchable.Ranchables.ToList())
-        {
-            if (!animal || animal == triggeredAnimal)
-            {
-                continue;
-            }
-
-            // Skip if already eaten today
-            if (animal.Animal.EatenToday)
-            {
-                continue;
-            }
-
-            hungryAnimals.Add(animal);
-        }
+        var hungryAnimals = Interaction_Ranchable.Ranchables
+            .Where(a => a && a != triggeredAnimal && !a.Animal.EatenToday)
+            .ToList();
+        if (hungryAnimals.Count == 0 || !MassActionCosts.TryDeductCosts(hungryAnimals.Count)) return;
 
         // Feed as many as we have inventory for
         var availableFood = Inventory.GetItemQuantity(foodType);
@@ -713,65 +698,34 @@ public static class FastCollectingPatches
 
     private static void MassMilkAllAnimals(Interaction_Ranchable triggeredAnimal)
     {
-        var milkedCount = 0;
-        foreach (var animal in Interaction_Ranchable.Ranchables.ToList())
+        var milkableAnimals = Interaction_Ranchable.Ranchables
+            .Where(a => a && a != triggeredAnimal && !a.Animal.MilkedToday && a.Animal.MilkedReady)
+            .ToList();
+        if (milkableAnimals.Count == 0 || !MassActionCosts.TryDeductCosts(milkableAnimals.Count)) return;
+
+        foreach (var animal in milkableAnimals)
         {
-            if (!animal || animal == triggeredAnimal)
-            {
-                continue;
-            }
-
-            // Check if animal can be milked
-            if (animal.Animal.MilkedToday || !animal.Animal.MilkedReady)
-            {
-                continue;
-            }
-
-            // Milk the animal (drops loot, updates state, updates skin)
             animal.MilkAnimal();
-
-            // Audio feedback
             AudioManager.Instance.PlayOneShot("event:/dlc/animal/cow/milk", animal.transform.position);
-
-            milkedCount++;
         }
 
-        if (milkedCount > 0)
-        {
-            NotificationCentre.Instance.PlayGenericNotification($"Milked {milkedCount} additional animal{(milkedCount > 1 ? "s" : "")}");
-        }
+        NotificationCentre.Instance.PlayGenericNotification($"Milked {milkableAnimals.Count} additional animal{(milkableAnimals.Count > 1 ? "s" : "")}");
     }
 
     private static void MassShearAllAnimals(Interaction_Ranchable triggeredAnimal)
     {
-        var shearedCount = 0;
-        foreach (var animal in Interaction_Ranchable.Ranchables.ToList())
+        var shearableAnimals = Interaction_Ranchable.Ranchables
+            .Where(a => a && a != triggeredAnimal && !a.Animal.WorkedToday && a.Animal.WorkedReady)
+            .ToList();
+        if (shearableAnimals.Count == 0 || !MassActionCosts.TryDeductCosts(shearableAnimals.Count)) return;
+
+        foreach (var animal in shearableAnimals)
         {
-            
-            if (!animal || animal == triggeredAnimal)
-            {
-                continue;
-            }
-
-            // Check if animal can be sheared
-            if (animal.Animal.WorkedToday || !animal.Animal.WorkedReady)
-            {
-                continue;
-            }
-
-            // Shear/work the animal (drops loot, updates state, updates skin)
             animal.Work();
-
-            // Audio feedback
             AudioManager.Instance.PlayOneShot("event:/dlc/animal/shared/shear", animal.transform.position);
-
-            shearedCount++;
         }
 
-        if (shearedCount > 0)
-        {
-            NotificationCentre.Instance.PlayGenericNotification($"Sheared {shearedCount} additional animal{(shearedCount > 1 ? "s" : "")}");
-        }
+        NotificationCentre.Instance.PlayGenericNotification($"Sheared {shearableAnimals.Count} additional animal{(shearableAnimals.Count > 1 ? "s" : "")}");
     }
 
     #endregion

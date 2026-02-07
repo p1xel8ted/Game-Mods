@@ -1,4 +1,6 @@
-﻿namespace CultOfQoL.Patches.Gameplay;
+﻿using CultOfQoL.Core;
+
+namespace CultOfQoL.Patches.Gameplay;
 
 [Harmony]
 [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")]
@@ -62,6 +64,7 @@ public static class InteractionPatches
     {
         yield return new WaitForEndOfFrame();
         var waterablePlots = FarmPlot.FarmPlots.Where(p => p.StructureBrain?.CanWater() == true).ToList();
+        if (waterablePlots.Count == 0 || !MassActionCosts.TryDeductCosts(waterablePlots.Count)) yield break;
 
         Plugin.WriteLog($"Watering {waterablePlots.Count} plots");
         foreach (var plot in waterablePlots)
@@ -82,6 +85,7 @@ public static class InteractionPatches
     {
         yield return new WaitForEndOfFrame();
         var fertilizablePlots = FarmPlot.FarmPlots.Where(p => p.StructureBrain?.CanFertilize() == true).ToList();
+        if (fertilizablePlots.Count == 0 || !MassActionCosts.TryDeductCosts(fertilizablePlots.Count)) yield break;
         var itemsNeeded = fertilizablePlots.Count;
         var itemsAvailable = Inventory.GetItemQuantity((int)chosenItem);
         

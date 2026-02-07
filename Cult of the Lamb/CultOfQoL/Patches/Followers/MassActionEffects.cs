@@ -1,3 +1,5 @@
+using CultOfQoL.Core;
+
 namespace CultOfQoL.Patches.Followers;
 
 /// <summary>
@@ -92,10 +94,14 @@ public static class MassActionEffects
         follower.Brain.Stats.LastBlessing = DataManager.Instance.CurrentDayIndex;
         follower.Brain.AddAdoration(FollowerBrain.AdorationActions.Bless, null);
 
-        CultFaithManager.AddThought(Thought.Cult_Bless, follower.Brain.Info.ID);
+        var faithMultiplier = MassActionCosts.GetFaithMultiplier();
+        if (faithMultiplier > 0f)
+        {
+            CultFaithManager.AddThought(Thought.Cult_Bless, follower.Brain.Info.ID, faithMultiplier);
+        }
         AudioManager.Instance?.PlayOneShot("event:/followers/gain_loyalty", follower.gameObject.transform.position);
 
-        Plugin.WriteLog($"[MassEffect] Bless applied to {follower.Brain.Info.Name}");
+        Plugin.WriteLog($"[MassEffect] Bless applied to {follower.Brain.Info.Name} (faith multiplier: {faithMultiplier:F2})");
     }
 
     /// <summary>
@@ -243,10 +249,14 @@ public static class MassActionEffects
         follower.Brain.AddThought(Thought.DancedWithLeader);
         follower.Brain.AddAdoration(FollowerBrain.AdorationActions.Inspire, null);
 
-        CultFaithManager.AddThought(Thought.Cult_Inspire, follower.Brain.Info.ID);
+        var faithMultiplier = MassActionCosts.GetFaithMultiplier();
+        if (faithMultiplier > 0f)
+        {
+            CultFaithManager.AddThought(Thought.Cult_Inspire, follower.Brain.Info.ID, faithMultiplier);
+        }
         AudioManager.Instance?.PlayOneShot("event:/followers/love_hearts", follower.gameObject.transform.position);
 
-        Plugin.WriteLog($"[MassEffect] Inspire applied to {follower.Brain.Info.Name}");
+        Plugin.WriteLog($"[MassEffect] Inspire applied to {follower.Brain.Info.Name} (faith multiplier: {faithMultiplier:F2})");
     }
 
     /// <summary>

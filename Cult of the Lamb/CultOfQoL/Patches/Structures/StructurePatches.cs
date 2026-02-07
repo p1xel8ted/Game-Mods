@@ -491,6 +491,11 @@ internal static class StructurePatches
                 .Where(r => r && r != pettedAnimal && !r.animal.PetToday)
                 .ToList();
 
+            if (animals.Count == 0 || !MassActionCosts.TryDeductCosts(animals.Count))
+            {
+                yield break;
+            }
+
             Plugin.WriteLog($"[MassPetAnimals] Petting {animals.Count} additional animals");
 
             foreach (var animal in animals)
