@@ -16,10 +16,19 @@ internal static class InventoryInfo
     {
         return itemType switch
         {
+            // Existing overrides
             InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION_ALT =>
                 LocalizationManager.GetTranslation($"Inventory/{InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION}"),
-            // SOUL_FRAGMENT is used for relics in the shop
             InventoryItem.ITEM_TYPE.SOUL_FRAGMENT => "Relic",
+
+            // Apple Arcade content
+            InventoryManager.AppleSkinType => "Follower Skin (Apple)",
+            InventoryManager.AppleDecorationType => "Decoration (Apple)",
+            InventoryManager.AppleClothingType => "Outfit (Apple)",
+            InventoryManager.AppleFleeceType => LocalizationManager.GetTranslation("TarotCards/Fleece680/Name"),
+            // InventoryManager.PalworldSkinType => "Follower Skin (Palworld)",
+            InventoryManager.BossSkinType => "Follower Skin (Boss)",
+
             _ => LocalizationManager.GetTranslation($"Inventory/{itemType}")
         };
     }
@@ -64,36 +73,66 @@ internal static class InventoryInfo
 
     /// <summary>
     /// Creates the list of all items available in the Mystic Assistant shop.
-    /// All items cost 1 God Tear.
     /// </summary>
     public static List<TraderTrackerItems> GetShopItemTypeList()
     {
-        return
-        [
+        var items = new List<TraderTrackerItems>
+        {
+            // Existing items
             CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Gold_Skull),
             CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Demonic),
             CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Loyalty),
             CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Missionary),
             CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Light),
             CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Dark),
+        };
+
+        // Woolhaven DLC necklaces (opt-in — normally obtained through DLC gameplay)
+        if (Plugin.EnableDlcNecklaces.Value && DataManager.Instance.MAJOR_DLC)
+        {
+            items.Add(CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Deaths_Door));
+            items.Add(CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Winter));
+            items.Add(CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Frozen));
+            items.Add(CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Targeted));
+            items.Add(CreateTraderItem(InventoryItem.ITEM_TYPE.Necklace_Weird));
+        }
+
+        items.AddRange(new[]
+        {
             CreateTraderItem(InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE),
             CreateTraderItem(InventoryItem.ITEM_TYPE.TALISMAN),
             CreateTraderItem(InventoryItem.ITEM_TYPE.FOUND_ITEM_FOLLOWERSKIN),
             CreateTraderItem(InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION_ALT),
             CreateTraderItem(InventoryItem.ITEM_TYPE.TRINKET_CARD),
-            CreateTraderItem(InventoryItem.ITEM_TYPE.SOUL_FRAGMENT), // Used for relics
+            CreateTraderItem(InventoryItem.ITEM_TYPE.SOUL_FRAGMENT),
             CreateTraderItem(InventoryItem.ITEM_TYPE.BLACK_GOLD)
-        ];
+        });
+
+        // Exclusive content
+        items.Add(CreateTraderItem(InventoryManager.AppleSkinType));
+        items.Add(CreateTraderItem(InventoryManager.AppleDecorationType));
+        items.Add(CreateTraderItem(InventoryManager.AppleClothingType));
+        items.Add(CreateTraderItem(InventoryManager.AppleFleeceType));
+        // items.Add(CreateTraderItem(InventoryManager.PalworldSkinType)); // Palworld skins — missing atlas textures
+
+        // Boss skins (opt-in — normally obtained by defeating bosses)
+        if (Plugin.EnableBossSkins.Value)
+        {
+            items.Add(CreateTraderItem(InventoryManager.BossSkinType));
+        }
+
+        return items;
     }
 
     private static TraderTrackerItems CreateTraderItem(InventoryItem.ITEM_TYPE itemType)
     {
+        var cost = Plugin.GetEffectiveCost();
         return new TraderTrackerItems
         {
             itemForTrade = itemType,
-            BuyPrice = 1,
+            BuyPrice = cost,
             BuyOffset = 0,
-            SellPrice = 1,
+            SellPrice = cost,
             SellOffset = 0,
             LastDayChecked = TimeManager.CurrentDay
         };

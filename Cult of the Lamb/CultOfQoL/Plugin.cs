@@ -98,6 +98,7 @@ public partial class Plugin : BaseUnityPlugin
 
 
         PopupManager = gameObject.AddComponent<PopupManager>();
+        PopupManager.Title = PluginName;
 
         // ══════════════════════════════════════════════════════════════════════
         // Config sections: General first, then alphabetical

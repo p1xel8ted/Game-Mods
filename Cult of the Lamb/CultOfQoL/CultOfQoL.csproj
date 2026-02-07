@@ -87,5 +87,8 @@
       <Compile Include="..\Shared\Extensions.cs">
         <Link>Util\Extensions.cs</Link>
       </Compile>
+      <Compile Include="..\Shared\PopupManager.cs">
+        <Link>Core\PopupManager.cs</Link>
+      </Compile>
     </ItemGroup>
 </Project>

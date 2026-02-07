@@ -1,0 +1,70 @@
+[size=4][b]Mystic Assistant Redux[/b][/size]
+
+[size=3]A continuation of [url=https://github.com/Ciarenni/COTL_MysticAssistant]Ciarenni's Mystic Assistant[/url] mod, updated for the latest game version.[/size]
+
+[size=3]Buy specific rewards from the Mystic Shop instead of spinning the wheel. All agency, no RNG.[/size]
+
+[size=4][b]Features[/b][/size]
+
+[size=3]After beating the base game, visit the Mystic Shop and use the [b]secondary interaction[/b] for "Mystic Assistant" to open the shop.[/size]
+
+[size=3][b]Available Items (configurable God Tear cost, default 3)[/b][/size]
+[list]
+[*][size=3]All 6 necklace types (Dark, Light, Gold Skull, Demonic, Loyalty, Missionary)[/size]
+[*][size=3]Crystal Doctrine Stones (up to 24, or 28 with Woolhaven DLC)[/size]
+[*][size=3]Talisman Pieces (up to 12)[/size]
+[*][size=3]Follower Skins (random from unlockable pool)[/size]
+[*][size=3]Decorations (random from unlockable pool)[/size]
+[*][size=3]Tarot Cards (random from unlockable pool)[/size]
+[*][size=3]Relics (random from unlockable pool)[/size]
+[*][size=3]Black Gold (100 coins per purchase)[/size]
+[/list]
+
+[size=3][b]Exclusive Content[/b][/size]
+[list]
+[*][size=3]5 Apple Arcade follower skins, 2 clothing items, 1 fleece, 5 decorations[/size]
+[/list]
+
+[size=3][b]Optional Content (Config)[/b][/size]
+[size=3]The following items are disabled by default since they're obtainable through normal gameplay. Enable them in the configuration manager under "Extra Content":[/size]
+[list]
+[*][size=3]5 Woolhaven DLC necklaces (Death's Door, Winter, Frozen, Targeted, Weird) — requires Woolhaven DLC[/size]
+[*][size=3]31 boss follower skins — normally unlocked by defeating bosses[/size]
+[/list]
+
+[size=3][b]God Tear Cost[/b][/size]
+[size=3]The cost per item is configurable (1-10, default 3). Once set, the cost is locked per save and can only be increased, never decreased. The lock is automatically cleared when a save is deleted or overwritten.[/size]
+
+[size=3][b]Overbuy Warnings[/b][/size]
+[size=3]The shop will warn you before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces). Click again to confirm.[/size]
+
+[size=4][b]Installation[/b][/size]
+
+[list]
+[*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
+[*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
+[/list]
+
+[size=4][b]Credits[/b][/size]
+
+[size=3]This mod is a continuation of the original [b]Mystic Assistant[/b] by [url=https://github.com/Ciarenni/COTL_MysticAssistant]Ciarenni[/url].[/size]
+
+[size=3]If you appreciate Ciarenni's original work, consider supporting them at [url=https://ko-fi.com/ciarenni]ko-fi.com/ciarenni[/url].[/size]
+
+[size=4][b]My Other Mods[/b][/size]
+
+[list]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/1]Cult of QoL[/url] - Massive quality-of-life overhaul with 100+ features[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/8]Rebirth[/url] - Followers can be reborn with new names and appearances[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/15]Namify[/url] - Random name generation from 1000+ names plus custom names[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/55]Skip of the Lamb[/url] - Skip intros, splash screens, and videos[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/56]Skip of the Lamb Lite[/url] - Just skips splash screens, no config needed[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/58]Trait Control[/url] - Replace negative traits, control trait probabilities[/size]
+[*][size=3][url=https://www.nexusmods.com/cultofthelamb/mods/59]Glyph Override[/url] - Force specific controller button prompts[/size]
+[/list]
+
+[size=4][b]Support[/b][/size]
+
+[size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
+
+[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.0</Version>
+        <Version>0.1.1</Version>
         <ThunderstoreDir>mysticassistantredux</ThunderstoreDir>
     </PropertyGroup>
     <ItemGroup>
@@ -10,8 +10,18 @@
         <Reference Include="Sirenix.Serialization">
             <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.ImageConversionModule">
+            <HintPath>..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+            <HintPath>..\libs\UnityEngine.InputLegacyModule.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="assets\Fleece_680.png" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
+        <Compile Include="..\Shared\PopupManager.cs" Link="PopupManager.cs"/>
     </ItemGroup>
 </Project>
