@@ -1,8 +1,9 @@
 ### 0.1.1 - 07/02/2026
 
 - Fixed Crystal Doctrine Stones showing -1 quantity for players with the Woolhaven DLC
-- Added configurable God Tear cost per item (default 3, range 1-10)
-  - Cost is locked per save file and can only be increased, not decreased
+- Added configurable God Tear cost per item (default 1, range 1-10)
+  - Increasing cost requires confirmation and is locked per save (cannot be decreased)
+  - Cost can only be changed while a save is loaded
   - Automatically cleared when a save is deleted or overwritten
 - Added exclusive content to the shop
   - 5 Apple Arcade follower skins, 2 clothing items, 1 fleece, 5 decorations

@@ -56,62 +56,53 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(Localization.BossSkinsDesc, null,
                 new ConfigurationManagerAttributes { DispName = Localization.BossSkinsName, Order = 1 }));
 
-        GodTearCost = Config.Bind("02. Shop", "GodTearCost", 3,
+        GodTearCost = Config.Bind("02. Shop", "GodTearCost", 1,
             new ConfigDescription(Localization.GodTearCostDesc, new AcceptableValueRange<int>(1, 10),
                 new ConfigurationManagerAttributes { DispName = Localization.GodTearCostName, Order = 2 }));
-
-        Config.Bind("02. Shop", "LockCost", "",
-            new ConfigDescription("Lock the current cost for this save. Cost can only be increased, not decreased.",
-                null, new ConfigurationManagerAttributes
-                {
-                    DispName = "Lock Cost for Save",
-                    Order = 0,
-                    HideDefaultButton = true,
-                    CustomDrawer = DrawLockCostButton
-                }));
+        GodTearCost.SettingChanged += OnGodTearCostChanged;
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Log.LogInfo($"{PluginName} v{PluginVer} loaded.");
     }
 
-    private static void DrawLockCostButton(ConfigEntryBase entry)
+    private static void OnGodTearCostChanged(object sender, EventArgs e)
     {
-        var costKey = GetCostKey(SaveAndLoad.SAVE_SLOT);
-        var lockedCost = PlayerPrefs.HasKey(costKey) ? PlayerPrefs.GetInt(costKey) : -1;
-        var configCost = GodTearCost.Value;
+        var newVal = GodTearCost.Value;
 
-        if (lockedCost > 0)
+        if (!SaveAndLoad.Loaded)
         {
-            GUILayout.Label($"Locked at {lockedCost} God Tears (slot {SaveAndLoad.SAVE_SLOT})");
-            if (configCost > lockedCost)
-            {
-                if (GUILayout.Button($"Increase to {configCost}"))
-                {
-                    _popupManager.ShowConfirmation(PluginName,
-                        $"Increase the locked cost from {lockedCost} to {configCost} God Tears per item for save slot {SaveAndLoad.SAVE_SLOT}?\n\nThis cannot be reversed.",
-                        () =>
-                        {
-                            PlayerPrefs.SetInt(costKey, configCost);
-                            PlayerPrefs.Save();
-                            Log.LogInfo($"[MysticShop] Cost increased to {configCost} for slot {SaveAndLoad.SAVE_SLOT}");
-                        });
-                }
-            }
+            GodTearCost.Value = 1;
+            return;
         }
-        else
+
+        var key = GetCostKey(SaveAndLoad.SAVE_SLOT);
+        var locked = PlayerPrefs.HasKey(key) ? PlayerPrefs.GetInt(key) : 0;
+
+        if (newVal <= locked)
         {
-            if (GUILayout.Button($"Lock at {configCost} God Tears"))
-            {
-                _popupManager.ShowConfirmation(PluginName,
-                    $"Lock the cost at {configCost} God Tears per item for save slot {SaveAndLoad.SAVE_SLOT}?\n\nCost can only be increased after locking, not decreased.",
-                    () =>
-                    {
-                        PlayerPrefs.SetInt(costKey, configCost);
-                        PlayerPrefs.Save();
-                        Log.LogInfo($"[MysticShop] Cost locked at {configCost} for slot {SaveAndLoad.SAVE_SLOT}");
-                    });
-            }
+            GodTearCost.Value = locked;
+            return;
         }
+
+        if (newVal <= 1 && locked == 0)
+        {
+            return;
+        }
+
+        var revertTo = locked > 0 ? locked : 1;
+        GodTearCost.Value = revertTo;
+
+        var message = locked > 0
+            ? $"Increase cost from {locked} to {newVal} God Tears per item for save slot {SaveAndLoad.SAVE_SLOT}?\n\nThis cannot be reversed."
+            : $"Set cost to {newVal} God Tears per item for save slot {SaveAndLoad.SAVE_SLOT}?\n\nCost can only be increased after this, not decreased.";
+
+        _popupManager.ShowConfirmation(PluginName, message, () =>
+        {
+            GodTearCost.Value = newVal;
+            PlayerPrefs.SetInt(key, newVal);
+            PlayerPrefs.Save();
+            Log.LogInfo($"[MysticShop] Cost set to {newVal} for slot {SaveAndLoad.SAVE_SLOT}");
+        });
     }
 
     /// <summary>

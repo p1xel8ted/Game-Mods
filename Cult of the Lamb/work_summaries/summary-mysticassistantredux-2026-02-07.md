@@ -187,23 +187,29 @@ Added `ItemSelector_OnShowStarted_Postfix` on `UIItemSelectorOverlayController.O
 
 ### Status: COMPLETE
 
-Configurable cost per item (1-10, default 3) with a one-way ratchet per save slot.
+Configurable cost per item (1-10, default 1) with a one-way ratchet per save slot.
 
 ### Implementation
 
-- `ConfigEntry<int> GodTearCost` with `AcceptableValueRange(1, 10)`, default 3
-- **Button-only lock**: Cost is NOT auto-locked. User must explicitly click "Lock Cost for Save" button in Config Manager
-- **One-way ratchet**: `GetEffectiveCost()` returns `Math.Max(configValue, lockedValue)` — cost can only increase
+- `ConfigEntry<int> GodTearCost` with `AcceptableValueRange(1, 10)`, default 1
+- **Slider-based locking via `SettingChanged`**: No separate lock button. Moving the slider up triggers a confirmation popup. Confirming saves the cost to PlayerPrefs for that save slot. Cancelling reverts the slider.
+- **No save loaded guard**: If `!SaveAndLoad.Loaded`, slider reverts to 1 (prevents accidental writes to `SAVE_SLOT=5` default)
+- **One-way ratchet**: Moving slider below locked value silently reverts. `GetEffectiveCost()` returns `Math.Max(configValue, lockedValue)`.
 - **Per-save persistence**: `PlayerPrefs` keyed by `MysticAssistant_Cost_{SaveAndLoad.SAVE_SLOT}`
 - **Save cleanup**: Postfix patches on `SaveAndLoad.DeleteSaveSlot` and `SaveAndLoad.ResetSave` clear the key
-- **Confirmation popup**: Custom drawer button shows `PopupManager.ShowConfirmation()` dialog before locking
-- **Config UI button states**: Shows "Lock at X" (unlocked) or "Locked at X" with optional "Increase to Y" (locked, config > locked)
+- **No re-fire on programmatic set**: Setting `ConfigEntry.Value` programmatically does not re-trigger `SettingChanged`, so no guard flag needed
+
+### Previous Implementation (replaced)
+
+Originally used a `DrawLockCostButton` custom drawer with explicit "Lock at X" / "Increase to Y" buttons. Replaced with `SettingChanged` approach because:
+- The lock button was vulnerable to `SaveAndLoad.SAVE_SLOT=5` default on main menu (no save loaded)
+- Slider-based confirmation is more intuitive — the act of changing IS the lock
 
 ### Files Modified
 
 | File | Changes |
 |------|---------|
-| `Plugin.cs` | `GodTearCost` config, `GetEffectiveCost()`, `ClearCostForSlot()`, `DrawLockCostButton()` custom drawer, PopupManager setup |
+| `Plugin.cs` | `GodTearCost` config (default 1), `OnGodTearCostChanged` handler, `GetEffectiveCost()`, `ClearCostForSlot()`, PopupManager setup |
 | `InventoryInfo.cs` | `CreateTraderItem()` uses `Plugin.GetEffectiveCost()` |
 | `Localization.cs` | `GodTearCostName`, `GodTearCostDesc` in 15 languages |
 | `MysticShopPatches.cs` | `DeleteSaveSlot_Postfix`, `ResetSave_Postfix` for cleanup |

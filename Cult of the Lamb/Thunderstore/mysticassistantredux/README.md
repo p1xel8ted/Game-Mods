@@ -8,7 +8,7 @@ Buy specific rewards from the Mystic Shop instead of spinning the wheel. All age
 
 After beating the base game, visit the Mystic Shop and use the **secondary interaction** for "Mystic Assistant" to open the shop.
 
-### Available Items (configurable God Tear cost, default 3)
+### Available Items (configurable God Tear cost, default 1)
 - All 6 necklace types (Dark, Light, Gold Skull, Demonic, Loyalty, Missionary)
 - Crystal Doctrine Stones (up to 24, or 28 with Woolhaven DLC)
 - Talisman Pieces (up to 12)
@@ -27,7 +27,7 @@ The following items are disabled by default since they're obtainable through nor
 - 31 boss follower skins — normally unlocked by defeating bosses
 
 ### God Tear Cost
-The cost per item is configurable (1-10, default 3). Once set, the cost is locked per save and can only be increased, never decreased. The lock is automatically cleared when a save is deleted or overwritten.
+The cost per item is configurable (1-10, default 1). Increasing the cost requires confirmation and is locked per save — it can only go up, never down. The cost can only be changed while a save is loaded. The lock is automatically cleared when a save is deleted or overwritten.
 
 ### Overbuy Warnings
 The shop will warn you before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces). Click again to confirm.
