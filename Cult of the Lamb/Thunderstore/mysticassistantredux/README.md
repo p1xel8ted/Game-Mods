@@ -35,6 +35,7 @@ The shop will warn you before purchasing items beyond their normal limits (talis
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)
+* Install [BepInEx Configuration Manager](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/) (for in-game configuration)
 * Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.
 
 ## Credits
@@ -46,11 +47,13 @@ If you appreciate Ciarenni's original work, consider supporting them at [ko-fi.c
 ## My Other Mods
 
 - [Cult of QoL](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Cult_of_QoL_Collection/) - Massive quality-of-life overhaul with 100+ features
+- [Mystic Assistant Redux](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Mystic_Assistant_Redux/) - Buy specific Mystic Shop rewards instead of spinning the wheel
 - [Rebirth](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Rebirth/) - Followers can be reborn with new names and appearances
 - [Namify](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Namify/) - Random name generation from 1000+ names plus custom names
 - [Skip of the Lamb](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Skip_of_the_Lamb/) - Skip intros, splash screens, and videos
 - [Skip of the Lamb Lite](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Skip_of_the_Lamb_Lite/) - Just skips splash screens, no config needed
 - [Trait Control](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Trait_Control/) - Replace negative traits, control trait probabilities
+- [Quick Menus](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Quick_Menus/) - Hotkey-based quick access to game menus from anywhere
 - [Glyph Override](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Glyph_Override/) - Force specific controller button prompts
 
 ## Donate
