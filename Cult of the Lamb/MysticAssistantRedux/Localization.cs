@@ -12,6 +12,10 @@ internal static class Localization
     internal static string BossSkinsDesc => Get("BossSkinsDesc");
     internal static string GodTearCostDesc => Get("GodTearCostDesc");
 
+    // Cost confirmation popup messages
+    internal static string CostIncreaseConfirm(int from, int to, int slot) => string.Format(Get("CostIncreaseConfirm"), from, to, slot);
+    internal static string CostSetConfirm(int cost, int slot) => string.Format(Get("CostSetConfirm"), cost, slot);
+
     private static string Get(string key)
     {
         var lang = LocalizationManager.CurrentLanguage ?? "English";
@@ -33,7 +37,9 @@ internal static class Localization
                 { "BossSkinsName", "Boss Skins" },
                 { "BossSkinsDesc", "Add boss follower skins to the shop. These are normally obtained by defeating bosses. Re-open the shop for changes to take effect." },
                 { "GodTearCostName", "God Tear Cost" },
-                { "GodTearCostDesc", "God Tears per item. Cost can be increased but not decreased per save." }
+                { "GodTearCostDesc", "God Tears per item. Cost can be increased but not decreased per save." },
+                { "CostIncreaseConfirm", "Increase cost from {0} to {1} God Tears per item for save slot {2}?\n\nThis cannot be reversed." },
+                { "CostSetConfirm", "Set cost to {0} God Tears per item for save slot {1}?\n\nCost can only be increased after this, not decreased." }
             }
         },
         {
@@ -44,7 +50,9 @@ internal static class Localization
                 { "BossSkinsName", "ボススキン" },
                 { "BossSkinsDesc", "ボスのフォロワースキンをショップに追加します。通常はボスを倒すと入手できます。変更を反映するにはショップを開き直してください。" },
                 { "GodTearCostName", "神の涙コスト" },
-                { "GodTearCostDesc", "アイテムごとの神の涙数。セーブごとにコストは増やせますが、減らせません。" }
+                { "GodTearCostDesc", "アイテムごとの神の涙数。セーブごとにコストは増やせますが、減らせません。" },
+                { "CostIncreaseConfirm", "セーブスロット{2}のアイテムあたりのコストを{0}から{1}神の涙に増やしますか？\n\nこの操作は元に戻せません。" },
+                { "CostSetConfirm", "セーブスロット{1}のアイテムあたりのコストを{0}神の涙に設定しますか？\n\n設定後はコストの増加のみ可能で、減少はできません。" }
             }
         },
         {
@@ -55,7 +63,9 @@ internal static class Localization
                 { "BossSkinsName", "Скины боссов" },
                 { "BossSkinsDesc", "Добавить скины боссов-последователей в магазин. Обычно получаются за победу над боссами. Переоткройте магазин для применения изменений." },
                 { "GodTearCostName", "Стоимость Слезы Бога" },
-                { "GodTearCostDesc", "Слёз Бога за предмет. Стоимость можно повысить, но не понизить для сохранения." }
+                { "GodTearCostDesc", "Слёз Бога за предмет. Стоимость можно повысить, но не понизить для сохранения." },
+                { "CostIncreaseConfirm", "Увеличить стоимость с {0} до {1} Слёз Бога за предмет для слота {2}?\n\nЭто действие необратимо." },
+                { "CostSetConfirm", "Установить стоимость {0} Слёз Бога за предмет для слота {1}?\n\nПосле установки стоимость можно только повысить, но не понизить." }
             }
         },
         {
@@ -66,7 +76,9 @@ internal static class Localization
                 { "BossSkinsName", "Skins de boss" },
                 { "BossSkinsDesc", "Ajouter les skins de boss au shop. Normalement obtenus en battant les boss. Rouvrez la boutique pour appliquer les changements." },
                 { "GodTearCostName", "Coût en Larmes Divines" },
-                { "GodTearCostDesc", "Larmes Divines par objet. Le coût peut être augmenté mais pas diminué par sauvegarde." }
+                { "GodTearCostDesc", "Larmes Divines par objet. Le coût peut être augmenté mais pas diminué par sauvegarde." },
+                { "CostIncreaseConfirm", "Augmenter le coût de {0} à {1} Larmes Divines par objet pour le slot {2} ?\n\nCette action est irréversible." },
+                { "CostSetConfirm", "Définir le coût à {0} Larmes Divines par objet pour le slot {1} ?\n\nLe coût ne pourra qu'être augmenté après cela, pas diminué." }
             }
         },
         {
@@ -77,7 +89,9 @@ internal static class Localization
                 { "BossSkinsName", "Boss-Skins" },
                 { "BossSkinsDesc", "Boss-Anhänger-Skins zum Shop hinzufügen. Werden normalerweise durch Besiegen von Bossen erhalten. Shop erneut öffnen, damit Änderungen wirksam werden." },
                 { "GodTearCostName", "Gottestränen-Kosten" },
-                { "GodTearCostDesc", "Gottestränen pro Gegenstand. Kosten können pro Speicherstand erhöht, aber nicht gesenkt werden." }
+                { "GodTearCostDesc", "Gottestränen pro Gegenstand. Kosten können pro Speicherstand erhöht, aber nicht gesenkt werden." },
+                { "CostIncreaseConfirm", "Kosten von {0} auf {1} Gottestränen pro Gegenstand für Speicherplatz {2} erhöhen?\n\nDies kann nicht rückgängig gemacht werden." },
+                { "CostSetConfirm", "Kosten auf {0} Gottestränen pro Gegenstand für Speicherplatz {1} festlegen?\n\nDanach können die Kosten nur erhöht, nicht gesenkt werden." }
             }
         },
         {
@@ -88,7 +102,9 @@ internal static class Localization
                 { "BossSkinsName", "Skins de jefes" },
                 { "BossSkinsDesc", "Añadir skins de jefes seguidores a la tienda. Normalmente se obtienen al derrotar jefes. Reabre la tienda para aplicar los cambios." },
                 { "GodTearCostName", "Coste en Lágrimas Divinas" },
-                { "GodTearCostDesc", "Lágrimas Divinas por objeto. El coste puede aumentarse pero no reducirse por partida guardada." }
+                { "GodTearCostDesc", "Lágrimas Divinas por objeto. El coste puede aumentarse pero no reducirse por partida guardada." },
+                { "CostIncreaseConfirm", "¿Aumentar el coste de {0} a {1} Lágrimas Divinas por objeto para la ranura {2}?\n\nEsto no se puede revertir." },
+                { "CostSetConfirm", "¿Establecer el coste en {0} Lágrimas Divinas por objeto para la ranura {1}?\n\nDespués de esto, el coste solo puede aumentarse, no reducirse." }
             }
         },
         {
@@ -99,7 +115,9 @@ internal static class Localization
                 { "BossSkinsName", "Skins de chefes" },
                 { "BossSkinsDesc", "Adicionar skins de chefes seguidores à loja. Normalmente obtidas ao derrotar chefes. Reabra a loja para aplicar as alterações." },
                 { "GodTearCostName", "Custo em Lágrimas Divinas" },
-                { "GodTearCostDesc", "Lágrimas Divinas por item. O custo pode ser aumentado, mas não diminuído por save." }
+                { "GodTearCostDesc", "Lágrimas Divinas por item. O custo pode ser aumentado, mas não diminuído por save." },
+                { "CostIncreaseConfirm", "Aumentar o custo de {0} para {1} Lágrimas Divinas por item para o slot {2}?\n\nIsso não pode ser revertido." },
+                { "CostSetConfirm", "Definir o custo em {0} Lágrimas Divinas por item para o slot {1}?\n\nApós isso, o custo só pode ser aumentado, não diminuído." }
             }
         },
         {
@@ -110,7 +128,9 @@ internal static class Localization
                 { "BossSkinsName", "Boss皮肤" },
                 { "BossSkinsDesc", "将Boss追随者皮肤添加到商店。通常通过击败Boss获得。重新打开商店以使更改生效。" },
                 { "GodTearCostName", "神之泪花费" },
-                { "GodTearCostDesc", "每件物品需要的神之泪数量。每个存档只能增加花费，不能减少。" }
+                { "GodTearCostDesc", "每件物品需要的神之泪数量。每个存档只能增加花费，不能减少。" },
+                { "CostIncreaseConfirm", "将存档位{2}的每件物品花费从{0}增加到{1}神之泪？\n\n此操作无法撤销。" },
+                { "CostSetConfirm", "将存档位{1}的每件物品花费设置为{0}神之泪？\n\n设置后只能增加花费，不能减少。" }
             }
         },
         {
@@ -121,7 +141,9 @@ internal static class Localization
                 { "BossSkinsName", "Boss皮膚" },
                 { "BossSkinsDesc", "將Boss追隨者皮膚新增至商店。通常透過擊敗Boss獲得。重新開啟商店以使變更生效。" },
                 { "GodTearCostName", "神之淚花費" },
-                { "GodTearCostDesc", "每件物品需要的神之淚數量。每個存檔只能增加花費，不能減少。" }
+                { "GodTearCostDesc", "每件物品需要的神之淚數量。每個存檔只能增加花費，不能減少。" },
+                { "CostIncreaseConfirm", "將存檔位{2}的每件物品花費從{0}增加到{1}神之淚？\n\n此操作無法撤銷。" },
+                { "CostSetConfirm", "將存檔位{1}的每件物品花費設置為{0}神之淚？\n\n設置後只能增加花費，不能減少。" }
             }
         },
         {
@@ -132,7 +154,9 @@ internal static class Localization
                 { "BossSkinsName", "보스 스킨" },
                 { "BossSkinsDesc", "보스 추종자 스킨을 상점에 추가합니다. 보통 보스를 처치하면 획득합니다. 변경 사항을 적용하려면 상점을 다시 여세요." },
                 { "GodTearCostName", "신의 눈물 비용" },
-                { "GodTearCostDesc", "아이템당 신의 눈물 수. 세이브별로 비용을 올릴 수 있지만 내릴 수 없습니다." }
+                { "GodTearCostDesc", "아이템당 신의 눈물 수. 세이브별로 비용을 올릴 수 있지만 내릴 수 없습니다." },
+                { "CostIncreaseConfirm", "슬롯 {2}의 아이템당 비용을 {0}에서 {1} 신의 눈물로 올리시겠습니까?\n\n이 작업은 되돌릴 수 없습니다." },
+                { "CostSetConfirm", "슬롯 {1}의 아이템당 비용을 {0} 신의 눈물로 설정하시겠습니까?\n\n설정 후에는 비용을 올릴 수만 있고 내릴 수 없습니다." }
             }
         },
         {
@@ -143,7 +167,9 @@ internal static class Localization
                 { "BossSkinsName", "Skin dei boss" },
                 { "BossSkinsDesc", "Aggiunge le skin dei boss seguaci al negozio. Normalmente ottenute sconfiggendo i boss. Riapri il negozio per applicare le modifiche." },
                 { "GodTearCostName", "Costo Lacrime Divine" },
-                { "GodTearCostDesc", "Lacrime Divine per oggetto. Il costo può essere aumentato ma non diminuito per salvataggio." }
+                { "GodTearCostDesc", "Lacrime Divine per oggetto. Il costo può essere aumentato ma non diminuito per salvataggio." },
+                { "CostIncreaseConfirm", "Aumentare il costo da {0} a {1} Lacrime Divine per oggetto per lo slot {2}?\n\nQuesta azione non può essere annullata." },
+                { "CostSetConfirm", "Impostare il costo a {0} Lacrime Divine per oggetto per lo slot {1}?\n\nDopo questa operazione il costo può solo essere aumentato, non diminuito." }
             }
         },
         {
@@ -154,7 +180,9 @@ internal static class Localization
                 { "BossSkinsName", "Baas-skins" },
                 { "BossSkinsDesc", "Voeg baas-volgelingskins toe aan de winkel. Normaal verkregen door bazen te verslaan. Heropen de winkel om wijzigingen toe te passen." },
                 { "GodTearCostName", "Godstraan-kosten" },
-                { "GodTearCostDesc", "Godstranen per item. Kosten kunnen per opslag verhoogd maar niet verlaagd worden." }
+                { "GodTearCostDesc", "Godstranen per item. Kosten kunnen per opslag verhoogd maar niet verlaagd worden." },
+                { "CostIncreaseConfirm", "Kosten verhogen van {0} naar {1} Godstranen per item voor opslagslot {2}?\n\nDit kan niet ongedaan worden gemaakt." },
+                { "CostSetConfirm", "Kosten instellen op {0} Godstranen per item voor opslagslot {1}?\n\nNa instelling kunnen de kosten alleen verhoogd, niet verlaagd worden." }
             }
         },
         {
@@ -165,7 +193,9 @@ internal static class Localization
                 { "BossSkinsName", "Patron Görünümleri" },
                 { "BossSkinsDesc", "Patron takipçi görünümlerini dükkâna ekler. Normalde patronları yenerek elde edilir. Değişikliklerin geçerli olması için dükkânı yeniden açın." },
                 { "GodTearCostName", "Tanrı Gözyaşı Maliyeti" },
-                { "GodTearCostDesc", "Eşya başına Tanrı Gözyaşı. Maliyet kayıt başına artırılabilir ama azaltılamaz." }
+                { "GodTearCostDesc", "Eşya başına Tanrı Gözyaşı. Maliyet kayıt başına artırılabilir ama azaltılamaz." },
+                { "CostIncreaseConfirm", "Kayıt yuvası {2} için eşya başına maliyeti {0}'den {1} Tanrı Gözyaşı'na yükseltilsin mi?\n\nBu işlem geri alınamaz." },
+                { "CostSetConfirm", "Kayıt yuvası {1} için eşya başına maliyet {0} Tanrı Gözyaşı olarak ayarlansın mı?\n\nBundan sonra maliyet yalnızca artırılabilir, azaltılamaz." }
             }
         },
         {
@@ -176,7 +206,9 @@ internal static class Localization
                 { "BossSkinsName", "Skins de boss" },
                 { "BossSkinsDesc", "Ajouter les skins de boss au shop. Normalement obtenus en battant les boss. Rouvrez la boutique pour appliquer les changements." },
                 { "GodTearCostName", "Coût en Larmes Divines" },
-                { "GodTearCostDesc", "Larmes Divines par objet. Le coût peut être augmenté mais pas diminué par sauvegarde." }
+                { "GodTearCostDesc", "Larmes Divines par objet. Le coût peut être augmenté mais pas diminué par sauvegarde." },
+                { "CostIncreaseConfirm", "Augmenter le coût de {0} à {1} Larmes Divines par objet pour le slot {2} ?\n\nCette action est irréversible." },
+                { "CostSetConfirm", "Définir le coût à {0} Larmes Divines par objet pour le slot {1} ?\n\nLe coût ne pourra qu'être augmenté après cela, pas diminué." }
             }
         },
         {
@@ -187,7 +219,9 @@ internal static class Localization
                 { "BossSkinsName", "مظاهر الزعماء" },
                 { "BossSkinsDesc", "إضافة مظاهر أتباع الزعماء إلى المتجر. عادةً يتم الحصول عليها بهزيمة الزعماء. أعد فتح المتجر لتطبيق التغييرات." },
                 { "GodTearCostName", "تكلفة دموع الإله" },
-                { "GodTearCostDesc", "دموع الإله لكل عنصر. يمكن زيادة التكلفة لكن لا يمكن تقليلها لكل حفظ." }
+                { "GodTearCostDesc", "دموع الإله لكل عنصر. يمكن زيادة التكلفة لكن لا يمكن تقليلها لكل حفظ." },
+                { "CostIncreaseConfirm", "زيادة التكلفة من {0} إلى {1} دموع الإله لكل عنصر لفتحة الحفظ {2}؟\n\nلا يمكن التراجع عن هذا الإجراء." },
+                { "CostSetConfirm", "تعيين التكلفة إلى {0} دموع الإله لكل عنصر لفتحة الحفظ {1}؟\n\nبعد ذلك يمكن فقط زيادة التكلفة وليس تقليلها." }
             }
         }
     };

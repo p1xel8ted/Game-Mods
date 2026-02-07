@@ -1,8 +1,3 @@
-#if DEBUG
-using UnityEngine.Windows;
-using Input = UnityEngine.Input;
-#endif
-
 namespace MysticAssistantRedux;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -93,8 +88,8 @@ public class Plugin : BaseUnityPlugin
         GodTearCost.Value = revertTo;
 
         var message = locked > 0
-            ? $"Increase cost from {locked} to {newVal} God Tears per item for save slot {SaveAndLoad.SAVE_SLOT}?\n\nThis cannot be reversed."
-            : $"Set cost to {newVal} God Tears per item for save slot {SaveAndLoad.SAVE_SLOT}?\n\nCost can only be increased after this, not decreased.";
+            ? Localization.CostIncreaseConfirm(locked, newVal, SaveAndLoad.SAVE_SLOT)
+            : Localization.CostSetConfirm(newVal, SaveAndLoad.SAVE_SLOT);
 
         _popupManager.ShowConfirmation(PluginName, message, () =>
         {
@@ -157,76 +152,5 @@ public class Plugin : BaseUnityPlugin
         UnlockedFleeces.Clear();
     }
 
-    #if DEBUG
-    private bool _decoProbeRan;
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.F5))
-        {
-            WorshipperData.Instance?.ExportCSV();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F6) && !_decoProbeRan)
-        {
-            _decoProbeRan = true;
-            ProbeAppleDecorations();
-        }
-    }
-
-    private void ProbeAppleDecorations()
-    {
-        Log.LogInfo("[AppleDecoProbe] Starting probe of Apple decoration addressables...");
-        foreach (var type in ExclusiveContent.AppleDecorations)
-        {
-            var info = StructuresData.GetInfoByType(type, 0);
-            var path = info.PrefabPath;
-            if (!path.Contains("Assets"))
-            {
-                path = $"Assets/{path}.prefab";
-            }
-
-            var capturedType = type;
-            var capturedPath = path;
-
-            UnityEngine.AddressableAssets.Addressables.LoadResourceLocationsAsync(path).Completed += locHandle =>
-            {
-                var locs = locHandle.Result;
-                Log.LogInfo($"[AppleDecoProbe] {capturedType}: path='{capturedPath}', locations={locs?.Count ?? 0}");
-
-                if (locs == null || locs.Count == 0)
-                {
-                    Log.LogError($"[AppleDecoProbe] {capturedType}: NO LOCATIONS FOUND — key not in catalog");
-                    return;
-                }
-
-                foreach (var loc in locs)
-                {
-                    Log.LogInfo($"[AppleDecoProbe]   Location: InternalId={loc.InternalId}, Provider={loc.ProviderId}, Type={loc.ResourceType}");
-                    if (loc.Dependencies != null)
-                    {
-                        foreach (var dep in loc.Dependencies)
-                        {
-                            Log.LogInfo($"[AppleDecoProbe]     Dep: InternalId={dep.InternalId}, Provider={dep.ProviderId}");
-                        }
-                    }
-                }
-
-                UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(capturedPath).Completed += assetHandle =>
-                {
-                    if (assetHandle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded && assetHandle.Result != null)
-                    {
-                        Log.LogInfo($"[AppleDecoProbe] {capturedType}: LOADED OK — name='{assetHandle.Result.name}', components={assetHandle.Result.GetComponents<Component>().Length}");
-                        UnityEngine.AddressableAssets.Addressables.Release(assetHandle);
-                    }
-                    else
-                    {
-                        Log.LogError($"[AppleDecoProbe] {capturedType}: LOAD FAILED — {assetHandle.OperationException?.Message}");
-                    }
-                };
-            };
-        }
-    }
-    #endif
 }
         
