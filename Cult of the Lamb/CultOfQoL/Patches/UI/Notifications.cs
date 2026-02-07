@@ -6,6 +6,28 @@ namespace CultOfQoL.Patches.UI;
 public static class Notifications
 {
     private static readonly HashSet<int> StructuresWithNoFuel = [];
+
+    static Notifications()
+    {
+        SaveAndLoad.OnLoadComplete += OnLoadComplete;
+    }
+
+    private static void OnLoadComplete()
+    {
+        if (!Plugin.SuppressNotificationsOnLoad.Value) return;
+
+        Plugin.WriteLog("[Notifications] Suppressing notifications on load");
+        NotificationCentre.NotificationsEnabled = false;
+        GameManager.GetInstance().StartCoroutine(ReEnableNotificationsAfterDelay());
+    }
+
+    private static IEnumerator ReEnableNotificationsAfterDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        NotificationCentre.Instance?.ClearNotifications();
+        NotificationCentre.NotificationsEnabled = true;
+        Plugin.WriteLog("[Notifications] Re-enabled notifications after load suppression");
+    }
     private static readonly Dictionary<string, float> RecentNotifications = new();
     private const float NotificationCooldown = 10f;
 

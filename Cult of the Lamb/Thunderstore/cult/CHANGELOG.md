@@ -7,6 +7,10 @@
 * Added "Rot Fertilizer Decay" option - rot fertilizer ground warming now expires after a configurable number of days (1-30, default 5) instead of lasting forever. Disabled by default.
 * Added "Mass Action Costs" section with three optional per-follower costs for mass actions: gold per follower affected, game time per follower, and faith reduction percentage for mass Bless/Inspire. All default to 0 (free). The original single interaction is never affected.
 
+* Added "Disable Soul Camera Shake" option to stop the camera shaking when devotion orbs hit the shrine during worship.
+* Added "Suppress Notifications On Load" option to prevent the flood of notifications when loading a save.
+* Added "Refinery: Poop to Rot Fertilizer" option - refine 10 Poop into 1 Rot Fertilizer at the refinery.
+
 **Fixes:**
 * Fixed "Collect All God Tears At Once" collecting double the tears when only one was available.
 * Fixed mass level up not properly incrementing follower levels (followers were stuck needing a sermon to level up).

@@ -8,6 +8,7 @@
 [*][size=3]Toggle main menu dark mode glitch effect[/size]
 [*][size=3]Hide New Game button when saves exist[/size]
 [*][size=3]Hide all notifications (with option to allow critical ones like deaths)[/size]
+[*][size=3]Suppress notification flood on save load[/size]
 [/list]
 
 [size=3][b]Saves[/b][/size]
@@ -147,11 +148,13 @@
 [*][size=3]Customise trigger amount and range[/size]
 [*][size=3]Fast collection speed from shrines, beds, and chests[/size]
 [*][size=3]Instant shrine devotion collection (single tap instead of holding)[/size]
+[*][size=3]Disable camera shake from devotion orbs and souls[/size]
 [/list]
 
 [size=3][b]Crafting Stations[/b][/size]
 [list]
 [*][size=3]Halve refinery material requirements[/size]
+[*][size=3]Refine 10 Poop into 1 Rot Fertilizer (new refinery recipe)[/size]
 [*][size=3]Mass fill refinery, cooking fire, kitchen, and pub queues with one click[/size]
 [/list]
 

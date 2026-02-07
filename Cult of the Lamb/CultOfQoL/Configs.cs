@@ -58,6 +58,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> ReverseGoldenFleeceDamageChange { get; private set; }
    // internal static ConfigEntry<bool> IncreaseGoldenFleeceDamageRate { get; private set; }
     internal static ConfigEntry<bool> AdjustRefineryRequirements { get; private set; }
+    internal static ConfigEntry<bool> RefineryPoopToRotPoop { get; private set; }
     internal static ConfigEntry<bool> RefineryMassFill { get; private set; }
     internal static ConfigEntry<bool> CookingFireMassFill { get; private set; }
     internal static ConfigEntry<bool> KitchenMassFill { get; private set; }
@@ -96,6 +97,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> HideHealthyFromHealingBay { get; private set; }
     internal static ConfigEntry<bool> DisableAllNotifications { get; private set; }
     internal static ConfigEntry<bool> AllowCriticalNotifications { get; private set; }
+    internal static ConfigEntry<bool> SuppressNotificationsOnLoad { get; private set; }
     internal static ConfigEntry<bool> NotifyOfScarecrowTraps { get; private set; }
     internal static ConfigEntry<bool> NotifyOfNoFuel { get; private set; }
     internal static ConfigEntry<bool> NotifyOfBedCollapse { get; private set; }
@@ -194,6 +196,7 @@ public partial class Plugin
     // TODO: Re-enable after testing
     // internal static ConfigEntry<bool> MassNurture { get; private set; }
     internal static ConfigEntry<bool> CollectShrineDevotionInstantly { get; private set; }
+    internal static ConfigEntry<bool> DisableSoulCameraShake { get; private set; }
 
     internal static WriteOnce<float> RunSpeed { get; } = new();
     internal static WriteOnce<float> DodgeSpeed { get; } = new();

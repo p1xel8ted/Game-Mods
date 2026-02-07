@@ -182,6 +182,7 @@ public partial class Plugin : BaseUnityPlugin
         FastCollecting = _configInstance.Bind(CollectionSection, "Speed Up Collection", false, new ConfigDescription("Increases the rate you can collect from the shrines, and other structures.", null, new ConfigurationManagerAttributes { DispName = "Speed Up Collection**", Order = 2 }));
         FastCollecting.SettingChanged += (_, _) => ShowRestartMessage();
         CollectShrineDevotionInstantly = _configInstance.Bind(CollectionSection, "Collect Shrine Devotion Instantly", false, new ConfigDescription("When collecting devotion from the shrine, collect all instantly instead of holding to collect.", null, new ConfigurationManagerAttributes { Order = 1 }));
+        DisableSoulCameraShake = _configInstance.Bind(CollectionSection, "Disable Soul Camera Shake", false, new ConfigDescription("Disables the camera shake caused by devotion orbs and souls hitting the shrine. Does not affect combat camera shake.", null, new ConfigurationManagerAttributes { Order = 0 }));
 
         // ── Followers ──
         PrioritizeRequestedFollowers = _configInstance.Bind(FollowersSection, "Prioritize Requested Followers", false, new ConfigDescription("Followers with active requests (rituals, missions, mating, etc.) appear at the top of selection lists.", null, new ConfigurationManagerAttributes
@@ -486,6 +487,10 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 9, DispName = "    └ Allow Critical Notifications"
         }));
+        SuppressNotificationsOnLoad = _configInstance.Bind(NotificationsSection, "Suppress Notifications On Load", false, new ConfigDescription("Suppress individual notifications for a few seconds after loading a save, preventing the flood of status updates. Dynamic status indicators (starving, sick, etc.) are not affected.", null, new ConfigurationManagerAttributes
+        {
+            Order = 8
+        }));
         NotifyOfScarecrowTraps = _configInstance.Bind(NotificationsSection, "Notify of Scarecrow Traps", false, new ConfigDescription("Display a notification when the farm scarecrows have caught a trap!", null, new ConfigurationManagerAttributes
         {
             Order = 5
@@ -606,6 +611,7 @@ public partial class Plugin : BaseUnityPlugin
         RotburnShrineFuelWeight = _configInstance.Bind(StructureSection, "Rotburn Fuel Weight", 13, new ConfigDescription("Fuel value when adding Rotburn to shrine. Default matches LOG (13). Vanilla MAGMA_STONE is 14700.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 29, ShowRangeAsPercent = false, DispName = "    └ Rotburn Fuel Weight" }));
         EnableShrineWarmth = _configInstance.Bind(StructureSection, "Shrine Provides Warmth", true, new ConfigDescription("When the shrine brazier is fully fueled, it provides warmth during winter (20% contribution).", null, new ConfigurationManagerAttributes { Order = 28 }));
 
+        RefineryPoopToRotPoop = _configInstance.Bind(StructureSection, "Refinery: Poop to Rot Fertilizer", false, new ConfigDescription("Adds a refinery recipe to convert 10 Poop into 1 Rot Fertilizer (Poop Rotstone).", null, new ConfigurationManagerAttributes { Order = 28 }));
         AdjustRefineryRequirements = _configInstance.Bind(StructureSection, "Adjust Refinery Requirements", false, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 27 }));
         AdjustRefineryRequirements.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AdjustRefineryRequirements);
         RefineryMassFill = _configInstance.Bind(StructureSection, "Refinery Mass Fill", false, new ConfigDescription("When adding an item to the refinery queue, automatically fill all available slots with that item.", null, new ConfigurationManagerAttributes { Order = 26 }));

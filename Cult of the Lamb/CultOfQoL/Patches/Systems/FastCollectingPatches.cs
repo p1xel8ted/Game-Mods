@@ -912,4 +912,57 @@ public static class FastCollectingPatches
     }
 
     #endregion
+
+    #region Soul Camera Shake
+
+    /// <summary>
+    /// Conditionally suppresses camera shake from SoulCustomTarget.CollectMe() based on config.
+    /// Called by the transpiler in place of CameraManager.ShakeCameraForDuration.
+    /// </summary>
+    private static void ConditionalSoulShake(CameraManager instance, float min, float max, float duration, bool stackShakes)
+    {
+        if (!Plugin.DisableSoulCameraShake.Value)
+        {
+            instance.ShakeCameraForDuration(min, max, duration, stackShakes);
+        }
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(SoulCustomTarget), nameof(SoulCustomTarget.CollectMe))]
+    private static IEnumerable<CodeInstruction> SoulCustomTarget_CollectMe(IEnumerable<CodeInstruction> instructions)
+    {
+        var original = instructions.ToList();
+        try
+        {
+            var codes = new List<CodeInstruction>(original);
+            var shakeMethod = AccessTools.Method(typeof(CameraManager), nameof(CameraManager.ShakeCameraForDuration),
+                [typeof(float), typeof(float), typeof(float), typeof(bool)]);
+            var conditionalMethod = AccessTools.Method(typeof(FastCollectingPatches), nameof(ConditionalSoulShake));
+            var found = false;
+
+            for (var i = 0; i < codes.Count; i++)
+            {
+                if (!codes[i].Calls(shakeMethod)) continue;
+                codes[i].operand = conditionalMethod;
+                found = true;
+                break;
+            }
+
+            if (!found)
+            {
+                Plugin.Log.LogWarning("[Transpiler] SoulCustomTarget.CollectMe: Failed to find ShakeCameraForDuration call.");
+                return original;
+            }
+
+            Plugin.Log.LogInfo("[Transpiler] SoulCustomTarget.CollectMe: Redirected ShakeCameraForDuration to ConditionalSoulShake.");
+            return codes;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[Transpiler] SoulCustomTarget.CollectMe: {ex.Message}");
+            return original;
+        }
+    }
+
+    #endregion
 }

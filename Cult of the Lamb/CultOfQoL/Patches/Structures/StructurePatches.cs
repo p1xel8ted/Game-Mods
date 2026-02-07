@@ -444,14 +444,30 @@ internal static class StructurePatches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Structures_Refinery), nameof(Structures_Refinery.GetCost), typeof(InventoryItem.ITEM_TYPE), typeof(int))]
-    public static void Structures_Refinery_GetCost(ref List<StructuresData.ItemCost> __result)
+    public static void Structures_Refinery_GetCost(InventoryItem.ITEM_TYPE Item, ref List<StructuresData.ItemCost> __result)
     {
+        // Inject poop → rot poop recipe
+        if (Plugin.RefineryPoopToRotPoop.Value && Item == InventoryItem.ITEM_TYPE.POOP_ROTSTONE)
+        {
+            __result = [new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.POOP, 10)];
+        }
+
         // Performance optimization: Use cached config value
         if (!ConfigCache.GetCachedValue(ConfigCache.Keys.AdjustRefineryRequirements, () => Plugin.AdjustRefineryRequirements.Value)) return;
         foreach (var item in __result)
         {
             item.CostValue = Mathf.CeilToInt(item.CostValue / 2f);
         }
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(UIRefineryMenuController), nameof(UIRefineryMenuController.OnShowStarted))]
+    public static void UIRefineryMenuController_OnShowStarted_Prefix(UIRefineryMenuController __instance)
+    {
+        if (!Plugin.RefineryPoopToRotPoop.Value) return;
+        if (__instance._refinableResources.Contains(InventoryItem.ITEM_TYPE.POOP_ROTSTONE)) return;
+        __instance._refinableResources = [.. __instance._refinableResources, InventoryItem.ITEM_TYPE.POOP_ROTSTONE];
+        Plugin.WriteLog("[Refinery] Added POOP_ROTSTONE to refinable resources list");
     }
 
     // Flag to prevent infinite recursion when mass filling refinery
