@@ -218,3 +218,52 @@ Originally used a `DrawLockCostButton` custom drawer with explicit "Lock at X" /
 | `CultOfQoL/Plugin.cs` | Added `PopupManager.Title = PluginName` |
 | `CultOfQoL/CultOfQoL.csproj` | Added shared PopupManager link |
 | `MysticAssistantRedux.csproj` | Added shared PopupManager link |
+
+---
+
+## Fix: God Tear Cost Slider Broken on Title Screen
+
+### Status: COMPLETE
+
+**User Report:** Slider can't be moved past 1, no popup appears.
+
+### Root Cause
+
+`OnGodTearCostChanged` checked `!SaveAndLoad.Loaded` as its first guard. On the title screen (before loading a save), `Loaded` is `false`, so the handler silently reset the value to 1 and returned before reaching any popup code. No feedback was given to the user.
+
+Secondary bug: In the confirm callback, `GodTearCost.Value = newVal` ran before `PlayerPrefs.SetInt(key, newVal)`, causing the re-entrant `SettingChanged` handler to see `locked = 0` and revert + show another popup (infinite popup loop).
+
+### Fixes Applied
+
+1. **Re-entrancy guard** (`_changingCost` static bool) — prevents cascading `SettingChanged` events. Set in both the outer handler and the confirm callback.
+2. **Title screen feedback** — `!SaveAndLoad.Loaded` still reverts to 1, but now shows a localized popup: "Please load a save before changing the God Tear cost." (`CostRequiresSave` in 15 languages)
+3. **Callback ordering** — `PlayerPrefs.SetInt` now runs before `GodTearCost.Value = newVal` so the re-entrant handler sees the correct locked value.
+
+### Files Modified
+
+| File | Changes |
+|------|---------|
+| `Plugin.cs` | Added `_changingCost` guard, title-screen popup, callback reorder |
+| `Localization.cs` | Added `CostRequiresSave` property + string in all 15 languages |
+
+### Also: CLAUDE.md Cleanup
+
+Removed stale ConfigurationManagerEnhanced (CME) section and dependency reference from `CLAUDE.md`. CME no longer exists; standard BepInEx Configuration Manager is used.
+
+---
+
+## Documentation Updates (Later Session)
+
+### Cross-Mod Links
+- Added Mystic Assistant Redux (self) and Quick Menus to "My Other Mods" in README.md and nexusmods_description.txt
+
+### Installation Instructions
+- Added BepInEx Configuration Manager to installation sections in both README.md and nexusmods_description.txt (was missing)
+
+### Thunderstore Manifest
+- Added `p1xel8ted-BepInEx_Configuration_Manager-18.4.1` dependency
+
+### Files Modified
+- `Thunderstore/mysticassistantredux/README.md` — added MAR + QM to My Other Mods, added CM to installation
+- `Thunderstore/mysticassistantredux/nexusmods_description.txt` — same
+- `Thunderstore/mysticassistantredux/manifest.json` — added CM dependency

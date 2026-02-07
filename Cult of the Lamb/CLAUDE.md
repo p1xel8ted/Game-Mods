@@ -119,7 +119,7 @@ Thunderstore directory names per mod: `cult` (CultOfQoL), `mysticassistantredux`
 
 ## Distribution
 
-Thunderstore packages in `Thunderstore/<modname>/` containing manifest.json, icon.png, README.md, CHANGELOG.md, and the compiled plugin DLL. The CultOfQoL mod depends on `BepInEx-BepInExPack_CultOfTheLamb-5.4.2101` and `p1xel8ted-ConfigurationManagerEnhanced-1.0.0`.
+Thunderstore packages in `Thunderstore/<modname>/` containing manifest.json, icon.png, README.md, CHANGELOG.md, and the compiled plugin DLL. The CultOfQoL mod depends on `BepInEx-BepInExPack_CultOfTheLamb-5.4.2101`.
 
 ### Documentation Files
 
@@ -129,6 +129,3 @@ When updating "readme" or documentation, always update BOTH files:
 
 Keep content in sync between both files, adjusting only for format differences (Markdown vs BBCode).
 
-### ConfigurationManagerEnhanced (CME)
-
-Source code for the custom Configuration Manager fork is in `libs/cme_code/`. This is a modified version with enhanced features for the mods in this solution.

@@ -34,6 +34,7 @@ public class Plugin : BaseUnityPlugin
     internal static bool ShowOverbuyWarning { get; set; }
 
     private static PopupManager _popupManager;
+    private static bool _changingCost;
 
     private void Awake()
     {
@@ -62,42 +63,64 @@ public class Plugin : BaseUnityPlugin
 
     private static void OnGodTearCostChanged(object sender, EventArgs e)
     {
-        var newVal = GodTearCost.Value;
-
-        if (!SaveAndLoad.Loaded)
-        {
-            GodTearCost.Value = 1;
-            return;
-        }
-
-        var key = GetCostKey(SaveAndLoad.SAVE_SLOT);
-        var locked = PlayerPrefs.HasKey(key) ? PlayerPrefs.GetInt(key) : 0;
-
-        if (newVal <= locked)
-        {
-            GodTearCost.Value = locked;
-            return;
-        }
-
-        if (newVal <= 1 && locked == 0)
+        if (_changingCost)
         {
             return;
         }
 
-        var revertTo = locked > 0 ? locked : 1;
-        GodTearCost.Value = revertTo;
-
-        var message = locked > 0
-            ? Localization.CostIncreaseConfirm(locked, newVal, SaveAndLoad.SAVE_SLOT)
-            : Localization.CostSetConfirm(newVal, SaveAndLoad.SAVE_SLOT);
-
-        _popupManager.ShowConfirmation(PluginName, message, () =>
+        _changingCost = true;
+        try
         {
-            GodTearCost.Value = newVal;
-            PlayerPrefs.SetInt(key, newVal);
-            PlayerPrefs.Save();
-            Log.LogInfo($"[MysticShop] Cost set to {newVal} for slot {SaveAndLoad.SAVE_SLOT}");
-        });
+            var newVal = GodTearCost.Value;
+
+            if (!SaveAndLoad.Loaded)
+            {
+                GodTearCost.Value = 1;
+                _popupManager.ShowPopupDlg(PluginName, Localization.CostRequiresSave, false);
+                return;
+            }
+
+            var key = GetCostKey(SaveAndLoad.SAVE_SLOT);
+            var locked = PlayerPrefs.HasKey(key) ? PlayerPrefs.GetInt(key) : 0;
+
+            if (newVal <= locked)
+            {
+                GodTearCost.Value = locked;
+                return;
+            }
+
+            if (newVal <= 1 && locked == 0)
+            {
+                return;
+            }
+
+            var revertTo = locked > 0 ? locked : 1;
+            GodTearCost.Value = revertTo;
+
+            var message = locked > 0
+                ? Localization.CostIncreaseConfirm(locked, newVal, SaveAndLoad.SAVE_SLOT)
+                : Localization.CostSetConfirm(newVal, SaveAndLoad.SAVE_SLOT);
+
+            _popupManager.ShowConfirmation(PluginName, message, () =>
+            {
+                _changingCost = true;
+                try
+                {
+                    PlayerPrefs.SetInt(key, newVal);
+                    PlayerPrefs.Save();
+                    GodTearCost.Value = newVal;
+                    Log.LogInfo($"[MysticShop] Cost set to {newVal} for slot {SaveAndLoad.SAVE_SLOT}");
+                }
+                finally
+                {
+                    _changingCost = false;
+                }
+            });
+        }
+        finally
+        {
+            _changingCost = false;
+        }
     }
 
     /// <summary>
