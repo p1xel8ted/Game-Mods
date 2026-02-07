@@ -381,6 +381,66 @@ internal static class StructurePatches
         return Mathf.Ceil(value / 32f) * 32f;
     }
 
+    /// <summary>
+    /// Excludes grass from the "Deposit All Seeds" action on seed silos.
+    /// Grass is included in InventoryItem.AllSeeds, but players often want to keep it
+    /// separate since it's commonly obtained and can overwhelm crop seed storage.
+    ///
+    /// This transpiler replaces calls to InventoryItem.AllSeeds with our filtered version
+    /// that optionally excludes grass based on the config setting.
+    /// </summary>
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(Interaction_SiloSeeder), nameof(Interaction_SiloSeeder.OnSecondaryInteract))]
+    public static IEnumerable<CodeInstruction> Interaction_SiloSeeder_OnSecondaryInteract_Transpiler(
+        IEnumerable<CodeInstruction> instructions)
+    {
+        var allSeedsGetter = AccessTools.PropertyGetter(typeof(InventoryItem), nameof(InventoryItem.AllSeeds));
+        var filteredSeedsMethod = AccessTools.Method(typeof(StructurePatches), nameof(GetFilteredSeeds));
+
+        foreach (var instruction in instructions)
+        {
+            if (instruction.Calls(allSeedsGetter))
+            {
+                // Replace InventoryItem.AllSeeds with our filtered version
+                yield return new CodeInstruction(OpCodes.Call, filteredSeedsMethod);
+            }
+            else
+            {
+                yield return instruction;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns AllSeeds list, optionally filtered to exclude grass.
+    /// </summary>
+    public static List<InventoryItem.ITEM_TYPE> GetFilteredSeeds()
+    {
+        var seeds = InventoryItem.AllSeeds;
+        if (!Plugin.ExcludeGrassFromSeedDeposit.Value)
+        {
+            return seeds;
+        }
+
+        seeds.Remove(InventoryItem.ITEM_TYPE.GRASS);
+        return seeds;
+    }
+
+    /// <summary>
+    /// Defensive fix for vanilla bug: QueuedRefineryVariants can desync from QueuedResources,
+    /// causing ArgumentOutOfRangeException in RefineryDeposit. This ensures they stay in sync.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Structures_Refinery), nameof(Structures_Refinery.RefineryDeposit))]
+    public static void Structures_Refinery_RefineryDeposit_Prefix(Structures_Refinery __instance)
+    {
+        // Ensure QueuedRefineryVariants has at least as many elements as QueuedResources
+        while (__instance.Data.QueuedRefineryVariants.Count < __instance.Data.QueuedResources.Count)
+        {
+            __instance.Data.QueuedRefineryVariants.Add(0);
+            Plugin.WriteLog("[Refinery] Added missing variant entry to prevent desync crash");
+        }
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Structures_Refinery), nameof(Structures_Refinery.GetCost), typeof(InventoryItem.ITEM_TYPE), typeof(int))]

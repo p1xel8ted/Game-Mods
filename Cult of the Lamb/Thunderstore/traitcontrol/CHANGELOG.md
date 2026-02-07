@@ -1,4 +1,4 @@
-### 0.1.5 - 03/02/2026
+### 0.1.5 - 04/02/2026
 
 **New Features:**
 * Added "Protect Trait Count on Reroll" option - ensures followers don't lose traits when rerolling via reeducation or reindoctrination.
@@ -8,6 +8,8 @@
 * Improved Configuration Manager UI formatting with visual section separators.
 
 **Fixes:**
+* Fixed multiple guaranteed traits not working - enabling both "Guarantee Immortal" and "Guarantee Don't Starve" now correctly gives both traits instead of only Immortal.
+* Fixed negative traits still appearing when "Enable Trait Replacement" is on - trait selection now filters out all negative traits upfront instead of replacing them afterward.
 * Fixed game freezing when using Re-educate or Re-indoctrinate with most trait weights set to zero.
 * Fixed doctrine-granted traits (Fertility, Allegiance, etc.) appearing as individual follower traits when they already apply cult-wide.
 * Fixed Re-educate causing sin/pleasure accumulation on normal followers when used for trait rerolls.

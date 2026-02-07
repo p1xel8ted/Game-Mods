@@ -12,7 +12,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.4.0";
+    private const string PluginVer = "2.4.1";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
 
@@ -205,12 +205,12 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 4
         }));
-        MakeOldFollowersWork = _configInstance.Bind(FollowersSection, "Make Old Followers Work", false, new ConfigDescription("Enable the elderly to work.", null, new ConfigurationManagerAttributes
+        ElderWorkMode = _configInstance.Bind(FollowersSection, "Elder Work Mode", CultOfQoL.ElderWorkMode.Disabled, new ConfigDescription("Disabled: Elders don't work (vanilla). All Work: Elders perform all tasks. Light Work Only: Elders only do light tasks like worship, cooking, brewing, and research.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Make Old Followers Work**",
+            DispName = "Elder Work Mode**",
             Order = 3
         }));
-        MakeOldFollowersWork.SettingChanged += (_, _) => ShowRestartMessage();
+        ElderWorkMode.SettingChanged += (_, _) => ShowRestartMessage();
         MinRangeLifeExpectancy = _configInstance.Bind(
             FollowersSection,
             "Minimum Range Life Expectancy", 40,
@@ -355,6 +355,10 @@ public partial class Plugin : BaseUnityPlugin
         }));
 
         // ── Mass Follower ──
+        MassNotificationThreshold = _configInstance.Bind(MassFollowerSection, "Mass Notification Threshold", 3, new ConfigDescription("When a mass action affects more than this many followers, show a single summary notification instead of one per follower. Set to 0 to always show a summary.", new AcceptableValueRange<int>(0, 50), new ConfigurationManagerAttributes
+        {
+            Order = 14
+        }));
         MassBribe = _configInstance.Bind(MassFollowerSection, "Mass Bribe", false, new ConfigDescription("When bribing a follower, all followers are bribed at once.", null, new ConfigurationManagerAttributes
         {
             DispName = "Mass Bribe**", Order = 13
@@ -375,48 +379,53 @@ public partial class Plugin : BaseUnityPlugin
             DispName = "Mass Intimidate**", Order = 10
         }));
         MassIntimidate.SettingChanged += (_, _) => ShowRestartMessage();
+        MassIntimidateScareAll = _configInstance.Bind(MassFollowerSection, "Mass Intimidate Scare All", false, new ConfigDescription("When Mass Intimidate is enabled, apply the 5% Scared trait roll to all intimidated followers instead of only the original.", null, new ConfigurationManagerAttributes
+        {
+            Order = 9, DispName = "    └ Mass Intimidate Scare All"
+        }));
+        MassIntimidateScareAll.SettingChanged += (_, _) => ShowRestartMessage();
         MassInspire = _configInstance.Bind(MassFollowerSection, "Mass Inspire", false, new ConfigDescription("When inspiring a follower, all followers are inspired at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Inspire**", Order = 9
+            DispName = "Mass Inspire**", Order = 8
         }));
         MassInspire.SettingChanged += (_, _) => ShowRestartMessage();
         MassRomance = _configInstance.Bind(MassFollowerSection, "Mass Romance", false, new ConfigDescription("When romancing a follower, all followers are romanced at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Romance**", Order = 8
+            DispName = "Mass Romance**", Order = 7
         }));
         MassRomance.SettingChanged += (_, _) => ShowRestartMessage();
         MassBully = _configInstance.Bind(MassFollowerSection, "Mass Bully", false, new ConfigDescription("When bullying a follower, all followers are bullied at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Bully**", Order = 7
+            DispName = "Mass Bully**", Order = 6
         }));
         MassBully.SettingChanged += (_, _) => ShowRestartMessage();
         MassReassure = _configInstance.Bind(MassFollowerSection, "Mass Reassure", false, new ConfigDescription("When reassuring a follower, all followers are reassured at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Reassure**", Order = 6
+            DispName = "Mass Reassure**", Order = 5
         }));
         MassReassure.SettingChanged += (_, _) => ShowRestartMessage();
         MassReeducate = _configInstance.Bind(MassFollowerSection, "Mass Reeducate", false, new ConfigDescription("When reeducating a follower, all followers are reeducated at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Reeducate**", Order = 5
+            DispName = "Mass Reeducate**", Order = 4
         }));
         MassReeducate.SettingChanged += (_, _) => ShowRestartMessage();
         MassLevelUp = _configInstance.Bind(MassFollowerSection, "Mass Level Up", false, new ConfigDescription("When leveling up a follower, all eligible followers are leveled up at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Level Up**", Order = 4
+            DispName = "Mass Level Up**", Order = 3
         }));
         MassLevelUp.SettingChanged += (_, _) => ShowRestartMessage();
         MassLevelUpInstantSouls = _configInstance.Bind(MassFollowerSection, "Mass Level Up Instant Souls", true, new ConfigDescription("Instantly collect souls during mass level up instead of having them fly to you.", null, new ConfigurationManagerAttributes
         {
-            Order = 3, DispName = "    └ Mass Level Up Instant Souls"
+            Order = 2, DispName = "    └ Mass Level Up Instant Souls"
         }));
         MassPetFollower = _configInstance.Bind(MassFollowerSection, "Mass Pet Follower", false, new ConfigDescription("When petting any follower, all followers are petted at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Pet Follower**", Order = 2
+            DispName = "Mass Pet Follower**", Order = 1
         }));
         MassPetFollower.SettingChanged += (_, _) => ShowRestartMessage();
         MassSinExtract = _configInstance.Bind(MassFollowerSection, "Mass Sin Extract", false, new ConfigDescription("When extracting sin from a follower, all eligible followers have their sin extracted at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Sin Extract**", Order = 1
+            DispName = "Mass Sin Extract**", Order = 0
         }));
         MassSinExtract.SettingChanged += (_, _) => ShowRestartMessage();
 
@@ -577,6 +586,7 @@ public partial class Plugin : BaseUnityPlugin
         AddExhaustedToHealingBay = _configInstance.Bind(StructureSection, "Add Exhausted To Healing Bay", false, new ConfigDescription("Allows you to select exhausted followers for rest and relaxation in the healing bays.", null, new ConfigurationManagerAttributes { Order = 19 }));
         HideHealthyFromHealingBay = _configInstance.Bind(StructureSection, "Hide Healthy From Healing Bay", false, new ConfigDescription("Hides followers that don't need healing from the healing bay selection menu.", null, new ConfigurationManagerAttributes { Order = 18 }));
         OnlyShowDissenters = _configInstance.Bind(StructureSection, "Only Show Dissenters In Prison Menu", false, new ConfigDescription("Only show dissenting followers when interacting with the prison.", null, new ConfigurationManagerAttributes { Order = 17 }));
+        ExcludeGrassFromSeedDeposit = _configInstance.Bind(StructureSection, "Exclude Grass From Seed Deposit", false, new ConfigDescription("When using 'Deposit All Seeds' on a seed silo, grass will not be deposited.", null, new ConfigurationManagerAttributes { Order = 16 }));
         TurnOffSpeakersAtNight = _configInstance.Bind(StructureSection, "Turn Off Speakers At Night", false, new ConfigDescription("Turns the speakers off, and stops fuel consumption at night time.", null, new ConfigurationManagerAttributes { Order = 14 }));
         TurnOffSpeakersAtNight.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.TurnOffSpeakersAtNight);
         DisablePropagandaSpeakerAudio = _configInstance.Bind(StructureSection, "Mute Propaganda Speakers", false, new ConfigDescription("Silences the audio from propaganda speakers.", null, new ConfigurationManagerAttributes { Order = 13 }));

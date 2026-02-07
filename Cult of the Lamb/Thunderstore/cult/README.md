@@ -51,7 +51,7 @@
 - Uncap follower level benefits beyond level 10
 - Collect tithe from elderly followers
 - Intimidate elderly followers
-- Make elderly followers work
+- Elder work mode (disabled, all work, or light work only - worship, cooking, brewing, research)
 - Replace follower necklaces (old one drops to ground)
 - Customise life expectancy range
 - Prioritize followers with active requests in selection lists
@@ -75,6 +75,7 @@
 - Mass sin extract
 - Mass open scarecrow traps
 - Mass fill/collect wolf traps
+- Configurable notification threshold - consolidate per-follower notifications into a single summary
 
 ### Mass Collect
 - Mass collect from beds, outhouses, offering shrines
@@ -82,6 +83,7 @@
 - Collect all god tears at once
 
 ### Structures
+- Exclude grass from "Deposit All Seeds" on seed silos
 - Use Rotburn as shrine brazier fuel (configurable fuel weight)
 - Fueled shrine brazier provides warmth during winter
 - Customise Harvest Totem radius

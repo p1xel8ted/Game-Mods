@@ -1,4 +1,20 @@
-### 2.4.0 - 02/02/2026
+### 2.4.1 - 05/02/2026
+
+**New Features:**
+* Added Elder Work Mode with three options: Disabled (vanilla), All Work, or Light Work Only. Light work allows elders to worship, cook, brew, and research while excluding physical labor like mining and body disposal.
+* Added "Exclude Grass From Seed Deposit" option - when using "Deposit All Seeds" on a seed silo, grass will not be deposited.
+* Added "Mass Notification Threshold" setting - when a mass action affects more than the configured number of followers (default 3), a single summary notification is shown instead of one per follower.
+
+**Fixes:**
+* Fixed "Collect All God Tears At Once" collecting double the tears when only one was available.
+* Fixed mass level up not properly incrementing follower levels (followers were stuck needing a sermon to level up).
+
+### 2.4.0 - 04/02/2026
+
+**Improvements:**
+* Rewrote the mass action system from scratch for improved reliability and performance.
+* Mass actions now skip locked and mutated followers to prevent edge case issues.
+* Mass Intimidate now has a config option to control whether the Scared trait can be applied to all followers or just the original target.
 
 **Fixes:**
 * Fixed Base Damage Multiplier not applying to the second player (Goat) in co-op mode.

@@ -1,4 +1,5 @@
 using CultOfQoL.Core;
+using DG.Tweening;
 using KnuckleBones;
 
 namespace CultOfQoL.Patches.Gameplay;
@@ -9,6 +10,15 @@ public static class KnucklebonesSpeedPatches
     private static float SpeedMultiplier => ConfigCache.GetCachedValue(ConfigCache.Keys.KnucklebonesSpeedMultiplier, () => Plugin.KnucklebonesSpeedMultiplier.Value);
 
     private static readonly FieldInfo WaitSecondsField = AccessTools.Field(typeof(WaitForSecondsRealtime), "<waitTime>k__BackingField");
+
+    /// <summary>
+    /// Returns Time.unscaledDeltaTime multiplied by the speed multiplier.
+    /// Called by transpiler-injected code to make time pass faster in dice animations.
+    /// </summary>
+    public static float GetScaledUnscaledDeltaTime() => Time.unscaledDeltaTime * SpeedMultiplier;
+
+    private static readonly MethodInfo GetUnscaledDeltaTime = AccessTools.PropertyGetter(typeof(Time), nameof(Time.unscaledDeltaTime));
+    private static readonly MethodInfo GetScaledUnscaledDeltaTimeMethod = AccessTools.Method(typeof(KnucklebonesSpeedPatches), nameof(GetScaledUnscaledDeltaTime));
 
     /// <summary>
     /// Wraps an enumerator and scales all WaitForSecondsRealtime yields by the speed multiplier.
@@ -105,68 +115,97 @@ public static class KnucklebonesSpeedPatches
         __result = ScaleWaitTimes(__result, SpeedMultiplier);
     }
 
-    [HarmonyPostfix]
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Dice DOTween cleanup - kill any running tweens before movement starts
+    // RollRoutine uses a 1-second DOMove tween. When we speed up the routine's
+    // WaitForSecondsRealtime, it finishes before the DOTween. GoToLocationRoutine
+    // then fights with the still-running DOTween, causing the dice to vanish.
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Kills any running DOTween on the dice's rectTransform before GoToLocationRoutine starts.
+    /// This prevents the RollRoutine's DOMove from fighting with the manual position setting.
+    /// </summary>
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(Dice), nameof(Dice.GoToLocationRoutine))]
-    public static void Dice_GoToLocationRoutine_Postfix(ref IEnumerator __result)
+    private static void Dice_GoToLocationRoutine_KillTweens(Dice __instance)
     {
         if (Mathf.Approximately(SpeedMultiplier, 1f)) return;
-        __result = ScaleDeltaTimeLoop(__result, SpeedMultiplier);
+
+        // Kill any DOTween animations on this dice's rectTransform
+        __instance.rectTransform.DOKill();
+        Plugin.WriteLog($"[Knucklebones] Killed DOTween on dice before GoToLocationRoutine (speed: {SpeedMultiplier}x)");
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Dice), nameof(Dice.ShakeRoutine))]
-    public static void Dice_ShakeRoutine_Postfix(ref IEnumerator __result)
-    {
-        if (Mathf.Approximately(SpeedMultiplier, 1f)) return;
-        __result = ScaleDeltaTimeLoop(__result, SpeedMultiplier);
-    }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Dice deltaTime transpilers - scale Time.unscaledDeltaTime reads
+    // Instead of modifying duration constants, we multiply the deltaTime value
+    // so time passes faster from the routine's perspective.
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Dice), nameof(Dice.ScaleRoutine))]
-    public static void Dice_ScaleRoutine_Postfix(ref IEnumerator __result)
+    /// <summary>
+    /// Transpiler for GoToLocationRoutine - replaces Time.unscaledDeltaTime with scaled version.
+    /// Original: Progress += Time.unscaledDeltaTime
+    /// Patched:  Progress += GetScaledUnscaledDeltaTime()
+    /// </summary>
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(Dice), nameof(Dice.GoToLocationRoutine), MethodType.Enumerator)]
+    private static IEnumerable<CodeInstruction> Dice_GoToLocationRoutine_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        if (Mathf.Approximately(SpeedMultiplier, 1f)) return;
-        __result = ScaleDeltaTimeLoop(__result, SpeedMultiplier);
+        return PatchUnscaledDeltaTime(instructions, "Dice.GoToLocationRoutine");
     }
 
     /// <summary>
-    /// For coroutines that use unscaledDeltaTime with a fixed duration, we can't easily
-    /// modify the duration constant. Instead, we wrap the enumerator to advance it multiple
-    /// times per frame based on the speed multiplier.
+    /// Transpiler for ShakeRoutine - replaces Time.unscaledDeltaTime with scaled version.
+    /// Original: Shake -= Time.unscaledDeltaTime
+    /// Patched:  Shake -= GetScaledUnscaledDeltaTime()
     /// </summary>
-    private static IEnumerator ScaleDeltaTimeLoop(IEnumerator original, float speedMultiplier)
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(Dice), nameof(Dice.ShakeRoutine), MethodType.Enumerator)]
+    private static IEnumerable<CodeInstruction> Dice_ShakeRoutine_Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        // For loops using unscaledDeltaTime, we need to run multiple iterations per frame
-        // to effectively speed them up. The original loop does:
-        //   while (progress < duration) { progress += Time.unscaledDeltaTime; yield return null; }
-        //
-        // We can't change the duration constant, but we can skip frames or advance faster
-        // by running multiple MoveNext calls per yield.
+        return PatchUnscaledDeltaTime(instructions, "Dice.ShakeRoutine");
+    }
 
-        var frameSkipAccumulator = 0f;
+    /// <summary>
+    /// Transpiler for ScaleRoutine - replaces Time.unscaledDeltaTime with scaled version.
+    /// Original: Progress += Time.unscaledDeltaTime
+    /// Patched:  Progress += GetScaledUnscaledDeltaTime()
+    /// </summary>
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(Dice), nameof(Dice.ScaleRoutine), MethodType.Enumerator)]
+    private static IEnumerable<CodeInstruction> Dice_ScaleRoutine_Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        return PatchUnscaledDeltaTime(instructions, "Dice.ScaleRoutine");
+    }
 
-        while (original.MoveNext())
+    /// <summary>
+    /// Shared transpiler logic: replaces calls to Time.get_unscaledDeltaTime() with GetScaledUnscaledDeltaTime().
+    /// </summary>
+    private static IEnumerable<CodeInstruction> PatchUnscaledDeltaTime(IEnumerable<CodeInstruction> instructions, string methodName)
+    {
+        var codes = new List<CodeInstruction>(instructions);
+        var patched = 0;
+
+        for (var i = 0; i < codes.Count; i++)
         {
-            var current = original.Current;
-
-            // For null yields (frame waits), potentially skip frames based on speed
-            if (current == null && speedMultiplier > 1f)
+            if (codes[i].Calls(GetUnscaledDeltaTime))
             {
-                frameSkipAccumulator += speedMultiplier - 1f;
-
-                // Advance the original enumerator extra times to speed up
-                while (frameSkipAccumulator >= 1f)
-                {
-                    frameSkipAccumulator -= 1f;
-                    if (!original.MoveNext())
-                    {
-                        yield break;
-                    }
-                }
+                codes[i] = new CodeInstruction(OpCodes.Call, GetScaledUnscaledDeltaTimeMethod).WithLabels(codes[i].labels);
+                patched++;
             }
-
-            yield return current;
         }
+
+        if (patched > 0)
+        {
+            Plugin.Log.LogInfo($"[Transpiler] {methodName}: Replaced {patched} Time.unscaledDeltaTime call(s) with scaled version.");
+        }
+        else
+        {
+            Plugin.Log.LogWarning($"[Transpiler] {methodName}: Failed to find Time.unscaledDeltaTime calls.");
+        }
+
+        return codes;
     }
 
     // ═══════════════════════════════════════════════════════════════════════════

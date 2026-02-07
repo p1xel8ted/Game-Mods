@@ -1,10 +1,46 @@
-﻿using CultOfQoL.Core.Routines;
+// using CultOfQoL.Core.Routines;
 
 namespace CultOfQoL.Patches.Followers;
 
 [Harmony]
 public static class FollowerPatches
 {
+    /// <summary>
+    /// Reference to the original follower interaction that triggered the mass action.
+    ///
+    /// NOTE: With the direct effects approach, this tracking may no longer be necessary.
+    /// The original follower runs the vanilla routine which calls Close() normally,
+    /// and other followers get instant effects (no callbacks, no Close() calls).
+    /// Kept as a safety measure - can be removed if testing confirms it's not needed.
+    /// </summary>
+    private static interaction_FollowerInteraction OriginalMassActionInteraction { get; set; }
+
+    /// <summary>
+    /// Suppresses notifications if the affected count exceeds the configured threshold.
+    /// Must be paired with <see cref="NotifySuppressEnd"/> after the mass action loop.
+    /// </summary>
+    private static void NotifySuppressBegin(int affectedCount)
+    {
+        if (affectedCount > Plugin.MassNotificationThreshold.Value)
+        {
+            NotificationCentre.NotificationsEnabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Re-enables notifications and shows a single summary if suppression was active.
+    /// </summary>
+    private static void NotifySuppressEnd(string actionName, int affectedCount)
+    {
+        if (affectedCount > Plugin.MassNotificationThreshold.Value)
+        {
+            NotificationCentre.NotificationsEnabled = true;
+            NotificationCentre.Instance?.PlayGenericNotification(
+                $"{actionName} {affectedCount} followers",
+                NotificationBase.Flair.Positive);
+        }
+    }
+
     public static int GetMinLifeExpectancy()
     {
         return Plugin.MinRangeLifeExpectancy.Value;
@@ -63,11 +99,37 @@ public static class FollowerPatches
     }
 
 
+    /// <summary>
+    /// Task types considered too physically demanding for elderly followers.
+    /// Used when ElderWorkMode is set to LightWorkOnly.
+    /// </summary>
+    private static readonly HashSet<FollowerTaskType> HeavyWorkTasks =
+    [
+        FollowerTaskType.Build,
+        FollowerTaskType.Farm,
+        FollowerTaskType.BuryBody,
+        FollowerTaskType.ClearRubble,
+        FollowerTaskType.ClearRubbleBig,
+        FollowerTaskType.ClearWeeds,
+        FollowerTaskType.Lumberjack,
+        FollowerTaskType.ChopTrees,
+        FollowerTaskType.MineBloodStone,
+        FollowerTaskType.MineRotstone,
+        FollowerTaskType.ResourceStation,
+        FollowerTaskType.Blacksmith,
+        FollowerTaskType.Refinery,
+        FollowerTaskType.Janitor,
+        FollowerTaskType.CleanWaste,
+        FollowerTaskType.Undertaker,
+        FollowerTaskType.Handyman,
+        FollowerTaskType.Forage
+    ];
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerBrain), nameof(FollowerBrain.GetPersonalTask))]
     public static void FollowerBrain_GetTask(FollowerBrain __instance, FollowerLocation location, ref FollowerTask __result)
     {
-        if (!Plugin.MakeOldFollowersWork.Value) return;
+        if (Plugin.ElderWorkMode.Value == ElderWorkMode.Disabled) return;
 
         if (__result is not FollowerTask_OldAge) return;
 
@@ -78,7 +140,13 @@ public static class FollowerPatches
             var task = FollowerBrain.GetDesiredTask_Work(location);
             task.RemoveAll(a => a is FollowerTask_OldAge);
 
-            if (task.Count > 0) // Ensure the list has elements
+            // Filter out heavy work when Light Work Only mode is active
+            if (Plugin.ElderWorkMode.Value == ElderWorkMode.LightWorkOnly)
+            {
+                task.RemoveAll(a => HeavyWorkTasks.Contains(a.Type));
+            }
+
+            if (task.Count > 0)
             {
                 var workTask = task.Random();
                 if (workTask != null)
@@ -99,30 +167,6 @@ public static class FollowerPatches
         }
     }
 
-
-    private static IEnumerator ExtortMoneyRoutine(interaction_FollowerInteraction interaction)
-    {
-        yield return new WaitForEndOfFrame();
-        interaction.follower.FacePosition(PlayerFarming.Instance.transform.position);
-        yield return new WaitForSeconds(0.25f);
-        int num;
-        for (var i = 0; i < Random.Range(3, 7); i = num + 1)
-        {
-            ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, interaction.follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, delegate { Inventory.AddItem(20, 1); });
-            yield return new WaitForSeconds(0.1f);
-            num = i;
-        }
-
-        yield return new WaitForSeconds(0.25f);
-    }
-
-    private static IEnumerator RunEnumerator(bool run, IEnumerator enumerator, Action onComplete = null)
-    {
-        if (!run) yield break;
-        yield return enumerator;
-        yield return new WaitForSeconds(1f);
-        onComplete?.Invoke();
-    }
 
     private static bool ShouldMassBribe(FollowerCommands followerCommands)
     {
@@ -204,35 +248,6 @@ public static class FollowerPatches
         return notReeducatedCount > 1;
     }
 
-    private static bool IsFollowerADog(FollowerBrain brain)
-    {
-        if (brain.Info.SkinName.Contains("Dog", StringComparison.OrdinalIgnoreCase)) return true;
-        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are not a dog!");
-        return false;
-    }
-
-    private static bool IsFollowerDissenting(FollowerBrain brain)
-    {
-        if (brain.Info.CursedState is not Thought.Dissenter) return false;
-        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are dissenting!");
-        return true;
-    }
-
-    private static bool IsFollowerImprisoned(FollowerBrain brain)
-    {
-        if (!brain.Info.CursedState.ToString().Contains("Imprison", StringComparison.OrdinalIgnoreCase)) return false;
-        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are in prison!");
-        return true;
-    }
-
-    private static bool IsFollowerAvailable(FollowerBrain brain)
-    {
-        if (brain.CurrentTaskType is not (FollowerTaskType.Sleep or FollowerTaskType.SleepBedRest or FollowerTaskType.Mating)) return true;
-        Plugin.WriteLog($"Skipping {brain.Info.Name} because they are busy with task: {brain.CurrentTaskType.ToString()}");
-        return false;
-    }
-
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnFollowerCommandFinalized), typeof(FollowerCommands[]))]
     public static void interaction_FollowerInteraction_OnFollowerCommandFinalized_Postfix(ref interaction_FollowerInteraction __instance, params FollowerCommands[] followerCommands)
@@ -247,143 +262,206 @@ public static class FollowerPatches
         var originalFollower = __instance.follower;
 
         var followers = Helpers.AllFollowers.Where(f => f != originalFollower).ToList();
+        var validFollowers = followers.Where(f => f.Interaction_FollowerInteraction != null).ToList();
 
-        foreach (var f in followers.Where(f => f.Interaction_FollowerInteraction))
+        foreach (var f in validFollowers)
         {
             f.Interaction_FollowerInteraction.playerFarming ??= PlayerFarming.Instance ??= Object.FindObjectOfType<PlayerFarming>();
         }
 
         if (cmd == FollowerCommands.Reassure && ShouldMassReassure(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var reassureEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Reassure().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(reassureEligible.Count);
+            foreach (var follower in reassureEligible)
             {
-                var run = FollowerCommandItems.Reassure().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.ReassureRoutine(), delegate
-                {
-                    interaction.follower.Brain.Stats.ScaredTraitInteracted = true;
-                    Plugin.WriteLog($"Reassured {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyReassure(follower);
             }
+            NotifySuppressEnd("Reassured", reassureEligible.Count);
         }
 
         if (cmd == FollowerCommands.Reeducate && ShouldMassReeducate(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var reeducateEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Reeducate().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                (MassActionEffects.IsImprisoned(f.Brain) || MassActionEffects.IsDissenting(f.Brain))).ToList();
+            NotifySuppressBegin(reeducateEligible.Count);
+            foreach (var follower in reeducateEligible)
             {
-                var run = FollowerCommandItems.Reeducate().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && (IsFollowerImprisoned(interaction.follower.Brain) || IsFollowerDissenting(interaction.follower.Brain));
-                interaction.StartCoroutine(RunEnumerator(run, interaction.ReeducateRoutine(), delegate
-                {
-                    interaction.follower.Brain.Stats.ReeducatedAction = true;
-                    Plugin.WriteLog($"Re-educated {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyReeducate(follower);
             }
+            NotifySuppressEnd("Reeducated", reeducateEligible.Count);
         }
 
         if (cmd == FollowerCommands.Bully && ShouldMassBully(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var bullyEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Bully().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(bullyEligible.Count);
+            foreach (var follower in bullyEligible)
             {
-                var run = FollowerCommandItems.Bully().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.BullyRoutine(), delegate
-                {
-                    interaction.follower.Brain.Stats.ScaredTraitInteracted = true;
-                    Plugin.WriteLog($"Scared straight {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyBully(follower);
             }
+            NotifySuppressEnd("Bullied", bullyEligible.Count);
         }
 
         if (cmd == FollowerCommands.Romance && ShouldMassRomance(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var allowZombieReaction = !originalFollower.Brain.Info.HasTrait(FollowerTrait.TraitType.Zombie);
+            var zombieReactionPlayed = false;
+            var romanceEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Kiss().IsAvailable(f) &&
+                !FollowerManager.IsChild(f.Brain.Info.ID) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(romanceEligible.Count);
+            foreach (var follower in romanceEligible)
             {
-                var run = FollowerCommandItems.Kiss().IsAvailable(interaction.follower) && !FollowerManager.IsChild(interaction.follower.Brain.Info.ID) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.RomanceRoutine(), delegate
+                var triggered = MassActionEffects.ApplyRomance(follower, allowZombieReaction && !zombieReactionPlayed);
+                if (triggered)
                 {
-                    interaction.follower.Brain.Stats.KissedAction = true;
-                    Plugin.WriteLog($"Romanced {interaction.follower.name}!");
-                }));
+                    zombieReactionPlayed = true;
+                }
             }
+            NotifySuppressEnd("Romanced", romanceEligible.Count);
         }
 
         if (cmd is (FollowerCommands.PetDog or FollowerCommands.PetFollower) && ShouldMassPetFollower(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var petEligible = validFollowers.Where(f =>
+                FollowerCommandItems.PetDog().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(petEligible.Count);
+            foreach (var follower in petEligible)
             {
-                var run = FollowerCommandItems.PetDog().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.PetDogRoutine(), delegate
-                {
-                    interaction.follower.Brain.Stats.PetDog = true;
-                    Plugin.WriteLog($"Petted {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyPet(follower);
             }
+            NotifySuppressEnd("Petted", petEligible.Count);
         }
 
         if (cmd == FollowerCommands.ExtortMoney && ShouldMassExtort(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var extortEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Extort().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(extortEligible.Count);
+            foreach (var follower in extortEligible)
             {
-                var run = FollowerCommandItems.Extort().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, ExtortMoneyRoutine(interaction), delegate
-                {
-                    interaction.follower.Brain.Stats.PaidTithes = true;
-                    Plugin.WriteLog($"Extorted {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyExtort(follower);
             }
+            NotifySuppressEnd("Extorted", extortEligible.Count);
         }
 
         if (cmd == FollowerCommands.Dance && ShouldMassInspire(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var inspireEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Dance().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                f.Brain.CurrentTaskType != FollowerTaskType.GetPlayerAttention &&
+                !FollowerManager.FollowerLocked(f.Brain.Info.ID) &&
+                !f.Brain.HasTrait(FollowerTrait.TraitType.Mutated) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(inspireEligible.Count);
+            foreach (var follower in inspireEligible)
             {
-                var run = FollowerCommandItems.Dance().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.DanceRoutine(false), delegate
-                {
-                    interaction.follower.Brain.Stats.Inspired = true;
-                    Plugin.WriteLog($"Inspired {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyInspire(follower);
             }
+            NotifySuppressEnd("Inspired", inspireEligible.Count);
         }
 
         if (cmd == FollowerCommands.Intimidate && ShouldMassIntimidate(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var intimidateEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Intimidate().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !FollowerManager.FollowerLocked(f.Brain.Info.ID) &&
+                !f.Brain.HasTrait(FollowerTrait.TraitType.Mutated) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(intimidateEligible.Count);
+            foreach (var follower in intimidateEligible)
             {
-                var run = FollowerCommandItems.Intimidate().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.IntimidateRoutine(false, PlayerFarming.Instance), delegate
-                {
-                    interaction.follower.Brain.Stats.Intimidated = true;
-                    Plugin.WriteLog($"Intimidated {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyIntimidate(follower, allowScaredTrait: Plugin.MassIntimidateScareAll.Value);
             }
+            NotifySuppressEnd("Intimidated", intimidateEligible.Count);
         }
 
 
         if (cmd == FollowerCommands.Bless && ShouldMassBless(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var blessEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Bless().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !FollowerManager.FollowerLocked(f.Brain.Info.ID) &&
+                !f.Brain.HasTrait(FollowerTrait.TraitType.Mutated) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(blessEligible.Count);
+            foreach (var follower in blessEligible)
             {
-                var run = FollowerCommandItems.Bless().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.BlessRoutine(false, PlayerFarming.Instance), delegate
-                {
-                    interaction.follower.Brain.Stats.ReceivedBlessing = true;
-                    interaction.follower.Brain.Stats.LastBlessing = DataManager.Instance.CurrentDayIndex;
-                    Plugin.WriteLog($"Blessed {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyBless(follower);
             }
+            NotifySuppressEnd("Blessed", blessEligible.Count);
         }
 
 
         if (cmd == FollowerCommands.Bribe && ShouldMassBribe(followerCommands[0]))
         {
-            foreach (var interaction in followers.Select(follower => follower.Interaction_FollowerInteraction))
+            if (validFollowers.Count == 0) return;
+
+            OriginalMassActionInteraction = __instance;
+            var bribeEligible = validFollowers.Where(f =>
+                FollowerCommandItems.Bribe().IsAvailable(f) &&
+                MassActionEffects.IsAvailable(f.Brain) &&
+                !MassActionEffects.IsImprisoned(f.Brain) &&
+                !MassActionEffects.IsDissenting(f.Brain)).ToList();
+            NotifySuppressBegin(bribeEligible.Count);
+            foreach (var follower in bribeEligible)
             {
-                var run = FollowerCommandItems.Bribe().IsAvailable(interaction.follower) && IsFollowerAvailable(interaction.follower.Brain) && !IsFollowerImprisoned(interaction.follower.Brain) && !IsFollowerDissenting(interaction.follower.Brain);
-                interaction.StartCoroutine(RunEnumerator(run, interaction.BribeRoutine(), delegate
-                {
-                    interaction.follower.Brain.Stats.Bribed = true;
-                    Plugin.WriteLog($"Bribed {interaction.follower.name}!");
-                }));
+                MassActionEffects.ApplyBribe(follower);
             }
+            NotifySuppressEnd("Bribed", bribeEligible.Count);
         }
     }
 
@@ -468,50 +546,76 @@ public static class FollowerPatches
         yield return new WaitForSeconds(0.5f);
 
         var eligible = Helpers.AllFollowers
-            .Where(f => f != original && f.Brain.CanLevelUp() && f.Interaction_FollowerInteraction)
+            .Where(f => f != original && f.Brain.CanLevelUp())
             .ToList();
 
         Plugin.WriteLog($"[MassLevelUp] Starting level up for {eligible.Count} followers.");
 
+        NotifySuppressBegin(eligible.Count);
         foreach (var follower in eligible)
         {
-            var interaction = follower.Interaction_FollowerInteraction;
-            interaction.playerFarming = PlayerFarming.Instance ??= Object.FindObjectOfType<PlayerFarming>();
+            var previousTask = follower.Brain.CurrentTaskType;
             Plugin.WriteLog($"[MassLevelUp] Leveling up {follower.Brain.Info.Name}.");
-            interaction.StartCoroutine(interaction.LevelUpRoutine(follower.Brain.CurrentTaskType, null, false, false, false));
+            MassActionEffects.ApplyLevelUp(follower, previousTask, follower.Interaction_FollowerInteraction);
         }
+        NotifySuppressEnd("Leveled up", eligible.Count);
 
-        Plugin.WriteLog("[MassLevelUp] All level up routines started.");
+        Plugin.WriteLog("[MassLevelUp] All level ups applied.");
         MassLevelUpRunning = false;
     }
 
+    /// <summary>
+    /// Prevents the interaction wheel from reopening after mass actions.
+    ///
+    /// NOTE: With the direct effects approach, this prefix may no longer be necessary.
+    /// Only the original follower runs a routine with callbacks - other followers get
+    /// instant effects. The vanilla Close() behavior should work fine for the original.
+    /// Kept as a safety measure until testing confirms it can be removed.
+    /// </summary>
     [HarmonyPrefix]
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.Close), typeof(bool), typeof(bool), typeof(bool))]
-    public static void interaction_FollowerInteraction_Close(ref bool DoResetFollower, ref bool unpause, ref bool reshowMenu)
+    public static void interaction_FollowerInteraction_Close(interaction_FollowerInteraction __instance, ref bool DoResetFollower, ref bool unpause, ref bool reshowMenu)
     {
-        if (!RoutinesTranspilers.AnyMassActionsEnabled) return;
+        // Safety check: force reshowMenu=false for the original mass action interaction
+        if (__instance == OriginalMassActionInteraction)
+        {
+            DoResetFollower = true;
+            unpause = true;
+            reshowMenu = false;
+        }
 
-        DoResetFollower = true;
-        unpause = true;
-        reshowMenu = false;
+        // NOTE: Legacy code below commented out - MassActionCurrentlyRunning is never set with the
+        // direct effects approach (MassActionEffects). Only the original follower runs a routine;
+        // other followers get instant effects without callbacks.
+
+        // if (!RoutinesTranspilers.MassActionCurrentlyRunning) return;
+        //
+        // DoResetFollower = true;
+        // unpause = true;
+        // reshowMenu = false;
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
-    public static void interaction_FollowerInteraction_LevelUpRoutine(ref Action Callback, ref bool GoToAndStop, ref bool onFinishClose)
-    {
-        if (!RoutinesTranspilers.AnyMassActionsEnabled) return;
+    // NOTE: Legacy prefix commented out - MassActionCurrentlyRunning is never set with the direct
+    // effects approach. This prefix was intended to modify callback behavior when mass routines
+    // were running, but now only the original follower runs a routine.
 
-        Callback = null;
-        GoToAndStop = false;
-        onFinishClose = true;
-    }
+    // [HarmonyPrefix]
+    // [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.LevelUpRoutine))]
+    // public static void interaction_FollowerInteraction_LevelUpRoutine(ref Action Callback, ref bool GoToAndStop, ref bool onFinishClose)
+    // {
+    //     // Only modify behavior when a mass action is actually running, not just when config is enabled
+    //     if (!RoutinesTranspilers.MassActionCurrentlyRunning) return;
+    //
+    //     Callback = null;
+    //     GoToAndStop = false;
+    //     onFinishClose = true;
+    // }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FollowerCommandItems), nameof(FollowerCommandItems.GiveWorkerCommand))]
     public static void interaction_FollowerInteraction_OnFollowerCommandFinalized(Follower follower, ref CommandItem __result)
     {
-        if (Plugin.MakeOldFollowersWork.Value && follower.Brain.Info.CursedState == Thought.OldAge)
+        if (Plugin.ElderWorkMode.Value != ElderWorkMode.Disabled && follower.Brain.Info.CursedState == Thought.OldAge)
         {
             __result.SubCommands = FollowerCommandGroups.GiveWorkerCommands(follower);
         }
@@ -521,15 +625,29 @@ public static class FollowerPatches
     [HarmonyPatch(typeof(interaction_FollowerInteraction), nameof(interaction_FollowerInteraction.OnFollowerCommandFinalized))]
     public static bool interaction_FollowerInteraction_OnFollowerCommandFinalized(ref interaction_FollowerInteraction __instance, params FollowerCommands[] followerCommands)
     {
-        var makeOldPeopleWork = Plugin.MakeOldFollowersWork.Value;
+        var elderWorkEnabled = Plugin.ElderWorkMode.Value != ElderWorkMode.Disabled;
         var command = followerCommands[0] == FollowerCommands.GiveWorkerCommand_2 || followerCommands[0] == FollowerCommands.MakeDemand;
         var old = __instance.follower.Brain.Info.CursedState == Thought.OldAge;
-        if (makeOldPeopleWork && command && old)
+        if (elderWorkEnabled && command && old)
         {
             __instance.follower.Brain.CompleteCurrentTask();
-            var task = FollowerBrain.GetDesiredTask_Work(__instance.follower.Brain.Location).Random();
+
+            // Get available tasks, filtering for light work if needed
+            var tasks = FollowerBrain.GetDesiredTask_Work(__instance.follower.Brain.Location);
+            if (Plugin.ElderWorkMode.Value == ElderWorkMode.LightWorkOnly)
+            {
+                tasks.RemoveAll(t => HeavyWorkTasks.Contains(t.Type));
+            }
+
+            if (tasks.Count == 0)
+            {
+                NotificationCentre.Instance.PlayGenericNotification($"No suitable work available for {__instance.follower.Brain.Info.Name}.", NotificationBase.Flair.Negative);
+                return true;
+            }
+
+            var task = tasks.Random();
             __instance.follower.Brain.HardSwapToTask(task);
-            NotificationCentre.Instance.PlayGenericNotification($"{__instance.follower.Brain.Info.Name} sent to work on random task!", NotificationBase.Flair.Positive);
+            NotificationCentre.Instance.PlayGenericNotification($"{__instance.follower.Brain.Info.Name} sent to work on {task.Type}!", NotificationBase.Flair.Positive);
             Plugin.WriteLog($"Old follower {__instance.follower.name} made to work on {task}");
             __instance.Close(false, true, false);
             return false;
@@ -559,9 +677,10 @@ public static class FollowerPatches
             }
         }
 
-        if (Plugin.MakeOldFollowersWork.Value)
+        if (Plugin.ElderWorkMode.Value != ElderWorkMode.Disabled)
         {
             __result.Add(FollowerCommandItems.GiveWorkerCommand(follower));
         }
     }
 }
+

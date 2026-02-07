@@ -105,6 +105,8 @@ internal class InventoryManager
         PopulateTarotCards();
         PopulateRelics();
 
+        Plugin.Log.LogInfo($"[InventoryManager] Shop stock: Skins={_followerSkinsAvailable.Count}, Decorations={_decorationsAvailable.Count}, TarotCards={_tarotCardsAvailable.Count}, Relics={_relicsAvailable.Count}");
+
         var outOfStockItems = new List<InventoryItem.ITEM_TYPE>();
 
         foreach (var item in InventoryInfo.GetShopItemTypeList())
@@ -146,9 +148,12 @@ internal class InventoryManager
 
     private void PopulateFollowerSkins()
     {
+        Plugin.Log.LogInfo($"[InventoryManager] Checking {DataManager.MysticShopKeeperSkins.Length} skins from MysticShopKeeperSkins");
         foreach (var skinString in DataManager.MysticShopKeeperSkins.ToList())
         {
-            if (!DataManager.GetFollowerSkinUnlocked(skinString))
+            var isUnlocked = DataManager.GetFollowerSkinUnlocked(skinString);
+            Plugin.Log.LogInfo($"[InventoryManager]   Skin '{skinString}': unlocked={isUnlocked}");
+            if (!isUnlocked)
             {
                 _followerSkinsAvailable.Add(skinString);
             }
@@ -158,9 +163,12 @@ internal class InventoryManager
 
     private void PopulateDecorations()
     {
+        Plugin.Log.LogInfo($"[InventoryManager] Checking {DataManager.MysticShopKeeperDecorations.Length} decorations from MysticShopKeeperDecorations");
         foreach (var deco in DataManager.MysticShopKeeperDecorations.ToList())
         {
-            if (!DataManager.Instance.UnlockedStructures.Contains(deco))
+            var isUnlocked = DataManager.Instance.UnlockedStructures.Contains(deco);
+            Plugin.Log.LogInfo($"[InventoryManager]   Decoration '{deco}': unlocked={isUnlocked}");
+            if (!isUnlocked)
             {
                 _decorationsAvailable.Add(deco);
             }
@@ -170,9 +178,12 @@ internal class InventoryManager
 
     private void PopulateTarotCards()
     {
+        Plugin.Log.LogInfo($"[InventoryManager] Checking {TarotCards.MysticCards.Length} cards from TarotCards.MysticCards");
         foreach (var card in TarotCards.MysticCards)
         {
-            if (!DataManager.Instance.PlayerFoundTrinkets.Contains(card))
+            var isUnlocked = DataManager.Instance.PlayerFoundTrinkets.Contains(card);
+            Plugin.Log.LogInfo($"[InventoryManager]   Tarot card '{card}': unlocked={isUnlocked}");
+            if (!isUnlocked)
             {
                 _tarotCardsAvailable.Add(card);
             }
@@ -182,13 +193,19 @@ internal class InventoryManager
 
     private void PopulateRelics()
     {
+        Plugin.Log.LogInfo("[InventoryManager] Checking 2 hardcoded relics");
+
         // Relics available from Mystic Shop are hardcoded in the original game
-        if (!DataManager.Instance.PlayerFoundRelics.Contains(RelicType.SpawnBlackGoop))
+        var goopUnlocked = DataManager.Instance.PlayerFoundRelics.Contains(RelicType.SpawnBlackGoop);
+        Plugin.Log.LogInfo($"[InventoryManager]   Relic 'SpawnBlackGoop': unlocked={goopUnlocked}");
+        if (!goopUnlocked)
         {
             _relicsAvailable.Add(RelicType.SpawnBlackGoop);
         }
 
-        if (!DataManager.Instance.PlayerFoundRelics.Contains(RelicType.UnlimitedFervour))
+        var fervourUnlocked = DataManager.Instance.PlayerFoundRelics.Contains(RelicType.UnlimitedFervour);
+        Plugin.Log.LogInfo($"[InventoryManager]   Relic 'UnlimitedFervour': unlocked={fervourUnlocked}");
+        if (!fervourUnlocked)
         {
             _relicsAvailable.Add(RelicType.UnlimitedFervour);
         }

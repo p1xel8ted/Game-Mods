@@ -852,19 +852,26 @@ public static class FastCollectingPatches
 
     /// <summary>
     /// After collecting one god tear, collect all remaining god tears at once.
+    ///
+    /// NOTE: This postfix runs when GiveGodTearIE returns its IEnumerator, BEFORE the coroutine
+    /// actually executes. At this point, AbilityPoints hasn't been decremented yet. The vanilla
+    /// coroutine will add 1 tear and decrement AbilityPoints by 1, so we collect (total - 1)
+    /// additional tears here and leave exactly 1 for vanilla to handle.
     /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.GiveGodTearIE))]
     public static void BuildingShrine_GiveGodTearIE_Postfix()
     {
         if (!Plugin.CollectAllGodTearsAtOnce.Value) return;
-        if (UpgradeSystem.AbilityPoints <= 0) return;
 
-        var remaining = UpgradeSystem.AbilityPoints;
-        Inventory.AddItem((int)InventoryItem.ITEM_TYPE.GOD_TEAR, remaining);
-        UpgradeSystem.AbilityPoints = 0;
+        // Reserve 1 tear for vanilla to handle (the coroutine hasn't executed yet)
+        var additional = UpgradeSystem.AbilityPoints - 1;
+        if (additional <= 0) return;
 
-        Plugin.Log.LogInfo($"[Collect All God Tears] Collected {remaining} additional god tears.");
+        Inventory.AddItem((int)InventoryItem.ITEM_TYPE.GOD_TEAR, additional);
+        UpgradeSystem.AbilityPoints = 1;  // Leave exactly 1 for the vanilla coroutine
+
+        Plugin.Log.LogInfo($"[Collect All God Tears] Collected {additional} additional god tears.");
     }
 
     /// <summary>

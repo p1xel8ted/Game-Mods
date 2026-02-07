@@ -8,12 +8,6 @@ namespace TraitControl.Patches;
 public static class TraitWeights
 {
     /// <summary>
-    /// Tracks whether the guaranteed trait has already been given during the current follower's creation.
-    /// Reset by the FollowerBrain constructor prefix before trait assignment begins.
-    /// </summary>
-    private static bool _guaranteedTraitGivenThisSession;
-
-    /// <summary>
     /// Tracks which traits have been assigned during the current follower's trait generation session.
     /// Prevents infinite loops when the weighted trait pool is restricted to a small number of traits.
     /// Reset by FollowerBrain constructor prefix and before re-indoctrinate/re-educate trait generation.
@@ -65,8 +59,8 @@ public static class TraitWeights
     /// </summary>
     internal static void ResetSessionTracking()
     {
-        _guaranteedTraitGivenThisSession = false;
         TraitsAssignedThisSession.Clear();
+        PopulateGuaranteedTraits();
     }
 
     /// <summary>
@@ -292,20 +286,17 @@ public static class TraitWeights
     /// <summary>
     /// Selects a trait using either weighted or random selection based on config.
     /// Filtering (unique toggles, single-use, game restrictions) always applies.
-    /// Guaranteed traits take priority over all other selection methods, but only once per follower.
+    /// Guaranteed traits take priority over all other selection methods.
     /// </summary>
     private static FollowerTrait.TraitType SelectTrait(IEnumerable<FollowerTrait.TraitType> sourceTraits)
     {
         // Check for guaranteed traits first (bypasses all other selection)
-        // Only give the guaranteed trait once per follower - subsequent trait rolls use normal selection
-        if (!_guaranteedTraitGivenThisSession)
+        // Each call returns the next pending guaranteed trait until all are given
+        var guaranteed = GetGuaranteedTrait();
+        if (guaranteed != FollowerTrait.TraitType.None)
         {
-            var guaranteed = GetGuaranteedTrait();
-            if (guaranteed != FollowerTrait.TraitType.None)
-            {
-                _guaranteedTraitGivenThisSession = true;
-                return guaranteed;
-            }
+            TraitsAssignedThisSession.Add(guaranteed);
+            return guaranteed;
         }
 
         // Debug: Log source traits count
@@ -334,53 +325,66 @@ public static class TraitWeights
     }
 
     /// <summary>
-    /// Checks if any guaranteed trait is enabled and available.
-    /// Returns the first available guaranteed trait, or None if none are available.
+    /// List of guaranteed traits that still need to be given during the current follower's creation.
+    /// Populated at the start of trait generation and consumed one at a time.
+    /// </summary>
+    private static readonly List<FollowerTrait.TraitType> _pendingGuaranteedTraits = [];
+
+    /// <summary>
+    /// Populates the pending guaranteed traits list with all enabled and available guaranteed traits.
+    /// Called at the start of trait generation for a new follower.
+    /// </summary>
+    private static void PopulateGuaranteedTraits()
+    {
+        _pendingGuaranteedTraits.Clear();
+
+        // Add all enabled guaranteed traits that are available
+        if (Plugin.GuaranteeImmortal.Value && Plugin.IncludeImmortal.Value && IsTraitAvailable(FollowerTrait.TraitType.Immortal))
+        {
+            _pendingGuaranteedTraits.Add(FollowerTrait.TraitType.Immortal);
+        }
+
+        if (Plugin.GuaranteeDisciple.Value && Plugin.IncludeDisciple.Value && IsTraitAvailable(FollowerTrait.TraitType.Disciple))
+        {
+            _pendingGuaranteedTraits.Add(FollowerTrait.TraitType.Disciple);
+        }
+
+        if (Plugin.GuaranteeDontStarve.Value && Plugin.IncludeDontStarve.Value && IsTraitAvailable(FollowerTrait.TraitType.DontStarve))
+        {
+            _pendingGuaranteedTraits.Add(FollowerTrait.TraitType.DontStarve);
+        }
+
+        if (Plugin.GuaranteeBlind.Value && Plugin.IncludeBlind.Value && IsTraitAvailable(FollowerTrait.TraitType.Blind))
+        {
+            _pendingGuaranteedTraits.Add(FollowerTrait.TraitType.Blind);
+        }
+
+        if (Plugin.GuaranteeBornToTheRot.Value && Plugin.IncludeBornToTheRot.Value && IsTraitAvailable(FollowerTrait.TraitType.BornToTheRot))
+        {
+            _pendingGuaranteedTraits.Add(FollowerTrait.TraitType.BornToTheRot);
+        }
+
+        if (_pendingGuaranteedTraits.Count > 0)
+        {
+            Plugin.Log.LogInfo($"[GuaranteedTraits] Queued {_pendingGuaranteedTraits.Count} guaranteed traits: {string.Join(", ", _pendingGuaranteedTraits)}");
+        }
+    }
+
+    /// <summary>
+    /// Returns the next pending guaranteed trait, or None if all have been given.
+    /// Removes the trait from the pending list so it won't be given again.
     /// </summary>
     private static FollowerTrait.TraitType GetGuaranteedTrait()
     {
-        // Check each guaranteed trait in order
-        if (Plugin.GuaranteeImmortal.Value && Plugin.IncludeImmortal.Value)
+        if (_pendingGuaranteedTraits.Count == 0)
         {
-            if (IsTraitAvailable(FollowerTrait.TraitType.Immortal))
-            {
-                return FollowerTrait.TraitType.Immortal;
-            }
+            return FollowerTrait.TraitType.None;
         }
 
-        if (Plugin.GuaranteeDisciple.Value && Plugin.IncludeDisciple.Value)
-        {
-            if (IsTraitAvailable(FollowerTrait.TraitType.Disciple))
-            {
-                return FollowerTrait.TraitType.Disciple;
-            }
-        }
-
-        if (Plugin.GuaranteeDontStarve.Value && Plugin.IncludeDontStarve.Value)
-        {
-            if (IsTraitAvailable(FollowerTrait.TraitType.DontStarve))
-            {
-                return FollowerTrait.TraitType.DontStarve;
-            }
-        }
-
-        if (Plugin.GuaranteeBlind.Value && Plugin.IncludeBlind.Value)
-        {
-            if (IsTraitAvailable(FollowerTrait.TraitType.Blind))
-            {
-                return FollowerTrait.TraitType.Blind;
-            }
-        }
-
-        if (Plugin.GuaranteeBornToTheRot.Value && Plugin.IncludeBornToTheRot.Value)
-        {
-            if (IsTraitAvailable(FollowerTrait.TraitType.BornToTheRot))
-            {
-                return FollowerTrait.TraitType.BornToTheRot;
-            }
-        }
-
-        return FollowerTrait.TraitType.None;
+        var trait = _pendingGuaranteedTraits[0];
+        _pendingGuaranteedTraits.RemoveAt(0);
+        Plugin.Log.LogInfo($"[GuaranteedTraits] Giving guaranteed trait: {trait} ({_pendingGuaranteedTraits.Count} remaining)");
+        return trait;
     }
 
     /// <summary>
@@ -475,6 +479,14 @@ public static class TraitWeights
     {
         var availableTraits = new List<FollowerTrait.TraitType>(sourceTraits);
         var initialCount = availableTraits.Count;
+
+        // Filter out ALL negative traits when trait replacement is enabled
+        // This prevents negative traits from being selected, avoiding the need for post-hoc replacement
+        if (Plugin.NoNegativeTraits.Value)
+        {
+            availableTraits.RemoveAll(t => !FollowerTrait.IsPositiveTrait(t));
+            Plugin.Log.LogInfo($"[GetFilteredTraits] Removed negative traits (NoNegativeTraits enabled): {initialCount} -> {availableTraits.Count}");
+        }
 
         // Filter unique traits based on section 01 configs
         if (!Plugin.IncludeImmortal.Value)

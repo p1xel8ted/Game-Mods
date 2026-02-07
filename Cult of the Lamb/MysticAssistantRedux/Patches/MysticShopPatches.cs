@@ -44,6 +44,8 @@ public static class MysticShopPatches
 
     private static void OpenAssistantShop(Interaction_MysticShop instance, StateMachine state)
     {
+        Plugin.Log.LogInfo("[MysticShop] Opening assistant shop");
+
         // Reset shop state for new session
         Plugin.CurrentInventoryManager = new InventoryManager(instance);
         Plugin.ResetShopState();
@@ -98,6 +100,7 @@ public static class MysticShopPatches
         // Handle shop closing - run post-shop screens
         shopItemSelector.OnHidden += () =>
         {
+            Plugin.Log.LogInfo($"[MysticShop] Shop closed, {Plugin.PostShopActions.Count} post-shop actions queued");
             PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive, false, null);
             SetMysticShopInteractable(instance, false);
             instance.StartCoroutine(RunPostShopActionsCoroutine(instance, state));
@@ -117,15 +120,19 @@ public static class MysticShopPatches
 
         var shopStock = Plugin.CurrentInventoryManager.GetItemListCountByItemType(boughtItemType);
 
+        Plugin.Log.LogInfo($"[MysticShop] Player purchased: {boughtItemType} (cost: {boughtItem.SellPriceActual} God Tear)");
+
         switch (boughtItemType)
         {
             case InventoryItem.ITEM_TYPE.BLACK_GOLD:
                 Inventory.ChangeItemQuantity((int)boughtItemType, 100, 0);
+                Plugin.Log.LogInfo("[MysticShop] Gave player 100 Gold");
                 break;
 
             case InventoryItem.ITEM_TYPE.Necklace_Dark:
             case InventoryItem.ITEM_TYPE.Necklace_Light:
                 Inventory.ChangeItemQuantity((int)boughtItemType, 1, 0);
+                Plugin.Log.LogInfo($"[MysticShop] Gave player necklace: {boughtItemType}");
                 break;
 
             case InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE:
@@ -136,6 +143,8 @@ public static class MysticShopPatches
                 {
                     DataManager.Instance.CrystalDoctrinesReceivedFromMysticShop++;
                 }
+
+                Plugin.Log.LogInfo($"[MysticShop] Gave player Crystal Doctrine Stone ({DataManager.Instance.CrystalDoctrinesReceivedFromMysticShop}/{Interaction_MysticShop.maxAmountOfCrystalDoctrines})");
 
                 if (!Plugin.CurrentInventoryManager.BoughtCrystalDoctrineStone)
                 {
@@ -155,6 +164,7 @@ public static class MysticShopPatches
                 {
                     DataManager.Instance.TalismanPiecesReceivedFromMysticShop++;
                 }
+                Plugin.Log.LogInfo($"[MysticShop] Gave player Talisman Piece (total: {Inventory.KeyPieces})");
                 if (!Plugin.CurrentInventoryManager.BoughtKeyPiece)
                 {
                     Plugin.PostShopActions.Add(ShowNewTalismanPieceAnimation);
@@ -168,6 +178,7 @@ public static class MysticShopPatches
                 DataManager.SetFollowerSkinUnlocked(skinToUnlock);
                 Plugin.CurrentInventoryManager.RemoveItemFromListByTypeAndIndex(boughtItemType, skinIndex);
                 Plugin.CurrentInventoryManager.ChangeShopStockByQuantity(boughtItemType, -1);
+                Plugin.Log.LogInfo($"[MysticShop] Unlocked follower skin: {skinToUnlock}");
                 if (!Plugin.CurrentInventoryManager.BoughtFollowerSkin)
                 {
                     Plugin.PostShopActions.Add(ShowUnlockedFollowerSkins);
@@ -183,6 +194,7 @@ public static class MysticShopPatches
                 Plugin.UnlockedDecorations.Add(deco);
                 Plugin.CurrentInventoryManager.RemoveItemFromListByTypeAndIndex(boughtItemType, decoIndex);
                 Plugin.CurrentInventoryManager.ChangeShopStockByQuantity(boughtItemType, -1);
+                Plugin.Log.LogInfo($"[MysticShop] Unlocked decoration: {deco}");
                 if (!Plugin.CurrentInventoryManager.BoughtDecoration)
                 {
                     Plugin.PostShopActions.Add(ShowUnlockedDecorations);
@@ -197,6 +209,7 @@ public static class MysticShopPatches
                 Plugin.UnlockedTarotCards.Add(card);
                 Plugin.CurrentInventoryManager.RemoveItemFromListByTypeAndIndex(boughtItemType, cardIndex);
                 Plugin.CurrentInventoryManager.ChangeShopStockByQuantity(boughtItemType, -1);
+                Plugin.Log.LogInfo($"[MysticShop] Unlocked tarot card: {card}");
                 if (!Plugin.CurrentInventoryManager.BoughtTarotCard)
                 {
                     Plugin.PostShopActions.Add(ShowUnlockedTarotCards);
@@ -211,6 +224,7 @@ public static class MysticShopPatches
                 Plugin.UnlockedRelics.Add(relic);
                 Plugin.CurrentInventoryManager.RemoveItemFromListByTypeAndIndex(boughtItemType, relicIndex);
                 Plugin.CurrentInventoryManager.ChangeShopStockByQuantity(boughtItemType, -1);
+                Plugin.Log.LogInfo($"[MysticShop] Unlocked relic: {relic}");
                 if (!Plugin.CurrentInventoryManager.BoughtRelic)
                 {
                     Plugin.PostShopActions.Add(ShowUnlockedRelics);
@@ -220,6 +234,7 @@ public static class MysticShopPatches
 
             default:
                 Inventory.ChangeItemQuantity((int)boughtItemType, 1, 0);
+                Plugin.Log.LogInfo($"[MysticShop] Gave player item: {boughtItemType}");
                 break;
         }
 
@@ -317,6 +332,7 @@ public static class MysticShopPatches
                 if (!Plugin.ShowOverbuyWarning && InventoryInfo.CheckForBoughtQuantityWarning(traderTrackerItems))
                 {
                     Plugin.ShowOverbuyWarning = true;
+                    Plugin.Log.LogInfo($"[MysticShop] Overbuy warning triggered for {item.Type}");
                     item.Shake();
                     // 10% chance for funny bleat
                     if (UnityEngine.Random.Range(0, 10) == 5)
@@ -388,6 +404,7 @@ public static class MysticShopPatches
 
         yield return new WaitForSecondsRealtime(0.5f);
         SetMysticShopInteractable(instance, true);
+        Plugin.Log.LogInfo("[MysticShop] Post-shop actions complete, returning control to player");
 
         // Return control to player
         foreach (var playerFarming in PlayerFarming.players)

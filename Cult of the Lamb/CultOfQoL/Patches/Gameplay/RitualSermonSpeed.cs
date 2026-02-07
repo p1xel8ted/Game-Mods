@@ -57,6 +57,27 @@ public static class RitualSermonSpeed
         GameManager.SetTimeScale(1);
     }
 
+    /// <summary>
+    /// Preventative fix: Forces visual effects to reset when fast rituals end.
+    /// Some users reported chromatic aberration getting "stuck" after resurrection ritual
+    /// with fast rituals enabled. This ensures effects are always reset to defaults.
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_TempleAltar), nameof(Interaction_TempleAltar.RitualOnEnd))]
+    [HarmonyPatch(typeof(Interaction_TempleAltar), nameof(Interaction_TempleAltar.DoCancel))]
+    [HarmonyPatch(typeof(Interaction_TempleAltar), nameof(Interaction_TempleAltar.Close))]
+    [HarmonyPatch(typeof(Interaction_TempleAltar), nameof(Interaction_TempleAltar.CloseAndSpeak))]
+    private static void Interaction_TempleAltar_End_ResetVisualEffects()
+    {
+        if (!Plugin.FastRitualSermons.Value) return;
+
+        // Preventative: Force reset chromatic aberration to default value
+        if (BiomeConstants.Instance != null && BiomeConstants.Instance.chromaticAbberration != null)
+        {
+            BiomeConstants.Instance.chromaticAbberration.intensity.value = BiomeConstants.Instance.ChromaticAberrationDefaultValue;
+        }
+    }
+
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameManager), nameof(GameManager.Update))]

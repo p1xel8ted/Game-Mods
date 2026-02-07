@@ -11,6 +11,21 @@ public enum MassWolfTrapMode
     Both
 }
 
+/// <summary>
+/// Controls how elderly followers participate in work activities.
+/// </summary>
+public enum ElderWorkMode
+{
+    /// <summary>Elders do not work (vanilla behavior).</summary>
+    Disabled,
+
+    /// <summary>Elders can perform all work tasks.</summary>
+    AllWork,
+
+    /// <summary>Elders can only perform light work (worship, cooking, brewing, research).</summary>
+    LightWorkOnly
+}
+
 public partial class Plugin
 {
     private static ConfigEntry<bool> EnableLogging { get; set; }
@@ -98,6 +113,7 @@ public partial class Plugin
 
     internal static ConfigEntry<float> SoulCapacityMulti { get; private set; }
     internal static ConfigEntry<float> SiloCapacityMulti { get; private set; }
+    internal static ConfigEntry<bool> ExcludeGrassFromSeedDeposit { get; private set; }
 
   //  internal static ConfigEntry<bool> DoubleSiloCapacity { get; private set; }
    // internal static ConfigEntry<bool> UseCustomSoulCapacity { get; private set; }
@@ -142,14 +158,16 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassPetFollower { get; private set; }
     internal static ConfigEntry<bool> MassPetAnimals { get; private set; }
     internal static ConfigEntry<bool> MassIntimidate { get; private set; }
+    internal static ConfigEntry<bool> MassIntimidateScareAll { get; private set; }
     internal static ConfigEntry<bool> MassInspire { get; private set; }
     internal static ConfigEntry<bool> MassWater { get; private set; }
 
     // internal static ConfigEntry<bool> MassHarvest{ get; private set;}
     internal static ConfigEntry<bool> MassLevelUp { get; private set; }
     internal static ConfigEntry<bool> MassLevelUpInstantSouls { get; private set; }
+    internal static ConfigEntry<int> MassNotificationThreshold { get; private set; }
 
-    internal static ConfigEntry<bool> MakeOldFollowersWork { get; private set; }
+    internal static ConfigEntry<ElderWorkMode> ElderWorkMode { get; private set; }
 
     internal static ConfigEntry<bool> MassCollectFromBeds { get; private set; }
     internal static ConfigEntry<bool> MassCollectFromOuthouses { get; private set; }
