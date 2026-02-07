@@ -805,27 +805,29 @@ public static class FastCollectingPatches
     #region Shrine God Tears and Devotion
 
     /// <summary>
-    /// After collecting one god tear, collect all remaining god tears at once.
-    ///
-    /// NOTE: This postfix runs when GiveGodTearIE returns its IEnumerator, BEFORE the coroutine
-    /// actually executes. At this point, AbilityPoints hasn't been decremented yet. The vanilla
-    /// coroutine will add 1 tear and decrement AbilityPoints by 1, so we collect (total - 1)
-    /// additional tears here and leave exactly 1 for vanilla to handle.
+    /// Before vanilla processes the shrine interaction, collect any extra god tears beyond the one
+    /// vanilla will handle via GiveGodTearIE. This prefix runs before any other code can modify
+    /// AbilityPoints (e.g. deferred SoulCustomTarget callbacks from instant devotion collection).
+    /// Only applies when vanilla would give god tears directly (all upgrades unlocked, DeathCatBeaten).
     /// </summary>
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.GiveGodTearIE))]
-    public static void BuildingShrine_GiveGodTearIE_Postfix()
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.OnInteract))]
+    public static void BuildingShrine_OnInteract_GodTears_Prefix(BuildingShrine __instance)
     {
         if (!Plugin.CollectAllGodTearsAtOnce.Value) return;
+        if (__instance.Activating) return;
+        if (GameManager.HasUnlockAvailable()) return;
+        if (!DataManager.Instance.DeathCatBeaten) return;
 
-        // Reserve 1 tear for vanilla to handle (the coroutine hasn't executed yet)
-        var additional = UpgradeSystem.AbilityPoints - 1;
-        if (additional <= 0) return;
+        var total = UpgradeSystem.AbilityPoints;
+        Plugin.WriteLog($"[Collect All God Tears] AbilityPoints at interaction: {total}");
+        if (total <= 1) return;
 
+        var additional = total - 1;
         Inventory.AddItem((int)InventoryItem.ITEM_TYPE.GOD_TEAR, additional);
-        UpgradeSystem.AbilityPoints = 1;  // Leave exactly 1 for the vanilla coroutine
+        UpgradeSystem.AbilityPoints = 1;
 
-        Plugin.Log.LogInfo($"[Collect All God Tears] Collected {additional} additional god tears.");
+        Plugin.WriteLog($"[Collect All God Tears] Pre-collected {additional} additional god tears (was {total}, left 1 for vanilla)");
     }
 
     /// <summary>

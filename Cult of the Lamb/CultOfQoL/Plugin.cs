@@ -310,14 +310,17 @@ public partial class Plugin : BaseUnityPlugin
         // }));
 
         // ── Mass Action Costs ──
-        MassActionGoldCost = _configInstance.Bind(MassActionCostsSection, "Gold Cost", 0, new ConfigDescription("Gold deducted per follower/target affected by a mass action. Set to 0 for free. If you can't afford the total, the mass action is skipped but the original single interaction still works.", new AcceptableValueRange<int>(0, 50), new ConfigurationManagerAttributes
+        MassActionGoldCost = _configInstance.Bind(MassActionCostsSection, "Gold Cost", 0f, new ConfigDescription("Gold deducted per follower/target affected by a mass action. Set to 0 for free. If you can't afford the total, the mass action is skipped but the original single interaction still works.", new AcceptableValueRange<float>(0f, 50f), new ConfigurationManagerAttributes
         {
             Order = 3
         }));
-        MassActionTimeCost = _configInstance.Bind(MassActionCostsSection, "Time Cost (Game Minutes)", 0, new ConfigDescription("Game minutes that pass per follower/target affected by a mass action. Set to 0 for no time cost. 240 minutes = 1 game phase.", new AcceptableValueRange<int>(0, 120), new ConfigurationManagerAttributes
+        MassActionGoldCost.SettingChanged += (_, _) => MassActionGoldCost.Value = RoundToQuarter(MassActionGoldCost.Value);
+
+        MassActionTimeCost = _configInstance.Bind(MassActionCostsSection, "Time Cost (Game Minutes)", 0f, new ConfigDescription("Game minutes that pass per follower/target affected by a mass action. Set to 0 for no time cost. 240 minutes = 1 game phase.", new AcceptableValueRange<float>(0f, 120f), new ConfigurationManagerAttributes
         {
             Order = 2
         }));
+        MassActionTimeCost.SettingChanged += (_, _) => MassActionTimeCost.Value = RoundToQuarter(MassActionTimeCost.Value);
         MassFaithReduction = _configInstance.Bind(MassActionCostsSection, "Faith Reduction (%)", 0, new ConfigDescription("Reduces faith gained per follower from mass Bless and Inspire. 0 = full faith, 50 = half faith, 100 = no faith. The original single interaction always gives full faith.", new AcceptableValueRange<int>(0, 100), new ConfigurationManagerAttributes
         {
             Order = 1
@@ -741,6 +744,8 @@ public partial class Plugin : BaseUnityPlugin
             Log.LogInfo($"[Config] Resetting {ent.Key} to default value: {ent.Value.DefaultValue}");
         }
     }
+
+    private static float RoundToQuarter(float value) => (float)(Math.Round(value * 4.0) / 4.0);
 
     private static void EnforceRangeSanity()
     {

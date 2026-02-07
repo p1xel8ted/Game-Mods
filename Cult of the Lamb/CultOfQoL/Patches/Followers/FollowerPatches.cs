@@ -158,13 +158,13 @@ public static class FollowerPatches
             }
             else
             {
-                Plugin.WriteLog($"No available work tasks for elderly follower {__instance.Info.Name}.");
+                Plugin.WriteLog($"[ElderWork] No available work tasks for elderly follower {__instance.Info.Name}.");
             }
         }
 
         if (found)
         {
-            Plugin.WriteLog($"Elderly follower {__instance.Info.Name} set to work on {__result}.");
+            Plugin.WriteLog($"[ElderWork] Elderly follower {__instance.Info.Name} set to work on {__result}.");
         }
     }
 
@@ -255,7 +255,7 @@ public static class FollowerPatches
     {
         if (followerCommands[0] is not (FollowerCommands.Reassure or FollowerCommands.Reeducate or FollowerCommands.Bully or FollowerCommands.Romance or FollowerCommands.PetDog or FollowerCommands.PetFollower or FollowerCommands.ExtortMoney or FollowerCommands.Dance or FollowerCommands.Intimidate or FollowerCommands.Bless or FollowerCommands.Bribe))
         {
-            Plugin.WriteLog($"Skipping mass command because {followerCommands[0]} is not a mass command!");
+            Plugin.WriteLog($"[MassAction] Skipping mass command because {followerCommands[0]} is not a mass command!");
             return;
         }
 
@@ -488,7 +488,7 @@ public static class FollowerPatches
             __instance.follower.Brain.Stats.Exhaustion = 0f;
             var onExhaustionStateChanged = FollowerBrainStats.OnExhaustionStateChanged;
             onExhaustionStateChanged?.Invoke(__instance.follower.Brain._directInfoAccess.ID, FollowerStatState.Off, FollowerStatState.On);
-            Plugin.WriteLog($"Resetting follower {__instance.follower.name} from exhaustion!");
+            Plugin.WriteLog($"[LevelUp] Resetting follower {__instance.follower.name} from exhaustion!");
         }
 
         if (__instance.follower.Brain.Stats.Illness > 0)
@@ -497,7 +497,7 @@ public static class FollowerPatches
             __instance.follower.Brain.Stats.Illness = 0f;
             var onIllnessStateChanged = FollowerBrainStats.OnIllnessStateChanged;
             onIllnessStateChanged?.Invoke(__instance.follower.Brain._directInfoAccess.ID, FollowerStatState.Off, FollowerStatState.On);
-            Plugin.WriteLog($"Resetting follower {__instance.follower.name} from illness!");
+            Plugin.WriteLog($"[LevelUp] Resetting follower {__instance.follower.name} from illness!");
         }
     }
 
@@ -659,7 +659,7 @@ public static class FollowerPatches
             var task = tasks.Random();
             __instance.follower.Brain.HardSwapToTask(task);
             NotificationCentre.Instance.PlayGenericNotification($"{__instance.follower.Brain.Info.Name} sent to work on {task.Type}!", NotificationBase.Flair.Positive);
-            Plugin.WriteLog($"Old follower {__instance.follower.name} made to work on {task}");
+            Plugin.WriteLog($"[ElderWork] Old follower {__instance.follower.name} made to work on {task}");
             __instance.Close(false, true, false);
             return false;
         }

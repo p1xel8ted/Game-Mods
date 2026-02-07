@@ -24,7 +24,7 @@ public static class PickUps
     internal static void UpdateAllPickUps()
     {
         var pickups = PickUp.PickUps.ToList(); // Use the game's static list
-        Plugin.WriteLog($"Updating {pickups.Count} pick ups");
+        Plugin.WriteLog($"[PickUps] Updating {pickups.Count} pick ups");
         foreach (var pickUp in pickups)
         {
             UpdatePickUp(pickUp);
@@ -34,7 +34,7 @@ public static class PickUps
     internal static void RestoreAllPickUps()
     {
         var pickups = PickUp.PickUps.ToList();
-        Plugin.WriteLog($"Restoring {pickups.Count} pick ups");
+        Plugin.WriteLog($"[PickUps] Restoring {pickups.Count} pick ups");
         foreach (var pickUp in pickups)
         {
             RestorePickUp(pickUp);

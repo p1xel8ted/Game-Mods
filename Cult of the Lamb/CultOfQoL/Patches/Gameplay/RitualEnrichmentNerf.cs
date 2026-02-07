@@ -8,7 +8,7 @@ public static class RitualEnrichmentNerf
         if (Plugin.ReverseEnrichmentNerf.Value)
         {
             // CustomGiveCoins handles coin addition per-follower
-            Plugin.WriteLog($"RitualEnrichmentNerf: Skipping RitualRoutine's AddItem({quantity} coins) - CustomGiveCoins handles it.");
+            Plugin.WriteLog($"[EnrichmentNerf] Skipping RitualRoutine's AddItem({quantity} coins) - CustomGiveCoins handles it.");
             return;
         }
         Inventory.AddItem(type, quantity, forceNormalInventory);

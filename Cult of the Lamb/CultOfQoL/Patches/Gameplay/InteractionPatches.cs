@@ -38,7 +38,7 @@ public static class InteractionPatches
             return true;
         }
 
-        Plugin.WriteLog($"Blocking interaction with {__instance.GetType().Name} - {UIMenuBase.ActiveMenus.Count} menu(s) open or InMenu={GameManager.InMenu}");
+        Plugin.WriteLog($"[Interaction] Blocking interaction with {__instance.GetType().Name} - {UIMenuBase.ActiveMenus.Count} menu(s) open or InMenu={GameManager.InMenu}");
         return false;
     }
 
@@ -66,7 +66,7 @@ public static class InteractionPatches
         var waterablePlots = FarmPlot.FarmPlots.Where(p => p.StructureBrain?.CanWater() == true).ToList();
         if (waterablePlots.Count == 0 || !MassActionCosts.TryDeductCosts(waterablePlots.Count)) yield break;
 
-        Plugin.WriteLog($"Watering {waterablePlots.Count} plots");
+        Plugin.WriteLog($"[MassWater] Watering {waterablePlots.Count} plots");
         foreach (var plot in waterablePlots)
         {
             plot.StructureInfo.Watered = true;
@@ -91,11 +91,11 @@ public static class InteractionPatches
         
         if (itemsNeeded > itemsAvailable)
         {
-            Plugin.WriteLog($"Warning: Need {itemsNeeded} fertilizer but only have {itemsAvailable}");
+            Plugin.WriteLog($"[MassFertilize] Need {itemsNeeded} fertilizer but only have {itemsAvailable}");
             fertilizablePlots = fertilizablePlots.Take(itemsAvailable).ToList();
         }
         
-        Plugin.WriteLog($"Fertilizing {fertilizablePlots.Count} plots with {chosenItem}");
+        Plugin.WriteLog($"[MassFertilize] Fertilizing {fertilizablePlots.Count} plots with {chosenItem}");
         foreach (var plot in fertilizablePlots)
         {
             plot.StructureBrain.AddFertilizer(chosenItem);

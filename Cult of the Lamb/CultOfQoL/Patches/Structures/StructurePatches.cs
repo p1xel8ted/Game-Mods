@@ -93,7 +93,7 @@ internal static class StructurePatches
             {
                 LOGCollectionCounts[__instance] = 0;
                 InventoryItem.Spawn(InventoryItem.ITEM_TYPE.SPIDER_WEB, 1, spawnPosition, 0f);
-                Plugin.WriteLog($"Spawned spider web at lumber station after {logsPerSpiderWeb} logs collected");
+                Plugin.WriteLog($"[ResourceProduction] Spawned spider web at lumber station after {logsPerSpiderWeb} logs collected");
             }
         }
         else if (type == InventoryItem.ITEM_TYPE.STONE)
@@ -104,7 +104,7 @@ internal static class StructurePatches
             {
                 LOGCollectionCounts[__instance] = 0;
                 InventoryItem.Spawn(InventoryItem.ITEM_TYPE.CRYSTAL, 1, spawnPosition, 0f);
-                Plugin.WriteLog($"Spawned crystal shard at mining station after {stonePerCrystal} stone collected");
+                Plugin.WriteLog($"[ResourceProduction] Spawned crystal shard at mining station after {stonePerCrystal} stone collected");
             }
         }
     }
@@ -116,7 +116,7 @@ internal static class StructurePatches
     {
         // Clean up tracking dictionary to prevent memory leaks
         LOGCollectionCounts.Remove(__instance);
-        Plugin.WriteLog("Removed lumber station from spider web tracking dictionary on disable");
+        Plugin.WriteLog("[ResourceProduction] Removed lumber station from spider web tracking dictionary on disable");
     }
 
     private static bool IsWoodOrLogType(InventoryItem.ITEM_TYPE type)
@@ -306,7 +306,7 @@ internal static class StructurePatches
         if (!ConfigCache.GetCachedValue(ConfigCache.Keys.LumberAndMiningStationsDontAge, () => Plugin.LumberAndMiningStationsDontAge.Value)) return;
 
         __instance.Data.Age = 0;
-        Plugin.WriteLog("Resetting age of lumber/mining station to 0!");
+        Plugin.WriteLog("[StationAge] Resetting age of lumber/mining station to 0!");
     }
 
 

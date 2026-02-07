@@ -31,7 +31,7 @@ public static class FarmPlotPatches
         }
         catch (Exception ex)
         {
-            Plugin.WriteLog($"Failed to save defrost data: {ex.Message}", Plugin.LogType.Error);
+            Plugin.WriteLog($"[RotFertilizer] Failed to save defrost data: {ex.Message}", Plugin.LogType.Error);
         }
     }
 
@@ -44,7 +44,7 @@ public static class FarmPlotPatches
             {
                 var json = File.ReadAllText(path);
                 _defrostDays = JsonConvert.DeserializeObject<Dictionary<int, int>>(json) ?? new Dictionary<int, int>();
-                Plugin.WriteLog($"Loaded defrost data for slot {SaveAndLoad.SAVE_SLOT}: {_defrostDays.Count} entries");
+                Plugin.WriteLog($"[RotFertilizer] Loaded defrost data for slot {SaveAndLoad.SAVE_SLOT}: {_defrostDays.Count} entries");
             }
             else
             {
@@ -53,7 +53,7 @@ public static class FarmPlotPatches
         }
         catch (Exception ex)
         {
-            Plugin.WriteLog($"Failed to load defrost data: {ex.Message}", Plugin.LogType.Error);
+            Plugin.WriteLog($"[RotFertilizer] Failed to load defrost data: {ex.Message}", Plugin.LogType.Error);
             _defrostDays.Clear();
         }
     }
@@ -71,7 +71,7 @@ public static class FarmPlotPatches
         if (type != InventoryItem.ITEM_TYPE.POOP_ROTSTONE) return;
 
         _defrostDays[__instance.Data.ID] = TimeManager.CurrentDay;
-        Plugin.WriteLog($"Tracked defrost for plot {__instance.Data.ID} on day {TimeManager.CurrentDay}");
+        Plugin.WriteLog($"[RotFertilizer] Tracked defrost for plot {__instance.Data.ID} on day {TimeManager.CurrentDay}");
     }
 
     [HarmonyPostfix]
@@ -97,7 +97,7 @@ public static class FarmPlotPatches
         __instance.Data.DefrostedCrop = false;
         _defrostDays.Remove(id);
 
-        Plugin.WriteLog($"Rot fertilizer expired on plot {id} after {duration} days");
+        Plugin.WriteLog($"[RotFertilizer] Warming expired on plot {id} after {duration} days");
 
         var farmPlot = FarmPlot.GetFarmPlot(id);
         if (farmPlot != null)
@@ -121,7 +121,7 @@ public static class FarmPlotPatches
         if (File.Exists(path))
         {
             File.Delete(path);
-            Plugin.WriteLog($"Deleted defrost data for slot {saveSlot}");
+            Plugin.WriteLog($"[RotFertilizer] Deleted defrost data for slot {saveSlot}");
         }
     }
 }
