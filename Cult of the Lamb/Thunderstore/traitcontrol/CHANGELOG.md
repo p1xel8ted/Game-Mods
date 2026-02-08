@@ -1,4 +1,4 @@
-### 0.1.6 - 07/02/2026
+### 0.1.6 - 08/02/2026
 
 **New Features:**
 * Added Ex-Bishop trait to unique trait options - followers with this trait will never become dissenters, regardless of faith level. Normally only granted when converting enemy bishops.
