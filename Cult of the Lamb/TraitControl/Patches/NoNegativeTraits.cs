@@ -207,6 +207,13 @@ public static class NoNegativeTraits
                 continue;
             }
 
+            // Skip Mutated (Rot) trait if preservation is enabled
+            if (Plugin.PreserveMutatedTrait.Value && trait == FollowerTrait.TraitType.Mutated)
+            {
+                Plugin.L($"\tSkipping Mutated (Rot) trait - preservation enabled");
+                continue;
+            }
+
             // Only use exclusive counterpart if it's actually positive (e.g., Lazy→Industrious)
             // Skip if counterpart is also negative (e.g., Hibernation→Aestivation are both negative)
             // Skip if counterpart is an event trait (e.g., OverworkedParent→ProudParent requires having kids)

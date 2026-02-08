@@ -10,7 +10,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.traitcontrol";
     internal const string PluginName = "Trait Control";
-    private const string PluginVer = "0.1.5";
+    private const string PluginVer = "0.1.6";
 
     private const string TraitReplacementSection = "── Trait Replacement ──";
     private const string UniqueTraitsSection = "── Unique Traits ──";
@@ -71,6 +71,7 @@ public partial class Plugin : BaseUnityPlugin
         FollowerTrait.TraitType.PureBlood_1,
         FollowerTrait.TraitType.PureBlood_2,
         FollowerTrait.TraitType.PureBlood_3,
+        FollowerTrait.TraitType.ChosenOne, // Granted to 4th generation child in PureBlood breeding chain
         FollowerTrait.TraitType.FreezeImmune
     ];
 
@@ -82,13 +83,18 @@ public partial class Plugin : BaseUnityPlugin
 
         // Trait Replacement - 01
         NoNegativeTraits = ConfigInstance.Bind(TraitReplacementSection, "Enable Trait Replacement", false,
-            new ConfigDescription("Replace negative traits with positive ones on all followers (existing and new).", null,
+            new ConfigDescription("Replace negative traits with positive ones. By default only affects NEW followers. Enable 'Apply To Existing Followers' to also modify current followers.", null,
                 new ConfigurationManagerAttributes { Order = 10 }));
         NoNegativeTraits.SettingChanged += (_, _) => UpdateNoNegativeTraits();
 
+        ApplyToExistingFollowers = ConfigInstance.Bind(TraitReplacementSection, "Apply To Existing Followers", false,
+            new ConfigDescription("When enabled, trait replacement also applies to existing followers (not just new ones). Disabling will restore original traits.", null,
+                new ConfigurationManagerAttributes { Order = 9, CustomDrawer = DrawApplyToExistingToggle }));
+        ApplyToExistingFollowers.SettingChanged += (_, _) => OnApplyToExistingChanged();
+
         UseUnlockedTraitsOnly = ConfigInstance.Bind(TraitReplacementSection, "Use Unlocked Traits Only", true,
             new ConfigDescription("Only use traits you have unlocked. Applies to both trait replacement and new follower trait selection.", null,
-                new ConfigurationManagerAttributes { Order = 9 }));
+                new ConfigurationManagerAttributes { Order = 8 }));
         UseUnlockedTraitsOnly.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -97,22 +103,26 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         UseAllTraits = ConfigInstance.Bind(TraitReplacementSection, "Use All Traits Pool", false,
-            new ConfigDescription("Merge all trait pools into one, bypassing vanilla's normal/rare split. Without this, vanilla assigns traits from separate pools (normal pool for first 2 traits, ~20% chance of rare pool for 3rd trait). Enable this for trait weights to have full control over distribution. Unique traits require their individual toggles.", null,
-                new ConfigurationManagerAttributes { Order = 8 }));
+            new ConfigDescription("Merge all trait pools into one, bypassing vanilla's normal/rare split. Without this, vanilla assigns traits from separate pools (normal pool by default, ~10% chance of rare pool per trait). Enable this for trait weights to have full control over distribution. Unique traits require their individual toggles.", null,
+                new ConfigurationManagerAttributes { Order = 7 }));
 
         PreferExclusiveCounterparts = ConfigInstance.Bind(TraitReplacementSection, "Prefer Exclusive Counterparts", true,
             new ConfigDescription("When replacing negative traits, exclusive traits (like Lazy) are replaced with their positive counterpart (Industrious) instead of a random trait.", null,
-                new ConfigurationManagerAttributes { Order = 7 }));
+                new ConfigurationManagerAttributes { Order = 6 }));
+
+        PreserveMutatedTrait = ConfigInstance.Bind(TraitReplacementSection, "Preserve Rot Followers", true,
+            new ConfigDescription("When enabled, Rot (Mutated) followers will not have their trait removed. Rot followers are mechanically distinct and useful for certain rituals.", null,
+                new ConfigurationManagerAttributes { Order = 5 }));
 
         MinimumTraits = ConfigInstance.Bind(TraitReplacementSection, "Minimum Traits", 2,
             new ConfigDescription("Minimum number of traits new followers will have. Vanilla is 2.",
                 new AcceptableValueRange<int>(2, 8),
-                new ConfigurationManagerAttributes { Order = 6 }));
+                new ConfigurationManagerAttributes { Order = 4 }));
 
         MaximumTraits = ConfigInstance.Bind(TraitReplacementSection, "Maximum Traits", 3,
             new ConfigDescription("Maximum number of traits new followers will have. Vanilla is 3. Limited to 8 due to UI constraints.",
                 new AcceptableValueRange<int>(2, 8),
-                new ConfigurationManagerAttributes { Order = 5 }));
+                new ConfigurationManagerAttributes { Order = 3 }));
 
         // Ensure max >= min
         MaximumTraits.SettingChanged += (_, _) =>
@@ -132,15 +142,19 @@ public partial class Plugin : BaseUnityPlugin
 
         RandomizeTraitsOnReindoctrination = ConfigInstance.Bind(TraitReplacementSection, "Randomize Traits on Re-indoctrination", false,
             new ConfigDescription("When re-indoctrinating an existing follower (at the altar), randomize their traits using the configured min/max. Vanilla re-indoctrination only changes appearance/name.", null,
-                new ConfigurationManagerAttributes { Order = 4 }));
+                new ConfigurationManagerAttributes { Order = 2 }));
 
         TraitRerollOnReeducation = ConfigInstance.Bind(TraitReplacementSection, "Trait Reroll via Reeducation", false,
             new ConfigDescription("Adds the Re-educate command to normal followers. Using it will re-roll their traits using the configured min/max and weights.", null,
-                new ConfigurationManagerAttributes { Order = 3 }));
+                new ConfigurationManagerAttributes { Order = 1 }));
 
         ProtectTraitCountOnReroll = ConfigInstance.Bind(TraitReplacementSection, "Protect Trait Count on Reroll", true,
             new ConfigDescription("When rerolling traits (via reeducation or reindoctrination), ensure the follower doesn't end up with fewer traits than they started with.", null,
-                new ConfigurationManagerAttributes { Order = 2 }));
+                new ConfigurationManagerAttributes { Order = 0 }));
+
+        RerollableAltarTraits = ConfigInstance.Bind(TraitReplacementSection, "Re-rollable Altar Traits", false,
+            new ConfigDescription("When using the Exorcism Altar, re-selecting a follower shows different trait results each time instead of the same result per day.", null,
+                new ConfigurationManagerAttributes { Order = -1 }));
 
         // Unique Traits - 02
         AllowMultipleUniqueTraits = ConfigInstance.Bind(UniqueTraitsSection, "Allow Multiple Unique Traits", false,
@@ -247,6 +261,26 @@ public partial class Plugin : BaseUnityPlugin
             }
         };
 
+        IncludeBishopOfCult = ConfigInstance.Bind(UniqueTraitsSection, "Include Ex-Bishop", false,
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.BishopOfCult, "normally granted when converting a bishop"), null,
+                new ConfigurationManagerAttributes { Order = 10 }));
+        IncludeBishopOfCult.SettingChanged += (_, _) =>
+        {
+            Patches.NoNegativeTraits.GenerateAvailableTraits();
+            UpdateTraitWeightVisibility();
+        };
+
+        GuaranteeBishopOfCult = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Ex-Bishop", false,
+            new ConfigDescription("New followers will always receive the Ex-Bishop trait (ignores weights). Only one follower can have this trait.", null,
+                new ConfigurationManagerAttributes { Order = 9, DispName = "    └ Guarantee Ex-Bishop" }));
+        GuaranteeBishopOfCult.SettingChanged += (_, _) =>
+        {
+            if (GuaranteeBishopOfCult.Value && !IncludeBishopOfCult.Value)
+            {
+                IncludeBishopOfCult.Value = true;
+            }
+        };
+
         // Notifications - 03
         ShowNotificationsWhenRemovingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Removing Traits", false,
             new ConfigDescription("Show notifications when trait replacement removes negative traits.", null,
@@ -262,7 +296,7 @@ public partial class Plugin : BaseUnityPlugin
 
         // Trait Weights - 04
         EnableTraitWeights = ConfigInstance.Bind(TraitWeightsSection, "Enable Trait Weights", false,
-            new ConfigDescription("Enable weighted random selection for new followers. Weights affect trait selection within each pool. For full control over all traits, enable 'Use All Traits Pool' - otherwise vanilla's normal/rare pool split still applies (rare pool has ~20% chance for 3rd trait). Set a weight to 0 to disable a trait.", null,
+            new ConfigDescription("Enable weighted random selection for new followers. Weights affect trait selection within each pool. For full control over all traits, enable 'Use All Traits Pool' - otherwise vanilla's normal/rare pool split still applies (rare pool has ~10% chance per trait). Set a weight to 0 to disable a trait.", null,
                 new ConfigurationManagerAttributes { Order = 100 }));
         EnableTraitWeights.SettingChanged += (_, _) => UpdateTraitWeightVisibility();
 
@@ -320,9 +354,8 @@ public partial class Plugin : BaseUnityPlugin
         // Remove None
         allTraits.Remove(FollowerTrait.TraitType.None);
 
-        // Always exclude - these require special game state setup
-        allTraits.Remove(FollowerTrait.TraitType.Spy); // Requires SpyJoinedDay or spies leave immediately
-        allTraits.Remove(FollowerTrait.TraitType.BishopOfCult); // Story-related, granted when converting a bishop
+        // Always exclude Spy - requires SpyJoinedDay or spies leave immediately
+        allTraits.Remove(FollowerTrait.TraitType.Spy);
 
         // Store all traits (excluding event traits based on config) for use by patches
         AllTraitsList.Clear();
@@ -579,6 +612,7 @@ public partial class Plugin : BaseUnityPlugin
                         FollowerTrait.TraitType.DontStarve => IncludeDontStarve.Value,
                         FollowerTrait.TraitType.Blind => IncludeBlind.Value,
                         FollowerTrait.TraitType.BornToTheRot => IncludeBornToTheRot.Value,
+                        FollowerTrait.TraitType.BishopOfCult => IncludeBishopOfCult.Value,
                         _ => true
                     };
                 }
@@ -682,6 +716,9 @@ public partial class Plugin : BaseUnityPlugin
             return;
         }
 
+        // Only process existing followers if that option is enabled
+        if (!ApplyToExistingFollowers.Value) return;
+
         if (NoNegativeTraits.Value)
         {
             Patches.NoNegativeTraits.UpdateAllFollowerTraits();
@@ -689,6 +726,62 @@ public partial class Plugin : BaseUnityPlugin
         else
         {
             Patches.NoNegativeTraits.RestoreOriginalTraits();
+        }
+    }
+
+    private static void OnApplyToExistingChanged()
+    {
+        if (IsNothingNegativePresent()) return;
+
+        // If turning ON while trait replacement is already enabled, process existing followers
+        if (ApplyToExistingFollowers.Value && NoNegativeTraits.Value)
+        {
+            Patches.NoNegativeTraits.UpdateAllFollowerTraits();
+        }
+        // If turning OFF while trait replacement is enabled, restore original traits
+        else if (!ApplyToExistingFollowers.Value && NoNegativeTraits.Value)
+        {
+            Patches.NoNegativeTraits.RestoreOriginalTraits();
+        }
+    }
+
+    private static bool _showApplyToExistingWarning;
+
+    private static void DrawApplyToExistingToggle(ConfigEntryBase entry)
+    {
+        var configEntry = (ConfigEntry<bool>)entry;
+
+        if (_showApplyToExistingWarning)
+        {
+            GUILayout.Label("WARNING: This will modify ALL existing followers!", GUILayout.ExpandWidth(true));
+            GUILayout.Label("Traits from necklaces may be lost on restore.", GUILayout.ExpandWidth(true));
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Confirm", GUILayout.ExpandWidth(true)))
+            {
+                configEntry.Value = true;
+                _showApplyToExistingWarning = false;
+            }
+            if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(true)))
+            {
+                _showApplyToExistingWarning = false;
+            }
+            GUILayout.EndHorizontal();
+        }
+        else
+        {
+            var newValue = GUILayout.Toggle(configEntry.Value, configEntry.Value ? "Enabled" : "Disabled", GUILayout.ExpandWidth(true));
+            if (newValue != configEntry.Value)
+            {
+                if (newValue)
+                {
+                    // Show warning before enabling
+                    _showApplyToExistingWarning = true;
+                }
+                else
+                {
+                    configEntry.Value = false;
+                }
+            }
         }
     }
 

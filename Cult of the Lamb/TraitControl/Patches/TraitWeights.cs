@@ -97,7 +97,7 @@ public static class TraitWeights
             .Cast<FollowerTrait.TraitType>()
             .Where(t => t != FollowerTrait.TraitType.None &&
                         t != FollowerTrait.TraitType.Spy &&
-                        t != FollowerTrait.TraitType.BishopOfCult)
+                        (t != FollowerTrait.TraitType.BishopOfCult || Plugin.IncludeBishopOfCult.Value))
             .ToList();
         IEnumerable<FollowerTrait.TraitType> traitsForPatches = allTraits;
         if (!Plugin.IncludeStoryEventTraits.Value)
@@ -364,6 +364,11 @@ public static class TraitWeights
             _pendingGuaranteedTraits.Add(FollowerTrait.TraitType.BornToTheRot);
         }
 
+        if (Plugin.GuaranteeBishopOfCult.Value && Plugin.IncludeBishopOfCult.Value && IsTraitAvailable(FollowerTrait.TraitType.BishopOfCult))
+        {
+            _pendingGuaranteedTraits.Add(FollowerTrait.TraitType.BishopOfCult);
+        }
+
         if (_pendingGuaranteedTraits.Count > 0)
         {
             Plugin.Log.LogInfo($"[GuaranteedTraits] Queued {_pendingGuaranteedTraits.Count} guaranteed traits: {string.Join(", ", _pendingGuaranteedTraits)}");
@@ -514,9 +519,14 @@ public static class TraitWeights
             availableTraits.Remove(FollowerTrait.TraitType.BornToTheRot);
         }
 
-        // Always filter out special traits that require game state setup
-        availableTraits.Remove(FollowerTrait.TraitType.BishopOfCult); // Story-related, granted when converting a bishop
-        availableTraits.Remove(FollowerTrait.TraitType.Spy); // Requires SpyJoinedDay to be set or spies leave immediately
+        // Filter out BishopOfCult unless explicitly enabled
+        if (!Plugin.IncludeBishopOfCult.Value)
+        {
+            availableTraits.Remove(FollowerTrait.TraitType.BishopOfCult);
+        }
+
+        // Always filter out Spy - requires SpyJoinedDay to be set or spies leave immediately
+        availableTraits.Remove(FollowerTrait.TraitType.Spy);
 
         // Filter out traits without localization (not fully implemented in the game)
         for (var i = availableTraits.Count - 1; i >= 0; i--)
@@ -751,6 +761,43 @@ public static class TraitWeights
     public static int GetMaxPlusOneTraitCount() => Plugin.MaximumTraits.Value + 1;
 
     /// <summary>
+    /// Resets session tracking before RandomisedTraits is called.
+    /// This is critical for the Trait Manipulator (Exorcism Altar) which calls this method
+    /// without going through the FollowerBrain constructor. Without this reset, the session
+    /// accumulates traits from previous follower creations, eventually exhausting all traits
+    /// and causing an infinite loop when the vanilla do-while can't find a valid trait.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.RandomisedTraits))]
+    private static void RandomisedTraits_Prefix(ref int seed)
+    {
+        ResetSessionTracking();
+        if (Plugin.RerollableAltarTraits.Value)
+        {
+            seed = Environment.TickCount;
+        }
+    }
+
+    /// <summary>
+    /// Resets session tracking before CompletelyNewRandomisedTraits is called.
+    /// This method is used by the Trait Manipulator's "Add Trait" feature.
+    /// Same rationale as RandomisedTraits_Prefix - prevents stale session data from
+    /// causing trait exhaustion and infinite loops.
+    /// When Re-rollable Altar Traits is enabled, replaces the deterministic seed with
+    /// Environment.TickCount so re-selecting a follower shows different results each time.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(FollowerInfo), nameof(FollowerInfo.CompletelyNewRandomisedTraits))]
+    private static void CompletelyNewRandomisedTraits_Prefix(ref int seed)
+    {
+        ResetSessionTracking();
+        if (Plugin.RerollableAltarTraits.Value)
+        {
+            seed = Environment.TickCount;
+        }
+    }
+
+    /// <summary>
     /// Debug postfix to log before/after traits during re-indoctrination.
     /// </summary>
     [HarmonyPostfix]
@@ -790,7 +837,8 @@ public static class TraitWeights
         Plugin.Log.LogInfo($"[Reindoctrinate] Current traits ({oldTraitCount}): {string.Join(", ", followerInfo.Traits)}");
 
         // Generate new randomized traits using the patched RandomisedTraits method
-        var seed = followerInfo.ID + TimeManager.CurrentDay;
+        // Include Environment.TickCount for entropy - without it, same follower + same day = same traits every time
+        var seed = followerInfo.ID + TimeManager.CurrentDay + Environment.TickCount;
         var newTraits = followerInfo.RandomisedTraits(seed);
 
         // Replace the follower's traits with the new randomized ones
@@ -861,6 +909,18 @@ public static class TraitWeights
     }
 
     /// <summary>
+    /// Adds the Reeducate command to mutated (Rot) followers when enabled.
+    /// Mutated followers get a different command set from NormalCommands, so we need to patch this separately.
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FollowerCommandGroups), nameof(FollowerCommandGroups.MutatedCommands))]
+    private static void FollowerCommandGroups_MutatedCommands_AddReeducate(ref List<CommandItem> __result)
+    {
+        if (!Plugin.TraitRerollOnReeducation.Value) return;
+        __result.Add(FollowerCommandItems.Reeducate());
+    }
+
+    /// <summary>
     /// Wraps the reeducation routine to re-roll traits after completion.
     /// Only applies to normal followers (not dissenters).
     /// </summary>
@@ -911,7 +971,8 @@ public static class TraitWeights
             Plugin.Log.LogInfo($"[Reeducate] Current traits ({oldTraitCount}): {string.Join(", ", followerInfo.Traits)}");
 
             // Generate new randomized traits using the patched RandomisedTraits method
-            var seed = followerInfo.ID + TimeManager.CurrentDay;
+            // Include Environment.TickCount for entropy - without it, same follower + same day = same traits every time
+            var seed = followerInfo.ID + TimeManager.CurrentDay + Environment.TickCount;
             var newTraits = followerInfo.RandomisedTraits(seed);
 
             // Replace the follower's traits with the new randomized ones

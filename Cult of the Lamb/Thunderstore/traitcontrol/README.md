@@ -7,7 +7,9 @@ Control your followers' traits with this quality-of-life mod.
 ## Features
 
 ### Trait Replacement
-- Automatically replaces negative traits with positive ones on all followers (existing and new)
+- Automatically replaces negative traits with positive ones on new followers
+- **Apply To Existing Followers** - optionally process existing followers too (disabled by default to protect necklace-granted traits). Shows a warning before enabling.
+- **Preserve Rot Followers** - keeps the Mutated (Rot) trait intact for rituals and DLC content (enabled by default)
 - Backs up original traits and can restore them if feature is disabled
 - Option to use only unlocked traits for replacements (enabled by default)
 - Option to pull from all trait pools instead of the game's separate pools
@@ -20,6 +22,7 @@ Control whether special/crossover traits can appear in trait pools:
 - **Dont Starve** - crossover trait (follower doesn't need to eat)
 - **Blind** - crossover trait
 - **Born To The Rot** - crossover trait
+- **Ex-Bishop** - normally granted when converting enemy bishops (follower will never dissent)
 
 Each unique trait has two options:
 - **Include** - allows the trait to appear in trait pools
@@ -39,6 +42,7 @@ Vanilla behavior is 2-3 traits for new followers (randomly chosen between min an
 - **Trait Reroll via Reeducation** - adds the Re-educate command to normal followers (dissenters already have this in vanilla). Using it will re-roll their traits using your configured min/max and weights. Works with "Enable Trait Replacement" to replace negative traits. A notification displays showing the follower's name and trait count change.
 
 - **Protect Trait Count on Reroll** - ensures followers don't end up with fewer traits than they started with when using reeducation or reindoctrination. If the reroll results in fewer traits, additional traits are added to match the original count.
+- **Re-rollable Altar Traits** - when using the Exorcism Altar, re-selecting a follower shows different trait results each time instead of the same result per day. Useful for finding specific traits without waiting.
 
 **Note:** If "Use Unlocked Traits Only" is enabled and you don't have enough traits unlocked, followers may receive fewer traits than the minimum. A warning will appear in the log when this happens.
 
@@ -64,7 +68,7 @@ Each trait in the configuration shows which game lists it belongs to at the end 
 | Category | Description |
 |----------|-------------|
 | Starting | Naturally appears on new followers (default pool) |
-| Rare | 20% chance to appear instead of a third starting trait |
+| Rare | ~10% chance to appear instead of a starting trait |
 | Faithful | Granted when a follower becomes faithful (spider web interaction) |
 | Unique | Special reward traits - only one follower can have each (Immortal, Disciple, etc.) |
 | Single | Only one follower in your cult can have this trait at a time |
@@ -85,7 +89,6 @@ Some traits are excluded from the weights list because they require special game
 | Trait | Reason |
 |-------|--------|
 | Spy | Requires SpyJoinedDay to be set or followers leave immediately |
-| BishopOfCult | Story-related, granted when converting a bishop |
 | Doctrine Traits | Traits you've unlocked via doctrines (Fertility, Allegiance, Cannibal, etc.) are automatically excluded since they already apply to your entire cult. Rolling them as individual traits would waste a slot. |
 
 **Event Traits** (excluded by default, enable "Include Event Traits" to add them). Note: "Include Event Traits" only applies when "Use All Traits Pool" is enabled:
@@ -109,14 +112,23 @@ Reset all configuration options to their default values (vanilla game behavior) 
 
 ## Configuration Examples
 
-### "I want all followers to have only positive traits"
+### "I want all NEW followers to have only positive traits"
 | Setting | Value |
 |---------|-------|
 | Enable Trait Replacement | ON |
+| Apply To Existing Followers | OFF (default) |
+
+**Result:** New followers will have their negative traits replaced with positive ones. Existing followers are not modified.
+
+### "I want ALL followers (existing and new) to have only positive traits"
+| Setting | Value |
+|---------|-------|
+| Enable Trait Replacement | ON |
+| Apply To Existing Followers | ON |
 | Use Unlocked Traits Only | OFF (default: ON) |
 | Prefer Exclusive Counterparts | ON (default) |
 
-**Result:** All negative traits are replaced. Lazy becomes Industrious, Faithless becomes Faithful, etc. Set "Use Unlocked Traits Only" to OFF to access all positive traits regardless of progression.
+**Result:** All negative traits are replaced on all followers. Lazy becomes Industrious, Faithless becomes Faithful, etc. **Warning:** Traits granted by necklaces may be lost if you disable this later and restore from backup.
 
 ### "I want to allow Immortal trait on new followers"
 | Setting | Value |
@@ -134,7 +146,7 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Faithful (in Good Traits) | 5.0 |
 | Other traits | 1.0 (default) |
 
-**Result:** Faithful is 5x more likely to appear than other traits on new followers. Note: Faithful is only in the Rare pool by default, so "Use All Traits Pool" is needed for it to appear on regular new followers.
+**Result:** Faithful is 5x more likely to appear than other traits on new followers. Note: Faithful is only in the Rare pool by default (~10% chance per trait slot), so "Use All Traits Pool" is needed for it to appear reliably on new followers.
 
 ### "I want exclusive traits replaced with random positive traits"
 | Setting | Value |
@@ -161,6 +173,7 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Include Dont Starve | OFF |
 | Include Blind | OFF |
 | Include Born To The Rot | OFF |
+| Include Ex-Bishop | OFF |
 
 **Result:** Trait selection uses all trait pools combined, but unique/crossover traits are excluded. Event traits are also excluded by default.
 
@@ -173,6 +186,7 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Include Dont Starve | ON |
 | Include Blind | ON |
 | Include Born To The Rot | ON |
+| Include Ex-Bishop | ON |
 | Include Event Traits | ON |
 
 **Result:** Every trait in the game can appear on new followers, including special/crossover and event traits.
@@ -189,11 +203,12 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Setting | Value |
 |---------|-------|
 | Enable Trait Replacement | ON |
+| Apply To Existing Followers | ON |
 | Prefer Exclusive Counterparts | ON |
 | Enable Trait Weights | ON |
 | Lazy (in Bad Traits) | 0 |
 
-**Result:** Existing Lazy followers get their trait replaced. New followers will never have the Lazy trait.
+**Result:** Existing Lazy followers get their trait replaced with Industrious. New followers will never have the Lazy trait.
 
 ### "I want followers who never die of old age"
 | Setting | Value |
@@ -213,6 +228,14 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Allow Multiple Unique Traits | ON |
 
 **Result:** Every new follower will have the Immortal trait, guaranteed. No weights needed.
+
+### "I want followers who never become dissenters"
+| Setting | Value |
+|---------|-------|
+| Include Ex-Bishop | ON |
+| Guarantee Ex-Bishop | ON |
+
+**Result:** New followers will receive the Ex-Bishop trait, making them immune to dissent regardless of how low cult faith drops. Only one follower can have this trait unless "Allow Multiple Unique Traits" is enabled.
 
 ### "I want a cult full of immortals (weights method)"
 | Setting | Value |
@@ -234,7 +257,7 @@ Reset all configuration options to their default values (vanilla game behavior) 
 | Faithful (in Good Traits) | 50 |
 | Faithless (in Bad Traits) | 0 |
 
-**Result:** New followers strongly favor the Faithful trait and will never be Faithless. Note: Faithful is in the Rare pool (20% chance for third trait slot in vanilla). "Use All Traits Pool" makes it equally likely as any other trait.
+**Result:** New followers strongly favor the Faithful trait and will never be Faithless. Note: Faithful is in the Rare pool (~10% chance per trait slot in vanilla). "Use All Traits Pool" makes it equally likely as any other trait.
 
 ### "I want to keep negative traits but control which ones appear"
 | Setting | Value |
@@ -290,11 +313,13 @@ This mod is incompatible with "Nothing Negative" or any other mod that modifies 
 ## My Other Mods
 
 - [Cult of QoL](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Cult_of_QoL_Collection/) - Massive quality-of-life overhaul with 100+ features
+- [Mystic Assistant Redux](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Mystic_Assistant_Redux/) - Buy specific Mystic Shop rewards instead of spinning the wheel
 - [Rebirth](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Rebirth/) - Followers can be reborn with new names and appearances
 - [Namify](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Namify/) - Random name generation from 1000+ names plus custom names
 - [Skip of the Lamb](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Skip_of_the_Lamb/) - Skip intros, splash screens, and videos
 - [Skip of the Lamb Lite](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Skip_of_the_Lamb_Lite/) - Just skips splash screens, no config needed
 - [Trait Control](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Trait_Control/) - Replace negative traits, control trait probabilities
+- [Quick Menus](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Quick_Menus/) - Hotkey-based quick access to game menus from anywhere
 - [Glyph Override](https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/Glyph_Override/) - Force specific controller button prompts
 
 ## Donate

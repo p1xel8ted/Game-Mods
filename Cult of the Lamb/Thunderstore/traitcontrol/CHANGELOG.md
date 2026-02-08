@@ -1,3 +1,21 @@
+### 0.1.6 - 07/02/2026
+
+**New Features:**
+* Added Ex-Bishop trait to unique trait options - followers with this trait will never become dissenters, regardless of faith level. Normally only granted when converting enemy bishops.
+* Added "Apply To Existing Followers" option - trait replacement now only affects new followers by default. Enable this option to also process existing followers (with confirmation warning).
+* Added "Preserve Rot Followers" option - prevents the Mutated (Rot) trait from being replaced, keeping your Rot followers intact for rituals and DLC content.
+* Added "Re-rollable Altar Traits" option - when using the Exorcism Altar, re-selecting a follower shows different trait results each time instead of the same result per day.
+
+**Improvements:**
+* "Enable Trait Replacement" now clearly states it only affects new followers by default.
+* Added warning popup when enabling "Apply To Existing Followers" to prevent accidental trait loss from necklaces.
+
+**Fixes:**
+* Fixed re-educating the same follower multiple times on the same day always producing identical traits.
+* Fixed game freeze when using the Exorcism Altar (Trait Manipulator) to add or shuffle traits on saves with many followers.
+* Fixed "Chosen Child" trait appearing in trait rolls when "Include Event Traits" is disabled.
+* Fixed Reeducate command not appearing for Rot (Mutated) followers when trait reroll via reeducation is enabled.
+
 ### 0.1.5 - 04/02/2026
 
 **New Features:**
