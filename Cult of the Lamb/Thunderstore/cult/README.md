@@ -71,12 +71,12 @@
 - Rot fertilizer decay - ground warming expires after configurable days instead of lasting forever
 
 ### Mass Actions
-- Configurable mass action costs (gold, time advancement, faith reduction for Bless/Inspire)
+- Configurable mass action costs (gold, time advancement, faith reduction for Bless/Inspire) with per-action or per-follower mode and optional cost preview in the command wheel
 - Mass inspire, bless, bribe, extort, intimidate
 - Mass fertilize, water
 - Mass level up (with optional instant soul collection)
 - Mass bully, reassure, reeducate
-- Mass romance, pet follower (dogs and non-dogs)
+- Mass romance, pet follower (dogs, Poppy, and pettable followers by default, or all followers)
 - Mass sin extract
 - Mass open scarecrow traps
 - Mass fill/collect wolf traps
@@ -91,6 +91,7 @@
 - Exclude grass from "Deposit All Seeds" on seed silos
 - Use Rotburn as shrine brazier fuel (configurable fuel weight)
 - Fueled shrine brazier provides warmth during winter
+- Furnace heater scaling - each proximity heater increases furnace fuel drain during winter
 - Customise Harvest Totem radius
 - Customise Propaganda Speaker radius (mute audio, turn off at night)
 - Customise Farm Station radius
@@ -121,7 +122,7 @@
 
 ### Crafting Stations
 - Halve refinery material requirements
-- Refine 10 Poop into 1 Rot Fertilizer (new refinery recipe)
+- Refine Poop + Rotgrit into Rot Fertilizer (refinery recipe)
 - Mass fill refinery, cooking fire, kitchen, and pub queues with one click
 
 ### Weather

@@ -177,11 +177,24 @@ public static class FollowerPatches
         return notBribed > 1;
     }
 
+    /// <summary>
+    /// Returns true if a follower qualifies for mass petting.
+    /// Checks MassPetAllFollowers config or Dog/Poppy skin or Pettable trait.
+    /// </summary>
+    internal static bool CanBePetted(Follower f)
+    {
+        if (Plugin.MassPetAllFollowers.Value) return true;
+        var skinName = f.Brain.Info.SkinName;
+        return skinName.Contains("Dog") || skinName.Contains("Poppy")
+            || f.Brain.HasTrait(FollowerTrait.TraitType.Pettable);
+    }
+
     private static bool ShouldMassPetFollower(FollowerCommands followerCommands)
     {
         if (!Plugin.MassPetFollower.Value) return false;
         if (followerCommands is not (FollowerCommands.PetDog or FollowerCommands.PetFollower)) return false;
-        var notPetted = Follower.Followers.Count(follower => FollowerCommandItems.PetDog().IsAvailable(follower));
+        var notPetted = Follower.Followers.Count(follower =>
+            FollowerCommandItems.PetDog().IsAvailable(follower) && CanBePetted(follower));
         return notPetted > 1;
     }
 
@@ -359,6 +372,7 @@ public static class FollowerPatches
             OriginalMassActionInteraction = __instance;
             var petEligible = validFollowers.Where(f =>
                 FollowerCommandItems.PetDog().IsAvailable(f) &&
+                CanBePetted(f) &&
                 MassActionEffects.IsAvailable(f.Brain) &&
                 !MassActionEffects.IsImprisoned(f.Brain) &&
                 !MassActionEffects.IsDissenting(f.Brain)).ToList();

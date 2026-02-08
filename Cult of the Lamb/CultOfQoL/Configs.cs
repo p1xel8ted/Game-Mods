@@ -26,6 +26,18 @@ public enum ElderWorkMode
     LightWorkOnly
 }
 
+/// <summary>
+/// Controls how mass action costs are calculated.
+/// </summary>
+public enum MassActionCostMode
+{
+    /// <summary>Flat fee regardless of follower count.</summary>
+    PerMassAction,
+
+    /// <summary>Cost multiplied by number of followers affected.</summary>
+    PerFollower
+}
+
 public partial class Plugin
 {
     private static ConfigEntry<bool> EnableLogging { get; set; }
@@ -151,6 +163,8 @@ public partial class Plugin
 
     internal static ConfigEntry<bool> MassBribe { get; private set; }
 
+    internal static ConfigEntry<MassActionCostMode> MassActionCostModeEntry { get; private set; }
+    internal static ConfigEntry<bool> ShowMassActionCostPreview { get; private set; }
     internal static ConfigEntry<float> MassActionGoldCost { get; private set; }
     internal static ConfigEntry<float> MassActionTimeCost { get; private set; }
     internal static ConfigEntry<int> MassFaithReduction { get; private set; }
@@ -166,6 +180,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassReeducate { get; private set; }
     internal static ConfigEntry<bool> MassExtort { get; private set; }
     internal static ConfigEntry<bool> MassPetFollower { get; private set; }
+    internal static ConfigEntry<bool> MassPetAllFollowers { get; private set; }
     internal static ConfigEntry<bool> MassPetAnimals { get; private set; }
     internal static ConfigEntry<bool> MassIntimidate { get; private set; }
     internal static ConfigEntry<bool> MassIntimidateScareAll { get; private set; }
@@ -239,6 +254,10 @@ public partial class Plugin
     internal static ConfigEntry<int> RotburnShrineFuelWeight { get; set; }
     internal static ConfigEntry<bool> EnableShrineWarmth { get; set; }
 
+    // Furnace
+    internal static ConfigEntry<bool> FurnaceHeaterScaling { get; set; }
+    internal static ConfigEntry<int> FurnaceHeaterFuelCost { get; set; }
+
     // Sound
     internal static ConfigEntry<bool> ResourceChestDepositSounds { get; private set; }
     internal static ConfigEntry<bool> ResourceChestCollectSounds { get; private set; }
@@ -248,4 +267,7 @@ public partial class Plugin
 
     // Fixes
     internal static ConfigEntry<bool> AutoRepairMissingLore { get; private set; }
+
+    // Debug
+    internal static ConfigEntry<KeyboardShortcut> DumpTranslationsKey { get; private set; }
 }

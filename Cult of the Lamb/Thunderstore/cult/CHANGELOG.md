@@ -5,15 +5,20 @@
 * Added "Exclude Grass From Seed Deposit" option - when using "Deposit All Seeds" on a seed silo, grass will not be deposited.
 * Added "Mass Notification Threshold" setting - when a mass action affects more than the configured number of followers (default 3), a single summary notification is shown instead of one per follower.
 * Added "Rot Fertilizer Decay" option - rot fertilizer ground warming now expires after a configurable number of days (1-30, default 5) instead of lasting forever. Disabled by default.
-* Added "Mass Action Costs" section with three optional per-follower costs for mass actions: gold per follower affected, game time per follower, and faith reduction percentage for mass Bless/Inspire. All default to 0 (free). The original single interaction is never affected.
+* Added "Mass Action Costs" section with configurable costs for mass actions: gold, game time, and faith reduction for Bless/Inspire. Costs can be charged per mass action (flat fee) or per follower via a dropdown. Optional cost preview shows estimated cost in the command wheel when highlighting a mass action. All defaults are 0 (free). The original single interaction is never affected.
 
 * Added "Disable Soul Camera Shake" option to stop the camera shaking when devotion orbs hit the shrine during worship.
 * Added "Suppress Notifications On Load" option to prevent the flood of notifications when loading a save.
-* Added "Refinery: Poop to Rot Fertilizer" option - refine 10 Poop into 1 Rot Fertilizer at the refinery.
+* Added "Refinery: Poop to Rot Fertilizer" option - refine Poop + Rotgrit into Rot Fertilizer at the refinery.
+* Added "Furnace Heater Scaling" option - each proximity heater increases the furnace's fuel drain during winter, adding challenge to heating large bases.
+
+**Changes:**
+* Mass pet now only targets dogs, Poppy, and followers with the Pettable trait by default. Enable "Mass Pet All Followers" to pet everyone like before.
 
 **Fixes:**
 * Fixed "Collect All God Tears At Once" collecting double the tears when only one was available.
 * Fixed mass level up not properly incrementing follower levels (followers were stuck needing a sermon to level up).
+* Fixed rot fertilizer decay not stopping crop growth when warming expires — crops now properly freeze in place until re-fertilized.
 
 ### 2.4.0 - 04/02/2026
 

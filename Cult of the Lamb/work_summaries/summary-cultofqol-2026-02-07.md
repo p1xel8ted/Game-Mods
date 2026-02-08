@@ -98,14 +98,62 @@ Make rot fertilizer's ground warming effect temporary instead of permanent, addi
 
 ---
 
+## Fix: God Tear Double-Collection Bug (COMPLETE)
+
+### Problem
+"Collect All God Tears At Once" was collecting double tears (e.g. 2 from a shrine with only 1). The old postfix on `GiveGodTearIE` ran after deferred `SoulCustomTarget` callbacks (from instant devotion collection) could increment `UpgradeSystem.AbilityPoints` via level-ups, causing it to see an inflated count.
+
+### Fix
+Replaced `GiveGodTearIE` postfix with `OnInteract` prefix on `BuildingShrine`. The prefix runs before any other code can modify AbilityPoints, snapshots the count, and pre-collects extras. Guards: `!Activating`, `!HasUnlockAvailable`, `DeathCatBeaten`.
+
+### Files Modified
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs`
+
+---
+
+## Change: Mass Action Costs Float with 0.25 Stepping (COMPLETE)
+
+### What Changed
+- `MassActionGoldCost` and `MassActionTimeCost` changed from `ConfigEntry<int>` to `ConfigEntry<float>`
+- Added `RoundToQuarter` helper and `SettingChanged` handlers for 0.25 stepping
+- `MassActionCosts.TryDeductCosts` uses `Mathf.CeilToInt` for gold deduction
+
+### Files Modified
+- `CultOfQoL/Configs.cs` — int → float type change
+- `CultOfQoL/Plugin.cs` — float bindings, AcceptableValueRange<float>, SettingChanged handlers, RoundToQuarter
+- `CultOfQoL/Core/MassActionCosts.cs` — Mathf.CeilToInt, float comparisons
+
+---
+
+## Logging Standardization (COMPLETE)
+
+### What Changed
+Audited all 195 log calls across 24 files. Established consistent format:
+- Runtime: `Plugin.WriteLog("[Tag] message")`
+- Transpilers: `Plugin.Log.LogInfo/Warning("[Transpiler] message")`
+
+Fixed 21 untagged calls across 7 files. Added `[CallerMemberName]` to `MassActionCosts.TryDeductCosts` and `GetFaithMultiplier` for automatic caller identification. Added detailed cost logging (gold check/deduction, time advancement, faith multiplier).
+
+### Files Modified
+- `CultOfQoL/Core/MassActionCosts.cs` — [CallerMemberName], detailed logging
+- `CultOfQoL/Patches/Followers/FollowerPatches.cs` — [ElderWork]/[MassAction]/[LevelUp] tags
+- `CultOfQoL/Patches/Gameplay/InteractionPatches.cs` — [Interaction]/[MassWater]/[MassFertilize] tags
+- `CultOfQoL/Patches/Gameplay/PickUps.cs` — [PickUps] tags
+- `CultOfQoL/Patches/Gameplay/RitualEnrichmentNerf.cs` — [EnrichmentNerf] tag
+- `CultOfQoL/Patches/Structures/FarmPlotPatches.cs` — [RotFertilizer] tags
+- `CultOfQoL/Patches/Structures/StructurePatches.cs` — [ResourceProduction]/[StationAge] tags
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — [Collect All God Tears] logging
+
+---
+
 ## Feature: Mass Action Costs (COMPLETE)
 
 ### Goal
 Add configurable costs (gold, time, faith reduction) to mass actions so they don't trivialize game balance.
 
 ### Config (in "── Mass Action Costs ──" section)
-- `MassActionGoldCost` (int, 0-50, default 0) — gold per target affected
-- `MassActionTimeCost` (int, 0-120, default 0) — game minutes per target affected
+- `MassActionGoldCost` (float, 0-50, default 0, 0.25 stepping) — gold per target affected
+- `MassActionTimeCost` (float, 0-120, default 0, 0.25 stepping) — game minutes per target affected
 - `MassFaithReduction` (int, 0-100, default 0) — % faith reduction for mass Bless/Inspire
 
 All default to 0 (free), preserving existing behavior unless user opts in.
@@ -144,3 +192,83 @@ All default to 0 (free), preserving existing behavior unless user opts in.
 - `CultFaithManager.AddThought(thought, followerID, faithMultiplier)` — line 253: `data.Modifier *= faithMultiplier`
 - `Inventory.GetItemQuantity(ITEM_TYPE.BLACK_GOLD)` / `Inventory.ChangeItemQuantity(ITEM_TYPE.BLACK_GOLD, -amount)`
 - `TimeManager.CurrentGameTime` — advanced by `SimulationManager.Update()` every frame; phase transitions fire at 240 min boundaries
+
+---
+
+## Feature: Disable Soul Camera Shake (COMPLETE)
+
+### Goal
+Stop the camera shaking when devotion orbs hit the shrine during follower worship.
+
+### Implementation
+- Transpiler on `SoulCustomTarget.CollectMe()` redirects `CameraManager.instance.ShakeCameraForDuration(0.1f, 0.2f, 0.2f)` to `ConditionalSoulShake`
+- Wrapper checks `Plugin.DisableSoulCameraShake.Value` before calling the real method
+- Game has global `SettingsManager.Settings.Accessibility.ScreenShake` but that kills ALL shake including combat — this is targeted
+- `ShakeCameraForDuration` has 4 params (float, float, float, bool=true) — wrapper must match all 4 since compiler pushes defaults onto IL stack
+
+### Config
+- `DisableSoulCameraShake` (bool, default false) in Collection section (Order 0)
+
+### Files Modified
+- `CultOfQoL/Configs.cs` — Added property
+- `CultOfQoL/Plugin.cs` — Added binding
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — Transpiler + `ConditionalSoulShake` wrapper
+
+---
+
+## Feature: Suppress Notifications On Load (COMPLETE)
+
+### Goal
+Prevent the flood of individual notifications when loading a save.
+
+### Implementation
+- Static constructor subscribes to `SaveAndLoad.OnLoadComplete` (same pattern as `FarmPlotPatches`)
+- On load: sets `NotificationCentre.NotificationsEnabled = false`
+- Coroutine waits 3 seconds, calls `ClearNotifications()`, re-enables `NotificationsEnabled`
+- `NotificationsEnabled` only gates static notifications (`PlayFollowerNotification`, etc.)
+- Dynamic notifications (`UIDynamicNotificationCenter`) rebuild from game state independently — unaffected
+
+### Config
+- `SuppressNotificationsOnLoad` (bool, default false) in Notifications section (Order 8)
+
+### Files Modified
+- `CultOfQoL/Configs.cs` — Added property
+- `CultOfQoL/Plugin.cs` — Added binding
+- `CultOfQoL/Patches/UI/Notifications.cs` — Static ctor + `OnLoadComplete` + `ReEnableNotificationsAfterDelay` coroutine
+
+---
+
+## Feature: Refinery Poop to Rot Fertilizer (COMPLETE)
+
+### Goal
+Add a refinery recipe: 10 POOP → 1 POOP_ROTSTONE.
+
+### Implementation
+Two patches:
+1. Modified existing `Structures_Refinery_GetCost` postfix — added `InventoryItem.ITEM_TYPE Item` parameter, injects recipe at top before cost-halving logic (so "Halve Refinery Costs" applies automatically)
+2. New prefix on `UIRefineryMenuController.OnShowStarted` — appends `POOP_ROTSTONE` to `_refinableResources` array before the method iterates it to populate the UI
+
+### Key Game Code
+- `UIRefineryMenuController._refinableResources` (line 45) — hardcoded `ITEM_TYPE[]` array iterated in `OnShowStarted` (line 83)
+- `Structures_Refinery.GetCost()` — switch statement returning `List<StructuresData.ItemCost>` for each recipe
+- `Structures_Refinery.GetAmount()` — returns 1 for non-BLACK_GOLD items (so 1 POOP_ROTSTONE per cycle)
+- `_dlcResources` — DLC-gated items; POOP_ROTSTONE is NOT in this list
+
+### Config
+- `RefineryPoopToRotPoop` (bool, default false) in Structures section (Order 28)
+
+### Files Modified
+- `CultOfQoL/Configs.cs` — Added property
+- `CultOfQoL/Plugin.cs` — Added binding
+- `CultOfQoL/Patches/Structures/StructurePatches.cs` — Modified GetCost postfix + added OnShowStarted prefix
+
+---
+
+## Documentation Updates (this session)
+- `Thunderstore/cult/CHANGELOG.md` — Added 3 features to 2.4.1 entry
+- `Thunderstore/cult/README.md` — Added to Collection, Menu & UI, Crafting sections
+- `Thunderstore/cult/nexusmods_description.txt` — Same (BBCode)
+
+## Open Issues
+- All features need in-game testing
+- Changes not yet committed

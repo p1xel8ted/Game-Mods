@@ -449,7 +449,11 @@ internal static class StructurePatches
         // Inject poop → rot poop recipe
         if (Plugin.RefineryPoopToRotPoop.Value && Item == InventoryItem.ITEM_TYPE.POOP_ROTSTONE)
         {
-            __result = [new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.POOP, 10)];
+            __result =
+            [
+                new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.POOP, 10),
+                new StructuresData.ItemCost(InventoryItem.ITEM_TYPE.SOOT, 5)
+            ];
         }
 
         // Performance optimization: Use cached config value

@@ -33,6 +33,7 @@ global using src.UI.Menus;
 global using UnityEngine;
 global using UnityEngine.SceneManagement;
 global using UnityEngine.UI;
+global using I2.Loc;
 global using Debug = UnityEngine.Debug;
 global using Debugger = DG.Tweening.Core.Debugger;
 global using Object = UnityEngine.Object;

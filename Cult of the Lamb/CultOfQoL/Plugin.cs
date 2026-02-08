@@ -110,6 +110,7 @@ public partial class Plugin : BaseUnityPlugin
         // ── General ──
         EnableLogging = _configInstance.Bind(GeneralSection, "Enable Logging", false, new ConfigDescription("Enable/disable logging.", null, new ConfigurationManagerAttributes { Order = 5 }));
         EnableLogging.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.EnableLogging);
+        DumpTranslationsKey = _configInstance.Bind(GeneralSection, "Dump Translations Key", new KeyboardShortcut(KeyCode.F9), new ConfigDescription("When Enable Logging is on, press this key to dump all English translations to a text file in BepInEx/plugins/CultOfQoL/.", null, new ConfigurationManagerAttributes { Order = 4, DispName = "    └ Dump Translations Key" }));
         UnlockTwitchItems = _configInstance.Bind(GeneralSection, "Unlock Twitch Items", false, new ConfigDescription("Unlock pre-order DLC, Twitch plush, and Twitch drops. Paid DLC is excluded on purpose.", null, new ConfigurationManagerAttributes { Order = 1 }));
 
         // ── Animals ──
@@ -311,13 +312,21 @@ public partial class Plugin : BaseUnityPlugin
         // }));
 
         // ── Mass Action Costs ──
-        MassActionGoldCost = _configInstance.Bind(MassActionCostsSection, "Gold Cost", 0f, new ConfigDescription("Gold deducted per follower/target affected by a mass action. Set to 0 for free. If you can't afford the total, the mass action is skipped but the original single interaction still works.", new AcceptableValueRange<float>(0f, 50f), new ConfigurationManagerAttributes
+        MassActionCostModeEntry = _configInstance.Bind(MassActionCostsSection, "Cost Mode", CultOfQoL.MassActionCostMode.PerFollower, new ConfigDescription("How costs are calculated. Per Mass Action = flat fee regardless of follower count. Per Follower = cost multiplied by number of followers affected.", null, new ConfigurationManagerAttributes
+        {
+            Order = 5
+        }));
+        ShowMassActionCostPreview = _configInstance.Bind(MassActionCostsSection, "Show Cost Preview", false, new ConfigDescription("Show the estimated cost in the command wheel description when highlighting a mass action.", null, new ConfigurationManagerAttributes
+        {
+            Order = 4
+        }));
+        MassActionGoldCost = _configInstance.Bind(MassActionCostsSection, "Gold Cost", 0f, new ConfigDescription("Gold deducted for a mass action. Set to 0 for free. If you can't afford the total, the mass action is skipped but the original single interaction still works.", new AcceptableValueRange<float>(0f, 50f), new ConfigurationManagerAttributes
         {
             Order = 3
         }));
         MassActionGoldCost.SettingChanged += (_, _) => MassActionGoldCost.Value = RoundToQuarter(MassActionGoldCost.Value);
 
-        MassActionTimeCost = _configInstance.Bind(MassActionCostsSection, "Time Cost (Game Minutes)", 0f, new ConfigDescription("Game minutes that pass per follower/target affected by a mass action. Set to 0 for no time cost. 240 minutes = 1 game phase.", new AcceptableValueRange<float>(0f, 120f), new ConfigurationManagerAttributes
+        MassActionTimeCost = _configInstance.Bind(MassActionCostsSection, "Time Cost (Game Minutes)", 0f, new ConfigDescription("Game minutes that pass for a mass action. Set to 0 for no time cost. 240 minutes = 1 game phase.", new AcceptableValueRange<float>(0f, 120f), new ConfigurationManagerAttributes
         {
             Order = 2
         }));
@@ -380,7 +389,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 2
         }));
-        RotFertilizerDuration = _configInstance.Bind(FarmSection, "Rot Fertilizer Duration (Days)", 5, new ConfigDescription("Number of days before rot fertilizer warming expires. Crops on expired plots will wither during winter unless near a Crop Grower.", new AcceptableValueRange<int>(1, 30), new ConfigurationManagerAttributes
+        RotFertilizerDuration = _configInstance.Bind(FarmSection, "Rot Fertilizer Duration (Days)", 5, new ConfigDescription("Number of days before rot fertilizer warming expires. Crops on expired plots will freeze during winter unless near a Thawing Harvest Totem.", new AcceptableValueRange<int>(1, 30), new ConfigurationManagerAttributes
         {
             Order = 1
         }));
@@ -449,14 +458,18 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 2, DispName = "    └ Mass Level Up Instant Souls"
         }));
-        MassPetFollower = _configInstance.Bind(MassFollowerSection, "Mass Pet Follower", false, new ConfigDescription("When petting any follower, all followers are petted at once.", null, new ConfigurationManagerAttributes
+        MassPetFollower = _configInstance.Bind(MassFollowerSection, "Mass Pet Follower", false, new ConfigDescription("When petting a follower, all eligible followers are petted at once. Which followers qualify depends on the Mass Pet All Followers setting below.", null, new ConfigurationManagerAttributes
         {
             DispName = "Mass Pet Follower**", Order = 1
         }));
         MassPetFollower.SettingChanged += (_, _) => ShowRestartMessage();
+        MassPetAllFollowers = _configInstance.Bind(MassFollowerSection, "Mass Pet All Followers", false, new ConfigDescription("When enabled, mass pet applies to all followers regardless of the Pettable trait. When disabled, only followers with the Pettable trait or Dog/Poppy skin are petted.", null, new ConfigurationManagerAttributes
+        {
+            Order = 0, DispName = "    └ Mass Pet All Followers"
+        }));
         MassSinExtract = _configInstance.Bind(MassFollowerSection, "Mass Sin Extract", false, new ConfigDescription("When extracting sin from a follower, all eligible followers have their sin extracted at once.", null, new ConfigurationManagerAttributes
         {
-            DispName = "Mass Sin Extract**", Order = 0
+            DispName = "Mass Sin Extract**", Order = -1
         }));
         MassSinExtract.SettingChanged += (_, _) => ShowRestartMessage();
 
@@ -611,7 +624,11 @@ public partial class Plugin : BaseUnityPlugin
         RotburnShrineFuelWeight = _configInstance.Bind(StructureSection, "Rotburn Fuel Weight", 13, new ConfigDescription("Fuel value when adding Rotburn to shrine. Default matches LOG (13). Vanilla MAGMA_STONE is 14700.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes { Order = 29, ShowRangeAsPercent = false, DispName = "    └ Rotburn Fuel Weight" }));
         EnableShrineWarmth = _configInstance.Bind(StructureSection, "Shrine Provides Warmth", true, new ConfigDescription("When the shrine brazier is fully fueled, it provides warmth during winter (20% contribution).", null, new ConfigurationManagerAttributes { Order = 28 }));
 
-        RefineryPoopToRotPoop = _configInstance.Bind(StructureSection, "Refinery: Poop to Rot Fertilizer", false, new ConfigDescription("Adds a refinery recipe to convert 10 Poop into 1 Rot Fertilizer (Poop Rotstone).", null, new ConfigurationManagerAttributes { Order = 28 }));
+        // Furnace Heater Scaling
+        FurnaceHeaterScaling = _configInstance.Bind(StructureSection, "Furnace Heater Scaling", false, new ConfigDescription("Each proximity heater increases the furnace's fuel drain during winter. More heaters = faster fuel consumption.", null, new ConfigurationManagerAttributes { Order = 34 }));
+        FurnaceHeaterFuelCost = _configInstance.Bind(StructureSection, "Furnace Heater Fuel Cost", 500, new ConfigDescription("Fuel units drained per heater per game phase during winter. 1 Rotburn = 14,700 fuel. At default 500, 5 heaters drain 2,500/phase (~10,000/day).", new AcceptableValueRange<int>(100, 5000), new ConfigurationManagerAttributes { Order = 33, ShowRangeAsPercent = false, DispName = "    └ Heater Fuel Cost" }));
+
+        RefineryPoopToRotPoop = _configInstance.Bind(StructureSection, "Refinery: Poop to Rot Fertilizer", false, new ConfigDescription("Adds a refinery recipe to convert Poop + Rotgrit into Rot Fertilizer (Poop Rotstone).", null, new ConfigurationManagerAttributes { Order = 28 }));
         AdjustRefineryRequirements = _configInstance.Bind(StructureSection, "Adjust Refinery Requirements", false, new ConfigDescription("Where possible, halves the materials needed to convert items in the refinery. Rounds up.", null, new ConfigurationManagerAttributes { Order = 27 }));
         AdjustRefineryRequirements.SettingChanged += (_, _) => ConfigCache.MarkDirty(ConfigCache.Keys.AdjustRefineryRequirements);
         RefineryMassFill = _configInstance.Bind(StructureSection, "Refinery Mass Fill", false, new ConfigDescription("When adding an item to the refinery queue, automatically fill all available slots with that item.", null, new ConfigurationManagerAttributes { Order = 26 }));
@@ -952,6 +969,12 @@ public partial class Plugin : BaseUnityPlugin
             NotificationCentre.Instance.PlayGenericNotification("Game Saved!");
         }
 
+        // Translation dump (debug utility, gated behind EnableLogging)
+        if (EnableLogging.Value && DumpTranslationsKey.Value.IsUp())
+        {
+            DumpTranslations();
+        }
+
         // Ad disabling - cache UI controller and components to avoid repeated queries
         if (_cachedDisableAdsValue)
         {
@@ -977,5 +1000,34 @@ public partial class Plugin : BaseUnityPlugin
                 }
             }
         }
+    }
+
+    private static void DumpTranslations()
+    {
+        var outputDir = Path.Combine(BepInEx.Paths.PluginPath, "CultOfQoL");
+        Directory.CreateDirectory(outputDir);
+        var outputPath = Path.Combine(outputDir, "translations_en.txt");
+
+        var count = 0;
+        using (var writer = new StreamWriter(outputPath, false, System.Text.Encoding.UTF8))
+        {
+            foreach (var source in LocalizationManager.Sources)
+            {
+                var englishIndex = source.GetLanguageIndex("English");
+                if (englishIndex < 0) continue;
+
+                foreach (var term in source.mTerms)
+                {
+                    var translation = term.GetTranslation(englishIndex);
+                    if (string.IsNullOrEmpty(translation)) continue;
+
+                    writer.WriteLine($"{term.Term} = {translation}");
+                    count++;
+                }
+            }
+        }
+
+        Log.LogInfo($"[TranslationDump] Dumped {count} English translations to {outputPath}");
+        NotificationCentre.Instance?.PlayGenericNotification($"Dumped {count} translations to plugins/CultOfQoL/");
     }
 }

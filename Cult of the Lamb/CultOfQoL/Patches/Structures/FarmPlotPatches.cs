@@ -106,6 +106,29 @@ public static class FarmPlotPatches
         }
     }
 
+    /// <summary>
+    /// When decay is enabled and warming has expired (DefrostedCrop = false), block growth
+    /// even though POOP_ROTSTONE is still on the plot. The fertilizer stays so that
+    /// SetWithered()'s guard prevents crop death — crops freeze but don't wither.
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Structures_FarmerPlot), nameof(Structures_FarmerPlot.CanGrow))]
+    public static void CanGrow_Postfix(Structures_FarmerPlot __instance, SeasonsManager.Season season, ref bool __result)
+    {
+        if (!__result) return;
+        if (!Plugin.RotFertilizerDecay.Value) return;
+
+        // Only intervene when warming has expired but rot fertilizer is still present
+        if (__instance.Data.DefrostedCrop) return;
+        if (!__instance.HasFertilized() || __instance.GetFertilizer().type != 187) return;
+
+        // Don't block if other growth enablers are active
+        if (__instance.NearbyFarmCropGrower()) return;
+        if (season == SeasonsManager.Season.Winter && __instance.GrowsDuringWinter) return;
+
+        __result = false;
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save), new Type[0])]
     public static void SaveAndLoad_Save_Prefix()
