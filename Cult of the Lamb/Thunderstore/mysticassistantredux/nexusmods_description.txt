@@ -30,13 +30,14 @@
 [list]
 [*][size=3]5 Woolhaven DLC necklaces (Death's Door, Winter, Frozen, Targeted, Weird) — requires Woolhaven DLC[/size]
 [*][size=3]31 boss follower skins — normally unlocked by defeating bosses[/size]
+[*][size=3]2 quest-locked follower skins (Nightwolf, Snail) — normally obtained through specific quests[/size]
 [/list]
 
 [size=3][b]God Tear Cost[/b][/size]
 [size=3]The cost per item is configurable (1-10, default 1). Increasing the cost requires confirmation and is locked per save — it can only go up, never down. The cost can only be changed while a save is loaded. The lock is automatically cleared when a save is deleted or overwritten.[/size]
 
-[size=3][b]Overbuy Warnings[/b][/size]
-[size=3]The shop will warn you before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces). Click again to confirm.[/size]
+[size=3][b]Purchase Warnings[/b][/size]
+[size=3]The shop will warn you with a confirmation click before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces), boss skins (bypasses boss fights), and quest skins (bypasses quest progression).[/size]
 
 [size=3][b]Localization[/b][/size]
 [size=3]All shop labels, interaction prompts, and configuration UI are localized in 15 languages, matching the game's language setting.[/size]

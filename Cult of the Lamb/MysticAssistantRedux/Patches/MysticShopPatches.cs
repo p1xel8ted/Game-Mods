@@ -315,6 +315,21 @@ public static class MysticShopPatches
                 }
                 break;
 
+            case InventoryManager.QuestSkinType:
+                var questSkinIndex = UnityEngine.Random.Range(0, shopStock);
+                var questSkinToUnlock = Plugin.CurrentInventoryManager.GetQuestSkinNameByIndex(questSkinIndex);
+                DataManager.SetFollowerSkinUnlocked(questSkinToUnlock);
+                RegisterSkinAlert(questSkinToUnlock);
+                Plugin.CurrentInventoryManager.RemoveItemFromListByTypeAndIndex(boughtItemType, questSkinIndex);
+                Plugin.CurrentInventoryManager.ChangeShopStockByQuantity(boughtItemType, -1);
+                Plugin.Log.LogInfo($"[MysticShop] Unlocked Quest skin: {questSkinToUnlock}");
+                if (!Plugin.CurrentInventoryManager.BoughtQuestSkin)
+                {
+                    Plugin.PostShopActions.Add(ShowUnlockedFollowerSkins);
+                    Plugin.CurrentInventoryManager.SetBoughtQuestSkinFlag(true);
+                }
+                break;
+
             case InventoryManager.AppleFleeceType:
                 var appleFleeceIndex = UnityEngine.Random.Range(0, shopStock);
                 var appleFleece = Plugin.CurrentInventoryManager.GetAppleFleeceByIndex(appleFleeceIndex);
@@ -367,9 +382,9 @@ public static class MysticShopPatches
             return false;
         }
 
-        if (Plugin.ShowOverbuyWarning)
+        if (Plugin.WarningMessage != null)
         {
-            __instance._buttonPromptText.text = " <color=red>You are buying more of this than the game normally allows. Click it again to confirm.</color>";
+            __instance._buttonPromptText.text = $" <color=red>{Plugin.WarningMessage}</color>";
         }
         else
         {
@@ -455,7 +470,7 @@ public static class MysticShopPatches
     [HarmonyPatch(typeof(UIItemSelectorOverlayController), nameof(UIItemSelectorOverlayController.OnItemSelected))]
     public static bool OnItemSelected_Prefix()
     {
-        Plugin.ShowOverbuyWarning = false;
+        Plugin.WarningMessage = null;
         return true; // Continue to original method
     }
 
@@ -478,11 +493,15 @@ public static class MysticShopPatches
             var traderTrackerItems = __instance.CostProvider?.Invoke(item.Type);
             if (traderTrackerItems != null && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.GOD_TEAR) >= traderTrackerItems.SellPriceActual)
             {
-                // Check for overbuy warning
-                if (!Plugin.ShowOverbuyWarning && InventoryInfo.CheckForBoughtQuantityWarning(traderTrackerItems))
+                // Check for purchase warning
+                var warningMsg = Plugin.WarningMessage == null
+                    ? InventoryInfo.CheckForPurchaseWarning(traderTrackerItems)
+                    : null;
+
+                if (warningMsg != null)
                 {
-                    Plugin.ShowOverbuyWarning = true;
-                    Plugin.Log.LogInfo($"[MysticShop] Overbuy warning triggered for {item.Type}");
+                    Plugin.WarningMessage = warningMsg;
+                    Plugin.Log.LogInfo($"[MysticShop] Warning triggered for {item.Type}");
                     item.Shake();
                     // 10% chance for funny bleat
                     if (UnityEngine.Random.Range(0, 10) == 5)
@@ -506,7 +525,7 @@ public static class MysticShopPatches
                     {
                         __instance.UpdateQuantities();
                     }
-                    Plugin.ShowOverbuyWarning = false;
+                    Plugin.WarningMessage = null;
                 }
 
                 __instance.RefreshContextText();

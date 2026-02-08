@@ -114,4 +114,11 @@ internal static class ExclusiveContent
         "Boss Rot 3",
         "Boss Rot 4"
     ];
+
+    /// <summary>
+    /// Quest-locked follower skins that players can miss or get locked out of.
+    /// Nightwolf: fox questline after sacrificing Ratau.
+    /// Snail: gifting shells to all 5 snail statues across multiple locations.
+    /// </summary>
+    public static readonly string[] QuestSkins = ["Nightwolf", "Snail"];
 }

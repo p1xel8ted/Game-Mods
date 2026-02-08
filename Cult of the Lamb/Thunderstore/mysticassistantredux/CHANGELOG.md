@@ -12,7 +12,9 @@
   - 31 boss follower skins
 - Apple decorations can be placed from the build menu with proper placement preview
 - Items display with clear labels indicating their source (e.g., "Follower Skin (Apple)", "Follower Skin (Boss)")
-- Shop labels, interaction prompts, and configuration UI localized in 15 languages
+- Added 2 quest-locked follower skins (Nightwolf, Snail) — disabled by default, enable in config
+- Purchase warnings now show context-specific messages for boss skins, quest skins, and overbuy situations
+- Shop labels, interaction prompts, warnings, and configuration UI localized in 15 languages
 
 ### 0.1.0 - 04/02/2026
 

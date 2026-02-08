@@ -25,12 +25,13 @@ After beating the base game, visit the Mystic Shop and use the **secondary inter
 The following items are disabled by default since they're obtainable through normal gameplay. Enable them in the configuration manager under "Extra Content":
 - 5 Woolhaven DLC necklaces (Death's Door, Winter, Frozen, Targeted, Weird) — requires Woolhaven DLC
 - 31 boss follower skins — normally unlocked by defeating bosses
+- 2 quest-locked follower skins (Nightwolf, Snail) — normally obtained through specific quests
 
 ### God Tear Cost
 The cost per item is configurable (1-10, default 1). Increasing the cost requires confirmation and is locked per save — it can only go up, never down. The cost can only be changed while a save is loaded. The lock is automatically cleared when a save is deleted or overwritten.
 
-### Overbuy Warnings
-The shop will warn you before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces). Click again to confirm.
+### Purchase Warnings
+The shop will warn you with a confirmation click before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces), boss skins (bypasses boss fights), and quest skins (bypasses quest progression).
 
 ### Localization
 All shop labels, interaction prompts, and configuration UI are localized in 15 languages, matching the game's language setting.

@@ -1,5 +1,6 @@
 namespace MysticAssistantRedux;
 
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
@@ -12,6 +13,7 @@ public class Plugin : BaseUnityPlugin
     // Config entries for optional content
     internal static ConfigEntry<bool> EnableDlcNecklaces { get; private set; }
     internal static ConfigEntry<bool> EnableBossSkins { get; private set; }
+    internal static ConfigEntry<bool> EnableQuestSkins { get; private set; }
     internal static ConfigEntry<int> GodTearCost { get; private set; }
 
     // Shop context key used to identify our custom shop
@@ -30,8 +32,8 @@ public class Plugin : BaseUnityPlugin
     internal static List<FollowerClothingType> UnlockedClothing { get; } = [];
     internal static List<int> UnlockedFleeces { get; } = [];
 
-    // Overbuy warning flag
-    internal static bool ShowOverbuyWarning { get; set; }
+    // Warning message (null = no warning, non-null = message to display with confirm-on-second-click)
+    internal static string WarningMessage { get; set; }
 
     private static PopupManager _popupManager;
     private static bool _changingCost;
@@ -50,7 +52,10 @@ public class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { DispName = Localization.DLCNecklacesName, Order = 2 }));
         EnableBossSkins = Config.Bind("01. Extra Content", "EnableBossSkins", false,
             new ConfigDescription(Localization.BossSkinsDesc, null,
-                new ConfigurationManagerAttributes { DispName = Localization.BossSkinsName, Order = 1 }));
+                new ConfigurationManagerAttributes { DispName = Localization.BossSkinsName, Order = 2 }));
+        EnableQuestSkins = Config.Bind("01. Extra Content", "EnableQuestSkins", false,
+            new ConfigDescription(Localization.QuestSkinsDesc, null,
+                new ConfigurationManagerAttributes { DispName = Localization.QuestSkinsName, Order = 1 }));
 
         GodTearCost = Config.Bind("02. Shop", "GodTearCost", 1,
             new ConfigDescription(Localization.GodTearCostDesc, new AcceptableValueRange<int>(1, 10),

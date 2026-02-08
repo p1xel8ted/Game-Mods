@@ -12,6 +12,7 @@ internal class InventoryManager
     public const InventoryItem.ITEM_TYPE AppleFleeceType = InventoryItem.ITEM_TYPE.SPECIAL_WOOL_6;
     public const InventoryItem.ITEM_TYPE PalworldSkinType = InventoryItem.ITEM_TYPE.FOUND_ITEM_WEAPON;
     public const InventoryItem.ITEM_TYPE BossSkinType = InventoryItem.ITEM_TYPE.SPECIAL_WOOL_7;
+    public const InventoryItem.ITEM_TYPE QuestSkinType = InventoryItem.ITEM_TYPE.SPECIAL_WOOL_8;
 
     // Existing purchase flags
     public bool BoughtKeyPiece { get; private set; }
@@ -27,9 +28,10 @@ internal class InventoryManager
     public bool BoughtAppleClothing { get; private set; }
     public bool BoughtAppleFleece { get; private set; }
 
-    // Palworld/Boss purchase flags
+    // Palworld/Boss/Quest purchase flags
     public bool BoughtPalworldSkin { get; private set; }
     public bool BoughtBossSkin { get; private set; }
+    public bool BoughtQuestSkin { get; private set; }
 
     private readonly List<InventoryItem> _shopInventory = [];
     private readonly List<InventoryItem.ITEM_TYPE> _limitedStockTypes = [];
@@ -46,9 +48,10 @@ internal class InventoryManager
     private readonly List<FollowerClothingType> _appleClothingAvailable = [];
     private readonly List<int> _appleFleecesAvailable = [];
 
-    // Palworld/Boss content pools
+    // Palworld/Boss/Quest content pools
     private readonly List<string> _palworldSkinsAvailable = [];
     private readonly List<string> _bossSkinsAvailable = [];
+    private readonly List<string> _questSkinsAvailable = [];
 
     private readonly int _maxCrystalDoctrineStones;
 
@@ -105,9 +108,10 @@ internal class InventoryManager
             AppleClothingType => _appleClothingAvailable.Count,
             AppleFleeceType => _appleFleecesAvailable.Count,
 
-            // Palworld/Boss
+            // Palworld/Boss/Quest
             // PalworldSkinType => _palworldSkinsAvailable.Count,
             BossSkinType => _bossSkinsAvailable.Count,
+            QuestSkinType => _questSkinsAvailable.Count,
 
             _ => 0
         };
@@ -145,12 +149,15 @@ internal class InventoryManager
                 _appleFleecesAvailable.RemoveAt(index);
                 break;
 
-            // Palworld/Boss
+            // Palworld/Boss/Quest
             // case PalworldSkinType:
             //     _palworldSkinsAvailable.RemoveAt(index);
             //     break;
             case BossSkinType:
                 _bossSkinsAvailable.RemoveAt(index);
+                break;
+            case QuestSkinType:
+                _questSkinsAvailable.RemoveAt(index);
                 break;
         }
     }
@@ -181,13 +188,15 @@ internal class InventoryManager
     public void SetBoughtAppleClothingFlag(bool value) => BoughtAppleClothing = value;
     public void SetBoughtAppleFleeceFlag(bool value) => BoughtAppleFleece = value;
 
-    // Palworld/Boss getters
+    // Palworld/Boss/Quest getters
     public string GetPalworldSkinNameByIndex(int index) => _palworldSkinsAvailable[index];
     public string GetBossSkinNameByIndex(int index) => _bossSkinsAvailable[index];
+    public string GetQuestSkinNameByIndex(int index) => _questSkinsAvailable[index];
 
-    // Palworld/Boss flag setters
+    // Palworld/Boss/Quest flag setters
     public void SetBoughtPalworldSkinFlag(bool value) => BoughtPalworldSkin = value;
     public void SetBoughtBossSkinFlag(bool value) => BoughtBossSkin = value;
+    public void SetBoughtQuestSkinFlag(bool value) => BoughtQuestSkin = value;
 
     private void PopulateShopInventory()
     {
@@ -203,15 +212,16 @@ internal class InventoryManager
         PopulateAppleClothing();
         PopulateAppleFleeces();
 
-        // Palworld/Boss content (if enabled)
+        // Palworld/Boss/Quest content (if enabled)
         // PopulatePalworldSkins(); // Palworld skins commented out — missing atlas textures
         PopulateBossSkins();
+        PopulateQuestSkins();
 
         Plugin.Log.LogInfo($"[InventoryManager] Shop stock: Skins={_followerSkinsAvailable.Count}, Decorations={_decorationsAvailable.Count}, " +
                            $"TarotCards={_tarotCardsAvailable.Count}, Relics={_relicsAvailable.Count}, " +
                            $"AppleSkins={_appleSkinsAvailable.Count}, AppleDecos={_appleDecorationsAvailable.Count}, " +
                            $"AppleClothing={_appleClothingAvailable.Count}, AppleFleeces={_appleFleecesAvailable.Count}, " +
-                           $"BossSkins={_bossSkinsAvailable.Count}");
+                           $"BossSkins={_bossSkinsAvailable.Count}, QuestSkins={_questSkinsAvailable.Count}");
 
         var outOfStockItems = new List<InventoryItem.ITEM_TYPE>();
 
@@ -433,6 +443,24 @@ internal class InventoryManager
         }
 
         _limitedStockTypes.Add(BossSkinType);
+    }
+
+    private void PopulateQuestSkins()
+    {
+        if (!Plugin.EnableQuestSkins.Value)
+        {
+            return;
+        }
+
+        foreach (var skinName in ExclusiveContent.QuestSkins)
+        {
+            if (!DataManager.GetFollowerSkinUnlocked(skinName))
+            {
+                _questSkinsAvailable.Add(skinName);
+            }
+        }
+
+        _limitedStockTypes.Add(QuestSkinType);
     }
 
     #endregion

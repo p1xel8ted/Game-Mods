@@ -28,15 +28,17 @@ internal static class InventoryInfo
             InventoryManager.AppleFleeceType => LocalizationManager.GetTranslation("TarotCards/Fleece680/Name"),
             // InventoryManager.PalworldSkinType => "Follower Skin (Palworld)",
             InventoryManager.BossSkinType => Localization.ShopLabelSkinBoss,
+            InventoryManager.QuestSkinType => Localization.ShopLabelSkinQuest,
 
             _ => LocalizationManager.GetTranslation($"Inventory/{itemType}")
         };
     }
 
     /// <summary>
-    /// Checks if the player should be warned about buying more of an item than normally allowed.
+    /// Checks if the player should be warned before purchasing.
+    /// Returns a localized warning message, or null if no warning needed.
     /// </summary>
-    public static bool CheckForBoughtQuantityWarning(TraderTrackerItems chosenItem)
+    public static string CheckForPurchaseWarning(TraderTrackerItems chosenItem)
     {
         switch (chosenItem.itemForTrade)
         {
@@ -46,7 +48,7 @@ internal static class InventoryInfo
                     Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.Necklace_Dark) >= MaxCountDarkNecklace ||
                     DataManager.Instance.Followers.Exists(f => f.Necklace == InventoryItem.ITEM_TYPE.Necklace_Dark))
                 {
-                    return true;
+                    return Localization.OverbuyWarning;
                 }
                 break;
 
@@ -56,19 +58,25 @@ internal static class InventoryInfo
                     Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.Necklace_Light) >= MaxCountLightNecklace ||
                     DataManager.Instance.Followers.Exists(f => f.Necklace == InventoryItem.ITEM_TYPE.Necklace_Light))
                 {
-                    return true;
+                    return Localization.OverbuyWarning;
                 }
                 break;
 
             case InventoryItem.ITEM_TYPE.TALISMAN:
                 if (DataManager.Instance.TalismanPiecesReceivedFromMysticShop >= MaxCountTalismanPieces)
                 {
-                    return true;
+                    return Localization.OverbuyWarning;
                 }
                 break;
+
+            case InventoryManager.BossSkinType:
+                return Localization.BossBypassWarning;
+
+            case InventoryManager.QuestSkinType:
+                return Localization.QuestBypassWarning;
         }
 
-        return false;
+        return null;
     }
 
     /// <summary>
@@ -119,6 +127,12 @@ internal static class InventoryInfo
         if (Plugin.EnableBossSkins.Value)
         {
             items.Add(CreateTraderItem(InventoryManager.BossSkinType));
+        }
+
+        // Quest skins (opt-in — normally obtained through specific quests)
+        if (Plugin.EnableQuestSkins.Value)
+        {
+            items.Add(CreateTraderItem(InventoryManager.QuestSkinType));
         }
 
         return items;
