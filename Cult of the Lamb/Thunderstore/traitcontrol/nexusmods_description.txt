@@ -58,7 +58,7 @@
 [size=3]The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.[/size]
 
 [size=3][b]Localization Support[/b][/size]
-[size=3]Trait names display in your current game language alongside the internal name, e.g. "Lover of Cold (Chionophile)". Names update automatically when you change languages. Traits with missing translations are marked with an asterisk (*), indicating they are not fully implemented in the game itself.[/size]
+[size=3]The entire configuration UI is localized into 15 languages (English, Japanese, Russian, French, German, Spanish, Portuguese, Chinese Simplified, Chinese Traditional, Korean, Italian, Dutch, Turkish, French Canadian, Arabic). All display names, descriptions, notifications, and UI text appear in your game language. Trait names display in your current game language alongside the internal name, e.g. "Lover of Cold (Chionophile)". Names update automatically when you change languages. Traits with missing translations are marked with an asterisk (*), indicating they are not fully implemented in the game itself.[/size]
 
 [size=3][b]Trait Categories[/b][/size]
 [size=3]Each trait in the configuration shows category tags indicating which game lists it belongs to. This helps you understand which traits are safe to disable without affecting unlocks.[/size]

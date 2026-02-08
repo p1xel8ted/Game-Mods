@@ -55,7 +55,7 @@ Control how likely each trait is to appear on new followers. Each trait has a we
 - All traits default to 1.0 (equal chance)
 - Sliders snap to 0.05 increments for precise control (values below 0.1 snap to 0)
 
-**Localization:** Trait names display in your current game language alongside the internal name, e.g. "Lover of Cold (Chionophile)". Names update automatically when you change languages. Traits with missing translations are marked with an asterisk (*), indicating they are not fully implemented in the game itself.
+**Localization:** The entire configuration UI is localized into 15 languages (English, Japanese, Russian, French, German, Spanish, Portuguese, Chinese Simplified, Chinese Traditional, Korean, Italian, Dutch, Turkish, French Canadian, Arabic). All display names, descriptions, notifications, and UI text appear in your game language. Trait names display in your current game language alongside the internal name, e.g. "Lover of Cold (Chionophile)". Names update automatically when you change languages. Traits with missing translations are marked with an asterisk (*), indicating they are not fully implemented in the game itself.
 
 **Understanding the math:** With "Use All Traits Pool" enabled, there are ~85 traits competing. If all are at weight 1 and you set Immortal to weight 50, the probability is: 50/(84+50) ≈ 37% per follower. At weight 100: 100/(84+100) ≈ 54% per follower.
 

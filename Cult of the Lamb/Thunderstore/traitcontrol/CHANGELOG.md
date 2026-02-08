@@ -7,6 +7,7 @@
 * Added "Re-rollable Altar Traits" option - when using the Exorcism Altar, re-selecting a follower shows different trait results each time instead of the same result per day.
 
 **Improvements:**
+* Full localization support - all config display names, descriptions, notifications, and UI text are now translated into 15 languages (English, Japanese, Russian, French, German, Spanish, Portuguese, Chinese Simplified, Chinese Traditional, Korean, Italian, Dutch, Turkish, French Canadian, Arabic).
 * "Enable Trait Replacement" now clearly states it only affects new followers by default.
 * Added warning popup when enabling "Apply To Existing Followers" to prevent accidental trait loss from necklaces.
 

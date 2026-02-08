@@ -888,7 +888,7 @@ public static class TraitWeights
         if (Plugin.ShowNotificationOnTraitReroll.Value)
         {
             var newTraitCount = followerInfo.Traits.Count;
-            NotificationCentre.Instance?.PlayGenericNotification($"<color=#FFD201>{followerInfo.Name}</color>'s traits rerolled! ({oldTraitCount} → {newTraitCount})");
+            NotificationCentre.Instance?.PlayGenericNotification(Localization.NotifyTraitsRerolled(followerInfo.Name, oldTraitCount, newTraitCount));
         }
     }
 
@@ -1022,7 +1022,7 @@ public static class TraitWeights
             if (Plugin.ShowNotificationOnTraitReroll.Value)
             {
                 var newTraitCount = followerInfo.Traits.Count;
-                NotificationCentre.Instance?.PlayGenericNotification($"<color=#FFD201>{followerInfo.Name}</color>'s traits rerolled! ({oldTraitCount} > {newTraitCount})");
+                NotificationCentre.Instance?.PlayGenericNotification(Localization.NotifyTraitsRerolled(followerInfo.Name, oldTraitCount, newTraitCount));
             }
         }
 

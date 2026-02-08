@@ -83,18 +83,18 @@ public partial class Plugin : BaseUnityPlugin
 
         // Trait Replacement - 01
         NoNegativeTraits = ConfigInstance.Bind(TraitReplacementSection, "Enable Trait Replacement", false,
-            new ConfigDescription("Replace negative traits with positive ones. By default only affects NEW followers. Enable 'Apply To Existing Followers' to also modify current followers.", null,
-                new ConfigurationManagerAttributes { Order = 10 }));
+            new ConfigDescription(Localization.DescNoNegativeTraits, null,
+                new ConfigurationManagerAttributes { Order = 10, DispName = Localization.NameEnableTraitReplacement }));
         NoNegativeTraits.SettingChanged += (_, _) => UpdateNoNegativeTraits();
 
         ApplyToExistingFollowers = ConfigInstance.Bind(TraitReplacementSection, "Apply To Existing Followers", false,
-            new ConfigDescription("When enabled, trait replacement also applies to existing followers (not just new ones). Disabling will restore original traits.", null,
-                new ConfigurationManagerAttributes { Order = 9, CustomDrawer = DrawApplyToExistingToggle }));
+            new ConfigDescription(Localization.DescApplyToExisting, null,
+                new ConfigurationManagerAttributes { Order = 9, DispName = Localization.NameApplyToExisting, CustomDrawer = DrawApplyToExistingToggle }));
         ApplyToExistingFollowers.SettingChanged += (_, _) => OnApplyToExistingChanged();
 
         UseUnlockedTraitsOnly = ConfigInstance.Bind(TraitReplacementSection, "Use Unlocked Traits Only", true,
-            new ConfigDescription("Only use traits you have unlocked. Applies to both trait replacement and new follower trait selection.", null,
-                new ConfigurationManagerAttributes { Order = 8 }));
+            new ConfigDescription(Localization.DescUseUnlockedTraits, null,
+                new ConfigurationManagerAttributes { Order = 8, DispName = Localization.NameUseUnlockedTraits }));
         UseUnlockedTraitsOnly.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -103,26 +103,26 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         UseAllTraits = ConfigInstance.Bind(TraitReplacementSection, "Use All Traits Pool", false,
-            new ConfigDescription("Merge all trait pools into one, bypassing vanilla's normal/rare split. Without this, vanilla assigns traits from separate pools (normal pool by default, ~10% chance of rare pool per trait). Enable this for trait weights to have full control over distribution. Unique traits require their individual toggles.", null,
-                new ConfigurationManagerAttributes { Order = 7 }));
+            new ConfigDescription(Localization.DescUseAllTraits, null,
+                new ConfigurationManagerAttributes { Order = 7, DispName = Localization.NameUseAllTraits }));
 
         PreferExclusiveCounterparts = ConfigInstance.Bind(TraitReplacementSection, "Prefer Exclusive Counterparts", true,
-            new ConfigDescription("When replacing negative traits, exclusive traits (like Lazy) are replaced with their positive counterpart (Industrious) instead of a random trait.", null,
-                new ConfigurationManagerAttributes { Order = 6 }));
+            new ConfigDescription(Localization.DescPreferExclusive, null,
+                new ConfigurationManagerAttributes { Order = 6, DispName = Localization.NamePreferExclusive }));
 
         PreserveMutatedTrait = ConfigInstance.Bind(TraitReplacementSection, "Preserve Rot Followers", true,
-            new ConfigDescription("When enabled, Rot (Mutated) followers will not have their trait removed. Rot followers are mechanically distinct and useful for certain rituals.", null,
-                new ConfigurationManagerAttributes { Order = 5 }));
+            new ConfigDescription(Localization.DescPreserveMutated, null,
+                new ConfigurationManagerAttributes { Order = 5, DispName = Localization.NamePreserveMutated }));
 
         MinimumTraits = ConfigInstance.Bind(TraitReplacementSection, "Minimum Traits", 2,
-            new ConfigDescription("Minimum number of traits new followers will have. Vanilla is 2.",
+            new ConfigDescription(Localization.DescMinTraits,
                 new AcceptableValueRange<int>(2, 8),
-                new ConfigurationManagerAttributes { Order = 4 }));
+                new ConfigurationManagerAttributes { Order = 4, DispName = Localization.NameMinTraits }));
 
         MaximumTraits = ConfigInstance.Bind(TraitReplacementSection, "Maximum Traits", 3,
-            new ConfigDescription("Maximum number of traits new followers will have. Vanilla is 3. Limited to 8 due to UI constraints.",
+            new ConfigDescription(Localization.DescMaxTraits,
                 new AcceptableValueRange<int>(2, 8),
-                new ConfigurationManagerAttributes { Order = 3 }));
+                new ConfigurationManagerAttributes { Order = 3, DispName = Localization.NameMaxTraits }));
 
         // Ensure max >= min
         MaximumTraits.SettingChanged += (_, _) =>
@@ -141,29 +141,29 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         RandomizeTraitsOnReindoctrination = ConfigInstance.Bind(TraitReplacementSection, "Randomize Traits on Re-indoctrination", false,
-            new ConfigDescription("When re-indoctrinating an existing follower (at the altar), randomize their traits using the configured min/max. Vanilla re-indoctrination only changes appearance/name.", null,
-                new ConfigurationManagerAttributes { Order = 2 }));
+            new ConfigDescription(Localization.DescRandomizeReindoc, null,
+                new ConfigurationManagerAttributes { Order = 2, DispName = Localization.NameRandomizeReindoc }));
 
         TraitRerollOnReeducation = ConfigInstance.Bind(TraitReplacementSection, "Trait Reroll via Reeducation", false,
-            new ConfigDescription("Adds the Re-educate command to normal followers. Using it will re-roll their traits using the configured min/max and weights.", null,
-                new ConfigurationManagerAttributes { Order = 1 }));
+            new ConfigDescription(Localization.DescTraitReroll, null,
+                new ConfigurationManagerAttributes { Order = 1, DispName = Localization.NameTraitReroll }));
 
         ProtectTraitCountOnReroll = ConfigInstance.Bind(TraitReplacementSection, "Protect Trait Count on Reroll", true,
-            new ConfigDescription("When rerolling traits (via reeducation or reindoctrination), ensure the follower doesn't end up with fewer traits than they started with.", null,
-                new ConfigurationManagerAttributes { Order = 0 }));
+            new ConfigDescription(Localization.DescProtectTraitCount, null,
+                new ConfigurationManagerAttributes { Order = 0, DispName = Localization.NameProtectTraitCount }));
 
         RerollableAltarTraits = ConfigInstance.Bind(TraitReplacementSection, "Re-rollable Altar Traits", false,
-            new ConfigDescription("When using the Exorcism Altar, re-selecting a follower shows different trait results each time instead of the same result per day.", null,
-                new ConfigurationManagerAttributes { Order = -1 }));
+            new ConfigDescription(Localization.DescRerollableAltar, null,
+                new ConfigurationManagerAttributes { Order = -1, DispName = Localization.NameRerollableAltar }));
 
         // Unique Traits - 02
         AllowMultipleUniqueTraits = ConfigInstance.Bind(UniqueTraitsSection, "Allow Multiple Unique Traits", false,
-            new ConfigDescription("Allow multiple followers to have the same unique trait (Immortal, Disciple, etc.). Normally only one follower can have each unique trait.", null,
-                new ConfigurationManagerAttributes { Order = 100 }));
+            new ConfigDescription(Localization.DescAllowMultipleUnique, null,
+                new ConfigurationManagerAttributes { Order = 100, DispName = Localization.NameAllowMultipleUnique }));
 
         IncludeImmortal = ConfigInstance.Bind(UniqueTraitsSection, "Include Immortal", false,
-            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Immortal, "normally a special reward"), null,
-                new ConfigurationManagerAttributes { Order = 20 }));
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Immortal, Localization.SourceSpecialReward), null,
+                new ConfigurationManagerAttributes { Order = 20, DispName = Localization.NameIncludeTrait("Immortal") }));
         IncludeImmortal.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -171,8 +171,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         GuaranteeImmortal = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Immortal", false,
-            new ConfigDescription("New followers will always receive the Immortal trait (ignores weights). Only one follower can have this trait.", null,
-                new ConfigurationManagerAttributes { Order = 19, DispName = "    └ Guarantee Immortal" }));
+            new ConfigDescription(Localization.GuaranteeTraitDesc("Immortal"), null,
+                new ConfigurationManagerAttributes { Order = 19, DispName = Localization.NameGuaranteeTrait("Immortal") }));
         GuaranteeImmortal.SettingChanged += (_, _) =>
         {
             if (GuaranteeImmortal.Value && !IncludeImmortal.Value)
@@ -182,8 +182,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         IncludeDisciple = ConfigInstance.Bind(UniqueTraitsSection, "Include Disciple", false,
-            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Disciple, "normally a special reward"), null,
-                new ConfigurationManagerAttributes { Order = 18 }));
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Disciple, Localization.SourceSpecialReward), null,
+                new ConfigurationManagerAttributes { Order = 18, DispName = Localization.NameIncludeTrait("Disciple") }));
         IncludeDisciple.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -191,8 +191,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         GuaranteeDisciple = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Disciple", false,
-            new ConfigDescription("New followers will always receive the Disciple trait (ignores weights). Only one follower can have this trait.", null,
-                new ConfigurationManagerAttributes { Order = 17, DispName = "    └ Guarantee Disciple" }));
+            new ConfigDescription(Localization.GuaranteeTraitDesc("Disciple"), null,
+                new ConfigurationManagerAttributes { Order = 17, DispName = Localization.NameGuaranteeTrait("Disciple") }));
         GuaranteeDisciple.SettingChanged += (_, _) =>
         {
             if (GuaranteeDisciple.Value && !IncludeDisciple.Value)
@@ -202,8 +202,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         IncludeDontStarve = ConfigInstance.Bind(UniqueTraitsSection, "Include Dont Starve", false,
-            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.DontStarve, "crossover reward"), null,
-                new ConfigurationManagerAttributes { Order = 16 }));
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.DontStarve, Localization.SourceCrossover), null,
+                new ConfigurationManagerAttributes { Order = 16, DispName = Localization.NameIncludeTrait("Dont Starve") }));
         IncludeDontStarve.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -211,8 +211,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         GuaranteeDontStarve = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Dont Starve", false,
-            new ConfigDescription("New followers will always receive the Dont Starve trait (ignores weights). Only one follower can have this trait.", null,
-                new ConfigurationManagerAttributes { Order = 15, DispName = "    └ Guarantee Dont Starve" }));
+            new ConfigDescription(Localization.GuaranteeTraitDesc("Dont Starve"), null,
+                new ConfigurationManagerAttributes { Order = 15, DispName = Localization.NameGuaranteeTrait("Dont Starve") }));
         GuaranteeDontStarve.SettingChanged += (_, _) =>
         {
             if (GuaranteeDontStarve.Value && !IncludeDontStarve.Value)
@@ -222,8 +222,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         IncludeBlind = ConfigInstance.Bind(UniqueTraitsSection, "Include Blind", false,
-            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Blind, "crossover reward"), null,
-                new ConfigurationManagerAttributes { Order = 14 }));
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.Blind, Localization.SourceCrossover), null,
+                new ConfigurationManagerAttributes { Order = 14, DispName = Localization.NameIncludeTrait("Blind") }));
         IncludeBlind.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -231,8 +231,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         GuaranteeBlind = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Blind", false,
-            new ConfigDescription("New followers will always receive the Blind trait (ignores weights). Only one follower can have this trait.", null,
-                new ConfigurationManagerAttributes { Order = 13, DispName = "    └ Guarantee Blind" }));
+            new ConfigDescription(Localization.GuaranteeTraitDesc("Blind"), null,
+                new ConfigurationManagerAttributes { Order = 13, DispName = Localization.NameGuaranteeTrait("Blind") }));
         GuaranteeBlind.SettingChanged += (_, _) =>
         {
             if (GuaranteeBlind.Value && !IncludeBlind.Value)
@@ -242,8 +242,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         IncludeBornToTheRot = ConfigInstance.Bind(UniqueTraitsSection, "Include Born To The Rot", false,
-            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.BornToTheRot, "crossover reward"), null,
-                new ConfigurationManagerAttributes { Order = 12 }));
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.BornToTheRot, Localization.SourceCrossover), null,
+                new ConfigurationManagerAttributes { Order = 12, DispName = Localization.NameIncludeTrait("Born To The Rot") }));
         IncludeBornToTheRot.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -251,8 +251,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         GuaranteeBornToTheRot = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Born To The Rot", false,
-            new ConfigDescription("New followers will always receive the Born To The Rot trait (ignores weights). Only one follower can have this trait.", null,
-                new ConfigurationManagerAttributes { Order = 11, DispName = "    └ Guarantee Born To The Rot" }));
+            new ConfigDescription(Localization.GuaranteeTraitDesc("Born To The Rot"), null,
+                new ConfigurationManagerAttributes { Order = 11, DispName = Localization.NameGuaranteeTrait("Born To The Rot") }));
         GuaranteeBornToTheRot.SettingChanged += (_, _) =>
         {
             if (GuaranteeBornToTheRot.Value && !IncludeBornToTheRot.Value)
@@ -262,8 +262,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         IncludeBishopOfCult = ConfigInstance.Bind(UniqueTraitsSection, "Include Ex-Bishop", false,
-            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.BishopOfCult, "normally granted when converting a bishop"), null,
-                new ConfigurationManagerAttributes { Order = 10 }));
+            new ConfigDescription(BuildUniqueTraitDescription(FollowerTrait.TraitType.BishopOfCult, Localization.SourceBishopConvert), null,
+                new ConfigurationManagerAttributes { Order = 10, DispName = Localization.NameIncludeTrait("Ex-Bishop") }));
         IncludeBishopOfCult.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -271,8 +271,8 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         GuaranteeBishopOfCult = ConfigInstance.Bind(UniqueTraitsSection, "Guarantee Ex-Bishop", false,
-            new ConfigDescription("New followers will always receive the Ex-Bishop trait (ignores weights). Only one follower can have this trait.", null,
-                new ConfigurationManagerAttributes { Order = 9, DispName = "    └ Guarantee Ex-Bishop" }));
+            new ConfigDescription(Localization.GuaranteeTraitDesc("Ex-Bishop"), null,
+                new ConfigurationManagerAttributes { Order = 9, DispName = Localization.NameGuaranteeTrait("Ex-Bishop") }));
         GuaranteeBishopOfCult.SettingChanged += (_, _) =>
         {
             if (GuaranteeBishopOfCult.Value && !IncludeBishopOfCult.Value)
@@ -283,26 +283,26 @@ public partial class Plugin : BaseUnityPlugin
 
         // Notifications - 03
         ShowNotificationsWhenRemovingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Removing Traits", false,
-            new ConfigDescription("Show notifications when trait replacement removes negative traits.", null,
-                new ConfigurationManagerAttributes { Order = 2 }));
+            new ConfigDescription(Localization.DescShowRemoving, null,
+                new ConfigurationManagerAttributes { Order = 2, DispName = Localization.NameShowRemoving }));
 
         ShowNotificationsWhenAddingTraits = ConfigInstance.Bind(NotificationsSection, "Show When Adding Traits", false,
-            new ConfigDescription("Show notifications when trait replacement adds positive traits.", null,
-                new ConfigurationManagerAttributes { Order = 1 }));
+            new ConfigDescription(Localization.DescShowAdding, null,
+                new ConfigurationManagerAttributes { Order = 1, DispName = Localization.NameShowAdding }));
 
         ShowNotificationOnTraitReroll = ConfigInstance.Bind(NotificationsSection, "Show On Trait Reroll", true,
-            new ConfigDescription("Show a notification when a follower's traits are rerolled via reeducation or reindoctrination.", null,
-                new ConfigurationManagerAttributes { Order = 0 }));
+            new ConfigDescription(Localization.DescShowReroll, null,
+                new ConfigurationManagerAttributes { Order = 0, DispName = Localization.NameShowReroll }));
 
         // Trait Weights - 04
         EnableTraitWeights = ConfigInstance.Bind(TraitWeightsSection, "Enable Trait Weights", false,
-            new ConfigDescription("Enable weighted random selection for new followers. Weights affect trait selection within each pool. For full control over all traits, enable 'Use All Traits Pool' - otherwise vanilla's normal/rare pool split still applies (rare pool has ~10% chance per trait). Set a weight to 0 to disable a trait.", null,
-                new ConfigurationManagerAttributes { Order = 100 }));
+            new ConfigDescription(Localization.DescEnableWeights, null,
+                new ConfigurationManagerAttributes { Order = 100, DispName = Localization.NameEnableWeights }));
         EnableTraitWeights.SettingChanged += (_, _) => UpdateTraitWeightVisibility();
 
         IncludeStoryEventTraits = ConfigInstance.Bind(TraitWeightsSection, "Include Event Traits", false,
-            new ConfigDescription("Include traits normally granted through gameplay events (marriage, parenting, criminal, missionary, etc.) in the weights list. Only applies when 'Use All Traits Pool' is enabled. Warning: This can result in nonsensical assignments (e.g., ProudParent on followers who have never had children).", null,
-                new ConfigurationManagerAttributes { Order = 99 }));
+            new ConfigDescription(Localization.DescIncludeEventTraits, null,
+                new ConfigurationManagerAttributes { Order = 99, DispName = Localization.NameIncludeEventTraits }));
         IncludeStoryEventTraits.SettingChanged += (_, _) =>
         {
             Patches.NoNegativeTraits.GenerateAvailableTraits();
@@ -318,8 +318,8 @@ public partial class Plugin : BaseUnityPlugin
 
         // Reset Settings - 07
         ConfigInstance.Bind(ResetSettingsSection, "Reset All Settings", false,
-            new ConfigDescription("Click to reset all settings to defaults (vanilla behavior).", null,
-                new ConfigurationManagerAttributes { Order = 0, HideDefaultButton = true, CustomDrawer = ResetAllSettings }));
+            new ConfigDescription(Localization.DescResetSettings, null,
+                new ConfigurationManagerAttributes { Order = 0, DispName = Localization.NameResetSettings, HideDefaultButton = true, CustomDrawer = ResetAllSettings }));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
 
@@ -400,8 +400,8 @@ public partial class Plugin : BaseUnityPlugin
         var displayName = !string.IsNullOrEmpty(localizedName) ? $"{localizedName} ({internalName})" : null;
 
         var configDescription = string.IsNullOrEmpty(traitDescription)
-            ? $"Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.{categories}"
-            : $"{traitDescription}\n\nWeight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.{categories}";
+            ? $"{Localization.TraitWeightDesc}{categories}"
+            : $"{traitDescription}\n\n{Localization.TraitWeightDesc}{categories}";
 
         var weight = ConfigInstance.Bind(
             section,
@@ -485,7 +485,7 @@ public partial class Plugin : BaseUnityPlugin
             categories.Add("Unlock");
         }
 
-        return categories.Count > 0 ? $"\n\nFound in: {string.Join(", ", categories)}" : "\n\nGranted via other means (doctrines, rituals, events, etc.)";
+        return categories.Count > 0 ? $"\n\n{string.Format(Localization.CategoryFoundIn, string.Join(", ", categories))}" : $"\n\n{Localization.CategoryGrantedOther}";
     }
 
     /// <summary>
@@ -494,7 +494,7 @@ public partial class Plugin : BaseUnityPlugin
     private static string BuildUniqueTraitDescription(FollowerTrait.TraitType trait, string source)
     {
         var gameDescription = GetTraitDescription(trait);
-        var baseDescription = $"Allow the {trait} trait ({source}) to appear in trait pools.";
+        var baseDescription = Localization.UniqueTraitDesc(trait.ToString(), source);
 
         if (!string.IsNullOrEmpty(gameDescription))
         {
@@ -753,15 +753,15 @@ public partial class Plugin : BaseUnityPlugin
 
         if (_showApplyToExistingWarning)
         {
-            GUILayout.Label("WARNING: This will modify ALL existing followers!", GUILayout.ExpandWidth(true));
-            GUILayout.Label("Traits from necklaces may be lost on restore.", GUILayout.ExpandWidth(true));
+            GUILayout.Label(Localization.WarningModifyAll, GUILayout.ExpandWidth(true));
+            GUILayout.Label(Localization.WarningNecklaceLoss, GUILayout.ExpandWidth(true));
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Confirm", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button(Localization.ButtonConfirm, GUILayout.ExpandWidth(true)))
             {
                 configEntry.Value = true;
                 _showApplyToExistingWarning = false;
             }
-            if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button(Localization.ButtonCancel, GUILayout.ExpandWidth(true)))
             {
                 _showApplyToExistingWarning = false;
             }
@@ -769,7 +769,7 @@ public partial class Plugin : BaseUnityPlugin
         }
         else
         {
-            var newValue = GUILayout.Toggle(configEntry.Value, configEntry.Value ? "Enabled" : "Disabled", GUILayout.ExpandWidth(true));
+            var newValue = GUILayout.Toggle(configEntry.Value, configEntry.Value ? Localization.ToggleEnabled : Localization.ToggleDisabled, GUILayout.ExpandWidth(true));
             if (newValue != configEntry.Value)
             {
                 if (newValue)
@@ -804,7 +804,7 @@ public partial class Plugin : BaseUnityPlugin
         }
         else
         {
-            if (GUILayout.Button("Reset All Settings", GUILayout.ExpandWidth(true)))
+            if (GUILayout.Button(Localization.ButtonResetAll, GUILayout.ExpandWidth(true)))
             {
                 _showResetConfirmation = true;
             }
@@ -813,14 +813,14 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void DisplayResetConfirmation()
     {
-        GUILayout.Label("Are you sure? This will reset all settings to defaults.");
+        GUILayout.Label(Localization.ConfirmResetAll);
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Yes", GUILayout.ExpandWidth(true)))
+        if (GUILayout.Button(Localization.ButtonYes, GUILayout.ExpandWidth(true)))
         {
             ResetAllToDefaults();
             _showResetConfirmation = false;
         }
-        if (GUILayout.Button("No", GUILayout.ExpandWidth(true)))
+        if (GUILayout.Button(Localization.ButtonNo, GUILayout.ExpandWidth(true)))
         {
             _showResetConfirmation = false;
         }
