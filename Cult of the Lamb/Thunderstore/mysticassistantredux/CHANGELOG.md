@@ -1,4 +1,4 @@
-### 0.1.1 - 07/02/2026
+### 0.1.1 - 08/02/2026
 
 - Fixed Crystal Doctrine Stones showing -1 quantity for players with the Woolhaven DLC
 - Added configurable God Tear cost per item (default 1, range 1-10)
