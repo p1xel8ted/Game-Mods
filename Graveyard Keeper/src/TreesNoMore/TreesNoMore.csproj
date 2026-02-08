@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>2.5.7</Version>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="..\GYKHelper\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
+        <Compile Include="..\GYKHelper\StartupLogger.cs" Link="StartupLogger.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>..\..\libs\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>0.1.5</Version>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="..\GYKHelper\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
+        <Compile Include="..\GYKHelper\StartupLogger.cs" Link="StartupLogger.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Rewired_Core">
+            <HintPath>..\..\libs\Rewired_Core.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>

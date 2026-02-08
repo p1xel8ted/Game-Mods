@@ -1,0 +1,3 @@
+<Project>
+    <Import Project="zip.target" Condition="'$(Configuration)' == 'Release' And Exists('$(MSBuildThisFileDirectory)zip.target')" />
+</Project>

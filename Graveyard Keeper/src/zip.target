@@ -1,0 +1,27 @@
+<Project>
+    <Target Name="ZipOutputPath" AfterTargets="Build">
+        <PropertyGroup>
+            <StagingDir>$(TEMP)\GYK_staging\$(MSBuildProjectName)</StagingDir>
+            <PluginDir>$(StagingDir)\plugins</PluginDir>
+            <ReleasesDir>$(SolutionDir)\AAA_Releases</ReleasesDir>
+        </PropertyGroup>
+
+        <RemoveDir Directories="$(StagingDir)" />
+        <MakeDir Directories="$(PluginDir)" />
+        <MakeDir Directories="$(ReleasesDir)" />
+
+        <ItemGroup>
+            <OutputFiles Include="$(OutputPath)\**\*.*"
+                         Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.json;$(OutputPath)\**\*.pdb" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(OutputFiles)"
+              DestinationFiles="@(OutputFiles->'$(PluginDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+        <ZipDirectory Overwrite="true"
+                      SourceDirectory="$(StagingDir)"
+                      DestinationFile="$(ReleasesDir)\$(MSBuildProjectName)_v$(Version)_BepInEx.zip" />
+
+        <RemoveDir Directories="$(StagingDir)" />
+    </Target>
+</Project>
