@@ -14,7 +14,7 @@ public static class MysticShopPatches
     public static void Start_Postfix(Interaction_MysticShop __instance)
     {
         __instance.HasSecondaryInteraction = true;
-        __instance.SecondaryLabel = "Mystic Assistant";
+        __instance.SecondaryLabel = Localization.MysticAssistantLabel;
     }
 
     /// <summary>
@@ -767,7 +767,24 @@ public static class MysticShopPatches
         __instance._fleeceItems = newArray;
 
         _appleFleeceButtonAdded = true;
-        Plugin.Log.LogInfo("[FleeceMenu] Added Apple fleece 680 to Player Upgrades Menu");
+
+        // Recalculate fleece counter — Start() computed it before we added fleece 680
+        int unlocked = 0;
+        int total = 0;
+        foreach (var fi in __instance._fleeceItems)
+        {
+            if (fi.gameObject.activeSelf)
+            {
+                ++total;
+                if (fi.Unlocked)
+                {
+                    ++unlocked;
+                }
+            }
+        }
+        __instance._fleeceCount.text = LocalizeIntegration.FormatCurrentMax(unlocked.ToString(), total.ToString()) ?? "";
+
+        Plugin.Log.LogInfo($"[FleeceMenu] Added Apple fleece 680 to Player Upgrades Menu (counter: {unlocked}/{total})");
     }
 
     /// <summary>
@@ -1014,9 +1031,12 @@ public static class MysticShopPatches
     #region Apple Clothing Injection
 
     /// <summary>
-    /// Tracks whether Apple clothing data has been injected.
+    /// Reference to the last ClothingData array we injected Apple clothing into.
+    /// Using reference equality instead of a boolean flag so we detect when
+    /// TailorManager.clothingData is replaced with a fresh array (e.g., after
+    /// scene reload) and need to re-inject.
     /// </summary>
-    private static bool _appleClothingInjected;
+    private static ClothingData[] _lastInjectedClothingArray;
 
     /// <summary>
     /// Injects ClothingData for Apple Arcade clothing types into TailorManager.
@@ -1026,15 +1046,15 @@ public static class MysticShopPatches
     [HarmonyPatch(typeof(TailorManager), nameof(TailorManager.ClothingData), MethodType.Getter)]
     public static void TailorManager_ClothingData_Postfix(ref ClothingData[] __result)
     {
-        if (_appleClothingInjected || __result == null)
+        if (__result == null || __result == _lastInjectedClothingArray)
         {
             return;
         }
 
-        // Check if Apple clothing already exists (shouldn't, but just in case)
+        // Check if Apple clothing already exists (e.g., from a previous injection still in cache)
         if (__result.Any(cd => cd.ClothingType == FollowerClothingType.Apple_1))
         {
-            _appleClothingInjected = true;
+            _lastInjectedClothingArray = __result;
             return;
         }
 
@@ -1066,7 +1086,7 @@ public static class MysticShopPatches
 
         __result = appleClothingList.ToArray();
         TailorManager.clothingData = __result;
-        _appleClothingInjected = true;
+        _lastInjectedClothingArray = __result;
     }
 
 

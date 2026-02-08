@@ -2,6 +2,16 @@ namespace MysticAssistantRedux;
 
 internal static class Localization
 {
+    // Interaction label
+    internal static string MysticAssistantLabel => Get("MysticAssistantLabel");
+
+    // Shop item labels
+    internal static string ShopLabelRelic => Get("ShopLabelRelic");
+    internal static string ShopLabelSkinApple => Get("ShopLabelSkinApple");
+    internal static string ShopLabelDecoApple => Get("ShopLabelDecoApple");
+    internal static string ShopLabelOutfitApple => Get("ShopLabelOutfitApple");
+    internal static string ShopLabelSkinBoss => Get("ShopLabelSkinBoss");
+
     // Config display names
     internal static string DLCNecklacesName => Get("DLCNecklacesName");
     internal static string BossSkinsName => Get("BossSkinsName");
@@ -33,6 +43,12 @@ internal static class Localization
         {
             "English", new()
             {
+                { "MysticAssistantLabel", "Mystic Assistant" },
+                { "ShopLabelRelic", "Relic" },
+                { "ShopLabelSkinApple", "Follower Skin (Apple)" },
+                { "ShopLabelDecoApple", "Decoration (Apple)" },
+                { "ShopLabelOutfitApple", "Outfit (Apple)" },
+                { "ShopLabelSkinBoss", "Follower Skin (Boss)" },
                 { "DLCNecklacesName", "DLC Necklaces" },
                 { "DLCNecklacesDesc", "Add Woolhaven DLC necklaces to the shop. These are normally obtained through DLC gameplay. Re-open the shop for changes to take effect." },
                 { "BossSkinsName", "Boss Skins" },
@@ -47,6 +63,12 @@ internal static class Localization
         {
             "Japanese", new()
             {
+                { "MysticAssistantLabel", "ミスティックアシスタント" },
+                { "ShopLabelRelic", "レリック" },
+                { "ShopLabelSkinApple", "フォロワースキン (Apple)" },
+                { "ShopLabelDecoApple", "デコレーション (Apple)" },
+                { "ShopLabelOutfitApple", "衣装 (Apple)" },
+                { "ShopLabelSkinBoss", "フォロワースキン (ボス)" },
                 { "DLCNecklacesName", "DLCネックレス" },
                 { "DLCNecklacesDesc", "ウールヘイブンDLCのネックレスをショップに追加します。通常はDLCのゲームプレイで入手できます。変更を反映するにはショップを開き直してください。" },
                 { "BossSkinsName", "ボススキン" },
@@ -61,6 +83,12 @@ internal static class Localization
         {
             "Russian", new()
             {
+                { "MysticAssistantLabel", "Мистический помощник" },
+                { "ShopLabelRelic", "Реликвия" },
+                { "ShopLabelSkinApple", "Облик последователя (Apple)" },
+                { "ShopLabelDecoApple", "Украшение (Apple)" },
+                { "ShopLabelOutfitApple", "Наряд (Apple)" },
+                { "ShopLabelSkinBoss", "Облик последователя (Босс)" },
                 { "DLCNecklacesName", "Ожерелья DLC" },
                 { "DLCNecklacesDesc", "Добавить ожерелья DLC Вулхейвен в магазин. Обычно получаются в ходе DLC. Переоткройте магазин для применения изменений." },
                 { "BossSkinsName", "Скины боссов" },
@@ -75,6 +103,12 @@ internal static class Localization
         {
             "French", new()
             {
+                { "MysticAssistantLabel", "Assistant mystique" },
+                { "ShopLabelRelic", "Relique" },
+                { "ShopLabelSkinApple", "Apparence de suiveur (Apple)" },
+                { "ShopLabelDecoApple", "Décoration (Apple)" },
+                { "ShopLabelOutfitApple", "Tenue (Apple)" },
+                { "ShopLabelSkinBoss", "Apparence de suiveur (Boss)" },
                 { "DLCNecklacesName", "Colliers DLC" },
                 { "DLCNecklacesDesc", "Ajouter les colliers du DLC Woolhaven à la boutique. Normalement obtenus via le gameplay du DLC. Rouvrez la boutique pour appliquer les changements." },
                 { "BossSkinsName", "Skins de boss" },
@@ -89,6 +123,12 @@ internal static class Localization
         {
             "German", new()
             {
+                { "MysticAssistantLabel", "Mystischer Assistent" },
+                { "ShopLabelRelic", "Relikt" },
+                { "ShopLabelSkinApple", "Anhänger-Skin (Apple)" },
+                { "ShopLabelDecoApple", "Dekoration (Apple)" },
+                { "ShopLabelOutfitApple", "Outfit (Apple)" },
+                { "ShopLabelSkinBoss", "Anhänger-Skin (Boss)" },
                 { "DLCNecklacesName", "DLC-Halsketten" },
                 { "DLCNecklacesDesc", "Woolhaven-DLC-Halsketten zum Shop hinzufügen. Werden normalerweise im DLC-Gameplay erhalten. Shop erneut öffnen, damit Änderungen wirksam werden." },
                 { "BossSkinsName", "Boss-Skins" },
@@ -103,6 +143,12 @@ internal static class Localization
         {
             "Spanish", new()
             {
+                { "MysticAssistantLabel", "Asistente místico" },
+                { "ShopLabelRelic", "Reliquia" },
+                { "ShopLabelSkinApple", "Aspecto de seguidor (Apple)" },
+                { "ShopLabelDecoApple", "Decoración (Apple)" },
+                { "ShopLabelOutfitApple", "Atuendo (Apple)" },
+                { "ShopLabelSkinBoss", "Aspecto de seguidor (Jefe)" },
                 { "DLCNecklacesName", "Collares DLC" },
                 { "DLCNecklacesDesc", "Añadir collares del DLC Woolhaven a la tienda. Normalmente se obtienen jugando al DLC. Reabre la tienda para aplicar los cambios." },
                 { "BossSkinsName", "Skins de jefes" },
@@ -117,6 +163,12 @@ internal static class Localization
         {
             "Portuguese (Brazil)", new()
             {
+                { "MysticAssistantLabel", "Assistente místico" },
+                { "ShopLabelRelic", "Relíquia" },
+                { "ShopLabelSkinApple", "Aparência de seguidor (Apple)" },
+                { "ShopLabelDecoApple", "Decoração (Apple)" },
+                { "ShopLabelOutfitApple", "Traje (Apple)" },
+                { "ShopLabelSkinBoss", "Aparência de seguidor (Chefe)" },
                 { "DLCNecklacesName", "Colares DLC" },
                 { "DLCNecklacesDesc", "Adicionar colares do DLC Woolhaven à loja. Normalmente obtidos no gameplay do DLC. Reabra a loja para aplicar as alterações." },
                 { "BossSkinsName", "Skins de chefes" },
@@ -131,6 +183,12 @@ internal static class Localization
         {
             "Chinese (Simplified)", new()
             {
+                { "MysticAssistantLabel", "神秘助手" },
+                { "ShopLabelRelic", "遗物" },
+                { "ShopLabelSkinApple", "追随者皮肤 (Apple)" },
+                { "ShopLabelDecoApple", "装饰 (Apple)" },
+                { "ShopLabelOutfitApple", "服装 (Apple)" },
+                { "ShopLabelSkinBoss", "追随者皮肤 (Boss)" },
                 { "DLCNecklacesName", "DLC项链" },
                 { "DLCNecklacesDesc", "将羊毛港DLC项链添加到商店。通常通过DLC游戏获得。重新打开商店以使更改生效。" },
                 { "BossSkinsName", "Boss皮肤" },
@@ -145,6 +203,12 @@ internal static class Localization
         {
             "Chinese (Traditional)", new()
             {
+                { "MysticAssistantLabel", "神秘助手" },
+                { "ShopLabelRelic", "遺物" },
+                { "ShopLabelSkinApple", "追隨者皮膚 (Apple)" },
+                { "ShopLabelDecoApple", "裝飾 (Apple)" },
+                { "ShopLabelOutfitApple", "服裝 (Apple)" },
+                { "ShopLabelSkinBoss", "追隨者皮膚 (Boss)" },
                 { "DLCNecklacesName", "DLC項鏈" },
                 { "DLCNecklacesDesc", "將羊毛港DLC項鏈新增至商店。通常透過DLC遊戲獲得。重新開啟商店以使變更生效。" },
                 { "BossSkinsName", "Boss皮膚" },
@@ -159,6 +223,12 @@ internal static class Localization
         {
             "Korean", new()
             {
+                { "MysticAssistantLabel", "미스틱 어시스턴트" },
+                { "ShopLabelRelic", "유물" },
+                { "ShopLabelSkinApple", "추종자 스킨 (Apple)" },
+                { "ShopLabelDecoApple", "장식 (Apple)" },
+                { "ShopLabelOutfitApple", "의상 (Apple)" },
+                { "ShopLabelSkinBoss", "추종자 스킨 (보스)" },
                 { "DLCNecklacesName", "DLC 목걸이" },
                 { "DLCNecklacesDesc", "울헤이븐 DLC 목걸이를 상점에 추가합니다. 보통 DLC 게임플레이에서 획득합니다. 변경 사항을 적용하려면 상점을 다시 여세요." },
                 { "BossSkinsName", "보스 스킨" },
@@ -173,6 +243,12 @@ internal static class Localization
         {
             "Italian", new()
             {
+                { "MysticAssistantLabel", "Assistente mistico" },
+                { "ShopLabelRelic", "Reliquia" },
+                { "ShopLabelSkinApple", "Aspetto seguace (Apple)" },
+                { "ShopLabelDecoApple", "Decorazione (Apple)" },
+                { "ShopLabelOutfitApple", "Vestito (Apple)" },
+                { "ShopLabelSkinBoss", "Aspetto seguace (Boss)" },
                 { "DLCNecklacesName", "Collane DLC" },
                 { "DLCNecklacesDesc", "Aggiunge le collane del DLC Woolhaven al negozio. Normalmente ottenute nel gameplay del DLC. Riapri il negozio per applicare le modifiche." },
                 { "BossSkinsName", "Skin dei boss" },
@@ -187,6 +263,12 @@ internal static class Localization
         {
             "Dutch", new()
             {
+                { "MysticAssistantLabel", "Mystieke assistent" },
+                { "ShopLabelRelic", "Relikwie" },
+                { "ShopLabelSkinApple", "Volgelingskin (Apple)" },
+                { "ShopLabelDecoApple", "Decoratie (Apple)" },
+                { "ShopLabelOutfitApple", "Outfit (Apple)" },
+                { "ShopLabelSkinBoss", "Volgelingskin (Baas)" },
                 { "DLCNecklacesName", "DLC-kettingen" },
                 { "DLCNecklacesDesc", "Voeg Woolhaven DLC-kettingen toe aan de winkel. Normaal verkregen via DLC-gameplay. Heropen de winkel om wijzigingen toe te passen." },
                 { "BossSkinsName", "Baas-skins" },
@@ -201,6 +283,12 @@ internal static class Localization
         {
             "Turkish", new()
             {
+                { "MysticAssistantLabel", "Mistik Asistan" },
+                { "ShopLabelRelic", "Kalıntı" },
+                { "ShopLabelSkinApple", "Takipçi Görünümü (Apple)" },
+                { "ShopLabelDecoApple", "Dekorasyon (Apple)" },
+                { "ShopLabelOutfitApple", "Kıyafet (Apple)" },
+                { "ShopLabelSkinBoss", "Takipçi Görünümü (Patron)" },
                 { "DLCNecklacesName", "DLC Kolyeler" },
                 { "DLCNecklacesDesc", "Woolhaven DLC kolyelerini dükkâna ekler. Normalde DLC oynanışıyla elde edilir. Değişikliklerin geçerli olması için dükkânı yeniden açın." },
                 { "BossSkinsName", "Patron Görünümleri" },
@@ -215,6 +303,12 @@ internal static class Localization
         {
             "French (Canadian)", new()
             {
+                { "MysticAssistantLabel", "Assistant mystique" },
+                { "ShopLabelRelic", "Relique" },
+                { "ShopLabelSkinApple", "Apparence de suiveur (Apple)" },
+                { "ShopLabelDecoApple", "Décoration (Apple)" },
+                { "ShopLabelOutfitApple", "Tenue (Apple)" },
+                { "ShopLabelSkinBoss", "Apparence de suiveur (Boss)" },
                 { "DLCNecklacesName", "Colliers DLC" },
                 { "DLCNecklacesDesc", "Ajouter les colliers du DLC Woolhaven à la boutique. Normalement obtenus via le gameplay du DLC. Rouvrez la boutique pour appliquer les changements." },
                 { "BossSkinsName", "Skins de boss" },
@@ -229,6 +323,12 @@ internal static class Localization
         {
             "Arabic", new()
             {
+                { "MysticAssistantLabel", "المساعد الغامض" },
+                { "ShopLabelRelic", "أثر" },
+                { "ShopLabelSkinApple", "مظهر التابع (Apple)" },
+                { "ShopLabelDecoApple", "زينة (Apple)" },
+                { "ShopLabelOutfitApple", "زي (Apple)" },
+                { "ShopLabelSkinBoss", "مظهر التابع (زعيم)" },
                 { "DLCNecklacesName", "قلادات المحتوى الإضافي" },
                 { "DLCNecklacesDesc", "إضافة قلادات محتوى وولهيفن الإضافي إلى المتجر. عادةً يتم الحصول عليها من خلال لعب المحتوى الإضافي. أعد فتح المتجر لتطبيق التغييرات." },
                 { "BossSkinsName", "مظاهر الزعماء" },

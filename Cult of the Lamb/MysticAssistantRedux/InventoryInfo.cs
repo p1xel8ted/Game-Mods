@@ -19,15 +19,15 @@ internal static class InventoryInfo
             // Existing overrides
             InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION_ALT =>
                 LocalizationManager.GetTranslation($"Inventory/{InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION}"),
-            InventoryItem.ITEM_TYPE.SOUL_FRAGMENT => "Relic",
+            InventoryItem.ITEM_TYPE.SOUL_FRAGMENT => Localization.ShopLabelRelic,
 
             // Apple Arcade content
-            InventoryManager.AppleSkinType => "Follower Skin (Apple)",
-            InventoryManager.AppleDecorationType => "Decoration (Apple)",
-            InventoryManager.AppleClothingType => "Outfit (Apple)",
+            InventoryManager.AppleSkinType => Localization.ShopLabelSkinApple,
+            InventoryManager.AppleDecorationType => Localization.ShopLabelDecoApple,
+            InventoryManager.AppleClothingType => Localization.ShopLabelOutfitApple,
             InventoryManager.AppleFleeceType => LocalizationManager.GetTranslation("TarotCards/Fleece680/Name"),
             // InventoryManager.PalworldSkinType => "Follower Skin (Palworld)",
-            InventoryManager.BossSkinType => "Follower Skin (Boss)",
+            InventoryManager.BossSkinType => Localization.ShopLabelSkinBoss,
 
             _ => LocalizationManager.GetTranslation($"Inventory/{itemType}")
         };

@@ -12,7 +12,7 @@
   - 31 boss follower skins
 - Apple decorations can be placed from the build menu with proper placement preview
 - Items display with clear labels indicating their source (e.g., "Follower Skin (Apple)", "Follower Skin (Boss)")
-- Configuration UI localized in 15 languages
+- Shop labels, interaction prompts, and configuration UI localized in 15 languages
 
 ### 0.1.0 - 04/02/2026
 

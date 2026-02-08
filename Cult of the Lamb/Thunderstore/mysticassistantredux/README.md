@@ -32,6 +32,9 @@ The cost per item is configurable (1-10, default 1). Increasing the cost require
 ### Overbuy Warnings
 The shop will warn you before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces). Click again to confirm.
 
+### Localization
+All shop labels, interaction prompts, and configuration UI are localized in 15 languages, matching the game's language setting.
+
 ## Installation
 
 * Install [BepInExPack CultOfTheLamb](https://thunderstore.io/c/cult-of-the-lamb/p/BepInEx/BepInExPack_CultOfTheLamb/)

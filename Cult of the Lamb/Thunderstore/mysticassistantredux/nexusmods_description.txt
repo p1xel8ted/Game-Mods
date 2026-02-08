@@ -38,6 +38,9 @@
 [size=3][b]Overbuy Warnings[/b][/size]
 [size=3]The shop will warn you before purchasing items beyond their normal limits (talisman pieces, dark/light necklaces). Click again to confirm.[/size]
 
+[size=3][b]Localization[/b][/size]
+[size=3]All shop labels, interaction prompts, and configuration UI are localized in 15 languages, matching the game's language setting.[/size]
+
 [size=4][b]Installation[/b][/size]
 
 [list]
