@@ -197,4 +197,7 @@ Debug keybind (F9, gated behind EnableLogging) dumps all English translations fr
 
 ## Open Issues
 - All changes need in-game testing
-- Changes not yet committed
+
+## Commit History
+- `3aeeb626` — Mass action cost preview, pet refinement, furnace scaling, translation dump
+- CHANGELOG date updated from 07/02/2026 to 08/02/2026 for release

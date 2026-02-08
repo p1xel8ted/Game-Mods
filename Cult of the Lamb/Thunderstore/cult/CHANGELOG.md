@@ -1,4 +1,4 @@
-### 2.4.1 - 07/02/2026
+### 2.4.1 - 08/02/2026
 
 **New Features:**
 * Added Elder Work Mode with three options: Disabled (vanilla), All Work, or Light Work Only. Light work allows elders to worship, cook, brew, and research while excluding physical labor like mining and body disposal.
