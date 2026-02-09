@@ -6,10 +6,10 @@ Hotkey-based quick access to four game menus from anywhere - no need to be at th
 
 | Default Key | Menu | Description |
 |---|---|---|
-| F1 | Follower Forms | Browse your follower skin collection |
-| F2 | Structures | View available structures (browse-only) |
-| F3 | Clothing | Browse and assign clothing to followers |
-| F4 | Fleeces | View, equip, and customize fleeces |
+| F2 | Follower Forms | Browse your follower skin collection |
+| F3 | Structures | View available structures (browse-only) |
+| F4 | Clothing | Browse and assign clothing to followers |
+| F5 | Fleeces | View, equip, and customize fleeces |
 
 ## Features
 
@@ -30,10 +30,10 @@ Hotkey-based quick access to four game menus from anywhere - no need to be at th
 All menus are enabled by default. Edit the config file in `BepInEx/config/` or use Configuration Manager (F1) to configure in-game.
 
 ### Hotkeys
-- **Follower Forms** - Default: F1
-- **Build Menu** - Default: F2
-- **Tailor / Clothing** - Default: F3
-- **Player Upgrades / Fleeces** - Default: F4
+- **Follower Forms** - Default: F2
+- **Build Menu** - Default: F3
+- **Tailor / Clothing** - Default: F4
+- **Player Upgrades / Fleeces** - Default: F5
 
 ### Toggles
 Each menu hotkey can be individually enabled or disabled.

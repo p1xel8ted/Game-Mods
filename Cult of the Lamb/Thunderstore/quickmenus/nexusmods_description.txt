@@ -5,10 +5,10 @@
 [size=4][b]Menus[/b][/size]
 
 [list]
-[*][size=3][b]F1[/b] - Follower Forms - Browse your follower skin collection[/size]
-[*][size=3][b]F2[/b] - Structures - View available structures (browse-only)[/size]
-[*][size=3][b]F3[/b] - Clothing - Browse and assign clothing to followers[/size]
-[*][size=3][b]F4[/b] - Fleeces - View, equip, and customize fleeces[/size]
+[*][size=3][b]F2[/b] - Follower Forms - Browse your follower skin collection[/size]
+[*][size=3][b]F3[/b] - Structures - View available structures (browse-only)[/size]
+[*][size=3][b]F4[/b] - Clothing - Browse and assign clothing to followers[/size]
+[*][size=3][b]F5[/b] - Fleeces - View, equip, and customize fleeces[/size]
 [/list]
 
 [size=4][b]Features[/b][/size]
@@ -35,10 +35,10 @@
 
 [size=3][b]Hotkeys[/b][/size]
 [list]
-[*][size=3]Follower Forms - Default: F1[/size]
-[*][size=3]Build Menu - Default: F2[/size]
-[*][size=3]Tailor / Clothing - Default: F3[/size]
-[*][size=3]Player Upgrades / Fleeces - Default: F4[/size]
+[*][size=3]Follower Forms - Default: F2[/size]
+[*][size=3]Build Menu - Default: F3[/size]
+[*][size=3]Tailor / Clothing - Default: F4[/size]
+[*][size=3]Player Upgrades / Fleeces - Default: F5[/size]
 [/list]
 
 [size=4][b]Notes[/b][/size]
