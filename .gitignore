@@ -44,6 +44,7 @@ bld/
 Cult of the Lamb/libs/*
 !Cult of the Lamb/libs/game_code/
 !Cult of the Lamb/libs/game_code/**
+Cult of the Lamb/libs/game_code/assets/
 Cult of the Lamb/libs/game_code/**/*.dll
 Cult of the Lamb/libs/game_code/**/Youtube*
 Cult of the Lamb/libs/game_code/**/LightShaft/
