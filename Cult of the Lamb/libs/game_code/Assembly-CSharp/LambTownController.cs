@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LambTownController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -179,7 +179,7 @@ public class LambTownController : MonoBehaviour
 
   public void RevealRanching()
   {
-    MonoSingleton<UIManager>.Instance.ShowUpgradeTree((System.Action) (() => this.rancherFixedShopB.Play()), UpgradeSystem.Type.RanchingSystem, showDLCTree: true);
+    MonoSingleton<UIManager>.Instance.ShowUpgradeTree((System.Action) (() => GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() => this.rancherFixedShopB.Play()))), UpgradeSystem.Type.RanchingSystem, showDLCTree: true);
   }
 
   public void GiveAnimal()
@@ -619,7 +619,13 @@ public class LambTownController : MonoBehaviour
   public void BlockPausing() => MonoSingleton<UIManager>.Instance.ForceBlockPause = true;
 
   [CompilerGenerated]
-  public void \u003CRevealRanching\u003Eb__44_0() => this.rancherFixedShopB.Play();
+  public void \u003CRevealRanching\u003Eb__44_0()
+  {
+    GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() => this.rancherFixedShopB.Play()));
+  }
+
+  [CompilerGenerated]
+  public void \u003CRevealRanching\u003Eb__44_1() => this.rancherFixedShopB.Play();
 
   [CompilerGenerated]
   public void \u003CGiveAnimal\u003Eb__45_0()

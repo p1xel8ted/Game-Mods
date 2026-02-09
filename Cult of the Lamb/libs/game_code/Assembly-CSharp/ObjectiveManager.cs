@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ObjectiveManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -1206,6 +1206,16 @@ public class ObjectiveManager : BaseMonoBehaviour
     foreach (ObjectivesData objective in DataManager.Instance.Objectives)
     {
       if (objective.GroupId == groupID)
+        return true;
+    }
+    return false;
+  }
+
+  public static bool HasCompletedJobBoardObjective(ObjectivesData objective)
+  {
+    foreach (ObjectivesDataFinalized objectivesDataFinalized in DataManager.Instance.CompletedObjectivesHistory)
+    {
+      if ((objectivesDataFinalized.GroupId == objective.GroupId || objectivesDataFinalized.GroupId == objective.GroupId.TryLocalize()) && (objectivesDataFinalized is Objectives_GetAnimal.FinalizedData_GetAnimal finalizedDataGetAnimal && objective is Objectives_GetAnimal objectivesGetAnimal && finalizedDataGetAnimal.AnimalType == objectivesGetAnimal.AnimalType || objectivesDataFinalized is Objectives_PlaceStructure.FinalizedData_PlaceStructure dataPlaceStructure && objective is Objectives_PlaceStructure objectivesPlaceStructure && dataPlaceStructure.DecoType == objectivesPlaceStructure.DecoType && dataPlaceStructure.Target == objectivesPlaceStructure.Target || objectivesDataFinalized is Objectives_BuildStructure.FinalizedData_BuildStructure dataBuildStructure && objective is Objectives_BuildStructure objectivesBuildStructure && dataBuildStructure.StructureType == objectivesBuildStructure.StructureType && dataBuildStructure.Target == objectivesBuildStructure.Target || objectivesDataFinalized is Objectives_WinFlockadeBet.FinalizedData_WinFlockadeBet dataWinFlockadeBet && objective is Objectives_WinFlockadeBet objectivesWinFlockadeBet && dataWinFlockadeBet.OpponentTermId == objectivesWinFlockadeBet.OpponentTermId || objectivesDataFinalized is Objectives_CollectItem.FinalizedData_CollectItem finalizedDataCollectItem && objective is Objectives_CollectItem objectivesCollectItem && finalizedDataCollectItem.ItemType == objectivesCollectItem.ItemType || objectivesDataFinalized is Objectives_ShowFleece.FinalizedData_ShowFleece finalizedDataShowFleece && objective is Objectives_ShowFleece objectivesShowFleece && finalizedDataShowFleece.FleeceType == objectivesShowFleece.FleeceType || objectivesDataFinalized is Objectives_LegendaryWeaponRun.FinalizedData_LegendaryWeaponRun legendaryWeaponRun1 && objective is Objectives_LegendaryWeaponRun legendaryWeaponRun2 && legendaryWeaponRun1.LegendaryWeapon == legendaryWeaponRun2.LegendaryWeapon || objectivesDataFinalized is Objectives_FindChildren.FinalizedData_FindChildren dataFindChildren && objective is Objectives_FindChildren objectivesFindChildren && dataFindChildren.Location == objectivesFindChildren.Location))
         return true;
     }
     return false;

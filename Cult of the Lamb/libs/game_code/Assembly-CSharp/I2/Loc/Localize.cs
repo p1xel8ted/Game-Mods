@@ -1,13 +1,14 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: I2.Loc.Localize
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -187,6 +188,9 @@ public class Localize : MonoBehaviour
     this.mLocalizeTarget.DoLocalize(this, Localize.MainTranslation, Localize.SecondaryTranslation);
     Localize.CurrentLocalizeComponent = (Localize) null;
     this.SetupRTL(this._text);
+    if (!(LocalizationManager.CurrentLanguage == "Arabic") || !((UnityEngine.Object) this._text != (UnityEngine.Object) null))
+      return;
+    this._text.text = Localize.StripRichText(this._text.text);
   }
 
   public static bool IsValidNumericString(string s)
@@ -393,6 +397,15 @@ public class Localize : MonoBehaviour
   }
 
   public void SetGlobalLanguage(string Language) => LocalizationManager.CurrentLanguage = Language;
+
+  public static string StripRichText(string input)
+  {
+    if (string.IsNullOrEmpty(input))
+      return input;
+    input = Regex.Replace(input, "<[^>]+>", string.Empty);
+    input = Regex.Replace(input, ">[^<]+<", string.Empty);
+    return input;
+  }
 
   public enum TermModification
   {

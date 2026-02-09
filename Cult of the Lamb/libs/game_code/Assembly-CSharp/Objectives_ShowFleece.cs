@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Objectives_ShowFleece
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MessagePack;
@@ -10,7 +10,7 @@ using System;
 #nullable disable
 [MessagePackObject(false)]
 [Serializable]
-public class Objectives_ShowFleece : ObjectivesData
+public class Objectives_ShowFleece : ObjectivesData, IJobBoardObjective
 {
   [Key(16 /*0x10*/)]
   public PlayerFleeceManager.FleeceType FleeceType;
@@ -64,6 +64,8 @@ public class Objectives_ShowFleece : ObjectivesData
       return false;
     return (PlayerFleeceManager.FleeceType) DataManager.Instance.PlayerFleece == this.FleeceType || (PlayerFleeceManager.FleeceType) DataManager.Instance.PlayerVisualFleece == this.FleeceType;
   }
+
+  public bool CanBeCompleted() => this.CheckComplete();
 
   [MessagePackObject(false)]
   [Serializable]

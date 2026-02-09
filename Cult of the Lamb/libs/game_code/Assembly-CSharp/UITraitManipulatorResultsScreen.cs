@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UITraitManipulatorResultsScreen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Coffee.UIExtensions;
@@ -72,6 +72,13 @@ public class UITraitManipulatorResultsScreen : UIMenuBase
         ++index1;
       }
     }
+    if (type != UITraitManipulatorMenuController.Type.Remove || this.traitItems.Count != this.followerTraitSlots.Count)
+      return;
+    List<IndoctrinationTraitItem> traitItems1 = this.traitItems;
+    if (traitItems1[traitItems1.Count - 1].TraitType == follower.TargetTraits[0])
+      return;
+    List<IndoctrinationTraitItem> traitItems2 = this.traitItems;
+    traitItems2[traitItems2.Count - 1].Configure(follower.TargetTraits[0]);
   }
 
   public override IEnumerator DoShowAnimation()

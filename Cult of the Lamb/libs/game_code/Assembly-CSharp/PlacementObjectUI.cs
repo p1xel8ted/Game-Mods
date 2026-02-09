@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlacementObjectUI
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using TMPro;
@@ -22,6 +22,7 @@ public class PlacementObjectUI : BaseMonoBehaviour
   public void Awake()
   {
     this.canvasGroup = this.GetComponent<CanvasGroup>();
+    this.canvasGroup.alpha = 0.0f;
     this.mainCamera = Camera.main;
   }
 
@@ -30,11 +31,15 @@ public class PlacementObjectUI : BaseMonoBehaviour
     this.placementObject = placement;
     this.gameObject.SetActive(true);
     this.UpdateText(structure.Type);
+    this.UpdatePosition();
+    this.canvasGroup.alpha = 1f;
   }
 
   public void Hide() => this.gameObject.SetActive(false);
 
-  public void Update()
+  public void Update() => this.UpdatePosition();
+
+  public void UpdatePosition()
   {
     if (!(bool) (Object) this.placementObject)
       return;

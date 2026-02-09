@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerFarming
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -501,7 +501,7 @@ public class PlayerFarming : BaseMonoBehaviour
 
   public Skin SetSkin(bool BlackAndWhite)
   {
-    this.IsGoat = DataManager.Instance.PlayerVisualFleece == 1003;
+    this.IsGoat = this.playerID != 0 || DataManager.Instance.PlayerVisualFleece == 1003;
     this.PlayerSkin = new Skin("Player Skin");
     this.PlayerSkin.AddSkin(!this.isLamb || this.IsGoat ? this.Spine.Skeleton.Data.FindSkin("Goat") : this.Spine.Skeleton.Data.FindSkin($"Lamb_{DataManager.Instance.PlayerVisualFleece.ToString()}{(BlackAndWhite ? "_BW" : "")}"));
     string str = WeaponData.Skins.Normal.ToString().ToString();

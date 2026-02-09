@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Fishing
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using EasyCurvedLine;
@@ -339,7 +339,7 @@ public class Interaction_Fishing : Interaction
           this.startedCastLoop = true;
           this.CastLoopedSound = AudioManager.Instance.CreateLoop("event:/ui/hold_button_loop", this.gameObject, true);
         }
-        int num = (int) this.CastLoopedSound.setParameterByName("hold_time", this.castingStrength[playerIndex]);
+        int num1 = (int) this.CastLoopedSound.setParameterByName("hold_time", this.castingStrength[playerIndex]);
         this.castingStrength[playerIndex] = Mathf.Clamp(this.castingStrength[playerIndex] + this.castingStrengthIncrement * Time.deltaTime, 0.0f, 1f);
         this._fishingOverlayControllerUI[playerIndex].UpdateCastingStrength(this.castingStrength[playerIndex]);
         if (!this.changedState)
@@ -349,10 +349,11 @@ public class Interaction_Fishing : Interaction
         }
         if (SettingsManager.Settings.Accessibility.AutoFish)
         {
-          Vector3 vector3 = playerFarming.FishingLineBone.transform.position + Vector3.down * Mathf.Lerp(this.minMaxCastDistance.x, this.minMaxCastDistance.y, this.castingStrength[playerIndex]);
-          foreach (Fishable fishable in this.fishables)
+          float num2 = Mathf.Abs((playerFarming.FishingLineBone.transform.position + Vector3.down * Mathf.Lerp(this.minMaxCastDistance.x, this.minMaxCastDistance.y, this.castingStrength[playerIndex])).y);
+          foreach (Component fishable in this.fishables)
           {
-            if ((double) vector3.y < (double) fishable.transform.position.y)
+            float num3 = Mathf.Abs(fishable.transform.position.y);
+            if ((double) Mathf.Abs(num2 - num3) < 1.5)
               this.CastLine(playerIndex);
           }
         }
@@ -401,7 +402,7 @@ public class Interaction_Fishing : Interaction
     else if ((double) this.ReeledAmount[playerIndex] >= 1.0)
       this.FishCaught(playerIndex);
     this.ReelLerped[playerIndex] = Mathf.Lerp(this.ReelLerped[playerIndex], this.ReeledAmount[playerIndex], this.hookReelLerpSpeed * Time.deltaTime);
-    Vector3 vector3_1 = Vector3.Lerp(this.HookedFishFleePosition[playerIndex], playerFarming.Spine.transform.position, this.ReelLerped[playerIndex]);
+    Vector3 vector3 = Vector3.Lerp(this.HookedFishFleePosition[playerIndex], playerFarming.Spine.transform.position, this.ReelLerped[playerIndex]);
     this.reelingHorizontalOffset += this.hookDirectionSpeed * (float) this.hookDirection * Time.deltaTime;
     this.reelingHorizontalOffset /= 2f;
     if ((double) Time.time > (double) this.hookDirectionChangeTimer)
@@ -409,7 +410,7 @@ public class Interaction_Fishing : Interaction
       this.hookDirection *= -1;
       this.hookDirectionChangeTimer = Time.time + UnityEngine.Random.Range(1.5f, 2.5f);
     }
-    this.fishingHooks[playerIndex].transform.position = new Vector3(vector3_1.x + this.reelingHorizontalOffset, vector3_1.y - 1f, this.zPosition);
+    this.fishingHooks[playerIndex].transform.position = new Vector3(vector3.x + this.reelingHorizontalOffset, vector3.y - 1f, this.zPosition);
   }
 
   public override void GetLabel()

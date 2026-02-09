@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UINavigator.UINavigatorNew
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -164,8 +164,9 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
                       flag3 = true;
                   }
                 }
-                InputManager.General.MouseInputActive = flag3;
-                Cursor.visible = flag3;
+                bool flag4 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                InputManager.General.MouseInputActive = flag3 & flag4;
+                Cursor.visible = flag3 & flag4;
                 if (this._currentSelectable != null && (UnityEngine.Object) this._currentSelectable.Selectable != (UnityEngine.Object) null)
                 {
                   this._currentSelectable.Selectable.OnPointerExit((PointerEventData) null);
@@ -178,20 +179,27 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
             }
             if (activeController1.type == ControllerType.Keyboard || activeController1.type == ControllerType.Mouse)
             {
-              bool flag4 = PlayerFarming.playersCount == 1;
-              bool flag5;
+              bool flag5 = PlayerFarming.playersCount == 1;
+              bool flag6;
               if (activeController1.type == ControllerType.Mouse & flag1)
               {
-                flag5 = true;
+                flag6 = true;
                 InputManager.General.MouseInputActive = true;
               }
-              else if (flag4)
+              else if (PlayerFarming.playersCount == 0)
+              {
+                flag1 = activeController1.type == ControllerType.Mouse;
+                bool flag7 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                flag6 = flag7;
+                InputManager.General.MouseInputActive = flag7;
+              }
+              else if (flag5)
               {
                 if (PlayerFarming.Instance.CurrentWeaponInfo != null && (UnityEngine.Object) PlayerFarming.Instance.CurrentWeaponInfo.WeaponData != (UnityEngine.Object) null && PlayerFarming.Instance.CurrentWeaponInfo.WeaponData.PrimaryEquipmentType == EquipmentType.Blunderbuss)
                   flag1 = activeController1.type == ControllerType.Mouse;
-                bool flag6 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
-                flag5 = flag6;
-                InputManager.General.MouseInputActive = flag6;
+                bool flag8 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                flag6 = flag8;
+                InputManager.General.MouseInputActive = flag8;
               }
               else
               {
@@ -206,20 +214,20 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
                       case ControllerType.Keyboard:
                       case ControllerType.Mouse:
                         playerFarming = player;
-                        goto label_38;
+                        goto label_40;
                       default:
                         continue;
                     }
                   }
                 }
-label_38:
+label_40:
                 if ((UnityEngine.Object) playerFarming != (UnityEngine.Object) null && playerFarming.CurrentWeaponInfo != null && (UnityEngine.Object) playerFarming.CurrentWeaponInfo.WeaponData != (UnityEngine.Object) null && playerFarming.CurrentWeaponInfo.WeaponData.PrimaryEquipmentType == EquipmentType.Blunderbuss)
                   flag1 = activeController1.type == ControllerType.Mouse;
-                bool flag7 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
-                flag5 = (UnityEngine.Object) playerFarming != (UnityEngine.Object) null | flag7;
-                InputManager.General.MouseInputActive = flag5;
+                bool flag9 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                flag6 = (UnityEngine.Object) playerFarming != (UnityEngine.Object) null & flag9;
+                InputManager.General.MouseInputActive = flag6;
               }
-              Cursor.visible = flag5;
+              Cursor.visible = flag6;
               if (flag1 | flag2)
               {
                 this._previousMouseInput = Input.mousePosition;

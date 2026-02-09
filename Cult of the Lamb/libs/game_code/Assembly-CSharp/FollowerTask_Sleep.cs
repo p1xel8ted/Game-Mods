@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Sleep
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -575,6 +575,8 @@ public class FollowerTask_Sleep : FollowerTask
       follower.SetEmotionAnimation();
       foreach (FollowerPet dlcFollowerPet in follower.DLCFollowerPets)
         dlcFollowerPet.StopSleeping();
+      if (this.hibernating && (follower.State.CURRENT_STATE == StateMachine.State.CustomAnimation || follower.State.CURRENT_STATE == StateMachine.State.TimedAction))
+        follower.State.CURRENT_STATE = StateMachine.State.Idle;
     }
     FollowerTask_Sleep.Release(this._claimedTile, this.OwnerId);
     this._claimedTile = (PlacementRegion.TileGridTile) null;

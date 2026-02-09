@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DataManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -11,6 +11,7 @@ using MessagePack;
 using MessagePack.Formatters;
 using Newtonsoft.Json;
 using src.Data;
+using src.Managers;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -4609,10 +4610,39 @@ public class DataManager
       DataManager.UnlockRelic(RelicType.HealPerFollower_Dammed);
       DataManager.UnlockRelic(RelicType.DestroyTarotGainBuff_Dammed);
     }
-    if (!DataManager.Instance.HasAcceptedPilgrimPart1 && FollowerInfo.GetInfoByID(99998, true) != null)
-      DataManager.Instance.HasAcceptedPilgrimPart1 = true;
-    if (!DataManager.Instance.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99997, true) != null && FollowerInfo.GetInfoByID(99999, true) != null)
-      DataManager.Instance.HasAcceptedPilgrimPart2 = true;
+    if (!this.HasAcceptedPilgrimPart1 && FollowerInfo.GetInfoByID(99998, true) != null)
+      this.HasAcceptedPilgrimPart1 = true;
+    if (!this.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99997, true) != null && FollowerInfo.GetInfoByID(99999, true) != null)
+      this.HasAcceptedPilgrimPart2 = true;
+    List<ObjectivesData> objectivesOfGroup = ObjectiveManager.GetAllObjectivesOfGroup("Objectives/GroupTitles/PilgrimsQuest");
+    if (this.HasAcceptedPilgrimPart1 && !this.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99998, true) == null && objectivesOfGroup.Count == 0)
+      this.HasAcceptedPilgrimPart1 = false;
+    if (this.HasAcceptedPilgrimPart2 && !this.HasAcceptedPilgrimPart3 && FollowerInfo.GetInfoByID(99997, true) == null && FollowerInfo.GetInfoByID(99999, true) == null && this.PilgrimPart2TargetDay + 3 < TimeManager.CurrentDay)
+    {
+      bool flag = false;
+      foreach (ObjectivesData objectivesData in objectivesOfGroup)
+      {
+        if (objectivesData is Objectives_FindFollower objectivesFindFollower && objectivesFindFollower.TargetLocation == FollowerLocation.Dungeon1_4)
+        {
+          flag = true;
+          break;
+        }
+      }
+      this.HasAcceptedPilgrimPart2 = flag;
+    }
+    if (this.HasAcceptedPilgrimPart3 && PersistenceManager.PersistentData.RevealedJalalasBag && !PersistenceManager.PersistentData.UnlockedBonusComicPages && this.PilgrimPart3TargetDay + 3 < TimeManager.CurrentDay)
+    {
+      bool flag = false;
+      foreach (ObjectivesData objectivesData in objectivesOfGroup)
+      {
+        if (objectivesData is Objectives_Custom objectivesCustom && objectivesCustom.CustomQuestType == global::Objectives.CustomQuestTypes.FindJalalaBag)
+        {
+          flag = true;
+          break;
+        }
+      }
+      this.HasAcceptedPilgrimPart3 = flag;
+    }
     if (UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FollowerWedding) || UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Wedding))
       UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Ritual_Divorce);
     if (DataManager.Instance.BeatenWolf && !this.DiedToYngyaBoss && DataManager.Instance.TotalShrineGhostJuice < 80 /*0x50*/ && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) == 0 && this.DLCDungeonNodesCompleted.Contains(11) && !this.BossesCompleted.Contains(FollowerLocation.Boss_Wolf))
@@ -4651,7 +4681,7 @@ public class DataManager
       Inventory.KeyPieces = 0;
       Inventory.AddItem(InventoryItem.ITEM_TYPE.TALISMAN, 1);
     }
-    if (DataManager.instance.HasProducedChosenOne)
+    if (DataManager.instance.HasProducedChosenOne && FollowerInfo.GetInfoByID(100000, true) == null)
     {
       List<Structures_EggFollower> structuresOfType1 = StructureManager.GetAllStructuresOfType<Structures_EggFollower>();
       bool flag1 = true;
@@ -4679,6 +4709,8 @@ public class DataManager
       objective.FailLocked = true;
       ObjectiveManager.Add((ObjectivesData) objective, true, true);
     }
+    else if (ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.LegendarySword) && DataManager.instance.FollowerSkinsUnlocked.Contains("ChosenChild"))
+      ObjectiveManager.CompleteCustomObjective(global::Objectives.CustomQuestTypes.LegendarySword, 100000);
     if (!DataManager.Instance.OnboardedBaseExpansion && (DataManager.instance.YngyaOffering >= 2 || DataManager.instance.YngyaOffering < 0))
       DataManager.Instance.OnboardedBaseExpansion = true;
     if (DataManager.Instance.NPCRescueRoomsCompleted >= 1 && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_RANCHER) <= 0 && !DataManager.instance.NPCGhostRancherRescued)

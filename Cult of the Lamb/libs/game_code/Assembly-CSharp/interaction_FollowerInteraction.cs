@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: interaction_FollowerInteraction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -3698,7 +3698,7 @@ public class interaction_FollowerInteraction : Interaction
   {
     this.Close(false, false, false);
     this.follower.FacePosition(this.playerFarming.transform.position);
-    if (this.follower.Brain.Info.ID == 99991)
+    if (this.follower.Brain.Info.ID == 99991 && ConversationEntryTerm != "SleepUntilWinter" && ConversationEntryTerm != "SleepUntilSummer")
       ConversationEntryTerm += "/Heket";
     List<ConversationEntry> conversationEntry1 = this.GetConversationEntry(ConversationEntryTerm);
     foreach (ConversationEntry conversationEntry2 in conversationEntry1)

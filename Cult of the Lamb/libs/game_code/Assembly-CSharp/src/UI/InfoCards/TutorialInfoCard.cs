@@ -1,12 +1,13 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UI.InfoCards.TutorialInfoCard
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
+using I2.Loc;
 using Lamb.UI;
 using Lamb.UI.Assets;
 using System.Collections;
@@ -35,11 +36,17 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
   [SerializeField]
   public TextMeshProUGUI _header;
   [SerializeField]
+  public Localize _headerLoc;
+  [SerializeField]
   public TextMeshProUGUI _description;
+  [SerializeField]
+  public Localize _descriptionLoc;
   [SerializeField]
   public Image _image;
   [SerializeField]
   public TextMeshProUGUI _tutorialBody;
+  [SerializeField]
+  public Localize _tutorialBodyLoc;
   [Header("Pages")]
   [SerializeField]
   public TextMeshProUGUI _pageText;
@@ -69,6 +76,8 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
     this._category = this._tutorialConfiguration.GetCategory(config);
     this._header.text = this._category.GetTitle();
     this._description.text = this._category.GetDescription();
+    this._headerLoc.enabled = false;
+    this._descriptionLoc.enabled = false;
     this._topContainer.SetActive(this._category.TopicImageRef.RuntimeKeyIsValid());
     this.StartCoroutine((IEnumerator) this.ConfigurePage(0));
   }
@@ -82,6 +91,7 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
       yield return (object) tutorialInfoCard.StartCoroutine((IEnumerator) tutorialInfoCard.LoadAsset(tutorialInfoCard._category.Entries[page - 1].ImageRef));
       tutorialInfoCard._image.sprite = tutorialInfoCard.handles[tutorialInfoCard._category.Entries[page - 1].ImageRef].Result;
       tutorialInfoCard._tutorialBody.text = tutorialInfoCard._category.Entries[page - 1].Description;
+      tutorialInfoCard._tutorialBodyLoc.enabled = false;
     }
     else
     {
@@ -167,8 +177,8 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
   }
 
   [CompilerGenerated]
-  public void \u003CAwake\u003Eb__18_0() => this.OnLeftArrowClicked();
+  public void \u003CAwake\u003Eb__21_0() => this.OnLeftArrowClicked();
 
   [CompilerGenerated]
-  public void \u003CAwake\u003Eb__18_1() => this.OnRightArrowClicked();
+  public void \u003CAwake\u003Eb__21_1() => this.OnRightArrowClicked();
 }

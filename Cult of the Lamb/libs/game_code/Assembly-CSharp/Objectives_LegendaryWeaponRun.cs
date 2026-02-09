@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Objectives_LegendaryWeaponRun
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -88,9 +88,10 @@ public class Objectives_LegendaryWeaponRun : ObjectivesData
 
   public void CheckComplete(EquipmentType weapon)
   {
-    if (weapon == this.LegendaryWeapon)
-      this.IsComplete = true;
-    this.CheckComplete();
+    if (weapon != this.LegendaryWeapon)
+      return;
+    this.Complete();
+    this.IsComplete = true;
   }
 
   public override bool CheckComplete() => this.IsComplete;

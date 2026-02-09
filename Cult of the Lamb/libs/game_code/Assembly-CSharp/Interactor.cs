@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interactor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -283,6 +283,8 @@ public class Interactor : BaseMonoBehaviour
           else
             this.indicator.text.text = ScriptLocalization.Interactions.BuryBody;
         }
+        else if (this.playerFarming.CarryingSnowball)
+          this.indicator.text.text = LocalizationManager.GetTranslation("UI/Settings/Controls/HoldToAim");
         else if (this.playerFarming.NearCompostBody)
           this.indicator.text.text = ScriptLocalization.Interactions.CompostBody;
         else if (this.playerFarming.NearFurnace)
@@ -292,8 +294,6 @@ public class Interactor : BaseMonoBehaviour
           else if ((UnityEngine.Object) this.playerFarming.GetLeashingAnimal() != (UnityEngine.Object) null)
             this.indicator.text.text = LocalizationManager.GetTranslation("Interactions/BurnAnimal");
         }
-        else if (this.playerFarming.CarryingSnowball)
-          this.indicator.text.text = LocalizationManager.GetTranslation("UI/Settings/Controls/HoldToAim");
         else if (!((UnityEngine.Object) this.playerFarming != (UnityEngine.Object) null) || !((UnityEngine.Object) this.playerFarming.PuzzlePieceCarried != (UnityEngine.Object) null))
           this.indicator.text.text = ScriptLocalization.Interactions.Drop;
         this.indicator.Reset();

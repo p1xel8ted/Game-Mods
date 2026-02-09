@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Flockade.FlockadeGameScreen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -38,8 +38,6 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
   [SerializeField]
   public FlockadeControlPrompts _controlPrompts;
   [SerializeField]
-  public FlockadePlayer _coopPlayer;
-  [SerializeField]
   public FlockadeEndGameAnnouncement _endGameAnnouncement;
   [SerializeField]
   public FlockadePlayer _goatPlayer;
@@ -47,6 +45,10 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
   public FlockadeGamePieceInformation _information;
   [SerializeField]
   public FlockadePlayer _lambPlayer;
+  [SerializeField]
+  public FlockadePlayer _coopGoatPlayer;
+  [SerializeField]
+  public FlockadePlayer _coopLambPlayer;
   [SerializeField]
   public FlockadeNpc _npc;
   [SerializeField]
@@ -62,6 +64,7 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
   public bool _matchCompleted;
   public FlockadePassiveManager _passiveManager;
   public FlockadePlayer _player;
+  public FlockadePlayer _coopPlayer;
 
   public static event FlockadeGameScreen.MatchCompletionEvent OnMatchCompleted;
 
@@ -75,18 +78,21 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
     FlockadeOpponentConfiguration opponentConfiguration,
     int bet = 0)
   {
-    bool flag = (UnityEngine.Object) playerFarming == (UnityEngine.Object) null || PlayerFarming.playersCount > 1 || playerFarming.isLamb && !playerFarming.IsGoat;
+    bool flag = (UnityEngine.Object) playerFarming == (UnityEngine.Object) null || playerFarming.isLamb && !playerFarming.IsGoat;
     this._lambPlayer.gameObject.SetActive(flag);
     this._goatPlayer.gameObject.SetActive(!flag);
     this._player = flag ? this._lambPlayer : this._goatPlayer;
     this._player.Configure(FlockadeGameBoardSide.Left, this._bag, this._controlPrompts, this._parent, playerFarming);
-    this._coopPlayer.gameObject.SetActive(opponentConfiguration.Type == FlockadeOpponentConfiguration.OpponentType.CoopPlayer);
+    this._coopLambPlayer.gameObject.SetActive(opponentConfiguration.Type == FlockadeOpponentConfiguration.OpponentType.CoopPlayer && !flag);
+    this._coopGoatPlayer.gameObject.SetActive(opponentConfiguration.Type == FlockadeOpponentConfiguration.OpponentType.CoopPlayer & flag);
     this._npc.gameObject.SetActive(opponentConfiguration.Type == FlockadeOpponentConfiguration.OpponentType.Npc);
     this._twitch.gameObject.SetActive(opponentConfiguration.Type == FlockadeOpponentConfiguration.OpponentType.Twitch);
     switch (opponentConfiguration.Type)
     {
       case FlockadeOpponentConfiguration.OpponentType.CoopPlayer:
-        this._coopPlayer.Configure(FlockadeGameBoardSide.Right, this._bag, this._controlPrompts, this._parent, PlayerFarming.players[1]);
+        PlayerFarming playerFarming1 = (UnityEngine.Object) playerFarming == (UnityEngine.Object) null || (UnityEngine.Object) PlayerFarming.players[0] == (UnityEngine.Object) playerFarming ? PlayerFarming.players[1] : PlayerFarming.players[0];
+        this._coopPlayer = flag ? this._coopGoatPlayer : this._coopLambPlayer;
+        this._coopPlayer.Configure(FlockadeGameBoardSide.Right, this._bag, this._controlPrompts, this._parent, playerFarming1);
         this._coopPlayer.Opponent = (FlockadePlayerBase) this._player;
         this._player.Opponent = (FlockadePlayerBase) this._coopPlayer;
         break;
@@ -256,7 +262,7 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
     flockadeGameScreen._controlPrompts.HideAcceptButton();
     MonoSingleton<UINavigatorNew>.Instance.AllowInputOnlyFromPlayer = (PlayerFarming) null;
     flockadeGameScreen._controlPrompts.ShowAcceptButton();
-    yield return (object) new WaitUntil((Func<bool>) new Func<bool>(flockadeGameScreen.\u003CEndGame\u003Eb__41_0));
+    yield return (object) new WaitUntil((Func<bool>) new Func<bool>(flockadeGameScreen.\u003CEndGame\u003Eb__43_0));
     (int, int) valueTuple1 = (flockadeGameScreen._player.Victories.Count, flockadeGameScreen._player.Opponent.Victories.Count);
     FlockadeUIController.Result result1;
     if (valueTuple1.Item1 > valueTuple1.Item2)
@@ -356,19 +362,19 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
       confirmationWindow.OnConfirm += (System.Action) (() =>
       {
         this.StopAllCoroutines();
-        if ((UnityEngine.Object) this._player.Opponent == (UnityEngine.Object) this._coopPlayer || (UnityEngine.Object) this._player.Opponent == (UnityEngine.Object) this._twitch)
-        {
-          System.Action matchQuit = this.MatchQuit;
-          if (matchQuit == null)
-            return;
-          matchQuit();
-        }
-        else
+        if ((UnityEngine.Object) this._player.Opponent == (UnityEngine.Object) this._npc)
         {
           Action<FlockadeUIController.Result> matchCompleted = this.MatchCompleted;
           if (matchCompleted == null)
             return;
           matchCompleted(FlockadeUIController.Result.Loss);
+        }
+        else
+        {
+          System.Action matchQuit = this.MatchQuit;
+          if (matchQuit == null)
+            return;
+          matchQuit();
         }
       });
       confirmationWindow.OnHide = confirmationWindow.OnHide + (System.Action) (() => UIManager.PlayAudio("event:/ui/close_menu"));
@@ -478,28 +484,28 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
   }
 
   [CompilerGenerated]
-  public bool \u003CEndGame\u003Eb__41_0()
+  public bool \u003CEndGame\u003Eb__43_0()
   {
     return this._player.GetAcceptButtonDown() || this._player.Opponent.GetAcceptButtonDown();
   }
 
   [CompilerGenerated]
-  public void \u003COnCancelButtonInput\u003Eb__48_1()
+  public void \u003COnCancelButtonInput\u003Eb__50_1()
   {
     this.StopAllCoroutines();
-    if ((UnityEngine.Object) this._player.Opponent == (UnityEngine.Object) this._coopPlayer || (UnityEngine.Object) this._player.Opponent == (UnityEngine.Object) this._twitch)
-    {
-      System.Action matchQuit = this.MatchQuit;
-      if (matchQuit == null)
-        return;
-      matchQuit();
-    }
-    else
+    if ((UnityEngine.Object) this._player.Opponent == (UnityEngine.Object) this._npc)
     {
       Action<FlockadeUIController.Result> matchCompleted = this.MatchCompleted;
       if (matchCompleted == null)
         return;
       matchCompleted(FlockadeUIController.Result.Loss);
+    }
+    else
+    {
+      System.Action matchQuit = this.MatchQuit;
+      if (matchQuit == null)
+        return;
+      matchQuit();
     }
   }
 

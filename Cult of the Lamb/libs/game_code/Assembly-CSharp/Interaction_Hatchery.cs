@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Hatchery
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -154,7 +154,7 @@ public class Interaction_Hatchery : Interaction
     GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() =>
     {
       if (this.hasEgg)
-        this.egg.UpdateEgg(this.eggReady, this.Structure.Brain.Data.Rotten, this.Structure.Brain.Data.EggInfo.Rotting, this.Structure.Brain.Data.EggInfo.Golden);
+        this.egg.UpdateEgg(this.eggReady, this.Structure.Brain.Data.Rotten, this.Structure.Brain.Data.EggInfo.Rotting, this.Structure.Brain.Data.EggInfo.Golden, this.Structure.Brain.Data.EggInfo.Special);
       this.normal.gameObject.SetActive(!this.eggRequiresWatering);
       this.collapsed.gameObject.SetActive(this.eggRequiresWatering);
       this.waterIcon.gameObject.SetActive(true);
@@ -430,7 +430,7 @@ public class Interaction_Hatchery : Interaction
   {
     StructuresData.EggData eggInfo = this.structureBrain.Data.EggInfo;
     System.Random random = new System.Random(eggInfo.EggSeed);
-    if (FollowerManager.PalworldIDs.Contains(eggInfo.Parent_1_ID) && !DataManager.Instance.FollowerSkinsUnlocked.Contains(eggInfo.Parent_1_SkinName) || eggInfo.Parent_1_ID == 100006 && !DataManager.Instance.CompletedMidasFollowerQuest || eggInfo.Special == FollowerSpecialType.Gold && eggInfo.Parent_1_ID != 0 && eggInfo.Parent_2_ID == 0)
+    if (FollowerManager.PalworldIDs.Contains(eggInfo.Parent_1_ID) && !DataManager.Instance.FollowerSkinsUnlocked.Contains(eggInfo.Parent_1_SkinName) || eggInfo.Parent_1_ID == 100006 && !DataManager.Instance.CompletedMidasFollowerQuest || eggInfo.Special == FollowerSpecialType.Gold && eggInfo.Parent_1_ID != 0 && eggInfo.Parent_2_ID == 0 || eggInfo.Parent_1_ID == -666 && eggInfo.Parent_2_ID == 0)
     {
       string str = "PalworldOne";
       FollowerTrait.TraitType traitType = FollowerTrait.TraitType.Scared;
@@ -457,7 +457,7 @@ public class Interaction_Hatchery : Interaction
           str = "Midas";
           break;
         default:
-          if (eggInfo.Special == FollowerSpecialType.Gold && eggInfo.Parent_1_ID != 0 && eggInfo.Parent_2_ID == 0)
+          if (eggInfo.Special == FollowerSpecialType.Gold && eggInfo.Parent_1_ID != 0 && eggInfo.Parent_2_ID == 0 || eggInfo.Parent_1_ID == -666 && eggInfo.Parent_2_ID == 0)
           {
             eggInfo.Parent_1_ID = ++DataManager.Instance.FollowerID;
             while (FollowerManager.UniqueFollowerIDs.Contains(eggInfo.Parent_1_ID))
@@ -678,7 +678,7 @@ public class Interaction_Hatchery : Interaction
   public void \u003CUpdateEgg\u003Eb__33_0()
   {
     if (this.hasEgg)
-      this.egg.UpdateEgg(this.eggReady, this.Structure.Brain.Data.Rotten, this.Structure.Brain.Data.EggInfo.Rotting, this.Structure.Brain.Data.EggInfo.Golden);
+      this.egg.UpdateEgg(this.eggReady, this.Structure.Brain.Data.Rotten, this.Structure.Brain.Data.EggInfo.Rotting, this.Structure.Brain.Data.EggInfo.Golden, this.Structure.Brain.Data.EggInfo.Special);
     this.normal.gameObject.SetActive(!this.eggRequiresWatering);
     this.collapsed.gameObject.SetActive(this.eggRequiresWatering);
     this.waterIcon.gameObject.SetActive(true);

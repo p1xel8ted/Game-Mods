@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_PurchasableFleece
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -225,7 +225,9 @@ public class Interaction_PurchasableFleece : Interaction
     {
       case Interaction_PurchasableFleece.State.None:
       case Interaction_PurchasableFleece.State.Completed:
+        base.OnInteract(state);
         this.EquipFleece();
+        this.HasChanged = true;
         break;
       case Interaction_PurchasableFleece.State.CanBury:
         if (Inventory.GetItemQuantity(this.buryItem) > 0)
@@ -489,11 +491,11 @@ public class Interaction_PurchasableFleece : Interaction
       DataManager.Instance.PlayerFleece = (int) this.fleeceType;
       DataManager.Instance.PlayerVisualFleece = (int) this.fleeceType;
     }
-    PlayerFarming.Instance.IsGoat = false;
-    PlayerFarming.Instance.simpleSpineAnimator?.SetSkin("Lamb_" + DataManager.Instance.PlayerFleece.ToString());
+    this.playerFarming.IsGoat = false;
+    this.playerFarming.simpleSpineAnimator?.SetSkin("Lamb_" + DataManager.Instance.PlayerFleece.ToString());
     AudioManager.Instance.PlayOneShot("event:/player/layer_clothes", this.gameObject);
     AudioManager.Instance.PlayOneShot("event:/player/weapon_equip", this.gameObject);
-    BiomeConstants.Instance.EmitSmokeInteractionVFX(PlayerFarming.Instance.transform.position, Vector3.one);
+    BiomeConstants.Instance.EmitSmokeInteractionVFX(this.playerFarming.transform.position, Vector3.one);
   }
 
   public IEnumerator RevealFlowersIE()

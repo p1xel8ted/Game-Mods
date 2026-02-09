@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Quests
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -101,7 +101,8 @@ public static class Quests
     (ObjectivesData) new Objectives_PerformRitual("Objectives/GroupTitles/Quest", UpgradeSystem.Type.Ritual_RanchHarvest, questExpireDuration: 4800f),
     (ObjectivesData) new Objectives_PerformRitual("Objectives/GroupTitles/Quest", UpgradeSystem.Type.Ritual_RanchMeat, questExpireDuration: 4800f),
     (ObjectivesData) new Objectives_Drink("Objectives/GroupTitles/Quest", InventoryItem.ITEM_TYPE.DRINK_CHILLI, 3600f),
-    (ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/Quest", Objectives.CustomQuestTypes.SendFollowerToMatingTent, questExpireDuration: 3600f)
+    (ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/Quest", Objectives.CustomQuestTypes.SendFollowerToMatingTent, questExpireDuration: 3600f),
+    (ObjectivesData) new Objectives_CollectItem("Objectives/GroupTitles/Quest", InventoryItem.ITEM_TYPE.FLOWER_RED, 10, false, FollowerLocation.Dungeon1_1, 4800f)
   };
   public static List<int> RequiresDrunkFollowerQuests = new List<int>()
   {
@@ -729,7 +730,7 @@ label_171:
                   objectivesDataList1[index1] = (ObjectivesData) null;
                 if (objectivesCollectItem.ItemType == InventoryItem.ITEM_TYPE.MUSHROOM_SMALL && !DataManager.Instance.VisitedLocations.Contains(FollowerLocation.Hub1_Sozo))
                   objectivesDataList1[index1] = (ObjectivesData) null;
-                if (targetQuest != null && objectivesCollectItem.ItemType == InventoryItem.ITEM_TYPE.FLOWER_RED && !Quests.IsLoverQuestAvailable(followerID, targetFollowerID_1))
+                if (targetQuest != null && objectivesCollectItem.ItemType == InventoryItem.ITEM_TYPE.FLOWER_RED && index1 == 86 && !Quests.IsLoverQuestAvailable(followerID, targetFollowerID_1))
                   objectivesDataList1[index1] = (ObjectivesData) null;
                 if (objectivesCollectItem.ItemType == InventoryItem.ITEM_TYPE.MAGMA_STONE && targetQuest == null)
                   objectivesCollectItem.CompleteTerm = "GiveQuest/CollectItem/MAGMA_STONE/Complete";

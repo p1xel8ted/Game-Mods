@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIJobBoardMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -181,15 +181,16 @@ public class UIJobBoardMenuController : UIMenuBase
   public override void OnShowStarted()
   {
     base.OnShowStarted();
-    this.TitleText.text = LocalizationManager.GetTranslation(this.jobItems[0].Objective.GroupId);
-    MonoSingleton<UINavigatorNew>.Instance.NavigateToNew((IMMSelectable) this.jobItems[0].MMButton);
+    JobBoardMenuItem safeItemSelection = this.jobItems.Count <= 0 ? this.completeJobItems[0] : this.jobItems[0];
+    this.TitleText.text = LocalizationManager.GetTranslation(safeItemSelection.Objective.GroupId);
+    MonoSingleton<UINavigatorNew>.Instance.NavigateToNew((IMMSelectable) safeItemSelection.MMButton);
     GameManager.GetInstance().WaitForSecondsRealtime(0.0f, (System.Action) (() =>
     {
-      this.objectiveController.HideAllExcluding(this.jobItems[0].Objective.GroupId, false);
+      this.objectiveController.HideAllExcluding(safeItemSelection.Objective.GroupId, false);
       this.noJobs.alpha = 0.0f;
-      if (this.objectiveController.GetCount() - this.objectiveController.GetCountExcluding(this.jobItems[0].Objective.GroupId) <= 0)
+      if (this.objectiveController.GetCount() - this.objectiveController.GetCountExcluding(safeItemSelection.Objective.GroupId) <= 0)
         this.noJobs.DOFade(1f, 0.5f).SetUpdate<TweenerCore<float, float, FloatOptions>>(true);
-      if (this.objectiveController.GetCount() - this.objectiveController.GetCountExcluding(this.jobItems[0].Objective.GroupId) > 0)
+      if (this.objectiveController.GetCount() - this.objectiveController.GetCountExcluding(safeItemSelection.Objective.GroupId) > 0)
         return;
       foreach (JobBoardMenuItem jobItem in this.jobItems)
       {
@@ -230,10 +231,11 @@ public class UIJobBoardMenuController : UIMenuBase
   public override void OnShowCompleted()
   {
     base.OnShowCompleted();
-    if (!((UnityEngine.Object) this.jobItems.FirstOrDefault<JobBoardMenuItem>((Func<JobBoardMenuItem, bool>) (x => x.Completed)) == (UnityEngine.Object) null))
+    if (!((UnityEngine.Object) this.jobItems.FirstOrDefault<JobBoardMenuItem>((Func<JobBoardMenuItem, bool>) (x => x.Completed)) == (UnityEngine.Object) null) || this.jobItems.Count == 0 && this.completeJobItems.Count == 0)
       return;
-    this.TitleText.text = LocalizationManager.GetTranslation(this.jobItems[0].JobData.GroupTitle);
-    this.infoCardController.Card1.Show(this.jobItems[0], true);
+    JobBoardMenuItem config = this.jobItems.Count <= 0 ? this.completeJobItems[0] : this.jobItems[0];
+    this.TitleText.text = LocalizationManager.GetTranslation(config.JobData.GroupTitle);
+    this.infoCardController.Card1.Show(config, true);
   }
 
   public override void OnHideStarted()
@@ -338,11 +340,21 @@ public class UIJobBoardMenuController : UIMenuBase
     objective = (ObjectivesDataFinalized) null;
     foreach (ObjectivesDataFinalized objectivesDataFinalized in DataManager.Instance.CompletedObjectivesHistory)
     {
-      if ((objectivesDataFinalized.GroupId == item.Objective.GroupId || objectivesDataFinalized.GroupId == item.Objective.GroupId.TryLocalize()) && objectivesDataFinalized is Objectives_GetAnimal.FinalizedData_GetAnimal finalizedDataGetAnimal && item.Objective is Objectives_GetAnimal objective1 && finalizedDataGetAnimal.AnimalType == objective1.AnimalType)
+      if ((objectivesDataFinalized.GroupId == item.Objective.GroupId || objectivesDataFinalized.GroupId == item.Objective.GroupId.TryLocalize()) && (objectivesDataFinalized is Objectives_GetAnimal.FinalizedData_GetAnimal finalizedDataGetAnimal && item.Objective is Objectives_GetAnimal objective1 && finalizedDataGetAnimal.AnimalType == objective1.AnimalType || objectivesDataFinalized is Objectives_PlaceStructure.FinalizedData_PlaceStructure dataPlaceStructure && item.Objective is Objectives_PlaceStructure objective2 && dataPlaceStructure.DecoType == objective2.DecoType && dataPlaceStructure.Target == objective2.Target || objectivesDataFinalized is Objectives_BuildStructure.FinalizedData_BuildStructure dataBuildStructure && item.Objective is Objectives_BuildStructure objective3 && dataBuildStructure.StructureType == objective3.StructureType && dataBuildStructure.Target == objective3.Target || objectivesDataFinalized is Objectives_WinFlockadeBet.FinalizedData_WinFlockadeBet dataWinFlockadeBet && item.Objective is Objectives_WinFlockadeBet objective4 && dataWinFlockadeBet.OpponentTermId == objective4.OpponentTermId || objectivesDataFinalized is Objectives_CollectItem.FinalizedData_CollectItem finalizedDataCollectItem && item.Objective is Objectives_CollectItem objective5 && finalizedDataCollectItem.ItemType == objective5.ItemType || objectivesDataFinalized is Objectives_ShowFleece.FinalizedData_ShowFleece finalizedDataShowFleece && item.Objective is Objectives_ShowFleece objective6 && finalizedDataShowFleece.FleeceType == objective6.FleeceType || objectivesDataFinalized is Objectives_LegendaryWeaponRun.FinalizedData_LegendaryWeaponRun legendaryWeaponRun && item.Objective is Objectives_LegendaryWeaponRun objective7 && legendaryWeaponRun.LegendaryWeapon == objective7.LegendaryWeapon || objectivesDataFinalized is Objectives_FindChildren.FinalizedData_FindChildren dataFindChildren && item.Objective is Objectives_FindChildren objective8 && dataFindChildren.Location == objective8.Location))
       {
         objective = objectivesDataFinalized;
         return true;
       }
+    }
+    return false;
+  }
+
+  public bool CompletedObjective(ObjectivesData objective)
+  {
+    foreach (ObjectivesDataFinalized objectivesDataFinalized in DataManager.Instance.CompletedObjectivesHistory)
+    {
+      if ((objectivesDataFinalized.GroupId == objective.GroupId || objectivesDataFinalized.GroupId == objective.GroupId.TryLocalize()) && (objectivesDataFinalized is Objectives_GetAnimal.FinalizedData_GetAnimal finalizedDataGetAnimal && objective is Objectives_GetAnimal objectivesGetAnimal && finalizedDataGetAnimal.AnimalType == objectivesGetAnimal.AnimalType || objectivesDataFinalized is Objectives_PlaceStructure.FinalizedData_PlaceStructure dataPlaceStructure && objective is Objectives_PlaceStructure objectivesPlaceStructure && dataPlaceStructure.DecoType == objectivesPlaceStructure.DecoType && dataPlaceStructure.Target == objectivesPlaceStructure.Target || objectivesDataFinalized is Objectives_BuildStructure.FinalizedData_BuildStructure dataBuildStructure && objective is Objectives_BuildStructure objectivesBuildStructure && dataBuildStructure.StructureType == objectivesBuildStructure.StructureType && dataBuildStructure.Target == objectivesBuildStructure.Target || objectivesDataFinalized is Objectives_WinFlockadeBet.FinalizedData_WinFlockadeBet dataWinFlockadeBet && objective is Objectives_WinFlockadeBet objectivesWinFlockadeBet && dataWinFlockadeBet.OpponentTermId == objectivesWinFlockadeBet.OpponentTermId || objectivesDataFinalized is Objectives_CollectItem.FinalizedData_CollectItem finalizedDataCollectItem && objective is Objectives_CollectItem objectivesCollectItem && finalizedDataCollectItem.ItemType == objectivesCollectItem.ItemType || objectivesDataFinalized is Objectives_ShowFleece.FinalizedData_ShowFleece finalizedDataShowFleece && objective is Objectives_ShowFleece objectivesShowFleece && finalizedDataShowFleece.FleeceType == objectivesShowFleece.FleeceType || objectivesDataFinalized is Objectives_LegendaryWeaponRun.FinalizedData_LegendaryWeaponRun legendaryWeaponRun1 && objective is Objectives_LegendaryWeaponRun legendaryWeaponRun2 && legendaryWeaponRun1.LegendaryWeapon == legendaryWeaponRun2.LegendaryWeapon || objectivesDataFinalized is Objectives_FindChildren.FinalizedData_FindChildren dataFindChildren && objective is Objectives_FindChildren objectivesFindChildren && dataFindChildren.Location == objectivesFindChildren.Location))
+        return true;
     }
     return false;
   }
@@ -370,25 +382,5 @@ public class UIJobBoardMenuController : UIMenuBase
         onCancel();
     }
     UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);
-  }
-
-  [CompilerGenerated]
-  public void \u003COnShowStarted\u003Eb__32_0()
-  {
-    this.objectiveController.HideAllExcluding(this.jobItems[0].Objective.GroupId, false);
-    this.noJobs.alpha = 0.0f;
-    if (this.objectiveController.GetCount() - this.objectiveController.GetCountExcluding(this.jobItems[0].Objective.GroupId) <= 0)
-      this.noJobs.DOFade(1f, 0.5f).SetUpdate<TweenerCore<float, float, FloatOptions>>(true);
-    if (this.objectiveController.GetCount() - this.objectiveController.GetCountExcluding(this.jobItems[0].Objective.GroupId) > 0)
-      return;
-    foreach (JobBoardMenuItem jobItem in this.jobItems)
-    {
-      ObjectivesData objective = (ObjectivesData) null;
-      if (this.TrackingObjective(jobItem, out objective, true, false))
-      {
-        DataManager.Instance.Objectives.Remove(objective);
-        this.OnMenuItemSelected(jobItem);
-      }
-    }
   }
 }

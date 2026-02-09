@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_JobBoard
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -122,7 +122,17 @@ public class Interaction_JobBoard : Interaction
               return true;
           }
         }
-        if (objective2 != null && objective2.TryComplete())
+        else if (this.host == Interaction_JobBoard.HostEnum.Priest && objective2.Type == global::Objectives.TYPES.SHOW_FLEECE)
+        {
+          foreach (Objectives_ShowFleece.FinalizedData_ShowFleece completedObjective in ObjectiveManager.GetCustomCompletedObjectives<Objectives_ShowFleece.FinalizedData_ShowFleece>())
+          {
+            if (completedObjective != null && completedObjective.GroupId == objective2.GroupId && completedObjective.FleeceType == ((Objectives_ShowFleece) objective2).FleeceType)
+              return true;
+          }
+        }
+        if (objective2 != null && objective2 is IJobBoardObjective jobBoardObjective)
+          return jobBoardObjective.CanBeCompleted();
+        if (objective2 != null && (ObjectiveManager.HasCompletedJobBoardObjective(objective2) || objective2.TryComplete()))
           return true;
       }
     }

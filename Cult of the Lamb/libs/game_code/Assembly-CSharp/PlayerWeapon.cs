@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerWeapon
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -493,7 +493,7 @@ public class PlayerWeapon : BaseMonoBehaviour
   public void LightningStrike(Vector3 pos)
   {
     BiomeConstants.Instance.EmitLightningStrike(pos);
-    Explosion.CreateExplosion(pos, Health.Team.Team2, this.health, 1f, PlayerWeapon.GetDamage(2f, this.playerFarming.currentWeaponLevel, this.playerFarming));
+    Explosion.CreateExplosion(pos, this.health.team, this.health, 1f, PlayerWeapon.GetDamage(2f, this.playerFarming.currentWeaponLevel, this.playerFarming));
   }
 
   public void AttackDealDamage(float DamageToDeal, Health.AttackFlags additionalFlags = (Health.AttackFlags) 0)

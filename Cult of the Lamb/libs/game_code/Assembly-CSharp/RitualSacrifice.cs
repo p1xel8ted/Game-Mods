@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualSacrifice
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -380,6 +380,14 @@ public class RitualSacrifice : Ritual
         }
         DataManager.Instance.Followers.Add(this.sacrificeFollower.Brain._directInfoAccess);
         DataManager.Instance.Followers.Sort((Comparison<FollowerInfo>) ((a, b) => a.ID.CompareTo(b.ID)));
+        FollowerBrain.AllBrains.Sort((Comparison<FollowerBrain>) ((a, b) =>
+        {
+          if (a.Info == null && b.Info == null)
+            return 0;
+          if (a.Info == null && b.Info != null)
+            return -1;
+          return a.Info != null && b.Info == null ? 1 : a.Info.ID.CompareTo(b.Info.ID);
+        }));
         FollowerManager.RemoveFollower(id);
         this.sacrificeFollower.Spine.Skeleton.SetSkin(this.sacrificeFollower.Brain.Info.SkinName);
         foreach (WorshipperData.SlotAndColor slotAndColour in WorshipperData.Instance.GetColourData("Boss Aym").SlotAndColours[0].SlotAndColours)

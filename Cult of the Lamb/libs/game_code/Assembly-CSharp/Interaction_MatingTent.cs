@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_MatingTent
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: B4944960-D044-4E12-B091-6A0422C77B16
+// MVID: 67F01238-B454-48B8-93E4-17A603153F10
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -504,7 +504,7 @@ public class Interaction_MatingTent : Interaction
   {
     float num = 0.5f;
     IDAndRelationship relationship = f1.Info.GetOrCreateRelationship(f2.Info.ID);
-    if (FollowerManager.IsChild(f1.Info.ID) || FollowerManager.IsChild(f2.Info.ID) || FollowerManager.AreSiblings(f1.Info.ID, f2.Info.ID) || FollowerManager.IsChildOf(f1.Info.ID, f2.Info.ID) || FollowerManager.IsChildOf(f2.Info.ID, f1.Info.ID) || f1.CurrentState == null || f2.CurrentState == null || f1.Info.ID == 666 && (f2.Info.ID == 99994 || f2.Info.ID == 99995) || f2.Info.ID == 666 && (f1.Info.ID == 99994 || f1.Info.ID == 99995))
+    if (FollowerManager.IsChild(f1.Info.ID) || FollowerManager.IsChild(f2.Info.ID) || FollowerManager.AreSiblings(f1.Info.ID, f2.Info.ID) || FollowerManager.IsChildOf(f1.Info.ID, f2.Info.ID) || FollowerManager.IsChildOf(f2.Info.ID, f1.Info.ID) || f1.CurrentState == null || f2.CurrentState == null || f1.Info.ID == 666 && (f2.Info.ID == 99994 || f2.Info.ID == 99995) || f2.Info.ID == 666 && (f1.Info.ID == 99994 || f1.Info.ID == 99995) || f1.Info.IsSnowman && !f1.Info.IsGoodSnowman || f2.Info.IsSnowman && !f2.Info.IsGoodSnowman)
       return 0.0f;
     if (f1.HasTrait(FollowerTrait.TraitType.Celibate) || f2.HasTrait(FollowerTrait.TraitType.Celibate))
       num -= 0.3f;
