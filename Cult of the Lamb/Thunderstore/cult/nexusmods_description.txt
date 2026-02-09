@@ -92,9 +92,9 @@
 
 [size=3][b]Mass Actions[/b][/size]
 [list]
-[*][size=3]Configurable mass action costs (gold, time advancement, faith reduction for Bless/Inspire) with per-action or per-follower mode and optional cost preview in the command wheel[/size]
+[*][size=3]Configurable mass action costs (gold, time advancement, faith reduction for Bless/Inspire) with per-action or per-object mode and optional cost preview when hovering[/size]
 [*][size=3]Mass inspire, bless, bribe, extort, intimidate[/size]
-[*][size=3]Mass fertilize, water[/size]
+[*][size=3]Mass fertilize, water, plant seeds[/size]
 [*][size=3]Mass level up (with optional instant soul collection)[/size]
 [*][size=3]Mass bully, reassure, reeducate[/size]
 [*][size=3]Mass romance, pet follower (dogs, Poppy, and pettable followers by default, or all followers)[/size]
@@ -104,10 +104,17 @@
 [*][size=3]Configurable notification threshold - consolidate per-follower notifications into a single summary[/size]
 [/list]
 
+[size=3][b]Mass Fill[/b][/size]
+[list]
+[*][size=3]Fill to capacity in one action: Troughs, Carpentry Stations, Medic Stations, Seed Silos, Fertiliser Silos[/size]
+[*][size=3]Mass fill Troughs, Carpentry Stations, Medic Stations, Seed Silos, Fertiliser Silos[/size]
+[/list]
+
 [size=3][b]Mass Collect[/b][/size]
 [list]
 [*][size=3]Mass collect from beds, outhouses, offering shrines[/size]
 [*][size=3]Mass collect from passive shrines, compost bins, harvest totems[/size]
+[*][size=3]Mass clean poop piles and vomit puddles[/size]
 [*][size=3]Collect all god tears at once[/size]
 [/list]
 

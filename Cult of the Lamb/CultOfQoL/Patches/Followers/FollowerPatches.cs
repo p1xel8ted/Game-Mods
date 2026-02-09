@@ -527,6 +527,7 @@ public static class FollowerPatches
         var originalFollower = __instance.follower;
         var eligibleCount = Helpers.AllFollowers.Count(f => f != originalFollower && f.Brain.CanLevelUp());
         if (eligibleCount < 1) return;
+        if (!MassActionCosts.TryDeductCosts(eligibleCount)) return;
 
         Plugin.WriteLog($"[MassLevelUp] Triggered by {originalFollower.Brain.Info.Name}, {eligibleCount} other followers eligible.");
         GameManager.GetInstance().StartCoroutine(MassLevelUpAll(originalFollower));

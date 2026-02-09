@@ -130,7 +130,7 @@ public static class FarmPlotPatches
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save), new Type[0])]
+    [HarmonyPatch(typeof(SaveAndLoad), nameof(SaveAndLoad.Save), [])]
     public static void SaveAndLoad_Save_Prefix()
     {
         SaveDefrostData();

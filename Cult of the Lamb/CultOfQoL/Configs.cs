@@ -31,11 +31,11 @@ public enum ElderWorkMode
 /// </summary>
 public enum MassActionCostMode
 {
-    /// <summary>Flat fee regardless of follower count.</summary>
+    /// <summary>Flat fee regardless of count.</summary>
     PerMassAction,
 
-    /// <summary>Cost multiplied by number of followers affected.</summary>
-    PerFollower
+    /// <summary>Cost multiplied by number of objects affected.</summary>
+    PerObject
 }
 
 public partial class Plugin
@@ -200,6 +200,8 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassCollectFromPassiveShrines { get; private set; }
     internal static ConfigEntry<bool> MassCollectFromCompost { get; private set; }
     internal static ConfigEntry<bool> MassCollectFromHarvestTotems { get; private set; }
+    internal static ConfigEntry<bool> MassCleanPoop { get; private set; }
+    internal static ConfigEntry<bool> MassCleanVomit { get; private set; }
     internal static ConfigEntry<bool> MassOpenScarecrows { get; private set; }
     internal static ConfigEntry<MassWolfTrapMode> MassWolfTraps { get; private set; }
     internal static ConfigEntry<bool> CollectAllGodTearsAtOnce { get; private set; }
@@ -208,6 +210,17 @@ public partial class Plugin
     internal static ConfigEntry<bool> MassFeedAnimals { get; private set; }
     internal static ConfigEntry<bool> MassMilkAnimals { get; private set; }
     internal static ConfigEntry<bool> MassShearAnimals { get; private set; }
+    internal static ConfigEntry<bool> FillTroughToCapacity { get; private set; }
+    internal static ConfigEntry<bool> MassFillTroughs { get; private set; }
+    internal static ConfigEntry<bool> FillToolshedToCapacity { get; private set; }
+    internal static ConfigEntry<bool> MassFillToolsheds { get; private set; }
+    internal static ConfigEntry<bool> FillMedicToCapacity { get; private set; }
+    internal static ConfigEntry<bool> MassFillMedicStations { get; private set; }
+    internal static ConfigEntry<bool> FillSeedSiloToCapacity { get; private set; }
+    internal static ConfigEntry<bool> MassFillSeedSilos { get; private set; }
+    internal static ConfigEntry<bool> FillFertilizerSiloToCapacity { get; private set; }
+    internal static ConfigEntry<bool> MassFillFertilizerSilos { get; private set; }
+    internal static ConfigEntry<bool> MassPlantSeeds { get; private set; }
     // TODO: Re-enable after testing
     // internal static ConfigEntry<bool> MassNurture { get; private set; }
     internal static ConfigEntry<bool> CollectShrineDevotionInstantly { get; private set; }

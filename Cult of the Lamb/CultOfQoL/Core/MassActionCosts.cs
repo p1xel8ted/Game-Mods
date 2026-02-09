@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using CultOfQoL.Patches.Followers;
+using CultOfQoL.Patches.Systems;
 
 namespace CultOfQoL.Core;
 
@@ -10,7 +11,7 @@ internal static class MassActionCosts
     /// Cost calculation depends on <see cref="MassActionCostMode"/>:
     /// <list type="bullet">
     ///   <item>PerMassAction — flat fee regardless of count</item>
-    ///   <item>PerFollower — cost multiplied by count</item>
+    ///   <item>PerObject — cost multiplied by count</item>
     /// </list>
     /// Returns false if the player can't afford the total gold cost (mass action should be skipped).
     /// </summary>
@@ -116,6 +117,22 @@ internal static class MassActionCosts
             FollowerCommands.Reeducate when Plugin.MassReeducate.Value =>
                 Follower.Followers.Count(f => FollowerCommandItems.Reeducate().IsAvailable(f)),
 
+            // Animal commands
+            FollowerCommands.PetAnimal when Plugin.MassPetAnimals.Value =>
+                Interaction_Ranchable.Ranchables.Count(a => a && !a.animal.PetToday),
+
+            FollowerCommands.Clean when Plugin.MassCleanAnimals.Value =>
+                Interaction_Ranchable.Ranchables.Count(a => a && a.Animal.Ailment == Interaction_Ranchable.Ailment.Stinky),
+
+            FollowerCommands.MilkAnimal when Plugin.MassMilkAnimals.Value =>
+                Interaction_Ranchable.Ranchables.Count(a => a && !a.Animal.MilkedToday && a.Animal.MilkedReady),
+
+            FollowerCommands.Harvest when Plugin.MassShearAnimals.Value =>
+                Interaction_Ranchable.Ranchables.Count(a => a && !a.Animal.WorkedToday && a.Animal.WorkedReady),
+
+            _ when FastCollectingPatches.FeedCommands.Contains(cmd) && Plugin.MassFeedAnimals.Value =>
+                Interaction_Ranchable.Ranchables.Count(a => a && !a.Animal.EatenToday),
+
             _ => 0
         };
     }
@@ -130,7 +147,18 @@ internal static class MassActionCosts
         if (!Plugin.ShowMassActionCostPreview.Value) return null;
 
         var count = GetMassActionTargetCount(cmd);
+        return GetCostPreviewTextForCount(count);
+    }
+
+    /// <summary>
+    /// Returns a cost preview string for a given target count (used by non-wheel actions like farm plots).
+    /// Returns null if preview is disabled, count is 0, or no costs are configured.
+    /// </summary>
+    internal static string GetCostPreviewTextForCount(int count)
+    {
+        if (!Plugin.ShowMassActionCostPreview.Value) return null;
         if (count <= 0) return null;
+        if (Plugin.MassActionCostModeEntry.Value != MassActionCostMode.PerObject) return null;
 
         var mode = Plugin.MassActionCostModeEntry.Value;
         var goldCost = Plugin.MassActionGoldCost.Value;

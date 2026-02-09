@@ -354,6 +354,13 @@ internal static class StructurePatches
         __result = AdjustSoulMax(__result);
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Structures_Shrine_Disciple_Collection), nameof(Structures_Shrine_Disciple_Collection.SoulMax), MethodType.Getter)]
+    public static void Structures_Shrine_Disciple_Collection_SoulMax(ref int __result)
+    {
+        __result = AdjustSoulMax(__result);
+    }
+
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Structures_SiloSeed), nameof(Structures_SiloSeed.Capacity), MethodType.Getter)]

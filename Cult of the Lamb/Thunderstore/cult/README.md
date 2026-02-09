@@ -71,9 +71,9 @@
 - Rot fertilizer decay - ground warming expires after configurable days instead of lasting forever
 
 ### Mass Actions
-- Configurable mass action costs (gold, time advancement, faith reduction for Bless/Inspire) with per-action or per-follower mode and optional cost preview in the command wheel
+- Configurable mass action costs (gold, time advancement, faith reduction for Bless/Inspire) with per-action or per-object mode and optional cost preview when hovering
 - Mass inspire, bless, bribe, extort, intimidate
-- Mass fertilize, water
+- Mass fertilize, water, plant seeds
 - Mass level up (with optional instant soul collection)
 - Mass bully, reassure, reeducate
 - Mass romance, pet follower (dogs, Poppy, and pettable followers by default, or all followers)
@@ -82,9 +82,14 @@
 - Mass fill/collect wolf traps
 - Configurable notification threshold - consolidate per-follower notifications into a single summary
 
+### Mass Fill
+- Fill to capacity in one action: Troughs, Carpentry Stations, Medic Stations, Seed Silos, Fertiliser Silos
+- Mass fill Troughs, Carpentry Stations, Medic Stations, Seed Silos, Fertiliser Silos
+
 ### Mass Collect
 - Mass collect from beds, outhouses, offering shrines
 - Mass collect from passive shrines, compost bins, harvest totems
+- Mass clean poop piles and vomit puddles
 - Collect all god tears at once
 
 ### Structures

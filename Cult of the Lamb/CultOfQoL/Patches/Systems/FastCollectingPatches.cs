@@ -8,11 +8,14 @@ public static class FastCollectingPatches
     private static GameManager GI => GameManager.GetInstance();
     private static bool CollectBedsRunning { get; set; }
     private static bool CollectAllBuildingShrinesRunning { get; set; }
+    private static bool CollectAllDiscipleShrinesRunning { get; set; }
     private static bool CollectAllShrinesRunning { get; set; }
     private static bool CollectAllOuthouseRunning { get; set; }
     private static bool CompostBinDeadBodyRunning { get; set; }
 
     private static bool CollectAllHarvestTotemsRunning { get; set; }
+    private static bool CleanAllPoopRunning { get; set; }
+    private static bool CleanAllVomitRunning { get; set; }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.Update))]
@@ -32,6 +35,31 @@ public static class FastCollectingPatches
     }
 
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_DiscipleCollectionShrine), nameof(Interaction_DiscipleCollectionShrine.Update))]
+    public static void DiscipleCollectionShrine_Update(Interaction_DiscipleCollectionShrine __instance)
+    {
+        if (!Plugin.FastCollecting.Value) return;
+        __instance.Delay = 0.0f;
+        __instance.AccelerateCollection = 0.09f;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_Bed), nameof(Interaction_Bed.GiveReward))]
+    public static void Interaction_Bed_GiveReward(ref IEnumerator __result)
+    {
+        if (!Plugin.FastCollecting.Value && !Plugin.MassCollectFromBeds.Value) return;
+        __result = SpeedUpBedReward(__result);
+    }
+
+    private static IEnumerator SpeedUpBedReward(IEnumerator original)
+    {
+        while (original.MoveNext())
+        {
+            yield return original.Current is WaitForSeconds ? new WaitForSeconds(0.05f) : original.Current;
+        }
+    }
+
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(Interaction_Bed), nameof(Interaction_Bed.OnSecondaryInteract))]
     public static void Interaction_Bed_OnSecondaryInteract(ref Interaction_Bed __instance)
     {
@@ -45,19 +73,40 @@ public static class FastCollectingPatches
     private static IEnumerator CollectBeds(Interaction_Bed bedInteraction)
     {
         CollectBedsRunning = true;
-        
+        yield return new WaitForEndOfFrame();
+
         // Snapshot to avoid collection modified during enumeration
         foreach (var interaction in Interaction.interactions.ToList())
         {
             if (interaction is Interaction_Bed bed && bed && bed != bedInteraction && bed.StructureBrain?.SoulCount > 0)
             {
                 bed.StartCoroutine(bed.GiveReward());
+                yield return new WaitForSeconds(0.05f);
             }
         }
 
-        yield return new WaitForSeconds(0.10f);
         CollectBedsRunning = false;
     }
+
+#if DEBUG
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameManager), nameof(GameManager.Update))]
+    public static void DebugFillBedSouls()
+    {
+        if (!UnityEngine.Input.GetKeyDown(KeyCode.F10)) return;
+        var count = 0;
+        foreach (var interaction in Interaction.interactions)
+        {
+            if (interaction is Interaction_Bed bed && bed.StructureBrain != null)
+            {
+                bed.StructureBrain.SoulCount = bed.StructureBrain.SoulMax;
+                bed.UpdateBar();
+                count++;
+            }
+        }
+        Plugin.WriteLog($"[DEBUG] Filled {count} bed(s) to max souls");
+    }
+#endif
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrinePassive), nameof(BuildingShrinePassive.OnInteract), typeof(StateMachine))]
@@ -81,11 +130,94 @@ public static class FastCollectingPatches
             if (interaction is BuildingShrinePassive shrine && shrine && shrine != __instance && shrine.StructureBrain?.SoulCount > 0)
             {
                 shrine.OnInteract(state);
-                yield return new WaitForSeconds(0.10f);
+                yield return new WaitForSeconds(0.05f);
             }
         }
 
         CollectAllBuildingShrinesRunning = false;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPriority(Priority.High)]
+    [HarmonyPatch(typeof(Interaction_DiscipleCollectionShrine), nameof(Interaction_DiscipleCollectionShrine.OnInteract), typeof(StateMachine))]
+    public static void DiscipleCollectionShrine_OnInteract_Instant(Interaction_DiscipleCollectionShrine __instance)
+    {
+        if (!Plugin.CollectShrineDevotionInstantly.Value) return;
+        if (!__instance.Activating) return;
+        if (__instance.StructureBrain?.SoulCount <= 0) return;
+
+        var totalSouls = __instance.StructureBrain.SoulCount;
+        __instance.StructureBrain.SoulCount = 0;
+
+        var hasUnlockAvailable = GameManager.HasUnlockAvailable() || DataManager.Instance.DeathCatBeaten;
+
+        if (hasUnlockAvailable)
+        {
+            var visualSouls = Math.Min(totalSouls, 10);
+            var directSouls = totalSouls - visualSouls;
+
+            for (var i = 0; i < visualSouls; i++)
+            {
+                SoulCustomTarget.Create(
+                    PlayerFarming.Instance.gameObject,
+                    __instance.ReceiveSoulPosition.transform.position,
+                    Color.white,
+                    () => PlayerFarming.Instance?.GetSoul(1)
+                );
+            }
+
+            for (var i = 0; i < directSouls; i++)
+            {
+                PlayerFarming.Instance?.GetSoul(1);
+            }
+        }
+        else
+        {
+            var visualItems = Math.Min(totalSouls, 10);
+            var directItems = totalSouls - visualItems;
+
+            for (var i = 0; i < visualItems; i++)
+            {
+                InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLACK_GOLD, 1, __instance.transform.position + Vector3.back, 0.0f)
+                    .SetInitialSpeedAndDiraction(8f + Random.Range(-0.5f, 1f), 270 + Random.Range(-90, 90));
+            }
+
+            if (directItems > 0)
+            {
+                Inventory.ChangeItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD, directItems);
+            }
+        }
+
+        __instance.Activating = false;
+        __instance.UpdateBar();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_DiscipleCollectionShrine), nameof(Interaction_DiscipleCollectionShrine.OnInteract), typeof(StateMachine))]
+    public static void DiscipleCollectionShrine_OnInteract(ref Interaction_DiscipleCollectionShrine __instance, ref StateMachine state)
+    {
+        if (!Plugin.MassCollectFromPassiveShrines.Value) return;
+        if (!CollectAllDiscipleShrinesRunning)
+        {
+            GI.StartCoroutine(CollectAllDiscipleShrines(__instance, state));
+        }
+    }
+
+    private static IEnumerator CollectAllDiscipleShrines(Interaction_DiscipleCollectionShrine __instance, StateMachine state)
+    {
+        CollectAllDiscipleShrinesRunning = true;
+        yield return new WaitForEndOfFrame();
+
+        foreach (var shrine in Interaction_DiscipleCollectionShrine.Shrines.ToList())
+        {
+            if (shrine && shrine != __instance && shrine.StructureBrain?.SoulCount > 0)
+            {
+                shrine.OnInteract(state);
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+
+        CollectAllDiscipleShrinesRunning = false;
     }
 
     [HarmonyPostfix]
@@ -110,7 +242,7 @@ public static class FastCollectingPatches
             if (interaction is Interaction_Outhouse outhouse && outhouse && outhouse != __instance && outhouse.StructureBrain?.GetPoopCount() > 0)
             {
                 outhouse.OnInteract(state);
-                yield return new WaitForSeconds(0.10f);
+                yield return new WaitForSeconds(0.05f);
             }
         }
 
@@ -139,7 +271,7 @@ public static class FastCollectingPatches
             if (interaction is Interaction_CompostBinDeadBody cbd && cbd && cbd != __instance && cbd.StructureBrain?.PoopCount > 0)
             {
                 cbd.OnInteract(state);
-                yield return new WaitForSeconds(0.10f);
+                yield return new WaitForSeconds(0.05f);
             }
         }
 
@@ -160,17 +292,18 @@ public static class FastCollectingPatches
     private static IEnumerator CollectAllHarvestTotems(HarvestTotem totem, StateMachine state)
     {
         CollectAllHarvestTotemsRunning = true;
-        
+        yield return new WaitForEndOfFrame();
+
         // Snapshot to avoid collection modified during enumeration
         foreach (var t in HarvestTotem.HarvestTotems.ToList())
         {
             if (t && t != totem && t.StructureBrain?.SoulCount > 0)
             {
                 t.OnInteract(state);
+                yield return new WaitForSeconds(0.05f);
             }
         }
 
-        yield return new WaitForSeconds(0.10f);
         CollectAllHarvestTotemsRunning = false;
     }
 
@@ -203,7 +336,7 @@ public static class FastCollectingPatches
             // Re-check validity before interacting
             if (!shrine || shrine.StructureInfo?.Inventory?.Count <= 0) continue;
 
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.05f);
 
             // Try-catch must be outside yield
             try
@@ -405,13 +538,13 @@ public static class FastCollectingPatches
             return;
         }
 
-        foreach (var scarecrow in Scarecrow.Scarecrows.ToList())
-        {
-            if (scarecrow == null || scarecrow == __instance || !scarecrow.Brain.HasBird)
-            {
-                continue;
-            }
+        var eligibleScarecrows = Scarecrow.Scarecrows
+            .Where(s => s != null && s != __instance && s.Brain.HasBird)
+            .ToList();
+        if (eligibleScarecrows.Count == 0 || !MassActionCosts.TryDeductCosts(eligibleScarecrows.Count)) return;
 
+        foreach (var scarecrow in eligibleScarecrows)
+        {
             scarecrow.OpenTrap();
             scarecrow.Brain.EmptyTrap();
             InventoryItem.Spawn(InventoryItem.ITEM_TYPE.MEAT, Random.Range(2, 5), scarecrow.transform.position);
@@ -486,8 +619,15 @@ public static class FastCollectingPatches
             // Call original first (for the triggered trap)
             originalCallback?.Invoke(chosenItem);
 
-            // Then fill all other empty traps
-            FillAllWolfTraps(triggered, chosenItem);
+            // Then fill all other empty traps (if costs are met)
+            var emptyTraps = Interaction_WolfTrap.Traps
+                .Count(t => t != null && t != triggered &&
+                            !t.structure.Brain.Data.HasBird &&
+                            t.structure.Brain.Data.Inventory.Count == 0);
+            if (emptyTraps > 0 && MassActionCosts.TryDeductCosts(emptyTraps))
+            {
+                FillAllWolfTraps(triggered, chosenItem);
+            }
         };
     }
 
@@ -520,6 +660,7 @@ public static class FastCollectingPatches
             .Where(t => t != null && t != triggered &&
                         t.structure.Brain.Data.HasBird)
             .ToList();
+        if (trapsWithWolves.Count == 0 || !MassActionCosts.TryDeductCosts(trapsWithWolves.Count)) return;
 
         foreach (var trap in trapsWithWolves)
         {
@@ -541,10 +682,445 @@ public static class FastCollectingPatches
 
     #endregion
 
+    #region Mass Fill Troughs
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_RanchTrough), nameof(Interaction_RanchTrough.OnInteract), typeof(StateMachine))]
+    public static void Interaction_RanchTrough_OnInteract_Postfix(Interaction_RanchTrough __instance)
+    {
+        if (!Plugin.FillTroughToCapacity.Value && !Plugin.MassFillTroughs.Value) return;
+        GI.StartCoroutine(HookTroughFoodSelection(__instance));
+    }
+
+    private static IEnumerator HookTroughFoodSelection(Interaction_RanchTrough triggered)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (UIItemSelectorOverlayController.SelectorOverlays.Count == 0)
+        {
+            yield break;
+        }
+
+        var selector = UIItemSelectorOverlayController.SelectorOverlays[UIItemSelectorOverlayController.SelectorOverlays.Count - 1];
+        if (selector == null)
+        {
+            yield break;
+        }
+
+        var originalCallback = selector.OnItemChosen;
+
+        selector.OnItemChosen = chosenItem =>
+        {
+            originalCallback?.Invoke(chosenItem);
+            FillAllTroughs(triggered, chosenItem);
+
+            if (triggered.GetCompostAndAirCount() >= triggered.StructureBrain.Capacity)
+            {
+                selector.Hide();
+            }
+        };
+    }
+
+    private static void FillAllTroughs(Interaction_RanchTrough triggered, InventoryItem.ITEM_TYPE foodType)
+    {
+        // Fill triggered trough to capacity (single-structure QoL, always free)
+        while (triggered.GetCompostAndAirCount() < triggered.StructureBrain.Capacity && Inventory.GetItemQuantity(foodType) > 0)
+        {
+            Inventory.ChangeItemQuantity((int)foodType, -1);
+            triggered.Structure.DepositInventory(new InventoryItem(foodType, 1));
+        }
+
+        // Fill all other non-full troughs (mass action, costs apply)
+        if (!Plugin.MassFillTroughs.Value) return;
+
+        var fillable = Interaction_RanchTrough.Troughs
+            .Where(t => t != null && t != triggered &&
+                        !t.StructureBrain.ReservedByPlayer &&
+                        t.GetCompostCount() < t.StructureBrain.Capacity)
+            .ToList();
+        if (fillable.Count == 0 || !MassActionCosts.TryDeductCosts(fillable.Count)) return;
+
+        foreach (var trough in fillable)
+        {
+            while (trough.GetCompostCount() < trough.StructureBrain.Capacity && Inventory.GetItemQuantity(foodType) > 0)
+            {
+                Inventory.ChangeItemQuantity((int)foodType, -1);
+                trough.Structure.DepositInventory(new InventoryItem(foodType, 1));
+            }
+
+            trough.UpdateCapacityIndicators();
+        }
+    }
+
+    #endregion
+
+    #region Mass Fill Toolsheds (Carpentry Stations)
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_Toolshed), nameof(Interaction_Toolshed.OnInteract), typeof(StateMachine))]
+    public static void Interaction_Toolshed_OnInteract_Postfix(Interaction_Toolshed __instance)
+    {
+        if (!Plugin.FillToolshedToCapacity.Value && !Plugin.MassFillToolsheds.Value) return;
+        GI.StartCoroutine(HookToolshedSelection(__instance));
+    }
+
+    private static IEnumerator HookToolshedSelection(Interaction_Toolshed triggered)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (UIItemSelectorOverlayController.SelectorOverlays.Count == 0)
+        {
+            yield break;
+        }
+
+        var selector = UIItemSelectorOverlayController.SelectorOverlays[UIItemSelectorOverlayController.SelectorOverlays.Count - 1];
+        if (selector == null)
+        {
+            yield break;
+        }
+
+        var originalCallback = selector.OnItemChosen;
+
+        selector.OnItemChosen = chosenItem =>
+        {
+            originalCallback?.Invoke(chosenItem);
+            FillAllToolsheds(triggered, chosenItem);
+
+            if (triggered.GetCompostAndAirCount() >= triggered.StructureBrain.Capacity)
+            {
+                selector.Hide();
+            }
+        };
+    }
+
+    private static void FillAllToolsheds(Interaction_Toolshed triggered, InventoryItem.ITEM_TYPE itemType)
+    {
+        // Fill triggered toolshed to capacity (single-structure QoL, always free)
+        while (triggered.GetCompostAndAirCount() < triggered.StructureBrain.Capacity && Inventory.GetItemQuantity(itemType) > 0)
+        {
+            Inventory.ChangeItemQuantity((int)itemType, -1);
+            triggered.Structure.DepositInventory(new InventoryItem(itemType, 1));
+        }
+
+        // Fill all other non-full toolsheds (mass action, costs apply)
+        if (!Plugin.MassFillToolsheds.Value) return;
+
+        var fillable = Interaction_Toolshed.Toolsheds
+            .Where(t => t != null && t != triggered &&
+                        !t.StructureBrain.ReservedByPlayer &&
+                        t.GetCompostCount() < t.StructureBrain.Capacity)
+            .ToList();
+        if (fillable.Count == 0 || !MassActionCosts.TryDeductCosts(fillable.Count)) return;
+
+        foreach (var toolshed in fillable)
+        {
+            while (toolshed.GetCompostCount() < toolshed.StructureBrain.Capacity && Inventory.GetItemQuantity(itemType) > 0)
+            {
+                Inventory.ChangeItemQuantity((int)itemType, -1);
+                toolshed.Structure.DepositInventory(new InventoryItem(itemType, 1));
+            }
+
+            toolshed.UpdateCapacityIndicators();
+        }
+    }
+
+    #endregion
+
+    #region Mass Fill Medic Stations
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_Medic), nameof(Interaction_Medic.OnInteract), typeof(StateMachine))]
+    public static void Interaction_Medic_OnInteract_Postfix(Interaction_Medic __instance)
+    {
+        if (!Plugin.FillMedicToCapacity.Value && !Plugin.MassFillMedicStations.Value) return;
+        GI.StartCoroutine(HookMedicSelection(__instance));
+    }
+
+    private static IEnumerator HookMedicSelection(Interaction_Medic triggered)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (UIItemSelectorOverlayController.SelectorOverlays.Count == 0)
+        {
+            yield break;
+        }
+
+        var selector = UIItemSelectorOverlayController.SelectorOverlays[UIItemSelectorOverlayController.SelectorOverlays.Count - 1];
+        if (selector == null)
+        {
+            yield break;
+        }
+
+        var originalCallback = selector.OnItemChosen;
+
+        selector.OnItemChosen = chosenItem =>
+        {
+            originalCallback?.Invoke(chosenItem);
+            FillAllMedicStations(triggered, chosenItem);
+
+            if (triggered.GetCompostAndAirCount() >= triggered.StructureBrain.Capacity)
+            {
+                selector.Hide();
+            }
+        };
+    }
+
+    private static void FillAllMedicStations(Interaction_Medic triggered, InventoryItem.ITEM_TYPE itemType)
+    {
+        // Fill triggered medic station to capacity (single-structure QoL, always free)
+        while (triggered.GetCompostAndAirCount() < triggered.StructureBrain.Capacity && Inventory.GetItemQuantity(itemType) > 0)
+        {
+            Inventory.ChangeItemQuantity((int)itemType, -1);
+            triggered.Structure.DepositInventory(new InventoryItem(itemType, 1));
+        }
+
+        // Fill all other non-full medic stations (mass action, costs apply)
+        if (!Plugin.MassFillMedicStations.Value) return;
+
+        var fillable = Interaction_Medic.Medics
+            .Where(m => m != null && m != triggered &&
+                        !m.StructureBrain.ReservedByPlayer &&
+                        m.GetCompostCount() < m.StructureBrain.Capacity)
+            .ToList();
+        if (fillable.Count == 0 || !MassActionCosts.TryDeductCosts(fillable.Count)) return;
+
+        foreach (var medic in fillable)
+        {
+            while (medic.GetCompostCount() < medic.StructureBrain.Capacity && Inventory.GetItemQuantity(itemType) > 0)
+            {
+                Inventory.ChangeItemQuantity((int)itemType, -1);
+                medic.Structure.DepositInventory(new InventoryItem(itemType, 1));
+            }
+
+            medic.UpdateCapacityIndicators();
+        }
+    }
+
+    #endregion
+
+    #region Mass Fill Seed Silos
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_SiloSeeder), nameof(Interaction_SiloSeeder.OnInteract), typeof(StateMachine))]
+    public static void Interaction_SiloSeeder_OnInteract_Postfix(Interaction_SiloSeeder __instance)
+    {
+        if (!Plugin.FillSeedSiloToCapacity.Value && !Plugin.MassFillSeedSilos.Value) return;
+        GI.StartCoroutine(HookSeedSiloSelection(__instance));
+    }
+
+    private static IEnumerator HookSeedSiloSelection(Interaction_SiloSeeder triggered)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (UIItemSelectorOverlayController.SelectorOverlays.Count == 0)
+        {
+            yield break;
+        }
+
+        var selector = UIItemSelectorOverlayController.SelectorOverlays[UIItemSelectorOverlayController.SelectorOverlays.Count - 1];
+        if (selector == null)
+        {
+            yield break;
+        }
+
+        var originalCallback = selector.OnItemChosen;
+
+        selector.OnItemChosen = chosenItem =>
+        {
+            originalCallback?.Invoke(chosenItem);
+            FillAllSeedSilos(triggered, chosenItem, selector);
+        };
+    }
+
+    private static void FillAllSeedSilos(Interaction_SiloSeeder triggered, InventoryItem.ITEM_TYPE seedType, UIItemSelectorOverlayController selector)
+    {
+        // Fill triggered seed silo to capacity (single-structure QoL, always free)
+        while (triggered.GetCompostAndAirCount() < triggered.StructureBrain.Capacity && Inventory.GetItemQuantity(seedType) > 0)
+        {
+            Inventory.ChangeItemQuantity((int)seedType, -1);
+            triggered.Structure.DepositInventory(new InventoryItem(seedType, 1));
+        }
+
+        triggered.UpdateCapacityIndicators();
+
+        if (triggered.GetCompostAndAirCount() >= triggered.StructureBrain.Capacity)
+        {
+            selector.Hide();
+        }
+
+        // Fill all other non-full seed silos (mass action, costs apply)
+        if (!Plugin.MassFillSeedSilos.Value) return;
+
+        var fillable = Interaction_SiloSeeder.SiloSeeders
+            .Where(s => s != null && s != triggered &&
+                        !s.StructureBrain.ReservedByPlayer &&
+                        s.GetCompostCount() < s.StructureBrain.Capacity)
+            .ToList();
+        if (fillable.Count == 0 || !MassActionCosts.TryDeductCosts(fillable.Count)) return;
+
+        foreach (var silo in fillable)
+        {
+            while (silo.GetCompostCount() < silo.StructureBrain.Capacity && Inventory.GetItemQuantity(seedType) > 0)
+            {
+                Inventory.ChangeItemQuantity((int)seedType, -1);
+                silo.Structure.DepositInventory(new InventoryItem(seedType, 1));
+            }
+
+            silo.UpdateCapacityIndicators();
+        }
+    }
+
+    #endregion
+
+    #region Mass Fill Fertilizer Silos
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_SiloFertilizer), nameof(Interaction_SiloFertilizer.OnInteract), typeof(StateMachine))]
+    public static void Interaction_SiloFertilizer_OnInteract_Postfix(Interaction_SiloFertilizer __instance)
+    {
+        if (!Plugin.FillFertilizerSiloToCapacity.Value && !Plugin.MassFillFertilizerSilos.Value) return;
+        GI.StartCoroutine(HookFertilizerSiloSelection(__instance));
+    }
+
+    private static IEnumerator HookFertilizerSiloSelection(Interaction_SiloFertilizer triggered)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (UIItemSelectorOverlayController.SelectorOverlays.Count == 0)
+        {
+            yield break;
+        }
+
+        var selector = UIItemSelectorOverlayController.SelectorOverlays[UIItemSelectorOverlayController.SelectorOverlays.Count - 1];
+        if (selector == null)
+        {
+            yield break;
+        }
+
+        var originalCallback = selector.OnItemChosen;
+
+        selector.OnItemChosen = chosenItem =>
+        {
+            originalCallback?.Invoke(chosenItem);
+            FillAllFertilizerSilos(triggered, chosenItem, selector);
+        };
+    }
+
+    private static void FillAllFertilizerSilos(Interaction_SiloFertilizer triggered, InventoryItem.ITEM_TYPE fertType, UIItemSelectorOverlayController selector)
+    {
+        // Fill triggered fertilizer silo to capacity (single-structure QoL, always free)
+        while (triggered.GetCompostCount() < triggered.StructureBrain.Capacity && Inventory.GetItemQuantity(fertType) > 0)
+        {
+            Inventory.ChangeItemQuantity((int)fertType, -1);
+            triggered.Structure.DepositInventory(new InventoryItem(fertType, 1));
+        }
+
+        triggered.UpdateCapacityIndicators();
+
+        if (triggered.GetCompostCount() >= triggered.StructureBrain.Capacity)
+        {
+            selector.Hide();
+        }
+
+        // Fill all other non-full fertilizer silos (mass action, costs apply)
+        if (!Plugin.MassFillFertilizerSilos.Value) return;
+
+        var fillable = Interaction_SiloFertilizer.SiloFertilizers
+            .Where(s => s != null && s != triggered &&
+                        !s.StructureBrain.ReservedByPlayer &&
+                        s.GetCompostCount() < s.StructureBrain.Capacity)
+            .ToList();
+        if (fillable.Count == 0 || !MassActionCosts.TryDeductCosts(fillable.Count)) return;
+
+        foreach (var silo in fillable)
+        {
+            while (silo.GetCompostCount() < silo.StructureBrain.Capacity && Inventory.GetItemQuantity(fertType) > 0)
+            {
+                Inventory.ChangeItemQuantity((int)fertType, -1);
+                silo.Structure.DepositInventory(new InventoryItem(fertType, 1));
+            }
+
+            silo.UpdateCapacityIndicators();
+        }
+    }
+
+    #endregion
+
+    #region Mass Plant Seeds
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(FarmPlot), nameof(FarmPlot.OnInteract), typeof(StateMachine))]
+    public static void FarmPlot_OnInteract_MassPlant(FarmPlot __instance)
+    {
+        if (!Plugin.MassPlantSeeds.Value) return;
+        if (__instance.Structure == null || __instance.StructureBrain == null) return;
+        if (!__instance.StructureBrain.CanPlantSeed()) return;
+        GI.StartCoroutine(HookSeedSelection(__instance));
+    }
+
+    private static IEnumerator HookSeedSelection(FarmPlot triggered)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (UIItemSelectorOverlayController.SelectorOverlays.Count == 0)
+        {
+            yield break;
+        }
+
+        var selector = UIItemSelectorOverlayController.SelectorOverlays[UIItemSelectorOverlayController.SelectorOverlays.Count - 1];
+        if (selector == null)
+        {
+            yield break;
+        }
+
+        var originalCallback = selector.OnItemChosen;
+
+        selector.OnItemChosen = chosenItem =>
+        {
+            originalCallback?.Invoke(chosenItem);
+
+            var emptyPlots = FarmPlot.FarmPlots
+                .Count(p => p != null && p != triggered &&
+                            p.Structure != null && p.StructureBrain != null &&
+                            p.StructureBrain.CanPlantSeed() &&
+                            p.ToDeposit.Count == 0);
+            if (emptyPlots > 0 && MassActionCosts.TryDeductCosts(emptyPlots))
+            {
+                GI.StartCoroutine(PlantSeedInAllEmptyPlots(triggered, chosenItem));
+            }
+        };
+    }
+
+    private static IEnumerator PlantSeedInAllEmptyPlots(FarmPlot triggered, InventoryItem.ITEM_TYPE seedType)
+    {
+        foreach (var plot in FarmPlot.FarmPlots.ToList())
+        {
+            if (plot == null || plot == triggered) continue;
+            if (plot.Structure == null || plot.StructureBrain == null) continue;
+            if (!plot.StructureBrain.CanPlantSeed()) continue;
+            if (plot.ToDeposit.Count > 0) continue;
+            if (Inventory.GetItemQuantity(seedType) <= 0) break;
+
+            Inventory.ChangeItemQuantity((int)seedType, -1);
+            var p = plot;
+            ResourceCustomTarget.Create(p.gameObject, PlayerFarming.Instance.transform.position, seedType, delegate
+            {
+                p.StructureBrain.PlantSeed(seedType);
+                ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.PlantCrops);
+                p.UpdateCropImage();
+                p.HasChanged = true;
+                p.checkWaterIndicator();
+            });
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+
+    #endregion
+
     #region Mass Animal Actions
 
     // List of all feed commands to check against
-    private static readonly HashSet<FollowerCommands> FeedCommands = new()
+    internal static readonly HashSet<FollowerCommands> FeedCommands = new()
     {
         FollowerCommands.FeedGrass,
         FollowerCommands.FeedPoop,
@@ -736,10 +1312,11 @@ public static class FastCollectingPatches
     [HarmonyPatch(typeof(Follower), nameof(Follower.GiveSinToPlayer), typeof(Action))]
     public static void Follower_GiveSinToPlayer_Postfix(Follower __instance)
     {
-        if (!Plugin.MassSinExtract.Value)
-        {
-            return;
-        }
+        if (!Plugin.MassSinExtract.Value) return;
+
+        var eligible = Follower.Followers.Count(f => f && f != __instance && f.Brain != null &&
+            f.Brain.CanGiveSin() && !f.InGiveSinSequence);
+        if (eligible < 1 || !MassActionCosts.TryDeductCosts(eligible)) return;
 
         // Find all other eligible followers and extract sin from them
         foreach (var follower in Follower.Followers.ToList())
@@ -962,6 +1539,80 @@ public static class FastCollectingPatches
             Plugin.Log.LogWarning($"[Transpiler] SoulCustomTarget.CollectMe: {ex.Message}");
             return original;
         }
+    }
+
+    #endregion
+
+    #region Mass Clean Poop/Vomit
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_Poop), nameof(Interaction_Poop.OnInteract), typeof(StateMachine))]
+    public static void Interaction_Poop_OnInteract(ref Interaction_Poop __instance, ref StateMachine state)
+    {
+        if (!Plugin.MassCleanPoop.Value) return;
+        if (!CleanAllPoopRunning)
+        {
+            GI.StartCoroutine(CleanAllPoop(__instance, state));
+        }
+    }
+
+    private static IEnumerator CleanAllPoop(Interaction_Poop __instance, StateMachine state)
+    {
+        CleanAllPoopRunning = true;
+        yield return new WaitForEndOfFrame();
+
+        var cleanable = Interaction_Poop.Poops.Count(p => p && p != __instance && !p.Activating);
+        if (cleanable == 0 || !MassActionCosts.TryDeductCosts(cleanable))
+        {
+            CleanAllPoopRunning = false;
+            yield break;
+        }
+
+        foreach (var poop in Interaction_Poop.Poops.ToList())
+        {
+            if (poop && poop != __instance && !poop.Activating)
+            {
+                poop.OnInteract(state);
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+
+        CleanAllPoopRunning = false;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Vomit), nameof(Vomit.OnInteract), typeof(StateMachine))]
+    public static void Vomit_OnInteract(ref Vomit __instance, ref StateMachine state)
+    {
+        if (!Plugin.MassCleanVomit.Value) return;
+        if (!CleanAllVomitRunning)
+        {
+            GI.StartCoroutine(CleanAllVomit(__instance, state));
+        }
+    }
+
+    private static IEnumerator CleanAllVomit(Vomit __instance, StateMachine state)
+    {
+        CleanAllVomitRunning = true;
+        yield return new WaitForEndOfFrame();
+
+        var cleanable = Vomit.Vomits.Count(v => v && v != __instance && !v.Activating);
+        if (cleanable == 0 || !MassActionCosts.TryDeductCosts(cleanable))
+        {
+            CleanAllVomitRunning = false;
+            yield break;
+        }
+
+        foreach (var v in Vomit.Vomits.ToList())
+        {
+            if (v && v != __instance && !v.Activating)
+            {
+                v.OnInteract(state);
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+
+        CleanAllVomitRunning = false;
     }
 
     #endregion

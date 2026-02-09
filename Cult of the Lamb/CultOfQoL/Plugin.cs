@@ -180,7 +180,7 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         // ── Collection ──
-        FastCollecting = _configInstance.Bind(CollectionSection, "Speed Up Collection", false, new ConfigDescription("Increases the rate you can collect from the shrines, and other structures.", null, new ConfigurationManagerAttributes { DispName = "Speed Up Collection**", Order = 2 }));
+        FastCollecting = _configInstance.Bind(CollectionSection, "Speed Up Collection", false, new ConfigDescription("Speeds up soul drain from shrines (instant) and beds (2x faster). Also removes delays when collecting from resource chests.", null, new ConfigurationManagerAttributes { DispName = "Speed Up Collection**", Order = 2 }));
         FastCollecting.SettingChanged += (_, _) => ShowRestartMessage();
         CollectShrineDevotionInstantly = _configInstance.Bind(CollectionSection, "Collect Shrine Devotion Instantly", false, new ConfigDescription("When collecting devotion from the shrine, collect all instantly instead of holding to collect.", null, new ConfigurationManagerAttributes { Order = 1 }));
         DisableSoulCameraShake = _configInstance.Bind(CollectionSection, "Disable Soul Camera Shake", false, new ConfigDescription("Disables the camera shake caused by devotion orbs and souls hitting the shrine. Does not affect combat camera shake.", null, new ConfigurationManagerAttributes { Order = 0 }));
@@ -305,18 +305,26 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 2
         }));
+        FillTroughToCapacity = _configInstance.Bind(MassAnimalSection, "Fill Trough to Capacity", false, new ConfigDescription("When adding food to a trough, fills it to capacity in one action instead of adding one item at a time.", null, new ConfigurationManagerAttributes
+        {
+            Order = 1
+        }));
+        MassFillTroughs = _configInstance.Bind(MassAnimalSection, "Mass Fill Troughs", false, new ConfigDescription("When filling a trough, all non-full troughs are filled with the same food.", null, new ConfigurationManagerAttributes
+        {
+            Order = 0, DispName = "    └ Mass Fill Troughs"
+        }));
         // TODO: Re-enable after testing
         // MassNurture = _configInstance.Bind(MassAnimalSection, "Mass Nurture", false, new ConfigDescription("When nurturing children at one daycare, children at all other daycares are also nurtured.", null, new ConfigurationManagerAttributes
         // {
-        //     Order = 1
+        //     Order = 0
         // }));
 
         // ── Mass Action Costs ──
-        MassActionCostModeEntry = _configInstance.Bind(MassActionCostsSection, "Cost Mode", CultOfQoL.MassActionCostMode.PerFollower, new ConfigDescription("How costs are calculated. Per Mass Action = flat fee regardless of follower count. Per Follower = cost multiplied by number of followers affected.", null, new ConfigurationManagerAttributes
+        MassActionCostModeEntry = _configInstance.Bind(MassActionCostsSection, "Cost Mode", CultOfQoL.MassActionCostMode.PerObject, new ConfigDescription("How costs are calculated. Per Mass Action = flat fee regardless of count. Per Object = cost multiplied by number of objects affected.", null, new ConfigurationManagerAttributes
         {
             Order = 5
         }));
-        ShowMassActionCostPreview = _configInstance.Bind(MassActionCostsSection, "Show Cost Preview", false, new ConfigDescription("Show the estimated cost in the command wheel description when highlighting a mass action.", null, new ConfigurationManagerAttributes
+        ShowMassActionCostPreview = _configInstance.Bind(MassActionCostsSection, "Show Cost Preview", false, new ConfigDescription("Show the estimated cost in the interaction label when highlighting a mass action. Only visible when Cost Mode is set to Per Object.", null, new ConfigurationManagerAttributes
         {
             Order = 4
         }));
@@ -341,7 +349,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 7
         }));
-        MassCollectFromBeds = _configInstance.Bind(MassCollectSection, "Mass Collect From Beds", false, new ConfigDescription("When collecting resources from a bed, all beds are collected from at once.", null, new ConfigurationManagerAttributes
+        MassCollectFromBeds = _configInstance.Bind(MassCollectSection, "Mass Collect From Beds", false, new ConfigDescription("When collecting souls from a bed, all beds are collected from at once. Also speeds up the per-soul drain to 2x.", null, new ConfigurationManagerAttributes
         {
             Order = 6
         }));
@@ -365,23 +373,67 @@ public partial class Plugin : BaseUnityPlugin
         {
             Order = 1
         }));
+        MassCleanPoop = _configInstance.Bind(MassCollectSection, "Mass Clean Poop", false, new ConfigDescription("When cleaning a poop pile, all poop piles are cleaned at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = 0
+        }));
+        MassCleanVomit = _configInstance.Bind(MassCollectSection, "Mass Clean Vomit", false, new ConfigDescription("When cleaning a vomit puddle, all vomit puddles are cleaned at once.", null, new ConfigurationManagerAttributes
+        {
+            Order = -1
+        }));
 
         // ── Mass Farm ──
+        MassPlantSeeds = _configInstance.Bind(MassFarmSection, "Mass Plant Seeds", false, new ConfigDescription("When planting a seed in a farm plot, all other empty farm plots are planted with the same seed.", null, new ConfigurationManagerAttributes
+        {
+            Order = 14
+        }));
         MassFertilize = _configInstance.Bind(MassFarmSection, "Mass Fertilize", false, new ConfigDescription("When fertilizing a plot, all farm plots are fertilized at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 4
+            Order = 13
         }));
         MassWater = _configInstance.Bind(MassFarmSection, "Mass Water", false, new ConfigDescription("When watering a plot, all farm plots are watered at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 3
+            Order = 12
+        }));
+        FillToolshedToCapacity = _configInstance.Bind(MassFarmSection, "Fill Carpentry Station to Capacity", false, new ConfigDescription("When depositing materials into a Carpentry Station, fills it to capacity in one action instead of adding one item at a time.", null, new ConfigurationManagerAttributes
+        {
+            Order = 11
+        }));
+        MassFillToolsheds = _configInstance.Bind(MassFarmSection, "Mass Fill Carpentry Stations", false, new ConfigDescription("When filling a Carpentry Station, all non-full Carpentry Stations are filled with the same material.", null, new ConfigurationManagerAttributes
+        {
+            Order = 10, DispName = "    └ Mass Fill Carpentry Stations"
+        }));
+        FillMedicToCapacity = _configInstance.Bind(MassFarmSection, "Fill Medic Station to Capacity", false, new ConfigDescription("When depositing supplies into a Medic Station, fills it to capacity in one action instead of adding one item at a time.", null, new ConfigurationManagerAttributes
+        {
+            Order = 9
+        }));
+        MassFillMedicStations = _configInstance.Bind(MassFarmSection, "Mass Fill Medic Stations", false, new ConfigDescription("When filling a Medic Station, all non-full Medic Stations are filled with the same supply.", null, new ConfigurationManagerAttributes
+        {
+            Order = 8, DispName = "    └ Mass Fill Medic Stations"
+        }));
+        FillSeedSiloToCapacity = _configInstance.Bind(MassFarmSection, "Fill Seed Silo to Capacity", false, new ConfigDescription("When depositing seeds into a Seed Silo, fills it to capacity in one action instead of adding one item at a time.", null, new ConfigurationManagerAttributes
+        {
+            Order = 7
+        }));
+        MassFillSeedSilos = _configInstance.Bind(MassFarmSection, "Mass Fill Seed Silos", false, new ConfigDescription("When filling a Seed Silo, all non-full Seed Silos are filled with the same seed.", null, new ConfigurationManagerAttributes
+        {
+            Order = 6, DispName = "    └ Mass Fill Seed Silos"
+        }));
+        FillFertilizerSiloToCapacity = _configInstance.Bind(MassFarmSection, "Fill Fertiliser Silo to Capacity", false, new ConfigDescription("When depositing fertiliser into a Fertiliser Silo, fills it to capacity in one action instead of adding one item at a time.", null, new ConfigurationManagerAttributes
+        {
+            Order = 5
+        }));
+        MassFillFertilizerSilos = _configInstance.Bind(MassFarmSection, "Mass Fill Fertiliser Silos", false, new ConfigDescription("When filling a Fertiliser Silo, all non-full Fertiliser Silos are filled with the same fertiliser.", null, new ConfigurationManagerAttributes
+        {
+            Order = 4, DispName = "    └ Mass Fill Fertiliser Silos"
         }));
         MassOpenScarecrows = _configInstance.Bind(MassFarmSection, "Mass Open Scarecrows", false, new ConfigDescription("When opening a scarecrow trap, all scarecrow traps with caught birds are opened at once.", null, new ConfigurationManagerAttributes
         {
-            Order = 2
+            Order = 3
         }));
         MassWolfTraps = _configInstance.Bind(MassFarmSection, "Mass Wolf Traps", MassWolfTrapMode.Disabled, new ConfigDescription("Fill Only: Fill all empty traps with the same bait. Collect Only: Collect from all traps with caught wolves. Both: Do both actions.", null, new ConfigurationManagerAttributes
         {
-            Order = 1
+            Order = 2
         }));
 
         // ── Farm ──

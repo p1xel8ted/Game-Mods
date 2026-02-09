@@ -1,19 +1,25 @@
-### 2.4.1 - 08/02/2026
+### 2.4.1 - 09/02/2026
 
 **New Features:**
-* Added Elder Work Mode with three options: Disabled (vanilla), All Work, or Light Work Only. Light work allows elders to worship, cook, brew, and research while excluding physical labor like mining and body disposal.
-* Added "Exclude Grass From Seed Deposit" option - when using "Deposit All Seeds" on a seed silo, grass will not be deposited.
+* Added "Mass Action Costs" section with configurable costs for mass actions: gold, game time, and faith reduction for Bless/Inspire. Costs can be charged per mass action (flat fee) or per object via a dropdown. Applies to all mass follower actions, mass level up, mass sin extract, and all mass fill actions. Optional cost preview shows estimated cost when hovering over an affected structure or follower (Per Object mode only). All defaults are 0 (free). The original single interaction is never affected.
 * Added "Mass Notification Threshold" setting - when a mass action affects more than the configured number of followers (default 3), a single summary notification is shown instead of one per follower.
+* Added "Fill to Capacity" toggles for Troughs, Carpentry Stations, Medic Stations, Seed Silos, and Fertiliser Silos — fill a structure to capacity in one action instead of adding one item at a time.
+* Added "Mass Fill Seed Silos" and "Mass Fill Fertiliser Silos" — filling one silo fills all others of the same type with the same item.
+* Added "Mass Plant Seeds" — planting a seed in one farm plot plants the same seed in all other empty plots.
+* Added "Exclude Grass From Seed Deposit" option - when using "Deposit All Seeds" on a seed silo, grass will not be deposited.
+* Added "Mass Clean Poop" and "Mass Clean Vomit" toggles to mass collect settings — clean one pile and all others are cleaned automatically.
+* Added Elder Work Mode with three options: Disabled (vanilla), All Work, or Light Work Only. Light work allows elders to worship, cook, brew, and research while excluding physical labor like mining and body disposal.
 * Added "Rot Fertilizer Decay" option - rot fertilizer ground warming now expires after a configurable number of days (1-30, default 5) instead of lasting forever. Disabled by default.
-* Added "Mass Action Costs" section with configurable costs for mass actions: gold, game time, and faith reduction for Bless/Inspire. Costs can be charged per mass action (flat fee) or per follower via a dropdown. Optional cost preview shows estimated cost in the command wheel when highlighting a mass action. All defaults are 0 (free). The original single interaction is never affected.
-
-* Added "Disable Soul Camera Shake" option to stop the camera shaking when devotion orbs hit the shrine during worship.
-* Added "Suppress Notifications On Load" option to prevent the flood of notifications when loading a save.
 * Added "Refinery: Poop to Rot Fertilizer" option - refine Poop + Rotgrit into Rot Fertilizer at the refinery.
 * Added "Furnace Heater Scaling" option - each proximity heater increases the furnace's fuel drain during winter, adding challenge to heating large bases.
+* Added "Disable Soul Camera Shake" option to stop the camera shaking when devotion orbs hit the shrine during worship.
+* Added "Suppress Notifications On Load" option to prevent the flood of notifications when loading a save.
 
 **Changes:**
 * Mass pet now only targets dogs, Poppy, and followers with the Pettable trait by default. Enable "Mass Pet All Followers" to pet everyone like before.
+* "Speed Up Collection" now speeds up bed soul drain (2x faster) and makes shrine collection instant. Previously only affected shrines.
+* "Mass Collect From Beds" now includes a 2x faster soul drain as part of the feature. With "Speed Up Collection" also enabled, beds drain instantly.
+* Reduced delay between mass collection actions from 0.10s to 0.05s for snappier feel.
 
 **Fixes:**
 * Fixed "Collect All God Tears At Once" collecting double the tears when only one was available.
