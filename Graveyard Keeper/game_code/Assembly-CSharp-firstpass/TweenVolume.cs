@@ -1,0 +1,83 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: TweenVolume
+// Assembly: Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: AD927277-3A17-461A-93C2-E51B5C84C57C
+// Assembly location: F:\OneDrive\Development\Game-Mods\Graveyard Keeper\libs\Assembly-CSharp-firstpass.dll
+
+using System;
+using UnityEngine;
+
+#nullable disable
+[RequireComponent(typeof (AudioSource))]
+[AddComponentMenu("NGUI/Tween/Tween Volume")]
+public class TweenVolume : UITweener
+{
+  [Range(0.0f, 1f)]
+  public float from = 1f;
+  [Range(0.0f, 1f)]
+  public float to = 1f;
+  public AudioSource mSource;
+
+  public AudioSource audioSource
+  {
+    get
+    {
+      if ((UnityEngine.Object) this.mSource == (UnityEngine.Object) null)
+      {
+        this.mSource = this.GetComponent<AudioSource>();
+        if ((UnityEngine.Object) this.mSource == (UnityEngine.Object) null)
+        {
+          this.mSource = this.GetComponent<AudioSource>();
+          if ((UnityEngine.Object) this.mSource == (UnityEngine.Object) null)
+          {
+            Debug.LogError((object) "TweenVolume needs an AudioSource to work with", (UnityEngine.Object) this);
+            this.enabled = false;
+          }
+        }
+      }
+      return this.mSource;
+    }
+  }
+
+  [Obsolete("Use 'value' instead")]
+  public float volume
+  {
+    get => this.value;
+    set => this.value = value;
+  }
+
+  public float value
+  {
+    get => !((UnityEngine.Object) this.audioSource != (UnityEngine.Object) null) ? 0.0f : this.mSource.volume;
+    set
+    {
+      if (!((UnityEngine.Object) this.audioSource != (UnityEngine.Object) null))
+        return;
+      this.mSource.volume = value;
+    }
+  }
+
+  public override void OnUpdate(float factor, bool isFinished)
+  {
+    this.value = (float) ((double) this.from * (1.0 - (double) factor) + (double) this.to * (double) factor);
+    this.mSource.enabled = (double) this.mSource.volume > 0.0099999997764825821;
+  }
+
+  public static TweenVolume Begin(GameObject go, float duration, float targetVolume)
+  {
+    TweenVolume tweenVolume = UITweener.Begin<TweenVolume>(go, duration);
+    tweenVolume.from = tweenVolume.value;
+    tweenVolume.to = targetVolume;
+    if ((double) targetVolume > 0.0)
+    {
+      AudioSource audioSource = tweenVolume.audioSource;
+      audioSource.enabled = true;
+      audioSource.Play();
+    }
+    return tweenVolume;
+  }
+
+  public override void SetStartToCurrentValue() => this.from = this.value;
+
+  public override void SetEndToCurrentValue() => this.to = this.value;
+}

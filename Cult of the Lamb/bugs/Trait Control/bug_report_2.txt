@@ -1,0 +1,5 @@
+Started a new game with the mod, set trait amount to 8/8 turned on the option to turn negative traits into positive but i still get negative traits. Is there no way to disable all negative traits?
+
+My only other mods are your skip of the lamb lite and QoL collection.
+
+I tried different settings there but all result in negative traits. Reeducation seems to work in removing them, but i can't check my follower for the new traits he gets afterwards, i don't have the read thoughts skill yet since it's a new save. Also enabling both Immortal and Don't starve only seems to add the Immortal trait.

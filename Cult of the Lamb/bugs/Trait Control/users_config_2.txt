@@ -1,0 +1,1373 @@
+## Settings file was created by plugin Trait Control v0.1.4
+## Plugin GUID: p1xel8ted.cotl.traitcontrol
+
+[01. Trait Replacement]
+
+## Replace negative traits with positive ones on all followers (existing and new).
+# Setting type: Boolean
+# Default value: false
+Enable Trait Replacement = true
+
+## Only use traits you have unlocked. Applies to both trait replacement and new follower trait selection.
+# Setting type: Boolean
+# Default value: true
+Use Unlocked Traits Only = true
+
+## Merge all trait pools into one, bypassing vanilla's normal/rare split. Without this, vanilla assigns traits from separate pools (normal pool for first 2 traits, ~20% chance of rare pool for 3rd trait). Enable this for trait weights to have full control over distribution. Unique traits require their individual toggles.
+# Setting type: Boolean
+# Default value: false
+Use All Traits Pool = false
+
+## When replacing negative traits, exclusive traits (like Lazy) are replaced with their positive counterpart (Industrious) instead of a random trait.
+# Setting type: Boolean
+# Default value: true
+Prefer Exclusive Counterparts = true
+
+## Minimum number of traits new followers will have. Vanilla is 2.
+# Setting type: Int32
+# Default value: 2
+# Acceptable value range: From 2 to 8
+Minimum Traits = 8
+
+## Maximum number of traits new followers will have. Vanilla is 3. Limited to 8 due to UI constraints.
+# Setting type: Int32
+# Default value: 3
+# Acceptable value range: From 2 to 8
+Maximum Traits = 8
+
+## When re-indoctrinating an existing follower (at the altar), randomize their traits using the configured min/max. Vanilla re-indoctrination only changes appearance/name.
+# Setting type: Boolean
+# Default value: false
+Randomize Traits on Re-indoctrination = true
+
+## Adds the Re-educate command to normal followers. Using it will re-roll their traits using the configured min/max and weights.
+# Setting type: Boolean
+# Default value: false
+Trait Reroll via Reeducation = true
+
+[02. Unique Traits]
+
+## Allow multiple followers to have the same unique trait (Immortal, Disciple, etc.). Normally only one follower can have each unique trait.
+# Setting type: Boolean
+# Default value: false
+Allow Multiple Unique Traits = true
+
+## Will never reach old age.
+## 
+## Allow the Immortal trait (normally a special reward) to appear in trait pools.
+# Setting type: Boolean
+# Default value: false
+Include Immortal = true
+
+## New followers will always receive the Immortal trait (ignores weights). Only one follower can have this trait.
+# Setting type: Boolean
+# Default value: false
+Guarantee Immortal = true
+
+## A member of the Inner Circle. Can re-educate Dissenters and use special Shrines.
+## 
+## Allow the Disciple trait (normally a special reward) to appear in trait pools.
+# Setting type: Boolean
+# Default value: false
+Include Disciple = false
+
+## New followers will always receive the Disciple trait (ignores weights). Only one follower can have this trait.
+# Setting type: Boolean
+# Default value: false
+Guarantee Disciple = false
+
+## Will never starve.
+## 
+## Allow the DontStarve trait (crossover reward) to appear in trait pools.
+# Setting type: Boolean
+# Default value: false
+Include Dont Starve = true
+
+## New followers will always receive the Dont Starve trait (ignores weights). Only one follower can have this trait.
+# Setting type: Boolean
+# Default value: false
+Guarantee Dont Starve = true
+
+## Will bump into other Followers.
+## 
+## Allow the Blind trait (crossover reward) to appear in trait pools.
+# Setting type: Boolean
+# Default value: false
+Include Blind = false
+
+## New followers will always receive the Blind trait (ignores weights). Only one follower can have this trait.
+# Setting type: Boolean
+# Default value: false
+Guarantee Blind = false
+
+## Gives Rotburn instead of Devotion when levelling up.
+## 
+## Allow the BornToTheRot trait (crossover reward) to appear in trait pools.
+# Setting type: Boolean
+# Default value: false
+Include Born To The Rot = false
+
+## New followers will always receive the Born To The Rot trait (ignores weights). Only one follower can have this trait.
+# Setting type: Boolean
+# Default value: false
+Guarantee Born To The Rot = false
+
+[03. Notifications]
+
+## Show notifications when trait replacement removes negative traits.
+# Setting type: Boolean
+# Default value: false
+Show When Removing Traits = true
+
+## Show notifications when trait replacement adds positive traits.
+# Setting type: Boolean
+# Default value: false
+Show When Adding Traits = true
+
+[04. Trait Weights]
+
+## Enable weighted random selection for new followers. Weights affect trait selection within each pool. For full control over all traits, enable 'Use All Traits Pool' - otherwise vanilla's normal/rare pool split still applies (rare pool has ~20% chance for 3rd trait). Set a weight to 0 to disable a trait.
+# Setting type: Boolean
+# Default value: false
+Enable Trait Weights = false
+
+## Include traits normally granted through gameplay events (marriage, parenting, criminal, missionary, etc.) in the weights list. Only applies when 'Use All Traits Pool' is enabled. Warning: This can result in nonsensical assignments (e.g., ProudParent on followers who have never had children).
+# Setting type: Boolean
+# Default value: false
+Include Event Traits = false
+
+[05. Good Traits]
+
+## Followers hatched in the Cult will be born with a high Loyalty level.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Allegiance = 1
+
+## Loves animals in the Ranch
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+AnimalLover = 1
+
+## Decreases Sin generation by 10% but increases productivity by 15%.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Sin
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Asceticism = 1
+
+## Gives Rotburn instead of Devotion when levelling up.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Unique, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+BornToTheRot = 1
+
+## Gain +5 Faith when a Follower eats a meals made from Follower meat.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Cannibal = 1
+
+## Descendant of the purest pedigree.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ChosenOne = 1
+
+## Will not freeze during blizzards.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ColdEnthusiast = 1
+
+## Gain +5 Faith when a building is constructed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ConstructionEnthusiast = 1
+
+## Gain +10 Faith when falling ill.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Coprophiliac = 1
+
+## Productivity is increased by 10%.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+CriminalReformed = 1
+
+## Will sleep through almost anything, even Snorers.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+DeepSleeper = 1
+
+## Belief in Afterlife
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+DesensitisedToDeath = 1
+
+## A member of the Inner Circle. Can re-educate Dissenters and use special Shrines.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Unique
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Disciple = 1
+
+## All are born guilty. Reduced Faith loss when putting a Follower in jail who is not dissenting.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Disciplinarian = 1
+
+## Choose to generate Sin  from the Confession Booth instead of Loyalty.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+DoctrinalExtremist = 1
+
+## Will never starve.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Unique
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+DontStarve = 1
+
+## Gain Faith for each day a Rotten Follower is in the Cult. Rotten Followers live longer.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+EmbraceRot = 1
+
+## Generates Devotion 15% faster.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Rare, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Faithful = 1
+
+## Gain +7 Faith when a decoration is built
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+FalseIdols = 1
+
+## Generates Devotion 20% faster when wearing a unique outfit.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Fashionable = 1
+
+## Followers hatched in the Cult will be born with some Sin
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Fertility = 1
+
+## Plays flute instead of working.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+FluteLover = 1
+
+## Will never freeze.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+FreezeImmune = 1
+
+## Will gain +100 Loyalty when freezing.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Frigidophile = 1
+
+## Ranch Animals can be burned in the Rotburn Furnace for additional Warmth.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+FurnaceAnimal = 1
+
+## Dead Followers can be burned in the Rotburn Furnace for additional Warmth.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+FurnaceFollower = 1
+
+## No longer lose Faith when a follower eats a Grass Meal.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+GrassEater = 1
+
+## 15% easier to level up.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Gullible = 1
+
+## Gains 10% more Sin.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+HappilyWidowed = 1
+
+## Gain +10 Faith if an elder is sacrificed, murdered or consumed, but  -20 Faith if an elder dies naturally.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+HateElderly = 1
+
+## Less likely to become Befuddled from drinks.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Heavyweight = 1
+
+## Decreases productivity by 10% but increases Sin generation by 15%.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Sin
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Hedonism = 1
+
+## Will never reach old age.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Unique
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Immortal = 1
+
+## Increased work speed by 15%.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Industrious = 1
+
+## Snowlamb won't melt after winter ends.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+InfusibleSnowman = 1
+
+## Heals 15% faster when sick and in bed rest.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+IronStomach = 1
+
+## Freedom above all else. Every day that begins without anyone in prison, gain +10 Faith.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Libertarian = 1
+
+## Higher chance of being struck by lightning. Won't die when struck.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+LightningEnthusiast = 1
+
+## Gains Loyalty each day they are in Prison.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+LockedLoyal = 1
+
+## Gain +5 Faith when a Follower becomes an elder.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+LoveElderly = 1
+
+## Gain +5 Faith when another Cult member becomes ill.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+LoveOfSickPeople = 1
+
+## Very... affectionate towards other Followers.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Sin
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Lustful = 1
+
+## Productivity is increased by 20%.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MarriedHappily = 1
+
+## Gains Sin each day they are in Prison.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Masochistic = 1
+
+## Perfectly made! Productivity is significantly increased.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MasterfulSnowman = 1
+
+## Gain Faith when building better sleeping quarters.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Materialistic = 1
+
+## 20% more likely to be successful in the Mating Tent.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MissionaryExcited = 1
+
+## All interactions with other Followers will be positive.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MissionaryInspired = 1
+
+## Work speed and devotion generation increased by 10% but  50% chance of Followers becoming sick after the Brainwashing ritual.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MushroomBanned = 1
+
+## Gain +20 Faith when Brainwashing Ritual is performed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MushroomEncouraged = 1
+
+## Generates 200% Sin when using the Drum Circle.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MusicLover = 1
+
+## Immune to Rotting.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MutatedImmune = 1
+
+## A bit... odd looking, but will not spread Rot.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MutatedVisual = 1
+
+## On recruiting this Follower immediately gain +10 Faith.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+NaturallyObedient = 1
+
+## Generates Loyalty 50% faster when Naked.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Nudist = 1
+
+## Does not fight with other Followers. Will break up Follower fights.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Pacifist = 1
+
+## Can be pet.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Pettable = 1
+
+## Does not get jealous if the Lamb has more than 1 spouse.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Polyamory = 1
+
+## Affectionate to their child and proud to have made the Lamb a new Follower.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ProudParent = 1
+
+## Ancestor of the Chosen Child.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+PureBlood = 1
+
+## The great grandchild of this Follower will receive the 'Chosen Child' trait.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+PureBlood_1 = 1
+
+## The grandchild of this Follower will receive the 'Chosen Child' trait.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+PureBlood_2 = 1
+
+## The child of this Follower will receive the 'Chosen Child' trait.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+PureBlood_3 = 1
+
+## Gain Faith when a Rotten Follower is killed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+RejectRot = 1
+
+## Remove the Rotten Trait from Followers at the Healing Bay.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+RemoveRot = 1
+
+## Poops Rotburn poops.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+RotstonePooper = 1
+
+## All poops are golden.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Rare, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+RoyalPooper = 1
+
+## Gain +20 Faith when a Follower is sacrificed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+SacrificeEnthusiast = 1
+
+## Less likely to become possessed by Sin.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+SeenGod = 1
+
+## Gain more Faith when you give a sermon.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+SermonEnthusiast = 1
+
+## Produces Sin  15% faster.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Sin
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Unrepentant = 1
+
+## Chance of Sin  appearing as a reward from mini-bosses.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ViolentExtremist = 1
+
+## Will never freeze.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Rare, Faithful, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+WarmBlooded = 1
+
+## Works 30% faster during winter but 20% slower during summer.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+WinterBody = 1
+
+## Gains +20 Loyalty at the start of winter.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+WinterExcited = 1
+
+## Chases wolves away.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+WolfHater = 1
+
+## Followers will work during blizzards.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+WorkThroughBlizzard = 1
+
+## Ignores dissenters when they preach.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Faithful
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Zealous = 1
+
+[06. Bad Traits]
+
+## Sleeps all summer.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Aestivation = 1
+
+## -5 Faith when a Follower is Sacrificed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+AgainstSacrifice = 1
+
+## May start a fight with other Followers.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Rare
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Argumentative = 1
+
+## Likes to cause mischief.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Rare, Unlock
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Bastard = 1
+
+## Will bump into other Followers.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Unique
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Blind = 1
+
+## Not very... affectionate towards other Followers.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Sin
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Celibate = 1
+
+## Will gain +100 Loyalty when freezing.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Chionophile = 1
+
+## More likely to freeze.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Rare, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ColdBlooded = 1
+
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+CriminalEvangelizing = 1
+
+## Will steal from the Lamb and other Followers.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+CriminalHardened = 1
+
+## Might run away if frightened.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+CriminalScarred = 1
+
+## 15% harder to level up.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Cynical = 1
+
+## Has a 90% chance of falling asleep when given a task.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Unlock
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Drowsy = 1
+
+## Raises the loyalty of a nearby Follower once a day.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ExCultLeader = 1
+
+## Confronted by their resurrection. Will need to be specially healed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ExistentialDread = 1
+
+## Generates Devotion 15% slower.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Rare
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Faithless = 1
+
+## -5 Faith whenever another Follower dies.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+FearOfDeath = 1
+
+## -5 Faith when another Cult member becomes sick.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+FearOfSickPeople = 1
+
+## -10 Faith when falling ill.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Germophobe = 1
+
+## Gains 10% less Sin.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+GrievingWidow = 1
+
+## Will fight Snowlambs.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+HatesSnowmen = 1
+
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Heliophile = 1
+
+## Sleeps all winter.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Hibernation = 1
+
+## Creates ice sculptures during winter.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+IceSculpture = 1
+
+## Sleeps during the day and works at night.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting, Unlock
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Insomniac = 1
+
+## Angry after the divorce. Will not be told what to do.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+JiltedLover = 1
+
+## Work and devotion generation speed reduced by 10%.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Lazy = 1
+
+## More likely to engage in debaucherous behaviour when Befuddled.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, DLC
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Lightweight = 1
+
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MarriedDevoted = 1
+
+## Will get into fights with other spouses.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MarriedJealous = 1
+
+## 25% more likely to murder other spouses in fights.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MarriedMurderouslyJealous = 1
+
+## Productivity is decreased by 20%.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MarriedUnhappily = 1
+
+## Has seen too much. Will need to be specially healed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+MissionaryTerrified = 1
+
+## Does not starve, freeze, dissent or become ill. Will die in 10 days.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Mutated = 1
+
+## On recruiting Follower immediately -10 Faith.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+NaturallySkeptical = 1
+
+## Exhausted and likely to have negative interactions with other Followers.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+OverworkedParent = 1
+
+## Writes poems instead of working.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Rare, Unlock
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Poet = 1
+
+## Might run away if frightened.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Rare, Unlock
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Scared = 1
+
+## Poorly made and less productive.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Event, DLC, Winter
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+ShoddySnowman = 1
+
+## Heals 15% slower when sick and in bed rest.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Sickly = 1
+
+## Will wake nearby Followers with their snoring.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Snorer = 1
+
+## Sits in the corner and cries.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Terrified = 1
+
+## Will break themselves and others out of prison.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Single, Starting
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Unlawful = 1
+
+## Produces Sin  20% slower.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Found in: Starting, Sin
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Virtuous = 1
+
+## Corrupted by their resurrection. Will need to be specially healed.
+## 
+## Weight: Higher = more likely relative to other traits. Set to 0 to disable. Default is 1.0. With ~85 traits at weight 1: weight 10 ≈ 10%, weight 50 ≈ 37%, weight 100 ≈ 54%.
+## 
+## Granted via other means (doctrines, rituals, events, etc.)
+# Setting type: Single
+# Default value: 1
+# Acceptable value range: From 0 to 100
+Zombie = 1
+
+[07. Reset Settings]
+
+## Click to reset all settings to defaults (vanilla behavior).
+# Setting type: Boolean
+# Default value: false
+Reset All Settings = false
+

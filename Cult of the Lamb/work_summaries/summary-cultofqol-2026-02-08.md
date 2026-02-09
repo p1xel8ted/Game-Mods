@@ -195,8 +195,150 @@ Debug keybind (F9, gated behind EnableLogging) dumps all English translations fr
 
 ---
 
+## Feature: Mass Clean Poop & Vomit (COMPLETE)
+
+### What Changed
+Added two new toggles in the Mass Collect config section:
+- **Mass Clean Poop** — cleaning one poop pile triggers cleanup of all others
+- **Mass Clean Vomit** — cleaning one vomit puddle triggers cleanup of all others
+
+Both default to off. No mass action costs applied (consistent with other collection actions).
+
+### Implementation
+Uses the same coroutine-based pattern as outhouse mass collection:
+- Postfix on `Interaction_Poop.OnInteract` / `Vomit.OnInteract`
+- Static re-entrancy guard (`CleanAllPoopRunning` / `CleanAllVomitRunning`)
+- Iterates `Interaction_Poop.Poops` / `Vomit.Vomits` static lists (snapshot via `.ToList()`)
+- Checks `!poop.Activating` / `!v.Activating` to skip piles already being cleaned
+- Game's own `OnInteract` also checks `Activating` as a safety guard
+
+### Files Modified
+- `CultOfQoL/Configs.cs` — Added `MassCleanPoop`, `MassCleanVomit` properties
+- `CultOfQoL/Plugin.cs` — Added bindings in MassCollectSection (Order 0, -1)
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — Added guards, postfix patches, coroutines
+
+---
+
+## Change: Standardized Collection Coroutine Delays (COMPLETE)
+
+### What Changed
+All collection coroutines in `FastCollectingPatches.cs` changed from `0.10f` to `0.05f` delay between iterations for snappier feel. Matches the `0.05f` already used by farm actions (water/fertilize) in `InteractionPatches.cs`. Sin extraction delay (`0.4f`) left unchanged.
+
+### Affected Coroutines
+`CollectBeds`, `CollectAllBuildingShrines`, `CollectAllOuthouse`, `CollectAllCompostBinDeadBody`, `CollectAllHarvestTotems`, `CollectAllShrines`, `CleanAllPoop`, `CleanAllVomit`
+
+### Files Modified
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — 8 occurrences of `0.10f` → `0.05f`
+
+---
+
+## Documentation Updates
+- `Thunderstore/cult/CHANGELOG.md` — Added mass clean poop/vomit + delay improvement entries
+- `Thunderstore/cult/README.md` — Added mass clean poop/vomit to Mass Collect section
+- `Thunderstore/cult/nexusmods_description.txt` — Same (BBCode)
+
+---
+
+## Feature: Mass Action Cost Preview for Non-Wheel Actions (COMPLETE)
+
+### Problem
+Cost preview only showed on the follower command wheel (`UIFollowerWheelInteractionItem.GetDescription()`). Farm actions (water/fertilize) use a simple interaction label. Animal commands (pet, clean, feed, milk, shear) use the same wheel UI but `GetMassActionTargetCount()` didn't handle their FollowerCommands values.
+
+### Fix
+1. **Animal wheel commands** — Extended `GetMassActionTargetCount()` switch with: `PetAnimal`, `Clean`, `MilkAnimal`, `Harvest`, and feed commands (via `FastCollectingPatches.FeedCommands` HashSet, changed from private to internal)
+2. **Farm plots** — Added `FarmPlot.GetLabel()` postfix that appends cost text when water/fertilize labels shown
+3. **Refactored** — Extracted `GetCostPreviewTextForCount(int count)` from `GetCostPreviewText(cmd)` so both wheel and label paths share cost string formatting
+
+### Files Modified
+- `CultOfQoL/Core/MassActionCosts.cs` — Added animal cases, extracted `GetCostPreviewTextForCount`, added `using CultOfQoL.Patches.Systems`
+- `CultOfQoL/Patches/Gameplay/InteractionPatches.cs` — Added `FarmPlot_GetLabel` postfix
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — Changed `FeedCommands` private → internal
+
+---
+
+## Feature: DiscipleCollectionShrine Full Coverage (COMPLETE)
+
+### Problem
+`Interaction_DiscipleCollectionShrine` (Collected Shrine of Disciples, SoulMax=150) had zero mod coverage — no fast collecting, mass collect, instant collect, or SoulMax multiplier.
+
+### Implementation
+Added 4 patches mirroring existing shrine patterns:
+1. **Fast collecting** — Postfix on `Update`: zeroes `Delay` and maxes `AccelerateCollection` (0.09f)
+2. **Instant collect** — Postfix on `OnInteract` (HarmonyPriority.High): drains all souls at once with visual cap at 10, same soul/gold logic as `BuildingShrine_OnInteract_Postfix`
+3. **Mass collect** — Postfix on `OnInteract`: iterates `Interaction_DiscipleCollectionShrine.Shrines` list, calls OnInteract on each with SoulCount > 0. Reuses `MassCollectFromPassiveShrines` config.
+4. **SoulMax multiplier** — Postfix on `Structures_Shrine_Disciple_Collection.SoulMax` getter: calls existing `AdjustSoulMax()`
+
+### Files Modified
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — Added `CollectAllDiscipleShrinesRunning` guard, 3 patches + coroutine
+- `CultOfQoL/Patches/Structures/StructurePatches.cs` — Added `Structures_Shrine_Disciple_Collection_SoulMax` postfix
+
+---
+
+## Feature: Mass Fill Troughs (COMPLETE)
+
+### Implementation
+Hooks `Interaction_RanchTrough.OnInteract`, waits one frame for `UIItemSelectorOverlayController` to appear (same pattern as wolf traps), wraps `OnItemChosen` callback:
+1. Original callback fires (deposits 1 item via flying visual)
+2. `FillAllTroughs()` fills triggered trough to capacity via direct `Structure.DepositInventory`
+3. Iterates `Interaction_RanchTrough.Troughs`, fills each non-full/non-reserved trough to capacity
+4. Hides selector if triggered trough is full
+
+### Config
+`MassFillTroughs` (bool, default false) in MassAnimalSection, Order 1
+
+### Files Modified
+- `CultOfQoL/Configs.cs` — Added `MassFillTroughs`
+- `CultOfQoL/Plugin.cs` — Binding in MassAnimalSection
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — Added `#region Mass Fill Troughs` with postfix, coroutine, fill method
+
+---
+
+## Feature: Mass Fill Toolsheds, Medic Stations, Mass Plant Seeds (COMPLETE)
+
+All three implemented in `FastCollectingPatches.cs` using same selector-hook pattern as troughs.
+
+### Toolshed / Carpentry Station (`Interaction_Toolshed`)
+- Same pattern as troughs: hook `OnInteract`, wrap `OnItemChosen`, fill triggered + all others
+- Items: LOG, STONE. Static list: `Toolsheds`. In-game name: "Carpentry Station"
+- Config: `MassFillToolsheds` in MassFarmSection (Order 4)
+
+### Medic Station (`Interaction_Medic`)
+- Same pattern. Items: FLOWER_RED, CRYSTAL, MUSHROOM_SMALL. Static list: `Medics`
+- Config: `MassFillMedicStations` in MassFarmSection (Order 3)
+
+### Farm Plot Seed Planting (`FarmPlot`)
+- Different pattern: `HideOnSelection = true` (single pick), one seed per plot
+- Hook `OnInteract` postfix (when `CanPlantSeed()`), wrap selector `OnItemChosen`
+- After original plants in triggered plot, iterate `FarmPlot.FarmPlots` for empty plots
+- Direct call `StructureBrain.PlantSeed(chosenItem)` + `UpdateCropImage()` + `checkWaterIndicator()`
+- Config: `MassPlantSeeds` in MassFarmSection (Order 7)
+
+### Files Modified
+- `CultOfQoL/Configs.cs` — Added `MassFillToolsheds`, `MassFillMedicStations`, `MassPlantSeeds`
+- `CultOfQoL/Plugin.cs` — 3 bindings in MassFarmSection, renumbered existing orders
+- `CultOfQoL/Patches/Systems/FastCollectingPatches.cs` — Added 3 new regions
+
+---
+
+## Lightning Rod / Ranch II Chests — Verification Only
+
+Both use `Interaction_CollectResourceChest` which is already auto-collected by the existing `EnableAutoCollect` prefix. No code changes needed — just verify in-game.
+
+---
+
+## BUG: FarmPlot.GetLabel Postfix Crash (RESOLVED)
+
+### Problem
+Accessing `FarmPlot.FarmPlots` (static field) from inside a `FarmPlot.GetLabel()` Harmony postfix caused an uncatchable crash.
+
+### Fix (applied in later session)
+Patched the base class `Interaction.Label` getter instead, with type guards. Farm plot counts cached via `FarmPlot.Update` postfix (throttled 0.25s) using `StructureManager.GetAllStructuresOfType<Structures_FarmerPlot>()`. The `Interaction.Label` postfix reads cached counts — never touches `FarmPlot.FarmPlots` directly.
+
+---
+
 ## Open Issues
-- All changes need in-game testing
+- All new features need in-game testing (toolshed, medic, seed mass fill)
+- No changelog/README updates for any of these new features yet
 
 ## Commit History
 - `3aeeb626` — Mass action cost preview, pet refinement, furnace scaling, translation dump

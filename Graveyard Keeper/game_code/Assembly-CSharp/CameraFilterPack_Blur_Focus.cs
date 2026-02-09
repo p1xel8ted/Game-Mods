@@ -1,0 +1,77 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: CameraFilterPack_Blur_Focus
+// Assembly: Assembly-CSharp, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 015C13E4-E5D0-4A69-A75A-A5E4923AD5DC
+// Assembly location: F:\OneDrive\Development\Game-Mods\Graveyard Keeper\libs\Assembly-CSharp.dll
+
+using UnityEngine;
+
+#nullable disable
+[AddComponentMenu("Camera Filter Pack/Blur/Focus")]
+[ExecuteInEditMode]
+public class CameraFilterPack_Blur_Focus : MonoBehaviour
+{
+  public Shader SCShader;
+  public float TimeX = 1f;
+  public Vector4 ScreenResolution;
+  public Material SCMaterial;
+  [Range(-1f, 1f)]
+  public float CenterX;
+  [Range(-1f, 1f)]
+  public float CenterY;
+  [Range(0.0f, 10f)]
+  public float _Size = 5f;
+  [Range(0.12f, 64f)]
+  public float _Eyes = 2f;
+
+  public Material material
+  {
+    get
+    {
+      if ((Object) this.SCMaterial == (Object) null)
+      {
+        this.SCMaterial = new Material(this.SCShader);
+        this.SCMaterial.hideFlags = HideFlags.HideAndDontSave;
+      }
+      return this.SCMaterial;
+    }
+  }
+
+  public void Start()
+  {
+    this.SCShader = Shader.Find("CameraFilterPack/Blur_Focus");
+    if (SystemInfo.supportsImageEffects)
+      return;
+    this.enabled = false;
+  }
+
+  public void OnRenderImage(RenderTexture sourceTexture, RenderTexture destTexture)
+  {
+    if ((Object) this.SCShader != (Object) null)
+    {
+      this.TimeX += Time.deltaTime;
+      if ((double) this.TimeX > 100.0)
+        this.TimeX = 0.0f;
+      this.material.SetFloat("_TimeX", this.TimeX);
+      this.material.SetFloat("_CenterX", this.CenterX);
+      this.material.SetFloat("_CenterY", this.CenterY);
+      this.material.SetFloat("_Size", Mathf.Round(this._Size / 0.2f) * 0.2f);
+      this.material.SetFloat("_Circle", this._Eyes);
+      this.material.SetVector("_ScreenResolution", (Vector4) new Vector2((float) Screen.width, (float) Screen.height));
+      Graphics.Blit((Texture) sourceTexture, destTexture, this.material);
+    }
+    else
+      Graphics.Blit((Texture) sourceTexture, destTexture);
+  }
+
+  public void Update()
+  {
+  }
+
+  public void OnDisable()
+  {
+    if (!(bool) (Object) this.SCMaterial)
+      return;
+    Object.DestroyImmediate((Object) this.SCMaterial);
+  }
+}

@@ -1,0 +1,1 @@
+I have this bug where even when i make sure Guaranteed don't starve is activated, not all new follower recive this trait. I also activated guarantee for immortal and it seems to work just fine

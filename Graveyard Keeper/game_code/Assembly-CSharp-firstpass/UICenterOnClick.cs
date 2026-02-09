@@ -1,0 +1,36 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: UICenterOnClick
+// Assembly: Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: AD927277-3A17-461A-93C2-E51B5C84C57C
+// Assembly location: F:\OneDrive\Development\Game-Mods\Graveyard Keeper\libs\Assembly-CSharp-firstpass.dll
+
+using UnityEngine;
+
+#nullable disable
+[AddComponentMenu("NGUI/Interaction/Center Scroll View on Click")]
+public class UICenterOnClick : MonoBehaviour
+{
+  public void OnClick()
+  {
+    UICenterOnChild inParents1 = NGUITools.FindInParents<UICenterOnChild>(this.gameObject);
+    UIPanel inParents2 = NGUITools.FindInParents<UIPanel>(this.gameObject);
+    if ((Object) inParents1 != (Object) null)
+    {
+      if (!inParents1.enabled)
+        return;
+      inParents1.CenterOn(this.transform);
+    }
+    else
+    {
+      if (!((Object) inParents2 != (Object) null) || inParents2.clipping == UIDrawCall.Clipping.None)
+        return;
+      UIScrollView component = inParents2.GetComponent<UIScrollView>();
+      Vector3 pos = -inParents2.cachedTransform.InverseTransformPoint(this.transform.position);
+      if (!component.canMoveHorizontally)
+        pos.x = inParents2.cachedTransform.localPosition.x;
+      if (!component.canMoveVertically)
+        pos.y = inParents2.cachedTransform.localPosition.y;
+      SpringPanel.Begin(inParents2.cachedGameObject, pos, 6f);
+    }
+  }
+}
