@@ -1,7 +1,7 @@
 namespace QuickMenus;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-[BepInDependency("com.bepis.bepinex.configurationmanager", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("com.bepis.bepinex.configurationmanager", "18.4.1")]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.quickmenus";
@@ -32,25 +32,25 @@ public class Plugin : BaseUnityPlugin
 
         FollowerFormsKey = Config.Bind(
             "01. Hotkeys", "Follower Forms",
-            new KeyboardShortcut(KeyCode.F1),
+            new KeyboardShortcut(KeyCode.F2),
             new ConfigDescription(Localization.DescFollowerForms, null,
                 new ConfigurationManagerAttributes { Order = 8, DispName = Localization.NameFollowerForms }));
 
         BuildMenuKey = Config.Bind(
             "01. Hotkeys", "Build Menu",
-            new KeyboardShortcut(KeyCode.F2),
+            new KeyboardShortcut(KeyCode.F3),
             new ConfigDescription(Localization.DescBuildMenu, null,
                 new ConfigurationManagerAttributes { Order = 7, DispName = Localization.NameBuildMenu }));
 
         TailorKey = Config.Bind(
             "01. Hotkeys", "Tailor / Clothing",
-            new KeyboardShortcut(KeyCode.F3),
+            new KeyboardShortcut(KeyCode.F4),
             new ConfigDescription(Localization.DescTailorClothing, null,
                 new ConfigurationManagerAttributes { Order = 6, DispName = Localization.NameTailorClothing }));
 
         PlayerUpgradesKey = Config.Bind(
             "01. Hotkeys", "Player Upgrades / Fleeces",
-            new KeyboardShortcut(KeyCode.F4),
+            new KeyboardShortcut(KeyCode.F5),
             new ConfigDescription(Localization.DescPlayerUpgrades, null,
                 new ConfigurationManagerAttributes { Order = 5, DispName = Localization.NamePlayerUpgrades }));
 

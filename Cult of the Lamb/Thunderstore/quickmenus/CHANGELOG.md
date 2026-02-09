@@ -1,12 +1,10 @@
-# Changelog
-
-## v0.1.0 - 07/02/2026
+### 0.1.0 - 07/02/2026
 - Initial release
-- Quick access to four game menus via configurable hotkeys (default F1-F4)
-- Follower Forms (F1) - Browse your follower skin collection
-- Structures (F2) - View available structures (browse-only)
-- Clothing (F3) - Browse and assign clothing to followers
-- Fleeces (F4) - View, equip, and customize fleeces
+- Quick access to four game menus via configurable hotkeys (default F2-F5)
+- Follower Forms (F2) - Browse your follower skin collection
+- Structures (F3) - View available structures (browse-only)
+- Clothing (F4) - Browse and assign clothing to followers
+- Fleeces (F5) - View, equip, and customize fleeces
 - Hotkeys act as toggles (press to open, press again to close)
 - Pressing a different hotkey while a menu is open switches to the new menu
 - All menus work from anywhere, not just the base

@@ -1,18 +1,13 @@
 [size=4][b]Features[/b][/size]
 
-[size=3][b]Pre-Rendered Videos[/b][/size]
 [list]
-[*][size=3]Skip Splash Screens - Skip developer/publisher logo videos on startup[/size]
-[*][size=3]Skip Crown Video - Skip the video when the player first dies and is crowned by the death cat[/size]
-[*][size=3]Skip Woolhaven Video - Skip the pre-rendered video after completing the Woolhaven intro dungeon[/size]
-[/list]
-
-[size=3][b]In-Game Cutscenes[/b][/size]
-[list]
-[*][size=3]Skip Woolhaven Arrival - Skip the in-game cutscene when first arriving in Woolhaven[/size]
-[*][size=3]Skip Main Boss Intros - Skip in-game boss ritual/transformation sequences[/size]
-[*][size=3]Skip Mini-Boss Intros - Skip in-game mini-boss roar/spawn sequences[/size]
-[*][size=3]Ignore First Encounter - Skip boss intros even on first encounter (useful for veteran players on new saves)[/size]
+[*][size=3]Gets a random list of 1000 names from the randommer.io API for use when naming followers.[/size]
+[*][size=3]Names are pre-loaded on game start for instant availability during indoctrination.[/size]
+[*][size=3]The name list is saved locally to prevent having to fetch names every time you start the game.[/size]
+[*][size=3]Names are removed from the list as they are used to prevent duplicates.[/size]
+[*][size=3]The provided API key is limited to 1000 requests per day. If you want to use your own API key, you can get one from [url=https://randommer.io/]randommer.io[/url].[/size]
+[*][size=3]Add your own names to the list by editing the JSON file or by using the interface via F1. The file is saved unencrypted to allow users to edit the file themselves.[/size]
+[*][size=3]Generated names display an asterisk during indoctrination so you can tell them apart from your own names. The asterisk is removed automatically once the name is confirmed. This can be toggled via F1.[/size]
 [/list]
 
 [size=4][b]Installation[/b][/size]
@@ -20,23 +15,19 @@
 [list]
 [*][size=3]Install [url=https://www.nexusmods.com/cultofthelamb/mods/31]Cult of the Lamb BepInEx 5 Pack[/url][/size]
 [*][size=3]Install [url=https://thunderstore.io/c/cult-of-the-lamb/p/p1xel8ted/BepInEx_Configuration_Manager/]BepInEx Configuration Manager[/url] (for in-game configuration)[/size]
-[*][size=3]Place the plugin DLL into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
+[*][size=3]Place the plugin DLLs into your "...\Cult of the Lamb\BepInEx\plugins" folder.[/size]
 [/list]
 
 [size=4][b]Configuration[/b][/size]
 
-[size=3]All features are disabled by default. Edit the config file in BepInEx/config/ or use Configuration Manager (F1) to configure in-game.[/size]
-
-[size=4][b]Compatibility[/b][/size]
-
 [list]
-[*][size=3][b]Skip of the Lamb Lite[/b] - Incompatible. Only one variant can be loaded at a time.[/size]
-[*][size=3][b]Cult of QoL[/b] - Fully compatible. Skip features have been removed from CultOfQoL.[/size]
+[*][size=3]Press F1 in game to open the configuration manager.[/size]
+[*][size=3]The configuration file can be found in the "...\Cult of the Lamb\BepInEx\config" folder.[/size]
 [/list]
 
-[size=4][b]Just Want Splash Screens Skipped?[/b][/size]
+[size=4][b]Recommendation[/b][/size]
 
-[size=3]Check out [url=https://www.nexusmods.com/cultofthelamb/mods/56]Skip of the Lamb Lite[/url] - a lightweight version with no configuration required.[/size]
+[size=3]While not required, I recommend installing [url=https://thunderstore.io/c/cult-of-the-lamb/p/LethalCompanyModding/UnityDebuggerAssistant/]Unity Debugger Assistant[/url] for better log files when reporting bugs.[/size]
 
 [size=4][b]My Other Mods[/b][/size]
 

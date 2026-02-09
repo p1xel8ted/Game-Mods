@@ -1,6 +1,6 @@
 ### 0.1.1 - 08/02/2026
 
-- Fixed Crystal Doctrine Stones showing -1 quantity for players with the Woolhaven DLC
+**New Features:**
 - Added configurable God Tear cost per item (default 1, range 1-10)
   - Increasing cost requires confirmation and is locked per save (cannot be decreased)
   - Cost can only be changed while a save is loaded
@@ -16,9 +16,14 @@
 - Purchase warnings now show context-specific messages for boss skins, quest skins, and overbuy situations
 - Shop labels, interaction prompts, warnings, and configuration UI localized in 15 languages
 
+**Fixes:**
+- Fixed Crystal Doctrine Stones showing -1 quantity for players with the Woolhaven DLC
+
 ### 0.1.0 - 04/02/2026
 
 - Initial release of Mystic Assistant Redux
 - Adopted and updated from Ciarenni's original Mystic Assistant mod (v2.1.0)
-- Fixed issue where certain items could never be selected from randomized categories
 - Updated for compatibility with latest game version
+
+**Fixes:**
+- Fixed issue where certain items could never be selected from randomized categories

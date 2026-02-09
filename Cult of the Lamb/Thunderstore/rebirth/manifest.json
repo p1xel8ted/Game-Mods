@@ -5,6 +5,7 @@
     "description":  "Collect Rebirth tokens while out on crusades, allowing followers to be born again so that you may change their name, looks and more.",
     "dependencies":  [
                          "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
-                         "xhayper-COTL_API-0.2.5"
+                         "xhayper-COTL_API-0.2.5",
+                         "p1xel8ted-BepInEx_Configuration_Manager-18.4.1"
                      ]
 }
