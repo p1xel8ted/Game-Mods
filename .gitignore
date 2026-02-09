@@ -49,6 +49,8 @@ Cult of the Lamb/libs/game_code/**/*.dll
 Cult of the Lamb/libs/game_code/**/Youtube*
 Cult of the Lamb/libs/game_code/**/LightShaft/
 
+Graveyard Keeper/game_code/assets/
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
