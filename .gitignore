@@ -1029,6 +1029,15 @@ FodyWeavers.xsd
 .continue/
 .tabnine/
 
+# Local build environment (machine-specific paths)
+**/Environment.props
+
+# Distribution/build archives
+*.zip
+
+# Release output directories
+AAA_Release*/
+
 # Sensitive or temporary files
 *.secret
 *.env
