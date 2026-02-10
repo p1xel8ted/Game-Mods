@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMBiomeGeneration.BiomeGenerator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -1812,9 +1812,14 @@ public class BiomeGenerator : BaseMonoBehaviour
     return positionInIsland;
   }
 
-  public static bool PointWithinIsland(Vector3 point, out Vector3 closestPoint)
+  public static bool PointWithinIsland(
+    Vector3 point,
+    out Vector3 closestPoint,
+    bool checkForObstacles = true)
   {
-    LayerMask layerMask = (LayerMask) ((int) (LayerMask) ((int) (LayerMask) ((int) new LayerMask() | 1 << LayerMask.NameToLayer("Island")) | 1 << LayerMask.NameToLayer("Obstacles Player Ignore")) | 1 << LayerMask.NameToLayer("Obstacles"));
+    LayerMask layerMask = (LayerMask) ((int) (LayerMask) ((int) new LayerMask() | 1 << LayerMask.NameToLayer("Island")) | 1 << LayerMask.NameToLayer("Obstacles Player Ignore"));
+    if (checkForObstacles)
+      layerMask = (LayerMask) ((int) layerMask | 1 << LayerMask.NameToLayer("Obstacles"));
     RaycastHit2D raycastHit2D = Physics2D.Raycast((Vector2) Vector3.zero, (Vector2) point.normalized, point.magnitude, (int) layerMask);
     closestPoint = (UnityEngine.Object) raycastHit2D.collider != (UnityEngine.Object) null ? (Vector3) raycastHit2D.point : point;
     return (UnityEngine.Object) raycastHit2D.collider == (UnityEngine.Object) null;

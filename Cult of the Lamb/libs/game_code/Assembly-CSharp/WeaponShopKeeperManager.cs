@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WeaponShopKeeperManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -112,7 +112,7 @@ public class WeaponShopKeeperManager : MonoBehaviour
     if (DataManager.Instance.GivenRelicFishRiddle)
       this.SetRelicRiddleManual();
     else if (DataManager.Instance.OnboardedRelics && !DungeonSandboxManager.Active)
-      this.relicRiddleConvo.OnInteraction += (Interaction.InteractionEvent) (state => ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/KudaiiRelic", Objectives.CustomQuestTypes.FindKudaiiRelic), true, true));
+      this.relicRiddleConvo.OnInteraction += (Interaction.InteractionEvent) (state => ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/KudaiiRelic", Objectives.CustomQuestTypes.FindKudaiiRelic), true));
     if (!DungeonSandboxManager.Active && PlayerFarming.AnyPlayerHasLegendaryWeapon())
       this.SetLegendaryWeaponsConvos();
     if (DataManager.Instance.BossesCompleted.Count >= 2 || !((UnityEngine.Object) this.relicRiddleConvo != (UnityEngine.Object) null))

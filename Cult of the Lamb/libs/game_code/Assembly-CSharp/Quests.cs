@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Quests
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -529,20 +529,22 @@ public static class Quests
                     objectivesCustom.TargetFollowerID = -1;
                   else if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.OpenPub)
                     objectivesCustom.TargetFollowerID = -1;
+                  else if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.BuildGoodSnowman)
+                    objectivesCustom.TargetFollowerID = -1;
                 }
                 if ((objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.SendFollowerOnMissionary || StructureManager.GetAllStructuresOfType<Structures_Missionary>().Count > 0) && (objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.SendFollowerToPrison || StructureManager.GetAllStructuresOfType<Structures_Prison>().Count > 0) && (objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.MurderFollower || DoctrineUpgradeSystem.GetUnlocked(DoctrineUpgradeSystem.DoctrineType.LawOrder_MurderFollower)) && (objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.MurderFollowerAtNight || DoctrineUpgradeSystem.GetUnlocked(DoctrineUpgradeSystem.DoctrineType.LawOrder_MurderFollower)) && (objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.UseFirePit || StructureManager.GetAllStructuresOfType<Structures_DancingFirePit>().Count > 0) && (objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.DrumCircle || StructureManager.GetAllStructuresOfType(StructureBrain.TYPES.DRUM_CIRCLE).Count > 0) && (objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.OpenPub || StructureManager.GetAllStructuresOfType<Structures_Pub>().Count > 0))
                 {
                   if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.BuildGoodSnowman)
                   {
                     if (StructureManager.GetAllStructuresOfTypes(StructureBrain.TYPES.ICE_BLOCK).Count <= 0)
-                      goto label_170;
+                      goto label_172;
                   }
                   if ((objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.SendSpouseOnMissionary || StructureManager.GetAllStructuresOfType<Structures_Missionary>().Count > 0) && (objectivesCustom.CustomQuestType != Objectives.CustomQuestTypes.SendFollowerToMatingTent || StructureManager.GetAllStructuresOfType<Structures_MatingTent>().Count > 0))
-                    goto label_171;
+                    goto label_173;
                 }
-label_170:
+label_172:
                 objectivesDataList1[index1] = (ObjectivesData) null;
-label_171:
+label_173:
                 if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.SendFollowerToPrison && objectivesDataList1[index1] != null && FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID) != null && (FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID).CursedState == Thought.OldAge || FollowerInfo.GetInfoByID(objectivesCustom.TargetFollowerID).IsSnowman))
                   objectivesDataList1[index1] = (ObjectivesData) null;
                 if (objectivesCustom.CustomQuestType == Objectives.CustomQuestTypes.KillFollower && targetQuest == null)

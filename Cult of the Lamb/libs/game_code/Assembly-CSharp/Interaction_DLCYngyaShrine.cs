@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCYngyaShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -385,7 +385,7 @@ public class Interaction_DLCYngyaShrine : Interaction
         ObjectiveManager.UpdateObjective((ObjectivesData) objective2);
       }
     }
-    if (DataManager.Instance.ShrineGhostJuice >= Interaction_DLCYngyaShrine.GetAmountRequiredForUpgrade() && DataManager.Instance.TotalShrineGhostJuice > 4)
+    if (DataManager.Instance.ShrineGhostJuice >= Interaction_DLCYngyaShrine.GetAmountRequiredForUpgrade() && DataManager.Instance.TotalShrineGhostJuice > 4 && !DataManager.Instance.BossesCompleted.Contains(FollowerLocation.Dungeon1_5) && !DataManager.Instance.BossesCompleted.Contains(FollowerLocation.Dungeon1_6))
     {
       DataManager.Instance.ShrineGhostJuice = 0;
       WoolhavenYngyaStatue.PlayWinterIncrementGlobal();
@@ -425,27 +425,36 @@ public class Interaction_DLCYngyaShrine : Interaction
         }));
       else if (DataManager.Instance.BeatenWolf && !ObjectiveManager.HasCustomObjectiveOfType(Objectives.CustomQuestTypes.ReturnLastLambGhosts))
       {
-        Interaction_DLCYngyaShrine.Instance.beatenWolfConvo.Play();
-        Interaction_DLCYngyaShrine.Instance.beatenWolfConvo.Callback.AddListener((UnityAction) (() =>
+        if (!Interaction_DLCYngyaShrine.Instance.beatenWolfConvo.Spoken)
         {
-          if (SeasonsManager.WinterSeverity < 6)
+          Interaction_DLCYngyaShrine.Instance.beatenWolfConvo.Play();
+          Interaction_DLCYngyaShrine.Instance.beatenWolfConvo.Callback.AddListener((UnityAction) (() =>
           {
-            Interaction_DLCYngyaShrine.Instance.requireLambsConvo.Play();
-            Interaction_DLCYngyaShrine.Instance.requireLambsConvo.Callback.AddListener((UnityAction) (() =>
+            if (SeasonsManager.WinterSeverity < 6)
+            {
+              Interaction_DLCYngyaShrine.Instance.requireLambsConvo.Play();
+              Interaction_DLCYngyaShrine.Instance.requireLambsConvo.Callback.AddListener((UnityAction) (() =>
+              {
+                MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
+                GameManager.SetGlobalOcclusionActive(true);
+                GameManager.GetInstance().OnConversationEnd();
+              }));
+              ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/BuryLostGhost", Objectives.CustomQuestTypes.ReturnLastLambGhosts), true, true);
+            }
+            else
             {
               MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
               GameManager.SetGlobalOcclusionActive(true);
               GameManager.GetInstance().OnConversationEnd();
-            }));
-            ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/BuryLostGhost", Objectives.CustomQuestTypes.ReturnLastLambGhosts), true, true);
-          }
-          else
-          {
-            MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
-            GameManager.SetGlobalOcclusionActive(true);
-            GameManager.GetInstance().OnConversationEnd();
-          }
-        }));
+            }
+          }));
+        }
+        else
+        {
+          MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
+          GameManager.SetGlobalOcclusionActive(true);
+          GameManager.GetInstance().OnConversationEnd();
+        }
       }
       else if (playFlavourConvo && DataManager.Instance.YngyaMiscConvoIndex < this.miscConvos.Length && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) <= 0)
       {

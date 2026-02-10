@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PickUp
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -181,7 +181,7 @@ public class PickUp : BaseMonoBehaviour
         if (!GameManager.IsDungeon(PlayerFarming.Location) || !((UnityEngine.Object) this != (UnityEngine.Object) null) || !((UnityEngine.Object) this.gameObject != (UnityEngine.Object) null) || !this.enabled || this.ignoreBoundsCheck)
           return;
         Vector3 closestPoint = this.transform.position;
-        BiomeGenerator.PointWithinIsland(this.transform.position, out closestPoint);
+        BiomeGenerator.PointWithinIsland(this.transform.position, out closestPoint, false);
         this.transform.position = closestPoint;
       }));
     Interaction_Chest.OnChestRevealed += new Interaction_Chest.ChestEvent(this.OnChestRevealed);
@@ -534,7 +534,7 @@ public class PickUp : BaseMonoBehaviour
     if (!GameManager.IsDungeon(PlayerFarming.Location) || !((UnityEngine.Object) this != (UnityEngine.Object) null) || !((UnityEngine.Object) this.gameObject != (UnityEngine.Object) null) || !this.enabled || this.ignoreBoundsCheck)
       return;
     Vector3 closestPoint = this.transform.position;
-    BiomeGenerator.PointWithinIsland(this.transform.position, out closestPoint);
+    BiomeGenerator.PointWithinIsland(this.transform.position, out closestPoint, false);
     this.transform.position = closestPoint;
   }
 

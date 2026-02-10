@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GameManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -519,6 +519,8 @@ public class GameManager : MonoBehaviour
           if (GameManager.AuthenticateTwitchDrop19() && DataManager.ActivateTwitchDrop19())
             NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
           if (GameManager.AuthenticateTwitchDrop20() && DataManager.ActivateTwitchDrop20())
+            NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
+          if (GameManager.AuthenticateSupportStreamer() && DataManager.ActivateSupportStreamer())
             NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
         }
         System.Action dlCsAuthenticated = this.OnDLCsAuthenticated;
@@ -1693,6 +1695,8 @@ public class GameManager : MonoBehaviour
           NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
         if (GameManager.AuthenticateTwitchDrop20() && DataManager.ActivateTwitchDrop20())
           NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
+        if (GameManager.AuthenticateSupportStreamer() && DataManager.ActivateSupportStreamer())
+          NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
       }
       System.Action dlCsAuthenticated = this.OnDLCsAuthenticated;
       if (dlCsAuthenticated == null)
@@ -1818,6 +1822,8 @@ public class GameManager : MonoBehaviour
       if (GameManager.AuthenticateTwitchDrop19() && DataManager.ActivateTwitchDrop19())
         NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
       if (GameManager.AuthenticateTwitchDrop20() && DataManager.ActivateTwitchDrop20())
+        NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
+      if (GameManager.AuthenticateSupportStreamer() && DataManager.ActivateSupportStreamer())
         NotificationCentre.Instance.PlayTwitchNotification("Notifications/Twitch/ReceivedDropDecoration");
     }
     System.Action dlCsAuthenticated = this.OnDLCsAuthenticated;

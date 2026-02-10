@@ -2,7 +2,7 @@
 <Project>
     <PropertyGroup>
         <Description>$(MSBuildProjectName)</Description>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net481</TargetFramework>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -34,7 +34,7 @@
     </ItemDefinitionGroup>
 
     <ItemGroup>
-        <PackageReference Include="Resource.Embedder" Version="2.2.0" />
+        <PackageReference Include="Resource.Embedder" Version="2.3.1" />
     </ItemGroup>
 
     <!-- BepInEx framework references -->

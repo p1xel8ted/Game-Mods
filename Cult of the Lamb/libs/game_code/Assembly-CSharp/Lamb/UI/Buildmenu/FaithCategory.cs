@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.BuildMenu.FaithCategory
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -23,26 +23,37 @@ public class FaithCategory : BuildMenuCategory
   [Header("Counts")]
   [SerializeField]
   public TextMeshProUGUI _unlocked;
+  [SerializeField]
+  public TextMeshProUGUI _sinUnlocked;
 
   public override void Populate()
   {
     this.Populate(FaithCategory.AllStructures(), this._content);
     this.Populate(FaithCategory.SinStructures(), this._SinContent);
-    this.SetUnlockedText(this._unlocked);
+    this.SetUnlockedText(this._unlocked, FaithCategory.Category.General);
+    this.SetUnlockedText(this._sinUnlocked, FaithCategory.Category.Sin);
   }
 
-  public void SetUnlockedText(TextMeshProUGUI target)
+  public void SetUnlockedText(TextMeshProUGUI target, FaithCategory.Category category)
   {
     int num = 0;
-    List<StructureBrain.TYPES> typesList = FaithCategory.AllStructures();
-    typesList.AddRange((IEnumerable<StructureBrain.TYPES>) FaithCategory.SinStructures());
-    foreach (StructureBrain.TYPES Types in typesList)
+    List<StructureBrain.TYPES> structuresForCategory = this.GetStructuresForCategory(category);
+    if (structuresForCategory == null)
+      return;
+    foreach (StructureBrain.TYPES Types in structuresForCategory)
     {
       if (StructuresData.GetUnlocked(Types))
         ++num;
     }
-    string str = LocalizeIntegration.ReverseText($"{num}/{typesList.Count}");
+    string str = LocalizeIntegration.ReverseText($"{num}/{structuresForCategory.Count}");
     target.text = string.Format(ScriptLocalization.UI.Collected, (object) str);
+  }
+
+  public List<StructureBrain.TYPES> GetStructuresForCategory(FaithCategory.Category category)
+  {
+    if (category == FaithCategory.Category.General)
+      return FaithCategory.AllStructures();
+    return category == FaithCategory.Category.Sin ? FaithCategory.SinStructures() : (List<StructureBrain.TYPES>) null;
   }
 
   public static List<StructureBrain.TYPES> AllStructures()
@@ -77,5 +88,11 @@ public class FaithCategory : BuildMenuCategory
       StructureBrain.TYPES.DRUM_CIRCLE,
       StructureBrain.TYPES.DAYCARE
     };
+  }
+
+  public enum Category
+  {
+    General,
+    Sin,
   }
 }

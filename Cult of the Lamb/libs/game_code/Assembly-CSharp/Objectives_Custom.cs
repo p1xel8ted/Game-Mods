@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Objectives_Custom
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -119,6 +119,8 @@ public class Objectives_Custom : ObjectivesData
       this.Failed();
     if (this.CustomQuestType == Objectives.CustomQuestTypes.ReturnLastLambGhosts)
       return DataManager.Instance.NPCGhostGeneric7Rescued && DataManager.Instance.NPCGhostGeneric8Rescued && DataManager.Instance.NPCGhostGeneric9Rescued && DataManager.Instance.NPCGhostGeneric10Rescued && DataManager.Instance.NPCGhostRancherRescued && DataManager.Instance.NPCGhostTarotRescued && DataManager.Instance.NPCGhostGraveyardRescued && DataManager.Instance.NPCGhostDecoRescued && DataManager.Instance.NPCGhostFlockadeRescued && DataManager.Instance.NPCGhostBlacksmithRescued;
+    if (this.CustomQuestType == Objectives.CustomQuestTypes.BuildGoodSnowman)
+      this.TargetFollowerID = -1;
     if (this.IsFailed)
       return false;
     if (this.ResultFollowerID == this.TargetFollowerID)

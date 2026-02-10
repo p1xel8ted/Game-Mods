@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_SnowballFight
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -146,12 +146,15 @@ public class FollowerTask_SnowballFight : FollowerTask
           if ((UnityEngine.Object) this.targetFollower != (UnityEngine.Object) null && (!FollowerManager.FollowerLocked(this.targetFollower.Brain.Info.ID) || this.ignoreLockedFollower) && (this.targetFollower.Brain.CurrentTask == null || !this.targetFollower.Brain.CurrentTask.BlockSocial || this.ignoreLockedFollower))
           {
             this.follower.FacePosition(this.targetFollower.transform.position);
-            this.targetFollower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_ManualControl());
+            if (this.targetFollower.State.CURRENT_STATE != StateMachine.State.CustomAnimation)
+              this.targetFollower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_ManualControl());
             GameManager.GetInstance().WaitForSeconds(0.766666651f, (System.Action) (() => this.ThrowSnowball()));
             GameManager.GetInstance().WaitForSeconds(0.9166666f, (System.Action) (() =>
             {
               this.targetFollower.SnowballHitFX.Play();
               AudioManager.Instance.PlayOneShot(this.snowballImpactUnit, this.targetFollower.transform.position);
+              if (this.targetFollower.State.CURRENT_STATE == StateMachine.State.CustomAnimation)
+                return;
               this.targetFollower.TimedAnimation(this.GetHitAnimation(), 2.33333325f, (System.Action) (() =>
               {
                 float num5 = UnityEngine.Random.value;
@@ -286,6 +289,8 @@ public class FollowerTask_SnowballFight : FollowerTask
   {
     this.targetFollower.SnowballHitFX.Play();
     AudioManager.Instance.PlayOneShot(this.snowballImpactUnit, this.targetFollower.transform.position);
+    if (this.targetFollower.State.CURRENT_STATE == StateMachine.State.CustomAnimation)
+      return;
     this.targetFollower.TimedAnimation(this.GetHitAnimation(), 2.33333325f, (System.Action) (() =>
     {
       float num = UnityEngine.Random.value;

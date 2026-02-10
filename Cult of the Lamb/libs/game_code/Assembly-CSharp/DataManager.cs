@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DataManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -4616,10 +4616,29 @@ public class DataManager
       this.HasAcceptedPilgrimPart2 = true;
     List<ObjectivesData> objectivesOfGroup = ObjectiveManager.GetAllObjectivesOfGroup("Objectives/GroupTitles/PilgrimsQuest");
     if (this.HasAcceptedPilgrimPart1 && !this.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99998, true) == null && objectivesOfGroup.Count == 0)
-      this.HasAcceptedPilgrimPart1 = false;
+    {
+      bool flag = false;
+      foreach (FollowerInfo followerInfo in this.Followers_Recruit)
+      {
+        if (followerInfo.ID == 99998)
+        {
+          flag = true;
+          break;
+        }
+      }
+      this.HasAcceptedPilgrimPart1 = flag;
+    }
     if (this.HasAcceptedPilgrimPart2 && !this.HasAcceptedPilgrimPart3 && FollowerInfo.GetInfoByID(99997, true) == null && FollowerInfo.GetInfoByID(99999, true) == null && this.PilgrimPart2TargetDay + 3 < TimeManager.CurrentDay)
     {
       bool flag = false;
+      foreach (FollowerInfo followerInfo in this.Followers_Recruit)
+      {
+        if (followerInfo.ID == 99997 || followerInfo.ID == 99997)
+        {
+          flag = true;
+          break;
+        }
+      }
       foreach (ObjectivesData objectivesData in objectivesOfGroup)
       {
         if (objectivesData is Objectives_FindFollower objectivesFindFollower && objectivesFindFollower.TargetLocation == FollowerLocation.Dungeon1_4)
@@ -4755,9 +4774,18 @@ public class DataManager
       ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Heket, 99991), true);
     if (DataManager.instance.GaveKallamarHealingQuest && !DataManager.instance.KallamarHealQuestCompleted && !ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Kallamar))
       ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Kallamar, 99992), true);
-    if (!DataManager.instance.GaveShamuraHealingQuest || DataManager.instance.ShamuraHealQuestCompleted || ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Shamura))
-      return;
-    ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Shamura, 99993), true);
+    if (DataManager.instance.GaveShamuraHealingQuest && !DataManager.instance.ShamuraHealQuestCompleted && !ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Shamura))
+      ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Shamura, 99993), true);
+    if (DataManager.instance.WinterServerity >= 2 && DataManager.instance.DLCUpgradeTreeSnowIncrement <= 0)
+    {
+      DataManager.instance.DLCUpgradeTreeSnowIncrement = 1;
+    }
+    else
+    {
+      if (DataManager.instance.WinterServerity < 4 || DataManager.instance.DLCUpgradeTreeSnowIncrement > 1)
+        return;
+      DataManager.instance.DLCUpgradeTreeSnowIncrement = 2;
+    }
   }
 
   public void AddToCompletedQuestHistory(ObjectivesDataFinalized finalizedData)

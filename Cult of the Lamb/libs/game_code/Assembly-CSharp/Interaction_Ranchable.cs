@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranchable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -3357,14 +3357,20 @@ label_6:
   {
     this.PlayPetVO();
     AudioManager.Instance.PlayOneShot("event:/dlc/animal/shared/pet", this.transform.position);
+    if (this.CurrentState == Interaction_Ranchable.State.Leashed)
+      this.DetatchLeash(false);
+    else if (this.CurrentState == Interaction_Ranchable.State.Riding)
+      this.EndRiding(false);
+    this.ClearPath();
     this.CurrentState = Interaction_Ranchable.State.Animating;
     this.spine.AnimationState.SetAnimation(0, "hit", false);
     this.spine.AnimationState.AddAnimation(0, this.idle_anim, true, 0.0f);
     GameManager.GetInstance().WaitForSeconds(1f, (System.Action) (() =>
     {
+      this.moveTimer = 0.0f;
       if (this.CurrentState != Interaction_Ranchable.State.Animating)
         return;
-      this.CurrentState = Interaction_Ranchable.State.Animating;
+      this.CheckBreakingOut();
     }));
   }
 
@@ -3500,9 +3506,10 @@ label_6:
   [CompilerGenerated]
   public void \u003CHitWithSnowball\u003Eb__253_0()
   {
+    this.moveTimer = 0.0f;
     if (this.CurrentState != Interaction_Ranchable.State.Animating)
       return;
-    this.CurrentState = Interaction_Ranchable.State.Animating;
+    this.CheckBreakingOut();
   }
 
   public enum State

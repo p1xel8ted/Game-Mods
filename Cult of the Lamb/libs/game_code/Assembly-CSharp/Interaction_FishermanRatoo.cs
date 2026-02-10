@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FishermanRatoo
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -86,10 +86,7 @@ public class Interaction_FishermanRatoo : Interaction
           break;
         default:
           if (ObjectiveManager.GroupExists("Objectives/GroupTitles/LegendaryDagger"))
-          {
             this.WinterInteraction.SetActive(true);
-            goto case 2;
-          }
           this.TraderInteraction.SetActive(true);
           goto case 2;
       }

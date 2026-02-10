@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIPlayerUpgradesMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -142,7 +142,10 @@ public class UIPlayerUpgradesMenuController : UIMenuBase
     if (!DoctrineUpgradeSystem.TrySermonsStillAvailable())
       this._ritualItem.SetMaxed();
     this._ritualItem.OnRitualItemSelected += new Action<UpgradeSystem.Type>(this.RitualItemSelected);
-    this._crownHeader.gameObject.SetActive(!DataManager.Instance.SurvivalModeActive);
+    bool flag = !DataManager.Instance.SurvivalModeActive;
+    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MONSTER_HEART) >= 1 && DataManager.Instance.BeatenYngya && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_WinterChoice) || UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_WinterChoice))
+      flag = true;
+    this._crownHeader.gameObject.SetActive(flag);
     this._crownContainer.gameObject.SetActive(!DataManager.Instance.SurvivalModeActive);
     this._customiseFleeceButton.gameObject.SetActive(false);
     MonoSingleton<UINavigatorNew>.Instance.OnSelectionChanged += new Action<Selectable, Selectable>(this.OnSelectionChanged);

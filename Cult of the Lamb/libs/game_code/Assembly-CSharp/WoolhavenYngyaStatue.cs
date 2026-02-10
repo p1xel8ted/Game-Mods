@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WoolhavenYngyaStatue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -977,7 +977,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     yield return (object) new WaitForSeconds(1f);
     yield return (object) DLCMap.ClearRotRoutine();
     yield return (object) woolhavenYngyaStatue.StartCoroutine((IEnumerator) WoolhavenYngyaStatue.FadeIn());
-    woolhavenYngyaStatue.SetYngyaSkin(WoolhavenYngyaStatue.YngyaRotSkin.Flowers, WoolhavenYngyaStatue.YngyaBellSkin.NoRot);
+    woolhavenYngyaStatue.SetYngyaSkin(WoolhavenYngyaStatue.YngyaRotSkin.Flowers, woolhavenYngyaStatue.ExpectedYngyaBellSkinIndex());
     woolhavenYngyaStatue.UpdateAmbientLoop(WoolhavenYngyaStatue.YngyaRotSkin.Flowers);
     woolhavenYngyaStatue.ghostNPCCircleContainer.gameObject.SetActive(false);
     woolhavenYngyaStatue.yngyaStatueSpriteFlowers.gameObject.SetActive(false);

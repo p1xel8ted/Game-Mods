@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.AltarMenu.UIAltarMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -61,8 +61,13 @@ public class UIAltarMenuController : UIMenuBase
     this._doctrineButton.gameObject.SetActive(DoctrineUpgradeSystem.GetLevelBySermon(SermonCategory.Afterlife) > 0 || DoctrineUpgradeSystem.GetLevelBySermon(SermonCategory.Food) > 0 || DoctrineUpgradeSystem.GetLevelBySermon(SermonCategory.Possession) > 0 || DoctrineUpgradeSystem.GetLevelBySermon(SermonCategory.LawAndOrder) > 0 || DoctrineUpgradeSystem.GetLevelBySermon(SermonCategory.WorkAndWorship) > 0 || DataManager.Instance.PleasureDoctrineEnabled && DoctrineUpgradeSystem.GetLevelBySermon(SermonCategory.Pleasure) > 0 || DataManager.Instance.WinterDoctrineEnabled && DoctrineUpgradeSystem.GetLevelBySermon(SermonCategory.Winter) > 0);
     this._ritualsButton.gameObject.SetActive(UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FirePit) || UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Brainwashing));
     this._ugpradeAlert.SetActive(false);
-    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MONSTER_HEART) >= 1 && (!UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_Eat) || !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_BlackHeart) || !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_Resurrection) || !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_TeleportHome) || DataManager.Instance.BeatenYngya && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_WinterChoice)))
-      this._ugpradeAlert.SetActive(true);
+    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MONSTER_HEART) >= 1)
+    {
+      if ((!UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_Eat) || !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_BlackHeart) || !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_Resurrection) || !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_TeleportHome)) && !DataManager.Instance.SurvivalModeActive)
+        this._ugpradeAlert.SetActive(true);
+      if (DataManager.Instance.BeatenYngya && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_WinterChoice))
+        this._ugpradeAlert.SetActive(true);
+    }
     if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.TALISMAN) >= 1)
       this._ugpradeAlert.SetActive(true);
     if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.DOCTRINE_STONE) >= 1 && (double) UpgradeSystem.GetCoolDownNormalised(UpgradeSystem.PrimaryRitual1) <= 0.0 && DoctrineUpgradeSystem.TrySermonsStillAvailable())

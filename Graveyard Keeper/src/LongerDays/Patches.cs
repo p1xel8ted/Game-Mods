@@ -30,12 +30,9 @@ public static class Patches
         {
             if (instruction.opcode == OpCodes.Call && instruction.OperandIs(time))
             {
-                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Patches), nameof(GetTime)));
+                instruction.operand = AccessTools.Method(typeof(Patches), nameof(GetTime));
             }
-            else
-            {
-                yield return instruction;
-            }
+            yield return instruction;
         }
     }
 

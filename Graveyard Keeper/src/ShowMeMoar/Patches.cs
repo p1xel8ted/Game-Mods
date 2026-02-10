@@ -171,26 +171,59 @@ public static class Patches
     {
         var codes = instructions.ToList();
         var getColumns = AccessTools.Method(typeof(Patches), nameof(GetFogColumns));
+        var borderXField = AccessTools.Field(typeof(FogObject), nameof(FogObject.BORDER_X));
         var replaced = false;
 
-        for (var i = 0; i < codes.Count; i++)
+        // Find the first ldsfld BORDER_X — this anchors us to the X wrapping check:
+        //   (double) tile_pos.x > 6.0 - (double) BORDER_X
+        // The constant 6 appears a few instructions before as ldc.i4.6, ldc.r4, or ldc.r8
+        // depending on compiler. Walk backward to find it.
+        for (var i = 0; i < codes.Count && !replaced; i++)
         {
-            // Replace ldc.r8 6.0 (the wrapping boundary for X) with call GetFogColumns()
-            if (!replaced && codes[i].opcode == OpCodes.Ldc_R8 && codes[i].operand is double d && Math.Abs(d - 6.0) < 0.001)
+            if (codes[i].opcode != OpCodes.Ldsfld || !ReferenceEquals(codes[i].operand, borderXField)) continue;
+
+            for (var j = i - 1; j >= Math.Max(0, i - 3); j--)
             {
-                codes[i].opcode = OpCodes.Call;
-                codes[i].operand = getColumns;
+                if (!IsLoadSix(codes[j])) continue;
+
+                var wasDouble = codes[j].opcode == OpCodes.Ldc_R8;
+                codes[j].opcode = OpCodes.Call;
+                codes[j].operand = getColumns;
+
+                // GetFogColumns() returns double. If the original was ldc.i4.6 or ldc.r4,
+                // there's a conv.r8 between the load and ldsfld BORDER_X — nop it.
+                if (!wasDouble)
+                {
+                    for (var k = j + 1; k < i; k++)
+                    {
+                        if (codes[k].opcode != OpCodes.Conv_R8) continue;
+                        codes[k].opcode = OpCodes.Nop;
+                        break;
+                    }
+                }
+
                 replaced = true;
                 Plugin.Log.LogInfo("Fog wrapping boundary patched for ultrawide.");
+                break;
             }
         }
 
         if (!replaced)
         {
-            Plugin.Log.LogWarning("Failed to find fog wrapping boundary instruction (ldc.r8 6.0) in FogObject.Update.");
+            Plugin.Log.LogWarning("Failed to find fog wrapping boundary near ldsfld BORDER_X in FogObject.Update.");
         }
 
         return codes;
+
+        bool IsLoadSix(CodeInstruction ci)
+        {
+            if (ci.opcode == OpCodes.Ldc_R8 && ci.operand is double d && Math.Abs(d - 6.0) < 0.001) return true;
+            if (ci.opcode == OpCodes.Ldc_R4 && ci.operand is float f && Math.Abs(f - 6.0f) < 0.001f) return true;
+            if (ci.opcode == OpCodes.Ldc_I4_6) return true;
+            if (ci.opcode == OpCodes.Ldc_I4 && ci.operand is int n && n == 6) return true;
+            if (ci.opcode == OpCodes.Ldc_I4_S && ci.operand is sbyte s && s == 6) return true;
+            return false;
+        }
     }
 
     private class AnimatorScaler : MonoBehaviour

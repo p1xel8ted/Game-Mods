@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Flockade
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -190,6 +190,8 @@ public class Interaction_Flockade : Interaction
     bool opponentCancelled = false;
     DataManager.Instance.HasNewFlockadePieces = false;
     GameManager.GetInstance().OnConversationNew();
+    while (interactionFlockade.isLoadingAssets)
+      yield return (object) null;
     List<FlockadeOpponentConfiguration> opponentConfigurationList;
     PooledObject<List<FlockadeOpponentConfiguration>> pooledObject = CollectionPool<List<FlockadeOpponentConfiguration>, FlockadeOpponentConfiguration>.Get(out opponentConfigurationList);
     bool flag;
@@ -238,18 +240,18 @@ public class Interaction_Flockade : Interaction
       else
       {
         yield return (object) interactionFlockade.ContinueToFlockade();
-        goto label_16;
+        goto label_17;
       }
-      goto label_15;
+      goto label_18;
     }
     finally
     {
       pooledObject.Dispose();
     }
-label_16:
+label_17:
     pooledObject = new PooledObject<List<FlockadeOpponentConfiguration>>();
     yield break;
-label_15:
+label_18:
     return flag;
   }
 
@@ -320,13 +322,13 @@ label_15:
     interactionFlockade.HasChanged = true;
     bool firstFlockadeGame = !DataManager.Instance.FlockadePlayed;
     DataManager.Instance.FlockadePlayed = true;
+    if ((UnityEngine.Object) interactionFlockade._jobBoard == (UnityEngine.Object) null)
+      interactionFlockade._jobBoard = UnityEngine.Object.FindObjectOfType<FlockadeJobBoardManager>(true);
+    interactionFlockade._jobBoard.Reveal();
     Debug.Log((object) "Flockade Game was Completed!");
     switch (result)
     {
       case FlockadeUIController.Result.Win:
-        if ((UnityEngine.Object) interactionFlockade._jobBoard == (UnityEngine.Object) null)
-          interactionFlockade._jobBoard = UnityEngine.Object.FindObjectOfType<FlockadeJobBoardManager>(true);
-        interactionFlockade._jobBoard.Reveal();
         if (!DataManager.Instance.GetVariable(interactionFlockade._currentOpponent.Config.NpcConfiguration.VariableToChangeOnWin))
         {
           if ((UnityEngine.Object) interactionFlockade._currentOpponent.FirstWinConversation != (UnityEngine.Object) null)
@@ -363,16 +365,30 @@ label_15:
       case FlockadeUIController.Result.Loss:
         interactionFlockade.enabled = false;
         Debug.Log((object) "Settling Wool Bet.");
-        yield return (object) interactionFlockade.GiveWool(false);
+        if (interactionFlockade._betAmount > 0)
+          yield return (object) interactionFlockade.GiveWool(false);
+        ObjectiveManager.CheckObjectives(Objectives.TYPES.WIN_FLOCKADE_BET);
         Debug.Log((object) "Show Lose Convo");
         interactionFlockade._currentOpponent.LoseConversation.gameObject.SetActive(true);
         interactionFlockade._currentOpponent.LoseConversation.Play(interactionFlockade.playerFarming.gameObject);
         while (!interactionFlockade._currentOpponent.LoseConversation.Finished)
           yield return (object) null;
+        if (!DataManager.Instance.GetVariable(interactionFlockade._currentOpponent.Config.NpcConfiguration.VariableToChangeOnWin))
+        {
+          yield return (object) interactionFlockade.GiveRewardRoutine(interactionFlockade._currentOpponent.Spine.transform.position + Vector3.back);
+          DataManager.Instance.SetVariable(interactionFlockade._currentOpponent.Config.NpcConfiguration.VariableToChangeOnWin, true);
+        }
         interactionFlockade.enabled = true;
         break;
       default:
         interactionFlockade.enabled = true;
+        ObjectiveManager.CheckObjectives(Objectives.TYPES.WIN_FLOCKADE_BET);
+        if (!DataManager.Instance.GetVariable(interactionFlockade._currentOpponent.Config.NpcConfiguration.VariableToChangeOnWin))
+        {
+          yield return (object) interactionFlockade.GiveRewardRoutine(interactionFlockade._currentOpponent.Spine.transform.position + Vector3.back);
+          DataManager.Instance.SetVariable(interactionFlockade._currentOpponent.Config.NpcConfiguration.VariableToChangeOnWin, true);
+          break;
+        }
         break;
     }
     if (firstFlockadeGame && (UnityEngine.Object) interactionFlockade._firstGameConversation != (UnityEngine.Object) null)
@@ -423,7 +439,7 @@ label_15:
 
   public IEnumerator GiveRewardRoutine(Vector3 fromPosition)
   {
-    if (this._currentOpponent.Config.NpcConfiguration.RewardPieces.Count != 0)
+    if (this._currentOpponent.Config.NpcConfiguration.RewardPieces.Count != 0 && !DataManager.Instance.PlayerFoundPieces.Contains(this._currentOpponent.Config.NpcConfiguration.RewardPieces[0]))
       yield return (object) this.GiveFlockadePieces(this._currentOpponent.Config.NpcConfiguration.RewardPieces, fromPosition);
   }
 

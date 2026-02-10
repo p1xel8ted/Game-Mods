@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Fishing
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using EasyCurvedLine;
@@ -350,11 +350,14 @@ public class Interaction_Fishing : Interaction
         if (SettingsManager.Settings.Accessibility.AutoFish)
         {
           float num2 = Mathf.Abs((playerFarming.FishingLineBone.transform.position + Vector3.down * Mathf.Lerp(this.minMaxCastDistance.x, this.minMaxCastDistance.y, this.castingStrength[playerIndex])).y);
-          foreach (Component fishable in this.fishables)
+          foreach (Fishable fishable in this.fishables)
           {
-            float num3 = Mathf.Abs(fishable.transform.position.y);
-            if ((double) Mathf.Abs(num2 - num3) < 1.5)
-              this.CastLine(playerIndex);
+            if (fishable.gameObject.activeSelf)
+            {
+              float num3 = Mathf.Abs(fishable.transform.position.y);
+              if ((double) Mathf.Abs(num2 - num3) < 0.25)
+                this.CastLine(playerIndex);
+            }
           }
         }
         if ((double) this.castingStrength[playerIndex] >= 1.0)

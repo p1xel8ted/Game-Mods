@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.FollowerInteractionWheel.UIFollowerInteractionWheelOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -115,11 +115,14 @@ public class UIFollowerInteractionWheelOverlayController :
         allCommands.Sort((Comparison<CommandItem>) ((p1, p2) => p2.IsAvailable(this._follower).CompareTo(p1.IsAvailable(this._follower))));
       else if (this._animal != null)
         allCommands.Sort((Comparison<CommandItem>) ((p1, p2) => ((AnimalInteractionModel.AnimalCommandItem) p2).IsAvailable(this._animal).CompareTo(((AnimalInteractionModel.AnimalCommandItem) p1).IsAvailable(this._animal))));
+      int a = 7;
       List<List<CommandItem>> commandItemListList1 = new List<List<CommandItem>>();
       int count;
       for (int index = 0; index < allCommands.Count; index += count)
       {
-        count = Mathf.Min(7, allCommands.Count - index);
+        if (index > 0)
+          a = 6;
+        count = Mathf.Min(a, allCommands.Count - index);
         commandItemListList1.Add(allCommands.GetRange(index, count));
       }
       List<List<CommandItem>> commandItemListList2 = new List<List<CommandItem>>();

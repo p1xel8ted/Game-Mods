@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.JobBoardMenuItem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -99,6 +99,7 @@ public class JobBoardMenuItem : MonoBehaviour, IPoolListener
   public UIJobBoardMenuController \u003CJobBoardMenuController\u003Ek__BackingField;
   [CompilerGenerated]
   public bool \u003CIsDisabled\u003Ek__BackingField;
+  public ObjectivesData trackedObjective;
   public bool _oldTrackstate;
 
   public MMButton MMButton => this.button;
@@ -119,6 +120,11 @@ public class JobBoardMenuItem : MonoBehaviour, IPoolListener
   {
     get => this.\u003CCompleted\u003Ek__BackingField;
     set => this.\u003CCompleted\u003Ek__BackingField = value;
+  }
+
+  public string Text
+  {
+    get => this.trackedObjective == null ? this.Objective.Text : this.trackedObjective.Text;
   }
 
   public bool CompletedClaimedReward
@@ -268,15 +274,16 @@ public class JobBoardMenuItem : MonoBehaviour, IPoolListener
         this.SetDisabled();
       }
     }
-    ObjectivesData objective7 = (ObjectivesData) null;
-    jobBoardMenuController.TrackingObjective(this, out objective7, true, true);
-    if (objective7 != null)
+    jobBoardMenuController.TrackingObjective(this, out this.trackedObjective, true, true);
+    if (this.trackedObjective != null)
     {
-      if (objective7.IsComplete)
+      if (this.trackedObjective.IsComplete)
       {
         this.Completed = true;
         this.objectiveText.text = "<s>" + this.objectiveText.text;
       }
+      else
+        this.objectiveText.text = this.trackedObjective.Text;
     }
     else if (this.Objective != null && (ObjectiveManager.HasCompletedJobBoardObjective(this.Objective) || this.Objective.TryComplete()))
     {
@@ -285,9 +292,9 @@ public class JobBoardMenuItem : MonoBehaviour, IPoolListener
     }
     else if (active)
     {
-      ObjectivesDataFinalized objective8 = (ObjectivesDataFinalized) null;
-      jobBoardMenuController.CompletedObjective(this, out objective8);
-      if (objective8 != null)
+      ObjectivesDataFinalized objective7 = (ObjectivesDataFinalized) null;
+      jobBoardMenuController.CompletedObjective(this, out objective7);
+      if (objective7 != null)
       {
         this.Completed = true;
         this.objectiveText.text = "<s>" + this.objectiveText.text;

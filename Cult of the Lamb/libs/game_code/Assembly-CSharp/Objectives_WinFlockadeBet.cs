@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Objectives_WinFlockadeBet
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -47,7 +47,7 @@ public class Objectives_WinFlockadeBet : ObjectivesData
   {
     get
     {
-      return string.Format("Objectives/Flockade/WinBet".Localized(), (object) this.OpponentTermId.Localized(), (object) this.Count, (object) this.TargetWoolAmount);
+      return string.Format("Objectives/Flockade/WinBetFinal".Localized(), (object) this.TargetWoolAmount, (object) this.OpponentTermId.Localized(), (object) this.Count, (object) this.TargetWoolAmount);
     }
   }
 
@@ -83,7 +83,7 @@ public class Objectives_WinFlockadeBet : ObjectivesData
     FlockadeUIController.Result result)
   {
     Debug.Log((object) $"WinFlockadeBet has detected a flockade game played {{Opponent={opponentName}, ObjectiveOpponent={this.OpponentTermId}, WoolWagered={winnings}, Result={result}}}");
-    if (result != FlockadeUIController.Result.Win || opponentName != this.OpponentTermId || winnings <= 0)
+    if (opponentName != this.OpponentTermId || winnings <= 0)
       return;
     this.Count += winnings;
     Debug.Log((object) $"Count is now {this.Count}, Target={this.TargetWoolAmount}");
@@ -117,7 +117,7 @@ public class Objectives_WinFlockadeBet : ObjectivesData
 
     public override string GetText()
     {
-      return string.Format("Objectives/Flockade/WinBetFinal".Localized(), (object) this.WoolAmount, (object) this.OpponentTermId.Localized());
+      return string.Format("Objectives/Flockade/WinBetFinal".Localized(), (object) this.WoolAmount, (object) this.OpponentTermId.Localized(), (object) this.WoolAmount, (object) this.WoolAmount);
     }
   }
 }

@@ -1,12 +1,13 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SpriteXPBar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 67F01238-B454-48B8-93E4-17A603153F10
+// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
+using System;
 using UnityEngine;
 
 #nullable disable
@@ -34,52 +35,58 @@ public class SpriteXPBar : MonoBehaviour
 
   public void UpdateBar(float value)
   {
-    this.lessValue = (double) value < (double) this._value;
-    this._value = value;
-    this.XPBar.DOComplete();
-    this.XPBar.DOKill();
-    this.ProgressBar.DOKill();
-    this.ProgressBar.transform.DOKill();
-    this.ProgressBar.transform.DOScaleX(this._value, 0.0f);
-    this.ProgressBarTmpFill.DOKill();
-    this.ProgressBarTmpFill.transform.DOKill();
-    this.ProgressBarTmpFill.transform.DOScaleX(this._value, 0.0f);
-    if (!this.hidden)
+    try
     {
-      this.ProgressBar.DOFade(1f, 0.0f);
-      this.ProgressBarTmpFill.DOFade(1f, 0.0f);
-    }
-    if ((double) value <= 0.0)
-    {
-      this.ProgressBarTmpFill.transform.DOScaleX(0.0f, 0.1f);
-      this.ProgressBar.transform.DOScaleX(0.0f, 0.1f);
-      if (this.HideOnEmpty)
-        this.Hide();
-      this.hidden = true;
-    }
-    else
-    {
-      if (this.hidden || this.SpriteRenderers != null && this.SpriteRenderers.Length != 0 && (double) this.SpriteRenderers[0].color.a == 0.0)
+      this.lessValue = (double) value < (double) this._value;
+      this._value = value;
+      this.XPBar.DOComplete();
+      this.XPBar.DOKill();
+      this.ProgressBar.DOKill();
+      this.ProgressBar.transform.DOKill();
+      this.ProgressBar.transform.DOScaleX(this._value, 0.0f);
+      this.ProgressBarTmpFill.DOKill();
+      this.ProgressBarTmpFill.transform.DOKill();
+      this.ProgressBarTmpFill.transform.DOScaleX(this._value, 0.0f);
+      if (!this.hidden)
       {
-        this.Show();
-        this.hidden = false;
+        this.ProgressBar.DOFade(1f, 0.0f);
+        this.ProgressBarTmpFill.DOFade(1f, 0.0f);
       }
-      this.XPBar.DOPunchRotation(Vector3.back * 10f, 0.5f).SetEase<Tweener>(Ease.OutBounce);
-      if ((double) this._value >= 1.0)
+      if ((double) value <= 0.0)
       {
-        this.ProgressBar.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
-        this.ProgressBar.DOColor(this.fullColor, 1f);
-      }
-      else if (!this.lessValue)
-      {
-        this.ProgressBarTmpFill.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
-        this.ProgressBar.transform.DOScaleX(value, 1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart).SetDelay<TweenerCore<Vector3, Vector3, VectorOptions>>(1f);
+        this.ProgressBarTmpFill.transform.DOScaleX(0.0f, 0.1f);
+        this.ProgressBar.transform.DOScaleX(0.0f, 0.1f);
+        if (this.HideOnEmpty)
+          this.Hide();
+        this.hidden = true;
       }
       else
       {
-        this.ProgressBarTmpFill.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
-        this.ProgressBar.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
+        if (this.hidden || this.SpriteRenderers != null && this.SpriteRenderers.Length != 0 && (double) this.SpriteRenderers[0].color.a == 0.0)
+        {
+          this.Show();
+          this.hidden = false;
+        }
+        this.XPBar.DOPunchRotation(Vector3.back * 10f, 0.5f).SetEase<Tweener>(Ease.OutBounce);
+        if ((double) this._value >= 1.0)
+        {
+          this.ProgressBar.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
+          this.ProgressBar.DOColor(this.fullColor, 1f);
+        }
+        else if (!this.lessValue)
+        {
+          this.ProgressBarTmpFill.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
+          this.ProgressBar.transform.DOScaleX(value, 1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart).SetDelay<TweenerCore<Vector3, Vector3, VectorOptions>>(1f);
+        }
+        else
+        {
+          this.ProgressBarTmpFill.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
+          this.ProgressBar.transform.DOScaleX(value, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
+        }
       }
+    }
+    catch (Exception ex)
+    {
     }
   }
 
