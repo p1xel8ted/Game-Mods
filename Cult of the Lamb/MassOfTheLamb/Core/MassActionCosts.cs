@@ -1,8 +1,6 @@
-using System.Runtime.CompilerServices;
-using CultOfQoL.Patches.Followers;
-using CultOfQoL.Patches.Systems;
+using MassOfTheLamb.Patches;
 
-namespace CultOfQoL.Core;
+namespace MassOfTheLamb.Core;
 
 internal static class MassActionCosts
 {
@@ -106,7 +104,7 @@ internal static class MassActionCosts
                 Follower.Followers.Count(f => FollowerCommandItems.Kiss().IsAvailable(f) && !FollowerManager.IsChild(f.Brain.Info.ID)),
 
             FollowerCommands.PetDog or FollowerCommands.PetFollower when Plugin.MassPetFollower.Value =>
-                Follower.Followers.Count(f => FollowerCommandItems.PetDog().IsAvailable(f) && FollowerPatches.CanBePetted(f)),
+                Follower.Followers.Count(f => FollowerCommandItems.PetDog().IsAvailable(f) && MassFollowerPatches.CanBePetted(f)),
 
             FollowerCommands.Bully when Plugin.MassBully.Value =>
                 Follower.Followers.Count(f => FollowerCommandItems.Bully().IsAvailable(f)),
@@ -130,7 +128,7 @@ internal static class MassActionCosts
             FollowerCommands.Harvest when Plugin.MassShearAnimals.Value =>
                 Interaction_Ranchable.Ranchables.Count(a => a && !a.Animal.WorkedToday && a.Animal.WorkedReady),
 
-            _ when FastCollectingPatches.FeedCommands.Contains(cmd) && Plugin.MassFeedAnimals.Value =>
+            _ when MassAnimalPatches.FeedCommands.Contains(cmd) && Plugin.MassFeedAnimals.Value =>
                 Interaction_Ranchable.Ranchables.Count(a => a && !a.Animal.EatenToday),
 
             _ => 0
@@ -140,7 +138,6 @@ internal static class MassActionCosts
     /// <summary>
     /// Returns a cost preview string for display in the command wheel description,
     /// or null if the command isn't a mass action or preview is disabled.
-    /// Called every frame for the highlighted wheel item via GetDescription() postfix.
     /// </summary>
     internal static string GetCostPreviewText(FollowerCommands cmd)
     {

@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>0.1.0</Version>
+        <ThunderstoreDir>massofthelamb</ThunderstoreDir>
+    </PropertyGroup>
+    <ItemGroup>
+      <Reference Include="DOTween">
+        <HintPath>..\libs\DOTween.dll</HintPath>
+      </Reference>
+      <Reference Include="DOTween.Modules">
+        <HintPath>..\libs\DOTween.Modules.dll</HintPath>
+      </Reference>
+      <Reference Include="FMODUnity">
+        <HintPath>..\libs\FMODUnity.dll</HintPath>
+      </Reference>
+      <Reference Include="Sirenix.OdinInspector.Attributes">
+        <HintPath>..\libs\Sirenix.OdinInspector.Attributes.dll</HintPath>
+      </Reference>
+      <Reference Include="Sirenix.Serialization">
+        <HintPath>..\libs\Sirenix.Serialization.dll</HintPath>
+      </Reference>
+      <Reference Include="spine-unity">
+        <HintPath>..\libs\spine-unity.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.TextMeshPro">
+        <HintPath>..\libs\Unity.TextMeshPro.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AnimationModule">
+        <HintPath>..\libs\UnityEngine.AnimationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AudioModule">
+        <HintPath>..\libs\UnityEngine.AudioModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.InputLegacyModule">
+        <HintPath>..\libs\UnityEngine.InputLegacyModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.ParticleSystemModule">
+        <HintPath>..\libs\UnityEngine.ParticleSystemModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Physics2DModule">
+        <HintPath>..\libs\UnityEngine.Physics2DModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PhysicsModule">
+        <HintPath>..\libs\UnityEngine.PhysicsModule.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="..\Shared\ConfigurationManagerAttributes.cs">
+        <Link>Util\ConfigurationManagerAttributes.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\Extensions.cs">
+        <Link>Util\Extensions.cs</Link>
+      </Compile>
+      <Compile Include="..\Shared\PopupManager.cs">
+        <Link>Core\PopupManager.cs</Link>
+      </Compile>
+    </ItemGroup>
+</Project>

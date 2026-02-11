@@ -1,0 +1,10 @@
+{
+    "name":  "Mass_of_the_Lamb",
+    "version_number":  "0.1.0",
+    "website_url":  "https://thunderstore.io/c/cult-of-the-lamb/",
+    "description":  "Standalone mass action mod extracted from Cult of QoL: mass follower commands, farm actions, animal actions, structure mass fill, mass collect, and configurable action costs with previews.",
+    "dependencies":  [
+                         "BepInEx-BepInExPack_CultOfTheLamb-5.4.2101",
+                         "p1xel8ted-BepInEx_Configuration_Manager-18.4.1"
+                     ]
+}

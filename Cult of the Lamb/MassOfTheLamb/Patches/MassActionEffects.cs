@@ -1,6 +1,6 @@
-using CultOfQoL.Core;
+using MassOfTheLamb.Core;
 
-namespace CultOfQoL.Patches.Followers;
+namespace MassOfTheLamb.Patches;
 
 /// <summary>
 /// Direct-effect implementations for mass actions.
