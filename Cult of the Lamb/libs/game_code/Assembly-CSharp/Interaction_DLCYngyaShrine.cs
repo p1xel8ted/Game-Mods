@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCYngyaShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -103,6 +103,8 @@ public class Interaction_DLCYngyaShrine : Interaction
     }
     this.StatueFlash.FlashWhite(false, 0.0f);
     this.BellFlash.FlashWhite(false, 0.0f);
+    if (!DataManager.Instance.OnboardedRotstoneDungeon && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MAGMA_STONE) > 0)
+      DataManager.Instance.OnboardedRotstoneDungeon = true;
     this.winterRevealedConvo.gameObject.SetActive(!UpgradeSystem.GetUnlocked(UpgradeSystem.Type.WinterSystem) && DataManager.Instance.OnboardedRotstoneDungeon);
     this.winterRevealedConvo.Callback.RemoveAllListeners();
     this.winterRevealedConvo.Callback.AddListener((UnityAction) (() => WoolhavenYngyaStatue.PlayWinterIncrementGlobal(true)));

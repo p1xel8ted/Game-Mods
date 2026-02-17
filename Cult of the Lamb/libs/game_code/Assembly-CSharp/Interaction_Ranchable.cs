@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranchable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -2770,6 +2770,7 @@ public class Interaction_Ranchable : Interaction
 
   public void ClearPath()
   {
+    this.targetTrough = (Structures_RanchTrough) null;
     this.unitObject.ClearPaths();
     if (this.CurrentState == Interaction_Ranchable.State.Dead)
       return;
@@ -3201,7 +3202,7 @@ label_6:
     base.IndicateHighlighted(playerFarming);
     this.CacheSpeed = this.unitObject.maxSpeed;
     this.unitObject.maxSpeed = 0.0f;
-    if (this.animal.State == Interaction_Ranchable.State.Dead)
+    if (this.animal.State == Interaction_Ranchable.State.Dead || this.animal.State == Interaction_Ranchable.State.Riding || this.animal.State == Interaction_Ranchable.State.Leashed)
       return;
     this.adorationUI.Show();
   }

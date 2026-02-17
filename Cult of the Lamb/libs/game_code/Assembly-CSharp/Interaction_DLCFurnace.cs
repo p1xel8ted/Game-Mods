@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCFurnace
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -170,18 +170,30 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
 
   public void Start()
   {
-    if (DataManager.Instance.OnboardedRotstone)
+    if (!DataManager.Instance.OnboardedRotstone)
+    {
+      if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MAGMA_STONE) > 0)
+      {
+        ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/WarmCult", Objectives.CustomQuestTypes.LightFurnace), true, true);
+      }
+      else
+      {
+        DataManager.Instance.OnboardedAddFuelToFurnace = true;
+        ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/InteractYngyaShrine", Objectives.CustomQuestTypes.InteractYngyaShrine), true, true);
+      }
+      DataManager.Instance.OnboardedRotstone = true;
+    }
+    if (DataManager.Instance.ShowCultWarmth || SeasonsManager.CurrentSeason != SeasonsManager.Season.Winter)
       return;
-    if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MAGMA_STONE) > 0)
-    {
-      ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/WarmCult", Objectives.CustomQuestTypes.LightFurnace), true, true);
-    }
-    else
-    {
-      DataManager.Instance.OnboardedAddFuelToFurnace = true;
-      ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/InteractYngyaShrine", Objectives.CustomQuestTypes.InteractYngyaShrine), true, true);
-    }
-    DataManager.Instance.OnboardedRotstone = true;
+    this.StartCoroutine((IEnumerator) this.OnboardWarmthBar());
+  }
+
+  public IEnumerator OnboardWarmthBar()
+  {
+    while ((UnityEngine.Object) WarmthBar.Instance == (UnityEngine.Object) null || (UnityEngine.Object) PlayerFarming.Instance == (UnityEngine.Object) null || PlayerFarming.Location != FollowerLocation.Base || LetterBox.IsPlaying || MMTransition.IsPlaying || PlayerFarming.Instance.state.CURRENT_STATE != StateMachine.State.Idle && PlayerFarming.Instance.state.CURRENT_STATE != StateMachine.State.Moving && PlayerFarming.Instance.state.CURRENT_STATE != StateMachine.State.Idle_Winter && PlayerFarming.Instance.state.CURRENT_STATE != StateMachine.State.Moving_Winter)
+      yield return (object) null;
+    WarmthBar.Instance.Reveal();
+    DataManager.Instance.ShowCultWarmth = true;
   }
 
   public override void OnEnable()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DataManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -4610,57 +4610,96 @@ public class DataManager
       DataManager.UnlockRelic(RelicType.HealPerFollower_Dammed);
       DataManager.UnlockRelic(RelicType.DestroyTarotGainBuff_Dammed);
     }
+    bool flag1 = false;
     if (!this.HasAcceptedPilgrimPart1 && FollowerInfo.GetInfoByID(99998, true) != null)
       this.HasAcceptedPilgrimPart1 = true;
-    if (!this.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99997, true) != null && FollowerInfo.GetInfoByID(99999, true) != null)
-      this.HasAcceptedPilgrimPart2 = true;
-    List<ObjectivesData> objectivesOfGroup = ObjectiveManager.GetAllObjectivesOfGroup("Objectives/GroupTitles/PilgrimsQuest");
-    if (this.HasAcceptedPilgrimPart1 && !this.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99998, true) == null && objectivesOfGroup.Count == 0)
+    else if (!this.HasAcceptedPilgrimPart1)
     {
-      bool flag = false;
       foreach (FollowerInfo followerInfo in this.Followers_Recruit)
       {
         if (followerInfo.ID == 99998)
         {
-          flag = true;
+          this.HasAcceptedPilgrimPart1 = true;
           break;
         }
       }
-      this.HasAcceptedPilgrimPart1 = flag;
+    }
+    if (!this.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99997, true) != null && FollowerInfo.GetInfoByID(99999, true) != null)
+    {
+      flag1 = true;
+      this.HasAcceptedPilgrimPart2 = true;
+    }
+    else if (!this.HasAcceptedPilgrimPart2)
+    {
+      foreach (FollowerInfo followerInfo in this.Followers_Recruit)
+      {
+        if (followerInfo.ID == 99997 || followerInfo.ID == 99999)
+        {
+          flag1 = true;
+          this.HasAcceptedPilgrimPart2 = true;
+          break;
+        }
+      }
+    }
+    List<ObjectivesData> objectivesOfGroupId = ObjectiveManager.GetAllObjectivesOfGroupID("Objectives/GroupTitles/PilgrimsQuest");
+    if (this.HasAcceptedPilgrimPart1 && !this.HasAcceptedPilgrimPart2 && FollowerInfo.GetInfoByID(99998, true) == null && objectivesOfGroupId.Count == 0)
+    {
+      bool flag2 = false;
+      foreach (FollowerInfo followerInfo in this.Followers_Recruit)
+      {
+        if (followerInfo.ID == 99998)
+        {
+          flag2 = true;
+          break;
+        }
+      }
+      this.HasAcceptedPilgrimPart1 = flag2;
     }
     if (this.HasAcceptedPilgrimPart2 && !this.HasAcceptedPilgrimPart3 && FollowerInfo.GetInfoByID(99997, true) == null && FollowerInfo.GetInfoByID(99999, true) == null && this.PilgrimPart2TargetDay + 3 < TimeManager.CurrentDay)
     {
-      bool flag = false;
+      bool flag3 = false;
       foreach (FollowerInfo followerInfo in this.Followers_Recruit)
       {
-        if (followerInfo.ID == 99997 || followerInfo.ID == 99997)
+        if (followerInfo.ID == 99997 || followerInfo.ID == 99999)
         {
-          flag = true;
+          flag1 = true;
+          flag3 = true;
           break;
         }
       }
-      foreach (ObjectivesData objectivesData in objectivesOfGroup)
+      foreach (ObjectivesData objectivesData in objectivesOfGroupId)
       {
         if (objectivesData is Objectives_FindFollower objectivesFindFollower && objectivesFindFollower.TargetLocation == FollowerLocation.Dungeon1_4)
         {
-          flag = true;
+          flag3 = true;
           break;
         }
       }
-      this.HasAcceptedPilgrimPart2 = flag;
+      this.HasAcceptedPilgrimPart2 = flag3;
     }
     if (this.HasAcceptedPilgrimPart3 && PersistenceManager.PersistentData.RevealedJalalasBag && !PersistenceManager.PersistentData.UnlockedBonusComicPages && this.PilgrimPart3TargetDay + 3 < TimeManager.CurrentDay)
     {
-      bool flag = false;
-      foreach (ObjectivesData objectivesData in objectivesOfGroup)
+      bool flag4 = false;
+      foreach (ObjectivesData objectivesData in objectivesOfGroupId)
       {
         if (objectivesData is Objectives_Custom objectivesCustom && objectivesCustom.CustomQuestType == global::Objectives.CustomQuestTypes.FindJalalaBag)
         {
-          flag = true;
+          flag4 = true;
           break;
         }
       }
-      this.HasAcceptedPilgrimPart3 = flag;
+      this.HasAcceptedPilgrimPart3 = flag4;
+    }
+    if (objectivesOfGroupId.Count > 0 && this.HasAcceptedPilgrimPart2 & flag1)
+    {
+      foreach (ObjectivesData objective in objectivesOfGroupId)
+      {
+        if (objective is Objectives_FindFollower objectivesFindFollower && objectivesFindFollower.TargetLocation == FollowerLocation.Dungeon1_4 && !objective.IsComplete && !objective.IsFailed)
+        {
+          objective.IsComplete = true;
+          ObjectiveManager.UpdateObjective(objective);
+        }
+      }
     }
     if (UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FollowerWedding) || UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Wedding))
       UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Ritual_Divorce);
@@ -4676,6 +4715,8 @@ public class DataManager
         ++DataManager.Instance.PLAYER_HEALTH_MODIFIED;
       }
     }
+    if (!this.EnabledDLCMapHeart && this.BeatenWolf && this.BossesCompleted.Contains(FollowerLocation.Boss_Wolf) && !this.DiedToYngyaBoss && this.TotalShrineGhostJuice < 80 /*0x50*/ && this.WinterServerity >= 5 && this.NPCGhostRancherRescued && this.NPCGhostBlacksmithRescued && this.NPCGhostDecoRescued && this.NPCGhostFlockadeRescued && this.NPCGhostTarotRescued && this.NPCGhostGraveyardRescued && this.NPCGhostGeneric7Rescued && this.NPCGhostGeneric8Rescued && this.NPCGhostGeneric9Rescued && this.NPCGhostGeneric10Rescued && Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.YNGYA_GHOST) == 0 && !this.DLCDungeonNodesCompleted.Contains(14))
+      Inventory.AddItem(InventoryItem.ITEM_TYPE.YNGYA_GHOST, 80 /*0x50*/ - this.TotalShrineGhostJuice);
     int num = 0;
     if (DataManager.instance.UnlockedFleeces.Contains(1))
       ++num;
@@ -4703,22 +4744,22 @@ public class DataManager
     if (DataManager.instance.HasProducedChosenOne && FollowerInfo.GetInfoByID(100000, true) == null)
     {
       List<Structures_EggFollower> structuresOfType1 = StructureManager.GetAllStructuresOfType<Structures_EggFollower>();
-      bool flag1 = true;
+      bool flag5 = true;
       foreach (Structures_EggFollower structuresEggFollower in structuresOfType1)
       {
         if (structuresEggFollower != null && structuresEggFollower.Data != null && structuresEggFollower.Data.EggInfo != null && structuresEggFollower.Data.EggInfo.Traits != null && structuresEggFollower.Data.EggInfo.Traits.Contains(FollowerTrait.TraitType.ChosenOne))
-          flag1 = false;
+          flag5 = false;
       }
-      if (flag1)
+      if (flag5)
       {
         List<Structures_Hatchery> structuresOfType2 = StructureManager.GetAllStructuresOfType<Structures_Hatchery>();
-        bool flag2 = true;
+        bool flag6 = true;
         foreach (Structures_Hatchery structuresHatchery in structuresOfType2)
         {
           if (structuresHatchery != null && structuresHatchery.Data != null && structuresHatchery.Data.EggInfo != null && structuresHatchery.Data.EggInfo.Traits != null && structuresHatchery.Data.EggInfo.Traits.Contains(FollowerTrait.TraitType.ChosenOne))
-            flag2 = false;
+            flag6 = false;
         }
-        if (flag2)
+        if (flag6)
           DataManager.instance.HasProducedChosenOne = false;
       }
     }
@@ -4777,15 +4818,12 @@ public class DataManager
     if (DataManager.instance.GaveShamuraHealingQuest && !DataManager.instance.ShamuraHealQuestCompleted && !ObjectiveManager.HasCustomObjectiveOfType(global::Objectives.CustomQuestTypes.HealingBishop_Shamura))
       ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/HealingBishop", global::Objectives.CustomQuestTypes.HealingBishop_Shamura, 99993), true);
     if (DataManager.instance.WinterServerity >= 2 && DataManager.instance.DLCUpgradeTreeSnowIncrement <= 0)
-    {
       DataManager.instance.DLCUpgradeTreeSnowIncrement = 1;
-    }
-    else
-    {
-      if (DataManager.instance.WinterServerity < 4 || DataManager.instance.DLCUpgradeTreeSnowIncrement > 1)
-        return;
+    else if (DataManager.instance.WinterServerity >= 4 && DataManager.instance.DLCUpgradeTreeSnowIncrement <= 1)
       DataManager.instance.DLCUpgradeTreeSnowIncrement = 2;
-    }
+    if (DataManager.instance.ShowCultFaith || !StructuresData.HasTemple())
+      return;
+    DataManager.instance.ShowCultFaith = true;
   }
 
   public void AddToCompletedQuestHistory(ObjectivesDataFinalized finalizedData)

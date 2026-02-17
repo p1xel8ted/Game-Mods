@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBatBurp
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -425,6 +425,11 @@ label_22:
     int amount = (int) UnityEngine.Random.Range(enemyBatBurp.flyAcrossScreenAmount.x, enemyBatBurp.flyAcrossScreenAmount.y + 1f) + 1;
     for (int i = 0; i < amount; ++i)
     {
+      if ((UnityEngine.Object) targetEnemy == (UnityEngine.Object) null)
+      {
+        targetEnemy = enemyBatBurp.GetClosestTarget();
+        targetEnemy = (UnityEngine.Object) targetEnemy == (UnityEngine.Object) null ? (Health) PlayerFarming.Instance.health : targetEnemy;
+      }
       Vector3 vector3 = right ? new Vector3(-15f, targetEnemy.transform.position.y, enemyBatBurp.transform.position.z) : new Vector3(15f, targetEnemy.transform.position.y, enemyBatBurp.transform.position.z);
       enemyBatBurp.TargetPosition = right ? new Vector3(15f, targetEnemy.transform.position.y, enemyBatBurp.transform.position.z) : new Vector3(-15f, targetEnemy.transform.position.y, enemyBatBurp.transform.position.z);
       enemyBatBurp.transform.position = vector3;

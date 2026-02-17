@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerWeapon
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1036,6 +1036,8 @@ public class PlayerWeapon : BaseMonoBehaviour
       DataManager.Instance.LegendaryBlunderbussPlimboEasterEggActive = true;
     if ((UnityEngine.Object) this.criticalTimer != (UnityEngine.Object) null && this.playerFarming.CurrentWeaponInfo != null && (bool) (UnityEngine.Object) this.playerFarming.CurrentWeaponInfo.WeaponData)
       this.criticalTimer.gameObject.SetActive((bool) (UnityEngine.Object) this.playerFarming.CurrentWeaponInfo.WeaponData.GetAttachment(AttachmentEffect.Critical) || TrinketManager.HasTrinket(TarotCards.Card.EmptyFervourCritical, this.playerFarming));
+    if (!DataManager.Instance.WeaponPool.Contains(weaponType))
+      DataManager.Instance.WeaponPool.Add(weaponType);
     if (this.playerFarming.currentWeapon != weaponType)
       PlayerWeapon.CriticalHitTimer = 0.0f;
     this.ChargedNegation = false;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: interaction_FollowerInteraction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -437,8 +437,12 @@ public class interaction_FollowerInteraction : Interaction
                       ref bool local5 = ref flag1;
                       flag2 = false;
                       ref bool local6 = ref flag2;
-                      if (!FollowerManager.FollowerLocked(in local1, in local2, in local3, in local4, in local5, in local6) && FollowerInfo.GetInfoByID(storyObjectiveData.Target1FollowerID) != null)
-                        targetFollowerID_1 = storyObjectiveData.Target1FollowerID;
+                      if (!FollowerManager.FollowerLocked(in local1, in local2, in local3, in local4, in local5, in local6))
+                      {
+                        FollowerInfo infoById = FollowerInfo.GetInfoByID(storyObjectiveData.Target1FollowerID);
+                        if (infoById != null && !infoById.IsSnowman)
+                          targetFollowerID_1 = storyObjectiveData.Target1FollowerID;
+                      }
                     }
                     if (storyObjectiveData.RequireTarget_2 && storyObjectiveData.Target2FollowerID != -1)
                     {
@@ -453,8 +457,12 @@ public class interaction_FollowerInteraction : Interaction
                       ref bool local11 = ref flag1;
                       flag2 = false;
                       ref bool local12 = ref flag2;
-                      if (!FollowerManager.FollowerLocked(in local7, in local8, in local9, in local10, in local11, in local12) && FollowerInfo.GetInfoByID(storyObjectiveData.Target2FollowerID) != null)
-                        targetFollowerID_2 = storyObjectiveData.Target2FollowerID;
+                      if (!FollowerManager.FollowerLocked(in local7, in local8, in local9, in local10, in local11, in local12))
+                      {
+                        FollowerInfo infoById = FollowerInfo.GetInfoByID(storyObjectiveData.Target2FollowerID);
+                        if (infoById != null && !infoById.IsSnowman)
+                          targetFollowerID_2 = storyObjectiveData.Target2FollowerID;
+                      }
                     }
                     if (storyObjectiveData.RequireTarget_Deadbody && storyObjectiveData.DeadBodyFollowerID != -1)
                     {
@@ -469,9 +477,14 @@ public class interaction_FollowerInteraction : Interaction
                       ref bool local17 = ref flag1;
                       flag2 = false;
                       ref bool local18 = ref flag2;
-                      if (!FollowerManager.FollowerLocked(in local13, in local14, in local15, in local16, in local17, in local18) && FollowerInfo.GetInfoByID(storyObjectiveData.DeadBodyFollowerID) != null)
+                      if (!FollowerManager.FollowerLocked(in local13, in local14, in local15, in local16, in local17, in local18))
                       {
-                        deadFollowerID = storyObjectiveData.DeadBodyFollowerID;
+                        FollowerInfo infoById = FollowerInfo.GetInfoByID(storyObjectiveData.DeadBodyFollowerID);
+                        if (infoById != null && !infoById.IsSnowman)
+                        {
+                          deadFollowerID = storyObjectiveData.DeadBodyFollowerID;
+                          break;
+                        }
                         break;
                       }
                       break;

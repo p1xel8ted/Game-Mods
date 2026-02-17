@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerFarming
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -2197,7 +2197,6 @@ public class PlayerFarming : BaseMonoBehaviour
     if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard)
     {
       playerFarming.playerController.SetSpecialMovingAnimations("blizzard/idle-called-center", "blizzard/run-up-called-center", "blizzard/run-down-called-center", "blizzard/run-called-center", "blizzard/run-up-diagonal-called-center", "blizzard/run-horizontal-called-center", StateMachine.State.Idle_Winter);
-      playerFarming.playerController.OverrideBlizzardAnims = true;
       playerFarming.state.CURRENT_STATE = StateMachine.State.Idle_Winter;
     }
     if (playerFarming.canUseKeyboard && InputManager.General.MouseInputActive)

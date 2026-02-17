@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyYngyaBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1760,7 +1760,10 @@ label_28:
   {
     EnemyYngyaBoss enemyYngyaBoss = this;
     foreach (PlayerFarming player in PlayerFarming.players)
+    {
       player.Spine.gameObject.SetActive(false);
+      player.SetCoopIndicatorVisibility(false);
+    }
     CameraFollowTarget.Instance.ClearAllTargets();
     enemyYngyaBoss.normalScene.transform.position = Vector3.up * 500f;
     enemyYngyaBoss.flashbackScene.gameObject.SetActive(true);
@@ -1774,7 +1777,10 @@ label_28:
     enemyYngyaBoss.flashbackScene.gameObject.SetActive(false);
     CameraFollowTarget.Instance.AddTarget(enemyYngyaBoss.gameObject, 1f);
     foreach (PlayerFarming player in PlayerFarming.players)
+    {
       player.Spine.gameObject.SetActive(true);
+      player.SetCoopIndicatorVisibility(true);
+    }
   }
 
   public void PulseDisplacementObject()

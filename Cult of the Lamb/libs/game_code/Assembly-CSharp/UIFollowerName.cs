@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIFollowerName
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -199,47 +199,40 @@ public class UIFollowerName : MonoBehaviour
 
   public void SetText()
   {
-    if (!((UnityEngine.Object) this.follower != (UnityEngine.Object) null) || this.follower.Brain == null)
-      return;
-    string str = "";
-    if (!string.IsNullOrEmpty(this.follower.Brain.Info.ViewerID) && (this.showAllNames || this.showTwitchNames))
-      str = !string.IsNullOrEmpty(this.follower.Brain.Info.ViewerID) ? $"{(this.showTwitchNames ? "<sprite name=\"icon_TwitchIcon\">" : "")} {this.follower.Brain.Info.Name}" : "";
-    else if (this.showAllNames)
-      str = this.follower.Brain.Info.Name;
-    if (this.nameText.text != str)
+    if ((UnityEngine.Object) this.follower != (UnityEngine.Object) null && this.follower.Brain != null)
     {
-      this.nameText.text = str;
-      this.nameText.transform.localScale = Vector3.one;
-      if (this.index <= -1)
+      string str = "";
+      if (!string.IsNullOrEmpty(this.follower.Brain.Info.ViewerID) && (this.showAllNames || this.showTwitchNames))
+        str = !string.IsNullOrEmpty(this.follower.Brain.Info.ViewerID) ? $"{(this.showTwitchNames ? "<sprite name=\"icon_TwitchIcon\">" : "")} {this.follower.Brain.Info.Name}" : "";
+      else if (this.showAllNames)
+        str = this.follower.Brain.Info.Name;
+      if (this.nameText.text != str)
       {
-        FollowersNameManager.Nameplate nameplate = new FollowersNameManager.Nameplate();
-        nameplate.SpriteRendererSource = this.textRenderer;
-        nameplate.TMPTextSource = this.nameText;
-        this.index = FollowersNameManager.Instance.GetNewIndex;
-        FollowersNameManager.Instance.AddNameplate(nameplate);
+        this.nameText.text = str;
+        this.nameText.transform.localScale = Vector3.one;
+        if (this.index <= -1)
+        {
+          FollowersNameManager.Nameplate nameplate = new FollowersNameManager.Nameplate();
+          nameplate.SpriteRendererSource = this.textRenderer;
+          nameplate.TMPTextSource = this.nameText;
+          this.index = FollowersNameManager.Instance.GetNewIndex;
+          FollowersNameManager.Instance.AddNameplate(nameplate);
+        }
+        else
+          this.RegenerateLabels();
+        this.isTextSet = true;
       }
-      else
-        this.RegenerateLabels();
-      this.isTextSet = true;
+      if (!SettingsManager.Settings.Accessibility.DyslexicFont && LocalizationManager.CurrentLanguage == "English")
+      {
+        if (!string.IsNullOrEmpty(this.follower.Brain.Info.ViewerID) && this.showTwitchNames)
+          this.nameText.fontSharedMaterial = !SettingsManager.Settings.Accessibility.RemoveTextStyling ? this.twitchMaterial : this.twitchMaterialNoStyle;
+        else if (this.showAllNames)
+          this.nameText.fontSharedMaterial = !SettingsManager.Settings.Accessibility.RemoveTextStyling ? this.normalMaterial : this.normalMaterialNoStyle;
+      }
     }
-    if (SettingsManager.Settings.Accessibility.DyslexicFont || !(LocalizationManager.CurrentLanguage == "English"))
+    if (!LocalizeIntegration.IsArabic() || LocalizeIntegration.IsRTLInput(this.nameText.text))
       return;
-    if (!string.IsNullOrEmpty(this.follower.Brain.Info.ViewerID) && this.showTwitchNames)
-    {
-      if (SettingsManager.Settings.Accessibility.RemoveTextStyling)
-        this.nameText.fontSharedMaterial = this.twitchMaterialNoStyle;
-      else
-        this.nameText.fontSharedMaterial = this.twitchMaterial;
-    }
-    else
-    {
-      if (!this.showAllNames)
-        return;
-      if (SettingsManager.Settings.Accessibility.RemoveTextStyling)
-        this.nameText.fontSharedMaterial = this.normalMaterialNoStyle;
-      else
-        this.nameText.fontSharedMaterial = this.normalMaterial;
-    }
+    this.nameText.text = LocalizeIntegration.ReverseText(this.nameText.text);
   }
 
   public void Show(bool animate = true)
@@ -252,6 +245,7 @@ public class UIFollowerName : MonoBehaviour
     if (animate)
       this.transform.DOScale(Vector3.one, 0.3f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     this.transform.localScale = Vector3.one;
+    this.SetText();
   }
 
   public void Hide(bool animate = true)

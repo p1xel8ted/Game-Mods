@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LambTownController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -71,8 +71,6 @@ public class LambTownController : MonoBehaviour
   [SerializeField]
   public GameObject doors;
   [SerializeField]
-  public Interaction revealInteraction;
-  [SerializeField]
   public Interaction_RatauShrine[] shrines;
   public string animalAppearOnRachSFX = "event:/dlc/env/woolhaven/animal_appear_on_ranch";
 
@@ -118,7 +116,6 @@ public class LambTownController : MonoBehaviour
     this.ranchingShop.gameObject.SetActive(DataManager.Instance.RancherShopFixed);
     this.rancherReturnConvoA.gameObject.SetActive(ObjectiveManager.HasCustomObjectiveOfType(Objectives.CustomQuestTypes.ReturnWoolToRancher) && !DataManager.Instance.OnboardedWool);
     this.CheckLegendaryWeaponsHints();
-    this.UpdateRevealInteraction();
     this.bigStairs.gameObject.SetActive(!DataManager.Instance.RevealedPostDLC);
     this.doors.gameObject.SetActive(DataManager.Instance.RevealedPostDLC);
     this.ranchingJobBoard.OnJobCompleted += new Interaction_JobBoard.JobEvent(this.RanchingJobBoard_OnJobCompleted);
@@ -163,11 +160,6 @@ public class LambTownController : MonoBehaviour
   public void OnDisable()
   {
     this.yngyaConvo.Callback.RemoveListener(new UnityAction(this.UnlockYngyaFleece));
-  }
-
-  public void UpdateRevealInteraction()
-  {
-    this.revealInteraction.gameObject.SetActive(DataManager.Instance.BeatenYngya && !DataManager.Instance.RevealedPostDLC && DataManager.Instance.DLCDungeonNodesCompleted.Count >= 80 /*0x50*/);
   }
 
   public void Update()
@@ -415,31 +407,6 @@ public class LambTownController : MonoBehaviour
     this.legendaryAxeHintConvo.Callback.RemoveAllListeners();
   }
 
-  public void RevealDungeonDoors()
-  {
-    this.StartCoroutine((IEnumerator) this.RevealDungeonDoorsIE());
-  }
-
-  public IEnumerator RevealDungeonDoorsIE()
-  {
-    LambTownController lambTownController = this;
-    DataManager.Instance.RevealedPostDLC = true;
-    GameManager.GetInstance().OnConversationNew();
-    GameManager.GetInstance().OnConversationNext(lambTownController.bigStairs.gameObject);
-    bool waiting = true;
-    PlayerFarming.Instance.GoToAndStop(new Vector3(18f, 10f), lambTownController.bigStairs, GoToCallback: (System.Action) (() => waiting = false));
-    while (waiting)
-      yield return (object) null;
-    yield return (object) lambTownController.StartCoroutine((IEnumerator) lambTownController.FadeIn());
-    lambTownController.bigStairs.gameObject.SetActive(false);
-    lambTownController.doors.gameObject.SetActive(true);
-    yield return (object) new WaitForSecondsRealtime(1f);
-    yield return (object) lambTownController.StartCoroutine((IEnumerator) lambTownController.FadeOut());
-    yield return (object) new WaitForSeconds(1f);
-    GameManager.GetInstance().OnConversationEnd();
-    lambTownController.revealInteraction.gameObject.SetActive(false);
-  }
-
   public IEnumerator FadeIn()
   {
     bool waitingForFade = true;
@@ -619,16 +586,16 @@ public class LambTownController : MonoBehaviour
   public void BlockPausing() => MonoSingleton<UIManager>.Instance.ForceBlockPause = true;
 
   [CompilerGenerated]
-  public void \u003CRevealRanching\u003Eb__44_0()
+  public void \u003CRevealRanching\u003Eb__42_0()
   {
     GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() => this.rancherFixedShopB.Play()));
   }
 
   [CompilerGenerated]
-  public void \u003CRevealRanching\u003Eb__44_1() => this.rancherFixedShopB.Play();
+  public void \u003CRevealRanching\u003Eb__42_1() => this.rancherFixedShopB.Play();
 
   [CompilerGenerated]
-  public void \u003CGiveAnimal\u003Eb__45_0()
+  public void \u003CGiveAnimal\u003Eb__43_0()
   {
     GameManager.GetInstance().OnConversationNew();
     GameManager.GetInstance().OnConversationNext(this.ranchingShop.itemSlots[0]);
@@ -636,7 +603,7 @@ public class LambTownController : MonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CSetSaleAnimal\u003Eb__48_0()
+  public void \u003CSetSaleAnimal\u003Eb__46_0()
   {
     MonoSingleton<UIManager>.Instance.ForceBlockPause = true;
     this.ranchingShop.ItemsForSale[0].Bought = false;
@@ -687,7 +654,7 @@ public class LambTownController : MonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CSetSaleAnimal\u003Eb__48_1()
+  public void \u003CSetSaleAnimal\u003Eb__46_1()
   {
     ShopLocationTracker shop = DataManager.Instance.GetShop(this.ranchingShop.Location, this.ranchingShop.gameObject.name);
     Interaction_BuyItem component = this.ranchingShop.itemSlots[0].GetComponent<Interaction_BuyItem>();
@@ -729,7 +696,7 @@ public class LambTownController : MonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CSetSaleAnimal\u003Eb__48_2(StateMachine state)
+  public void \u003CSetSaleAnimal\u003Eb__46_2(StateMachine state)
   {
     MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
     this.grabAnimalConvo.gameObject.SetActive(false);
@@ -755,7 +722,7 @@ public class LambTownController : MonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CSetupYngyaConvo\u003Eb__72_0()
+  public void \u003CSetupYngyaConvo\u003Eb__68_0()
   {
     this.StartCoroutine((IEnumerator) this.WaitForPlayer());
   }

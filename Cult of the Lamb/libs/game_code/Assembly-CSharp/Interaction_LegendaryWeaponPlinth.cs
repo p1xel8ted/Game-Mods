@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_LegendaryWeaponPlinth
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -74,7 +74,7 @@ public class Interaction_LegendaryWeaponPlinth : Interaction
   {
     base.GetLabel();
     this.Interactable = true;
-    if ((DataManager.Instance.LegendaryWeaponsJobBoardCompleted.Contains(this.legendaryWeapon) || this.legendaryWeapon == EquipmentType.Chain_Legendary && DataManager.IsAllJobBoardsComplete) && DataManager.Instance.ForcedStartingWeapon != this.legendaryWeapon && !this.isPaying)
+    if ((DataManager.Instance.LegendaryWeaponsJobBoardCompleted.Contains(this.legendaryWeapon) || this.legendaryWeapon == EquipmentType.Chain_Legendary && DataManager.IsAllJobBoardsComplete && DataManager.Instance.WeaponPool.Contains(EquipmentType.Chain_Legendary)) && DataManager.Instance.ForcedStartingWeapon != this.legendaryWeapon && !this.isPaying)
       this.Label = $"{LocalizationManager.GetTranslation("UI/Settings/Accessibility/GameplayModifiers/ForceWeapon")}: {InventoryItem.CapacityString(this.cost.CostType, this.cost.Cost)}";
     else if (this.canShowWeapon)
     {

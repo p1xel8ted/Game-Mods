@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyFleshSwarmer
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -145,9 +145,16 @@ public class EnemyFleshSwarmer : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    if (!this.health.IsHidden || !(bool) (UnityEngine.Object) this.BloodDrip || this.BloodDrip.isPlaying)
-      return;
-    this.BloodDrip.Play();
+    if (this.isInProcessOfReveal && !this.isRevealed)
+    {
+      this.AutoRevealCoroutine = this.StartCoroutine((IEnumerator) this.Reveal(0.0f, instantReveal: true));
+    }
+    else
+    {
+      if (!this.health.IsHidden || !(bool) (UnityEngine.Object) this.BloodDrip || this.BloodDrip.isPlaying)
+        return;
+      this.BloodDrip.Play();
+    }
   }
 
   public void SetSpawner(Health spawnerHealthTarget)

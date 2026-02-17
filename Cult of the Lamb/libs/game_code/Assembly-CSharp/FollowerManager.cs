@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI.FollowerSelect;
@@ -1485,7 +1485,7 @@ label_9:
     List<int> ts = new List<int>();
     foreach (Follower follower in FollowerManager.FollowersAtLocation(FollowerLocation.Base))
     {
-      if ((excludeList != null && !excludeList.Contains(follower.Brain.Info.ID) || excludeList == null) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID))
+      if ((excludeList != null && !excludeList.Contains(follower.Brain.Info.ID) || excludeList == null) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID) && !follower.Brain.Info.IsSnowman)
         ts.Add(follower.Brain.Info.ID);
     }
     ts.Shuffle<int>();

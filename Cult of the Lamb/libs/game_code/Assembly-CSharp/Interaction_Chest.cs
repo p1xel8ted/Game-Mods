@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Chest
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -938,22 +938,22 @@ public class Interaction_Chest : Interaction
     bool includeTarot = true)
   {
     AudioManager.Instance.PlayOneShot("event:/chests/chest_item_spawn", this.gameObject);
-    bool flag1 = false;
-    if ((double) includeDLCSkinChance > 0.0 && (double) UnityEngine.Random.value < (double) includeDLCSkinChance && (PlayerFarming.Location == FollowerLocation.Dungeon1_5 || PlayerFarming.Location == FollowerLocation.Dungeon1_6 || PlayerFarming.Location == FollowerLocation.Boss_Wolf || PlayerFarming.Location == FollowerLocation.Boss_Yngya) && DataManager.CheckIfThereAreSkinsAvailable())
+    bool flag1 = PlayerFarming.Location == FollowerLocation.Dungeon1_5 || PlayerFarming.Location == FollowerLocation.Dungeon1_6 || PlayerFarming.Location == FollowerLocation.Boss_Wolf || PlayerFarming.Location == FollowerLocation.Boss_Yngya;
+    bool flag2 = false;
+    if ((double) includeDLCSkinChance > 0.0 && (double) UnityEngine.Random.value < (double) includeDLCSkinChance & flag1 && DataManager.CheckIfThereAreSkinsAvailable())
     {
       this.Reward = RewardsItem.Instance.ReturnItemType(RewardsItem.ChestRewards.FOLLOWER_SKIN);
-      flag1 = true;
-    }
-    bool flag2 = false;
-    if ((double) includeDLCDecoChance > 0.0 && (double) UnityEngine.Random.value < (double) includeDLCDecoChance && (PlayerFarming.Location == FollowerLocation.Dungeon1_5 || PlayerFarming.Location == FollowerLocation.Dungeon1_6 || PlayerFarming.Location == FollowerLocation.Boss_Wolf || PlayerFarming.Location == FollowerLocation.Boss_Yngya) && DataManager.Instance.GetDecorationListFromLocation(PlayerFarming.Location).Count > 0)
-    {
-      this.Reward = InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION;
       flag2 = true;
     }
-    bool flag3 = PlayerFarming.Location == FollowerLocation.Dungeon1_5 || PlayerFarming.Location == FollowerLocation.Dungeon1_6 || PlayerFarming.Location == FollowerLocation.Boss_Wolf || PlayerFarming.Location == FollowerLocation.Boss_Yngya;
-    bool flag4 = !flag2 && !flag3;
-    bool flag5 = !flag1 && !flag3;
-    if (!flag1 && !flag2)
+    bool flag3 = false;
+    if ((double) includeDLCDecoChance > 0.0 && (double) UnityEngine.Random.value < (double) includeDLCDecoChance & flag1 && DataManager.Instance.GetDecorationListFromLocation(PlayerFarming.Location).Count > 0)
+    {
+      this.Reward = InventoryItem.ITEM_TYPE.FOUND_ITEM_DECORATION;
+      flag3 = true;
+    }
+    bool flag4 = !flag3 && !flag1;
+    bool flag5 = !flag2 && !flag1;
+    if (!flag2 && !flag3)
     {
       RewardsItem instance1 = RewardsItem.Instance;
       RewardsItem instance2 = RewardsItem.Instance;
@@ -982,7 +982,7 @@ public class Interaction_Chest : Interaction
     else if (InventoryItem.IsGiftOrNecklace(this.FirstGoldReward) && InventoryItem.IsGiftOrNecklace(this.Reward))
       this.Reward = InventoryItem.ITEM_TYPE.BLACK_GOLD;
     bool flag8 = false;
-    if ((double) includeDLCNecklaceChance > 0.0 && (double) UnityEngine.Random.value < (double) includeDLCNecklaceChance && (PlayerFarming.Location == FollowerLocation.Dungeon1_5 || PlayerFarming.Location == FollowerLocation.Dungeon1_6 || PlayerFarming.Location == FollowerLocation.Boss_Wolf || PlayerFarming.Location == FollowerLocation.Boss_Yngya))
+    if ((double) includeDLCNecklaceChance > 0.0 && (double) UnityEngine.Random.value < (double) includeDLCNecklaceChance & flag1)
     {
       this.Reward = InventoryItem.Necklaces_DLC[UnityEngine.Random.Range(0, InventoryItem.Necklaces_DLC.Count)];
       flag8 = true;

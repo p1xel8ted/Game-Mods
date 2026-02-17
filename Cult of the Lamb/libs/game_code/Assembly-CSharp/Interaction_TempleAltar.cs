@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TempleAltar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -545,6 +545,8 @@ public class Interaction_TempleAltar : Interaction
     yield return (object) new WaitForEndOfFrame();
     while (MMConversation.isPlaying)
       yield return (object) null;
+    if (DataManager.Instance.PleasureRevealed && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Purge) && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Nudism))
+      DataManager.Instance.PleasureRevealed = false;
     if (DataManager.Instance.BossesCompleted.Count < 3 || DataManager.Instance.PleasureRevealed || Ritual.FollowerToAttendSermon.Count <= 0 || !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_FirePit))
     {
       System.Action action = callback;

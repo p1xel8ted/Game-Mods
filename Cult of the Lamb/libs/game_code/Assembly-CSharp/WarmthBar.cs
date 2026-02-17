@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WarmthBar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -108,7 +108,6 @@ public class WarmthBar : MonoBehaviour
     yield return (object) new WaitForSeconds(0.5f);
     CameraManager.instance.ShakeCameraForDuration(0.3f, 0.5f, 0.3f);
     warmthBar.showing = true;
-    DataManager.Instance.ShowCultWarmth = true;
   }
 
   public void OnDisable()

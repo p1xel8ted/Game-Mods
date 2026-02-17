@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CheatConsole
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using CodeStage.AdvancedFPSCounter;
@@ -1502,7 +1502,7 @@ public class CheatConsole : BaseMonoBehaviour
     List<Follower> possibleQuestFollowers = new List<Follower>();
     foreach (Follower follower in Follower.Followers)
     {
-      if (FollowerBrain.CanFollowerGiveQuest(follower.Brain._directInfoAccess) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID))
+      if (FollowerBrain.CanFollowerGiveQuest(follower.Brain._directInfoAccess) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID) && !follower.Brain.Info.IsSnowman)
         possibleQuestFollowers.Add(follower);
     }
     return possibleQuestFollowers;

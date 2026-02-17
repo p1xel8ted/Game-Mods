@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_DisplayName
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using BlendModes;
@@ -29,6 +29,7 @@ public class HUD_DisplayName : BaseMonoBehaviour
   public TextMeshProUGUI Text_Japanese;
   public GameObject Text_English_GO;
   public GameObject Text_Korean_GO;
+  public GameObject Text_Arabic_GO;
   public GameObject Text_ChineseTraditional_GO;
   public GameObject Text_ChineseSimplified_GO;
   public GameObject Text_Russian_GO;
@@ -60,20 +61,10 @@ public class HUD_DisplayName : BaseMonoBehaviour
   {
     switch (LocalizationManager.CurrentLanguage)
     {
-      case "English":
-        if (!((UnityEngine.Object) this.Text_English_GO == (UnityEngine.Object) null))
+      case "Arabic":
+        if (!((UnityEngine.Object) this.Text_Arabic_GO == (UnityEngine.Object) null))
           break;
-        this.Text_English_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/English.prefab", this.transform);
-        break;
-      case "Japanese":
-        if (!((UnityEngine.Object) this.Text_Japanese_GO == (UnityEngine.Object) null))
-          break;
-        this.Text_Japanese_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/Japanese.prefab", this.transform);
-        break;
-      case "Russian":
-        if (!((UnityEngine.Object) this.Text_Russian_GO == (UnityEngine.Object) null))
-          break;
-        this.Text_Russian_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/Russian.prefab", this.transform);
+        this.Text_Arabic_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/Arabic.prefab", this.transform);
         break;
       case "Chinese (Simplified)":
         if (!((UnityEngine.Object) this.Text_ChineseSimplified_GO == (UnityEngine.Object) null))
@@ -85,10 +76,25 @@ public class HUD_DisplayName : BaseMonoBehaviour
           break;
         this.Text_ChineseTraditional_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/Chinese-Traditional.prefab", this.transform);
         break;
+      case "English":
+        if (!((UnityEngine.Object) this.Text_English_GO == (UnityEngine.Object) null))
+          break;
+        this.Text_English_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/English.prefab", this.transform);
+        break;
+      case "Japanese":
+        if (!((UnityEngine.Object) this.Text_Japanese_GO == (UnityEngine.Object) null))
+          break;
+        this.Text_Japanese_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/Japanese.prefab", this.transform);
+        break;
       case "Korean":
         if (!((UnityEngine.Object) this.Text_Korean_GO == (UnityEngine.Object) null))
           break;
         this.Text_Korean_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/Korean.prefab", this.transform);
+        break;
+      case "Russian":
+        if (!((UnityEngine.Object) this.Text_Russian_GO == (UnityEngine.Object) null))
+          break;
+        this.Text_Russian_GO = Addressables_wrapper.InstantiateSynchrous((object) "Assets/Resources_moved/Prefabs/UI/DisplayNames/Russian.prefab", this.transform);
         break;
       default:
         if (!((UnityEngine.Object) this.Text_English_GO == (UnityEngine.Object) null))
@@ -102,18 +108,20 @@ public class HUD_DisplayName : BaseMonoBehaviour
   {
     switch (LocalizationManager.CurrentLanguage)
     {
-      case "English":
-        return (UnityEngine.Object) this.Text_English_GO != (UnityEngine.Object) null ? this.Text_English_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
-      case "Japanese":
-        return (UnityEngine.Object) this.Text_Japanese_GO != (UnityEngine.Object) null ? this.Text_Japanese_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
-      case "Russian":
-        return (UnityEngine.Object) this.Text_Russian_GO != (UnityEngine.Object) null ? this.Text_Russian_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
+      case "Arabic":
+        return (UnityEngine.Object) this.Text_Arabic_GO != (UnityEngine.Object) null ? this.Text_Arabic_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
       case "Chinese (Simplified)":
         return (UnityEngine.Object) this.Text_ChineseSimplified_GO != (UnityEngine.Object) null ? this.Text_ChineseSimplified_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
       case "Chinese (Traditional)":
         return (UnityEngine.Object) this.Text_ChineseTraditional_GO != (UnityEngine.Object) null ? this.Text_ChineseTraditional_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
+      case "English":
+        return (UnityEngine.Object) this.Text_English_GO != (UnityEngine.Object) null ? this.Text_English_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
+      case "Japanese":
+        return (UnityEngine.Object) this.Text_Japanese_GO != (UnityEngine.Object) null ? this.Text_Japanese_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
       case "Korean":
         return (UnityEngine.Object) this.Text_Korean_GO != (UnityEngine.Object) null ? this.Text_Korean_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
+      case "Russian":
+        return (UnityEngine.Object) this.Text_Russian_GO != (UnityEngine.Object) null ? this.Text_Russian_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
       default:
         return (UnityEngine.Object) this.Text_English_GO != (UnityEngine.Object) null ? this.Text_English_GO.GetComponentInChildren<TextMeshProUGUI>(true) : (TextMeshProUGUI) null;
     }
@@ -201,7 +209,6 @@ public class HUD_DisplayName : BaseMonoBehaviour
       return;
     textLanguage.color = new Color(0.0f, 0.41f, 0.8f, 1f);
     textLanguage.GetComponent<BlendModeEffect>().BlendMode = BlendMode.Divide;
-    Name = LocalizeIntegration.Arabic_ReverseNonRTL(Name);
     HUD_DisplayName.Instance.Show(Name, (float) Delay, Position);
   }
 
@@ -223,9 +230,11 @@ public class HUD_DisplayName : BaseMonoBehaviour
       this.Text_ChineseSimplified_GO.SetActive(false);
     if ((UnityEngine.Object) this.Text_Russian_GO != (UnityEngine.Object) null)
       this.Text_Russian_GO.SetActive(false);
-    if (!((UnityEngine.Object) this.Text_Japanese_GO != (UnityEngine.Object) null))
+    if ((UnityEngine.Object) this.Text_Japanese_GO != (UnityEngine.Object) null)
+      this.Text_Japanese_GO.SetActive(false);
+    if (!((UnityEngine.Object) this.Text_Arabic_GO != (UnityEngine.Object) null))
       return;
-    this.Text_Japanese_GO.SetActive(false);
+    this.Text_Arabic_GO.SetActive(false);
   }
 
   public void ShowAndTranslate(string Name, float Delay)
@@ -280,6 +289,8 @@ public class HUD_DisplayName : BaseMonoBehaviour
     Text.transform.parent.gameObject.SetActive(true);
     Text.gameObject.SetActive(true);
     Text.alpha = 0.0f;
+    if (LocalizeIntegration.IsArabic() && !LocalizeIntegration.IsRTLInput(Text.text))
+      Text.text = LocalizeIntegration.ReverseText(Text.text);
     float Progress = 0.0f;
     while ((double) (Progress += Time.deltaTime) <= 1.0)
     {

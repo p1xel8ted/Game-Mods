@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DLCOpenMountainMap
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -27,16 +27,7 @@ public class DLCOpenMountainMap : EnterBuilding
     this.triggered = true;
     this.playerFarming.EndGoToAndStop();
     SimulationManager.Pause();
-    if (DataManager.Instance.DLCDungeonNodesCompleted.Count >= 49)
-    {
-      GameManager.NextDungeonLayer(4);
-      GameManager.DungeonUseAllLayers = true;
-      DataManager.Instance.IsMiniBoss = true;
-      FollowerLocation location = (double) UnityEngine.Random.value < 0.5 ? FollowerLocation.Dungeon1_5 : FollowerLocation.Dungeon1_6;
-      GameManager.NewRun("", false, location);
-      MMTransition.Play(MMTransition.TransitionType.ChangeRoomWaitToResume, MMTransition.Effect.BlackFade, location == FollowerLocation.Dungeon1_5 ? "Dungeon5" : "Dungeon6", 1f, "", (System.Action) (() => SaveAndLoad.Save()));
-    }
-    else if (SeasonsManager.Active)
+    if (SeasonsManager.Active)
     {
       this.StartCoroutine((IEnumerator) this.OpenMap());
     }
@@ -95,7 +86,6 @@ public class DLCOpenMountainMap : EnterBuilding
         else
           player.GoToAndStop(position, IdleOnEnd: true);
       }
-      LambTownController.Instance.UpdateRevealInteraction();
     });
   }
 
@@ -115,7 +105,6 @@ public class DLCOpenMountainMap : EnterBuilding
       else
         player.GoToAndStop(position, IdleOnEnd: true);
     }
-    LambTownController.Instance.UpdateRevealInteraction();
   }
 
   [CompilerGenerated]

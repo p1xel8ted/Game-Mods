@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Knucklebones
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -13,7 +13,7 @@ public class FollowerTask_Knucklebones : FollowerTask
 {
   public FollowerBrain targetFollower;
   public Follower target;
-  public Follower leader;
+  public Follower taskFollower;
   public Coroutine playingRoutine;
   public int structureID;
   public bool isLeader;
@@ -87,22 +87,20 @@ public class FollowerTask_Knucklebones : FollowerTask
 
   public void BeginPlaying()
   {
-    Follower target = (Follower) null;
-    Follower enforcer = (Follower) null;
     foreach (Follower follower in FollowerManager.FollowersAtLocation(FollowerLocation.Base))
     {
       if (follower.Brain.Info.ID == this.targetFollower.Info.ID)
-        target = this.target = follower;
+        this.target = follower;
       else if (follower.Brain.Info.ID == this._brain.Info.ID)
-        enforcer = this.leader = follower;
+        this.taskFollower = follower;
     }
-    if ((bool) (Object) target && (bool) (Object) enforcer && enforcer.gameObject.activeInHierarchy)
+    if ((bool) (Object) this.target && (bool) (Object) this.taskFollower && this.taskFollower.gameObject.activeInHierarchy)
     {
       if (!this.isLeader)
         return;
       if (this.playingRoutine != null)
-        enforcer.StopCoroutine(this.playingRoutine);
-      this.playingRoutine = enforcer.StartCoroutine((IEnumerator) this.PlayingIE(target, enforcer));
+        this.taskFollower.StopCoroutine(this.playingRoutine);
+      this.playingRoutine = this.taskFollower.StartCoroutine((IEnumerator) this.PlayingIE(this.target, this.taskFollower));
     }
     else
     {
@@ -229,13 +227,31 @@ public class FollowerTask_Knucklebones : FollowerTask
   {
     base.OnAbort();
     this.OnFollowerTaskStateChanged = this.OnFollowerTaskStateChanged - new FollowerTask.FollowerTaskDelegate(this.StateChange);
-    if (this.playingRoutine == null || !((Object) this.leader != (Object) null) || !this.leader.gameObject.activeInHierarchy)
-      return;
-    this.leader.StopCoroutine(this.playingRoutine);
-    this.playingRoutine = (Coroutine) null;
-    if (this.targetFollower == null)
-      return;
-    this.targetFollower.CompleteCurrentTask();
+    if ((Object) this.taskFollower != (Object) null && this.taskFollower.gameObject.activeInHierarchy)
+    {
+      if (this.isLeader)
+      {
+        if (this.playingRoutine != null)
+          this.taskFollower.StopCoroutine(this.playingRoutine);
+        this.playingRoutine = (Coroutine) null;
+      }
+      else if ((Object) this.target != (Object) null && this.target.gameObject.activeInHierarchy && this.target.Brain.CurrentTaskType == FollowerTaskType.Knucklebones)
+      {
+        FollowerTask_Knucklebones currentTask = (FollowerTask_Knucklebones) this.target.Brain.CurrentTask;
+        if (currentTask.playingRoutine != null)
+          this.target.StopCoroutine(currentTask.playingRoutine);
+        currentTask.playingRoutine = (Coroutine) null;
+      }
+      if (this.targetFollower == null)
+        return;
+      this.targetFollower.CompleteCurrentTask();
+    }
+    else
+    {
+      if (this.targetFollower == null)
+        return;
+      this.targetFollower.CompleteCurrentTask();
+    }
   }
 
   public void CheckToEndTask()
@@ -245,15 +261,15 @@ public class FollowerTask_Knucklebones : FollowerTask
       if (follower.Brain.Info.ID == this.targetFollower.Info.ID)
         this.target = follower;
       else if (follower.Brain.Info.ID == this._brain.Info.ID)
-        this.leader = follower;
+        this.taskFollower = follower;
     }
     if (this.targetFollower != null)
     {
       this.End();
-      if ((Object) this.leader != (Object) null && this.leader.Brain != null && this.leader.Brain.CurrentTask != null && this.leader.Brain.CurrentTaskType == FollowerTaskType.Knucklebones)
-        this.leader.Brain.CurrentTask?.Abort();
+      if ((Object) this.taskFollower != (Object) null && this.taskFollower.Brain != null && this.taskFollower.Brain.CurrentTask != null && this.taskFollower.Brain.CurrentTaskType == FollowerTaskType.Knucklebones)
+        this.taskFollower.Brain.CurrentTask?.Abort();
     }
-    if (!((Object) this.leader != (Object) null))
+    if (!((Object) this.taskFollower != (Object) null))
       return;
     this.End();
     if (this.targetFollower == null || this.targetFollower.CurrentTask == null || this.targetFollower.CurrentTaskType != FollowerTaskType.Knucklebones)

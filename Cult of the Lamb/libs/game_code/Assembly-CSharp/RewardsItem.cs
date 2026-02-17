@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RewardsItem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -182,60 +182,41 @@ public class RewardsItem
     if (PlayerFleeceManager.FleecePreventTarotCards())
       includeTarot = false;
     if (DungeonSandboxManager.Active)
-      return (double) UnityEngine.Random.value < 0.5 ? RewardsItem.ChestRewards.HEART : RewardsItem.ChestRewards.TAROT;
+      return (double) UnityEngine.Random.value < 0.5 || !includeTarot ? RewardsItem.ChestRewards.HEART : RewardsItem.ChestRewards.TAROT;
+    List<RewardsItem.ChestRewards> chestRewardsList = new List<RewardsItem.ChestRewards>();
+    chestRewardsList.Remove(RewardsItem.ChestRewards.LORE_STONE);
+    chestRewardsList.Remove(RewardsItem.ChestRewards.OUTFIT);
     if (DataManager.Instance.HadNecklaceOnRun > 0)
-      this.GoodReward.Remove(RewardsItem.ChestRewards.FOLLOWER_NECKLASE);
-    this.GoodReward.Remove(RewardsItem.ChestRewards.OUTFIT);
-    if (!DataManager.Instance.OnboardedWool)
-      this.GoodReward.Remove(RewardsItem.ChestRewards.WOOL);
+      chestRewardsList.Add(RewardsItem.ChestRewards.FOLLOWER_NECKLASE);
+    if (!DataManager.Instance.OnboardedWool || !DataManager.Instance.MAJOR_DLC)
+      chestRewardsList.Add(RewardsItem.ChestRewards.WOOL);
     if (!DataManager.CheckIfThereAreSkinsAvailable() || !includeSkin)
-      this.GoodReward.Remove(RewardsItem.ChestRewards.FOLLOWER_SKIN);
+      chestRewardsList.Add(RewardsItem.ChestRewards.FOLLOWER_SKIN);
     if (DataManager.Instance.GetDecorationListFromLocation(PlayerFarming.Location).Count <= 0 || !includeDeco)
-      this.GoodReward.Remove(RewardsItem.ChestRewards.BASE_DECORATION);
-    this.GoodReward.Remove(RewardsItem.ChestRewards.LORE_STONE);
+      chestRewardsList.Add(RewardsItem.ChestRewards.BASE_DECORATION);
+    if (!includeTarot)
+      chestRewardsList.Add(RewardsItem.ChestRewards.TAROT);
+    for (int index = this.GoodReward.Count - 1; index >= 0; --index)
+    {
+      if (chestRewardsList.Contains(this.GoodReward[index]))
+        this.GoodReward.RemoveAt(index);
+    }
     if (this.GoodReward.Count <= 0)
       return RewardsItem.ChestRewards.GOLD;
-    bool flag1 = false;
-    while (!flag1)
+    RewardsItem.ChestRewards goodReward = this.GoodReward[UnityEngine.Random.Range(0, this.GoodReward.Count)];
+    switch (goodReward)
     {
-      RewardsItem.ChestRewards goodReward = this.GoodReward[UnityEngine.Random.Range(0, this.GoodReward.Count)];
-      bool flag2;
-      switch (goodReward)
-      {
-        case RewardsItem.ChestRewards.GOLD:
-          if (!IsBoss)
-            return RewardsItem.ChestRewards.GOLD;
-          continue;
-        case RewardsItem.ChestRewards.FOLLOWER_NECKLASE:
-          ++DataManager.Instance.HadNecklaceOnRun;
-          return RewardsItem.ChestRewards.FOLLOWER_NECKLASE;
-        case RewardsItem.ChestRewards.FOLLOWER_GIFT:
-          flag2 = true;
-          return PlayerFarming.Location == FollowerLocation.IntroDungeon ? RewardsItem.ChestRewards.GOLD : RewardsItem.ChestRewards.FOLLOWER_GIFT;
-        case RewardsItem.ChestRewards.FOLLOWER_SKIN:
-          return RewardsItem.ChestRewards.FOLLOWER_SKIN;
-        case RewardsItem.ChestRewards.BASE_DECORATION:
-          return RewardsItem.ChestRewards.BASE_DECORATION;
-        case RewardsItem.ChestRewards.TAROT:
-          if (includeTarot)
-            return RewardsItem.ChestRewards.TAROT;
-          flag1 = false;
-          continue;
-        case RewardsItem.ChestRewards.GOLD_NUGGETS:
-          return RewardsItem.ChestRewards.GOLD_NUGGETS;
-        case RewardsItem.ChestRewards.GOLD_BAR:
-          return RewardsItem.ChestRewards.GOLD_BAR;
-        case RewardsItem.ChestRewards.OUTFIT:
-          return RewardsItem.ChestRewards.OUTFIT;
-        case RewardsItem.ChestRewards.LORE_STONE:
-          Debug.Log((object) "NO available Lore");
-          return RewardsItem.ChestRewards.GOLD;
-        default:
-          flag2 = true;
-          return goodReward;
-      }
+      case RewardsItem.ChestRewards.GOLD:
+        int num = IsBoss ? 1 : 0;
+        return RewardsItem.ChestRewards.GOLD;
+      case RewardsItem.ChestRewards.FOLLOWER_NECKLASE:
+        ++DataManager.Instance.HadNecklaceOnRun;
+        return RewardsItem.ChestRewards.FOLLOWER_NECKLASE;
+      case RewardsItem.ChestRewards.FOLLOWER_GIFT:
+        return PlayerFarming.Location == FollowerLocation.IntroDungeon ? RewardsItem.ChestRewards.GOLD : RewardsItem.ChestRewards.FOLLOWER_GIFT;
+      default:
+        return goodReward;
     }
-    return RewardsItem.ChestRewards.GOLD;
   }
 
   public enum ChestRewards

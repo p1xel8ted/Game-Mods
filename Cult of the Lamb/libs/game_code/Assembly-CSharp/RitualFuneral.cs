@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualFuneral
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -352,6 +352,7 @@ public class RitualFuneral : Ritual
     BiomeConstants.Instance.ChromaticAbberationTween(1f, 1f, BiomeConstants.Instance.ChromaticAberrationDefaultValue);
     BiomeConstants.Instance.VignetteTween(1f, 0.7f, BiomeConstants.Instance.VignetteDefaultValue);
     yield return (object) new WaitForSeconds(1f);
+    UnityEngine.Object.Destroy((UnityEngine.Object) deadWorshipper);
     ritualFuneral.EndRitual();
     ritualFuneral.CompleteRitual(targetFollowerID_1: deadFollower.Info.ID);
     yield return (object) new WaitForSeconds(1f);

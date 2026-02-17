@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ObjectiveManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 74784EE5-FB9D-47CB-98C9-77A69FCC35F7
+// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -166,13 +166,32 @@ public class ObjectiveManager : BaseMonoBehaviour
     return objectivesOfGroup;
   }
 
-  public static List<ObjectivesData> GetAllObjectivesOfGroupID(string groupID)
+  public static List<ObjectivesData> GetAllObjectivesOfGroupID(
+    string groupID,
+    bool includeCompleted = false,
+    bool includeFailed = false)
   {
     List<ObjectivesData> objectivesOfGroupId = new List<ObjectivesData>();
     foreach (ObjectivesData objective in DataManager.Instance.Objectives)
     {
       if (objective.GroupId == groupID)
         objectivesOfGroupId.Add(objective);
+    }
+    if (includeCompleted)
+    {
+      foreach (ObjectivesData completedObjective in DataManager.Instance.CompletedObjectives)
+      {
+        if (completedObjective.GroupId == groupID)
+          objectivesOfGroupId.Add(completedObjective);
+      }
+    }
+    if (includeFailed)
+    {
+      foreach (ObjectivesData failedObjective in DataManager.Instance.FailedObjectives)
+      {
+        if (failedObjective.GroupId == groupID)
+          objectivesOfGroupId.Add(failedObjective);
+      }
     }
     return objectivesOfGroupId;
   }
