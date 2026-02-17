@@ -1,0 +1,10 @@
+{
+  "name": "The Invincible Vortex Extension",
+  "author": "ChemBoy1",
+  "version": "0.1.0",
+  "description": "This extension adds The Invincible modding support to Vortex Mod Manager.",
+  "type": "game",
+  "path": "C:\\Users\\Ben\\AppData\\Roaming\\Vortex\\plugins\\Vortex Extension Update - The Invincible Vortex Extension v0.1.0.7z",
+  "bundled": false,
+  "modId": 0
+}
