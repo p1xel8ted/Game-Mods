@@ -1086,12 +1086,12 @@ public static class MysticShopPatches
             clothingData.ClothingType = clothingType;
             clothingData.ProtectionType = FollowerProtectionType.None;
             clothingData.ForSale = false;
-            clothingData.SpecialClothing = true; // Special so it doesn't require crafting
+            clothingData.SpecialClothing = false;
             clothingData.IsSecret = false;
             clothingData.IsDLC = false;
             clothingData.IsMajorDLC = false;
             clothingData.HideOnTailorMenu = false;
-            clothingData.CanBeCrafted = false;
+            clothingData.CanBeCrafted = true;
             clothingData.Variants = [$"Clothes/{clothingType}"];
             // Must have at least one entry or ConfigureFollowerOutfit crashes with index out of range
             clothingData.SlotAndColours = [new WorshipperData.SlotsAndColours { SlotAndColours = [] }];
@@ -1108,6 +1108,32 @@ public static class MysticShopPatches
         _lastInjectedClothingArray = __result;
     }
 
+    /// <summary>
+    /// Provides crafting costs for Apple clothing, which are missing from the vanilla
+    /// ClothingData.Cost switch statement (Apple_1/Apple_2 fall through to default → empty array).
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(ClothingData), nameof(ClothingData.Cost), MethodType.Getter)]
+    public static void ClothingData_Cost_Postfix(ClothingData __instance, ref ClothingData.CostItem[] __result)
+    {
+        switch (__instance.ClothingType)
+        {
+            case FollowerClothingType.Apple_1:
+                __result =
+                [
+                    new ClothingData.CostItem(InventoryItem.ITEM_TYPE.SILK_THREAD, 4),
+                    new ClothingData.CostItem(InventoryItem.ITEM_TYPE.COTTON, 4)
+                ];
+                break;
+            case FollowerClothingType.Apple_2:
+                __result =
+                [
+                    new ClothingData.CostItem(InventoryItem.ITEM_TYPE.SILK_THREAD, 4),
+                    new ClothingData.CostItem(InventoryItem.ITEM_TYPE.COTTON, 6)
+                ];
+                break;
+        }
+    }
 
     #endregion
 
@@ -1159,7 +1185,24 @@ public static class MysticShopPatches
     /// </summary>
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Interaction_PlacementRegion), nameof(Interaction_PlacementRegion.PlaceBuilding))]
-    public static void PlaceBuilding_Prefix(StructureBrain.TYPES structureType)
+    public static void PlaceBuilding_Prefix(StructureBrain.TYPES structureType) => EnsureAppleGhost(structureType);
+
+    /// <summary>
+    /// Ensures the ghost PlacementObject exists when MOVING an already-placed Apple decoration.
+    /// PlayMove() accesses TypeAndPlacementObjects.GetByType(type).PlacementObject, which
+    /// throws InvalidKeyException for Apple GUIDs on PC.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(PlacementRegion), nameof(PlacementRegion.PlayMove))]
+    public static void PlayMove_Prefix(Structure structure) => EnsureAppleGhost(structure.Brain.Data.Type);
+
+    /// <summary>
+    /// Ensures a ghost PlacementObject is injected into the TypeAndPlacementObjects entry
+    /// for an Apple decoration type. Without this, accessing the PlacementObject property
+    /// triggers an Addressable load for a GUID that only exists on Apple Arcade builds,
+    /// crashing the game on PC with InvalidKeyException.
+    /// </summary>
+    private static void EnsureAppleGhost(StructureBrain.TYPES structureType)
     {
         if (!_appleDecoTypes.Contains(structureType))
         {
@@ -1188,7 +1231,7 @@ public static class MysticShopPatches
         }
         else
         {
-            Plugin.Log.LogWarning($"[AppleDecoFix] Failed to create ghost for {structureType} — placement may fail");
+            Plugin.Log.LogWarning($"[AppleDecoFix] Failed to create ghost for {structureType}");
         }
     }
 

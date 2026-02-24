@@ -1,3 +1,9 @@
+### 0.1.2 - 24/02/2026
+
+**Fixes:**
+- Fixed crash when moving or editing Apple Arcade decorations (e.g., overgrown well)
+- Fixed Apple clothing not being craftable at the Tailor
+
 ### 0.1.1 - 08/02/2026
 
 **New Features:**
