@@ -481,4 +481,218 @@ internal static class StructurePatches
         Plugin.WriteLog("[Refinery] Added POOP_ROTSTONE to refinable resources list");
     }
 
+    // Flag to prevent infinite recursion when mass filling refinery
+    private static bool _refineryMassFillInProgress;
+
+    // Flag to prevent infinite recursion when mass petting animals
+    private static bool _massPetAnimalsInProgress;
+
+    // Flags to prevent infinite recursion when mass filling cooking stations
+    private static bool _cookingFireMassFillInProgress;
+    private static bool _kitchenMassFillInProgress;
+    private static bool _pubMassFillInProgress;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Interaction_Ranchable), nameof(Interaction_Ranchable.OnAnimalCommandFinalized))]
+    public static void Interaction_Ranchable_OnAnimalCommandFinalized(
+        ref Interaction_Ranchable __instance,
+        params FollowerCommands[] followerCommands)
+    {
+        if (!Plugin.MassPetAnimals.Value) return;
+        if (_massPetAnimalsInProgress) return;
+        if (followerCommands.Length == 0 || followerCommands[0] != FollowerCommands.PetAnimal) return;
+
+        GameManager.GetInstance().StartCoroutine(PetAllAnimals(__instance));
+    }
+
+    private static IEnumerator PetAllAnimals(Interaction_Ranchable pettedAnimal)
+    {
+        _massPetAnimalsInProgress = true;
+        yield return new WaitForEndOfFrame();
+
+        try
+        {
+            // Get all ranchable animals that haven't been petted today
+            var animals = Interaction.interactions
+                .OfType<Interaction_Ranchable>()
+                .Where(r => r && r != pettedAnimal && !r.animal.PetToday)
+                .ToList();
+
+            if (animals.Count == 0 || !MassActionCosts.TryDeductCosts(animals.Count))
+            {
+                yield break;
+            }
+
+            Plugin.WriteLog($"[MassPetAnimals] Petting {animals.Count} additional animals");
+
+            foreach (var animal in animals)
+            {
+                if (!animal || animal.animal.PetToday) continue;
+
+                // Apply pet effects directly instead of calling PetIE
+                // This avoids the coroutine's player-locking animation and long delays
+                animal.AddAdoration(50f);
+                animal.animal.PetToday = true;
+
+                // Visual and audio feedback
+                BiomeConstants.Instance.EmitHeartPickUpVFX(animal.transform.position, 0f, "red", "burst_small");
+                AudioManager.Instance.PlayOneShot("event:/dlc/animal/shared/love_hearts", animal.transform.position);
+            }
+        }
+        finally
+        {
+            _massPetAnimalsInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIRefineryMenuController), nameof(UIRefineryMenuController.AddToQueue))]
+    public static void UIRefineryMenuController_AddToQueue(UIRefineryMenuController __instance, RefineryItem item)
+    {
+        if (!Plugin.RefineryMassFill.Value) return;
+        if (_refineryMassFillInProgress) return;
+
+        _refineryMassFillInProgress = true;
+        try
+        {
+            var maxItems = __instance.kMaxItems;
+            var currentCount = __instance._structureInfo.QueuedResources.Count;
+
+            // Keep adding same item until queue is full or can't afford
+            while (currentCount < maxItems && item.CanAfford)
+            {
+                __instance.AddToQueue(item);
+                currentCount = __instance._structureInfo.QueuedResources.Count;
+            }
+
+            Plugin.WriteLog($"[RefineryMassFill] Filled queue with {item.Type} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _refineryMassFillInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIFollowerKitchenMenuController), nameof(UIFollowerKitchenMenuController.AddToQueue))]
+    public static void UIFollowerKitchenMenuController_AddToQueue(UIFollowerKitchenMenuController __instance, InventoryItem.ITEM_TYPE meal)
+    {
+        if (!Plugin.KitchenMassFill.Value) return;
+        if (_kitchenMassFillInProgress) return;
+
+        _kitchenMassFillInProgress = true;
+        try
+        {
+            var maxItems = UIFollowerKitchenMenuController.kMaxItems;
+            var currentCount = __instance._structureInfo.QueuedMeals.Count;
+
+            while (currentCount < maxItems && CookingData.CanMakeMeal(meal))
+            {
+                __instance.AddToQueue(meal);
+                currentCount = __instance._structureInfo.QueuedMeals.Count;
+            }
+
+            Plugin.WriteLog($"[KitchenMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _kitchenMassFillInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIPubMenuController), nameof(UIPubMenuController.AddToQueue))]
+    public static void UIPubMenuController_AddToQueue(UIPubMenuController __instance, InventoryItem.ITEM_TYPE meal)
+    {
+        if (!Plugin.PubMassFill.Value) return;
+        if (_pubMassFillInProgress) return;
+
+        _pubMassFillInProgress = true;
+        try
+        {
+            var maxItems = __instance._pub.Brain.MaxQueue;
+            var currentCount = __instance._structureInfo.QueuedMeals.Count;
+
+            while (currentCount < maxItems && CookingData.CanMakeMeal(meal))
+            {
+                __instance.AddToQueue(meal);
+                currentCount = __instance._structureInfo.QueuedMeals.Count;
+            }
+
+            Plugin.WriteLog($"[PubMassFill] Filled queue with {meal} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _pubMassFillInProgress = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UICookingFireMenuController), nameof(UICookingFireMenuController.OnRecipeChosen))]
+    public static void UICookingFireMenuController_OnRecipeChosen(UICookingFireMenuController __instance, InventoryItem.ITEM_TYPE recipe)
+    {
+        if (!Plugin.CookingFireMassFill.Value) return;
+        if (_cookingFireMassFillInProgress) return;
+
+        _cookingFireMassFillInProgress = true;
+        try
+        {
+            var maxItems = __instance.RecipeLimit();
+            var currentCount = __instance._kitchenData.QueuedMeals.Count;
+
+            while (currentCount < maxItems && CookingData.CanMakeMeal(recipe))
+            {
+                __instance.OnRecipeChosen(recipe);
+                currentCount = __instance._kitchenData.QueuedMeals.Count;
+            }
+
+            Plugin.WriteLog($"[CookingFireMassFill] Filled queue with {recipe} - {currentCount}/{maxItems} slots used");
+        }
+        finally
+        {
+            _cookingFireMassFillInProgress = false;
+        }
+    }
+
+    // TODO: Re-enable after testing
+    /*
+    #region Mass Nurture
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(UIDaycareMenu), nameof(UIDaycareMenu.OnNurturePressed))]
+    public static void UIDaycareMenu_OnNurturePressed_Postfix(UIDaycareMenu __instance)
+    {
+        if (!Plugin.MassNurture.Value) return;
+
+
+
+        var sourceDaycare = __instance._structuresBrain;
+
+        foreach (var daycare in StructureManager.GetAllStructuresOfType<Structures_Daycare>())
+        {
+            if (daycare == sourceDaycare) continue;
+
+            foreach (var childId in daycare.Data.MultipleFollowerIDs.ToList())
+            {
+                var follower = FollowerManager.FindFollowerByID(childId);
+                if (follower == null) continue;
+                if (follower.Brain.Stats.Cuddled) continue;
+                if (!FollowerManager.IsChild(childId)) continue;
+
+                // Apply nurture effects (same as NurtureIE lines 183-190)
+                CultFaithManager.AddThought(Thought.ChildCuddle_0, follower.Brain.Info.ID);
+                follower.Brain.AddThought((Thought)Random.Range(393, 397));
+                AudioManager.Instance.PlayOneShot("event:/followers/love_hearts", follower.transform.position);
+                BiomeConstants.Instance.EmitHeartPickUpVFX(follower.transform.position, 0f, "red", "burst_big");
+                follower.Brain.Stats.Cuddled = true;
+                follower.Brain._directInfoAccess.CuddledAmount++;
+                follower.Brain.AddAdoration(FollowerBrain.AdorationActions.CuddleBaby, null);
+
+                Plugin.WriteLog($"[MassNurture] Nurtured {follower.Brain.Info.Name} in another daycare!");
+            }
+        }
+    }
+
+    #endregion
+    */
 }

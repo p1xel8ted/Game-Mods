@@ -1,6 +1,6 @@
-using MassOfTheLamb.Core;
+using CultOfQoL.Core;
 
-namespace MassOfTheLamb.Patches;
+namespace CultOfQoL.Patches.UI;
 
 [Harmony]
 public static class WheelCostPreviewPatch
