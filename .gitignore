@@ -1051,3 +1051,6 @@ AAA_Release*/
 *.bak
 *.tmp
 *.swp
+
+# Unity lock files
+_ul
