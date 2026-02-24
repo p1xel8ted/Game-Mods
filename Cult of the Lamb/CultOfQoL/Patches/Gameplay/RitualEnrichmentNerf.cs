@@ -5,13 +5,24 @@ public static class RitualEnrichmentNerf
 {
     private static void AddCoins(int type, int quantity, bool forceNormalInventory = false)
     {
-        if (Plugin.ReverseEnrichmentNerf.Value)
+        if (!Plugin.ReverseEnrichmentNerf.Value)
         {
-            // CustomGiveCoins handles coin addition per-follower
-            Plugin.WriteLog($"[EnrichmentNerf] Skipping RitualRoutine's AddItem({quantity} coins) - CustomGiveCoins handles it.");
+            Inventory.AddItem(type, quantity, forceNormalInventory);
             return;
         }
-        Inventory.AddItem(type, quantity, forceNormalInventory);
+
+        // Pre-nerf formula: level * 20 per follower (verified from pre-1.3.0 game code)
+        // Original used ResourceCustomTarget callbacks (level*10 visual coins × 2 gold each)
+        // We add the total synchronously for reliability
+        var followers = Ritual.GetFollowersAvailableToAttendSermon();
+        var enhancedTotal = 0;
+        foreach (var brain in followers)
+        {
+            enhancedTotal += brain.Info.XPLevel * 20;
+        }
+
+        Plugin.WriteLog($"[EnrichmentNerf] Enhanced: {enhancedTotal} coins for {followers.Count} followers (vanilla would be {quantity})");
+        Inventory.AddItem(type, enhancedTotal, forceNormalInventory);
     }
 
     [HarmonyTranspiler]
@@ -67,27 +78,21 @@ public static class RitualEnrichmentNerf
     {
         if (!follower)
         {
-            Plugin.WriteLog("[EnrichmentNerf] Follower is null, skipping");
             yield break;
         }
 
-        // Pre-nerf formula was 10 * level, vanilla now gives 3 + level
-        // We'll give 10 * level (the pre-nerf amount)
+        // Visual-only animation — actual coins are added synchronously in AddCoins
         var level = follower.Brain.Info.XPLevel;
-        var enhancedCoins = level * 10;
-
-        Plugin.WriteLog($"[EnrichmentNerf] {follower.Brain.Info.Name} (L{level}): vanilla={vanillaCoinPerFollower}, enhanced={enhancedCoins}");
+        var visualCoins = Math.Min(level * 10, 20);
 
         yield return new WaitForSeconds(delay);
 
-        var increment = (totalTime - delay) / enhancedCoins;
-        for (var i = 0; i < enhancedCoins; i++)
+        var increment = (totalTime - delay) / visualCoins;
+        for (var i = 0; i < visualCoins; i++)
         {
             AudioManager.Instance.PlayOneShot("event:/followers/pop_in", follower.transform.position);
             ResourceCustomTarget.Create(PlayerFarming.Instance.gameObject, follower.transform.position, InventoryItem.ITEM_TYPE.BLACK_GOLD, null);
             yield return new WaitForSeconds(increment);
         }
-
-        Inventory.AddItem(InventoryItem.ITEM_TYPE.BLACK_GOLD, enhancedCoins);
     }
 }

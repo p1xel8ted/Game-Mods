@@ -3,8 +3,14 @@
 [Harmony]
 internal static class TwitchItems
 {
-    // Centralized list of known Twitch skins
-    private static readonly List<string> KnownTwitchSkins = ["TwitchCat", "TwitchMouse", "TwitchPoggers", "TwitchDog", "TwitchDogAlt"];
+    // All free Twitch drop skins (cross-referenced from DataManager.ActivateTwitchDrop1-20 + ActivateSupportStreamer)
+    private static readonly List<string> KnownTwitchSkins =
+    [
+        "TwitchCat", "TwitchMouse", "TwitchPoggers", "TwitchDog", "TwitchDogAlt",
+        "Lion", "Penguin", "Kiwi", "Pelican",
+        "Anglerfish", "SeaButterfly", "Jellyfish", "Leech", "LizardTongue",
+        "DogTeddy"
+    ];
     
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildingShrine), nameof(BuildingShrine.OnEnableInteraction))]

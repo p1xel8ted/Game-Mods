@@ -1,3 +1,9 @@
+### 2.4.2 - 24/02/2026
+
+**Fixes:**
+* Fixed "Unlock Twitch Items" not unlocking the Anglerfish, Sea Butterfly, Jellyfish, and Leech follower skins.
+* Fixed "Reverse Enrichment Nerf" giving incorrect coin amounts and not working reliably with large populations (76+ followers). Restored the verified pre-nerf formula (level × 20 per follower).
+
 ### 2.4.1 - 09/02/2026
 
 **New Features:**
