@@ -9,7 +9,7 @@ Control your followers' traits with this quality-of-life mod.
 ### Trait Replacement
 - Automatically replaces negative traits with positive ones on new followers
 - **Apply To Existing Followers** - optionally process existing followers too (disabled by default to protect necklace-granted traits). Shows a warning before enabling.
-- **Preserve Rot Followers** - keeps the Mutated (Rot) trait intact for rituals and DLC content (enabled by default)
+- **Preserve Rot & Cursed** - keeps the Mutated (Rot) and Cursed (Zombie) traits intact (enabled by default). Rot followers are useful for rituals, and Cursed followers gain their trait through resurrection.
 - Backs up original traits and can restore them if feature is disabled
 - Option to use only unlocked traits for replacements (enabled by default)
 - Option to pull from all trait pools instead of the game's separate pools

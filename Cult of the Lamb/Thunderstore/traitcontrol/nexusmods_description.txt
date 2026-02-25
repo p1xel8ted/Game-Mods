@@ -6,7 +6,7 @@
 [list]
 [*][size=3]Automatically replaces negative traits with positive ones on new followers.[/size]
 [*][size=3][b]Apply To Existing Followers[/b] - optionally process existing followers too (disabled by default to protect necklace-granted traits). Shows a warning before enabling.[/size]
-[*][size=3][b]Preserve Rot Followers[/b] - keeps the Mutated (Rot) trait intact for rituals and DLC content (enabled by default).[/size]
+[*][size=3][b]Preserve Rot & Cursed[/b] - keeps the Mutated (Rot) and Cursed (Zombie) traits intact (enabled by default). Rot followers are useful for rituals, and Cursed followers gain their trait through resurrection.[/size]
 [*][size=3]Backs up original traits and can restore them if the feature is disabled.[/size]
 [*][size=3]Option to use only unlocked traits for replacements (enabled by default).[/size]
 [*][size=3]Option to pull from all trait pools instead of the game's separate pools.[/size]

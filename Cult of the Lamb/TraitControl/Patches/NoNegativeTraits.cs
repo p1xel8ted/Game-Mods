@@ -10,6 +10,13 @@ public static class NoNegativeTraits
     private static HashSet<FollowerTrait.TraitType> _allTraits;
     private static List<FollowerTraitBackup> _followerTraitBackups = [];
 
+    /// <summary>
+    /// True while loading followers from a save file. Set in BiomeBaseManager_Start,
+    /// cleared after one frame. Used to gate the FollowerBrain constructor postfix
+    /// so existing followers respect the ApplyToExistingFollowers setting.
+    /// </summary>
+    private static bool _isLoadingSave;
+
     private static string DataPath => Path.Combine(Application.persistentDataPath, "saves", $"slot_{SaveAndLoad.SAVE_SLOT}_follower_trait_backups.json");
 
     private static void LoadBackupFromFile()
@@ -207,10 +214,12 @@ public static class NoNegativeTraits
                 continue;
             }
 
-            // Skip Mutated (Rot) trait if preservation is enabled
-            if (Plugin.PreserveMutatedTrait.Value && trait == FollowerTrait.TraitType.Mutated)
+            // Skip Mutated (Rot) and Zombie (Cursed) traits if preservation is enabled
+            // Mutated: mechanically distinct rot state, useful for rituals
+            // Zombie: granted by resurrection ritual, changes animation and behavior
+            if (Plugin.PreserveMutatedTrait.Value && (trait == FollowerTrait.TraitType.Mutated || trait == FollowerTrait.TraitType.Zombie))
             {
-                Plugin.L($"\tSkipping Mutated (Rot) trait - preservation enabled");
+                Plugin.L($"\tSkipping {trait} trait - special state trait preservation enabled");
                 continue;
             }
 
@@ -325,6 +334,15 @@ public static class NoNegativeTraits
     {
         if (Plugin.IsNothingNegativePresent()) return;
         if (!Plugin.NoNegativeTraits.Value) return;
+
+        // During save load, respect ApplyToExistingFollowers setting.
+        // New followers created during gameplay are always processed.
+        if (_isLoadingSave && !Plugin.ApplyToExistingFollowers.Value)
+        {
+            Plugin.L($"Skipping trait replacement for {__instance._directInfoAccess.Name} - loading save with 'Apply To Existing' disabled");
+            return;
+        }
+
         // Use directManipulation to avoid NullReferenceException during early game loading
         // when singletons like TwitchFollowers or NotificationCentre may not be initialized.
         ProcessTraitReplacement(__instance, directManipulation: true);
@@ -367,9 +385,26 @@ public static class NoNegativeTraits
     private static void BiomeBaseManager_Start()
     {
         if (Plugin.IsNothingNegativePresent()) return;
+
+        // Mark that we're loading from save — FollowerBrain constructors during this frame
+        // should respect ApplyToExistingFollowers instead of always processing
+        _isLoadingSave = true;
+        Plugin._instance?.StartCoroutine(ClearLoadFlag());
+
         _followerTraitBackups?.Clear();
         LoadBackupFromFile();
         GenerateAvailableTraits();
+    }
+
+    /// <summary>
+    /// Clears the save-load flag after one frame, once all existing followers have been constructed.
+    /// After this, any new FollowerBrain constructions are for genuinely new followers.
+    /// </summary>
+    private static IEnumerator ClearLoadFlag()
+    {
+        yield return null;
+        _isLoadingSave = false;
+        Plugin.L("Save load complete - new followers will have trait replacement applied normally");
     }
 
     internal static void GenerateAvailableTraits()

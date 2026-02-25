@@ -1,3 +1,10 @@
+### 0.1.7 - 25/02/2026
+
+**Fixes:**
+* Fixed game freezing when using the Exorcism Altar with limited trait options — the game could enter an infinite loop when the available trait pool was exhausted.
+* "Preserve Rot & Cursed" (formerly "Preserve Rot Followers") now also preserves the Cursed trait on resurrected followers, preventing it from being replaced with a random positive trait.
+* Trait replacement no longer modifies existing followers when loading a save if "Apply To Existing Followers" is disabled. Previously, all followers had their negative traits replaced on every save load regardless of this setting.
+
 ### 0.1.6 - 08/02/2026
 
 **New Features:**

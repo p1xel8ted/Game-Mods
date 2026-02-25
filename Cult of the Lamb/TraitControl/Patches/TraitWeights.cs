@@ -183,7 +183,14 @@ public static class TraitWeights
     {
         var sourceTraits = Plugin.UseAllTraits.Value ? Plugin.AllTraitsList : FollowerTrait.StartingTraits;
         __result = SelectTrait(sourceTraits);
-        return false; // Always skip original
+        if (__result == FollowerTrait.TraitType.None)
+        {
+            // Trait pool exhausted - fall back to vanilla logic to prevent infinite loops
+            // in the vanilla do-while within RandomisedTraits/CompletelyNewRandomisedTraits
+            Plugin.Log.LogWarning("[GetStartingTrait] Pool exhausted, falling back to vanilla selection");
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -196,7 +203,13 @@ public static class TraitWeights
     {
         var sourceTraits = Plugin.UseAllTraits.Value ? Plugin.AllTraitsList : FollowerTrait.RareStartingTraits;
         __result = SelectTrait(sourceTraits);
-        return false; // Always skip original
+        if (__result == FollowerTrait.TraitType.None)
+        {
+            // Trait pool exhausted - fall back to vanilla logic to prevent infinite loops
+            Plugin.Log.LogWarning("[GetRareTrait] Pool exhausted, falling back to vanilla selection");
+            return true;
+        }
+        return false;
     }
 
     /// <summary>

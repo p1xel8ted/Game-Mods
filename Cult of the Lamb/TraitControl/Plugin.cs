@@ -10,7 +10,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.traitcontrol";
     internal const string PluginName = "Trait Control";
-    private const string PluginVer = "0.1.6";
+    private const string PluginVer = "0.1.7";
 
     private const string TraitReplacementSection = "── Trait Replacement ──";
     private const string UniqueTraitsSection = "── Unique Traits ──";
@@ -585,7 +585,7 @@ public partial class Plugin : BaseUnityPlugin
         return string.IsNullOrWhiteSpace(sanitized) ? null : sanitized.Trim();
     }
 
-    private static Plugin _instance;
+    internal static Plugin _instance;
 
     /// <summary>
     /// Public wrapper for UpdateTraitWeightVisibility, callable from patches.
