@@ -55,6 +55,8 @@
 [*][size=3]All traits default to 1.0 (equal chance).[/size]
 [*][size=3]Sliders snap to 0.05 increments for precise control (values below 0.1 snap to 0).[/size]
 [/list]
+[size=3][b]Understanding the math:[/b] With "Use All Traits Pool" enabled, there are ~85 traits competing. If all are at weight 1 and you set Immortal to weight 50, the probability is: 50/(84+50) ≈ 37% per follower. At weight 100: 100/(84+100) ≈ 54% per follower.[/size]
+
 [size=3]The trait list is dynamically generated from the game, so new traits added by the developers will automatically appear in the config.[/size]
 
 [size=3][b]Localization Support[/b][/size]
@@ -263,6 +265,13 @@
 [/list]
 [size=3][i]Result: New followers will have the RoyalPooper trait (produces gold instead of poop). Note: RoyalPooper is only in the Rare/Faithful pools, so "Use All Traits Pool" must be enabled for it to appear on regular new followers.[/i][/size]
 
+[size=3][b]"I want followers with lots of traits"[/b][/size]
+[list]
+[*][size=3]Minimum Traits: 5[/size]
+[*][size=3]Maximum Traits: 8[/size]
+[/list]
+[size=3][i]Result: New followers will have 5-8 traits instead of the vanilla 2-3. (Maximum is 8 due to UI constraints.)[/i][/size]
+
 [size=4][b]Installation[/b][/size]
 
 [list]
@@ -301,3 +310,7 @@
 [size=3]If you're enjoying the mod, please consider donating or endorsing it with a thumbs up. Your support is greatly appreciated![/size]
 
 [url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
+
+[size=4][b]Issues[/b][/size]
+
+[size=3]Please report issues on the mod page or GitHub.[/size]
