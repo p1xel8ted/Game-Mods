@@ -1,3 +1,11 @@
+### 2.4.3 - 27/02/2026
+
+**New Features:**
+* Added "Animal Guaranteed Death Age" setting — controls the age at which old age death becomes certain. Daily death chance scales linearly up to this age (e.g., setting to 200 means 50% chance at age 100). Vanilla default is 100.
+
+**Fixes:**
+* Fixed "Immortal Farm Animals" not fully preventing old age death for animals aged 100+.
+
 ### 2.4.2 - 24/02/2026
 
 **Fixes:**

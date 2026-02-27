@@ -60,7 +60,8 @@
 
 ### Animals
 - Immortal farm animals (prevent old age death)
-- Customise minimum age before animals can die of old age
+- Customise minimum age before animals can die of old age (vanilla: 15 days)
+- Customise guaranteed death age — the age at which old age death becomes certain (vanilla: 100 days). Daily death chance scales linearly from the minimum age to this value
 - Mass pet farm animals
 - Mass clean stinky animals
 - Mass feed hungry animals

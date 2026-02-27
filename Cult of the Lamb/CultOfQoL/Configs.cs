@@ -247,6 +247,7 @@ public partial class Plugin
 
     public static ConfigEntry<bool> DisableAnimalOldAgeDeath { get; private set; }
     public static ConfigEntry<int> AnimalOldAgeDeathThreshold { get; private set; }
+    public static ConfigEntry<int> AnimalGuaranteedDeathAge { get; private set; }
     
     public static ConfigEntry<float> RitualCooldownTime { get; private set; }
     public static ConfigEntry<float> RitualCostMultiplier { get; private set; }

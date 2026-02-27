@@ -12,7 +12,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.4.2";
+    private const string PluginVer = "2.4.3";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
 
@@ -120,7 +120,7 @@ public partial class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "Prevents farm animals from dying of old age.",
                 null,
-                new ConfigurationManagerAttributes { Order = 2 }
+                new ConfigurationManagerAttributes { Order = 3 }
             )
         );
 
@@ -128,9 +128,19 @@ public partial class Plugin : BaseUnityPlugin
             AnimalsSection,
             "Animal Old Age Death Threshold", 15,
             new ConfigDescription(
-                "The minimum age (in days) before animals can die of old age. Vanilla default is 15. At any age above this, there is a chance per day equal to age/100 (e.g., at age 50, 50% chance).",
+                "The minimum age (in days) before animals can die of old age. Vanilla default is 15.",
                 new AcceptableValueRange<int>(15, 100),
-                new ConfigurationManagerAttributes { ShowRangeAsPercent = false, Order = 1, DispName = "    └ Animal Old Age Death Threshold" }
+                new ConfigurationManagerAttributes { ShowRangeAsPercent = false, Order = 2 }
+            )
+        );
+
+        AnimalGuaranteedDeathAge = _configInstance.Bind(
+            AnimalsSection,
+            "Animal Guaranteed Death Age", 100,
+            new ConfigDescription(
+                "The age at which old age death becomes certain. Daily death chance scales linearly — at half this age, there's a 50% chance per day. Vanilla default is 100.",
+                new AcceptableValueRange<int>(50, 1000),
+                new ConfigurationManagerAttributes { ShowRangeAsPercent = false, Order = 1 }
             )
         );
 
