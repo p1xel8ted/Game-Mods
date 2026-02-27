@@ -1,11 +1,18 @@
 # Glyph Override
 
-Customize which controller button prompts are displayed in-game.
+Customize which controller button prompts are displayed in-game, with full local co-op support.
 
 ## Features
 
-### Force Controller Prompts
+### Co-op Controller Prompt Fix
+- Fixes Player 2 (Goat) seeing "--" instead of button prompts in local co-op
+- Button prompts now correctly update when Player 2 switches or reconnects their controller
+- Supports mixed controller types in co-op (e.g., Player 1 on Xbox, Player 2 on PlayStation)
+
+### Force Controller Prompts (Per-Player)
 - Override the auto-detected controller type to display specific button prompts
+- Separate settings for Player 1 (Lamb) and Player 2 (Goat) in co-op
+- Each player can be set to a different controller type independently
 - Supported controller types:
   - Auto (default - uses connected controller)
   - Keyboard
@@ -21,6 +28,7 @@ Customize which controller button prompts are displayed in-game.
 
 ### Nintendo Switch A/B Button Fix
 - Automatically swaps A/B button prompts when using any Nintendo Switch controller type
+- Works correctly per-player in co-op with mixed controller types
 - Nintendo and Xbox controllers have physically swapped A/B positions:
   - Nintendo: A=right, B=bottom
   - Xbox: A=bottom, B=right
