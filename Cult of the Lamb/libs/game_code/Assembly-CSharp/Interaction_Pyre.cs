@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Pyre
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -61,7 +61,7 @@ public class Interaction_Pyre : Interaction
 
   public override void GetLabel() => this.Label = this.Activated ? "" : this.sSacrificialPyre;
 
-  public void CutDown() => this.StartCoroutine((IEnumerator) this.CutDownRoutine());
+  public void CutDown() => this.StartCoroutine(this.CutDownRoutine());
 
   public IEnumerator CutDownRoutine()
   {
@@ -76,7 +76,7 @@ public class Interaction_Pyre : Interaction
     interactionPyre.state.CURRENT_STATE = StateMachine.State.Idle;
   }
 
-  public void LightPyre() => this.StartCoroutine((IEnumerator) this.LightPyreRoutine());
+  public void LightPyre() => this.StartCoroutine(this.LightPyreRoutine());
 
   public IEnumerator LightPyreRoutine()
   {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Structures_Refinery
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -106,7 +106,8 @@ public class Structures_Refinery : StructureBrain, ITaskProvider
     this.Data.Progress = 0.0f;
     this.DepositItem(this.Data.QueuedResources[0], Structures_Refinery.GetAmount(this.Data.QueuedResources[0]));
     this.Data.QueuedResources.RemoveAt(0);
-    this.Data.QueuedRefineryVariants.RemoveAt(0);
+    if (this.Data.QueuedRefineryVariants.Count > 0)
+      this.Data.QueuedRefineryVariants.RemoveAt(0);
     System.Action completeRefining = this.OnCompleteRefining;
     if (completeRefining == null)
       return;

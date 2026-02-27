@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LambTownExecutionerQuestManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -102,7 +102,7 @@ public class LambTownExecutionerQuestManager : MonoBehaviour
     if (LambTownExecutionerQuestManager.CanPlayExecutionerIndoctrinationSequence)
     {
       this.executionerSpine.gameObject.SetActive(true);
-      this.StartCoroutine((IEnumerator) this.WaitForTransitionAndPlay());
+      this.StartCoroutine(this.WaitForTransitionAndPlay());
     }
     else
     {
@@ -150,9 +150,9 @@ public class LambTownExecutionerQuestManager : MonoBehaviour
     this.prayingLoopInstanceSFX = AudioManager.Instance.CreateLoop(this.outroPrayingLoopSFX, this.executionerSpine.gameObject, true);
     List<MMTools.Response> Responses = new List<MMTools.Response>();
     string str1 = "Conversation_NPC/GraveyardNPC/Executioner/Choice_Indoctrinate";
-    Responses.Add(new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine((IEnumerator) this.Indoctrinate())), str1));
+    Responses.Add(new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine(this.Indoctrinate())), str1));
     string str2 = "Conversation_NPC/GraveyardNPC/Executioner/Choice_Kill";
-    Responses.Add(new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine((IEnumerator) this.Kill())), str2));
+    Responses.Add(new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine(this.Kill())), str2));
     ConversationObject conversationObject = new ConversationObject(this.graveyardNPCEntries, Responses, (System.Action) null);
     HUD_Manager.Instance.Hide(false);
     PlayerFarming.Instance.GoToAndStop(this.playerPosition.position, GoToCallback: (System.Action) (() => MMConversation.Play(conversationObject, SnapLetterBox: true)), groupAction: true);
@@ -181,11 +181,11 @@ public class LambTownExecutionerQuestManager : MonoBehaviour
     PlayerFarming.Instance.state.CURRENT_STATE = StateMachine.State.InActive;
     DataManager.Instance.ExecutionerWoolhavenExecuted = true;
     if (!DataManager.Instance.LegendaryWeaponsUnlockOrder.Contains(EquipmentType.Axe_Legendary) && DataManager.Instance.OnboardedLegendaryWeapons)
-      yield return (object) executionerQuestManager.StartCoroutine((IEnumerator) executionerQuestManager.PlayerPickUpWeapon());
+      yield return (object) executionerQuestManager.StartCoroutine(executionerQuestManager.PlayerPickUpWeapon());
     yield return (object) new WaitForSeconds(0.3f);
     if (!StructuresData.GetUnlocked(StructureBrain.TYPES.DECORATION_BOSS_TROPHY_DLC_EXECUTIONER))
     {
-      yield return (object) executionerQuestManager.StartCoroutine((IEnumerator) executionerQuestManager.PlayerPickUpThrophyDeco(executionerQuestManager.executionerSpine.transform.position));
+      yield return (object) executionerQuestManager.StartCoroutine(executionerQuestManager.PlayerPickUpThrophyDeco(executionerQuestManager.executionerSpine.transform.position));
       yield return (object) new WaitForSeconds(0.5f);
     }
     MMConversation.Play(new ConversationObject(executionerQuestManager.killReactionEntries, (List<MMTools.Response>) null, (System.Action) (() => this.EndExecution())), SnapLetterBox: true);
@@ -228,7 +228,7 @@ public class LambTownExecutionerQuestManager : MonoBehaviour
     yield return (object) new WaitForSeconds(0.5f);
     if (!StructuresData.GetUnlocked(StructureBrain.TYPES.DECORATION_BOSS_TROPHY_DLC_EXECUTIONER))
     {
-      yield return (object) executionerQuestManager.StartCoroutine((IEnumerator) executionerQuestManager.PlayerPickUpThrophyDeco(follower.Follower.transform.position));
+      yield return (object) executionerQuestManager.StartCoroutine(executionerQuestManager.PlayerPickUpThrophyDeco(follower.Follower.transform.position));
       yield return (object) new WaitForSeconds(0.5f);
     }
     GameManager.GetInstance().OnConversationNext(follower.Follower.gameObject);
@@ -268,16 +268,16 @@ public class LambTownExecutionerQuestManager : MonoBehaviour
     MMConversation.Play(new ConversationObject(executionerQuestManager.indoctraintedReactionEntries, (List<MMTools.Response>) null, (System.Action) (() => this.EndExecution())), SnapLetterBox: true);
   }
 
-  public void EndExecution() => this.StartCoroutine((IEnumerator) this.EndExecutionSequence());
+  public void EndExecution() => this.StartCoroutine(this.EndExecutionSequence());
 
   public IEnumerator EndExecutionSequence()
   {
     LambTownExecutionerQuestManager executionerQuestManager = this;
     PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive);
-    yield return (object) executionerQuestManager.StartCoroutine((IEnumerator) LambTownExecutionerQuestManager.FadeIn());
+    yield return (object) executionerQuestManager.StartCoroutine(LambTownExecutionerQuestManager.FadeIn());
     executionerQuestManager.executionerSpine.gameObject.SetActive(false);
     executionerQuestManager.SetGhostsActive(false);
-    yield return (object) executionerQuestManager.StartCoroutine((IEnumerator) LambTownExecutionerQuestManager.FadeOut());
+    yield return (object) executionerQuestManager.StartCoroutine(LambTownExecutionerQuestManager.FadeOut());
     PlayerFarming.SetStateForAllPlayers();
     SimulationManager.UnPause();
   }

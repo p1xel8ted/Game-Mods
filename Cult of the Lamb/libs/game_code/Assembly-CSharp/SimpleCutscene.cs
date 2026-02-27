@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SimpleCutscene
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -30,7 +30,7 @@ public class SimpleCutscene : BaseMonoBehaviour
   public void Play()
   {
     Debug.Log((object) "PLAY CUTSCENE!");
-    this.StartCoroutine((IEnumerator) this.PlayRoutine());
+    this.StartCoroutine(this.PlayRoutine());
   }
 
   public void Update()
@@ -51,7 +51,7 @@ public class SimpleCutscene : BaseMonoBehaviour
         switch (c.Type)
         {
           case SimpleCutscene.CutsceneObject.TypeOfScene.Animate:
-            yield return (object) simpleCutscene.StartCoroutine((IEnumerator) simpleCutscene.AnimateRoutine(c));
+            yield return (object) simpleCutscene.StartCoroutine(simpleCutscene.AnimateRoutine(c));
             break;
           case SimpleCutscene.CutsceneObject.TypeOfScene.Delay:
             yield return (object) new WaitForSeconds(c.Delay);
@@ -62,10 +62,10 @@ public class SimpleCutscene : BaseMonoBehaviour
           case SimpleCutscene.CutsceneObject.TypeOfScene.Move:
             if (c.WaitForEndOfMove)
             {
-              yield return (object) simpleCutscene.StartCoroutine((IEnumerator) simpleCutscene.MoveRoutine(c));
+              yield return (object) simpleCutscene.StartCoroutine(simpleCutscene.MoveRoutine(c));
               break;
             }
-            simpleCutscene.StartCoroutine((IEnumerator) simpleCutscene.MoveRoutine(c));
+            simpleCutscene.StartCoroutine(simpleCutscene.MoveRoutine(c));
             break;
           case SimpleCutscene.CutsceneObject.TypeOfScene.BeginCutscene:
             GameManager.GetInstance().OnConversationNew();
@@ -107,7 +107,7 @@ public class SimpleCutscene : BaseMonoBehaviour
     if (c.WaitForEndOfAnimation)
       yield return (object) new WaitForSeconds(c.Spine.AnimationState.GetCurrent(0).Animation.Duration);
     if (c.DestroyAfterAnimation)
-      simpleCutscene.StartCoroutine((IEnumerator) simpleCutscene.DestroyAfterDelay(c, c.WaitForEndOfAnimation ? 0.0f : c.Spine.AnimationState.GetCurrent(0).Animation.Duration));
+      simpleCutscene.StartCoroutine(simpleCutscene.DestroyAfterDelay(c, c.WaitForEndOfAnimation ? 0.0f : c.Spine.AnimationState.GetCurrent(0).Animation.Duration));
   }
 
   public IEnumerator DestroyAfterDelay(SimpleCutscene.CutsceneObject c, float Duration)

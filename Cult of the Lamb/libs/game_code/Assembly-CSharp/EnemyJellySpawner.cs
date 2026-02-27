@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJellySpawner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -196,6 +196,8 @@ public class EnemyJellySpawner : EnemyJellyCharger
     this.charging = false;
     this.attacking = false;
     this.health.invincible = false;
+    this.Spine.timeScale = 1f;
+    this.Spine.AnimationState.SetAnimation(0, this.idleAnimation, true);
     this.lastProjectileSwirlShootingTime = ((UnityEngine.Object) GameManager.GetInstance() != (UnityEngine.Object) null ? GameManager.GetInstance().CurrentTime : Time.time) + UnityEngine.Random.Range(this.timeBetweenProjectileSwirlShots.x, this.timeBetweenProjectileSwirlShots.y);
     this.lastDropBombTime = ((UnityEngine.Object) GameManager.GetInstance() != (UnityEngine.Object) null ? GameManager.GetInstance().CurrentTime : Time.time) + UnityEngine.Random.Range(this.timeBetweenDroppingBombs.x, this.timeBetweenDroppingBombs.y);
   }
@@ -210,7 +212,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
     this.simpleSpineFlash.FlashFillRed();
     if (this.teleportOnHit && !this.attacking && (AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Projectile))
     {
-      this.StartCoroutine((IEnumerator) this.TeleportIE());
+      this.StartCoroutine(this.TeleportIE());
     }
     else
     {
@@ -281,7 +283,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
   {
     if (this.spawning || this.charging || this.attacking || this.teleporting || this.spawnableEnemies.Length == 0 || this.spawnedAmount >= this.maxEnemiesActive || (double) this.targetMinSpawnRadius != 0.0 && (double) Vector3.Distance(this.transform.position, this.targetObject.transform.position) <= (double) this.targetMinSpawnRadius)
       return;
-    this.spawnRoutine = this.StartCoroutine((IEnumerator) this.SpawnDelay());
+    this.spawnRoutine = this.StartCoroutine(this.SpawnDelay());
   }
 
   public IEnumerator SpawnDelay()
@@ -490,8 +492,8 @@ public class EnemyJellySpawner : EnemyJellyCharger
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
     AudioManager.Instance.PlayOneShot("event:/enemy/chaser/chaser_attack", this.transform.position);
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.TurnOnDamageColliderForDuration(this.damageDuration));
-    this.StartCoroutine((IEnumerator) this.AttackCooldownIE());
+    this.StartCoroutine(this.TurnOnDamageColliderForDuration(this.damageDuration));
+    this.StartCoroutine(this.AttackCooldownIE());
   }
 
   public IEnumerator AttackCooldownIE()
@@ -532,7 +534,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
   {
     if (this.spawning || this.charging || this.attacking || this.teleporting)
       return;
-    this.StartCoroutine((IEnumerator) this.ProjectilePattern());
+    this.StartCoroutine(this.ProjectilePattern());
   }
 
   public IEnumerator ProjectilePattern()
@@ -550,7 +552,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
     enemyJellySpawner.simpleSpineFlash.FlashWhite(false);
     enemyJellySpawner.Spine.AnimationState.SetAnimation(0, enemyJellySpawner.shootAnimation, false);
     enemyJellySpawner.Spine.AnimationState.AddAnimation(0, enemyJellySpawner.idleAnimation, true, 0.0f);
-    yield return (object) enemyJellySpawner.StartCoroutine((IEnumerator) enemyJellySpawner.projectilePattern.ShootIE(0.0f, (GameObject) null, (Transform) null, false));
+    yield return (object) enemyJellySpawner.StartCoroutine(enemyJellySpawner.projectilePattern.ShootIE(0.0f, (GameObject) null, (Transform) null, false));
     enemyJellySpawner.lastProjectileShootingTime = GameManager.GetInstance().CurrentTime + UnityEngine.Random.Range(enemyJellySpawner.timeBetweenProjectileShots.x, enemyJellySpawner.timeBetweenProjectileShots.y);
     enemyJellySpawner.attacking = false;
   }
@@ -559,7 +561,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
   {
     if (this.spawning || this.charging || this.attacking || this.teleporting)
       return;
-    this.StartCoroutine((IEnumerator) this.DropTrapBombs());
+    this.StartCoroutine(this.DropTrapBombs());
   }
 
   public IEnumerator DropTrapBombs()
@@ -616,7 +618,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
   {
     if (this.spawning || this.charging || this.attacking || this.teleporting)
       return;
-    this.StartCoroutine((IEnumerator) this.ProjectileSwirlPattern());
+    this.StartCoroutine(this.ProjectileSwirlPattern());
   }
 
   public IEnumerator ProjectileSwirlPattern()
@@ -624,7 +626,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
     EnemyJellySpawner enemyJellySpawner = this;
     enemyJellySpawner.attacking = true;
     enemyJellySpawner.ClearPaths();
-    yield return (object) enemyJellySpawner.StartCoroutine((IEnumerator) enemyJellySpawner.TeleportToPositionIE(Vector3.zero, enemyJellySpawner.teleportShootAnimation));
+    yield return (object) enemyJellySpawner.StartCoroutine(enemyJellySpawner.TeleportToPositionIE(Vector3.zero, enemyJellySpawner.teleportShootAnimation));
     enemyJellySpawner.Spine.AnimationState.SetAnimation(0, enemyJellySpawner.shootLongAnticipateAnimation, true);
     AudioManager.Instance.PlayOneShot("event:/enemy/jellyfish_miniboss/jellyfish_miniboss_charge", enemyJellySpawner.transform.position);
     float t = 0.0f;
@@ -637,7 +639,7 @@ public class EnemyJellySpawner : EnemyJellyCharger
     enemyJellySpawner.simpleSpineFlash.FlashWhite(false);
     AudioManager.Instance.PlayOneShot("event:/enemy/vocals/jellyfish_large/warning", enemyJellySpawner.transform.position);
     enemyJellySpawner.Spine.AnimationState.SetAnimation(0, enemyJellySpawner.shootLongAnimation, true);
-    yield return (object) enemyJellySpawner.StartCoroutine((IEnumerator) enemyJellySpawner.projectileSwirlPattern.ShootIE());
+    yield return (object) enemyJellySpawner.StartCoroutine(enemyJellySpawner.projectileSwirlPattern.ShootIE());
     enemyJellySpawner.Spine.AnimationState.AddAnimation(0, enemyJellySpawner.idleAnimation, true, 0.0f);
     yield return (object) new WaitForSeconds(2f);
     enemyJellySpawner.lastProjectileSwirlShootingTime = GameManager.GetInstance().CurrentTime + UnityEngine.Random.Range(enemyJellySpawner.timeBetweenProjectileSwirlShots.x, enemyJellySpawner.timeBetweenProjectileSwirlShots.y);

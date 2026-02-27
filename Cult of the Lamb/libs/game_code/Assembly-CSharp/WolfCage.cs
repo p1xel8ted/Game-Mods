@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WolfCage
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -42,7 +42,7 @@ public class WolfCage : BaseMonoBehaviour
   {
     this.chargedParticles.SetActive(false);
     this._originalPosition = this.transform.position;
-    this.StartCoroutine((IEnumerator) this.RattleRoutine());
+    this.StartCoroutine(this.RattleRoutine());
   }
 
   public IEnumerator RattleRoutine()
@@ -65,7 +65,7 @@ public class WolfCage : BaseMonoBehaviour
   public void Explode()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ExplodeRoutine());
+    this.StartCoroutine(this.ExplodeRoutine());
   }
 
   public IEnumerator ExplodeRoutine(bool playSFX = false)

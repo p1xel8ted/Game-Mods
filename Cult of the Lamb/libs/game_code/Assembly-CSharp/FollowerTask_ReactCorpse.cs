@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_ReactCorpse
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -54,7 +54,7 @@ public class FollowerTask_ReactCorpse : FollowerTask
         this._brain.AddThought(Thought.GrievedAtRottenUnburiedBodyFearOfDeathTrait);
         if ((double) UnityEngine.Random.value >= 0.75)
           return;
-        GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
+        GameManager.GetInstance().StartCoroutine(FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
         {
           if ((double) IllnessBar.IllnessNormalized <= 0.05000000074505806)
             return;
@@ -66,7 +66,7 @@ public class FollowerTask_ReactCorpse : FollowerTask
         this._brain.AddThought(Thought.GrievedAtUnburiedBodyFearOfDeathTrait);
         if ((double) UnityEngine.Random.value >= 0.33000001311302185)
           return;
-        GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
+        GameManager.GetInstance().StartCoroutine(FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
         {
           if ((double) IllnessBar.IllnessNormalized <= 0.05000000074505806)
             return;
@@ -79,7 +79,7 @@ public class FollowerTask_ReactCorpse : FollowerTask
       if ((double) UnityEngine.Random.value >= 0.5)
         return;
       this._brain.AddThought(Thought.GrievedAtRottenUnburiedBody);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
       {
         if ((double) IllnessBar.IllnessNormalized <= 0.05000000074505806)
           return;
@@ -91,7 +91,7 @@ public class FollowerTask_ReactCorpse : FollowerTask
       this._brain.AddThought(Thought.GrievedAtUnburiedBody);
       if ((double) UnityEngine.Random.value >= 0.25)
         return;
-      GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(FollowerTask_ReactCorpse.FrameDelay((System.Action) (() =>
       {
         if ((double) IllnessBar.IllnessNormalized <= 0.05000000074505806)
           return;

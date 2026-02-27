@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyRotHoleMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -87,7 +87,7 @@ public class EnemyRotHoleMiniboss : UnitObject
   {
     if (this.currentStateRoutine != null)
       this.StopCoroutine(this.currentStateRoutine);
-    this.currentStateRoutine = this.StartCoroutine((IEnumerator) newState);
+    this.currentStateRoutine = this.StartCoroutine(newState);
   }
 
   public override void OnDie(
@@ -215,7 +215,7 @@ public class EnemyRotHoleMiniboss : UnitObject
     if (!hasExploded)
     {
       hasExploded = true;
-      enemyRotHoleMiniboss.health.DealDamage(float.PositiveInfinity, (GameObject) null, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+      enemyRotHoleMiniboss.health.DealDamage(float.PositiveInfinity, (GameObject) null, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
     }
   }
 

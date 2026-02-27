@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LetterboxSimple
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -38,7 +38,7 @@ public class LetterboxSimple : MonoBehaviour
     this._letterboxStartingScale = this._letterboxTop.localScale.y;
     this._letterboxCanvasGroup.alpha = 0.0f;
     if (this.startDelay)
-      this.StartCoroutine((IEnumerator) this.ShowDelayed());
+      this.StartCoroutine(this.ShowDelayed());
     else
       this.Show();
   }

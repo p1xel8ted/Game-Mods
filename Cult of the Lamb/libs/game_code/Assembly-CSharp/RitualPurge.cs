@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualPurge
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -34,7 +34,7 @@ public class RitualPurge : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -44,7 +44,7 @@ public class RitualPurge : Ritual
     Interaction_TempleAltar.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
     PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualPurge.StartCoroutine((IEnumerator) ritualPurge.WaitFollowersFormCircle());
+    yield return (object) ritualPurge.StartCoroutine(ritualPurge.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     SimulationManager.Pause();
     PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
@@ -274,13 +274,13 @@ public class RitualPurge : Ritual
           ++structuresDestroyedCount;
           StructureBrain targetStructure = possibleStructures[UnityEngine.Random.Range(0, possibleStructures.Count)];
           possibleStructures.Remove(targetStructure);
-          yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) ritualPurge.ShowFollowersDestroyingStructure(followers, targetStructure));
+          yield return (object) GameManager.GetInstance().StartCoroutine(ritualPurge.ShowFollowersDestroyingStructure(followers, targetStructure));
           break;
         }
         if (num2 == 1 && possibleFollowersForInjured.Count > 1 && injuredFollowersCount < 1)
         {
           ++injuredFollowersCount;
-          yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) ritualPurge.ShowFollowersFighting(possibleFollowersForInjured));
+          yield return (object) GameManager.GetInstance().StartCoroutine(ritualPurge.ShowFollowersFighting(possibleFollowersForInjured));
           for (int index = possibleFollowersForInjured.Count - 1; index >= 0; --index)
           {
             if (possibleFollowersForInjured[index].FollowerBrain.Info.CursedState == Thought.Injured)
@@ -293,7 +293,7 @@ public class RitualPurge : Ritual
           ++terrifiedFollowersCount;
           FollowerManager.SpawnedFollower targetFollower = possibleFollowersForTerrified[UnityEngine.Random.Range(0, possibleFollowersForTerrified.Count)];
           possibleFollowersForTerrified.Remove(targetFollower);
-          yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) ritualPurge.ShowFollowerCrying(targetFollower));
+          yield return (object) GameManager.GetInstance().StartCoroutine(ritualPurge.ShowFollowerCrying(targetFollower));
           break;
         }
       }
@@ -415,7 +415,7 @@ public class RitualPurge : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num6 += Delay;
-      ritualPurge.StartCoroutine((IEnumerator) ritualPurge.DelayFollowerReaction(Ritual.FollowerToAttendSermon[index], Delay));
+      ritualPurge.StartCoroutine(ritualPurge.DelayFollowerReaction(Ritual.FollowerToAttendSermon[index], Delay));
       if (Ritual.FollowerToAttendSermon[index].HasTrait(FollowerTrait.TraitType.Scared) || Ritual.FollowerToAttendSermon[index].HasTrait(FollowerTrait.TraitType.Terrified) || Ritual.FollowerToAttendSermon[index].HasTrait(FollowerTrait.TraitType.CriminalScarred) || Ritual.FollowerToAttendSermon[index].HasTrait(FollowerTrait.TraitType.MissionaryTerrified))
         Ritual.FollowerToAttendSermon[index].AddThought((Thought) UnityEngine.Random.Range(343, 346));
       else
@@ -530,7 +530,7 @@ public class RitualPurge : Ritual
           this.loops.Add(follower.PlayLoopedVO("event:/dialogue/followers/pitchfork_loop", follower.gameObject));
       }
     }
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.ShakeTargetStructure());
+    GameManager.GetInstance().StartCoroutine(this.ShakeTargetStructure());
     yield return (object) new WaitForSeconds(3f);
     BiomeConstants.Instance.EmitSmokeInteractionVFX(this.target.transform.position, Vector3.one * (float) targetStructure.Data.Bounds.x);
     targetStructure.Collapse();

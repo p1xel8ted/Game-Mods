@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBomb
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -33,7 +33,7 @@ public class EnemyBomb : BaseMonoBehaviour, ISpellOwning
 
   public void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.ScaleCircle());
+    this.StartCoroutine(this.ScaleCircle());
     this.BombVisual.SetActive(false);
     this.BombShadow.SetActive(false);
   }
@@ -47,8 +47,8 @@ public class EnemyBomb : BaseMonoBehaviour, ISpellOwning
     this.moveDuration = moveDuration;
     this.team = team;
     this.parentSpine = parentSpine;
-    this.StartCoroutine((IEnumerator) this.MoveRock(Position));
-    this.StartCoroutine((IEnumerator) this.FlashCircle());
+    this.StartCoroutine(this.MoveRock(Position));
+    this.StartCoroutine(this.FlashCircle());
   }
 
   public void Update()

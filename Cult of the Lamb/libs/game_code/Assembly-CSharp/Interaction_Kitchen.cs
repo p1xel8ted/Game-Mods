@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Kitchen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -67,7 +67,7 @@ public class Interaction_Kitchen : Interaction_Cauldron
       return;
     GameManager.GetInstance().OnConversationNew();
     this.isLoadingAssets = true;
-    this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadCookingMinigameAssets(), (System.Action) (() =>
+    this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadCookingMinigameAssets(), (System.Action) (() =>
     {
       this.isLoadingAssets = false;
       this.ShowCooking(true);
@@ -129,7 +129,7 @@ public class Interaction_Kitchen : Interaction_Cauldron
 
   public void EndCooking()
   {
-    this.StartCoroutine((IEnumerator) this.DelayHideCooking());
+    this.StartCoroutine(this.DelayHideCooking());
     this._uiCookingMinigameOverlayController.OnCook -= new System.Action(this.OnCook);
     this._uiCookingMinigameOverlayController.OnUnderCook -= new System.Action(this.OnUnderCook);
     this._uiCookingMinigameOverlayController.OnBurn -= new System.Action(this.OnBurn);
@@ -183,9 +183,9 @@ public class Interaction_Kitchen : Interaction_Cauldron
     {
       ++DataManager.Instance.PoopMealsCreated;
       if (DataManager.Instance.PoopMealsCreated == UnityEngine.Random.Range(5, 12) && !DataManager.GetFollowerSkinUnlocked("Poop"))
-        this.StartCoroutine((IEnumerator) this.CreatePoopSkin());
+        this.StartCoroutine(this.CreatePoopSkin());
       else if (DataManager.Instance.PoopMealsCreated >= 12 && !DataManager.GetFollowerSkinUnlocked("Poop"))
-        this.StartCoroutine((IEnumerator) this.CreatePoopSkin());
+        this.StartCoroutine(this.CreatePoopSkin());
     }
     InventoryItem.Spawn((InventoryItem.ITEM_TYPE) num, 1, this.SpawnMealPosition.position, (float) UnityEngine.Random.Range(9, 11), (System.Action<PickUp>) (pickUp =>
     {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_AmmoIcon
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -72,15 +72,15 @@ public class HUD_AmmoIcon : BaseMonoBehaviour
       case HUD_AmmoIcon.Mode.ON:
       case HUD_AmmoIcon.Mode.ON_SPIRIT:
         this.Spine.gameObject.SetActive(true);
-        this.A = this.StartCoroutine((IEnumerator) this.Activate(Delay));
+        this.A = this.StartCoroutine(this.Activate(Delay));
         break;
       case HUD_AmmoIcon.Mode.EMPTY:
       case HUD_AmmoIcon.Mode.EMPTY_SPIRIT:
         this.Spine.gameObject.SetActive(true);
-        this.AE = this.StartCoroutine((IEnumerator) this.ActivateEmpty(this.PrevMode == HUD_AmmoIcon.Mode.OFF ? Delay : 0.0f));
+        this.AE = this.StartCoroutine(this.ActivateEmpty(this.PrevMode == HUD_AmmoIcon.Mode.OFF ? Delay : 0.0f));
         break;
       case HUD_AmmoIcon.Mode.OFF:
-        this.D = this.StartCoroutine((IEnumerator) this.Deactivate(Delay));
+        this.D = this.StartCoroutine(this.Deactivate(Delay));
         break;
     }
     this.PrevMode = mode;
@@ -107,7 +107,7 @@ public class HUD_AmmoIcon : BaseMonoBehaviour
           hudAmmoIcon.Spine.AnimationState.AddAnimation(0, "full", true, 0.0f);
         }
         hudAmmoIcon.Spine.Skeleton.SetAttachment(hudAmmoIcon.Slot, hudAmmoIcon.Attachment);
-        hudAmmoIcon.StartCoroutine((IEnumerator) hudAmmoIcon.DoScale());
+        hudAmmoIcon.StartCoroutine(hudAmmoIcon.DoScale());
         break;
     }
   }
@@ -172,7 +172,7 @@ public class HUD_AmmoIcon : BaseMonoBehaviour
   {
     if (this.Shaking)
       return;
-    this.StartCoroutine((IEnumerator) this.DoShake());
+    this.StartCoroutine(this.DoShake());
   }
 
   public IEnumerator DoShake()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: I2.Loc.LocalizationManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -639,7 +639,7 @@ public static class LocalizationManager
 
   public static void RegisterSceneSources()
   {
-    foreach (LanguageSource languageSource in (LanguageSource[]) UnityEngine.Resources.FindObjectsOfTypeAll((System.Type) typeof (LanguageSource)))
+    foreach (LanguageSource languageSource in (LanguageSource[]) UnityEngine.Resources.FindObjectsOfTypeAll(typeof (LanguageSource)))
     {
       if (!LocalizationManager.Sources.Contains(languageSource.mSource))
       {
@@ -917,7 +917,7 @@ public static class LocalizationManager
 
   public static void DoLocalizeAll(bool Force = false)
   {
-    Localize[] objectsOfTypeAll = (Localize[]) UnityEngine.Resources.FindObjectsOfTypeAll((System.Type) typeof (Localize));
+    Localize[] objectsOfTypeAll = (Localize[]) UnityEngine.Resources.FindObjectsOfTypeAll(typeof (Localize));
     int index = 0;
     for (int length = objectsOfTypeAll.Length; index < length; ++index)
     {

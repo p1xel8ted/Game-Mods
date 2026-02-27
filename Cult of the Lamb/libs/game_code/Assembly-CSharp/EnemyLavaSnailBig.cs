@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyLavaSnailBig
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -183,10 +183,10 @@ public class EnemyLavaSnailBig : UnitObject
       this.health.invincible = false;
       foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
         simpleSpineFlash.FlashWhite(false);
-      this.StartCoroutine((IEnumerator) this.WanderingRoutine());
+      this.StartCoroutine(this.WanderingRoutine());
     }
     else
-      this.StartCoroutine((IEnumerator) this.WanderingRoutine());
+      this.StartCoroutine(this.WanderingRoutine());
   }
 
   public override void OnDisable()
@@ -233,7 +233,7 @@ public class EnemyLavaSnailBig : UnitObject
             enemyLavaSnailBig.Spine.AnimationState.SetAnimation(0, enemyLavaSnailBig.IdleAnimation, true);
         }
         if (enemyLavaSnailBig.ShouldAttack())
-          enemyLavaSnailBig.StartCoroutine((IEnumerator) enemyLavaSnailBig.AttackRoutine());
+          enemyLavaSnailBig.StartCoroutine(enemyLavaSnailBig.AttackRoutine());
         yield return (object) null;
       }
       yield return (object) null;
@@ -257,12 +257,12 @@ public class EnemyLavaSnailBig : UnitObject
     if ((UnityEngine.Object) enemyLavaSnailBig.GetClosestTarget() != (UnityEngine.Object) null)
     {
       if ((double) UnityEngine.Random.value < (double) enemyLavaSnailBig.targetShootChance)
-        yield return (object) enemyLavaSnailBig.StartCoroutine((IEnumerator) enemyLavaSnailBig.TargetShootAttackRoutine());
+        yield return (object) enemyLavaSnailBig.StartCoroutine(enemyLavaSnailBig.TargetShootAttackRoutine());
       else
-        yield return (object) enemyLavaSnailBig.StartCoroutine((IEnumerator) enemyLavaSnailBig.BombardmentAttackRountine());
+        yield return (object) enemyLavaSnailBig.StartCoroutine(enemyLavaSnailBig.BombardmentAttackRountine());
     }
     else
-      yield return (object) enemyLavaSnailBig.StartCoroutine((IEnumerator) enemyLavaSnailBig.BombardmentAttackRountine());
+      yield return (object) enemyLavaSnailBig.StartCoroutine(enemyLavaSnailBig.BombardmentAttackRountine());
     enemyLavaSnailBig.SetUpPostAttackData();
   }
 
@@ -451,10 +451,10 @@ public class EnemyLavaSnailBig : UnitObject
     {
       this.StopAllCoroutines();
       this.DisableForces = false;
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && AttackType != Health.AttackTypes.NoReaction && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -498,7 +498,7 @@ public class EnemyLavaSnailBig : UnitObject
     while ((double) (time += Time.deltaTime * enemyLavaSnailBig.Spine.timeScale) < 0.5)
       yield return (object) null;
     enemyLavaSnailBig.DisableForces = false;
-    enemyLavaSnailBig.StartCoroutine((IEnumerator) enemyLavaSnailBig.WanderingRoutine());
+    enemyLavaSnailBig.StartCoroutine(enemyLavaSnailBig.WanderingRoutine());
   }
 
   public void GetNewTargetPosition()
@@ -536,7 +536,7 @@ public class EnemyLavaSnailBig : UnitObject
     {
       Health closestTarget = this.GetClosestTarget();
       if ((UnityEngine.Object) closestTarget != (UnityEngine.Object) null && (double) Vector2.Distance((Vector2) closestTarget.transform.position, (Vector2) this.transform.position) < (double) this.meleeDetectionDistance)
-        this.StartCoroutine((IEnumerator) this.MeleeAttackRoutine());
+        this.StartCoroutine(this.MeleeAttackRoutine());
       this.CalculateCurrentSpeed(deltaTime);
       if ((double) this.currentMovementTime <= 0.0)
         this.StartPulseMovement();

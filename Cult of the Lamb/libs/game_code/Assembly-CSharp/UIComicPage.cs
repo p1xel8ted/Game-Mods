@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIComicPage
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -121,7 +121,7 @@ public class UIComicPage : MonoBehaviour
             segment.Segment.gameObject.SetActive(!segment.Segment.OnlyEnglish || UIComicMenuController.LanguageCodes.IndexOf(LocalizationManager.CurrentLanguageCode) == 0);
         }
       }
-      this.showingPanelRoutine = this.StartCoroutine((IEnumerator) this.ShowingPanel(this.panels[this.index].Panel));
+      this.showingPanelRoutine = this.StartCoroutine(this.ShowingPanel(this.panels[this.index].Panel));
     }
     else
     {
@@ -207,7 +207,7 @@ public class UIComicPage : MonoBehaviour
       PersistenceManager.PersistentData.ComicPanelIndex = this.index;
       PersistenceManager.Save();
     }
-    this.showingPanelRoutine = this.StartCoroutine((IEnumerator) this.ShowingPanel(this.panels[this.index].Panel));
+    this.showingPanelRoutine = this.StartCoroutine(this.ShowingPanel(this.panels[this.index].Panel));
   }
 
   public void PreviousPanel()
@@ -244,7 +244,7 @@ public class UIComicPage : MonoBehaviour
       PersistenceManager.PersistentData.ComicPanelIndex = this.index;
       PersistenceManager.Save();
     }
-    this.showingPanelRoutine = this.StartCoroutine((IEnumerator) this.ShowingPanel(this.panels[this.index].Panel));
+    this.showingPanelRoutine = this.StartCoroutine(this.ShowingPanel(this.panels[this.index].Panel));
   }
 
   public void SetMusic(UIComicPanel panel)
@@ -348,7 +348,7 @@ public class UIComicPage : MonoBehaviour
     }
     uiComicPage.comicMenu.InvertPromptsColouring = panel.InvertPromptsColouring;
     bool skipped = false;
-    Coroutine skipRoutine = uiComicPage.StartCoroutine((IEnumerator) uiComicPage.WaitForSkip((System.Action) (() =>
+    Coroutine skipRoutine = uiComicPage.StartCoroutine(uiComicPage.WaitForSkip((System.Action) (() =>
     {
       skipped = true;
       foreach (UIComicPanel.ComicSegment segment in panel.Segments)
@@ -406,7 +406,7 @@ public class UIComicPage : MonoBehaviour
       segment.Segment.gameObject.SetActive(!segment.Segment.OnlyEnglish || UIComicMenuController.LanguageCodes.IndexOf(LocalizationManager.CurrentLanguageCode) == 0);
       uiComicPage.SetChoices(segment);
       if (uiComicPage.comicMenu.RequiresAnimating)
-        uiComicPage.StartCoroutine((IEnumerator) uiComicPage.WaitForSeconds(anim.delay, (System.Action) (() =>
+        uiComicPage.StartCoroutine(uiComicPage.WaitForSeconds(anim.delay, (System.Action) (() =>
         {
           segment.Segment.OnSegmentShown?.Invoke();
           if (!string.IsNullOrEmpty(segment.Segment.SFX))

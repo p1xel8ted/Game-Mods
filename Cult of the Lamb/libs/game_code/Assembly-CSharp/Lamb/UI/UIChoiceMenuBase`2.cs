@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIChoiceMenuBase`2
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -106,15 +106,9 @@ public abstract class UIChoiceMenuBase<T, U> : UIMenuBase where T : UIChoiceInfo
     this._crownEye.DOLocalMove(this._eyePosRight.localPosition, 0.6f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuad).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
   }
 
-  public virtual void OnLeftChoice()
-  {
-    this.StartCoroutine((IEnumerator) this.DoHoldToUnlock(this._infoBox1));
-  }
+  public virtual void OnLeftChoice() => this.StartCoroutine(this.DoHoldToUnlock(this._infoBox1));
 
-  public virtual void OnRightChoice()
-  {
-    this.StartCoroutine((IEnumerator) this.DoHoldToUnlock(this._infoBox2));
-  }
+  public virtual void OnRightChoice() => this.StartCoroutine(this.DoHoldToUnlock(this._infoBox2));
 
   public T OppositeChoice(T choice)
   {
@@ -157,7 +151,7 @@ public abstract class UIChoiceMenuBase<T, U> : UIMenuBase where T : UIChoiceInfo
       confirmed = false;
       // ISSUE: reference to a compiler-generated field
       // ISSUE: reference to a compiler-generated field
-      this.\u003C\u003E4__this.StartCoroutine((IEnumerator) this.\u003C\u003E4__this.DoCancelChoice(choice));
+      this.\u003C\u003E4__this.StartCoroutine(this.\u003C\u003E4__this.DoCancelChoice(choice));
     }));
     if (confirmed)
     {
@@ -207,7 +201,7 @@ public abstract class UIChoiceMenuBase<T, U> : UIMenuBase where T : UIChoiceInfo
     choice.BringOnscreen();
     yield return (object) new WaitForSecondsRealtime(0.2f);
     otherChoice.BringOnscreen();
-    uiChoiceMenuBase.StartCoroutine((IEnumerator) uiChoiceMenuBase.DoShowAnimation());
+    uiChoiceMenuBase.StartCoroutine(uiChoiceMenuBase.DoShowAnimation());
     yield return (object) new WaitForSecondsRealtime(0.8f);
     if ((UnityEngine.Object) MMConversation.mmConversation != (UnityEngine.Object) null && MMConversation.CURRENT_CONVERSATION.DoctrineResponses.Count > 1 && MMConversation.CURRENT_CONVERSATION.DoctrineResponses[0].RewardLevel < 5)
       MMConversation.mmConversation.SpeechBubble.gameObject.SetActive(true);

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BuildSitePlot
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -79,12 +79,12 @@ public class BuildSitePlot : BaseMonoBehaviour
     {
       this.Bounds = this.StructureBrain.Data.Bounds;
       this.SpawnTiles();
-      this.StartCoroutine((IEnumerator) this.AutoBuild());
+      this.StartCoroutine(this.AutoBuild());
     }
     else
     {
       this.StructureBrain.OnBuildProgressChanged += new System.Action(this.OnBuildProgressChanged);
-      this.StartCoroutine((IEnumerator) this.CheckTutorialRoutine());
+      this.StartCoroutine(this.CheckTutorialRoutine());
       this.Bounds = this.StructureBrain.Data.Bounds;
       this.SpawnTiles();
     }
@@ -160,7 +160,7 @@ public class BuildSitePlot : BaseMonoBehaviour
       this.StopCoroutine(this.cBuildSmokeRoutine);
     if (!((UnityEngine.Object) this.gameObject != (UnityEngine.Object) null) || !this.gameObject.activeInHierarchy)
       return;
-    this.cBuildSmokeRoutine = this.StartCoroutine((IEnumerator) this.BuildSmokeRoutine());
+    this.cBuildSmokeRoutine = this.StartCoroutine(this.BuildSmokeRoutine());
   }
 
   public IEnumerator BuildSmokeRoutine()

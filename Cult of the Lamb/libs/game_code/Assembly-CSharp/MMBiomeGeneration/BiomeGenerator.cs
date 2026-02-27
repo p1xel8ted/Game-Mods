@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMBiomeGeneration.BiomeGenerator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -341,7 +341,7 @@ public class BiomeGenerator : BaseMonoBehaviour
     }
     if (DungeonSandboxManager.Active)
       return;
-    this.StartCoroutine((IEnumerator) this.GenerateRoutine());
+    this.StartCoroutine(this.GenerateRoutine());
   }
 
   public static bool EncounterAlreadyUsed(string EncounterName)
@@ -428,14 +428,14 @@ public class BiomeGenerator : BaseMonoBehaviour
       yield return (object) null;
     }
     MMTransition.UpdateProgress(++Progress / Total, ScriptLocalization.Interactions.GeneratingDungeon + " 10");
-    yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.PlaceStoryRooms());
+    yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.PlaceStoryRooms());
     if ((double) stopwatch.ElapsedMilliseconds > 0.01666666753590107)
     {
       stopwatch.Reset();
       yield return (object) null;
     }
     MMTransition.UpdateProgress(++Progress / Total, ScriptLocalization.Interactions.GeneratingDungeon + " 11");
-    yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.PlaceDynamicCustomRooms());
+    yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.PlaceDynamicCustomRooms());
     MMTransition.UpdateProgress(++Progress / Total, ScriptLocalization.Interactions.GeneratingDungeon + " 12");
     if ((double) stopwatch.ElapsedMilliseconds > 0.01666666753590107)
     {
@@ -445,7 +445,7 @@ public class BiomeGenerator : BaseMonoBehaviour
     MMTransition.UpdateProgress(++Progress / Total, ScriptLocalization.Interactions.GeneratingDungeon + " 13");
     if (GameManager.Layer2 && DataManager.Instance.LoreStonesRoomUpTo <= LoreSystem.LoreTotalLoreRoom && !biomeGenerator.spawnedLoreTotemsThisDungeon && !DungeonSandboxManager.Active)
       biomeGenerator.PlaceLoreTotems();
-    yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.InstantiatePrefabs());
+    yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.InstantiatePrefabs());
     biomeGenerator.InitMusic();
     MMTransition.UpdateProgress(++Progress / Total, ScriptLocalization.Interactions.GeneratingDungeon + " 14");
     if ((double) stopwatch.ElapsedMilliseconds > 0.01666666753590107)
@@ -496,7 +496,7 @@ public class BiomeGenerator : BaseMonoBehaviour
     this.PlaceStoryRooms();
     this.PlaceDynamicCustomRooms();
     this.PlaceFixedCustomRooms();
-    this.StartCoroutine((IEnumerator) this.InstantiatePrefabs());
+    this.StartCoroutine(this.InstantiatePrefabs());
     LocationManager.LocationManagers[this.DungeonLocation].SpawnFollowers();
     this.SetRoom(this.StartX, this.StartY);
     BiomeGenerator.BiomeAction onBiomeGenerated = BiomeGenerator.OnBiomeGenerated;
@@ -797,6 +797,13 @@ public class BiomeGenerator : BaseMonoBehaviour
             BiomeRoom biomeRoom = this.PlacePostBossRoom(ConnectionRoom.Room.EmptyNeighbourPositionsIgnoreSouth, DataManager.Instance.DungeonCompleted(this.DungeonLocation, GameManager.Layer2) ? this.PostBossRoomPath : this.BossDoorRoomPath, ConnectionRoom);
             if (GameManager.DungeonEndlessLevel >= 3 && DataManager.Instance.DungeonCompleted(this.DungeonLocation, GameManager.Layer2))
               biomeRoom.N_Room.SetConnection(GenerateRoom.ConnectionTypes.False);
+            else if (this.DungeonLocation == FollowerLocation.Dungeon1_5 || this.DungeonLocation == FollowerLocation.Dungeon1_6)
+            {
+              if (DataManager.Instance.DungeonCompleted(this.DungeonLocation, GameManager.Layer2))
+                biomeRoom.N_Room.SetConnection(GenerateRoom.ConnectionTypes.NextLayer);
+              else
+                biomeRoom.N_Room.SetConnection(GenerateRoom.ConnectionTypes.False);
+            }
             else
               biomeRoom.N_Room.SetConnection(DataManager.Instance.DungeonCompleted(this.DungeonLocation, GameManager.Layer2) ? GenerateRoom.ConnectionTypes.NextLayer : GenerateRoom.ConnectionTypes.LeaderBoss);
             this.lastRoom = biomeRoom;
@@ -1662,7 +1669,7 @@ public class BiomeGenerator : BaseMonoBehaviour
       this.Seed = DataManager.RandomSeed.Next(-2147483647 /*0x80000001*/, int.MaxValue);
       DataManager.Instance.AddNewDungeonSeed(this.Seed);
       MonoSingleton<MMLogger>.Instance.AddToLog("DungeonSeed/Regenerated: " + this.Seed.ToString());
-      this.StartCoroutine((IEnumerator) this.GenerateRoutine());
+      this.StartCoroutine(this.GenerateRoutine());
       System.Action action = Callback;
       if (action != null)
         action();
@@ -1674,14 +1681,14 @@ public class BiomeGenerator : BaseMonoBehaviour
   {
     this.CurrentX = x;
     this.CurrentY = y;
-    this.StartCoroutine((IEnumerator) this.ChangeRoomRoutine(BiomeRoom.GetRoom(this.CurrentX, this.CurrentY)));
+    this.StartCoroutine(this.ChangeRoomRoutine(BiomeRoom.GetRoom(this.CurrentX, this.CurrentY)));
   }
 
   public static void ChangeRoom(int X, int Y)
   {
     BiomeGenerator.Instance.CurrentX = X;
     BiomeGenerator.Instance.CurrentY = Y;
-    BiomeGenerator.Instance.StartCoroutine((IEnumerator) BiomeGenerator.Instance.ChangeRoomRoutine(BiomeRoom.GetRoom(BiomeGenerator.Instance.CurrentX, BiomeGenerator.Instance.CurrentY)));
+    BiomeGenerator.Instance.StartCoroutine(BiomeGenerator.Instance.ChangeRoomRoutine(BiomeRoom.GetRoom(BiomeGenerator.Instance.CurrentX, BiomeGenerator.Instance.CurrentY)));
   }
 
   public static void ChangeRoom(Vector2Int Direction)
@@ -1689,7 +1696,7 @@ public class BiomeGenerator : BaseMonoBehaviour
     PlayerFarming.ResetMainPlayer();
     BiomeGenerator.Instance.CurrentX += Direction.x;
     BiomeGenerator.Instance.CurrentY += Direction.y;
-    BiomeGenerator.Instance.StartCoroutine((IEnumerator) BiomeGenerator.Instance.ChangeRoomRoutine(BiomeRoom.GetRoom(BiomeGenerator.Instance.CurrentX, BiomeGenerator.Instance.CurrentY)));
+    BiomeGenerator.Instance.StartCoroutine(BiomeGenerator.Instance.ChangeRoomRoutine(BiomeRoom.GetRoom(BiomeGenerator.Instance.CurrentX, BiomeGenerator.Instance.CurrentY)));
   }
 
   public IEnumerator ChangeRoomRoutine(BiomeRoom CurrentRoom)
@@ -1746,7 +1753,7 @@ public class BiomeGenerator : BaseMonoBehaviour
       AudioManager.Instance.SetMusicCombatState(false);
     biomeGenerator.PrevRoom = CurrentRoom;
     if (CurrentRoom != null && CurrentRoom.GameObjectPath != null && CurrentRoom.GameObjectPath.Contains("D5 Mountain Top") && biomeGenerator.DungeonLocation != FollowerLocation.Boss_Wolf)
-      biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.PlayDLCVideoIE());
+      biomeGenerator.StartCoroutine(biomeGenerator.PlayDLCVideoIE());
   }
 
   public static void SpawnBombsInRoom(
@@ -1766,7 +1773,7 @@ public class BiomeGenerator : BaseMonoBehaviour
     {
       Vector3 positionInIsland = BiomeGenerator.GetRandomPositionInIsland();
       // ISSUE: reference to a compiler-generated method
-      GameManager.GetInstance().StartCoroutine((IEnumerator) displayClass1900.\u003CSpawnBombsInRoom\u003Eg__SpawnBomb\u007C0(positionInIsland, BiomeGenerator.Instance.CurrentRoom.generateRoom.transform, delay, playerFarming, damageMultiplier));
+      GameManager.GetInstance().StartCoroutine(displayClass1900.\u003CSpawnBombsInRoom\u003Eg__SpawnBomb\u007C0(positionInIsland, BiomeGenerator.Instance.CurrentRoom.generateRoom.transform, delay, playerFarming, damageMultiplier));
       delay += num;
     }
   }
@@ -1785,12 +1792,12 @@ public class BiomeGenerator : BaseMonoBehaviour
     foreach (PlayerFarming player in PlayerFarming.players)
     {
       Vector3 position = player.transform.position;
-      GameManager.GetInstance().StartCoroutine((IEnumerator) BiomeGenerator.\u003CSpawnPoisonsInRoom\u003Eg__SpawnPoison\u007C191_0(position, BiomeGenerator.Instance.CurrentRoom.generateRoom.transform, delay, player, damageMultiplier));
+      GameManager.GetInstance().StartCoroutine(BiomeGenerator.\u003CSpawnPoisonsInRoom\u003Eg__SpawnPoison\u007C191_0(position, BiomeGenerator.Instance.CurrentRoom.generateRoom.transform, delay, player, damageMultiplier));
     }
     for (int index = 0; index < amount; ++index)
     {
       Vector3 position = new Vector3(UnityEngine.Random.Range(-x, x), UnityEngine.Random.Range(-y, y));
-      GameManager.GetInstance().StartCoroutine((IEnumerator) BiomeGenerator.\u003CSpawnPoisonsInRoom\u003Eg__SpawnPoison\u007C191_0(position, BiomeGenerator.Instance.CurrentRoom.generateRoom.transform, delay, playerFarming, damageMultiplier));
+      GameManager.GetInstance().StartCoroutine(BiomeGenerator.\u003CSpawnPoisonsInRoom\u003Eg__SpawnPoison\u007C191_0(position, BiomeGenerator.Instance.CurrentRoom.generateRoom.transform, delay, playerFarming, damageMultiplier));
       delay += num;
     }
   }
@@ -1861,7 +1868,7 @@ public class BiomeGenerator : BaseMonoBehaviour
           return;
         if ((UnityEngine.Object) this.PlayerState != (UnityEngine.Object) null)
           this.PlayerState.facingAngle = Utils.GetAngle(Door.GetEntranceDoor().transform.position, TargetPosition);
-        this.StartCoroutine((IEnumerator) this.DelayEndConversation());
+        this.StartCoroutine(this.DelayEndConversation());
         if (this.CurrentRoom == this.RoomEntrance || DungeonSandboxManager.Active)
           GenerateRoom.Instance.LockEntranceBehindPlayer = true;
         Door entranceDoor1 = Door.GetEntranceDoor();
@@ -1879,7 +1886,7 @@ public class BiomeGenerator : BaseMonoBehaviour
         entranceDoor1.PlayerFinishedEnteringDoor();
         PlayerFarming.ResetMainPlayer();
         CoopManager.RefreshCoopPlayerRewired();
-        this.StartCoroutine((IEnumerator) this.DelayActivateRoom(this.DungeonLocation != FollowerLocation.Boss_5));
+        this.StartCoroutine(this.DelayActivateRoom(this.DungeonLocation != FollowerLocation.Boss_5));
       }), maxDuration: -1f, forcePositionOnTimeout: true);
     }
     yield return (object) new WaitForSeconds(0.5f);
@@ -1894,7 +1901,7 @@ public class BiomeGenerator : BaseMonoBehaviour
           if (i == 0)
           {
             PlayerFarming player = PlayerFarming.players[i];
-            yield return (object) biomeGenerator.StartCoroutine((IEnumerator) heartsIntro.HeartRoutine(player));
+            yield return (object) biomeGenerator.StartCoroutine(heartsIntro.HeartRoutine(player));
             DataManager.Instance.PlayerHasBeenGivenHearts = true;
           }
         }
@@ -1934,12 +1941,12 @@ public class BiomeGenerator : BaseMonoBehaviour
         PlayerFarming playerFarming = PlayerFarming.players[i];
         if (GameManager.InitialDungeonEnter)
         {
-          yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.ApplyCurrentFleeceModifiersIE(playerFarming));
-          yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.ApplyCurrentDemonModifiersIE(playerFarming));
-          yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.ShowHeavyAttackTutorial());
-          yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.ShowOmniTutorial());
+          yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.ApplyCurrentFleeceModifiersIE(playerFarming));
+          yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.ApplyCurrentDemonModifiersIE(playerFarming));
+          yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.ShowHeavyAttackTutorial());
+          yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.ShowOmniTutorial());
         }
-        yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.ApplyCurrentDungeonModifiersIE(playerFarming));
+        yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.ApplyCurrentDungeonModifiersIE(playerFarming));
         playerFarming = (PlayerFarming) null;
       }
     }
@@ -2043,7 +2050,7 @@ public class BiomeGenerator : BaseMonoBehaviour
       GameManager.GetInstance().CameraSetOffset(new Vector3(0.0f, 0.0f, -1f));
       Door entranceDoor = Door.GetEntranceDoor();
       if ((UnityEngine.Object) entranceDoor != (UnityEngine.Object) null)
-        this.StartCoroutine((IEnumerator) this.PlayersFirstEnterRoomDelayedGotoAndStop(this.Player, entranceDoor, entranceDoor.PlayerPosition.position + entranceDoor.GetDoorDirection() * 7.3f));
+        this.StartCoroutine(this.PlayersFirstEnterRoomDelayedGotoAndStop(this.Player, entranceDoor, entranceDoor.PlayerPosition.position + entranceDoor.GetDoorDirection() * 7.3f));
       foreach (Objective_FindRelic objectiveFindRelic in new List<Objective_FindRelic>((IEnumerable<Objective_FindRelic>) ObjectiveManager.GetObjectivesOfType<Objective_FindRelic>()))
       {
         if (objectiveFindRelic.TargetLocation == this.DungeonLocation && !objectiveFindRelic.IsComplete)
@@ -2160,7 +2167,7 @@ public class BiomeGenerator : BaseMonoBehaviour
             if (playerFarming.isLamb)
               action += (System.Action) (() =>
               {
-                this.StartCoroutine((IEnumerator) this.DelayActivateRoom());
+                this.StartCoroutine(this.DelayActivateRoom());
                 if (containsEnemies)
                 {
                   BiomeGenerator.BiomeAction enteredCombatRoom = BiomeGenerator.OnBiomeEnteredCombatRoom;
@@ -2188,7 +2195,7 @@ public class BiomeGenerator : BaseMonoBehaviour
             playerFarming.GoToAndStop(TargetPosition, IdleOnEnd: true, GoToCallback: (System.Action) (() =>
             {
               if (playerFarming.isLamb)
-                this.StartCoroutine((IEnumerator) this.DelayActivateRoom());
+                this.StartCoroutine(this.DelayActivateRoom());
               this.\u003CPlacePlayer\u003Eg__HandleBossHeal\u007C212_3(playerFarming);
               BiomeGenerator.\u003CPlacePlayer\u003Eg__HandleJokerTarot\u007C212_2(playerFarming);
             }), maxDuration: 5f, forcePositionOnTimeout: true);
@@ -2202,14 +2209,14 @@ public class BiomeGenerator : BaseMonoBehaviour
             this.\u003CPlacePlayer\u003Eg__HandleBossHeal\u007C212_3(player);
             BiomeGenerator.\u003CPlacePlayer\u003Eg__HandleJokerTarot\u007C212_2(player);
           }
-          this.StartCoroutine((IEnumerator) this.DelayActivateRoom());
+          this.StartCoroutine(this.DelayActivateRoom());
         }
       }
       else
       {
         Vector3 TargetPosition = this.Player.transform.position + (Vector3) Utils.DegreeToVector2(this.PlayerState.facingAngle);
         PlayerFarming.PositionAllPlayers(PlayerFarming.Instance.transform.position, false);
-        PlayerFarming.Instance?.GoToAndStop(TargetPosition, IdleOnEnd: true, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DelayActivateRoom())), forcePositionOnTimeout: true, groupAction: true);
+        PlayerFarming.Instance?.GoToAndStop(TargetPosition, IdleOnEnd: true, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DelayActivateRoom())), forcePositionOnTimeout: true, groupAction: true);
       }
     }
     if ((bool) (UnityEngine.Object) this.Player)
@@ -2323,7 +2330,7 @@ public class BiomeGenerator : BaseMonoBehaviour
 
   public void ApplyCurrentDungeonModifiers(PlayerFarming playerFarming)
   {
-    this.StartCoroutine((IEnumerator) this.ApplyCurrentDungeonModifiersIE(playerFarming));
+    this.StartCoroutine(this.ApplyCurrentDungeonModifiersIE(playerFarming));
   }
 
   public IEnumerator ApplyCurrentDungeonModifiersIE(PlayerFarming playerFarming)
@@ -2351,7 +2358,7 @@ public class BiomeGenerator : BaseMonoBehaviour
       if (health.IsNoHeartSlotsLeft)
         health.DealDamage(1f, playerFarming.gameObject, playerFarming.transform.position, false, Health.AttackTypes.Melee, true, (Health.AttackFlags) 0);
       else
-        yield return (object) biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.DoTarotRoutine(Vector3.zero, Vector3.one, playerFarming));
+        yield return (object) biomeGenerator.StartCoroutine(biomeGenerator.DoTarotRoutine(Vector3.zero, Vector3.one, playerFarming));
     }
   }
 
@@ -2524,7 +2531,7 @@ public class BiomeGenerator : BaseMonoBehaviour
         yield return (object) new WaitForSeconds(0.01f);
       }
       yield return (object) new WaitForSeconds(1.5f);
-      biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.BackToIdleRoutine(drawnCard, playerFarming));
+      biomeGenerator.StartCoroutine(biomeGenerator.BackToIdleRoutine(drawnCard, playerFarming));
     }
     else
     {
@@ -2539,7 +2546,7 @@ public class BiomeGenerator : BaseMonoBehaviour
       ((RectTransform) gameObject.transform).anchoredPosition = (Vector2) position;
       while (waiting)
         yield return (object) null;
-      biomeGenerator.StartCoroutine((IEnumerator) biomeGenerator.BackToIdleRoutine(drawnCard, playerFarming));
+      biomeGenerator.StartCoroutine(biomeGenerator.BackToIdleRoutine(drawnCard, playerFarming));
     }
   }
 
@@ -2557,7 +2564,7 @@ public class BiomeGenerator : BaseMonoBehaviour
     playerFarming.simpleSpineAnimator.Animate("cards/cards-stop-seperate", 0, false);
     playerFarming.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
     if (card != null)
-      GameManager.GetInstance().StartCoroutine((IEnumerator) biomeGenerator.DelayEffectsRoutine(card, playerFarming));
+      GameManager.GetInstance().StartCoroutine(biomeGenerator.DelayEffectsRoutine(card, playerFarming));
   }
 
   public void PlaceLoreTotems()
@@ -2742,10 +2749,7 @@ public class BiomeGenerator : BaseMonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CPlacePlayer\u003Eb__212_10()
-  {
-    this.StartCoroutine((IEnumerator) this.DelayActivateRoom());
-  }
+  public void \u003CPlacePlayer\u003Eb__212_10() => this.StartCoroutine(this.DelayActivateRoom());
 
   public delegate void GetKey();
 

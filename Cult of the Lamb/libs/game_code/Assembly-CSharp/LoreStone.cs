@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LoreStone
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -130,7 +130,7 @@ public class LoreStone : Interaction
     if ((UnityEngine.Object) component != (UnityEngine.Object) null)
       component.enabled = false;
     this.ChooseLore();
-    this.StartCoroutine((IEnumerator) this.PlayerPickUpBook((System.Action) (() => this.StartCoroutine((IEnumerator) this.SpawnMenu()))));
+    this.StartCoroutine(this.PlayerPickUpBook((System.Action) (() => this.StartCoroutine(this.SpawnMenu()))));
   }
 
   public void HandleEvent(TrackEntry trackentry, Spine.Event e)
@@ -257,7 +257,7 @@ public class LoreStone : Interaction
     Debug.Log((object) ("Lore Unlocked: " + loreStone.chosenLore.ToString()));
     loreStone.PlayerToIdle();
     if (!DataManager.Instance.LoreOnboarded)
-      GameManager.GetInstance().StartCoroutine((IEnumerator) loreStone.ShowLoreMenu());
+      GameManager.GetInstance().StartCoroutine(loreStone.ShowLoreMenu());
     else
       loreStone.IsRunning = false;
     if ((UnityEngine.Object) loreStone.Teleporter != (UnityEngine.Object) null)
@@ -324,8 +324,5 @@ public class LoreStone : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003CMagnetToPlayer\u003Eb__29_0()
-  {
-    this.StartCoroutine((IEnumerator) this.SpawnMenu());
-  }
+  public void \u003CMagnetToPlayer\u003Eb__29_0() => this.StartCoroutine(this.SpawnMenu());
 }

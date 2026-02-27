@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: NotificationBase
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -77,7 +77,7 @@ public abstract class NotificationBase : MonoBehaviour
       this.Shown = true;
     }
     else
-      this.StartCoroutine((IEnumerator) this.DoShow(andThen));
+      this.StartCoroutine(this.DoShow(andThen));
   }
 
   public virtual IEnumerator DoShow(System.Action andThen = null)
@@ -120,7 +120,7 @@ public abstract class NotificationBase : MonoBehaviour
       ObjectPool.Recycle(this.gameObject);
     }
     else
-      this.StartCoroutine((IEnumerator) this.DoHide());
+      this.StartCoroutine(this.DoHide());
   }
 
   public virtual IEnumerator DoHide(System.Action andThen = null)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UITailorMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -138,7 +138,7 @@ public class UITailorMenuController : UIMenuBase
     this._infoCardController.Card2.Configure(clothingData, this.tailor, "", this._inMenu);
     this._highlightController.SetAsRed();
     if (MonoSingleton<UINavigatorNew>.Instance.CurrentSelectable == null)
-      this.StartCoroutine((IEnumerator) this.Wait());
+      this.StartCoroutine(this.Wait());
     UIPauseDetailsMenuTabNavigatorBase tabNavigator = this.tabNavigator;
     tabNavigator.OnTabChanged = tabNavigator.OnTabChanged + new Action<int>(this.OnTabChanged);
     this.Show(instant);
@@ -164,7 +164,7 @@ public class UITailorMenuController : UIMenuBase
   {
     UIManager.PlayAudio("event:/ui/open_menu");
     base.OnShowStarted();
-    this.StartCoroutine((IEnumerator) this.Wait());
+    this.StartCoroutine(this.Wait());
   }
 
   public void Update()
@@ -313,7 +313,7 @@ public class UITailorMenuController : UIMenuBase
   public void ForceAssignTab()
   {
     this.tabNavigator.DefaultTabIndex = 2;
-    this.StartCoroutine((IEnumerator) this.ShowUnlockSequence());
+    this.StartCoroutine(this.ShowUnlockSequence());
     this.OnTabChanged(2);
   }
 

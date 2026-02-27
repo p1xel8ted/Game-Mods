@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIBugReportingOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -186,7 +186,7 @@ public class UIBugReportingOverlayController : UIMenuBase
     UnityUserReporting.CurrentClient.SendEventsToAnalytics = false;
     UnityUserReporting.Configure(this.GetConfiguration());
     UnityUserReporting.CurrentClient.Platform.Post($"https://userreporting.cloud.unity3d.com/api/userreporting/projects/{UnityUserReporting.CurrentClient.ProjectIdentifier}/ping", "application/json", Encoding.UTF8.GetBytes("\"Ping\""), (Action<float, float>) ((upload, download) => { }), (Action<bool, byte[]>) ((result, bytes) => { }));
-    this.StartCoroutine((IEnumerator) this.WaitForReport());
+    this.StartCoroutine(this.WaitForReport());
     this.CreateReport();
   }
 

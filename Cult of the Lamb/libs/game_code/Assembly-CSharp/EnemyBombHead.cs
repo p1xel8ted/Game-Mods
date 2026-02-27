@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBombHead
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -37,7 +37,7 @@ public class EnemyBombHead : UnitObject
 
   public void Start()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb2D = this.GetComponent<Rigidbody2D>();
     this.SeperateObject = true;
   }
@@ -62,7 +62,7 @@ public class EnemyBombHead : UnitObject
     }
     while ((double) enemyBombHead.MagnitudeFindDistanceBetween(enemyBombHead.TargetObject.transform.position, enemyBombHead.transform.position) > (double) enemyBombHead.Range * (double) enemyBombHead.Range)
       yield return (object) null;
-    enemyBombHead.ChasePlayerCoroutine = enemyBombHead.StartCoroutine((IEnumerator) enemyBombHead.ChasePlayer());
+    enemyBombHead.ChasePlayerCoroutine = enemyBombHead.StartCoroutine(enemyBombHead.ChasePlayer());
   }
 
   public override void OnHit(
@@ -77,7 +77,7 @@ public class EnemyBombHead : UnitObject
     this.ClearPaths();
     if (this.ChasePlayerCoroutine != null)
       this.StopCoroutine(this.ChasePlayerCoroutine);
-    this.StartCoroutine((IEnumerator) this.AddForce());
+    this.StartCoroutine(this.AddForce());
     BiomeConstants.Instance.EmitHitVFX(AttackLocation - Vector3.back * 0.5f, Quaternion.identity.z, "HitFX_Weak");
   }
 
@@ -92,7 +92,7 @@ public class EnemyBombHead : UnitObject
         return false;
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
-      enemyBombHead.ChasePlayerCoroutine = enemyBombHead.StartCoroutine((IEnumerator) enemyBombHead.ChasePlayer());
+      enemyBombHead.ChasePlayerCoroutine = enemyBombHead.StartCoroutine(enemyBombHead.ChasePlayer());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -118,7 +118,7 @@ public class EnemyBombHead : UnitObject
     CameraManager.shakeCamera(this.ExplodeOnDeath ? 0.5f : 0.2f, Utils.GetAngle(Attacker.transform.position, this.transform.position));
     this.ClearPaths();
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ExplodeAndSpawn());
+    this.StartCoroutine(this.ExplodeAndSpawn());
   }
 
   public IEnumerator ExplodeAndSpawn()
@@ -181,7 +181,7 @@ public class EnemyBombHead : UnitObject
     {
       if ((UnityEngine.Object) enemyBombHead.TargetObject == (UnityEngine.Object) null)
       {
-        enemyBombHead.StartCoroutine((IEnumerator) enemyBombHead.WaitForTarget());
+        enemyBombHead.StartCoroutine(enemyBombHead.WaitForTarget());
         break;
       }
       if (enemyBombHead.state.CURRENT_STATE != StateMachine.State.RecoverFromAttack)
@@ -238,7 +238,7 @@ public class EnemyBombHead : UnitObject
             enemyBombHead.WhiteFade = Mathf.Lerp(1f, 0.0f, (float) (1.0 - (double) enemyBombHead.AttackSpeed / 0.75));
             enemyBombHead.simpleSpineAnimator.FillColor(Color.white, enemyBombHead.WhiteFade);
             enemyBombHead.collider2DList = new List<Collider2D>();
-            enemyBombHead.DamageCollider.GetContacts((List<Collider2D>) enemyBombHead.collider2DList);
+            enemyBombHead.DamageCollider.GetContacts(enemyBombHead.collider2DList);
             foreach (Collider2D collider2D in enemyBombHead.collider2DList)
             {
               enemyBombHead.EnemyHealth = collider2D.gameObject.GetComponent<Health>();

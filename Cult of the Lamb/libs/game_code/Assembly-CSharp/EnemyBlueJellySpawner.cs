@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBlueJellySpawner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -130,7 +130,7 @@ public class EnemyBlueJellySpawner : EnemyJellyCharger
     if ((double) this.TeleportOnHitDelay >= 0.0 || this.cDelayTeleport != null)
       return;
     this.TeleportOnHitDelay = 2f;
-    this.cDelayTeleport = this.StartCoroutine((IEnumerator) this.DelayTeleport());
+    this.cDelayTeleport = this.StartCoroutine(this.DelayTeleport());
   }
 
   public IEnumerator DelayTeleport()
@@ -139,7 +139,7 @@ public class EnemyBlueJellySpawner : EnemyJellyCharger
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * blueJellySpawner.Spine.timeScale) < 0.5)
       yield return (object) null;
-    blueJellySpawner.StartCoroutine((IEnumerator) blueJellySpawner.TeleportIE());
+    blueJellySpawner.StartCoroutine(blueJellySpawner.TeleportIE());
     blueJellySpawner.cDelayTeleport = (Coroutine) null;
   }
 
@@ -193,7 +193,7 @@ public class EnemyBlueJellySpawner : EnemyJellyCharger
   {
     if (this.spawning || this.charging || this.attacking || this.teleporting || this.spawnableEnemies.Length == 0 || this.spawnedAmount >= this.maxEnemiesActive || (double) this.targetMinSpawnRadius != 0.0 && (double) Vector3.Distance(this.transform.position, this.targetObject.transform.position) <= (double) this.targetMinSpawnRadius)
       return;
-    this.spawnRoutine = this.StartCoroutine((IEnumerator) this.SpawnDelay());
+    this.spawnRoutine = this.StartCoroutine(this.SpawnDelay());
   }
 
   public IEnumerator SpawnDelay()
@@ -379,8 +379,8 @@ public class EnemyBlueJellySpawner : EnemyJellyCharger
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
     AudioManager.Instance.PlayOneShot("event:/enemy/chaser/chaser_attack", this.transform.position);
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.TurnOnDamageColliderForDuration(this.damageDuration));
-    this.StartCoroutine((IEnumerator) this.AttackCooldownIE());
+    this.StartCoroutine(this.TurnOnDamageColliderForDuration(this.damageDuration));
+    this.StartCoroutine(this.AttackCooldownIE());
   }
 
   public IEnumerator AttackCooldownIE()

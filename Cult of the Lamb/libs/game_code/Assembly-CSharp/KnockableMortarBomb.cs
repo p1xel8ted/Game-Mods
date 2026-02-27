@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: KnockableMortarBomb
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -115,7 +115,7 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
   public void OnEnable()
   {
     KnockableMortarBomb.KnockableMortarBombs.Add(this);
-    this.StartCoroutine((IEnumerator) this.ScaleCircle());
+    this.StartCoroutine(this.ScaleCircle());
     this.BombVisual.SetActive(false);
     this.BombShadow.SetActive(false);
     this.health.team = this.defaultBombTeam;
@@ -140,8 +140,8 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
   {
     this.moveDuration = moveDuration;
     this.owner = owner;
-    this.StartCoroutine((IEnumerator) this.MoveRock(Position));
-    this.StartCoroutine((IEnumerator) this.FlashCircle());
+    this.StartCoroutine(this.MoveRock(Position));
+    this.StartCoroutine(this.FlashCircle());
     if (!playDefaultSFX)
       return;
     AudioManager.Instance.PlayOneShot("event:/enemy/fly_spawn", this.gameObject);
@@ -158,8 +158,8 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
     this.moveDuration = moveDuration;
     this.owner = owner;
     this.explodeTimer = explodeTimer;
-    this.StartCoroutine((IEnumerator) this.MoveRock(Position));
-    this.StartCoroutine((IEnumerator) this.FlashCircle());
+    this.StartCoroutine(this.MoveRock(Position));
+    this.StartCoroutine(this.FlashCircle());
     if (!playDefaultSFX)
       return;
     AudioManager.Instance.PlayOneShot("event:/enemy/fly_spawn", this.gameObject);
@@ -244,15 +244,15 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
   public void KnockTowardsEnemy(Vector3 AttackPosition, Health.AttackTypes attackType)
   {
     this.isKnocked = true;
-    this.StartCoroutine((IEnumerator) this.PlayerDetectionGracePeriod());
-    this.StartCoroutine((IEnumerator) this.NotExplodingHittable(AttackPosition, attackType));
+    this.StartCoroutine(this.PlayerDetectionGracePeriod());
+    this.StartCoroutine(this.NotExplodingHittable(AttackPosition, attackType));
   }
 
   public IEnumerator NotExplodingHittable(Vector3 AttackerPosition, Health.AttackTypes AttackType)
   {
     KnockableMortarBomb knockableMortarBomb = this;
     if (KnockableMortarBomb.isRunning)
-      knockableMortarBomb.StopCoroutine((IEnumerator) knockableMortarBomb.NotExplodingHittable(AttackerPosition, AttackType));
+      knockableMortarBomb.StopCoroutine(knockableMortarBomb.NotExplodingHittable(AttackerPosition, AttackType));
     KnockableMortarBomb.isRunning = true;
     if (!knockableMortarBomb.isExploding || knockableMortarBomb.hittableWhileExploding)
     {
@@ -296,10 +296,10 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
       if (!knockableMortarBomb.isExploding)
         knockableMortarBomb.explodeTimer = (knockableMortarBomb.addDelayOnKnock ? knockableMortarBomb.knockExplodeDelay : knockableMortarBomb.explodeTimer) / knockableMortarBomb.Spine.timeScale;
       if (knockableMortarBomb.explodeWhenMeleed || !knockableMortarBomb.explodeWhenMeleed && AttackType != Health.AttackTypes.Melee)
-        knockableMortarBomb.StartCoroutine((IEnumerator) knockableMortarBomb.DelayedExplodeCharge());
+        knockableMortarBomb.StartCoroutine(knockableMortarBomb.DelayedExplodeCharge());
       else if (knockableMortarBomb.gameObject.activeInHierarchy && !knockableMortarBomb.DelayingDestroy)
       {
-        knockableMortarBomb.StartCoroutine((IEnumerator) knockableMortarBomb.DelayedDestroy());
+        knockableMortarBomb.StartCoroutine(knockableMortarBomb.DelayedDestroy());
         knockableMortarBomb.Spine.gameObject.SetActive(false);
       }
       colliders = (Collider2D[]) null;
@@ -357,8 +357,8 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
     knockableMortarBomb.TargetWarning.transform.localScale = Vector3.zero;
     if (!string.IsNullOrEmpty(knockableMortarBomb.BombWindUpSFX))
       knockableMortarBomb.windUpInstanceSFX = AudioManager.Instance.PlayOneShotWithInstanceCleanup(knockableMortarBomb.BombWindUpSFX, knockableMortarBomb.gameObject.transform);
-    knockableMortarBomb.StartCoroutine((IEnumerator) knockableMortarBomb.EnableTriggerCollider(knockableMortarBomb.contactExplosionDelay));
-    knockableMortarBomb.StartCoroutine((IEnumerator) knockableMortarBomb.DelayedExplodeCharge());
+    knockableMortarBomb.StartCoroutine(knockableMortarBomb.EnableTriggerCollider(knockableMortarBomb.contactExplosionDelay));
+    knockableMortarBomb.StartCoroutine(knockableMortarBomb.DelayedExplodeCharge());
   }
 
   public virtual void OnHit(
@@ -372,7 +372,7 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
     Health component = Attacker.GetComponent<Health>();
     if ((UnityEngine.Object) component != (UnityEngine.Object) null && component.team != Health.Team.PlayerTeam)
       return;
-    this.StartCoroutine((IEnumerator) this.EnableTriggerCollider(0.0f));
+    this.StartCoroutine(this.EnableTriggerCollider(0.0f));
     this.Target.transform.localScale = Vector3.zero;
     this.TargetWarning.transform.localScale = Vector3.zero;
     this.BombVisual.transform.position = new Vector3(this.BombVisual.transform.position.x, this.BombVisual.transform.position.y, 0.0f);
@@ -453,7 +453,7 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
       this.StopCoroutine(this.knockRoutine);
     if (!appendForce)
       this.rb.velocity = (Vector2) Vector3.zero;
-    this.knockRoutine = this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Utils.GetAngle(AttackerPosition, this.transform.position) * ((float) Math.PI / 180f), KnockbackModifier, Duration));
+    this.knockRoutine = this.StartCoroutine(this.ApplyForceRoutine(Utils.GetAngle(AttackerPosition, this.transform.position) * ((float) Math.PI / 180f), KnockbackModifier, Duration));
   }
 
   public IEnumerator EnableTriggerCollider(float delay)
@@ -480,7 +480,7 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
       return;
     this.StopAllCoroutines();
     this.explodeTimer = 0.0f;
-    this.StartCoroutine((IEnumerator) this.DelayedExplodeCharge());
+    this.StartCoroutine(this.DelayedExplodeCharge());
   }
 
   public void OnTriggerEnterEvent(Collider2D collision)
@@ -492,7 +492,7 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
       return;
     this.StopAllCoroutines();
     this.explodeTimer = 0.0f;
-    this.StartCoroutine((IEnumerator) this.DelayedExplodeCharge());
+    this.StartCoroutine(this.DelayedExplodeCharge());
   }
 
   public void OnDamageTriggerStay(Collider2D collider)
@@ -536,7 +536,7 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
       this.StopCoroutine(this.knockRoutine);
     if (!appendForce)
       this.rb.velocity = (Vector2) Vector3.zero;
-    this.knockRoutine = this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(angle, KnockbackModifier, Duration));
+    this.knockRoutine = this.StartCoroutine(this.ApplyForceRoutine(angle, KnockbackModifier, Duration));
   }
 
   public SkeletonAnimation SkeletonAnimation => this.Spine;
@@ -545,5 +545,8 @@ public class KnockableMortarBomb : BaseMonoBehaviour, ISpellOwning, ITimeFreezab
 
   public void SetOwner(GameObject owner) => this.Origin = owner.GetComponent<Health>();
 
-  public GameObject GetOwner() => this.Origin?.gameObject;
+  public GameObject GetOwner()
+  {
+    return !((UnityEngine.Object) this.Origin != (UnityEngine.Object) null) ? (GameObject) null : this.Origin.gameObject;
+  }
 }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualFeast
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -19,7 +19,7 @@ public class RitualFeast : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -44,7 +44,7 @@ public class RitualFeast : Ritual
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
     while (feastTable.StructureInfo == null)
       yield return (object) null;
-    yield return (object) ritualFeast.StartCoroutine((IEnumerator) ritualFeast.WaitForFollowersToTakeSeat(feastTable.StructureInfo.ID));
+    yield return (object) ritualFeast.StartCoroutine(ritualFeast.WaitForFollowersToTakeSeat(feastTable.StructureInfo.ID));
     PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
     PlayerFarming.Instance.Spine.skeleton.UpdateWorldTransform();
@@ -100,7 +100,7 @@ public class RitualFeast : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num1 += Delay;
-      ritualFeast.StartCoroutine((IEnumerator) ritualFeast.DelayFollowerReaction(brain, Delay));
+      ritualFeast.StartCoroutine(ritualFeast.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1.5f);
     if (DataManager.Instance.SurvivalModeActive)
@@ -132,7 +132,7 @@ public class RitualFeast : Ritual
     follower.HoodOff(onComplete: (System.Action) (() => waiting = false));
     while (waiting)
       yield return (object) null;
-    yield return (object) ritualFeast.StartCoroutine((IEnumerator) follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
+    yield return (object) ritualFeast.StartCoroutine(follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
     double num = (double) follower.SetBodyAnimation("dance-hooded", true);
   }
 

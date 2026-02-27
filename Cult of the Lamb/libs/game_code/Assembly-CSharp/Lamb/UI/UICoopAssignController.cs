@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UICoopAssignController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -206,9 +206,9 @@ public class UICoopAssignController : UIMenuBase
         {
           ++num2;
           Joystick joystick = joystickList[index];
-          if (num1 > index && joystickList.Count >= index && (!guidList.Contains((Guid) ((Controller) joystick).deviceInstanceGuid) || this.debugModeActive))
+          if (num1 > index && joystickList.Count >= index && (!guidList.Contains(((Controller) joystick).deviceInstanceGuid) || this.debugModeActive))
           {
-            guidList.Add((Guid) ((Controller) joystick).deviceInstanceGuid);
+            guidList.Add(((Controller) joystick).deviceInstanceGuid);
             this.displayedConnectedGamepads[index].gameObject.SetActive(true);
             this.displayedConnectedGamepads[index].SetpadNumDisplay(num2);
             if (joystick != null && joystick.type != ControllerType.Keyboard && joystick.type != ControllerType.Mouse)
@@ -259,13 +259,13 @@ public class UICoopAssignController : UIMenuBase
               {
                 this.displayedConnectedGamepads[playerNo].SetSelection(-1);
                 this.preventSpawnBufferTime = Time.realtimeSinceStartup;
-                MMVibrate.RumblePad(((IList<Joystick>) player.controllers.Joysticks)[0], 0, 1, 0.2f);
+                MMVibrate.RumblePad(player.controllers.Joysticks[0], 0, 1, 0.2f);
               }
               else if ((double) player.GetAxis(1) > 0.800000011920929 || InputManager.UI.GetPageNavigateRightDown(player))
               {
                 this.displayedConnectedGamepads[playerNo].SetSelection();
                 this.preventSpawnBufferTime = Time.realtimeSinceStartup;
-                MMVibrate.RumblePad(((IList<Joystick>) player.controllers.Joysticks)[0], 1, 1, 0.2f);
+                MMVibrate.RumblePad(player.controllers.Joysticks[0], 1, 1, 0.2f);
               }
               else
                 this.displayedConnectedGamepads[playerNo].inputLock = false;

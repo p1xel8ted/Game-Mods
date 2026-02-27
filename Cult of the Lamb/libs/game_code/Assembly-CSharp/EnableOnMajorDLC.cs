@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnableOnMajorDLC
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -20,7 +20,7 @@ public class EnableOnMajorDLC : MonoBehaviour
   {
     if ((Object) this.text != (Object) null)
       this.text.alpha = 0.0f;
-    this.StartCoroutine((IEnumerator) this.CheckForDLC());
+    this.StartCoroutine(this.CheckForDLC());
   }
 
   public IEnumerator CheckForDLC()
@@ -51,5 +51,5 @@ public class EnableOnMajorDLC : MonoBehaviour
     }
   }
 
-  public void OnEnable() => this.StartCoroutine((IEnumerator) this.CheckForDLC());
+  public void OnEnable() => this.StartCoroutine(this.CheckForDLC());
 }

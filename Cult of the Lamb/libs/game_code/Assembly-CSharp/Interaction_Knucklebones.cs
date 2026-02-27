@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Knucklebones
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -123,7 +123,7 @@ public class Interaction_Knucklebones : Interaction
   {
     base.OnThirdInteract(state);
     int num = state.GetComponent<PlayerFarming>().isLamb ? 1 : 0;
-    this.StartCoroutine((IEnumerator) this.PlayMatchTwitch());
+    this.StartCoroutine(this.PlayMatchTwitch());
   }
 
   public override void OnEnableInteraction()
@@ -169,7 +169,7 @@ public class Interaction_Knucklebones : Interaction
     base.OnInteract(state);
     if (this._availableOpponents.Count <= 0)
       return;
-    this.StartCoroutine((IEnumerator) this.SelectOpponent());
+    this.StartCoroutine(this.SelectOpponent());
   }
 
   public void GameQuit()
@@ -196,7 +196,7 @@ public class Interaction_Knucklebones : Interaction
           this.KnuckleboneOpponent.FirstWinConvo.Callback.AddListener((UnityAction) (() =>
           {
             this.enabled = true;
-            this.StartCoroutine((IEnumerator) this.GiveKeyPieceRoutine());
+            this.StartCoroutine(this.GiveKeyPieceRoutine());
           }));
           this.KnuckleboneOpponent.FirstWinConvo.gameObject.SetActive(true);
           this.KnuckleboneOpponent.FirstWinConvo.Play(this.playerFarming.gameObject);
@@ -207,7 +207,7 @@ public class Interaction_Knucklebones : Interaction
         {
           Debug.Log((object) "Show Win Convo");
           if (this._betAmount > 0)
-            this.StartCoroutine((IEnumerator) this.GiveGold(true));
+            this.StartCoroutine(this.GiveGold(true));
           else
             this.TryToGiveKnucklbonesStructure();
         }
@@ -219,7 +219,7 @@ public class Interaction_Knucklebones : Interaction
       case UIKnuckleBonesController.KnucklebonesResult.Loss:
         Debug.Log((object) "Show Lose Convo");
         if (this._betAmount > 0)
-          this.StartCoroutine((IEnumerator) this.GiveGold(false));
+          this.StartCoroutine(this.GiveGold(false));
         else
           this.TryToGiveKnucklbonesStructure();
         if (this._betAmount > 0 && !this.canPlayRatauStaffLoseConvo || this.KnuckleboneOpponent.Tag != KnucklebonesOpponent.OppnentTags.Ratau)
@@ -241,7 +241,7 @@ public class Interaction_Knucklebones : Interaction
   public override void OnSecondaryInteract(StateMachine state)
   {
     base.OnSecondaryInteract(state);
-    this.StartCoroutine((IEnumerator) this.PlayMatchCoop());
+    this.StartCoroutine(this.PlayMatchCoop());
   }
 
   public override void GetSecondaryLabel()
@@ -257,7 +257,7 @@ public class Interaction_Knucklebones : Interaction
     AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup("WIN_KNUCKLEBONES_ALL"));
     if (UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Building_Knucklebones))
       return;
-    this.StartCoroutine((IEnumerator) this.GiveKnucklebonesStructureIE());
+    this.StartCoroutine(this.GiveKnucklebonesStructureIE());
   }
 
   public IEnumerator GiveKnucklebonesStructureIE()
@@ -348,7 +348,7 @@ public class Interaction_Knucklebones : Interaction
     else if (DataManager.Instance.GetVariable(interactionKnucklebones.KnuckleboneOpponent.Config.VariableToChangeOnWin))
     {
       AudioManager.Instance.PlayOneShot("event:/ui/confirm_selection", interactionKnucklebones.gameObject);
-      interactionKnucklebones.StartCoroutine((IEnumerator) interactionKnucklebones.MakeBet());
+      interactionKnucklebones.StartCoroutine(interactionKnucklebones.MakeBet());
     }
     else
       yield return (object) interactionKnucklebones.ContinueToKnucklebones();
@@ -455,7 +455,7 @@ public class Interaction_Knucklebones : Interaction
   public void TestReward(int Player = 3)
   {
     this.KnuckleboneOpponent = this.KnucklebonePlayers[Player];
-    this.StartCoroutine((IEnumerator) this.GiveKeyPieceRoutine());
+    this.StartCoroutine(this.GiveKeyPieceRoutine());
   }
 
   public void GiveReward()
@@ -608,10 +608,7 @@ public class Interaction_Knucklebones : Interaction
     GameManager.GetInstance().OnConversationEnd();
   }
 
-  public void UnlockRatauFleece()
-  {
-    this.StartCoroutine((IEnumerator) this.UnlockRatauFleeceSequence());
-  }
+  public void UnlockRatauFleece() => this.StartCoroutine(this.UnlockRatauFleeceSequence());
 
   public IEnumerator UnlockRatauFleeceSequence()
   {
@@ -677,7 +674,7 @@ public class Interaction_Knucklebones : Interaction
   public void \u003CCompleteGame\u003Eb__29_0()
   {
     this.enabled = true;
-    this.StartCoroutine((IEnumerator) this.GiveKeyPieceRoutine());
+    this.StartCoroutine(this.GiveKeyPieceRoutine());
   }
 
   [CompilerGenerated]

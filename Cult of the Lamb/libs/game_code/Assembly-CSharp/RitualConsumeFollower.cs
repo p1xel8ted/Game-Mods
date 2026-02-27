@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualConsumeFollower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -26,7 +26,7 @@ public class RitualConsumeFollower : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.HeartsOfTheFaithfulRitual());
+    GameManager.GetInstance().StartCoroutine(this.HeartsOfTheFaithfulRitual());
   }
 
   public IEnumerator HeartsOfTheFaithfulRitual()
@@ -43,7 +43,7 @@ public class RitualConsumeFollower : Ritual
       else
         AudioManager.Instance.PlayOneShot("event:/sermon/sermon_speech_bubble", PlayerFarming.Instance.transform.position);
     }));
-    yield return (object) ritualConsumeFollower.StartCoroutine((IEnumerator) ritualConsumeFollower.WaitFollowersFormCircle());
+    yield return (object) ritualConsumeFollower.StartCoroutine(ritualConsumeFollower.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
     followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon(), followerSelectionType: ritualConsumeFollower.RitualType);

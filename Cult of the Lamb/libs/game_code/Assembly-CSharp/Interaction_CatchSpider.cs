@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_CatchSpider
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -43,7 +43,7 @@ public class Interaction_CatchSpider : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.CatchCritterRoutine());
+    GameManager.GetInstance().StartCoroutine(this.CatchCritterRoutine());
     if (this.isCrab)
       return;
     ++DataManager.Instance.SpidersCaught;
@@ -120,12 +120,12 @@ public class Interaction_CatchSpider : Interaction
   public void \u003CCatchCritterRoutine\u003Eb__11_1(PickUp pickUp)
   {
     pickUp.SetInitialSpeedAndDiraction((float) UnityEngine.Random.Range(9, 11), Utils.GetAngle(this.transform.position, Vector3.zero));
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.Delay(1f, (System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.Delay(1f, (System.Action) (() =>
     {
       Interaction_WebberSkull component = pickUp.GetComponent<Interaction_WebberSkull>();
       component.Structure.CreateStructure(FollowerLocation.Base, component.transform.position);
       component.Structure.Brain.AddToGrid();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.Delay(1f, (System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(this.Delay(1f, (System.Action) (() =>
       {
         GameManager.GetInstance().OnConversationEnd();
         this.state.CURRENT_STATE = StateMachine.State.Idle;

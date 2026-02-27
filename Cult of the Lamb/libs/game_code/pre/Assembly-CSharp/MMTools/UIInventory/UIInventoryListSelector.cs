@@ -1,0 +1,85 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: MMTools.UIInventory.UIInventoryListSelector
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using Rewired;
+using UnityEngine;
+using UnityEngine.UI;
+
+#nullable disable
+namespace MMTools.UIInventory;
+
+public class UIInventoryListSelector : BaseMonoBehaviour
+{
+  public UIInventoryListSelector.ListSelectorAction OnMove;
+  public UIInventoryListSelector.ListSelectorAction OnSelect;
+  private UIInventoryList List;
+  public Image Selector;
+  private float selectionDelay;
+  public Vector3 SelectorTargetPosition;
+  private int _CurrentSelection;
+
+  private int CURRENT_SELECTION
+  {
+    get => this._CurrentSelection;
+    set
+    {
+      this.selectionDelay = 0.25f;
+      this._CurrentSelection = value;
+      if (this.List.Items.Count <= 0)
+        return;
+      while (this._CurrentSelection > this.List.Items.Count - 1)
+        this._CurrentSelection -= this.List.Items.Count;
+      while (this._CurrentSelection < 0)
+        this._CurrentSelection += this.List.Items.Count;
+      this.SelectorTargetPosition = this.List.Items[this.CURRENT_SELECTION].rectTransform.position;
+      UIInventoryListSelector.ListSelectorAction onMove = this.OnMove;
+      if (onMove == null)
+        return;
+      onMove(this.List.Items[this.CURRENT_SELECTION].Item);
+    }
+  }
+
+  private void OnEnable()
+  {
+    this.Selector.enabled = false;
+    this.List = this.GetComponent<UIInventoryList>();
+  }
+
+  public void SetActive(int Selection)
+  {
+    this.CURRENT_SELECTION = Selection;
+    this.Selector.enabled = true;
+    this.Selector.transform.position = this.SelectorTargetPosition;
+  }
+
+  private void Update()
+  {
+    this.Selector.transform.position = Vector3.Lerp(this.Selector.transform.position, this.SelectorTargetPosition, 35f * Time.unscaledDeltaTime);
+  }
+
+  public void DoUpdate(Player RewiredController)
+  {
+    this.selectionDelay -= Time.unscaledDeltaTime;
+    if ((double) InputManager.UI.GetHorizontalAxis() > 0.30000001192092896 && (double) this.selectionDelay < 0.0)
+      ++this.CURRENT_SELECTION;
+    if ((double) InputManager.UI.GetHorizontalAxis() < -0.30000001192092896 && (double) this.selectionDelay < 0.0)
+      --this.CURRENT_SELECTION;
+    if ((double) InputManager.UI.GetVerticalAxis() > 0.30000001192092896 && (double) this.selectionDelay < 0.0)
+      this.CURRENT_SELECTION -= this.List.GridSize.x;
+    if ((double) InputManager.UI.GetVerticalAxis() < -0.30000001192092896 && (double) this.selectionDelay < 0.0)
+      this.CURRENT_SELECTION += this.List.GridSize.x;
+    if ((double) InputManager.UI.GetVerticalAxis() >= -0.30000001192092896 && (double) InputManager.UI.GetVerticalAxis() <= 0.30000001192092896 && (double) InputManager.Gameplay.GetHorizontalAxis() < 0.30000001192092896 && (double) InputManager.Gameplay.GetHorizontalAxis() > -0.30000001192092896)
+      this.selectionDelay = 0.0f;
+    if (!InputManager.UI.GetAcceptButtonDown() || this.List.Items[this.CURRENT_SELECTION].Item == null || this.List.Items[this.CURRENT_SELECTION].Item.type == 0)
+      return;
+    UIInventoryListSelector.ListSelectorAction onSelect = this.OnSelect;
+    if (onSelect == null)
+      return;
+    onSelect(this.List.Items[this.CURRENT_SELECTION].Item);
+  }
+
+  public delegate void ListSelectorAction(InventoryItem Item);
+}

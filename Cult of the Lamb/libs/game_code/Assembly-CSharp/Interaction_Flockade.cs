@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Flockade
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -62,7 +62,7 @@ public class Interaction_Flockade : Interaction
     this.\u003C\u003E1__state = -1;
     interactionFlockade.isLoadingAssets = true;
     System.Threading.Tasks.Task task = MonoSingleton<UIManager>.Instance.LoadFlockadeAssets();
-    interactionFlockade.StartCoroutine((IEnumerator) UIManager.LoadAssets(task, new System.Action(interactionFlockade.\u003CStart\u003Eb__12_0)));
+    interactionFlockade.StartCoroutine(UIManager.LoadAssets(task, new System.Action(interactionFlockade.\u003CStart\u003Eb__12_0)));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E2__current = (object) null;
     // ISSUE: reference to a compiler-generated field
@@ -137,7 +137,7 @@ public class Interaction_Flockade : Interaction
     this.playerFarming.GoToAndStop(this.transform.position + new Vector3(-0.75f, -2.2f), this.gameObject, GoToCallback: (System.Action) (() =>
     {
       if (this._availableOpponents.Count > 0)
-        this.StartCoroutine((IEnumerator) this.SelectOpponent());
+        this.StartCoroutine(this.SelectOpponent());
       else
         state.CURRENT_STATE = StateMachine.State.Idle;
     }));
@@ -234,7 +234,7 @@ public class Interaction_Flockade : Interaction
       else if (DataManager.Instance.GetVariable(interactionFlockade._currentOpponent.Config.NpcConfiguration.VariableToChangeOnWin))
       {
         AudioManager.Instance.PlayOneShot("event:/ui/confirm_selection", interactionFlockade.gameObject);
-        interactionFlockade.StartCoroutine((IEnumerator) interactionFlockade.MakeBet());
+        interactionFlockade.StartCoroutine(interactionFlockade.MakeBet());
         flag = false;
       }
       else
@@ -312,7 +312,7 @@ label_18:
 
   public void GameCompleted(FlockadeUIController.Result result)
   {
-    this.StartCoroutine((IEnumerator) this.GameCompletedRoutine(result));
+    this.StartCoroutine(this.GameCompletedRoutine(result));
   }
 
   public IEnumerator GameCompletedRoutine(FlockadeUIController.Result result)

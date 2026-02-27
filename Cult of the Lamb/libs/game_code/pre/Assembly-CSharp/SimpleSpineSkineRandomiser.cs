@@ -1,0 +1,35 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: SimpleSpineSkineRandomiser
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using Spine.Unity;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+#nullable disable
+public class SimpleSpineSkineRandomiser : BaseMonoBehaviour
+{
+  public List<SimpleSpineSkineRandomiser.SkinAndChance> Skins = new List<SimpleSpineSkineRandomiser.SkinAndChance>();
+  private ISkeletonAnimation skeletonAnimation;
+
+  private void Start()
+  {
+    this.skeletonAnimation = this.GetComponent<ISkeletonAnimation>();
+    int[] weights = new int[this.Skins.Count];
+    int index = -1;
+    while (++index < this.Skins.Count)
+      weights[index] = this.Skins[index].Probability;
+    this.skeletonAnimation.Skeleton.SetSkin(this.Skins[Utils.GetRandomWeightedIndex(weights)].SkinName);
+  }
+
+  [Serializable]
+  public class SkinAndChance
+  {
+    public string SkinName;
+    [Range(0.0f, 100f)]
+    public int Probability = 50;
+  }
+}

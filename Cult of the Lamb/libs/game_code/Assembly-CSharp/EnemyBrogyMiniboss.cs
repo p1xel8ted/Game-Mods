@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBrogyMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -257,7 +257,7 @@ public class EnemyBrogyMiniboss : EnemyDual
     base.OnEnable();
     this.health.OnHitEarly += new Health.HitAction(this.OnHitEarly);
     this.InitDamageColliders();
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.onStateChange += new EnemyBrogyMiniboss.BrogyStateChange(this.OnStateChange);
     this.attack_9_cooldoownTimestamp = GameManager.GetInstance().CurrentTime;
@@ -448,7 +448,7 @@ public class EnemyBrogyMiniboss : EnemyDual
   {
     EnemyBrogyMiniboss enemyBrogyMiniboss = this;
     enemyBrogyMiniboss.FacePosition(enemyBrogyMiniboss.targetObject.transform.position, enemyBrogyMiniboss.targetObject.transform.position);
-    enemyBrogyMiniboss.StartCoroutine((IEnumerator) enemyBrogyMiniboss.EnableDamageColliderTime(enemyBrogyMiniboss.damageColliders[0], enemyBrogyMiniboss.attack_2_delay));
+    enemyBrogyMiniboss.StartCoroutine(enemyBrogyMiniboss.EnableDamageColliderTime(enemyBrogyMiniboss.damageColliders[0], enemyBrogyMiniboss.attack_2_delay));
     yield return (object) new WaitForSeconds(enemyBrogyMiniboss.attack_2_duration * enemyBrogyMiniboss.Spine.timeScale);
     enemyBrogyMiniboss.FacePosition(enemyBrogyMiniboss.targetObject.transform.position, enemyBrogyMiniboss.targetObject.transform.position);
     enemyBrogyMiniboss.CURRENT_BROGY_STATE = enemyBrogyMiniboss.rageActive ? ((double) UnityEngine.Random.value >= (double) enemyBrogyMiniboss.prob_attack_7_attack_8 ? EnemyBrogyMiniboss.BrogyState.Attack_8 : EnemyBrogyMiniboss.BrogyState.Attack_7) : EnemyBrogyMiniboss.BrogyState.Attack_3;
@@ -495,7 +495,7 @@ public class EnemyBrogyMiniboss : EnemyDual
     enemyBrogyMiniboss.FacePosition(enemyBrogyMiniboss.targetObject.transform.position, enemyBrogyMiniboss.targetObject.transform.position);
     yield return (object) new WaitForSeconds(enemyBrogyMiniboss.attack_4_delay * enemyBrogyMiniboss.Spine.timeScale);
     enemyBrogyMiniboss.Spine.AnimationState.SetAnimation(0, "attack-4-loop", true);
-    enemyBrogyMiniboss.StartCoroutine((IEnumerator) enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[4], 0.0f));
+    enemyBrogyMiniboss.StartCoroutine(enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[4], 0.0f));
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyBrogyMiniboss.Spine.timeScale) < (double) enemyBrogyMiniboss.attack_4_duration)
     {
@@ -535,7 +535,7 @@ public class EnemyBrogyMiniboss : EnemyDual
     enemyBrogyMiniboss.FacePosition(enemyBrogyMiniboss.targetObject.transform.position, enemyBrogyMiniboss.targetObject.transform.position);
     yield return (object) new WaitForSeconds(enemyBrogyMiniboss.attack_6_delay * enemyBrogyMiniboss.Spine.timeScale);
     enemyBrogyMiniboss.Spine.AnimationState.SetAnimation(0, "attack-6-loop", true);
-    enemyBrogyMiniboss.StartCoroutine((IEnumerator) enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[1], 0.0f));
+    enemyBrogyMiniboss.StartCoroutine(enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[1], 0.0f));
     float time = 0.0f;
     float projectileTime = 0.0f;
     float projectileAngleOffset = 0.0f;
@@ -630,7 +630,7 @@ public class EnemyBrogyMiniboss : EnemyDual
     enemyBrogyMiniboss.Spine.AnimationState.SetAnimation(0, "attack-3-end", false);
     enemyBrogyMiniboss.Spine.AnimationState.AddAnimation(0, enemyBrogyMiniboss.IdleAnim, true, 0.0f);
     yield return (object) new WaitForSeconds(0.5f);
-    enemyBrogyMiniboss.StartCoroutine((IEnumerator) enemyBrogyMiniboss.EnableDamageColliderTime(enemyBrogyMiniboss.damageColliders[1], 0.0f));
+    enemyBrogyMiniboss.StartCoroutine(enemyBrogyMiniboss.EnableDamageColliderTime(enemyBrogyMiniboss.damageColliders[1], 0.0f));
     for (int index1 = 0; index1 < 4; ++index1)
     {
       float num1 = 45f + (float) (90 * index1);
@@ -698,7 +698,7 @@ public class EnemyBrogyMiniboss : EnemyDual
     enemyBrogyMiniboss.FacePosition(enemyBrogyMiniboss.targetObject.transform.position, enemyBrogyMiniboss.targetObject.transform.position);
     yield return (object) new WaitForSeconds(enemyBrogyMiniboss.attack_10_delay * enemyBrogyMiniboss.Spine.timeScale);
     enemyBrogyMiniboss.Spine.AnimationState.SetAnimation(0, "attack-6-loop", true);
-    enemyBrogyMiniboss.StartCoroutine((IEnumerator) enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[1], 0.0f));
+    enemyBrogyMiniboss.StartCoroutine(enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[1], 0.0f));
     enemyBrogyMiniboss.levitateVFX.Play();
     float time = 0.0f;
     float projectileTime = 0.0f;
@@ -755,7 +755,7 @@ public class EnemyBrogyMiniboss : EnemyDual
     yield return (object) new WaitForSeconds(enemyBrogyMiniboss.attack_together_delay * enemyBrogyMiniboss.Spine.timeScale);
     enemyBrogyMiniboss.Spine.AnimationState.SetAnimation(0, "attack-6-loop", true);
     enemyBrogyMiniboss.levitateVFX.Play();
-    enemyBrogyMiniboss.StartCoroutine((IEnumerator) enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[1], 0.0f));
+    enemyBrogyMiniboss.StartCoroutine(enemyBrogyMiniboss.EnableDamageCollider(enemyBrogyMiniboss.damageColliders[1], 0.0f));
     float time = 0.0f;
     enemyBrogyMiniboss.FacePosition(enemyBrogyMiniboss.targetObject.transform.position, enemyBrogyMiniboss.targetObject.transform.position);
     enemyBrogyMiniboss.linealDirection = enemyBrogyMiniboss.FacingDirection;
@@ -843,7 +843,7 @@ public class EnemyBrogyMiniboss : EnemyDual
         this.Spine.AnimationState.SetAnimation(0, this.IdleAnim, true);
         if (this.idleRoutine != null)
           this.StopCoroutine(this.idleRoutine);
-        this.idleRoutine = this.StartCoroutine((IEnumerator) this.IdleState());
+        this.idleRoutine = this.StartCoroutine(this.IdleState());
         break;
       case EnemyBrogyMiniboss.BrogyState.KeepDistance:
         this.speed = this.movementSpeed * this.SpeedMultiplier;
@@ -851,73 +851,73 @@ public class EnemyBrogyMiniboss : EnemyDual
         this.Spine.AnimationState.AddAnimation(0, "backstep-loop", true, 0.0f);
         if (this.moveRoutine != null)
           this.StopCoroutine(this.moveRoutine);
-        this.moveRoutine = this.StartCoroutine((IEnumerator) this.KeepDistanceState());
+        this.moveRoutine = this.StartCoroutine(this.KeepDistanceState());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_2:
         this.Spine.AnimationState.SetAnimation(0, "attack-2", false);
         this.Spine.AnimationState.AddAnimation(0, this.IdleAnim, true, 0.0f);
         if (this.attack_2_Routine != null)
           this.StopCoroutine(this.attack_2_Routine);
-        this.attack_2_Routine = this.StartCoroutine((IEnumerator) this.Attack_2());
+        this.attack_2_Routine = this.StartCoroutine(this.Attack_2());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_3:
         this.Spine.AnimationState.SetAnimation(0, "attack-3-start", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-3-loop", true, 0.0f);
         if (this.attack_3_Routine != null)
           this.StopCoroutine(this.attack_3_Routine);
-        this.attack_3_Routine = this.StartCoroutine((IEnumerator) this.Attack_3());
+        this.attack_3_Routine = this.StartCoroutine(this.Attack_3());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_4:
         this.Spine.AnimationState.SetAnimation(0, "attack-4-charge", false);
         if (this.attack_4_Routine != null)
           this.StopCoroutine(this.attack_4_Routine);
-        this.attack_4_Routine = this.StartCoroutine((IEnumerator) this.Attack_4());
+        this.attack_4_Routine = this.StartCoroutine(this.Attack_4());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_5:
         this.Spine.AnimationState.SetAnimation(0, "attack-5-charge", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-5-loop", true, 0.0f);
         if (this.attack_5_Routine != null)
           this.StopCoroutine(this.attack_5_Routine);
-        this.attack_5_Routine = this.StartCoroutine((IEnumerator) this.Attack_5());
+        this.attack_5_Routine = this.StartCoroutine(this.Attack_5());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_6:
         this.Spine.AnimationState.SetAnimation(0, "attack-6-start", false);
         if (this.attack_6_Routine != null)
           this.StopCoroutine(this.attack_6_Routine);
-        this.attack_6_Routine = this.StartCoroutine((IEnumerator) this.Attack_6());
+        this.attack_6_Routine = this.StartCoroutine(this.Attack_6());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_7:
         this.Spine.AnimationState.SetAnimation(0, "attack-3-start", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-3-loop", true, 0.0f);
         if (this.attack_7_Routine != null)
           this.StopCoroutine(this.attack_7_Routine);
-        this.attack_7_Routine = this.StartCoroutine((IEnumerator) this.Attack_7());
+        this.attack_7_Routine = this.StartCoroutine(this.Attack_7());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_8:
         this.Spine.AnimationState.SetAnimation(0, "attack-3-start", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-3-loop", true, 0.0f);
         if (this.attack_8_Routine != null)
           this.StopCoroutine(this.attack_8_Routine);
-        this.attack_8_Routine = this.StartCoroutine((IEnumerator) this.Attack_8());
+        this.attack_8_Routine = this.StartCoroutine(this.Attack_8());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_9:
         this.Spine.AnimationState.SetAnimation(0, "attack-3-start", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-3-loop", true, 0.0f);
         if (this.attack_9_Routine != null)
           this.StopCoroutine(this.attack_9_Routine);
-        this.attack_9_Routine = this.StartCoroutine((IEnumerator) this.Attack_9());
+        this.attack_9_Routine = this.StartCoroutine(this.Attack_9());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_10:
         this.Spine.AnimationState.SetAnimation(0, "attack-6-start", false);
         if (this.attack_10_Routine != null)
           this.StopCoroutine(this.attack_10_Routine);
-        this.attack_10_Routine = this.StartCoroutine((IEnumerator) this.Attack_10());
+        this.attack_10_Routine = this.StartCoroutine(this.Attack_10());
         break;
       case EnemyBrogyMiniboss.BrogyState.Sync:
         this.Spine.AnimationState.SetAnimation(0, this.IdleAnim, true);
         if (this.sync_Routine != null)
           this.StopCoroutine(this.sync_Routine);
-        this.sync_Routine = this.StartCoroutine((IEnumerator) this.Sync());
+        this.sync_Routine = this.StartCoroutine(this.Sync());
         break;
       case EnemyBrogyMiniboss.BrogyState.Attack_Together:
         this.Spine.AnimationState.SetAnimation(0, "attack-6-start", false);
@@ -925,13 +925,13 @@ public class EnemyBrogyMiniboss : EnemyDual
           this.StopCoroutine(this.sync_Routine);
         if (this.attack_together_Routine != null)
           this.StopCoroutine(this.attack_together_Routine);
-        this.attack_together_Routine = this.StartCoroutine((IEnumerator) this.Attack_Together());
+        this.attack_together_Routine = this.StartCoroutine(this.Attack_Together());
         break;
       case EnemyBrogyMiniboss.BrogyState.Phase:
         this.Spine.AnimationState.SetAnimation(0, this.IdleAnim, true);
         if (this.phase_Routine != null)
           this.StopCoroutine(this.phase_Routine);
-        this.phase_Routine = this.StartCoroutine((IEnumerator) this.Phase());
+        this.phase_Routine = this.StartCoroutine(this.Phase());
         break;
     }
   }

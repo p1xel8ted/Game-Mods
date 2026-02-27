@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UI.Menus.UIMissionaryMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -37,7 +37,7 @@ public class UIMissionaryMenuController : UIFollowerSelectMenuController
   {
     this._cannotCancel = true;
     this._controlPrompts.HideCancelButton();
-    this.StartCoroutine((IEnumerator) this.DeferredFinalize(followerInfo));
+    this.StartCoroutine(this.DeferredFinalize(followerInfo));
   }
 
   public IEnumerator DeferredFinalize(FollowerInfo followerInfo)
@@ -55,7 +55,7 @@ public class UIMissionaryMenuController : UIFollowerSelectMenuController
       missionaryMenuController._missionInfoCardController.enabled = false;
       MonoSingleton<UINavigatorNew>.Instance.Clear();
       missionaryMenuController.SetActiveStateForMenu(false);
-      missionaryMenuController.StartCoroutine((IEnumerator) missionaryMenuController.FocusFollowerCard(followerInfo));
+      missionaryMenuController.StartCoroutine(missionaryMenuController.FocusFollowerCard(followerInfo));
       missionaryMenuController._choosingFollower = true;
       return false;
     }
@@ -74,7 +74,7 @@ public class UIMissionaryMenuController : UIFollowerSelectMenuController
     this.OverrideDefaultOnce(MonoSingleton<UINavigatorNew>.Instance.CurrentSelectable.Selectable);
     MonoSingleton<UINavigatorNew>.Instance.Clear();
     this.SetActiveStateForMenu(false);
-    this.StartCoroutine((IEnumerator) this.FocusFollowerCard(followerInfo));
+    this.StartCoroutine(this.FocusFollowerCard(followerInfo));
     this._choosingFollower = true;
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DamageCollider
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -26,27 +26,37 @@ public class DamageCollider : BaseMonoBehaviour
   public bool DealDamageToAllNonEnemyHealth;
   public List<Health> hitEnemies = new List<Health>();
   public List<Projectile> hitProjectiles = new List<Projectile>();
+  public static int SceneryLayer;
+  public static int ObstaclesLayer;
 
-  public void Start() => this.health = this.GetComponentInParent<Health>();
+  public void Start()
+  {
+    this.health = this.GetComponentInParent<Health>();
+    DamageCollider.SceneryLayer = LayerMask.NameToLayer("Scenery");
+    DamageCollider.ObstaclesLayer = LayerMask.NameToLayer("Obstacles");
+  }
 
   public void OnTriggerEnter2D(Collider2D collision)
   {
-    Health component = collision.gameObject.GetComponent<Health>();
-    if ((Object) component != (Object) null && ((Object) this.health == (Object) null || component.team != this.health.team || component.team == Health.Team.PlayerTeam && this.health.IsCharmedEnemy))
+    GameObject gameObject = collision.gameObject;
+    int layer = gameObject.layer;
+    Health component1;
+    if (gameObject.TryGetComponent<Health>(out component1) && ((Object) this.health == (Object) null || component1.team != this.health.team || component1.team == Health.Team.PlayerTeam && this.health.IsCharmedEnemy))
     {
-      if (component.team == Health.Team.Team2 && this.PlayersOnly || this.IgnorePlayer && (component.isPlayer || component.isPlayerAlly) || this.hitEnemies.Contains(component))
+      if (component1.team == Health.Team.Team2 && this.PlayersOnly || this.IgnorePlayer && (component1.isPlayer || component1.isPlayerAlly) || this.hitEnemies.Contains(component1))
         return;
       this.hitEnemies.Add(this.health);
-      if (collision.gameObject.layer == LayerMask.NameToLayer("Scenery") || collision.gameObject.layer == LayerMask.NameToLayer("Obstacles") || this.DealDamageToAllNonEnemyHealth && component.team != Health.Team.Team2)
+      if (((layer == DamageCollider.SceneryLayer ? 1 : (layer == DamageCollider.ObstaclesLayer ? 1 : 0)) | (!this.DealDamageToAllNonEnemyHealth ? (false ? 1 : 0) : (component1.team != Health.Team.Team2 ? 1 : 0))) != 0)
       {
-        component.DealDamage(this.DamageToObstacles, this.gameObject, Vector3.Lerp(this.transform.position, component.transform.position, 0.8f), this.BreakArmor, this.AttackType, AttackFlags: this.AttackFlags);
+        component1.DealDamage(this.DamageToObstacles, this.gameObject, Vector3.Lerp(this.transform.position, component1.transform.position, 0.8f), this.BreakArmor, this.AttackType, component1.team != Health.Team.PlayerTeam, this.AttackFlags);
       }
       else
       {
-        component.DealDamage(this.Damage, this.gameObject, this.transform.position, this.BreakArmor, this.AttackType, AttackFlags: this.AttackFlags);
-        if ((double) this.Knockback == 0.0)
+        component1.DealDamage(this.Damage, this.gameObject, this.transform.position, this.BreakArmor, this.AttackType, component1.team != Health.Team.PlayerTeam, this.AttackFlags);
+        UnitObject component2;
+        if ((double) this.Knockback == 0.0 || !component1.TryGetComponent<UnitObject>(out component2))
           return;
-        component.GetComponent<UnitObject>()?.DoKnockBack(this.gameObject, this.Knockback, 1f);
+        component2.DoKnockBack(this.gameObject, this.Knockback, 1f);
       }
     }
     else
@@ -86,7 +96,7 @@ public class DamageCollider : BaseMonoBehaviour
       projectile.DestroyProjectile();
     if (!(bool) (Object) this.health || this.health.team != Health.Team.Neutral)
       return;
-    this.health.DealDamage(10f, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile);
+    this.health.DealDamage(10f, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
   }
 
   public void DeflectProjectile(Projectile projectile)

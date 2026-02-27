@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SingleChoiceRewardOption
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -277,14 +277,19 @@ public class SingleChoiceRewardOption : BaseMonoBehaviour
           this.Option.quantity = Mathf.Clamp(this.Option.quantity + Random.Range((int) this.randomOffset.x, (int) this.randomOffset.y), 1, int.MaxValue);
       }
       this.itemDisplay.SetImage(this.Option.itemToBuy);
-      if (this.Option.quantity > 1 && !this.Option.SingleQuantityItem)
-        this.QuantityText.text = "x" + this.Option.quantity.ToString();
-      else
-        this.QuantityText.text = "";
+      this.UpdateQuantityText(this.Option);
       this.interaction.Init(this.Option.itemToBuy, this.Option.quantity);
       this.interaction.OnInteraction += new Interaction.InteractionEvent(this.OnInteraction);
       Debug.Log((object) ("Option.itemToBuy: " + this.Option.itemToBuy.ToString()).Colour(Color.green));
     }
+  }
+
+  public void UpdateQuantityText(BuyEntry buyEntry)
+  {
+    if (buyEntry.quantity > 1 && !buyEntry.SingleQuantityItem)
+      this.QuantityText.text = "x" + buyEntry.quantity.ToString();
+    else
+      this.QuantityText.text = "";
   }
 
   public void OnInteraction(StateMachine state)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Data.UserDataStore_KeyValue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired.Utils.Libraries.TinyJson;
@@ -95,7 +95,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
       if (this.__allActionIds != null)
         return this.__allActionIds;
       List<int> allActionIds = new List<int>();
-      IList<InputAction> actions = (IList<InputAction>) ReInput.mapping.Actions;
+      IList<InputAction> actions = ReInput.mapping.Actions;
       for (int index = 0; index < actions.Count; ++index)
         allActionIds.Add(actions[index].id);
       this.__allActionIds = allActionIds;
@@ -225,7 +225,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
       return;
     this.LoadJoystickData(args.controllerId);
     if (this._loadDataOnStart && this._loadJoystickAssignments && !this._wasJoystickEverDetected)
-      this.StartCoroutine((IEnumerator) this.LoadJoystickAssignmentsDeferred());
+      this.StartCoroutine(this.LoadJoystickAssignmentsDeferred());
     if (this._loadJoystickAssignments && !this._deferredJoystickAssignmentLoadPending)
       this.SaveControllerAssignments();
     this._wasJoystickEverDetected = true;
@@ -273,7 +273,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
     int num = 0;
     if (this.loadControllerAssignments && this.LoadControllerAssignmentsNow())
       ++num;
-    IList<Player> allPlayers = (IList<Player>) ReInput.players.AllPlayers;
+    IList<Player> allPlayers = ReInput.players.AllPlayers;
     for (int index = 0; index < allPlayers.Count; ++index)
       num += this.LoadPlayerDataNow(allPlayers[index]);
     return num + this.LoadAllJoystickCalibrationData();
@@ -298,7 +298,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
   public int LoadAllJoystickCalibrationData()
   {
     int num = 0;
-    IList<Joystick> joysticks = (IList<Joystick>) ReInput.controllers.Joysticks;
+    IList<Joystick> joysticks = ReInput.controllers.Joysticks;
     for (int index = 0; index < joysticks.Count; ++index)
       num += this.LoadJoystickCalibrationData(joysticks[index]);
     return num;
@@ -317,7 +317,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
   public int LoadJoystickData(int joystickId)
   {
     int num = 0;
-    IList<Player> allPlayers = (IList<Player>) ReInput.players.AllPlayers;
+    IList<Player> allPlayers = ReInput.players.AllPlayers;
     for (int index = 0; index < allPlayers.Count; ++index)
     {
       Player player = allPlayers[index];
@@ -355,13 +355,13 @@ public abstract class UserDataStore_KeyValue : UserDataStore
     Controller controller = ReInput.controllers.GetController(controllerType, controllerId);
     if (controller == null)
       return num;
-    IList<InputMapCategory> mapCategories = (IList<InputMapCategory>) ReInput.mapping.MapCategories;
+    IList<InputMapCategory> mapCategories = ReInput.mapping.MapCategories;
     for (int index1 = 0; index1 < mapCategories.Count; ++index1)
     {
       InputMapCategory inputMapCategory = mapCategories[index1];
       if (inputMapCategory.userAssignable)
       {
-        IList<InputLayout> inputLayoutList = (IList<InputLayout>) ReInput.mapping.MapLayouts(controller.type);
+        IList<InputLayout> inputLayoutList = ReInput.mapping.MapLayouts(controller.type);
         for (int index2 = 0; index2 < inputLayoutList.Count; ++index2)
         {
           InputLayout inputLayout = inputLayoutList[index2];
@@ -402,7 +402,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
     if (player == null)
       return 0;
     int num = 0;
-    IList<InputBehavior> inputBehaviors = (IList<InputBehavior>) ReInput.mapping.GetInputBehaviors(player.id);
+    IList<InputBehavior> inputBehaviors = ReInput.mapping.GetInputBehaviors(player.id);
     for (int index = 0; index < inputBehaviors.Count; ++index)
       num += this.LoadInputBehaviorNow(player, inputBehaviors[index]);
     return num;
@@ -584,7 +584,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
 
   public void SaveAll()
   {
-    IList<Player> allPlayers = (IList<Player>) ReInput.players.AllPlayers;
+    IList<Player> allPlayers = ReInput.players.AllPlayers;
     for (int index = 0; index < allPlayers.Count; ++index)
       this.SavePlayerDataNow(allPlayers[index]);
     this.SaveAllJoystickCalibrationData();
@@ -610,7 +610,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
 
   public void SaveAllJoystickCalibrationData()
   {
-    IList<Joystick> joysticks = (IList<Joystick>) ReInput.controllers.Joysticks;
+    IList<Joystick> joysticks = ReInput.controllers.Joysticks;
     for (int index = 0; index < joysticks.Count; ++index)
       this.SaveJoystickCalibrationData(joysticks[index]);
   }
@@ -630,7 +630,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
 
   public void SaveJoystickData(int joystickId)
   {
-    IList<Player> allPlayers = (IList<Player>) ReInput.players.AllPlayers;
+    IList<Player> allPlayers = ReInput.players.AllPlayers;
     for (int index = 0; index < allPlayers.Count; ++index)
     {
       Player player = allPlayers[index];
@@ -655,7 +655,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
 
   public void SaveControllerMaps(Player player, PlayerSaveData playerSaveData)
   {
-    foreach (ControllerMapSaveData controllerMapSaveData in (IEnumerable<ControllerMapSaveData>) playerSaveData.AllControllerMapSaveData)
+    foreach (ControllerMapSaveData controllerMapSaveData in playerSaveData.AllControllerMapSaveData)
       this.SaveControllerMap(player, controllerMapSaveData.map);
   }
 
@@ -711,7 +711,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
       UserDataStore_KeyValue.ControllerAssignmentSaveInfo assignmentSaveInfo = new UserDataStore_KeyValue.ControllerAssignmentSaveInfo(ReInput.players.allPlayerCount);
       for (int index1 = 0; index1 < ReInput.players.allPlayerCount; ++index1)
       {
-        Player allPlayer = ((IList<Player>) ReInput.players.AllPlayers)[index1];
+        Player allPlayer = ReInput.players.AllPlayers[index1];
         UserDataStore_KeyValue.ControllerAssignmentSaveInfo.PlayerInfo playerInfo = new UserDataStore_KeyValue.ControllerAssignmentSaveInfo.PlayerInfo();
         assignmentSaveInfo.players[index1] = playerInfo;
         playerInfo.id = allPlayer.id;
@@ -721,10 +721,10 @@ public abstract class UserDataStore_KeyValue : UserDataStore
         playerInfo.joysticks = joystickInfoArray;
         for (int index2 = 0; index2 < allPlayer.controllers.joystickCount; ++index2)
         {
-          Joystick joystick = ((IList<Joystick>) allPlayer.controllers.Joysticks)[index2];
+          Joystick joystick = allPlayer.controllers.Joysticks[index2];
           joystickInfoArray[index2] = new UserDataStore_KeyValue.ControllerAssignmentSaveInfo.JoystickInfo()
           {
-            instanceGuid = (Guid) ((Controller) joystick).deviceInstanceGuid,
+            instanceGuid = ((Controller) joystick).deviceInstanceGuid,
             id = joystick.id,
             hardwareIdentifier = joystick.hardwareIdentifier
           };
@@ -791,8 +791,8 @@ public abstract class UserDataStore_KeyValue : UserDataStore
     sb.Append("layoutId=");
     sb.Append(layoutId);
     sb.Append("|hardwareGuid=");
-    sb.Append((object) (Guid) controllerIdentifier.hardwareTypeGuid);
-    if ((Guid) controllerIdentifier.hardwareTypeGuid == Guid.Empty)
+    sb.Append((object) controllerIdentifier.hardwareTypeGuid);
+    if (controllerIdentifier.hardwareTypeGuid == Guid.Empty)
     {
       sb.Append("|hardwareIdentifier=");
       sb.Append(controllerIdentifier.hardwareIdentifier);
@@ -812,7 +812,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
     this._sb.Append("|hardwareIdentifier=");
     this._sb.Append(joystick.hardwareIdentifier);
     this._sb.Append("|hardwareGuid=");
-    this._sb.Append(((Guid) joystick.hardwareTypeGuid).ToString());
+    this._sb.Append(joystick.hardwareTypeGuid.ToString());
     return this._sb.ToString();
   }
 
@@ -919,10 +919,10 @@ public abstract class UserDataStore_KeyValue : UserDataStore
       return (Joystick) null;
     if (joystickInfo.instanceGuid == Guid.Empty)
       return (Joystick) null;
-    IList<Joystick> joysticks = (IList<Joystick>) ReInput.controllers.Joysticks;
+    IList<Joystick> joysticks = ReInput.controllers.Joysticks;
     for (int index = 0; index < joysticks.Count; ++index)
     {
-      if ((Guid) ((Controller) joysticks[index]).deviceInstanceGuid == joystickInfo.instanceGuid)
+      if (((Controller) joysticks[index]).deviceInstanceGuid == joystickInfo.instanceGuid)
         return joysticks[index];
     }
     return (Joystick) null;
@@ -935,7 +935,7 @@ public abstract class UserDataStore_KeyValue : UserDataStore
     matches = (List<Joystick>) null;
     if (joystickInfo == null || string.IsNullOrEmpty(joystickInfo.hardwareIdentifier))
       return false;
-    IList<Joystick> joysticks = (IList<Joystick>) ReInput.controllers.Joysticks;
+    IList<Joystick> joysticks = ReInput.controllers.Joysticks;
     for (int index = 0; index < joysticks.Count; ++index)
     {
       if (string.Equals(joysticks[index].hardwareIdentifier, joystickInfo.hardwareIdentifier, StringComparison.OrdinalIgnoreCase))
@@ -959,16 +959,16 @@ public abstract class UserDataStore_KeyValue : UserDataStore
     if (controller1 == null)
       return 0;
     int duplicateIndex = 0;
-    foreach (Controller controller2 in (IEnumerable<Controller>) player.controllers.Controllers)
+    foreach (Controller controller2 in player.controllers.Controllers)
     {
       if (controller2.type == controller1.type)
       {
         bool flag = false;
         if (controller1.type == ControllerType.Joystick)
         {
-          if (!((Guid) (controller2 as Joystick).hardwareTypeGuid != (Guid) controller1.hardwareTypeGuid))
+          if (!((controller2 as Joystick).hardwareTypeGuid != controller1.hardwareTypeGuid))
           {
-            if ((Guid) controller1.hardwareTypeGuid != Guid.Empty)
+            if (controller1.hardwareTypeGuid != Guid.Empty)
               flag = true;
           }
           else

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GuardianPet_Whirlwind
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -47,7 +47,7 @@ public class GuardianPet_Whirlwind : GuardianPet
       this.health = this.GetComponent<Health>();
     this.health.HP = this.health.totalHP;
     this.health.enabled = true;
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnHit(
@@ -58,7 +58,7 @@ public class GuardianPet_Whirlwind : GuardianPet
   {
     base.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.ActiveRoutine()))));
+    this.StartCoroutine(this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() => this.StartCoroutine(this.ActiveRoutine()))));
   }
 
   public IEnumerator KnockBackRoutine(float angle, System.Action Callback)
@@ -85,7 +85,7 @@ public class GuardianPet_Whirlwind : GuardianPet
     Debug.Log((object) "DIE!".Colour(Color.yellow));
     base.OnDie(Attacker, AttackLocation, Victim, AttackType, AttackFlags);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() => this.ReturnToController())));
+    this.StartCoroutine(this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() => this.ReturnToController())));
   }
 
   public void ReturnToController()
@@ -144,7 +144,7 @@ public class GuardianPet_Whirlwind : GuardianPet
         }
         if (guardianPetWhirlwind.avoidTarget)
         {
-          guardianPetWhirlwind.StartCoroutine((IEnumerator) guardianPetWhirlwind.FleeRoutine());
+          guardianPetWhirlwind.StartCoroutine(guardianPetWhirlwind.FleeRoutine());
         }
         else
         {
@@ -169,10 +169,10 @@ public class GuardianPet_Whirlwind : GuardianPet
       guardianPetWhirlwind.state.facingAngle = guardianPetWhirlwind.Angle;
       yield return (object) null;
     }
-    guardianPetWhirlwind.StartCoroutine((IEnumerator) guardianPetWhirlwind.ChargingRoutine());
+    guardianPetWhirlwind.StartCoroutine(guardianPetWhirlwind.ChargingRoutine());
     yield break;
 label_18:
-    guardianPetWhirlwind.StartCoroutine((IEnumerator) guardianPetWhirlwind.AttackRoutine());
+    guardianPetWhirlwind.StartCoroutine(guardianPetWhirlwind.AttackRoutine());
   }
 
   public virtual IEnumerator FleeRoutine()
@@ -195,7 +195,7 @@ label_18:
   }
 
   [CompilerGenerated]
-  public void \u003COnHit\u003Eb__20_0() => this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+  public void \u003COnHit\u003Eb__20_0() => this.StartCoroutine(this.ActiveRoutine());
 
   [CompilerGenerated]
   public void \u003COnDie\u003Eb__22_0() => this.ReturnToController();

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_NightFox
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -148,7 +148,7 @@ public class Interaction_NightFox : Interaction
   {
     base.OnInteract(state);
     this.Activating = true;
-    this.playerFarming.GoToAndStop(this.PlayerPosition.transform.position, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.AppearRoutine())));
+    this.playerFarming.GoToAndStop(this.PlayerPosition.transform.position, GoToCallback: (System.Action) (() => this.StartCoroutine(this.AppearRoutine())));
   }
 
   public bool CanAfford()
@@ -205,9 +205,9 @@ public class Interaction_NightFox : Interaction
     this.responses = new List<MMTools.Response>();
     int encounterType = (int) this.EncounterType;
     string str1 = this.CanAfford() ? "Conversation_NPC/Fox/Response_Yes" : "Conversation_NPC/Fox/Meeting/Response_CantAfford";
-    this.responses.Add(new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine(this.CanAfford() ? (IEnumerator) this.Agree() : (IEnumerator) this.CantAfford())), str1));
+    this.responses.Add(new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine(this.CanAfford() ? this.Agree() : this.CantAfford())), str1));
     string str2 = "Conversation_NPC/Fox/Response_No";
-    this.responses.Add(new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine((IEnumerator) this.Disagree())), str2));
+    this.responses.Add(new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine(this.Disagree())), str2));
     this.conversationEntries = new List<ConversationEntry>();
     int num = -1;
     string str3 = $"Conversation_NPC/Fox/Meeting{encounterType.ToString()}/";
@@ -245,7 +245,7 @@ public class Interaction_NightFox : Interaction
   public IEnumerator Agree()
   {
     Interaction_NightFox interactionNightFox = this;
-    yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.GiveItem());
+    yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.GiveItem());
     yield return (object) new WaitForEndOfFrame();
     List<ConversationEntry> Entries = new List<ConversationEntry>();
     int encounterType = (int) interactionNightFox.EncounterType;
@@ -281,7 +281,7 @@ public class Interaction_NightFox : Interaction
     Debug.Log((object) "AGREE!");
     Debug.Log((object) ("EncounterType: " + interactionNightFox.EncounterType.ToString()));
     if (interactionNightFox.EncounterType == Interaction_NightFox.EncounterTypes.Ratau)
-      yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.GiveFinalRewards());
+      yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.GiveFinalRewards());
     GameManager.GetInstance().RemoveAllFromCamera();
     Interaction_KeyPiece KeyPiece = UnityEngine.Object.Instantiate<Interaction_KeyPiece>(interactionNightFox.KeyPiecePrefab, interactionNightFox.Spine.transform.position + new Vector3(0.0f, -0.2f, -1.25f), Quaternion.identity, interactionNightFox.transform.parent);
     KeyPiece.transform.localScale = Vector3.zero;
@@ -294,7 +294,7 @@ public class Interaction_NightFox : Interaction
     {
       GameManager.GetInstance().OnConversationEnd(false);
       KeyPiece.OnInteract(this.state);
-      this.StartCoroutine((IEnumerator) this.ExitRoutine());
+      this.StartCoroutine(this.ExitRoutine());
     }))));
     SimulationManager.UnPause();
     DataManager.Instance.FoxCompleted.Add(PlayerFarming.Location);
@@ -437,22 +437,22 @@ public class Interaction_NightFox : Interaction
     switch (interactionNightFox.EncounterType)
     {
       case Interaction_NightFox.EncounterTypes.Fish:
-        yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.GiveFishRoutine());
+        yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.GiveFishRoutine());
         break;
       case Interaction_NightFox.EncounterTypes.Follower:
-        yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.GiveFollowerRoutine());
+        yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.GiveFollowerRoutine());
         break;
       case Interaction_NightFox.EncounterTypes.FollowerOrHeart:
-        yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.AskFollowerOrHeart());
+        yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.AskFollowerOrHeart());
         if (interactionNightFox.ChooseFollowerOverHeart)
         {
-          yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.GiveFollowerRoutine());
+          yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.GiveFollowerRoutine());
           break;
         }
-        yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.GiveHalfHeartRoutine());
+        yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.GiveHalfHeartRoutine());
         break;
       case Interaction_NightFox.EncounterTypes.Ratau:
-        yield return (object) interactionNightFox.StartCoroutine((IEnumerator) interactionNightFox.GiveRatauRoutine());
+        yield return (object) interactionNightFox.StartCoroutine(interactionNightFox.GiveRatauRoutine());
         break;
     }
   }
@@ -516,7 +516,7 @@ public class Interaction_NightFox : Interaction
   {
     this.Spine.gameObject.SetActive(true);
     this.GetQuestionAndResponses();
-    this.StartCoroutine((IEnumerator) this.Agree());
+    this.StartCoroutine(this.Agree());
   }
 
   public float RequiredFollowers()
@@ -583,7 +583,7 @@ public class Interaction_NightFox : Interaction
     selectMenuController1.OnFollowerSelected = selectMenuController1.OnFollowerSelected + (System.Action<FollowerInfo>) (followerInfo =>
     {
       AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/select_follower", this.playerFarming.gameObject);
-      this.StartCoroutine((IEnumerator) this.SpawnFollower(followerInfo.ID));
+      this.StartCoroutine(this.SpawnFollower(followerInfo.ID));
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnHide = selectMenuController2.OnHide + (System.Action) (() => Time.timeScale = 1f);
@@ -624,7 +624,7 @@ public class Interaction_NightFox : Interaction
       interactionNightFox1.FollowerSelect();
   }
 
-  public void TestHalfHeart() => this.StartCoroutine((IEnumerator) this.GiveHalfHeartRoutine());
+  public void TestHalfHeart() => this.StartCoroutine(this.GiveHalfHeartRoutine());
 
   public IEnumerator GiveHalfHeartRoutine()
   {
@@ -653,7 +653,7 @@ public class Interaction_NightFox : Interaction
     --DataManager.Instance.PLAYER_HEALTH_MODIFIED;
   }
 
-  public void TestRat() => this.StartCoroutine((IEnumerator) this.GiveRatauRoutine());
+  public void TestRat() => this.StartCoroutine(this.GiveRatauRoutine());
 
   public IEnumerator GiveRatauRoutine()
   {
@@ -744,7 +744,7 @@ public class Interaction_NightFox : Interaction
       this.goopFloorParticle.GetComponent<SimpleSpineDeactivateAfterPlay>().enabled = false;
     }
     else
-      this.StartCoroutine((IEnumerator) this.HideGoopDelayIE());
+      this.StartCoroutine(this.HideGoopDelayIE());
   }
 
   public IEnumerator HideGoopDelayIE()
@@ -775,37 +775,25 @@ public class Interaction_NightFox : Interaction
   public void \u003CDeactivate\u003Eb__22_0() => this.MoonIcon.SetActive(false);
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__29_0()
-  {
-    this.StartCoroutine((IEnumerator) this.AppearRoutine());
-  }
+  public void \u003COnInteract\u003Eb__29_0() => this.StartCoroutine(this.AppearRoutine());
 
   [CompilerGenerated]
   public void \u003CGetQuestionAndResponses\u003Eb__35_0()
   {
-    this.StartCoroutine(this.CanAfford() ? (IEnumerator) this.Agree() : (IEnumerator) this.CantAfford());
+    this.StartCoroutine(this.CanAfford() ? this.Agree() : this.CantAfford());
   }
 
   [CompilerGenerated]
-  public void \u003CGetQuestionAndResponses\u003Eb__35_1()
-  {
-    this.StartCoroutine((IEnumerator) this.Disagree());
-  }
+  public void \u003CGetQuestionAndResponses\u003Eb__35_1() => this.StartCoroutine(this.Disagree());
 
   [CompilerGenerated]
-  public void \u003CAgree\u003Eb__38_0() => this.StartCoroutine((IEnumerator) this.AgreeCallback());
+  public void \u003CAgree\u003Eb__38_0() => this.StartCoroutine(this.AgreeCallback());
 
   [CompilerGenerated]
-  public void \u003CCantAfford\u003Eb__43_0()
-  {
-    this.StartCoroutine((IEnumerator) this.DisagreeCallback());
-  }
+  public void \u003CCantAfford\u003Eb__43_0() => this.StartCoroutine(this.DisagreeCallback());
 
   [CompilerGenerated]
-  public void \u003CDisagree\u003Eb__44_0()
-  {
-    this.StartCoroutine((IEnumerator) this.DisagreeCallback());
-  }
+  public void \u003CDisagree\u003Eb__44_0() => this.StartCoroutine(this.DisagreeCallback());
 
   [CompilerGenerated]
   public void \u003CAskFollowerOrHeart\u003Eb__49_0() => this.ChooseFollowerOverHeart = false;

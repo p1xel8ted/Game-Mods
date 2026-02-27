@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ShaderTimeScale
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using UnityEngine;
@@ -12,13 +12,20 @@ public class ShaderTimeScale : BaseMonoBehaviour
 {
   public float TimeStep = 1f;
   public float timer;
+  public MeshRenderer rend;
+  public MaterialPropertyBlock mpb;
 
-  public MeshRenderer _rend => this.GetComponent<MeshRenderer>();
+  public void Awake()
+  {
+    this.rend = this.GetComponent<MeshRenderer>();
+    this.mpb = new MaterialPropertyBlock();
+  }
 
   public void Update()
   {
     this.timer += this.TimeStep * Time.deltaTime;
-    foreach (Material material in this._rend.materials)
-      material.SetFloat("_shaderTime", this.timer);
+    this.rend.GetPropertyBlock(this.mpb);
+    this.mpb.SetFloat("_shaderTime", this.timer);
+    this.rend.SetPropertyBlock(this.mpb);
   }
 }

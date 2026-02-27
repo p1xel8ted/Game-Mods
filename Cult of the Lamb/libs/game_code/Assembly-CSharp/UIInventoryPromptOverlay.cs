@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIInventoryPromptOverlay
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -40,7 +40,7 @@ public class UIInventoryPromptOverlay : BaseMonoBehaviour
   public IEnumerator Start()
   {
     UIInventoryPromptOverlay inventoryPromptOverlay = this;
-    inventoryPromptOverlay.StartCoroutine((IEnumerator) inventoryPromptOverlay.ScaleButton());
+    inventoryPromptOverlay.StartCoroutine(inventoryPromptOverlay.ScaleButton());
     inventoryPromptOverlay._promptRectTransform.DOScale(Vector3.one, inventoryPromptOverlay.kTransitionTime).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     inventoryPromptOverlay._promptCanvasGroup.DOFade(1f, inventoryPromptOverlay.kTransitionTime * 0.5f).SetUpdate<TweenerCore<float, float, FloatOptions>>(true);
     if (CoopManager.CoopActive && PlayerFarming.playersCount > 1)
@@ -49,7 +49,7 @@ public class UIInventoryPromptOverlay : BaseMonoBehaviour
       yield return (object) null;
     if (CoopManager.CoopActive && PlayerFarming.playersCount > 1)
       PlayerFarming.players[1].state.CURRENT_STATE = StateMachine.State.Idle;
-    inventoryPromptOverlay.StopCoroutine((IEnumerator) inventoryPromptOverlay.ScaleButton());
+    inventoryPromptOverlay.StopCoroutine(inventoryPromptOverlay.ScaleButton());
     Object.Destroy((Object) inventoryPromptOverlay.gameObject);
   }
 }

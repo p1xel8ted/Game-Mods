@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.MMScrollRect
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI.Assets;
@@ -74,7 +74,7 @@ public class MMScrollRect : ScrollRect
     if (this._initialSetToggle && InputManager.General.MouseInputActive)
       return;
     this._initialSetToggle = true;
-    this.StartCoroutine((IEnumerator) this.DeferredDefaultCheck(selectable));
+    this.StartCoroutine(this.DeferredDefaultCheck(selectable));
   }
 
   public IEnumerator DeferredDefaultCheck(Selectable selectable)
@@ -162,7 +162,7 @@ public class MMScrollRect : ScrollRect
     if ((double) Mathf.Abs(num) <= 0.0)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoScrollTo(this.ClampPosition(this.content.anchoredPosition + new Vector2(0.0f, num)), this.content.anchoredPosition, 0.2f));
+    this.StartCoroutine(this.DoScrollTo(this.ClampPosition(this.content.anchoredPosition + new Vector2(0.0f, num)), this.content.anchoredPosition, 0.2f));
   }
 
   public override void OnBeginDrag(PointerEventData eventData)
@@ -175,7 +175,7 @@ public class MMScrollRect : ScrollRect
   public void ScrollTo(RectTransform target)
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoScrollTo(target));
+    this.StartCoroutine(this.DoScrollTo(target));
   }
 
   public IEnumerator ScrollToTop()

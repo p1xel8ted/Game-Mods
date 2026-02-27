@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: QuoteScreenController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -39,7 +39,7 @@ public class QuoteScreenController : BaseMonoBehaviour
   public void DoManualQuote()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoManualQuoteCoroutine());
+    this.StartCoroutine(this.DoManualQuoteCoroutine());
   }
 
   public void DoManualQuote(QuoteScreenController.QuoteTypes quoteType)
@@ -83,8 +83,8 @@ public class QuoteScreenController : BaseMonoBehaviour
       {
         this.Text.text = LocalizationManager.GetTranslation($"QUOTE/{QuoteScreenController.QuoteType[QuoteScreenController.CURRENT_QUOTE_INDEX]}");
         AudioManager.Instance.PlayOneShot(QuoteScreenController.SFX);
-        this.StartCoroutine((IEnumerator) this.DoScreen(7f));
-        ShortcutExtensionsTMPText.DOColor(this.Text, TargetColor, 2f).OnComplete<TweenerCore<Color, Color, ColorOptions>>((TweenCallback) (() => this.StartCoroutine((IEnumerator) this.SkipScreen())));
+        this.StartCoroutine(this.DoScreen(7f));
+        ShortcutExtensionsTMPText.DOColor(this.Text, TargetColor, 2f).OnComplete<TweenerCore<Color, Color, ColorOptions>>((TweenCallback) (() => this.StartCoroutine(this.SkipScreen())));
       }));
     }
     else
@@ -92,8 +92,8 @@ public class QuoteScreenController : BaseMonoBehaviour
       AudioManager.Instance.PlayOneShotDelayed(QuoteScreenController.SFX, 1f);
       if (QuoteScreenController.QuoteType != null)
         this.Text.text = LocalizationManager.GetTranslation($"QUOTE/{QuoteScreenController.QuoteType[QuoteScreenController.CURRENT_QUOTE_INDEX]}");
-      this.StartCoroutine((IEnumerator) this.DoScreen(7f));
-      this.StartCoroutine((IEnumerator) this.SkipScreen());
+      this.StartCoroutine(this.DoScreen(7f));
+      this.StartCoroutine(this.SkipScreen());
       MMTransition.ResumePlay();
     }
   }
@@ -160,7 +160,7 @@ public class QuoteScreenController : BaseMonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CSetQuote\u003Eb__16_1() => this.StartCoroutine((IEnumerator) this.SkipScreen());
+  public void \u003CSetQuote\u003Eb__16_1() => this.StartCoroutine(this.SkipScreen());
 
   public enum QuoteTypes
   {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualMidwinter
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -23,7 +23,7 @@ public class RitualMidwinter : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -37,7 +37,7 @@ public class RitualMidwinter : Ritual
       PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     }));
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualMidwinter.StartCoroutine((IEnumerator) ritualMidwinter.WaitFollowersFormCircle());
+    yield return (object) ritualMidwinter.StartCoroutine(ritualMidwinter.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
@@ -60,7 +60,7 @@ public class RitualMidwinter : Ritual
       Follower followerById1 = FollowerManager.FindFollowerByID(followers[index].Info.ID);
       Follower followerById2 = FollowerManager.FindFollowerByID(followers[index + 1].Info.ID);
       if ((UnityEngine.Object) followerById1 != (UnityEngine.Object) null && (UnityEngine.Object) followerById2 != (UnityEngine.Object) null)
-        ritualMidwinter.StartCoroutine((IEnumerator) ritualMidwinter.GiftRoutine(followerById1, followerById2));
+        ritualMidwinter.StartCoroutine(ritualMidwinter.GiftRoutine(followerById1, followerById2));
     }
     if (followers.Count % 2 == 1)
     {
@@ -98,7 +98,7 @@ public class RitualMidwinter : Ritual
       {
         float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
         num1 += Delay;
-        ritualMidwinter.StartCoroutine((IEnumerator) ritualMidwinter.DelayFollowerReaction(brain, Delay));
+        ritualMidwinter.StartCoroutine(ritualMidwinter.DelayFollowerReaction(brain, Delay));
       }
     }
     yield return (object) new WaitForSeconds(1.5f);
@@ -129,7 +129,7 @@ public class RitualMidwinter : Ritual
     follower.HoodOff(onComplete: (System.Action) (() => waiting = false));
     while (waiting)
       yield return (object) null;
-    yield return (object) ritualMidwinter.StartCoroutine((IEnumerator) follower.GoToRoutine(PlayerFarming.Instance.transform.position + positions[index]));
+    yield return (object) ritualMidwinter.StartCoroutine(follower.GoToRoutine(PlayerFarming.Instance.transform.position + positions[index]));
     follower.State.facingAngle = Utils.GetAngle(follower.transform.position, PlayerFarming.Instance.transform.position);
     double num = (double) follower.SetBodyAnimation(anims[UnityEngine.Random.Range(0, anims.Length)], false);
     follower.AddBodyAnimation(anims[UnityEngine.Random.Range(0, anims.Length)], false, 0.0f);

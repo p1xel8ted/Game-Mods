@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUDManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -43,7 +43,7 @@ public class HUDManager : BaseMonoBehaviour
     if (Snap)
       this.rectTransform.localPosition = this.Offscreen;
     else
-      this.StartCoroutine((IEnumerator) this.DoHide());
+      this.StartCoroutine(this.DoHide());
   }
 
   public IEnumerator DoHide()
@@ -79,7 +79,7 @@ public class HUDManager : BaseMonoBehaviour
       this.rectTransform.localPosition = Vector3.zero;
     }
     else
-      this.StartCoroutine((IEnumerator) this.DoShow());
+      this.StartCoroutine(this.DoShow());
   }
 
   public IEnumerator DoShow()
@@ -97,7 +97,7 @@ public class HUDManager : BaseMonoBehaviour
 
   public void TopLeftUISetOffset(Vector3 Offset, float Duration)
   {
-    this.StartCoroutine((IEnumerator) this.TopLeftUIAddOffsetRoutine(Offset, Duration));
+    this.StartCoroutine(this.TopLeftUIAddOffsetRoutine(Offset, Duration));
   }
 
   public IEnumerator TopLeftUIAddOffsetRoutine(Vector3 Offset, float Duration)

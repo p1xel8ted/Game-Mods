@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWoodman
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -223,9 +223,9 @@ public class EnemyWoodman : UnitObject
       this.damageColliderEvents.SetActive(false);
     }
     if (this.MyState == EnemyWoodman.State.Resurrecting)
-      this.StartCoroutine((IEnumerator) this.ResurrectRoutine());
+      this.StartCoroutine(this.ResurrectRoutine());
     else if (this.state.CURRENT_STATE != StateMachine.State.Dead)
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
   }
 
@@ -251,7 +251,7 @@ public class EnemyWoodman : UnitObject
     this.UpdateResurrectProgress(resurrectionProgress);
     this.PulseResurrectionUI(resurrectionProgress);
     if ((double) this.currentResurrectionTimer >= (double) this.resurrectionAwaitTime - (double) this.resurrectionAnticipationTimer && this.MyState != EnemyWoodman.State.Resurrecting)
-      this.StartCoroutine((IEnumerator) this.ResurrectRoutine());
+      this.StartCoroutine(this.ResurrectRoutine());
     if (!this.CanKillAllWoodmen())
       return;
     this.TryKillAllWoodmen();
@@ -353,7 +353,7 @@ public class EnemyWoodman : UnitObject
       {
         if (this.hurtRoutine != null)
           this.StopCoroutine(this.hurtRoutine);
-        this.hurtRoutine = this.StartCoroutine((IEnumerator) this.HurtRoutine());
+        this.hurtRoutine = this.StartCoroutine(this.HurtRoutine());
       }
     }
     if (AttackType == Health.AttackTypes.Projectile && !this.health.HasShield)
@@ -365,7 +365,7 @@ public class EnemyWoodman : UnitObject
     {
       if (this.jumpDiveRoutine != null)
         this.StopJumpDiveAttackEarly();
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     }
     this.SimpleSpineFlash.FlashFillRed();
   }
@@ -380,7 +380,7 @@ public class EnemyWoodman : UnitObject
   {
     if (this.activatingRoutine != null)
       return;
-    this.activatingRoutine = this.StartCoroutine((IEnumerator) this.ActivateWoodmanRoutine());
+    this.activatingRoutine = this.StartCoroutine(this.ActivateWoodmanRoutine());
   }
 
   public IEnumerator ActivateWoodmanRoutine()
@@ -425,7 +425,7 @@ public class EnemyWoodman : UnitObject
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyWoodman.Spine.timeScale) < 0.30000001192092896)
       yield return (object) null;
-    enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.WaitForTarget());
+    enemyWoodman.StartCoroutine(enemyWoodman.WaitForTarget());
   }
 
   public IEnumerator WaitForTarget()
@@ -469,7 +469,7 @@ public class EnemyWoodman : UnitObject
       yield return (object) null;
     }
     enemyWoodman.FindPath(enemyWoodman.TargetPosition);
-    enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.ChasePlayer());
+    enemyWoodman.StartCoroutine(enemyWoodman.ChasePlayer());
   }
 
   public void LookAtTarget()
@@ -527,7 +527,7 @@ public class EnemyWoodman : UnitObject
                 {
                   enemyWoodman.StopAllCoroutines();
                   enemyWoodman.DisableForces = false;
-                  enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.FightPlayer());
+                  enemyWoodman.StartCoroutine(enemyWoodman.FightPlayer());
                 }
                 else if (!enemyWoodman.health.HasShield)
                 {
@@ -568,7 +568,7 @@ public class EnemyWoodman : UnitObject
     if ((double) a > (double) this.VisionRange)
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
       this.LookAtTarget();
   }
@@ -648,7 +648,7 @@ public class EnemyWoodman : UnitObject
         switch (enemyWoodman.state.CURRENT_STATE)
         {
           case StateMachine.State.Idle:
-            enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.WaitForTarget());
+            enemyWoodman.StartCoroutine(enemyWoodman.WaitForTarget());
             yield break;
           case StateMachine.State.Moving:
             if ((bool) (UnityEngine.Object) enemyWoodman.GetClosestTarget())
@@ -713,7 +713,7 @@ public class EnemyWoodman : UnitObject
               enemyWoodman.speed = AttackSpeed * 0.0166666675f;
               enemyWoodman.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? enemyWoodman.attackImpact2Anim : enemyWoodman.attackImpactAnim, false);
               enemyWoodman.canBeParried = true;
-              enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.EnableDamageCollider(0.0f));
+              enemyWoodman.StartCoroutine(enemyWoodman.EnableDamageCollider(0.0f));
               enemyWoodman.DoKnockBack(enemyWoodman.GetClosestTarget().gameObject, -1f, 1f);
               if (!string.IsNullOrEmpty(enemyWoodman.AttackBiteSwipeSFX))
                 AudioManager.Instance.PlayOneShot(enemyWoodman.AttackBiteSwipeSFX, enemyWoodman.transform.position);
@@ -750,7 +750,7 @@ public class EnemyWoodman : UnitObject
         yield return (object) null;
       }
     }
-    enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.WaitForTarget());
+    enemyWoodman.StartCoroutine(enemyWoodman.WaitForTarget());
   }
 
   public void BiomeGenerator_OnBiomeChangeRoom()
@@ -798,7 +798,7 @@ public class EnemyWoodman : UnitObject
   {
     if (this.jumpDiveRoutine != null)
       return;
-    this.jumpDiveRoutine = this.StartCoroutine((IEnumerator) this.JumpDiveRoutine());
+    this.jumpDiveRoutine = this.StartCoroutine(this.JumpDiveRoutine());
   }
 
   public void StopJumpDiveAttackEarly()
@@ -863,7 +863,7 @@ public class EnemyWoodman : UnitObject
     enemyWoodman.transform.position = targetPosition;
     if (!string.IsNullOrEmpty(enemyWoodman.AttackJumpLandSFX))
       AudioManager.Instance.PlayOneShot(enemyWoodman.AttackJumpLandSFX, enemyWoodman.gameObject);
-    yield return (object) enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.JumpRecoveryRoutine());
+    yield return (object) enemyWoodman.StartCoroutine(enemyWoodman.JumpRecoveryRoutine());
     enemyWoodman.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyWoodman.isJumpDiving = false;
     enemyWoodman.FindPath(enemyWoodman.TargetPosition);
@@ -924,7 +924,7 @@ public class EnemyWoodman : UnitObject
     enemyWoodman.Spine.Skeleton.SetSkin(enemyWoodman.rageSkin);
     enemyWoodman.Spine.Skeleton.SetSlotsToSetupPose();
     enemyWoodman.MyState = EnemyWoodman.State.WaitAndTaunt;
-    enemyWoodman.StartCoroutine((IEnumerator) enemyWoodman.WaitForTarget());
+    enemyWoodman.StartCoroutine(enemyWoodman.WaitForTarget());
   }
 
   public void ResetJumpCooldown()

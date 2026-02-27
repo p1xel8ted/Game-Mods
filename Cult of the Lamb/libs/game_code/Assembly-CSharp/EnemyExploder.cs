@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyExploder
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -223,14 +223,14 @@ public class EnemyExploder : EnemyChaser
 
   public virtual void KnockTowardsEnemy(GameObject attacker, Health.AttackTypes attackType)
   {
-    this.StartCoroutine((IEnumerator) this.NotExplodingHittable(attacker, attackType));
+    this.StartCoroutine(this.NotExplodingHittable(attacker, attackType));
   }
 
   public IEnumerator NotExplodingHittable(GameObject Attacker, Health.AttackTypes AttackType)
   {
     EnemyExploder enemyExploder = this;
     if (EnemyExploder.isRunning)
-      enemyExploder.StopCoroutine((IEnumerator) enemyExploder.NotExplodingHittable(Attacker, AttackType));
+      enemyExploder.StopCoroutine(enemyExploder.NotExplodingHittable(Attacker, AttackType));
     EnemyExploder.isRunning = true;
     if (!enemyExploder.isExploding || enemyExploder.hittableWhileExploding)
     {
@@ -278,7 +278,7 @@ public class EnemyExploder : EnemyChaser
         enemyExploder.ExplodeCharge();
       else if (enemyExploder.gameObject.activeInHierarchy && !enemyExploder.DelayingDestroy)
       {
-        enemyExploder.StartCoroutine((IEnumerator) enemyExploder.DelayedDestroy());
+        enemyExploder.StartCoroutine(enemyExploder.DelayedDestroy());
         enemyExploder.Spine.gameObject.SetActive(false);
       }
       enemyExploder.ClearPaths();
@@ -433,10 +433,10 @@ public class EnemyExploder : EnemyChaser
     if (onExplode != null)
       onExplode();
     this.exploded = true;
-    this.health.DealDamage(this.health.totalHP, (UnityEngine.Object) this.hitInitiator != (UnityEngine.Object) null ? this.hitInitiator : this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+    this.health.DealDamage(this.health.totalHP, (UnityEngine.Object) this.hitInitiator != (UnityEngine.Object) null ? this.hitInitiator : this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
     if (!this.gameObject.activeInHierarchy || this.DelayingDestroy)
       return;
-    this.StartCoroutine((IEnumerator) this.DelayedDestroy());
+    this.StartCoroutine(this.DelayedDestroy());
     this.Spine.gameObject.SetActive(false);
   }
 

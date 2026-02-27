@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Offering
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -59,7 +59,7 @@ public class Interaction_Offering : Interaction
 
   public void GiveResource() => Inventory.AddItem((int) this.Resource, 1);
 
-  public void StartCombat() => this.StartCoroutine((IEnumerator) this.StartCombatRoutine());
+  public void StartCombat() => this.StartCoroutine(this.StartCombatRoutine());
 
   public IEnumerator StartCombatRoutine()
   {
@@ -90,7 +90,7 @@ public class Interaction_Offering : Interaction
   public void CombatComplete()
   {
     AudioManager.Instance.SetMusicRoomID(SoundConstants.RoomID.StandardAmbience);
-    this.StartCoroutine((IEnumerator) this.DelayGoTo());
+    this.StartCoroutine(this.DelayGoTo());
   }
 
   public IEnumerator DelayGoTo()
@@ -103,7 +103,7 @@ public class Interaction_Offering : Interaction
     interactionOffering.playerFarming.GoToAndStop(interactionOffering.PlayerGoTo, interactionOffering.gameObject, GoToCallback: new System.Action(interactionOffering.CollectResources));
   }
 
-  public void CollectResources() => this.StartCoroutine((IEnumerator) this.InteractRoutine());
+  public void CollectResources() => this.StartCoroutine(this.InteractRoutine());
 
   public void CompleteCollection()
   {

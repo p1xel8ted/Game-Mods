@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualConvertToRot
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -19,7 +19,7 @@ public class RitualConvertToRot : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -27,17 +27,17 @@ public class RitualConvertToRot : Ritual
     RitualConvertToRot ritualConvertToRot = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
     AudioManager.Instance.PlayOneShot("event:/dlc/ritual/decay_start");
-    yield return (object) ritualConvertToRot.StartCoroutine((IEnumerator) ritualConvertToRot.CentreAndAnimatePlayer());
+    yield return (object) ritualConvertToRot.StartCoroutine(ritualConvertToRot.CentreAndAnimatePlayer());
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
     Debug.Log((object) "Ritual sacrifice begin gather");
-    yield return (object) ritualConvertToRot.StartCoroutine((IEnumerator) ritualConvertToRot.WaitFollowersFormCircle());
+    yield return (object) ritualConvertToRot.StartCoroutine(ritualConvertToRot.WaitFollowersFormCircle());
     Debug.Log((object) "Ritual sacrifice end gather");
     SimulationManager.Pause();
     PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-start", 0, false);
     PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("rituals/ritual-loop", 0, true, 0.0f);
     yield return (object) new WaitForSeconds(1f);
     Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) ritualConvertToRot.DoRessurectRoutine());
+    GameManager.GetInstance().StartCoroutine(ritualConvertToRot.DoRessurectRoutine());
   }
 
   public IEnumerator DoRessurectRoutine()
@@ -100,7 +100,7 @@ public class RitualConvertToRot : Ritual
     {
       float Delay = Random.Range(0.1f, 0.5f);
       num2 += Delay;
-      ritualConvertToRot.StartCoroutine((IEnumerator) ritualConvertToRot.DelayFollowerReaction(brain, Delay));
+      ritualConvertToRot.StartCoroutine(ritualConvertToRot.DelayFollowerReaction(brain, Delay));
       brain.AddThought(Thought.ConvertToRot);
     }
     yield return (object) new WaitForSeconds(1f);

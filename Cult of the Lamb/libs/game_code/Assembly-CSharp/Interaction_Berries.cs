@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Berries
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -305,14 +305,14 @@ public class Interaction_Berries : Interaction
   {
     base.OnInteract(state);
     this.activatingPlayers.Add(this._playerFarming);
-    this.StartCoroutine((IEnumerator) this.PickBerries(this._playerFarming));
+    this.StartCoroutine(this.PickBerries(this._playerFarming));
   }
 
   public override void OnSecondaryInteract(StateMachine state)
   {
     if (this.activatingPlayers.Count > 0)
       return;
-    this.StartCoroutine((IEnumerator) this.GiveDevotion());
+    this.StartCoroutine(this.GiveDevotion());
   }
 
   public IEnumerator PickBerries(PlayerFarming player)
@@ -325,7 +325,7 @@ public class Interaction_Berries : Interaction
       playerActivatingStart(interactionBerries);
     player.TimedAction(10f, (System.Action) null, "actions/collect-berries");
     player.state.facingAngle = Utils.GetAngle(interactionBerries.transform.position, interactionBerries.transform.position);
-    Coroutine coroutine = interactionBerries.StartCoroutine((IEnumerator) interactionBerries.berryTimer(player));
+    Coroutine coroutine = interactionBerries.StartCoroutine(interactionBerries.berryTimer(player));
     interactionBerries.pickBerriesTime = 0.5f + UpgradeSystem.Foraging;
     while (interactionBerries.buttonDown[PlayerFarming.players.IndexOf(player)] && !interactionBerries.StructureBrain.BerryPicked && player.state.CURRENT_STATE == StateMachine.State.TimedAction)
       yield return (object) null;
@@ -554,7 +554,7 @@ public class Interaction_Berries : Interaction
     if (this.inTrigger)
       return;
     this.inTrigger = true;
-    this.StartCoroutine((IEnumerator) this.ShakeObjectTimer());
+    this.StartCoroutine(this.ShakeObjectTimer());
     this.transform.DOShakeScale(0.5f, new Vector3(-0.1f, 0.05f, 0.01f), randomness: 1f);
     AudioManager.Instance.PlayOneShot("event:/material/footstep_bush", collision.transform.position);
   }
@@ -571,7 +571,7 @@ public class Interaction_Berries : Interaction
       return;
     this.inTrigger = true;
     if (this.gameObject.activeSelf)
-      this.StartCoroutine((IEnumerator) this.ShakeObjectTimer());
+      this.StartCoroutine(this.ShakeObjectTimer());
     this.transform.DOShakeScale(0.5f, new Vector3(-0.1f, 0.05f, 0.01f), randomness: 1f);
     AudioManager.Instance.PlayOneShot("event:/material/footstep_bush", collision.transform.position);
   }

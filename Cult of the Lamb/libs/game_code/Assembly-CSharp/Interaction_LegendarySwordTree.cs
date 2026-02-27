@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_LegendarySwordTree
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -94,7 +94,7 @@ public class Interaction_LegendarySwordTree : Interaction
     if (this.canGiveDemon)
     {
       this.Interactable = false;
-      this.StartCoroutine((IEnumerator) this.GiveDemon());
+      this.StartCoroutine(this.GiveDemon());
     }
     else
     {
@@ -150,7 +150,7 @@ public class Interaction_LegendarySwordTree : Interaction
     legendarySwordTree.spawnedFollower = legendarySwordTree.SpawnFollower(followerBrain._directInfoAccess, legendarySwordTree.chosenChildPosition.position);
     GameManager.GetInstance().OnConversationNext(legendarySwordTree.chosenChildPosition.gameObject, 5f);
     legendarySwordTree.playerFarming.GoToAndStop(legendarySwordTree.chosenChildPosition.position + Vector3.left * 2.5f, legendarySwordTree.chosenChildPosition.gameObject);
-    yield return (object) new WaitUntil((Func<bool>) new Func<bool>(legendarySwordTree.\u003CGiveDemon\u003Eb__12_0));
+    yield return (object) new WaitUntil(new Func<bool>(legendarySwordTree.\u003CGiveDemon\u003Eb__12_0));
     legendarySwordTree.PlayStartMeditationConvo();
   }
 
@@ -222,7 +222,7 @@ public class Interaction_LegendarySwordTree : Interaction
     ObjectiveManager.Add((ObjectivesData) new Objectives_GiveItem("Objectives/GroupTitles/LegendarySword", "NAMES/BlacksmithNPC", 1, InventoryItem.ITEM_TYPE.BROKEN_WEAPON_SWORD), true, true);
     if (!DataManager.Instance.ChosenChildLeftInTheMidasCave)
       return;
-    this.StartCoroutine((IEnumerator) this.TeleportOutSequence());
+    this.StartCoroutine(this.TeleportOutSequence());
   }
 
   [CompilerGenerated]

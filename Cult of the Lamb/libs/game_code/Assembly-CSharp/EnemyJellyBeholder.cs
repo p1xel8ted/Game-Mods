@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJellyBeholder
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -227,7 +227,7 @@ public class EnemyJellyBeholder : EnemyChaser
     }
     if ((UnityEngine.Object) this.ringshotArrowPrefab != (UnityEngine.Object) null && this.numRingShots > 0)
       ObjectPool.CreatePool(this.ringshotArrowPrefab, this.numRingShots, true);
-    this.StartCoroutine((IEnumerator) this.PreloadEnemyAssets());
+    this.StartCoroutine(this.PreloadEnemyAssets());
     Health.team2.RemoveAll((Predicate<Health>) (unit => (UnityEngine.Object) unit == (UnityEngine.Object) null));
   }
 
@@ -249,7 +249,7 @@ public class EnemyJellyBeholder : EnemyChaser
       this.canAttack = true;
     }
     if (this.IsTimeToComeBack())
-      this.StartCoroutine((IEnumerator) this.EnemiesDefeated());
+      this.StartCoroutine(this.EnemiesDefeated());
     if ((double) Time.deltaTime > 0.0)
     {
       this.v3ShakeSpeed += (Vector3.zero - this.v3Shake) * 0.4f / Time.deltaTime;
@@ -325,10 +325,7 @@ public class EnemyJellyBeholder : EnemyChaser
     this.LookAtAngle(Utils.GetAngle(this.transform.position, this.targetObject.transform.position));
   }
 
-  public void SpawnEnemies()
-  {
-    this.spawnRoutine = this.StartCoroutine((IEnumerator) this.SpawnDelay());
-  }
+  public void SpawnEnemies() => this.spawnRoutine = this.StartCoroutine(this.SpawnDelay());
 
   public IEnumerator PreloadEnemyAssets()
   {
@@ -498,7 +495,7 @@ public class EnemyJellyBeholder : EnemyChaser
     this.beholderState = EnemyJellyBeholder.BeholderState.Attacking;
     this.canAttack = false;
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.MeleeAttackIE());
+    this.StartCoroutine(this.MeleeAttackIE());
     this.attackPatternIndex = (this.attackPatternIndex + 1) % this.attackPattern.Length;
     if (!this.randomPattern)
       return;
@@ -517,7 +514,7 @@ public class EnemyJellyBeholder : EnemyChaser
       enemyJellyBeholder.Spine.AnimationState.AddAnimation(0, enemyJellyBeholder.idleAnimation, true, 0.0f);
       AudioManager.Instance.PlayOneShot("event:/jellyfish_large/attack", enemyJellyBeholder.gameObject);
       yield return (object) new WaitForEndOfFrame();
-      enemyJellyBeholder.StartCoroutine((IEnumerator) enemyJellyBeholder.TurnOnDamageColliderForDuration(enemyJellyBeholder.damageDuration));
+      enemyJellyBeholder.StartCoroutine(enemyJellyBeholder.TurnOnDamageColliderForDuration(enemyJellyBeholder.damageDuration));
       enemyJellyBeholder.simpleSpineFlash.FlashWhite(false);
       enemyJellyBeholder.DisableForces = true;
       Vector2 force = new Vector2(2500f * Mathf.Cos(enemyJellyBeholder.state.LookAngle * ((float) Math.PI / 180f)), 2500f * Mathf.Sin(enemyJellyBeholder.state.LookAngle * ((float) Math.PI / 180f))) * enemyJellyBeholder.attackForceModifier;
@@ -573,7 +570,7 @@ public class EnemyJellyBeholder : EnemyChaser
     if (this.beholderState == EnemyJellyBeholder.BeholderState.Shooting)
       return;
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.RingShotAttackIE());
+    this.StartCoroutine(this.RingShotAttackIE());
     this.attackPatternIndex = (this.attackPatternIndex + 1) % this.attackPattern.Length;
     if (!this.randomPattern)
       return;
@@ -655,7 +652,7 @@ public class EnemyJellyBeholder : EnemyChaser
     if (this.beholderState == EnemyJellyBeholder.BeholderState.Shooting)
       return;
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.TargetedShotAttackIE());
+    this.StartCoroutine(this.TargetedShotAttackIE());
     this.attackPatternIndex = (this.attackPatternIndex + 1) % this.attackPattern.Length;
     if (!this.randomPattern)
       return;
@@ -763,7 +760,7 @@ public class EnemyJellyBeholder : EnemyChaser
     if (this.beholderState == EnemyJellyBeholder.BeholderState.Shooting)
       return;
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.PatternShotAttackIE());
+    this.StartCoroutine(this.PatternShotAttackIE());
     this.attackPatternIndex = (this.attackPatternIndex + 1) % this.attackPattern.Length;
     if (!this.randomPattern)
       return;

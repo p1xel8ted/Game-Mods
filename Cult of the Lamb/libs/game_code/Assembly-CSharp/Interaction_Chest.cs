@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Chest
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -45,6 +45,7 @@ public class Interaction_Chest : Interaction
   public StealthCover[] StealthCovers;
   public GameObject uIBlueprint;
   public GameObject uINewCard;
+  public bool _roomCompleted;
   public List<RewardsItem> ChestRewards = new List<RewardsItem>();
   public RewardsItem.ChestRewards OverrideChestReward;
   public int OverrideChestRewardQuantity = 1;
@@ -152,7 +153,7 @@ public class Interaction_Chest : Interaction
   {
     this.loader = this.GetComponent<AddressableLoader>();
     this.loader.Initialize();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.InitializeAsync((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.InitializeAsync((System.Action) (() =>
     {
       ChestLoader componentInChildren = this.GetComponentInChildren<ChestLoader>(true);
       this.CameraBone = componentInChildren.CameraBone;
@@ -183,7 +184,7 @@ public class Interaction_Chest : Interaction
       this.RevealSfx();
       this.Spine.AnimationState.AddAnimation(0, "closed", true, 0.0f);
       this.MyState = Interaction_Chest.State.Closed;
-      this.StartCoroutine((IEnumerator) this.ShowShadow());
+      this.StartCoroutine(this.ShowShadow());
     })));
   }
 
@@ -197,13 +198,13 @@ public class Interaction_Chest : Interaction
 
   public override void OnEnableInteraction()
   {
-    this.StartCoroutine((IEnumerator) this.InitializeAsync((System.Action) (() =>
+    this.StartCoroutine(this.InitializeAsync((System.Action) (() =>
     {
       base.OnEnableInteraction();
       if (!this.active)
       {
         if (!this.BossChest)
-          this.StartCoroutine((IEnumerator) this.DelayGetEnemies());
+          this.StartCoroutine(this.DelayGetEnemies());
         if ((UnityEngine.Object) this.DamageCollider != (UnityEngine.Object) null)
         {
           this.DamageCollider.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
@@ -211,11 +212,11 @@ public class Interaction_Chest : Interaction
         }
       }
       Interaction_Chest.Instance = this;
-      this.StartCoroutine((IEnumerator) this.EnableInteractionDelay());
+      this.StartCoroutine(this.EnableInteractionDelay());
       this.active = true;
       if (this.Enemies.Count > 0)
         return;
-      this.StartCoroutine((IEnumerator) this.DelayGetEnemies());
+      this.StartCoroutine(this.DelayGetEnemies());
     })));
   }
 
@@ -231,7 +232,7 @@ public class Interaction_Chest : Interaction
   {
     this.EnemyHealth = collider.GetComponent<Health>();
     if ((UnityEngine.Object) this.EnemyHealth != (UnityEngine.Object) null && this.EnemyHealth.team != Health.Team.PlayerTeam)
-      this.EnemyHealth.DealDamage((float) int.MaxValue, this.gameObject, Vector3.Lerp(this.transform.position, this.EnemyHealth.transform.position, 0.7f));
+      this.EnemyHealth.DealDamage((float) int.MaxValue, this.gameObject, Vector3.Lerp(this.transform.position, this.EnemyHealth.transform.position, 0.7f), dealDamageImmediately: true);
     TrapSpikes component = this.GetComponent<TrapSpikes>();
     if (!((UnityEngine.Object) component != (UnityEngine.Object) null))
       return;
@@ -251,12 +252,12 @@ public class Interaction_Chest : Interaction
 
   public override void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.InitializeAsync((System.Action) (() =>
+    this.StartCoroutine(this.InitializeAsync((System.Action) (() =>
     {
       base.OnEnable();
       if (!this.StartRevealed || this.givenReward)
         return;
-      this.StartCoroutine((IEnumerator) this.DelayReveal());
+      this.StartCoroutine(this.DelayReveal());
     })));
   }
 
@@ -324,7 +325,7 @@ public class Interaction_Chest : Interaction
     if (this.givenReward)
       return;
     this.givenReward = true;
-    this.StartCoroutine((IEnumerator) this.InitializeAsync((System.Action) (() =>
+    this.StartCoroutine(this.InitializeAsync((System.Action) (() =>
     {
       if (!DataManager.Instance.ShownInventoryTutorial)
       {
@@ -334,11 +335,11 @@ public class Interaction_Chest : Interaction
         CameraFollowTarget cameraFollowTarget = CameraFollowTarget.Instance;
         cameraFollowTarget.SetOffset((this.gameObject.transform.position - this.playerFarming.transform.position) * 0.85f);
         HUD_Manager.Instance.Hide(false, 0);
-        this.StartCoroutine((IEnumerator) this.DelayCallback(2f, (System.Action) (() => cameraFollowTarget.SetOffset(Vector3.zero))));
+        this.StartCoroutine(this.DelayCallback(2f, (System.Action) (() => cameraFollowTarget.SetOffset(Vector3.zero))));
       }
       Debug.Log((object) "Reveal()");
       this.RevealedGiveReward = true;
-      this.StartCoroutine((IEnumerator) this.DamageColliderRoutine());
+      this.StartCoroutine(this.DamageColliderRoutine());
       if (!this.BlockWeapons && (UnityEngine.Object) BiomeGenerator.Instance != (UnityEngine.Object) null && BiomeGenerator.Instance.CurrentRoom.HasWeapon && !BiomeGenerator.Instance.OnboardingDungeon5)
       {
         Debug.Log((object) "CHEST: Weapon!".Colour(Color.red));
@@ -383,10 +384,10 @@ public class Interaction_Chest : Interaction
           this.RevealSfx();
           this.Spine.AnimationState.AddAnimation(0, "closed", true, 0.0f);
           this.MyState = Interaction_Chest.State.Closed;
-          this.StartCoroutine((IEnumerator) this.ShowShadow());
+          this.StartCoroutine(this.ShowShadow());
           this.SelectReward();
           this.MyState = Interaction_Chest.State.Open;
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.GiveRewardDelay());
+          GameManager.GetInstance().StartCoroutine(this.GiveRewardDelay());
           Projectile.ClearProjectiles();
         }
       }
@@ -417,8 +418,8 @@ public class Interaction_Chest : Interaction
 
   public void RevealBossReward(InventoryItem.ITEM_TYPE ForceItem, System.Action callback = null)
   {
-    this.StartCoroutine((IEnumerator) this.DamageColliderRoutine());
-    this.StartCoroutine((IEnumerator) this.GiveBossReward(ForceItem, callback));
+    this.StartCoroutine(this.DamageColliderRoutine());
+    this.StartCoroutine(this.GiveBossReward(ForceItem, callback));
   }
 
   public void RevealSfx()
@@ -485,7 +486,7 @@ public class Interaction_Chest : Interaction
     bool roomCompleteOnOpen = true;
     if (PlayerFarming.Location != FollowerLocation.IntroDungeon)
     {
-      interactionChest.StartCoroutine((IEnumerator) interactionChest.ShowShadow());
+      interactionChest.StartCoroutine(interactionChest.ShowShadow());
       interactionChest.Spine.AnimationState.SetAnimation(0, "reveal", true);
       interactionChest.RevealSfx();
       interactionChest.Spine.AnimationState.AddAnimation(0, "closed", true, 0.0f);
@@ -494,9 +495,9 @@ public class Interaction_Chest : Interaction
       interactionChest.Spine.AnimationState.SetAnimation(0, "open", false);
       interactionChest.ChestOpenSfx();
       interactionChest.Spine.AnimationState.AddAnimation(0, "opened", true, 0.0f);
-      interactionChest.StartCoroutine((IEnumerator) interactionChest.GiveBlackSouls());
+      interactionChest.StartCoroutine(interactionChest.GiveBlackSouls());
       if (interactionChest.DropFullHeal)
-        yield return (object) interactionChest.StartCoroutine((IEnumerator) interactionChest.GiveFullHeal());
+        yield return (object) interactionChest.StartCoroutine(interactionChest.GiveFullHeal());
       Debug.Log((object) ("chest ForceIncludeItem " + ForceIncludeItem.ToString()));
       if (ForceIncludeItem != InventoryItem.ITEM_TYPE.NONE)
       {
@@ -665,7 +666,7 @@ public class Interaction_Chest : Interaction
                   GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.gameObject);
                   PermanentHeart_CustomTarget.Create(interactionChest.transform.position, PlayerFarming.Instance.gameObject.transform.position, 2f, (System.Action<Interaction_PermanentHeart>) null);
                 }
-                interactionChest.StartCoroutine((IEnumerator) interactionChest.SpawnGivenUpWolfFood());
+                interactionChest.StartCoroutine(interactionChest.SpawnGivenUpWolfFood());
               }
               if (!StructuresData.GetUnlocked(StructureBrain.TYPES.DECORATION_BOSS_TROPHY_DLC_WOLF) && !DungeonSandboxManager.Active)
               {
@@ -1139,9 +1140,9 @@ public class Interaction_Chest : Interaction
       if (UnityEngine.Random.Range(1, 15) == 3 && interactionChest.pickedReward != RewardsItem.ChestRewards.DISSENTER && interactionChest.pickedReward != RewardsItem.ChestRewards.MISSIONARY)
         interactionChest.SpawnBlackSouls();
       if (interactionChest.pickedReward == RewardsItem.ChestRewards.DISSENTER)
-        interactionChest.StartCoroutine((IEnumerator) interactionChest.SpawnDissentingFollowerIE());
+        interactionChest.StartCoroutine(interactionChest.SpawnDissentingFollowerIE());
       else if (interactionChest.pickedReward == RewardsItem.ChestRewards.MISSIONARY)
-        interactionChest.StartCoroutine((IEnumerator) interactionChest.SpawnMissionaryFollowerIE());
+        interactionChest.StartCoroutine(interactionChest.SpawnMissionaryFollowerIE());
       else if (interactionChest.pickedReward == RewardsItem.ChestRewards.SPIDERS && interactionChest.TypeOfChest == Interaction_Chest.ChestType.Wooden)
       {
         AudioManager.Instance.PlayOneShot("event:/Stings/generic_negative", interactionChest.transform.position);
@@ -1289,7 +1290,7 @@ public class Interaction_Chest : Interaction
             health.invincible = false;
             health.enabled = true;
             if ((double) health.HP > 0.0)
-              health.DealDamage(float.PositiveInfinity, health.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+              health.DealDamage(float.PositiveInfinity, health.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
           }
         }
         DungeonMissionaryFollower dungeonMissionary = spawnedFollower.Follower.gameObject.AddComponent<DungeonMissionaryFollower>();
@@ -1452,7 +1453,7 @@ public class Interaction_Chest : Interaction
       {
         if ((double) this.Delay != 0.0 && (double) this.delayTimestamp == -1.0)
           this.delayTimestamp = GameManager.GetInstance().CurrentTime + this.Delay;
-        if ((double) this.Delay == 0.0 || (double) GameManager.GetInstance().CurrentTime > (double) this.delayTimestamp)
+        if (((double) this.Delay == 0.0 || (double) GameManager.GetInstance().CurrentTime > (double) this.delayTimestamp) && !this._roomCompleted)
         {
           foreach (UnityEngine.Object enemy in this.Enemies)
           {
@@ -1486,6 +1487,7 @@ public class Interaction_Chest : Interaction
           GameManager.GetInstance().CamFollowTarget.MinZoom = this.CacheCameraMinZoom;
           GameManager.GetInstance().CamFollowTarget.ZoomLimiter = this.CacheCameraZoomLimiter;
           GameManager.GetInstance().RemoveFromCamera(this.gameObject);
+          this._roomCompleted = true;
         }
       }
       else
@@ -1525,7 +1527,7 @@ public class Interaction_Chest : Interaction
     base.OnInteract(state);
     this.SelectReward();
     this.MyState = Interaction_Chest.State.Open;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.GiveRewardDelay(UnityEngine.Random.Range(0.0f, 0.3f)));
+    GameManager.GetInstance().StartCoroutine(this.GiveRewardDelay(UnityEngine.Random.Range(0.0f, 0.3f)));
   }
 
   public void SelectReward()
@@ -1575,7 +1577,7 @@ public class Interaction_Chest : Interaction
     GameManager.GetInstance().OnConversationEnd();
     GameManager.GetInstance().CameraResetTargetZoom();
     this.state.CURRENT_STATE = StateMachine.State.Idle;
-    this.StartCoroutine((IEnumerator) this.DelayEffectsRoutine(this.playerFarming));
+    this.StartCoroutine(this.DelayEffectsRoutine(this.playerFarming));
   }
 
   public IEnumerator DelayEffectsRoutine(PlayerFarming playerFarming)
@@ -1612,7 +1614,7 @@ public class Interaction_Chest : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003CAwake\u003Eb__46_0()
+  public void \u003CAwake\u003Eb__47_0()
   {
     ChestLoader componentInChildren = this.GetComponentInChildren<ChestLoader>(true);
     this.CameraBone = componentInChildren.CameraBone;
@@ -1643,20 +1645,20 @@ public class Interaction_Chest : Interaction
     this.RevealSfx();
     this.Spine.AnimationState.AddAnimation(0, "closed", true, 0.0f);
     this.MyState = Interaction_Chest.State.Closed;
-    this.StartCoroutine((IEnumerator) this.ShowShadow());
+    this.StartCoroutine(this.ShowShadow());
   }
 
   [CompilerGenerated]
-  public bool \u003CInitializeAsync\u003Eb__47_0() => this.loader.isInitialized;
+  public bool \u003CInitializeAsync\u003Eb__48_0() => this.loader.isInitialized;
 
   [CompilerGenerated]
-  public void \u003COnEnableInteraction\u003Eb__48_0()
+  public void \u003COnEnableInteraction\u003Eb__49_0()
   {
     base.OnEnableInteraction();
     if (!this.active)
     {
       if (!this.BossChest)
-        this.StartCoroutine((IEnumerator) this.DelayGetEnemies());
+        this.StartCoroutine(this.DelayGetEnemies());
       if ((UnityEngine.Object) this.DamageCollider != (UnityEngine.Object) null)
       {
         this.DamageCollider.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
@@ -1664,24 +1666,24 @@ public class Interaction_Chest : Interaction
       }
     }
     Interaction_Chest.Instance = this;
-    this.StartCoroutine((IEnumerator) this.EnableInteractionDelay());
+    this.StartCoroutine(this.EnableInteractionDelay());
     this.active = true;
     if (this.Enemies.Count > 0)
       return;
-    this.StartCoroutine((IEnumerator) this.DelayGetEnemies());
+    this.StartCoroutine(this.DelayGetEnemies());
   }
 
   [CompilerGenerated]
-  public void \u003COnEnable\u003Eb__54_0()
+  public void \u003COnEnable\u003Eb__55_0()
   {
     base.OnEnable();
     if (!this.StartRevealed || this.givenReward)
       return;
-    this.StartCoroutine((IEnumerator) this.DelayReveal());
+    this.StartCoroutine(this.DelayReveal());
   }
 
   [CompilerGenerated]
-  public void \u003CReveal\u003Eb__65_0()
+  public void \u003CReveal\u003Eb__66_0()
   {
     if (!DataManager.Instance.ShownInventoryTutorial)
     {
@@ -1691,11 +1693,11 @@ public class Interaction_Chest : Interaction
       CameraFollowTarget cameraFollowTarget = CameraFollowTarget.Instance;
       cameraFollowTarget.SetOffset((this.gameObject.transform.position - this.playerFarming.transform.position) * 0.85f);
       HUD_Manager.Instance.Hide(false, 0);
-      this.StartCoroutine((IEnumerator) this.DelayCallback(2f, (System.Action) (() => cameraFollowTarget.SetOffset(Vector3.zero))));
+      this.StartCoroutine(this.DelayCallback(2f, (System.Action) (() => cameraFollowTarget.SetOffset(Vector3.zero))));
     }
     Debug.Log((object) "Reveal()");
     this.RevealedGiveReward = true;
-    this.StartCoroutine((IEnumerator) this.DamageColliderRoutine());
+    this.StartCoroutine(this.DamageColliderRoutine());
     if (!this.BlockWeapons && (UnityEngine.Object) BiomeGenerator.Instance != (UnityEngine.Object) null && BiomeGenerator.Instance.CurrentRoom.HasWeapon && !BiomeGenerator.Instance.OnboardingDungeon5)
     {
       Debug.Log((object) "CHEST: Weapon!".Colour(Color.red));
@@ -1740,24 +1742,24 @@ public class Interaction_Chest : Interaction
         this.RevealSfx();
         this.Spine.AnimationState.AddAnimation(0, "closed", true, 0.0f);
         this.MyState = Interaction_Chest.State.Closed;
-        this.StartCoroutine((IEnumerator) this.ShowShadow());
+        this.StartCoroutine(this.ShowShadow());
         this.SelectReward();
         this.MyState = Interaction_Chest.State.Open;
-        GameManager.GetInstance().StartCoroutine((IEnumerator) this.GiveRewardDelay());
+        GameManager.GetInstance().StartCoroutine(this.GiveRewardDelay());
         Projectile.ClearProjectiles();
       }
     }
   }
 
   [CompilerGenerated]
-  public void \u003CUpdate\u003Eb__103_0()
+  public void \u003CUpdate\u003Eb__104_0()
   {
     GameManager.GetInstance().OnConversationNew();
     GameManager.GetInstance().OnConversationNext(this.gameObject, 6f);
   }
 
   [CompilerGenerated]
-  public void \u003CUpdate\u003Eb__103_1()
+  public void \u003CUpdate\u003Eb__104_1()
   {
     GameManager.GetInstance().OnConversationNew();
     GameManager.GetInstance().OnConversationNext(this.gameObject, 6f);

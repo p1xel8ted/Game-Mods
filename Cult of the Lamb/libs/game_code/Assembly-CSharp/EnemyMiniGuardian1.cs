@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyMiniGuardian1
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -71,7 +71,7 @@ public class EnemyMiniGuardian1 : UnitObject
     this.Particles.Stop();
     this.health.invincible = false;
     this.HealthCollider.enabled = true;
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
   }
 
   public override void OnHit(
@@ -98,7 +98,7 @@ public class EnemyMiniGuardian1 : UnitObject
     this.simpleSpineAnimator.FlashWhite(false);
     this.lineRenderer.gameObject.SetActive(false);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
     this.GetComponent<Collider2D>().enabled = false;
     GameManager.GetInstance().RemoveFromCamera(this.gameObject);
     UIBossHUD.Hide();
@@ -109,7 +109,7 @@ public class EnemyMiniGuardian1 : UnitObject
         Health component = spawnedEnemy.GetComponent<Health>();
         component.enabled = true;
         component.invincible = false;
-        component.DealDamage(float.MaxValue, component.gameObject, component.transform.position);
+        component.DealDamage(float.MaxValue, component.gameObject, component.transform.position, dealDamageImmediately: true);
       }
     }
   }
@@ -137,7 +137,7 @@ public class EnemyMiniGuardian1 : UnitObject
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
       enemyMiniGuardian1.simpleSpineAnimator.Animate("idle", 0, true);
-      enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.SpawnTraps());
+      enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.SpawnTraps());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -160,7 +160,7 @@ public class EnemyMiniGuardian1 : UnitObject
         GameManager.GetInstance().OnConversationEnd();
         this.health.invincible = false;
         this.HealthCollider.enabled = true;
-        this.StartCoroutine((IEnumerator) this.FightPlayer());
+        this.StartCoroutine(this.FightPlayer());
         AudioManager.Instance.SetMusicRoomID(1, "deathcat_room_id");
         UIBossHUD.Play(this.health, LocalizationManager.GetTranslation(this.DisplayName));
         GameManager.GetInstance().AddToCamera(this.gameObject);
@@ -198,7 +198,7 @@ public class EnemyMiniGuardian1 : UnitObject
     while ((double) PlayerFarming.GetClosestPlayerDist(enemyMiniGuardian1.transform.position) > (double) enemyMiniGuardian1.Range)
       yield return (object) null;
     enemyMiniGuardian1.StopAllCoroutines();
-    enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.FightPlayer());
+    enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.FightPlayer());
   }
 
   public IEnumerator FightPlayer()
@@ -236,7 +236,7 @@ public class EnemyMiniGuardian1 : UnitObject
           enemyMiniGuardian1.state.facingAngle = Utils.GetAngle(enemyMiniGuardian1.transform.position, enemyMiniGuardian1.TargetPosition);
           if ((double) (enemyMiniGuardian1.state.Timer += Time.deltaTime) >= 0.5)
           {
-            enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.EnableCollider());
+            enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.EnableCollider());
             CameraManager.shakeCamera(0.4f, enemyMiniGuardian1.state.facingAngle);
             enemyMiniGuardian1.state.CURRENT_STATE = StateMachine.State.RecoverFromAttack;
             enemyMiniGuardian1.speed = AttackSpeed * Time.deltaTime;
@@ -274,9 +274,9 @@ public class EnemyMiniGuardian1 : UnitObject
     if ((UnityEngine.Object) enemyMiniGuardian1.damageColliderEvents != (UnityEngine.Object) null)
       enemyMiniGuardian1.damageColliderEvents.SetActive(false);
     if (UnityEngine.Random.Range(0, 4) < 3)
-      enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.SpawnTraps());
+      enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.SpawnTraps());
     else
-      enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.FightPlayer());
+      enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.FightPlayer());
   }
 
   public IEnumerator EnableCollider()
@@ -302,20 +302,20 @@ public class EnemyMiniGuardian1 : UnitObject
       switch (enemyMiniGuardian1.TrapPattern)
       {
         case 0:
-          yield return (object) enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.TrapPattern0());
+          yield return (object) enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.TrapPattern0());
           break;
         case 1:
-          yield return (object) enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.TrapPatternChasePlayer());
+          yield return (object) enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.TrapPatternChasePlayer());
           break;
         case 2:
-          yield return (object) enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.TrapPattern1());
+          yield return (object) enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.TrapPattern1());
           break;
       }
       yield return (object) new WaitForSeconds(0.5f);
       if (enemyMiniGuardian1.spawnedEnemies.Count <= 1)
-        enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.SpawnEnemies());
+        enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.SpawnEnemies());
       else
-        enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.FightPlayer());
+        enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.FightPlayer());
     }
   }
 
@@ -477,7 +477,7 @@ public class EnemyMiniGuardian1 : UnitObject
       enemyMiniGuardian1.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
       yield return (object) new WaitForSeconds(0.5f);
       yield return (object) new WaitForSeconds(1f);
-      enemyMiniGuardian1.StartCoroutine((IEnumerator) enemyMiniGuardian1.FightPlayer());
+      enemyMiniGuardian1.StartCoroutine(enemyMiniGuardian1.FightPlayer());
     }
   }
 

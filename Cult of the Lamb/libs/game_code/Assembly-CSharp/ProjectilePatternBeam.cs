@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ProjectilePatternBeam
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -60,12 +60,12 @@ public class ProjectilePatternBeam : ProjectilePatternBase
 
   public void Shoot(GameObject target = null)
   {
-    this.StartCoroutine((IEnumerator) this.ShootIE(0.0f, target, (Transform) null, false));
+    this.StartCoroutine(this.ShootIE(0.0f, target, (Transform) null, false));
   }
 
   public void Shoot(float delay)
   {
-    this.StartCoroutine((IEnumerator) this.ShootIE(delay, (GameObject) null, (Transform) null, false));
+    this.StartCoroutine(this.ShootIE(delay, (GameObject) null, (Transform) null, false));
   }
 
   public override IEnumerator ShootIE(
@@ -83,7 +83,7 @@ public class ProjectilePatternBeam : ProjectilePatternBase
     }
     int count = 0;
     foreach (ProjectilePatternBeam.BulletWave bulletWave in projectilePatternBeam.bulletWaves)
-      projectilePatternBeam.StartCoroutine((IEnumerator) projectilePatternBeam.SpawnBullets(bulletWave, target, parent, (System.Action) (() => ++count), allowSFXForEachShot));
+      projectilePatternBeam.StartCoroutine(projectilePatternBeam.SpawnBullets(bulletWave, target, parent, (System.Action) (() => ++count), allowSFXForEachShot));
     while (count < projectilePatternBeam.bulletWaves.Length)
       yield return (object) null;
   }

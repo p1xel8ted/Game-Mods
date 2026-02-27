@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_CompostBinDeadBody
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -144,7 +144,7 @@ public class Interaction_CompostBinDeadBody : Interaction
     this.state = state;
     if (this.StructureBrain.PoopCount <= 0)
       return;
-    this.StartCoroutine((IEnumerator) this.GivePoopRoutine());
+    this.StartCoroutine(this.GivePoopRoutine());
   }
 
   public void BuryBody()

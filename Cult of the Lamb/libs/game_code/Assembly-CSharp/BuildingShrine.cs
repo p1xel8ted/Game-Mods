@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BuildingShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -393,7 +393,7 @@ public class BuildingShrine : Interaction
         MonoSingleton<UIManager>.Instance.ShowUpgradeTree(new System.Action(this.UpdateBar), revealType);
       }
       else
-        this.StartCoroutine((IEnumerator) this.GiveGodTearIE());
+        this.StartCoroutine(this.GiveGodTearIE());
     }
     else
       this.Activating = true;
@@ -571,7 +571,7 @@ public class BuildingShrine : Interaction
             DataManager.Instance.Followers_Recruit.Add(f);
             break;
           }
-          this.StartCoroutine((IEnumerator) this.GiveFollowerIE(f));
+          this.StartCoroutine(this.GiveFollowerIE(f));
           break;
       }
     });

@@ -1,13 +1,12 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWolfGuardian_Sword
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
 using FMODUnity;
 using Spine.Unity;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -194,7 +193,7 @@ public class EnemyWolfGuardian_Sword : EnemyWolfGuardian
       else if (!this.hasFired && (double) this.currentAttackProgress >= (double) this.projectileDelay)
       {
         this.hasFired = true;
-        this.parent.StartCoroutine((IEnumerator) this.parent.projectilePattern.ShootIE(this.targetLocation));
+        this.parent.StartCoroutine(this.parent.projectilePattern.ShootIE(this.targetLocation));
         foreach (SimpleSpineFlash simpleSpineFlash in this.parent.SimpleSpineFlashes)
           simpleSpineFlash.FlashWhite(0.0f);
       }

@@ -1,11 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Utils
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -564,20 +563,10 @@ public class Utils : BaseMonoBehaviour
   public static List<GameObject> GetChildren(GameObject obj)
   {
     List<GameObject> children = new List<GameObject>();
-    IEnumerator enumerator = (IEnumerator) obj.transform.GetEnumerator();
-    try
+    foreach (Transform transform in obj.transform)
     {
-      while (enumerator.MoveNext())
-      {
-        Transform current = (Transform) enumerator.Current;
-        children.Add(current.gameObject);
-        children.AddRange((IEnumerable<GameObject>) Utils.GetChildren(current.gameObject));
-      }
-    }
-    finally
-    {
-      if (enumerator is IDisposable disposable)
-        disposable.Dispose();
+      children.Add(transform.gameObject);
+      children.AddRange((IEnumerable<GameObject>) Utils.GetChildren(transform.gameObject));
     }
     return children;
   }

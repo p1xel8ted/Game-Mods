@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ChainDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -28,10 +28,7 @@ public class ChainDoor : BaseMonoBehaviour
 
   public void ShowOpenDoor() => this.Spine.AnimationState.SetAnimation(0, "open", true);
 
-  public void Play(System.Action Callback)
-  {
-    this.StartCoroutine((IEnumerator) this.PlayRoutine(Callback));
-  }
+  public void Play(System.Action Callback) => this.StartCoroutine(this.PlayRoutine(Callback));
 
   public IEnumerator PlayRoutine(System.Action Callback)
   {

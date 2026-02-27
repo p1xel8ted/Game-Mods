@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ShowHPBar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -124,7 +124,7 @@ public class ShowHPBar : BaseMonoBehaviour
       this.StopCoroutine(this.cTweenBar);
     if (!((Object) this.hpBar != (Object) null) || !((Object) this.hpBar.barTween != (Object) null))
       return;
-    this.cTweenBar = this.StartCoroutine((IEnumerator) this.TweenBar());
+    this.cTweenBar = this.StartCoroutine(this.TweenBar());
   }
 
   public void Hide() => this.alphaHold = 0.0f;
@@ -248,7 +248,7 @@ public class ShowHPBar : BaseMonoBehaviour
       this.StopCoroutine(this.cTweenBar);
     if (!((Object) this.hpBar != (Object) null) || !((Object) this.hpBar.barTween != (Object) null))
       return;
-    this.cTweenBar = this.StartCoroutine((IEnumerator) this.TweenBar());
+    this.cTweenBar = this.StartCoroutine(this.TweenBar());
   }
 
   public IEnumerator TweenBar(float delay = 0.4f)

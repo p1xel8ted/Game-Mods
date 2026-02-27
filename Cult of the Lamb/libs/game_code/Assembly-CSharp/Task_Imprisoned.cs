@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Task_Imprisoned
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -22,7 +22,7 @@ public class Task_Imprisoned : Task
     this.Prison = TargetObject.GetComponent<Prison>();
     this.w.simpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "picked-up-hate");
     this.w.transform.position = this.Prison.PrisonerLocation.position;
-    this.w.StartCoroutine((IEnumerator) this.ArriveAtPrisonRoutine());
+    this.w.StartCoroutine(this.ArriveAtPrisonRoutine());
   }
 
   public IEnumerator ArriveAtPrisonRoutine()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_BaseDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -67,11 +67,11 @@ public class Interaction_BaseDoor : Interaction
     {
       GameManager.GetInstance().OnConversationNew();
       this.SimpleSetCamera.Play();
-      this.playerFarming.GoToAndStop(this.PlayerPosition, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.EnterTemple())));
+      this.playerFarming.GoToAndStop(this.PlayerPosition, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.EnterTemple())));
     }
   }
 
-  public void Play() => this.StartCoroutine((IEnumerator) this.FrameDelayOpenDoor());
+  public void Play() => this.StartCoroutine(this.FrameDelayOpenDoor());
 
   public IEnumerator FrameDelayOpenDoor()
   {
@@ -84,7 +84,7 @@ public class Interaction_BaseDoor : Interaction
         return false;
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
-      interactionBaseDoor.StartCoroutine((IEnumerator) interactionBaseDoor.EnterTemple());
+      interactionBaseDoor.StartCoroutine(interactionBaseDoor.EnterTemple());
       GameManager.GetInstance().OnConversationNew();
       interactionBaseDoor.SimpleSetCamera.Play();
       return false;
@@ -134,7 +134,7 @@ public class Interaction_BaseDoor : Interaction
       return;
     this.Used = true;
     MMTransition.StopCurrentTransition();
-    this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadWorldMapAssets(), (System.Action) (() =>
+    this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadWorldMapAssets(), (System.Action) (() =>
     {
       UIWorldMapMenuController mapMenuController = MonoSingleton<UIManager>.Instance.ShowWorldMap();
       mapMenuController.Show();
@@ -143,10 +143,7 @@ public class Interaction_BaseDoor : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__15_0()
-  {
-    this.StartCoroutine((IEnumerator) this.EnterTemple());
-  }
+  public void \u003COnInteract\u003Eb__15_0() => this.StartCoroutine(this.EnterTemple());
 
   [CompilerGenerated]
   public void \u003COnTriggerEnter2D\u003Eb__20_0()

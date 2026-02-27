@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_BreakUpFight
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -86,7 +86,7 @@ public class FollowerTask_BreakUpFight : FollowerTask
   {
     Follower followerById1 = FollowerManager.FindFollowerByID(this.fightingFollowerID0);
     Follower followerById2 = FollowerManager.FindFollowerByID(this.fightingFollowerID1);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.BreakUpFightIE(follower, followerById1, followerById2));
+    GameManager.GetInstance().StartCoroutine(this.BreakUpFightIE(follower, followerById1, followerById2));
   }
 
   public override Vector3 UpdateDestination(Follower follower)

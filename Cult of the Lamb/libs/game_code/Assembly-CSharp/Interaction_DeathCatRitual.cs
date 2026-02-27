@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DeathCatRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -108,7 +108,7 @@ public class Interaction_DeathCatRitual : Interaction
     if (!this.EnoughFollowers)
       this.playerFarming.indicator.PlayShake();
     else
-      this.StartCoroutine((IEnumerator) this.RitualIE());
+      this.StartCoroutine(this.RitualIE());
   }
 
   public void HandleEvent(TrackEntry trackEntry, Spine.Event e)
@@ -191,7 +191,7 @@ public class Interaction_DeathCatRitual : Interaction
     yield return (object) new WaitForSeconds(0.5f);
     foreach (FollowerManager.SpawnedFollower spawnedFollower in interactionDeathCatRitual.spawnedFollowers)
     {
-      interactionDeathCatRitual.StartCoroutine((IEnumerator) interactionDeathCatRitual.SpawnSouls(spawnedFollower.Follower.transform.position));
+      interactionDeathCatRitual.StartCoroutine(interactionDeathCatRitual.SpawnSouls(spawnedFollower.Follower.transform.position));
       yield return (object) new WaitForSeconds(0.1f);
     }
     AudioManager.Instance.PlayOneShot("event:/rituals/blood_sacrifice", interactionDeathCatRitual.playerFarming.transform.position);
@@ -220,7 +220,7 @@ public class Interaction_DeathCatRitual : Interaction
     AudioManager.Instance.StopLoop(interactionDeathCatRitual.loopedInstanceOutro);
   }
 
-  public void Skip() => this.StartCoroutine((IEnumerator) this.SkipRoutine());
+  public void Skip() => this.StartCoroutine(this.SkipRoutine());
 
   public IEnumerator SkipRoutine()
   {

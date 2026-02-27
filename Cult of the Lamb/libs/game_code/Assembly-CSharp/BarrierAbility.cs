@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BarrierAbility
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -106,7 +106,7 @@ public class BarrierAbility : BaseMonoBehaviour, ISpellOwning
     for (int index = 0; index < healthList.Count; ++index)
     {
       if ((Object) healthList[index] != (Object) null && (double) Vector2.Distance((Vector2) healthList[index].transform.position, (Vector2) this.transform.position) <= (double) this.stompRadius)
-        healthList[index].DealDamage(this.stompDamage, this.owner, this.transform.position);
+        healthList[index].DealDamage(this.stompDamage, this.owner, this.transform.position, dealDamageImmediately: true);
     }
   }
 
@@ -114,14 +114,14 @@ public class BarrierAbility : BaseMonoBehaviour, ISpellOwning
   {
     if (tennisBall.health.team == this.health.team || !this.colldier.OverlapPoint((Vector2) tennisBall.transform.position))
       return;
-    tennisBall.health.DealDamage(1f, this.owner, this.transform.position);
+    tennisBall.health.DealDamage(1f, this.owner, this.transform.position, dealDamageImmediately: true);
   }
 
   public void DeflectKockableMortar(KnockableMortarBomb mortar)
   {
     if (mortar.health.team == this.health.team || !this.IsPositionWithinColliderBoundsAndHeight(mortar.Spine.transform.position))
       return;
-    mortar.health.DealDamage(1f, this.owner, this.transform.position);
+    mortar.health.DealDamage(1f, this.owner, this.transform.position, dealDamageImmediately: true);
     mortar.OnHit(this.owner, this.transform.position, Health.AttackTypes.Melee);
   }
 
@@ -130,7 +130,7 @@ public class BarrierAbility : BaseMonoBehaviour, ISpellOwning
     if (this.collidedProjectiles.Contains(projectile) || !this.colldier.OverlapPoint((Vector2) projectile.transform.position))
       return;
     this.collidedProjectiles.Add(projectile);
-    this.health.DealDamage(1f, projectile.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile);
+    this.health.DealDamage(1f, projectile.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
     if (projectile.destroyOnParry)
     {
       projectile.DestroyProjectile();
@@ -154,7 +154,7 @@ public class BarrierAbility : BaseMonoBehaviour, ISpellOwning
     if (this.collidedProjectiles.Contains(projectile) || !this.colldier.OverlapPoint((Vector2) projectile.transform.position))
       return;
     this.collidedProjectiles.Add(projectile);
-    this.health.DealDamage(1f, projectile.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile);
+    this.health.DealDamage(1f, projectile.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
     this.collidedProjectiles.Remove(projectile);
     projectile.DestroyProjectile();
   }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FireHealingRoomNPC
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -176,7 +176,7 @@ public class Interaction_FireHealingRoomNPC : Interaction
 
   public void GoToInteractPosition(System.Action callback)
   {
-    this.playerFarming.GoToAndStop(this.npc.transform.position + this.listenPosition, this.gameObject, GoToCallback: (System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+    this.playerFarming.GoToAndStop(this.npc.transform.position + this.listenPosition, this.gameObject, GoToCallback: (System.Action) (() => GameManager.GetInstance().StartCoroutine(this.FrameDelay((System.Action) (() =>
     {
       foreach (PlayerFarming player in PlayerFarming.players)
       {
@@ -199,10 +199,7 @@ public class Interaction_FireHealingRoomNPC : Interaction
       action();
   }
 
-  public void PlayGiveDaggerSequence()
-  {
-    this.StartCoroutine((IEnumerator) this.PlayerPickUpWeapon());
-  }
+  public void PlayGiveDaggerSequence() => this.StartCoroutine(this.PlayerPickUpWeapon());
 
   public IEnumerator PlayerPickUpWeapon()
   {

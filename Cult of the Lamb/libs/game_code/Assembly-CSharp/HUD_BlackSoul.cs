@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_BlackSoul
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -63,8 +63,8 @@ public class HUD_BlackSoul : BaseMonoBehaviour
   {
     MMConversation.Play(new ConversationObject(ConversationEntry.CloneList(this.ConversationEntryTutorial), (List<MMTools.Response>) null, (System.Action) (() =>
     {
-      this.StartCoroutine((IEnumerator) this.StartTutorialRoutine());
-      this.StartCoroutine((IEnumerator) this.ScaleProgressBarRoutine());
+      this.StartCoroutine(this.StartTutorialRoutine());
+      this.StartCoroutine(this.ScaleProgressBarRoutine());
       DataManager.Instance.BlackSoulsEnabled = true;
     })));
   }
@@ -131,7 +131,7 @@ public class HUD_BlackSoul : BaseMonoBehaviour
     hudBlackSoul.ParseTokens = Inventory.FollowerTokens;
     Inventory.FollowerTokens = 1;
     CameraManager.shakeCamera(0.3f);
-    hudBlackSoul.StartCoroutine((IEnumerator) hudBlackSoul.ExitTutorialRoutine());
+    hudBlackSoul.StartCoroutine(hudBlackSoul.ExitTutorialRoutine());
   }
 
   public IEnumerator ExitTutorialRoutine()
@@ -144,7 +144,7 @@ public class HUD_BlackSoul : BaseMonoBehaviour
   public void EndTutorial()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.EndTutorialRoutine());
+    this.StartCoroutine(this.EndTutorialRoutine());
   }
 
   public IEnumerator EndTutorialRoutine()
@@ -261,7 +261,7 @@ public class HUD_BlackSoul : BaseMonoBehaviour
     else
     {
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.SmoothStepRoutine());
+      this.StartCoroutine(this.SmoothStepRoutine());
     }
   }
 
@@ -283,8 +283,8 @@ public class HUD_BlackSoul : BaseMonoBehaviour
   [CompilerGenerated]
   public void \u003CDoTutorial\u003Eb__15_0()
   {
-    this.StartCoroutine((IEnumerator) this.StartTutorialRoutine());
-    this.StartCoroutine((IEnumerator) this.ScaleProgressBarRoutine());
+    this.StartCoroutine(this.StartTutorialRoutine());
+    this.StartCoroutine(this.ScaleProgressBarRoutine());
     DataManager.Instance.BlackSoulsEnabled = true;
   }
 }

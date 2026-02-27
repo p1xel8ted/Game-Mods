@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerRelic
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -274,7 +274,7 @@ public class PlayerRelic : MonoBehaviour
         case RelicType.SpawnDemon:
         case RelicType.SpawnDemon_Dammed:
         case RelicType.SpawnDemon_Blessed:
-          this.StartCoroutine((IEnumerator) this.Delay(1f, true, (System.Action) (() => AudioManager.Instance.PlayOneShot("event:/relics/demon_bubble", this.gameObject))));
+          this.StartCoroutine(this.Delay(1f, true, (System.Action) (() => AudioManager.Instance.PlayOneShot("event:/relics/demon_bubble", this.gameObject))));
           int level = 1;
           if (relicType == RelicType.SpawnDemon_Dammed)
             level = UnityEngine.Random.Range(2, 4);
@@ -296,7 +296,7 @@ public class PlayerRelic : MonoBehaviour
             onRelicCantUse(EquipmentManager.GetRelicData(relicType), this.playerFarming);
             return;
           }
-          this.StartCoroutine((IEnumerator) this.DestroyTarotsGainStrength(bonusType, this.playerFarming));
+          this.StartCoroutine(this.DestroyTarotsGainStrength(bonusType, this.playerFarming));
           break;
         case RelicType.FiftyFiftyGamble:
         case RelicType.FiftyFiftyGamble_Dammed:
@@ -331,7 +331,7 @@ public class PlayerRelic : MonoBehaviour
           {
             playerTransform
           });
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.VFXTimer(duration * 1.25f, sequence1));
+          GameManager.GetInstance().StartCoroutine(this.VFXTimer(duration * 1.25f, sequence1));
           break;
         case RelicType.FreezeAll:
         case RelicType.PoisonAll:
@@ -495,7 +495,7 @@ public class PlayerRelic : MonoBehaviour
               blueHeartsList[i / 2].transform.DOPunchScale(Vector3.one, 0.5f);
             }));
           }
-          this.StartCoroutine((IEnumerator) this.Delay(1.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(1.5f, true, (System.Action) (() =>
           {
             for (int index = tempObjs.Count - 1; index >= 0; --index)
               UnityEngine.Object.Destroy((UnityEngine.Object) tempObjs[index]);
@@ -576,7 +576,7 @@ public class PlayerRelic : MonoBehaviour
           for (int index = Health.team2.Count - 1; index >= 0; --index)
           {
             if ((UnityEngine.Object) Health.team2[index] != (UnityEngine.Object) null && Health.team2[index].gameObject.activeSelf && (UnityEngine.Object) Health.team2[index].GetComponent<UnitObject>() != (UnityEngine.Object) null && Health.team2[index].GetComponent<UnitObject>().HasModifier)
-              Health.team2[index].DealDamage(Health.team2[index].HP, this.gameObject, Health.team2[index].transform.position, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+              Health.team2[index].DealDamage(Health.team2[index].HP, this.gameObject, Health.team2[index].transform.position, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
           }
           break;
         case RelicType.DealDamagePerFollower:
@@ -651,7 +651,7 @@ public class PlayerRelic : MonoBehaviour
           sequence.OnImpact += (Action<VFXObject, int>) ((result, slot) =>
           {
             AudioManager.Instance.PlayOneShot("event:/relics/follower_impact", result.gameObject);
-            this.StartCoroutine((IEnumerator) this.Delay(0.25f, true, (System.Action) (() => this.FadeRedAway())));
+            this.StartCoroutine(this.Delay(0.25f, true, (System.Action) (() => this.FadeRedAway())));
           });
           break;
         case RelicType.UseRandomRelic:
@@ -714,9 +714,9 @@ public class PlayerRelic : MonoBehaviour
           {
             AudioManager.Instance.PlayOneShot("event:/relics/follower_impact", result.gameObject);
             if (slot == count - 1)
-              this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+              this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
               {
-                this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+                this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
                 {
                   foreach (DeadBodySliding deadBodySliding in otherBodies)
                   {
@@ -729,7 +729,7 @@ public class PlayerRelic : MonoBehaviour
                 })));
                 this.FadeRedAway();
               })));
-            this.StartCoroutine((IEnumerator) this.Delay(1f, true, (System.Action) (() =>
+            this.StartCoroutine(this.Delay(1f, true, (System.Action) (() =>
             {
               if (!((UnityEngine.Object) targetBodies[slot] != (UnityEngine.Object) null))
                 return;
@@ -854,12 +854,12 @@ public class PlayerRelic : MonoBehaviour
           }));
           break;
         case RelicType.TeleportToBoss:
-          this.StartCoroutine((IEnumerator) this.TeleportToBossRoom());
+          this.StartCoroutine(this.TeleportToBossRoom());
           break;
         case RelicType.RandomTeleport:
           if (!BiomeGenerator.Instance.CurrentRoom.IsBoss && BiomeGenerator.Instance.CurrentRoom.y != 999 && (UnityEngine.Object) DungeonLeaderMechanics.Instance == (UnityEngine.Object) null)
           {
-            this.StartCoroutine((IEnumerator) this.TeleportToRandomRoom());
+            this.StartCoroutine(this.TeleportToRandomRoom());
             break;
           }
           break;
@@ -939,7 +939,7 @@ public class PlayerRelic : MonoBehaviour
           {
             playerTransform
           });
-          this.StartCoroutine((IEnumerator) this.Delay(0.25f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(0.25f, true, (System.Action) (() =>
           {
             for (int index = 0; index < 20; ++index)
             {
@@ -1009,7 +1009,7 @@ public class PlayerRelic : MonoBehaviour
           if (!TrinketManager.HasTrinket(TarotCards.Card.NoCorruption, this.playerFarming))
           {
             this.playerFarming.playerController.RunSpeed /= 4f;
-            GameManager.GetInstance().StartCoroutine((IEnumerator) this.Delay(6f, true, (System.Action) (() => this.playerFarming.playerController.RunSpeed *= 4f)));
+            GameManager.GetInstance().StartCoroutine(this.Delay(6f, true, (System.Action) (() => this.playerFarming.playerController.RunSpeed *= 4f)));
           }
           this.DamageMultiplier += 5f;
           GameManager.GetInstance().WaitForSeconds(6f, (System.Action) (() =>
@@ -1031,7 +1031,7 @@ public class PlayerRelic : MonoBehaviour
             {
               playerTransform
             });
-            this.StartCoroutine((IEnumerator) this.Delay(UnityEngine.Random.Range(0.5f, 1f), true, (System.Action) (() =>
+            this.StartCoroutine(this.Delay(UnityEngine.Random.Range(0.5f, 1f), true, (System.Action) (() =>
             {
               if (!TrinketManager.HasTrinket(TarotCards.Card.NoCorruption, this.playerFarming))
                 possibleFollowers[UnityEngine.Random.Range(0, possibleFollowers.Count)].Die(NotificationCentre.NotificationType.Died);
@@ -1062,7 +1062,7 @@ public class PlayerRelic : MonoBehaviour
           {
             playerTransform
           });
-          this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
           {
             ++this.playerFarming.health.BlueHearts;
             BiomeConstants.Instance.EmitHeartPickUpVFX(this.transform.position, 0.0f, "blue", "burst_big");
@@ -1076,7 +1076,7 @@ public class PlayerRelic : MonoBehaviour
               pickup.MagnetToPlayer = false;
               pickup.AddToInventory = false;
               pickup.CanBePickedUp = false;
-              this.StartCoroutine((IEnumerator) this.Delay(UnityEngine.Random.Range(0.5f, 1f), true, (System.Action) (() => pickup.transform.DOScale(0.0f, 0.25f).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() => UnityEngine.Object.Destroy((UnityEngine.Object) pickup.gameObject))))));
+              this.StartCoroutine(this.Delay(UnityEngine.Random.Range(0.5f, 1f), true, (System.Action) (() => pickup.transform.DOScale(0.0f, 0.25f).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() => UnityEngine.Object.Destroy((UnityEngine.Object) pickup.gameObject))))));
             }
           })));
           break;
@@ -1086,7 +1086,7 @@ public class PlayerRelic : MonoBehaviour
           {
             playerTransform
           });
-          this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
           {
             AudioManager.Instance.PlayOneShot("event:/player/weapon_equip", this.transform.position);
             AudioManager.Instance.PlayOneShot("event:/player/weapon_unlocked", this.transform.position);
@@ -1132,7 +1132,7 @@ public class PlayerRelic : MonoBehaviour
           {
             playerTransform
           });
-          this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
           {
             this.playerFarming.health.DealDamage(1f, this.playerFarming.gameObject, this.transform.position, false, Health.AttackTypes.Melee, false, (Health.AttackFlags) 0);
             foreach (PlayerFarming player in PlayerFarming.players)
@@ -1145,7 +1145,7 @@ public class PlayerRelic : MonoBehaviour
                 {
                   player.transform
                 });
-                GameManager.GetInstance().StartCoroutine((IEnumerator) this.VFXTimer(12.5f, sequence2));
+                GameManager.GetInstance().StartCoroutine(this.VFXTimer(12.5f, sequence2));
               }
             }
           })));
@@ -1156,7 +1156,7 @@ public class PlayerRelic : MonoBehaviour
           {
             playerTransform
           });
-          this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
           {
             Vector3 position = (PlayerFarming.players[0].transform.position + PlayerFarming.players[1].transform.position) / 2f;
             SoulCustomTarget.Create(PlayerFarming.players[0].gameObject, position, Color.red, (System.Action) (() =>
@@ -1182,10 +1182,10 @@ public class PlayerRelic : MonoBehaviour
           int explosions = 10;
           float r = 2f;
           duration = 1f;
-          this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
           {
-            PlayerFarming.players[0].StartCoroutine((IEnumerator) PlayerFarming.players[0].playerRelic.ExplosiveRingIE(explosions, r, duration));
-            PlayerFarming.players[1].StartCoroutine((IEnumerator) PlayerFarming.players[1].playerRelic.ExplosiveRingIE(explosions, r, duration));
+            PlayerFarming.players[0].StartCoroutine(PlayerFarming.players[0].playerRelic.ExplosiveRingIE(explosions, r, duration));
+            PlayerFarming.players[1].StartCoroutine(PlayerFarming.players[1].playerRelic.ExplosiveRingIE(explosions, r, duration));
           })));
           break;
         case RelicType.FervourForResources_Corrupted:
@@ -1199,7 +1199,7 @@ public class PlayerRelic : MonoBehaviour
           int resourcesToGive = Mathf.RoundToInt(10f * num8);
           if (!TrinketManager.HasTrinket(TarotCards.Card.CorruptedFullCorruption, this.playerFarming))
           {
-            this.StartCoroutine((IEnumerator) this.Delay(1f, true, (System.Action) (() =>
+            this.StartCoroutine(this.Delay(1f, true, (System.Action) (() =>
             {
               List<InventoryItem.ITEM_TYPE> itemTypeList = new List<InventoryItem.ITEM_TYPE>()
               {
@@ -1218,7 +1218,7 @@ public class PlayerRelic : MonoBehaviour
           {
             this.playerFarming.transform
           });
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+          GameManager.GetInstance().StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
           {
             bool doubledDamage = false;
             bool increasedRecivedDamage = false;
@@ -1234,7 +1234,7 @@ public class PlayerRelic : MonoBehaviour
                 this.playerFarming.health.DamageModifier *= 2f;
               increasedRecivedDamage = true;
             }
-            GameManager.GetInstance().StartCoroutine((IEnumerator) this.Delay(5f, true, (System.Action) (() =>
+            GameManager.GetInstance().StartCoroutine(this.Delay(5f, true, (System.Action) (() =>
             {
               if (doubledDamage)
               {
@@ -1275,7 +1275,7 @@ public class PlayerRelic : MonoBehaviour
           Transform transform1 = sequence.ImpactVFXObjects[0].gameObject.transform;
           transform1.position = new Vector3(transform1.position.x, transform1.position.y, -1f);
           transform1.DOMove(worldPoint4, 1.5f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() => { }));
-          this.StartCoroutine((IEnumerator) this.Delay(1.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(1.5f, true, (System.Action) (() =>
           {
             for (int index = tmpObjs.Count - 1; index >= 0; --index)
               UnityEngine.Object.Destroy((UnityEngine.Object) tmpObjs[index]);
@@ -1302,21 +1302,21 @@ public class PlayerRelic : MonoBehaviour
           break;
         case RelicType.FieryBurrow:
         case RelicType.IceyBurrow:
-          this.StartCoroutine((IEnumerator) this.BurrowRoutine(relicType));
+          this.StartCoroutine(this.BurrowRoutine(relicType));
           break;
         case RelicType.IceyCoat:
           EquipmentManager.GetRelicData(relicType).VFXData.PlayNewSequence(this.playerFarming.transform, new Transform[0], GenerateRoom.Instance.transform);
           this.iceyCoatLoopInstance = AudioManager.Instance.CreateLoop(this.relicIceyCoatLoopSFX, this.gameObject, true);
-          this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+          this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
           {
             this.iceCoatManager.SetActive(true);
             this.playerFarming.playerController.MakeImmuneToProjectiles(10f);
-            this.StartCoroutine((IEnumerator) this.Delay(10f, true, (System.Action) (() => this.iceCoatManager.SetActive(false))));
-            this.StartCoroutine((IEnumerator) this.Delay(9f, true, (System.Action) (() => AudioManager.Instance.StopLoop(this.iceyCoatLoopInstance))));
+            this.StartCoroutine(this.Delay(10f, true, (System.Action) (() => this.iceCoatManager.SetActive(false))));
+            this.StartCoroutine(this.Delay(9f, true, (System.Action) (() => AudioManager.Instance.StopLoop(this.iceyCoatLoopInstance))));
           })));
           break;
         case RelicType.IceSpikes:
-          this.StartCoroutine((IEnumerator) this.SpawnIceSpikes());
+          this.StartCoroutine(this.SpawnIceSpikes());
           break;
       }
       if ((this.CurrentRelic.InteractionType == RelicInteractionType.Fragile || this.CurrentRelic.InteractionType == RelicInteractionType.Instant || TrinketManager.AreRelicsFragile(this.playerFarming)) && EquipmentManager.NextRandomRelic != this.CurrentRelic.RelicType)
@@ -1392,7 +1392,7 @@ public class PlayerRelic : MonoBehaviour
       if (data.InteractionType == RelicInteractionType.Fragile | forceConsumableAnimation || TrinketManager.AreRelicsFragile(this.playerFarming))
       {
         AudioManager.Instance.PlayOneShot("event:/relics/relic_break", this.gameObject);
-        this.animationCoroutine = this.StartCoroutine((IEnumerator) this.Delay(1.5f, true, (System.Action) (() =>
+        this.animationCoroutine = this.StartCoroutine(this.Delay(1.5f, true, (System.Action) (() =>
         {
           this.relicPuff.Play();
           AudioManager.Instance.PlayOneShot("event:/relics/puff_of_smoke", this.gameObject);
@@ -1592,7 +1592,7 @@ public class PlayerRelic : MonoBehaviour
       }
     }
     RelicType relicType = this.CurrentRelic.RelicType;
-    BiomeGenerator.Instance.SpawnDemon(type, -1, level, true, this.gameObject, (Action<Demon>) (demon => this.StartCoroutine((IEnumerator) this.DemonSpawned(demon, relicType))));
+    BiomeGenerator.Instance.SpawnDemon(type, -1, level, true, this.gameObject, (Action<Demon>) (demon => this.StartCoroutine(this.DemonSpawned(demon, relicType))));
   }
 
   public void SpawnRotDemon()
@@ -1601,7 +1601,7 @@ public class PlayerRelic : MonoBehaviour
     BiomeGenerator.Instance.SpawnDemon(13, -1, 1, true, this.gameObject, (Action<Demon>) (demon =>
     {
       AudioManager.Instance.PlayOneShot("event:/dlc/tarot/rotdemon_summon_trigger", demon.transform.position);
-      this.StartCoroutine((IEnumerator) this.DemonSpawned(demon, relicType));
+      this.StartCoroutine(this.DemonSpawned(demon, relicType));
     }));
   }
 
@@ -1705,7 +1705,7 @@ public class PlayerRelic : MonoBehaviour
         return;
       Vector3 position = targetEnemies[targetIndex].transform.position;
       vfxObject.transform.SetPositionAndRotation(position, Quaternion.identity);
-      targetEnemies[targetIndex].DealDamage(damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+      targetEnemies[targetIndex].DealDamage(damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
       if ((double) chanceForBlueHearts != 0.0 && (double) UnityEngine.Random.value < (double) chanceForBlueHearts)
         InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLUE_HEART, 1, position);
       if ((double) chanceForBlackHearts == 0.0 || (double) UnityEngine.Random.value >= (double) chanceForBlackHearts)
@@ -1720,7 +1720,7 @@ public class PlayerRelic : MonoBehaviour
           return;
         Vector3 position = targetEnemies[targetIndex].transform.position;
         vfxObject.transform.SetPositionAndRotation(position, Quaternion.identity);
-        targetEnemies[targetIndex].DealDamage(damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+        targetEnemies[targetIndex].DealDamage(damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
         if ((double) chanceForBlueHearts != 0.0 && (double) UnityEngine.Random.value < (double) chanceForBlueHearts)
           InventoryItem.Spawn(InventoryItem.ITEM_TYPE.BLUE_HEART, 1, position);
         if ((double) chanceForBlackHearts == 0.0 || (double) UnityEngine.Random.value >= (double) chanceForBlackHearts)
@@ -1797,7 +1797,7 @@ public class PlayerRelic : MonoBehaviour
               {
                 this.playerFarming.transform
               });
-              GameManager.GetInstance().StartCoroutine((IEnumerator) this.VFXTimer(12.5f, sequence2));
+              GameManager.GetInstance().StartCoroutine(this.VFXTimer(12.5f, sequence2));
               break;
             }
             this.playerFarming.health.BlueHearts += 2f;
@@ -1886,7 +1886,7 @@ public class PlayerRelic : MonoBehaviour
       System.Action setupFriendlyEnemyAction = (System.Action) (() => this.SetupFriendlyEnemy(friendlyEnemyHealth));
       setupFriendlyEnemyAction += (System.Action) (() => this.onDestroyWithSpawningAlly -= setupFriendlyEnemyAction);
       this.onDestroyWithSpawningAlly += setupFriendlyEnemyAction;
-      this.StartCoroutine((IEnumerator) this.Delay(1f, true, (System.Action) (() =>
+      this.StartCoroutine(this.Delay(1f, true, (System.Action) (() =>
       {
         setupFriendlyEnemyAction();
         CameraManager.instance.ShakeCameraForDuration(0.5f, 0.7f, 0.2f);
@@ -1903,7 +1903,7 @@ public class PlayerRelic : MonoBehaviour
       enemyHealth.team = Health.Team.Team2;
       enemyHealth.gameObject.SetActive(false);
       enemyHealth.transform.position = result.transform.position;
-      this.StartCoroutine((IEnumerator) this.Delay(1f, true, (System.Action) (() =>
+      this.StartCoroutine(this.Delay(1f, true, (System.Action) (() =>
       {
         enemyHealth.enabled = true;
         enemyHealth.gameObject.SetActive(true);
@@ -1994,7 +1994,7 @@ public class PlayerRelic : MonoBehaviour
         return;
       Vector3 position = targetEnemies[targetIndex].transform.position;
       vfxObject.transform.SetPositionAndRotation(position, Quaternion.identity);
-      targetEnemies[targetIndex].DealDamage(PlayerWeapon.GetDamage(damage, this.playerFarming.currentWeaponLevel, this.playerFarming) * TrinketManager.GetRelicDamageMultiplier(this.playerFarming), this.gameObject, position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+      targetEnemies[targetIndex].DealDamage(PlayerWeapon.GetDamage(damage, this.playerFarming.currentWeaponLevel, this.playerFarming) * TrinketManager.GetRelicDamageMultiplier(this.playerFarming), this.gameObject, position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
     });
     sequence.OnComplete += (System.Action) (() =>
     {
@@ -2004,7 +2004,7 @@ public class PlayerRelic : MonoBehaviour
           return;
         Vector3 position = targetEnemies[targetIndex].transform.position;
         vfxObject.transform.SetPositionAndRotation(position, Quaternion.identity);
-        targetEnemies[targetIndex].DealDamage(PlayerWeapon.GetDamage(damage, this.playerFarming.currentWeaponLevel, this.playerFarming) * TrinketManager.GetRelicDamageMultiplier(this.playerFarming), this.gameObject, position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+        targetEnemies[targetIndex].DealDamage(PlayerWeapon.GetDamage(damage, this.playerFarming.currentWeaponLevel, this.playerFarming) * TrinketManager.GetRelicDamageMultiplier(this.playerFarming), this.gameObject, position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
       });
       sequence.OnComplete -= (System.Action) (() =>
       {
@@ -2040,7 +2040,7 @@ public class PlayerRelic : MonoBehaviour
       targetEnemies[targetIndex].invincible = false;
       targetEnemies[targetIndex].enabled = true;
       targetEnemies[targetIndex].HasShield = false;
-      targetEnemies[targetIndex].DealDamage(targetEnemies[targetIndex].HP, this.gameObject, position, AttackType: Health.AttackTypes.NoHitStop, AttackFlags: Health.AttackFlags.DoesntChargeRelics | Health.AttackFlags.ForceKill);
+      targetEnemies[targetIndex].DealDamage(targetEnemies[targetIndex].HP, this.gameObject, position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics | Health.AttackFlags.ForceKill);
     });
     sequence.OnComplete += (System.Action) (() =>
     {
@@ -2054,7 +2054,7 @@ public class PlayerRelic : MonoBehaviour
         targetEnemies[targetIndex].invincible = false;
         targetEnemies[targetIndex].enabled = true;
         targetEnemies[targetIndex].HasShield = false;
-        targetEnemies[targetIndex].DealDamage(targetEnemies[targetIndex].HP, this.gameObject, position, AttackType: Health.AttackTypes.NoHitStop, AttackFlags: Health.AttackFlags.DoesntChargeRelics | Health.AttackFlags.ForceKill);
+        targetEnemies[targetIndex].DealDamage(targetEnemies[targetIndex].HP, this.gameObject, position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics | Health.AttackFlags.ForceKill);
       });
       sequence.OnComplete -= (System.Action) (() =>
       {
@@ -2085,7 +2085,7 @@ public class PlayerRelic : MonoBehaviour
       Vector3 position = targetEnemies[targetIndex].transform.position;
       vfxObject.transform.SetPositionAndRotation(position, Quaternion.identity);
       float Damage = PlayerWeapon.GetDamage(20f, this.playerFarming.currentWeaponLevel, this.playerFarming) * TrinketManager.GetRelicDamageMultiplier(this.playerFarming);
-      targetEnemies[targetIndex].DealDamage(Damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+      targetEnemies[targetIndex].DealDamage(Damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
     });
     sequence.OnComplete += (System.Action) (() =>
     {
@@ -2096,7 +2096,7 @@ public class PlayerRelic : MonoBehaviour
         Vector3 position = targetEnemies[targetIndex].transform.position;
         vfxObject.transform.SetPositionAndRotation(position, Quaternion.identity);
         float Damage = PlayerWeapon.GetDamage(20f, this.playerFarming.currentWeaponLevel, this.playerFarming) * TrinketManager.GetRelicDamageMultiplier(this.playerFarming);
-        targetEnemies[targetIndex].DealDamage(Damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
+        targetEnemies[targetIndex].DealDamage(Damage, this.gameObject, position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.DoesntChargeRelics);
       });
       sequence.OnComplete -= (System.Action) (() =>
       {
@@ -2111,7 +2111,7 @@ public class PlayerRelic : MonoBehaviour
     {
       this.playerFarming.transform
     });
-    this.StartCoroutine((IEnumerator) this.Delay(0.5f, true, (System.Action) (() =>
+    this.StartCoroutine(this.Delay(0.5f, true, (System.Action) (() =>
     {
       switch (relicType)
       {
@@ -2159,7 +2159,7 @@ public class PlayerRelic : MonoBehaviour
     Health component = playerTransform.GetComponent<Health>();
     if (!((UnityEngine.Object) component != (UnityEngine.Object) null))
       return;
-    this.StartCoroutine((IEnumerator) this.TakeDamageOnRelicUse(component, playerTransform));
+    this.StartCoroutine(this.TakeDamageOnRelicUse(component, playerTransform));
   }
 
   public IEnumerator TakeDamageOnRelicUse(Health playerHealth, Transform playerTransform)
@@ -2168,7 +2168,7 @@ public class PlayerRelic : MonoBehaviour
     yield return (object) new WaitForSeconds(1.5f);
     BiomeConstants.Instance.ShowTarotCardDamage(playerTransform.transform, Vector3.up);
     yield return (object) new WaitForSeconds(0.5f);
-    playerHealth.DealDamage(1f, playerTransform.gameObject, playerTransform.position);
+    playerHealth.DealDamage(1f, playerTransform.gameObject, playerTransform.position, dealDamageImmediately: true);
     BiomeConstants.Instance.PlayerEmitHitImpactEffect(playerRelic.transform.position + Vector3.back * 0.5f, Quaternion.identity.z, false);
     if (CoopManager.CoopActive && Health.team2.Count <= 0)
     {
@@ -2403,7 +2403,7 @@ public class PlayerRelic : MonoBehaviour
       AttackFlags |= Health.AttackFlags.Burn;
     else if ((UnityEngine.Object) this.CurrentRelic == (UnityEngine.Object) null || this.CurrentRelic.RelicType == RelicType.IceyBurrow)
       AttackFlags |= Health.AttackFlags.Ice;
-    component.DealDamage(PlayerWeapon.GetDamage(0.1f, this.playerFarming.currentWeaponLevel, this.playerFarming), this.gameObject, component.transform.position, AttackFlags: AttackFlags);
+    component.DealDamage(PlayerWeapon.GetDamage(0.1f, this.playerFarming.currentWeaponLevel, this.playerFarming), this.gameObject, component.transform.position, dealDamageImmediately: true, AttackFlags: AttackFlags);
   }
 
   public IEnumerator SpawnIceSpikes()

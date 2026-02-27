@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -196,7 +196,7 @@ public abstract class Interaction : BaseMonoBehaviour
     LocalizationManager.OnLocalizeEvent -= new LocalizationManager.OnLocalizeCallback(this.UpdateLocalisation);
     LocalizationManager.OnLocalizeEvent += new LocalizationManager.OnLocalizeCallback(this.UpdateLocalisation);
     if (this.gameObject.activeInHierarchy)
-      this.StartCoroutine((IEnumerator) this.AddToRegion());
+      this.StartCoroutine(this.AddToRegion());
     if (!((UnityEngine.Object) this.Outliner == (UnityEngine.Object) null) || !((UnityEngine.Object) Camera.main != (UnityEngine.Object) null))
       return;
     this.Outliner = Camera.main.GetComponent<OutlineEffect>();
@@ -439,7 +439,7 @@ public abstract class Interaction : BaseMonoBehaviour
       this.interactorSkeletonAnimation = this.playerFarming.Spine;
     if (!this.InactiveAfterStopMoving || !this.gameObject.activeSelf)
       return;
-    this.StartCoroutine((IEnumerator) this.WaitForPlayerToStopMoving(this.playerFarming, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForPlayerToStopMoving(this.playerFarming, (System.Action) (() =>
     {
       if (!LetterBox.IsPlaying && !MMConversation.isPlaying && !GameManager.GetInstance().CamFollowTarget.IN_CONVERSATION)
         return;

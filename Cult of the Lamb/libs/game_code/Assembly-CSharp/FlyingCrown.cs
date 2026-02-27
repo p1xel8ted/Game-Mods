@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FlyingCrown
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -182,7 +182,7 @@ public class FlyingCrown : MonoBehaviour
     this.Hiding = true;
     this.StopAllCoroutines();
     this.Active = false;
-    this.playerFarming.StartCoroutine((IEnumerator) this.HideCrown());
+    this.playerFarming.StartCoroutine(this.HideCrown());
     this.gameObject.SetActive(false);
   }
 
@@ -224,10 +224,10 @@ public class FlyingCrown : MonoBehaviour
       this.PlayerSpine.Skeleton.SetAttachment("CROWN", (string) null);
       this.PlayerSpine.Skeleton.SetAttachment("CROWN_EYE", (string) null);
       if ((UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null && PlayerFarming.Instance.state.CURRENT_STATE == StateMachine.State.Meditate)
-        this.StartCoroutine((IEnumerator) this.AnimateAndClose());
+        this.StartCoroutine(this.AnimateAndClose());
       if ((double) FlyingCrown.Distance(this.transform.position, this.TargetPosition.transform.position) >= (double) this.TargetDistance)
         return;
-      this.StartCoroutine((IEnumerator) this.AnimateAndClose());
+      this.StartCoroutine(this.AnimateAndClose());
     }
   }
 

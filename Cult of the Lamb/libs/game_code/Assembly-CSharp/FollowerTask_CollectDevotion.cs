@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_CollectDevotion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -223,7 +223,7 @@ public class FollowerTask_CollectDevotion : FollowerTask
         }
         else
         {
-          follower.StartCoroutine((IEnumerator) this.CollectDevotion(this.FindShrineStructure().gameObject, follower.transform.position, this.holdingDevotion, (StructureBrain) this._shrine));
+          follower.StartCoroutine(this.CollectDevotion(this.FindShrineStructure().gameObject, follower.transform.position, this.holdingDevotion, (StructureBrain) this._shrine));
           this.holdingDevotion = 0;
           this._targetID = -1;
           this.carryingDevotion = false;
@@ -244,7 +244,7 @@ public class FollowerTask_CollectDevotion : FollowerTask
       else
       {
         int amount = Mathf.Min(target.Data.SoulCount, this._shrine.SoulMax - this._shrine.SoulCount);
-        follower.StartCoroutine((IEnumerator) this.CollectDevotion(follower.gameObject, vector3, amount, (StructureBrain) null));
+        follower.StartCoroutine(this.CollectDevotion(follower.gameObject, vector3, amount, (StructureBrain) null));
         this.holdingDevotion = amount;
         target.Data.SoulCount -= amount;
         this.carryingDevotion = true;

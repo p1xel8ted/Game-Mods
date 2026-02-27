@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWolfBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -415,7 +415,7 @@ label_28:
       lightningTrap.StopTrap();
     this.CleanupCurrentIndicators();
     this.arrowIndicator.gameObject.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.SlowMo());
+    this.StartCoroutine(this.SlowMo());
     this.isDead = true;
     this.ClearPaths();
     this.enabled = false;
@@ -426,11 +426,11 @@ label_28:
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
         Health.team2[index].untouchable = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DieIE());
+    this.StartCoroutine(this.DieIE());
   }
 
   public override void OnHit(
@@ -487,18 +487,18 @@ label_28:
     this.arms[1].FlashFillRed();
   }
 
-  public void Die() => GameManager.GetInstance().StartCoroutine((IEnumerator) this.TESTING_DEATH());
+  public void Die() => GameManager.GetInstance().StartCoroutine(this.TESTING_DEATH());
 
   public IEnumerator TESTING_DEATH()
   {
     EnemyWolfBoss enemyWolfBoss = this;
-    yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.RevealArmsIE());
-    yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.GrabSidesIE());
+    yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.RevealArmsIE());
+    yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.GrabSidesIE());
     enemyWolfBoss.BreakLeftArm();
     enemyWolfBoss.BreakRightArm();
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyWolfBoss.Spine);
     enemyWolfBoss.health.HP = 1f;
-    enemyWolfBoss.health.DealDamage(enemyWolfBoss.health.totalHP, PlayerFarming.Instance.gameObject, enemyWolfBoss.transform.position);
+    enemyWolfBoss.health.DealDamage(enemyWolfBoss.health.totalHP, PlayerFarming.Instance.gameObject, enemyWolfBoss.transform.position, true);
   }
 
   public IEnumerator DieIE()
@@ -558,7 +558,7 @@ label_28:
       for (int i = 0; i < 3; ++i)
       {
         bool indoctrinated = false;
-        yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.WaitForChoice((System.Action<bool>) (r => indoctrinated = r)));
+        yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.WaitForChoice((System.Action<bool>) (r => indoctrinated = r)));
         if (indoctrinated)
         {
           List<ConversationEntry> Entries2 = new List<ConversationEntry>()
@@ -577,7 +577,7 @@ label_28:
         }
         else
         {
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Sacrificed());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.Sacrificed());
           break;
         }
       }
@@ -766,14 +766,14 @@ label_28:
   {
     if (this.TESTING)
       return;
-    this.StartCoroutine((IEnumerator) this.Phase1IE());
+    this.StartCoroutine(this.Phase1IE());
   }
 
   public void RoarPlayerSequence()
   {
     BiomeConstants.Instance.EmitRoarDistortionVFX(this.cameraTarget.transform.position);
     foreach (PlayerFarming player in PlayerFarming.players)
-      this.StartCoroutine((IEnumerator) this.RoarPlayerKnocbackSequence(player));
+      this.StartCoroutine(this.RoarPlayerKnocbackSequence(player));
   }
 
   public IEnumerator RoarPlayerKnocbackSequence(PlayerFarming player)
@@ -808,16 +808,16 @@ label_28:
     GameManager.GetInstance().CamFollowTarget.MaxZoom = 18f;
     if ((UnityEngine.Object) enemyWolfBoss.GetClosestTarget() == (UnityEngine.Object) null)
       yield return (object) null;
-    enemyWolfBoss.primaryAttack = enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.StomachStabAttackIE());
+    enemyWolfBoss.primaryAttack = enemyWolfBoss.StartCoroutine(enemyWolfBoss.StomachStabAttackIE());
     yield return (object) enemyWolfBoss.primaryAttack;
     foreach (TrapFleshRock fleshRock in enemyWolfBoss.fleshRocks)
-      enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.WaitThenActivate(fleshRock.gameObject, UnityEngine.Random.Range(0.0f, 4f)));
+      enemyWolfBoss.StartCoroutine(enemyWolfBoss.WaitThenActivate(fleshRock.gameObject, UnityEngine.Random.Range(0.0f, 4f)));
     while (true)
     {
       while (!((UnityEngine.Object) enemyWolfBoss.GetClosestTarget() == (UnityEngine.Object) null))
       {
         int num = UnityEngine.Random.Range(0, 101);
-        enemyWolfBoss.primaryAttack = (double) Vector3.Distance(enemyWolfBoss.transform.position, enemyWolfBoss.GetClosestTarget().transform.position) > 4.0 ? (num >= 50 ? enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.StomachStabAttackIE()) : enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.RotBombsIE())) : (num >= 50 ? enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.MeleeSlamAttackIE()) : enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.MeleeSwipeAttackIE()));
+        enemyWolfBoss.primaryAttack = (double) Vector3.Distance(enemyWolfBoss.transform.position, enemyWolfBoss.GetClosestTarget().transform.position) > 4.0 ? (num >= 50 ? enemyWolfBoss.StartCoroutine(enemyWolfBoss.StomachStabAttackIE()) : enemyWolfBoss.StartCoroutine(enemyWolfBoss.RotBombsIE())) : (num >= 50 ? enemyWolfBoss.StartCoroutine(enemyWolfBoss.MeleeSlamAttackIE()) : enemyWolfBoss.StartCoroutine(enemyWolfBoss.MeleeSwipeAttackIE()));
         if (enemyWolfBoss.primaryAttack != null)
         {
           yield return (object) enemyWolfBoss.primaryAttack;
@@ -825,7 +825,7 @@ label_28:
           enemyWolfBoss.repathTimestamp = 0.0f;
           if ((double) enemyWolfBoss.health.HP <= (double) enemyWolfBoss.phase2Threshold)
           {
-            enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Phase2IE());
+            enemyWolfBoss.StartCoroutine(enemyWolfBoss.Phase2IE());
             yield break;
           }
           yield return (object) CoroutineStatics.WaitForScaledSeconds(UnityEngine.Random.Range(enemyWolfBoss.timeBetweenAttacks.x, enemyWolfBoss.timeBetweenAttacks.y), enemyWolfBoss.Spine);
@@ -835,7 +835,7 @@ label_28:
     }
   }
 
-  public void Phase2() => this.StartCoroutine((IEnumerator) this.Phase2IE());
+  public void Phase2() => this.StartCoroutine(this.Phase2IE());
 
   public IEnumerator Phase2IE()
   {
@@ -843,23 +843,23 @@ label_28:
     enemyWolfBoss.phase1 = false;
     enemyWolfBoss.phase2 = true;
     enemyWolfBoss.ClearPaths();
-    yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.JumpIE(new Vector3(0.0f, 1f / 1000f, 0.0f)));
-    enemyWolfBoss.primaryAttack = enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.RevealArmsIE());
+    yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.JumpIE(new Vector3(0.0f, 1f / 1000f, 0.0f)));
+    enemyWolfBoss.primaryAttack = enemyWolfBoss.StartCoroutine(enemyWolfBoss.RevealArmsIE());
     yield return (object) enemyWolfBoss.primaryAttack;
     if ((double) enemyWolfBoss.health.HP <= (double) enemyWolfBoss.phase3Threshold)
     {
-      enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Phase3IE());
+      enemyWolfBoss.StartCoroutine(enemyWolfBoss.Phase3IE());
     }
     else
     {
       for (int i = 0; i < UnityEngine.Random.Range(3, 5); ++i)
       {
-        enemyWolfBoss.primaryAttack = enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmAttackPlayerIE());
+        enemyWolfBoss.primaryAttack = enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmAttackPlayerIE());
         yield return (object) enemyWolfBoss.primaryAttack;
         yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyWolfBoss.Spine);
         if ((double) enemyWolfBoss.health.HP <= (double) enemyWolfBoss.phase3Threshold)
         {
-          enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Phase3IE());
+          enemyWolfBoss.StartCoroutine(enemyWolfBoss.Phase3IE());
           yield break;
         }
       }
@@ -872,7 +872,7 @@ label_28:
         else
         {
           int num = UnityEngine.Random.Range(0, 101);
-          enemyWolfBoss.primaryAttack = (double) Vector3.Distance(enemyWolfBoss.transform.position, enemyWolfBoss.GetClosestTarget().transform.position) > 5.0 ? (num >= 50 ? enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmLightningRingsAttackIE()) : enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.StomachStabAttackIE())) : (num >= 50 ? enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmCombo2IE()) : enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmCombo1IE()));
+          enemyWolfBoss.primaryAttack = (double) Vector3.Distance(enemyWolfBoss.transform.position, enemyWolfBoss.GetClosestTarget().transform.position) > 5.0 ? (num >= 50 ? enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmLightningRingsAttackIE()) : enemyWolfBoss.StartCoroutine(enemyWolfBoss.StomachStabAttackIE())) : (num >= 50 ? enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmCombo2IE()) : enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmCombo1IE()));
           if (enemyWolfBoss.primaryAttack != null)
           {
             yield return (object) enemyWolfBoss.primaryAttack;
@@ -880,7 +880,7 @@ label_28:
             enemyWolfBoss.repathTimestamp = 0.0f;
             if ((double) enemyWolfBoss.health.HP <= (double) enemyWolfBoss.phase3Threshold)
             {
-              enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Phase3IE());
+              enemyWolfBoss.StartCoroutine(enemyWolfBoss.Phase3IE());
               break;
             }
             yield return (object) CoroutineStatics.WaitForScaledSeconds(UnityEngine.Random.Range(enemyWolfBoss.timeBetweenAttacks.x, enemyWolfBoss.timeBetweenAttacks.y), enemyWolfBoss.Spine);
@@ -890,7 +890,7 @@ label_28:
     }
   }
 
-  public void Phase3() => this.StartCoroutine((IEnumerator) this.Phase3IE());
+  public void Phase3() => this.StartCoroutine(this.Phase3IE());
 
   public IEnumerator Phase3IE()
   {
@@ -898,10 +898,10 @@ label_28:
     enemyWolfBoss.phase2 = false;
     enemyWolfBoss.phase3 = true;
     enemyWolfBoss.primaryAttack = (Coroutine) null;
-    yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.JumpIE(new Vector3(0.0f, 1f / 1000f, 0.0f)));
-    yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.GrabSidesIE());
+    yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.JumpIE(new Vector3(0.0f, 1f / 1000f, 0.0f)));
+    yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.GrabSidesIE());
     enemyWolfBoss.health.DamageModifier = 1f;
-    enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Phase3AttackLoopIE());
+    enemyWolfBoss.StartCoroutine(enemyWolfBoss.Phase3AttackLoopIE());
   }
 
   public IEnumerator Phase3AttackLoopIE()
@@ -913,15 +913,15 @@ label_28:
       {
         if ((double) UnityEngine.Random.value < 0.5)
         {
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.LightningBeamAttackIE());
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.BeamShootIE());
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.StomachStabAttackIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.LightningBeamAttackIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.BeamShootIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.StomachStabAttackIE());
         }
         else
         {
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.BeamShootIE());
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.LightningBeamAttackIE());
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.StomachStabAttackIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.BeamShootIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.LightningBeamAttackIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.StomachStabAttackIE());
         }
         AudioManager.Instance.PlayOneShot(enemyWolfBoss.knockdownStartSFX, enemyWolfBoss.gameObject);
         AudioManager.Instance.PlayOneShot(enemyWolfBoss.knockdownStartVO, enemyWolfBoss.gameObject);
@@ -948,11 +948,11 @@ label_28:
     {
       for (int i = 0; i < 3; ++i)
       {
-        yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.JumpIE());
+        yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.JumpIE());
         if ((double) UnityEngine.Random.value < 0.5)
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.StomachStabAttackIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.StomachStabAttackIE());
         else
-          yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.RotBombsIE());
+          yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.RotBombsIE());
       }
       AudioManager.Instance.PlayOneShot(enemyWolfBoss.knockdownStartSFX, enemyWolfBoss.gameObject);
       AudioManager.Instance.PlayOneShot(enemyWolfBoss.knockdownStartVO, enemyWolfBoss.gameObject);
@@ -969,7 +969,7 @@ label_28:
     }
   }
 
-  public void MeleeSlamAttack() => this.StartCoroutine((IEnumerator) this.MeleeSlamAttackIE());
+  public void MeleeSlamAttack() => this.StartCoroutine(this.MeleeSlamAttackIE());
 
   public IEnumerator MeleeSlamAttackIE()
   {
@@ -1004,7 +1004,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void MeleeSwipeAttack() => this.StartCoroutine((IEnumerator) this.MeleeSwipeAttackIE());
+  public void MeleeSwipeAttack() => this.StartCoroutine(this.MeleeSwipeAttackIE());
 
   public IEnumerator MeleeSwipeAttackIE()
   {
@@ -1036,7 +1036,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void RevealArms() => this.StartCoroutine((IEnumerator) this.RevealArmsIE());
+  public void RevealArms() => this.StartCoroutine(this.RevealArmsIE());
 
   public IEnumerator RevealArmsIE()
   {
@@ -1106,7 +1106,7 @@ label_28:
     this.arms[1].Retract();
   }
 
-  public void ArmSpikesMovement() => this.StartCoroutine((IEnumerator) this.ArmSpikesMovementIE());
+  public void ArmSpikesMovement() => this.StartCoroutine(this.ArmSpikesMovementIE());
 
   public IEnumerator ArmSpikesMovementIE()
   {
@@ -1159,10 +1159,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void ArmLightningRingsAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.ArmLightningRingsAttackIE());
-  }
+  public void ArmLightningRingsAttack() => this.StartCoroutine(this.ArmLightningRingsAttackIE());
 
   public IEnumerator ArmLightningRingsAttackIE()
   {
@@ -1183,10 +1180,10 @@ label_28:
     };
     AudioManager.Instance.PlayOneShot(enemyWolfBoss.attackBigArmSlamMultiStartSFX, enemyWolfBoss.gameObject);
     AudioManager.Instance.PlayOneShot(enemyWolfBoss.attackBigArmSlamMultiStartVO, enemyWolfBoss.gameObject);
-    enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmAttackMultiIE(enemyWolfBoss.arms[0], "slam-right", targets, (System.Action) null));
+    enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmAttackMultiIE(enemyWolfBoss.arms[0], "slam-right", targets, (System.Action) null));
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyWolfBoss.Spine);
     bool waiting = true;
-    enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmAttackMultiIE(enemyWolfBoss.arms[1], "slam-left", pos1, (System.Action) (() => waiting = false)));
+    enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmAttackMultiIE(enemyWolfBoss.arms[1], "slam-left", pos1, (System.Action) (() => waiting = false)));
     while (waiting)
       yield return (object) null;
     enemyWolfBoss.moving = true;
@@ -1218,7 +1215,7 @@ label_28:
     arm.Retract(fromPosition, callback);
   }
 
-  public void ArmAttackPlayer() => this.StartCoroutine((IEnumerator) this.ArmAttackPlayerIE());
+  public void ArmAttackPlayer() => this.StartCoroutine(this.ArmAttackPlayerIE());
 
   public IEnumerator ArmAttackPlayerIE()
   {
@@ -1244,7 +1241,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void ArmSweepAttack() => this.StartCoroutine((IEnumerator) this.ArmSweepAttackIE());
+  public void ArmSweepAttack() => this.StartCoroutine(this.ArmSweepAttackIE());
 
   public IEnumerator ArmSweepAttackIE()
   {
@@ -1339,7 +1336,7 @@ label_28:
     yield return (object) CoroutineStatics.WaitForScaledSeconds(3f, enemyWolfBoss.Spine);
   }
 
-  public void ArmCombo1() => this.StartCoroutine((IEnumerator) this.ArmCombo1IE());
+  public void ArmCombo1() => this.StartCoroutine(this.ArmCombo1IE());
 
   public IEnumerator ArmCombo1IE()
   {
@@ -1352,20 +1349,20 @@ label_28:
       enemyWolfBoss.arms[0].SmackAttack(vector3 + Vector3.left, false, enemyWolfBoss.attackBigArmSlamSingleStartSFX, enemyWolfBoss.attackBigArmSlamSingleStartVO, enemyWolfBoss.attackBigArmSlamImpactSFX, new System.Action(enemyWolfBoss.\u003CArmCombo1IE\u003Eb__206_0));
       enemyWolfBoss.UpdateArmSkins();
       yield return (object) CoroutineStatics.WaitForScaledSeconds(2f, enemyWolfBoss.Spine);
-      enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmSweepLeftIE());
+      enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmSweepLeftIE());
     }
     else
     {
       enemyWolfBoss.arms[1].SmackAttack(vector3 + Vector3.right, false, enemyWolfBoss.attackBigArmSlamSingleStartSFX, enemyWolfBoss.attackBigArmSlamSingleStartVO, enemyWolfBoss.attackBigArmSlamImpactSFX, new System.Action(enemyWolfBoss.\u003CArmCombo1IE\u003Eb__206_1));
       enemyWolfBoss.UpdateArmSkins();
       yield return (object) CoroutineStatics.WaitForScaledSeconds(2f, enemyWolfBoss.Spine);
-      enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmSweepRightIE());
+      enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmSweepRightIE());
     }
     yield return (object) CoroutineStatics.WaitForScaledSeconds(3f, enemyWolfBoss.Spine);
     enemyWolfBoss.moving = true;
   }
 
-  public void ArmCombo2() => this.StartCoroutine((IEnumerator) this.ArmCombo2IE());
+  public void ArmCombo2() => this.StartCoroutine(this.ArmCombo2IE());
 
   public IEnumerator ArmCombo2IE()
   {
@@ -1376,11 +1373,11 @@ label_28:
     enemyWolfBoss.arms[0].SmackAttack(new Vector3(enemyWolfBoss.transform.position.x - UnityEngine.Random.Range(5f, 8f), enemyWolfBoss.transform.position.y - UnityEngine.Random.Range(3f, 5f), enemyWolfBoss.transform.position.z), true, enemyWolfBoss.attackBigArmSlamDoubleStartSFX, enemyWolfBoss.attackBigArmSlamDoubleStartVO, enemyWolfBoss.attackBigArmSlamImpactSFX, (System.Action) null);
     enemyWolfBoss.UpdateArmSkins();
     yield return (object) CoroutineStatics.WaitForScaledSeconds(2f, enemyWolfBoss.Spine);
-    yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.StomachStabAttackIE());
+    yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.StomachStabAttackIE());
     enemyWolfBoss.moving = true;
   }
 
-  public void StomachStabAttack() => this.StartCoroutine((IEnumerator) this.StomachStabAttackIE());
+  public void StomachStabAttack() => this.StartCoroutine(this.StomachStabAttackIE());
 
   public IEnumerator StomachStabAttackIE()
   {
@@ -1424,10 +1421,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void StomachTripleStabAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.StomachTripleStabAttackIE());
-  }
+  public void StomachTripleStabAttack() => this.StartCoroutine(this.StomachTripleStabAttackIE());
 
   public IEnumerator StomachTripleStabAttackIE()
   {
@@ -1452,10 +1446,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void StomachProjectileAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.StomachProjectileAttackIE());
-  }
+  public void StomachProjectileAttack() => this.StartCoroutine(this.StomachProjectileAttackIE());
 
   public IEnumerator StomachProjectileAttackIE()
   {
@@ -1478,17 +1469,14 @@ label_28:
       for (int index = 1; index < enemyWolfBoss.stomachProjectilePatterns.Length; ++index)
         enemyWolfBoss.stomachProjectilePatterns[index].Shoot();
     }
-    yield return (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.stomachProjectilePatterns[0].ShootIE(0.0f, (GameObject) null, (Transform) null, false));
+    yield return (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.stomachProjectilePatterns[0].ShootIE(0.0f, (GameObject) null, (Transform) null, false));
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyWolfBoss.Spine);
     enemyWolfBoss.Spine.AnimationState.SetAnimation(0, "worm-attack-stop", false);
     enemyWolfBoss.Spine.AnimationState.AddAnimation(0, "animation", true, 0.0f);
     enemyWolfBoss.moving = true;
   }
 
-  public void ArmProjectilesAttackRight()
-  {
-    this.StartCoroutine((IEnumerator) this.ArmProjectileAttackRightIE());
-  }
+  public void ArmProjectilesAttackRight() => this.StartCoroutine(this.ArmProjectileAttackRightIE());
 
   public IEnumerator ArmProjectileAttackRightIE()
   {
@@ -1507,16 +1495,13 @@ label_28:
     this.\u003C\u003E1__state = -1;
     enemyWolfBoss.UpdateArmSkins();
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmProjectileAttackIE(enemyWolfBoss.arms[0], new Vector3(enemyWolfBoss.transform.position.x - 5f, enemyWolfBoss.transform.position.y - 5f, -2f), new System.Action(enemyWolfBoss.\u003CArmProjectileAttackRightIE\u003Eb__216_0)));
+    this.\u003C\u003E2__current = (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmProjectileAttackIE(enemyWolfBoss.arms[0], new Vector3(enemyWolfBoss.transform.position.x - 5f, enemyWolfBoss.transform.position.y - 5f, -2f), new System.Action(enemyWolfBoss.\u003CArmProjectileAttackRightIE\u003Eb__216_0)));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
   }
 
-  public void ArmProjectilesAttackLeft()
-  {
-    this.StartCoroutine((IEnumerator) this.ArmProjectileAttackLeftIE());
-  }
+  public void ArmProjectilesAttackLeft() => this.StartCoroutine(this.ArmProjectileAttackLeftIE());
 
   public IEnumerator ArmProjectileAttackLeftIE()
   {
@@ -1535,7 +1520,7 @@ label_28:
     this.\u003C\u003E1__state = -1;
     enemyWolfBoss.UpdateArmSkins();
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ArmProjectileAttackIE(enemyWolfBoss.arms[1], new Vector3(enemyWolfBoss.transform.position.x + 5f, enemyWolfBoss.transform.position.y - 5f, -2f), new System.Action(enemyWolfBoss.\u003CArmProjectileAttackLeftIE\u003Eb__218_0)));
+    this.\u003C\u003E2__current = (object) enemyWolfBoss.StartCoroutine(enemyWolfBoss.ArmProjectileAttackIE(enemyWolfBoss.arms[1], new Vector3(enemyWolfBoss.transform.position.x + 5f, enemyWolfBoss.transform.position.y - 5f, -2f), new System.Action(enemyWolfBoss.\u003CArmProjectileAttackLeftIE\u003Eb__218_0)));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -1580,7 +1565,7 @@ label_28:
   public void GrabSides()
   {
     this.phase3 = true;
-    this.StartCoroutine((IEnumerator) this.GrabSidesIE());
+    this.StartCoroutine(this.GrabSidesIE());
   }
 
   public IEnumerator GrabSidesIE()
@@ -1669,7 +1654,7 @@ label_28:
     this.leftArmBroken = true;
     this.arms[0].transform.parent = (Transform) null;
     this.armBreakLeftParticle.gameObject.SetActive(true);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForStomachAttackToFinish((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForStomachAttackToFinish((System.Action) (() =>
     {
       AudioManager.Instance.PlayOneShot(this.armRippedOffSFX, this.arms[0].gameObject);
       AudioManager.Instance.PlayOneShot(this.armRippedOffVO, this.gameObject);
@@ -1691,7 +1676,7 @@ label_28:
     this.rightArmBroken = true;
     this.arms[1].transform.parent = (Transform) null;
     this.armBreakRightParticle.gameObject.SetActive(true);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForStomachAttackToFinish((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForStomachAttackToFinish((System.Action) (() =>
     {
       AudioManager.Instance.PlayOneShot(this.armRippedOffSFX, this.arms[1].gameObject);
       AudioManager.Instance.PlayOneShot(this.armRippedOffVO, this.gameObject);
@@ -1729,7 +1714,7 @@ label_28:
     this.arrowIndicator.gameObject.SetActive(false);
     AudioManager.Instance.StopLoop(this.multiLasterInstance);
     if ((double) this.health.HP > 0.0)
-      this.StartCoroutine((IEnumerator) this.PhaseCheckPostArmBreak(1.5f));
+      this.StartCoroutine(this.PhaseCheckPostArmBreak(1.5f));
     this.UpdateArmSkins();
   }
 
@@ -1740,9 +1725,9 @@ label_28:
     if (!enemyWolfBoss.TESTING)
     {
       if (enemyWolfBoss.leftArmBroken && enemyWolfBoss.rightArmBroken)
-        enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Phase4IE());
+        enemyWolfBoss.StartCoroutine(enemyWolfBoss.Phase4IE());
       else
-        enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.Phase3AttackLoopIE());
+        enemyWolfBoss.StartCoroutine(enemyWolfBoss.Phase3AttackLoopIE());
     }
   }
 
@@ -1755,7 +1740,7 @@ label_28:
       action();
   }
 
-  public void FireAttack() => this.StartCoroutine((IEnumerator) this.FireAttackIE());
+  public void FireAttack() => this.StartCoroutine(this.FireAttackIE());
 
   public IEnumerator FireAttackIE()
   {
@@ -1774,7 +1759,7 @@ label_28:
         yield return (object) null;
       }
       enemyWolfBoss.FlashWhite(0.0f);
-      enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.SpawnFire());
+      enemyWolfBoss.StartCoroutine(enemyWolfBoss.SpawnFire());
       yield return (object) CoroutineStatics.WaitForScaledSeconds(enemyWolfBoss.timeBetweenFireAttacks, enemyWolfBoss.Spine);
     }
     enemyWolfBoss.moving = true;
@@ -1822,10 +1807,7 @@ label_28:
     return (TrapLavaTimed) null;
   }
 
-  public void LightningBeamAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.LightningBeamAttackIE());
-  }
+  public void LightningBeamAttack() => this.StartCoroutine(this.LightningBeamAttackIE());
 
   public IEnumerator LightningBeamAttackIE()
   {
@@ -1835,7 +1817,7 @@ label_28:
     enemyWolfBoss.multiLasterInstance = AudioManager.Instance.CreateLoop(enemyWolfBoss.attackMultiLaserLoopSFX, enemyWolfBoss.gameObject, true);
     List<ArrowLightningBeam> arrowLightningBeamList = new List<ArrowLightningBeam>();
     foreach (BoneFollower eyePosition in enemyWolfBoss.eyePositions)
-      enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.BeamFollow(eyePosition.gameObject, enemyWolfBoss.beamDuration));
+      enemyWolfBoss.StartCoroutine(enemyWolfBoss.BeamFollow(eyePosition.gameObject, enemyWolfBoss.beamDuration));
     yield return (object) CoroutineStatics.WaitForScaledSeconds(enemyWolfBoss.beamDuration, enemyWolfBoss.Spine);
     AudioManager.Instance.StopLoop(enemyWolfBoss.multiLasterInstance);
   }
@@ -1909,7 +1891,7 @@ label_28:
     UnityEngine.Object.Destroy((UnityEngine.Object) impact.gameObject);
   }
 
-  public void BeamShoot() => this.StartCoroutine((IEnumerator) this.BeamShootIE());
+  public void BeamShoot() => this.StartCoroutine(this.BeamShootIE());
 
   public void CleanupCurrentIndicators()
   {
@@ -1973,7 +1955,7 @@ label_28:
     enemyWolfBoss.Spine.AnimationState.SetAnimation(0, "animation", true);
   }
 
-  public void RoofAttack() => this.StartCoroutine((IEnumerator) this.RoofAttackIE());
+  public void RoofAttack() => this.StartCoroutine(this.RoofAttackIE());
 
   public IEnumerator RoofAttackIE()
   {
@@ -2013,10 +1995,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void StomachSpawnAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.StomachSpawnAttackIE());
-  }
+  public void StomachSpawnAttack() => this.StartCoroutine(this.StomachSpawnAttackIE());
 
   public IEnumerator StomachSpawnAttackIE()
   {
@@ -2042,7 +2021,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void Jump() => this.StartCoroutine((IEnumerator) this.JumpIE());
+  public void Jump() => this.StartCoroutine(this.JumpIE());
 
   public IEnumerator JumpIE(Vector3 position = default (Vector3))
   {
@@ -2082,7 +2061,7 @@ label_28:
     enemyWolfBoss.moving = true;
   }
 
-  public void Bounce() => this.StartCoroutine((IEnumerator) this.BounceIE());
+  public void Bounce() => this.StartCoroutine(this.BounceIE());
 
   public IEnumerator BounceIE()
   {
@@ -2143,12 +2122,12 @@ label_28:
     this.repathTimestamp = GameManager.GetInstance().CurrentTime + UnityEngine.Random.Range(this.repaithDelay.x, this.repaithDelay.y);
   }
 
-  public void AvalancheAttack() => this.StartCoroutine((IEnumerator) this.AvalancheAttackIE());
+  public void AvalancheAttack() => this.StartCoroutine(this.AvalancheAttackIE());
 
   public IEnumerator AvalancheAttackIE()
   {
     EnemyWolfBoss enemyWolfBoss = this;
-    enemyWolfBoss.StartCoroutine((IEnumerator) enemyWolfBoss.ShakeCameraWithRampUp(3f, (float) enemyWolfBoss.avalancheAmount * enemyWolfBoss.avalancheTimeBetweenSpawns, 2f));
+    enemyWolfBoss.StartCoroutine(enemyWolfBoss.ShakeCameraWithRampUp(3f, (float) enemyWolfBoss.avalancheAmount * enemyWolfBoss.avalancheTimeBetweenSpawns, 2f));
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyWolfBoss.Spine);
     for (int i = 0; i < enemyWolfBoss.avalancheAmount; ++i)
     {
@@ -2162,7 +2141,7 @@ label_28:
     }
   }
 
-  public void RotBombs() => this.StartCoroutine((IEnumerator) this.RotBombsIE());
+  public void RotBombs() => this.StartCoroutine(this.RotBombsIE());
 
   public IEnumerator RotBombsIE()
   {
@@ -2303,7 +2282,7 @@ label_28:
     Health component = collision.gameObject.GetComponent<Health>();
     if (!((UnityEngine.Object) component != (UnityEngine.Object) null))
       return;
-    component.DealDamage(component.totalHP, component.gameObject, component.transform.position);
+    component.DealDamage(component.totalHP, component.gameObject, component.transform.position, dealDamageImmediately: true);
   }
 
   public IEnumerator SlowMo()

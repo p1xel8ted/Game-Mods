@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FollowerKitchen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -190,7 +190,7 @@ public class Interaction_FollowerKitchen : Interaction_Kitchen
       AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.transform.position);
       this.foodStorage.StructureBrain.DepositItemUnstacked(this.currentMeal);
       this.foodStorage.UpdateFoodDisplayed();
-      this.StartCoroutine((IEnumerator) this.Delay(0.01f, (System.Action) (() =>
+      this.StartCoroutine(this.Delay(0.01f, (System.Action) (() =>
       {
         this.CookingMealAnimation.gameObject.SetActive(false);
         int index = this.structure.Brain.Data.QueuedResources.Count - 1;
@@ -213,7 +213,7 @@ public class Interaction_FollowerKitchen : Interaction_Kitchen
       return;
     this.CookingMealAnimation.AnimationState.SetAnimation(0, "start", false);
     this.CookingMealAnimation.AnimationState.AddAnimation(0, "cook", true, 0.0f);
-    this.StartCoroutine((IEnumerator) this.Delay(0.1f, (System.Action) (() =>
+    this.StartCoroutine(this.Delay(0.1f, (System.Action) (() =>
     {
       if (!((UnityEngine.Object) CookingMealAnimationMeshRenderer != (UnityEngine.Object) null))
         return;

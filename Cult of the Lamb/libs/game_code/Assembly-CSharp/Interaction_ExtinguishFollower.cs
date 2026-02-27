@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_ExtinguishFollower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -38,7 +38,7 @@ public class Interaction_ExtinguishFollower : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    this.StartCoroutine((IEnumerator) this.WaterRoutine());
+    this.StartCoroutine(this.WaterRoutine());
   }
 
   public IEnumerator WaterRoutine()

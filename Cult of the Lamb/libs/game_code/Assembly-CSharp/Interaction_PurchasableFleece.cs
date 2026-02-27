@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_PurchasableFleece
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -253,7 +253,7 @@ public class Interaction_PurchasableFleece : Interaction
             ShowEmpty = true,
             DontCache = true
           });
-          itemSelector.OnItemChosen += (System.Action<InventoryItem.ITEM_TYPE>) (chosenItem => this.StartCoroutine((IEnumerator) this.BuryWoolRoutine()));
+          itemSelector.OnItemChosen += (System.Action<InventoryItem.ITEM_TYPE>) (chosenItem => this.StartCoroutine(this.BuryWoolRoutine()));
           UIItemSelectorOverlayController overlayController = itemSelector;
           overlayController.OnHidden = overlayController.OnHidden + (System.Action) (() =>
           {
@@ -269,7 +269,7 @@ public class Interaction_PurchasableFleece : Interaction
         if (Inventory.GetItemQuantity(this.costItem) >= this.cost || this.buryItem == InventoryItem.ITEM_TYPE.SPECIAL_WOOL_11)
         {
           base.OnInteract(state);
-          this.StartCoroutine((IEnumerator) this.InteractRoutine());
+          this.StartCoroutine(this.InteractRoutine());
           this.CurrentState = Interaction_PurchasableFleece.State.None;
           this.Interactable = false;
           break;
@@ -280,7 +280,7 @@ public class Interaction_PurchasableFleece : Interaction
     this.HasChanged = true;
   }
 
-  public void BuryWoolTest() => this.StartCoroutine((IEnumerator) this.BuryWoolRoutine());
+  public void BuryWoolTest() => this.StartCoroutine(this.BuryWoolRoutine());
 
   public IEnumerator BuryWoolRoutine()
   {
@@ -390,7 +390,7 @@ public class Interaction_PurchasableFleece : Interaction
     else
     {
       purchasableFleece.playerFarming.Spine.AnimationState.SetAnimation(0, "idle", true);
-      purchasableFleece.StartCoroutine((IEnumerator) purchasableFleece.ShakeCameraWithRampUp(2f, 2f, 1f));
+      purchasableFleece.StartCoroutine(purchasableFleece.ShakeCameraWithRampUp(2f, 2f, 1f));
       GameManager.GetInstance().OnConversationNext(purchasableFleece.gameObject, 6f);
       yield return (object) new WaitForSeconds(2f);
       GameManager.GetInstance().OnConversationNext(purchasableFleece.gameObject);
@@ -481,7 +481,7 @@ public class Interaction_PurchasableFleece : Interaction
         PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
         if (!((UnityEngine.Object) this.flowersContainer != (UnityEngine.Object) null))
           return;
-        this.StartCoroutine((IEnumerator) this.RevealFlowersIE());
+        this.StartCoroutine(this.RevealFlowersIE());
       });
     }));
   }
@@ -567,7 +567,7 @@ public class Interaction_PurchasableFleece : Interaction
   [CompilerGenerated]
   public void \u003COnInteract\u003Eb__49_0(InventoryItem.ITEM_TYPE chosenItem)
   {
-    this.StartCoroutine((IEnumerator) this.BuryWoolRoutine());
+    this.StartCoroutine(this.BuryWoolRoutine());
   }
 
   public enum State

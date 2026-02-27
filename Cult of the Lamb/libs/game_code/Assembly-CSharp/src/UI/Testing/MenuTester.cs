@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UI.Testing.MenuTester
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -230,7 +230,7 @@ public class MenuTester : MonoBehaviour
     this._screenshotPath = Path.Combine(Application.persistentDataPath, "MenuScreenshots");
     if (!Directory.Exists(this._screenshotPath))
       Directory.CreateDirectory(this._screenshotPath);
-    this.StartCoroutine((IEnumerator) this.WaitASecond());
+    this.StartCoroutine(this.WaitASecond());
   }
 
   public IEnumerator WaitASecond()
@@ -1345,7 +1345,7 @@ public class MenuTester : MonoBehaviour
       new System.Action(this.TestRanchMenu),
       new System.Action(this.TestCookingFireMenu)
     };
-    this.StartCoroutine((IEnumerator) this.TestMenusSequentially());
+    this.StartCoroutine(this.TestMenusSequentially());
   }
 
   public IEnumerator TestMenusSequentially()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UISimpleNewRecruit
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -374,7 +374,7 @@ public class UISimpleNewRecruit : BaseMonoBehaviour
       {
         this.formIndex = component.FormIndex;
         this.formRandomSelected = false;
-        this.StartCoroutine((IEnumerator) this.SetSelectable(this.formsNextButton));
+        this.StartCoroutine(this.SetSelectable(this.formsNextButton));
       }
       else if ((UnityEngine.Object) component.transform.parent == (UnityEngine.Object) this.colorContainer)
       {
@@ -384,7 +384,7 @@ public class UISimpleNewRecruit : BaseMonoBehaviour
       else if ((UnityEngine.Object) component.transform.parent == (UnityEngine.Object) this.variantContainer)
       {
         this.variantIndex = component.SkinVariationIndex;
-        this.StartCoroutine((IEnumerator) this.SetSelectable(this.variantNextButton));
+        this.StartCoroutine(this.SetSelectable(this.variantNextButton));
       }
     }
     this.UpdateFollow(this.formIndex, this.colorIndex, this.variantIndex);

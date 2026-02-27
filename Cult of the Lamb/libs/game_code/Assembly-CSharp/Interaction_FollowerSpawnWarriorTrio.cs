@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FollowerSpawnWarriorTrio
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -119,8 +119,8 @@ public class Interaction_FollowerSpawnWarriorTrio : Interaction
     this.portalSpines = this.GetSpinesFromParentName(warriorFollowers, "VFX");
     this.recruitParticles = this.GetRecruitParticles(warriorFollowers);
     this.centreFollowerName = warriorFollowers[centreFollower].displayName;
-    this.StartCoroutine((IEnumerator) this.DoTransformAnimationSequence());
-    this.StartCoroutine((IEnumerator) this.WaitForFollowerToStopMoving(this.GetTransformAnimLength(centreFollower)));
+    this.StartCoroutine(this.DoTransformAnimationSequence());
+    this.StartCoroutine(this.WaitForFollowerToStopMoving(this.GetTransformAnimLength(centreFollower)));
     this.SetupFollowerInfoManagers(warriorFollowers);
     this.SetupFollowerInfos(warriorFollowers);
     this.MoveFollowersIfTooFarAwayFromCentre(warriorFollowers);
@@ -221,7 +221,7 @@ public class Interaction_FollowerSpawnWarriorTrio : Interaction
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = -1;
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) spawnWarriorTrio.StartCoroutine((IEnumerator) spawnWarriorTrio.SetFollowerAnimaions(spawnWarriorTrio.animationTransform, playOffset: 0.1f));
+    this.\u003C\u003E2__current = (object) spawnWarriorTrio.StartCoroutine(spawnWarriorTrio.SetFollowerAnimaions(spawnWarriorTrio.animationTransform, playOffset: 0.1f));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -299,7 +299,7 @@ public class Interaction_FollowerSpawnWarriorTrio : Interaction
         yield return (object) null;
     }
     spawnWarriorTrio.Interactable = false;
-    yield return (object) spawnWarriorTrio.StartCoroutine((IEnumerator) spawnWarriorTrio.ConvertFollowers());
+    yield return (object) spawnWarriorTrio.StartCoroutine(spawnWarriorTrio.ConvertFollowers());
     GameManager.GetInstance().OnConversationEnd();
     yield return (object) new WaitForSeconds(0.75f);
     spawnWarriorTrio.state.CURRENT_STATE = StateMachine.State.Idle;
@@ -324,7 +324,7 @@ public class Interaction_FollowerSpawnWarriorTrio : Interaction
     GameManager.GetInstance().OnConversationNext(spawnWarriorTrio.gameObject, 5f);
     AudioManager.Instance.PlayOneShot(spawnWarriorTrio.followerAscendSFX, spawnWarriorTrio.gameObject);
     spawnWarriorTrio.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
-    spawnWarriorTrio.StartCoroutine((IEnumerator) spawnWarriorTrio.SetFollowerAnimaions(spawnWarriorTrio.animationConvertShort, playOffset: 0.1f));
+    spawnWarriorTrio.StartCoroutine(spawnWarriorTrio.SetFollowerAnimaions(spawnWarriorTrio.animationConvertShort, playOffset: 0.1f));
     spawnWarriorTrio.PlayAllRecruitParticles();
     spawnWarriorTrio.PlayAllPortalAnimations();
     yield return (object) new WaitForEndOfFrame();
@@ -414,7 +414,7 @@ public class Interaction_FollowerSpawnWarriorTrio : Interaction
     base.OnInteract(state);
     this.state = state;
     state.CURRENT_STATE = StateMachine.State.CustomAnimation;
-    this.StartCoroutine((IEnumerator) this.PositionPlayer());
+    this.StartCoroutine(this.PositionPlayer());
     this.Activated = true;
   }
 
@@ -442,7 +442,7 @@ public class Interaction_FollowerSpawnWarriorTrio : Interaction
     while (spawnWarriorTrio.playerFarming.GoToAndStopping)
       yield return (object) null;
     spawnWarriorTrio.state.facingAngle = Utils.GetAngle(spawnWarriorTrio.state.transform.position, spawnWarriorTrio.transform.position);
-    spawnWarriorTrio.StartCoroutine((IEnumerator) spawnWarriorTrio.FollowerChoiceIE());
+    spawnWarriorTrio.StartCoroutine(spawnWarriorTrio.FollowerChoiceIE());
   }
 
   public void SetFollowerCollidersEnabled(bool state)

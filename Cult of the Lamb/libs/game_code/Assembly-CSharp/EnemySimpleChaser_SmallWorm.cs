@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySimpleChaser_SmallWorm
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -119,7 +119,7 @@ public class EnemySimpleChaser_SmallWorm : UnitObject
       this.state.CURRENT_STATE = StateMachine.State.HitRight;
     if ((double) AttackLocation.x < (double) this.transform.position.x && this.state.CURRENT_STATE != StateMachine.State.HitLeft)
       this.state.CURRENT_STATE = StateMachine.State.HitLeft;
-    this.StartCoroutine((IEnumerator) this.HurtRoutine());
+    this.StartCoroutine(this.HurtRoutine());
   }
 
   public IEnumerator HurtRoutine()

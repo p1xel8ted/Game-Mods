@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyFollowerPossessed
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -77,7 +77,7 @@ public class EnemyFollowerPossessed : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.health.OnAddCharm += new Health.StasisEvent(this.ReconsiderTarget);
     this.health.OnStasisCleared += new Health.StasisEvent(this.ReconsiderTarget);
     EnemyFollowerPossessed.LastSimpleGuardianRingProjectiles = GameManager.GetInstance().CurrentTime;
@@ -116,7 +116,7 @@ public class EnemyFollowerPossessed : UnitObject
     {
       if ((UnityEngine.Object) followerPossessed.TargetObject == (UnityEngine.Object) null)
       {
-        followerPossessed.StartCoroutine((IEnumerator) followerPossessed.WaitForTarget());
+        followerPossessed.StartCoroutine(followerPossessed.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(followerPossessed.TargetObject.transform.position, followerPossessed.transform.position);
@@ -129,7 +129,7 @@ public class EnemyFollowerPossessed : UnitObject
       }
       yield return (object) null;
     }
-    followerPossessed.StartCoroutine((IEnumerator) followerPossessed.FightPlayer());
+    followerPossessed.StartCoroutine(followerPossessed.FightPlayer());
   }
 
   public void SetTargetObject()
@@ -347,7 +347,7 @@ public class EnemyFollowerPossessed : UnitObject
       while ((double) (time += Time.deltaTime * followerPossessed.Spine.timeScale) < 1.0)
         yield return (object) null;
     }
-    followerPossessed.StartCoroutine((IEnumerator) followerPossessed.FightPlayer());
+    followerPossessed.StartCoroutine(followerPossessed.FightPlayer());
   }
 
   public void OnDamageTriggerEnter(Collider2D collider)
@@ -361,7 +361,7 @@ public class EnemyFollowerPossessed : UnitObject
   public void ProjectileRings()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectileRingsRoutine());
+    this.StartCoroutine(this.ProjectileRingsRoutine());
   }
 
   public IEnumerator ProjectileRingsRoutine()
@@ -395,13 +395,13 @@ public class EnemyFollowerPossessed : UnitObject
       yield return (object) null;
     followerPossessed.state.CURRENT_STATE = StateMachine.State.Idle;
     followerPossessed.Spine.AnimationState.SetAnimation(0, "idle", true);
-    followerPossessed.StartCoroutine((IEnumerator) followerPossessed.FightPlayer());
+    followerPossessed.StartCoroutine(followerPossessed.FightPlayer());
   }
 
   public void ProjectileBounce()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectileBounceRoutine());
+    this.StartCoroutine(this.ProjectileBounceRoutine());
   }
 
   public IEnumerator ProjectileBounceRoutine()
@@ -420,13 +420,13 @@ public class EnemyFollowerPossessed : UnitObject
       component.Owner = followerPossessed.health;
     }
     followerPossessed.state.CURRENT_STATE = StateMachine.State.Idle;
-    followerPossessed.StartCoroutine((IEnumerator) followerPossessed.FightPlayer());
+    followerPossessed.StartCoroutine(followerPossessed.FightPlayer());
   }
 
   public void ProjectileBoomerangs()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectileBoomerangsRoutine());
+    this.StartCoroutine(this.ProjectileBoomerangsRoutine());
   }
 
   public IEnumerator ProjectileBoomerangsRoutine()
@@ -498,13 +498,13 @@ public class EnemyFollowerPossessed : UnitObject
     while ((double) (time += Time.deltaTime * followerPossessed.Spine.timeScale) < 0.699999988079071)
       yield return (object) null;
     followerPossessed.state.CURRENT_STATE = StateMachine.State.Idle;
-    followerPossessed.StartCoroutine((IEnumerator) followerPossessed.FightPlayer());
+    followerPossessed.StartCoroutine(followerPossessed.FightPlayer());
   }
 
   public void ProjectilePulse()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectilePulseRoutine());
+    this.StartCoroutine(this.ProjectilePulseRoutine());
   }
 
   public IEnumerator ProjectilePulseRoutine()
@@ -527,7 +527,7 @@ public class EnemyFollowerPossessed : UnitObject
         yield return (object) null;
     }
     followerPossessed.state.CURRENT_STATE = StateMachine.State.Idle;
-    followerPossessed.StartCoroutine((IEnumerator) followerPossessed.FightPlayer());
+    followerPossessed.StartCoroutine(followerPossessed.FightPlayer());
   }
 
   public IEnumerator SetProjectilePulse(List<Projectile> projectiles)
@@ -543,6 +543,6 @@ public class EnemyFollowerPossessed : UnitObject
   [CompilerGenerated]
   public void \u003CProjectilePulseRoutine\u003Eb__53_0(List<Projectile> projectiles)
   {
-    this.StartCoroutine((IEnumerator) this.SetProjectilePulse(projectiles));
+    this.StartCoroutine(this.SetProjectilePulse(projectiles));
   }
 }

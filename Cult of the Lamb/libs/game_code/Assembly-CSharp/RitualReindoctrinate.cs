@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualReindoctrinate
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI.FollowerSelect;
@@ -22,7 +22,7 @@ public class RitualReindoctrinate : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine());
+    this.StartCoroutine(this.SacrificeFollowerRoutine());
   }
 
   public IEnumerator SacrificeFollowerRoutine()
@@ -34,7 +34,7 @@ public class RitualReindoctrinate : Ritual
       Interaction_TempleAltar.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
       PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
     }));
-    yield return (object) ritualReindoctrinate.StartCoroutine((IEnumerator) ritualReindoctrinate.WaitFollowersFormCircle());
+    yield return (object) ritualReindoctrinate.StartCoroutine(ritualReindoctrinate.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     UIFollowerSelectMenuController followerSelectInstance = ritualReindoctrinate._followerSelectTemplate.Instantiate<UIFollowerSelectMenuController>();
     followerSelectInstance.Show(Ritual.GetFollowerSelectEntriesForSermon(), followerSelectionType: ritualReindoctrinate.RitualType);

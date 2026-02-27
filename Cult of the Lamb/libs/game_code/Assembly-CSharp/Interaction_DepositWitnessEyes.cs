@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DepositWitnessEyes
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -96,10 +96,10 @@ public class Interaction_DepositWitnessEyes : Interaction_SimpleInteraction
       if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.BEHOLDER_EYE_ROT) == 0)
         this.playerFarming.indicator.PlayShake();
       else
-        this.StartCoroutine((IEnumerator) this.OpenIE(state));
+        this.StartCoroutine(this.OpenIE(state));
     }
     else
-      this.StartCoroutine((IEnumerator) this.OpenIE(state));
+      this.StartCoroutine(this.OpenIE(state));
   }
 
   public override void GetLabel()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Pub
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -211,7 +211,7 @@ public class Interaction_Pub : Interaction
       AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.transform.position);
       this.foodStorage.StructureBrain.DepositItemUnstacked(this.currentMeal);
       this.foodStorage.UpdateFoodDisplayed();
-      this.StartCoroutine((IEnumerator) this.Delay(0.01f, (System.Action) (() => this.foodStorage.itemDisplays[this.structure.Brain.Data.QueuedResources.Count - 1].transform.DOPunchScale(Vector3.one * 0.25f, 0.25f).SetEase<Tweener>(Ease.OutBounce))));
+      this.StartCoroutine(this.Delay(0.01f, (System.Action) (() => this.foodStorage.itemDisplays[this.structure.Brain.Data.QueuedResources.Count - 1].transform.DOPunchScale(Vector3.one * 0.25f, 0.25f).SetEase<Tweener>(Ease.OutBounce))));
       if (this.currentMeal == InventoryItem.ITEM_TYPE.DRINK_BEER)
         AudioManager.Instance.PlayOneShot("event:/building/brewery/select_bubbly_drink", this.transform.position);
       else if (this.currentMeal == InventoryItem.ITEM_TYPE.DRINK_COCKTAIL)

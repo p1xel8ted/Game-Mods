@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TarotCard
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -91,7 +91,7 @@ public class Interaction_TarotCard : Interaction
     }
   }
 
-  public void DoRoutine() => this.StartCoroutine((IEnumerator) this.DoRoutineRoutine());
+  public void DoRoutine() => this.StartCoroutine(this.DoRoutineRoutine());
 
   public IEnumerator DoRoutineRoutine()
   {
@@ -140,10 +140,7 @@ public class Interaction_TarotCard : Interaction
       interactionTarotCard.transform.GetChild(index).gameObject.SetActive(false);
   }
 
-  public void BackToIdle()
-  {
-    this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(this.playerFarming));
-  }
+  public void BackToIdle() => this.StartCoroutine(this.BackToIdleRoutine(this.playerFarming));
 
   public IEnumerator BackToIdleRoutine(PlayerFarming playerFarming)
   {
@@ -166,7 +163,7 @@ public class Interaction_TarotCard : Interaction
     Health.isGlobalTimeFreeze = false;
     PlayerFarming.SetStateForAllPlayers();
     playerFarming.Spine.UseDeltaTime = true;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) interactionTarotCard.DelayEffectsRoutine(playerFarming));
+    GameManager.GetInstance().StartCoroutine(interactionTarotCard.DelayEffectsRoutine(playerFarming));
   }
 
   public IEnumerator DelayEffectsRoutine(PlayerFarming playerFarming)

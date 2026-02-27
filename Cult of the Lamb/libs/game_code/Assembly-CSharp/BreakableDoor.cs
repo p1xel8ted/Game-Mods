@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BreakableDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -52,7 +52,7 @@ public class BreakableDoor : BaseMonoBehaviour
     this.particles = Object.Instantiate<ParticleSystem>(this.particles, this.transform.position, Quaternion.identity, this.transform);
     this.particles.transform.parent = this.particles.transform.parent.parent;
     this.particles.Emit(emitParams, this.maxParticles);
-    this.StartCoroutine((IEnumerator) this.PauseParticles());
+    this.StartCoroutine(this.PauseParticles());
   }
 
   public IEnumerator PauseParticles()

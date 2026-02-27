@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIDoctrineUpgradeTile
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -83,7 +83,7 @@ public class UIDoctrineUpgradeTile :
         this.BG.color = Color.white;
       this.Icon.color = Color.white;
       if (!this.Revealed && !this.StartAvailable)
-        this.StartCoroutine((IEnumerator) this.Selected(1.5f, 1f));
+        this.StartCoroutine(this.Selected(1.5f, 1f));
       this.Revealed = true;
     }
     else if (this.NeighbourUnlocked() && !this.Upgrade)
@@ -91,7 +91,7 @@ public class UIDoctrineUpgradeTile :
       this.SetLocked();
       if (this.Revealed || this.StartAvailable)
         return;
-      this.StartCoroutine((IEnumerator) this.Selected(1.5f, 1f));
+      this.StartCoroutine(this.Selected(1.5f, 1f));
     }
     else
     {
@@ -189,13 +189,13 @@ public class UIDoctrineUpgradeTile :
   public void OnSelect(BaseEventData eventData)
   {
     this.SelectedIcon.enabled = true;
-    this.StartCoroutine((IEnumerator) this.Selected(this.Container.localScale.x, 1.3f));
+    this.StartCoroutine(this.Selected(this.Container.localScale.x, 1.3f));
   }
 
   public void OnDeselect(BaseEventData eventData)
   {
     this.SelectedIcon.enabled = false;
-    this.StartCoroutine((IEnumerator) this.DeSelected());
+    this.StartCoroutine(this.DeSelected());
   }
 
   public IEnumerator Selected(float Starting, float Target)

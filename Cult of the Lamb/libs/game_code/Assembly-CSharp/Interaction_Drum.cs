@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Drum
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -142,7 +142,7 @@ public class Interaction_Drum : Interaction
     base.OnInteract(state);
     this.Activating = true;
     this.Interactable = false;
-    this.StartCoroutine((IEnumerator) this.DrumRoutine());
+    this.StartCoroutine(this.DrumRoutine());
   }
 
   public override void Update()
@@ -318,7 +318,7 @@ public class Interaction_Drum : Interaction
           break;
       }
       // ISSUE: reference to a compiler-generated method
-      drum.StartCoroutine((IEnumerator) cDisplayClass370.\u003CDrumRoutine\u003Eg__InitialAnimsIE\u007C3());
+      drum.StartCoroutine(cDisplayClass370.\u003CDrumRoutine\u003Eg__InitialAnimsIE\u007C3());
       yield return (object) new WaitForSeconds(0.5f);
       GameManager.GetInstance().CamFollowTarget.ClearAllTargets();
       // ISSUE: reference to a compiler-generated field
@@ -338,7 +338,7 @@ public class Interaction_Drum : Interaction
       // ISSUE: reference to a compiler-generated field
       cDisplayClass370.loadTask = MonoSingleton<UIManager>.Instance.LoadDrumMinigameAssets();
       // ISSUE: reference to a compiler-generated method
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(cDisplayClass370.\u003CDrumRoutine\u003Eb__7));
+      yield return (object) new WaitUntil(new Func<bool>(cDisplayClass370.\u003CDrumRoutine\u003Eb__7));
       UIDrumMinigameOverlayController _uiDrumMinigameOverlayController = MonoSingleton<UIManager>.Instance.DrumMinigameOverlayControllerTemplate.Instantiate<UIDrumMinigameOverlayController>();
       _uiDrumMinigameOverlayController.Initialise(drum, song - 1);
       // ISSUE: reference to a compiler-generated field

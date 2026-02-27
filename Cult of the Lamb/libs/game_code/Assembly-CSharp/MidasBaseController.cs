@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MidasBaseController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -239,7 +239,7 @@ public class MidasBaseController : MonoBehaviour
       {
         if (trap.Structure.Brain.Data.Inventory.Count > 0 && trap.Structure.Brain.Data.Inventory[0].type == 86)
         {
-          this.StartCoroutine((IEnumerator) this.CapturedMidasIE(trap));
+          this.StartCoroutine(this.CapturedMidasIE(trap));
           return true;
         }
       }
@@ -271,7 +271,7 @@ public class MidasBaseController : MonoBehaviour
         availableFollowers.Add(allBrain);
     }
     for (int index = 0; index < availableFollowers.Count; ++index)
-      midasBaseController.StartCoroutine((IEnumerator) midasBaseController.WaitForFollower(availableFollowers[index], availableFollowers, islandMask));
+      midasBaseController.StartCoroutine(midasBaseController.WaitForFollower(availableFollowers[index], availableFollowers, islandMask));
     yield return (object) null;
     trap.TrappedMidas();
     double num1 = (double) midasBaseController.fakeMidas.Follower.SetBodyAnimation("Midas/trapped", true);
@@ -428,7 +428,7 @@ public class MidasBaseController : MonoBehaviour
     realMidas.Brain.AddTrait(FollowerTrait.TraitType.Scared, true);
     realMidas.Brain.MakeInjured();
     SimulationManager.UnPause();
-    yield return (object) realMidas.StartCoroutine((IEnumerator) realMidas.Interaction_FollowerInteraction.SimpleNewRecruitRoutine());
+    yield return (object) realMidas.StartCoroutine(realMidas.Interaction_FollowerInteraction.SimpleNewRecruitRoutine());
     Debug.Log((object) "Achievement: Indoctrinated Midas!");
     AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup(AchievementsWrapper.Tags.INDOCTRINATE_MIDAS));
     while (UIMenuBase.ActiveMenus.Count > 0)

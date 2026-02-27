@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerBonfire
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -31,7 +31,7 @@ public class FollowerBonfire : BaseMonoBehaviour
     if (DataManager.Instance.GetVariable(this.VariableOnComplete))
       return;
     this.interaction.Interactable = false;
-    this.StartCoroutine((IEnumerator) this.WaitForPlayer());
+    this.StartCoroutine(this.WaitForPlayer());
     this.interaction.Label = (string) this._MyLocalizedString;
   }
 
@@ -62,7 +62,7 @@ public class FollowerBonfire : BaseMonoBehaviour
     DataManager.Instance.SetVariable(DataManager.Variables.ForestRescueWorshipper, true);
   }
 
-  public void Close() => this.StartCoroutine((IEnumerator) this.CloseRoutine());
+  public void Close() => this.StartCoroutine(this.CloseRoutine());
 
   public IEnumerator CloseRoutine()
   {

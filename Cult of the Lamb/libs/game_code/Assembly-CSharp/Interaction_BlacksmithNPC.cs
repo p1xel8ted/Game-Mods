@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_BlacksmithNPC
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -156,7 +156,7 @@ public class Interaction_BlacksmithNPC : Interaction
     {
       SimulationManager.Pause();
       GameManager.GetInstance().OnConversationNew(true, true, this.playerFarming);
-      this.StartCoroutine((IEnumerator) this.GiveWeaponFragment(nextBrokenWeapon));
+      this.StartCoroutine(this.GiveWeaponFragment(nextBrokenWeapon));
     }
   }
 
@@ -196,7 +196,7 @@ public class Interaction_BlacksmithNPC : Interaction
     interactionBlacksmithNpc.PlayRepairSequence();
   }
 
-  public void PlayRepairSequence() => this.StartCoroutine((IEnumerator) this.RepairSequence());
+  public void PlayRepairSequence() => this.StartCoroutine(this.RepairSequence());
 
   public IEnumerator RepairSequence()
   {
@@ -256,7 +256,7 @@ public class Interaction_BlacksmithNPC : Interaction
     interactionBlacksmithNpc.RepairWeaponCallback();
   }
 
-  public void NameWeapon() => this.StartCoroutine((IEnumerator) this.NameWeaponSequence());
+  public void NameWeapon() => this.StartCoroutine(this.NameWeaponSequence());
 
   public IEnumerator NameWeaponSequence()
   {
@@ -406,7 +406,7 @@ public class Interaction_BlacksmithNPC : Interaction
     }
   }
 
-  public void PlayUnlockPlinth() => this.StartCoroutine((IEnumerator) this.UnlockPlinth());
+  public void PlayUnlockPlinth() => this.StartCoroutine(this.UnlockPlinth());
 
   public IEnumerator UnlockPlinth()
   {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyGuardian2
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using CotL.Projectiles;
@@ -73,7 +73,7 @@ public class EnemyGuardian2 : UnitObject
   public List<GameObject> enemies = new List<GameObject>();
   public LineRenderer lineRenderer;
 
-  public void Activate() => this.StartCoroutine((IEnumerator) this.ActivateIE());
+  public void Activate() => this.StartCoroutine(this.ActivateIE());
 
   public override void Awake()
   {
@@ -120,7 +120,7 @@ public class EnemyGuardian2 : UnitObject
     {
       this.health.invincible = false;
       this.HealthCollider.enabled = true;
-      this.StartCoroutine((IEnumerator) this.SpawnTraps());
+      this.StartCoroutine(this.SpawnTraps());
       UIBossHUD.Play(this.health, LocalizationManager.GetTranslation(this.DisplayName));
       AudioManager.Instance.SetMusicRoomID(2, "deathcat_room_id");
     }
@@ -142,9 +142,9 @@ public class EnemyGuardian2 : UnitObject
         this.health.invincible = false;
         this.HealthCollider.enabled = true;
         if (UnityEngine.Random.Range(0, 2) == 0)
-          this.StartCoroutine((IEnumerator) this.ShootRingsScattered());
+          this.StartCoroutine(this.ShootRingsScattered());
         else
-          this.StartCoroutine((IEnumerator) this.ShootRingsTargeted());
+          this.StartCoroutine(this.ShootRingsTargeted());
         GameManager.GetInstance().OnConversationEnd();
         this.active = true;
         UIBossHUD.Play(this.health, LocalizationManager.GetTranslation(this.DisplayName));
@@ -214,7 +214,7 @@ public class EnemyGuardian2 : UnitObject
     base.OnDie(Attacker, AttackLocation, Victim, AttackType, AttackFlags);
     this.simpleSpineAnimator.FlashWhite(false);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
     this.HealthCollider.enabled = false;
     GameManager.GetInstance().RemoveFromCamera(this.gameObject);
     UIBossHUD.Hide();
@@ -225,7 +225,7 @@ public class EnemyGuardian2 : UnitObject
         Health component = enemy.GetComponent<Health>();
         component.enabled = true;
         component.invincible = false;
-        component.DealDamage(float.MaxValue, component.gameObject, component.transform.position);
+        component.DealDamage(float.MaxValue, component.gameObject, component.transform.position, dealDamageImmediately: true);
       }
     }
   }
@@ -243,7 +243,7 @@ public class EnemyGuardian2 : UnitObject
       this.\u003C\u003E1__state = -1;
       enemyGuardian2.simpleSpineAnimator.Animate("idle", 0, true);
       GameManager.GetInstance().RemoveFromCamera(enemyGuardian2.CameraBone.gameObject);
-      enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.TeleportAway());
+      enemyGuardian2.StartCoroutine(enemyGuardian2.TeleportAway());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -296,7 +296,7 @@ public class EnemyGuardian2 : UnitObject
         return false;
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
-      enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.SpawnTraps());
+      enemyGuardian2.StartCoroutine(enemyGuardian2.SpawnTraps());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -305,7 +305,7 @@ public class EnemyGuardian2 : UnitObject
     float num2 = 4f;
     Vector3 Destination = enemyGuardian2.CentreOfLevel + new Vector3(num2 * Mathf.Cos(f), num2 * Mathf.Sin(f));
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.Teleport(Destination));
+    this.\u003C\u003E2__current = (object) enemyGuardian2.StartCoroutine(enemyGuardian2.Teleport(Destination));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -321,13 +321,13 @@ public class EnemyGuardian2 : UnitObject
     for (int i = 0; i < UnityEngine.Random.Range(3, 6); ++i)
     {
       yield return (object) new WaitForSeconds(0.5f);
-      enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.TrapPattern0());
+      enemyGuardian2.StartCoroutine(enemyGuardian2.TrapPattern0());
     }
     yield return (object) new WaitForSeconds(2f);
     if (c == 0 && UnityEngine.Random.Range(0, 2) == 0)
-      enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.SpawnTraps(1));
+      enemyGuardian2.StartCoroutine(enemyGuardian2.SpawnTraps(1));
     else
-      enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.TeleportAndShoot());
+      enemyGuardian2.StartCoroutine(enemyGuardian2.TeleportAndShoot());
   }
 
   public void InitializeProjectilePatternRings()
@@ -345,7 +345,7 @@ public class EnemyGuardian2 : UnitObject
   public IEnumerator ShootRingsTargeted()
   {
     EnemyGuardian2 enemyGuardian2 = this;
-    yield return (object) enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.Teleport(enemyGuardian2.CentreOfLevel));
+    yield return (object) enemyGuardian2.StartCoroutine(enemyGuardian2.Teleport(enemyGuardian2.CentreOfLevel));
     enemyGuardian2.simpleSpineAnimator.Animate("floating-start", 0, true);
     enemyGuardian2.simpleSpineAnimator.AddAnimate("floating-spin", 0, true, 0.0f);
     yield return (object) new WaitForSeconds(0.5f);
@@ -367,13 +367,13 @@ public class EnemyGuardian2 : UnitObject
     yield return (object) new WaitForSeconds(0.5f);
     yield return (object) new WaitForSeconds(0.5f);
     yield return (object) new WaitForSeconds(1.5f);
-    enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.TeleportAway());
+    enemyGuardian2.StartCoroutine(enemyGuardian2.TeleportAway());
   }
 
   public IEnumerator ShootRingsScattered()
   {
     EnemyGuardian2 enemyGuardian2 = this;
-    yield return (object) enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.Teleport(enemyGuardian2.CentreOfLevel));
+    yield return (object) enemyGuardian2.StartCoroutine(enemyGuardian2.Teleport(enemyGuardian2.CentreOfLevel));
     enemyGuardian2.simpleSpineAnimator.Animate("floating-start", 0, true);
     enemyGuardian2.simpleSpineAnimator.AddAnimate("floating-spin", 0, true, 0.0f);
     yield return (object) new WaitForSeconds(0.5f);
@@ -396,7 +396,7 @@ public class EnemyGuardian2 : UnitObject
     yield return (object) new WaitForSeconds(0.5f);
     yield return (object) new WaitForSeconds(0.5f);
     yield return (object) new WaitForSeconds(1.5f);
-    enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.TeleportAway());
+    enemyGuardian2.StartCoroutine(enemyGuardian2.TeleportAway());
   }
 
   public float GetAngleToPlayer()
@@ -419,26 +419,26 @@ public class EnemyGuardian2 : UnitObject
         degree += Utils.Repeat((float) UnityEngine.Random.Range(0, 360), 360f);
       float f = degree * ((float) Math.PI / 180f);
       Vector3 Destination = enemyGuardian2.transform.position + new Vector3(distance * Mathf.Cos(f), distance * Mathf.Sin(f));
-      yield return (object) enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.Teleport(Destination));
+      yield return (object) enemyGuardian2.StartCoroutine(enemyGuardian2.Teleport(Destination));
       yield return (object) new WaitForSeconds(0.5f);
       enemyGuardian2.simpleSpineAnimator.Animate("summon-fast", 0, false);
       enemyGuardian2.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
-      yield return (object) enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.TrapPatternChasePlayer(UnityEngine.Random.Range(8, 15)));
+      yield return (object) enemyGuardian2.StartCoroutine(enemyGuardian2.TrapPatternChasePlayer(UnityEngine.Random.Range(8, 15)));
       yield return (object) new WaitForSeconds(1f);
       if (--NumAttacks <= 0)
         Loop = false;
       yield return (object) null;
     }
     if (UnityEngine.Random.Range(0, 2) == 0)
-      enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.ShootRingsScattered());
+      enemyGuardian2.StartCoroutine(enemyGuardian2.ShootRingsScattered());
     else
-      enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.ShootRingsTargeted());
+      enemyGuardian2.StartCoroutine(enemyGuardian2.ShootRingsTargeted());
   }
 
   public IEnumerator SpawnEnemies()
   {
     EnemyGuardian2 enemyGuardian2 = this;
-    yield return (object) enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.Teleport(enemyGuardian2.CentreOfLevel));
+    yield return (object) enemyGuardian2.StartCoroutine(enemyGuardian2.Teleport(enemyGuardian2.CentreOfLevel));
     yield return (object) new WaitForSeconds(1f);
     enemyGuardian2.simpleSpineAnimator.Animate("floating-start", 0, true);
     enemyGuardian2.simpleSpineAnimator.AddAnimate("floating-spin", 0, true, 0.0f);
@@ -481,7 +481,7 @@ public class EnemyGuardian2 : UnitObject
     enemyGuardian2.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
     yield return (object) new WaitForSeconds(1f);
     yield return (object) new WaitForSeconds(2f);
-    enemyGuardian2.StartCoroutine((IEnumerator) enemyGuardian2.TeleportAway());
+    enemyGuardian2.StartCoroutine(enemyGuardian2.TeleportAway());
   }
 
   public void EnemyDied(

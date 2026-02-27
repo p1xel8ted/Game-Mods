@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MeshSplatterParticleCollision
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -20,7 +20,7 @@ public class MeshSplatterParticleCollision : BaseMonoBehaviour
   public void Start()
   {
     this.particles = this.GetComponent<ParticleSystem>();
-    this.StartCoroutine((IEnumerator) this.WaitForPlayer());
+    this.StartCoroutine(this.WaitForPlayer());
   }
 
   public IEnumerator WaitForPlayer()
@@ -36,7 +36,7 @@ public class MeshSplatterParticleCollision : BaseMonoBehaviour
     if ((Object) this.playerController == (Object) null || !this.enabled)
       return;
     this.enter = new List<ParticleSystem.Particle>();
-    this.numEnter = this.particles.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, (List<ParticleSystem.Particle>) this.enter);
+    this.numEnter = this.particles.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, this.enter);
     if (this.numEnter <= 0)
       return;
     this.playerController.SetFootSteps((Color) this.enter[0].GetCurrentColor(this.particles));

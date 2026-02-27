@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBellKnight
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -144,7 +144,7 @@ public class EnemyBellKnight : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.health.OnAddCharm += new Health.StasisEvent(this.ReconsiderTarget);
     this.health.OnStasisCleared += new Health.StasisEvent(this.ReconsiderTarget);
     this.TargetPosition = this.transform.position;
@@ -204,7 +204,7 @@ public class EnemyBellKnight : UnitObject
     {
       if ((UnityEngine.Object) enemyBellKnight.TargetObject == (UnityEngine.Object) null)
       {
-        enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.WaitForTarget());
+        enemyBellKnight.StartCoroutine(enemyBellKnight.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(enemyBellKnight.TargetObject.transform.position, enemyBellKnight.transform.position);
@@ -218,7 +218,7 @@ public class EnemyBellKnight : UnitObject
       yield return (object) null;
     }
     enemyBellKnight.StopAllCoroutines();
-    enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.FightPlayer());
+    enemyBellKnight.StartCoroutine(enemyBellKnight.FightPlayer());
   }
 
   public void SetTargetObject()
@@ -395,7 +395,7 @@ public class EnemyBellKnight : UnitObject
               enemyBellKnight.state.CURRENT_STATE = StateMachine.State.SignPostAttack;
               enemyBellKnight.currentAttack = EnemyBellKnight.BellKnightAttacks.PREPARATION_SWING;
               enemyBellKnight.Spine.AnimationState.SetAnimation(0, "attack-1", false);
-              enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.PlayOneShotWithDelay(enemyBellKnight.BasicAttackUpSwingSFX, 0.3f));
+              enemyBellKnight.StartCoroutine(enemyBellKnight.PlayOneShotWithDelay(enemyBellKnight.BasicAttackUpSwingSFX, 0.3f));
               AudioManager.Instance.PlayOneShot(enemyBellKnight.WarningVO, enemyBellKnight.transform.position);
               if (enemyBellKnight.UseForceForAttack)
               {
@@ -469,12 +469,12 @@ public class EnemyBellKnight : UnitObject
                 enemyBellKnight.damageColliderEvents.SetActive(false);
                 if ((double) UnityEngine.Random.value < 0.25)
                 {
-                  yield return (object) enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.IceWallRain());
+                  yield return (object) enemyBellKnight.StartCoroutine(enemyBellKnight.IceWallRain());
                   break;
                 }
                 break;
               case EnemyBellKnight.BellKnightAttacks.CHARGED_ATTACK:
-                yield return (object) enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.IceCrossAttack());
+                yield return (object) enemyBellKnight.StartCoroutine(enemyBellKnight.IceCrossAttack());
                 break;
             }
           }
@@ -607,7 +607,7 @@ public class EnemyBellKnight : UnitObject
       while ((double) (time += Time.deltaTime * enemyBellKnight.Spine.timeScale) < 1.0)
         yield return (object) null;
     }
-    enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.WaitForTarget());
+    enemyBellKnight.StartCoroutine(enemyBellKnight.WaitForTarget());
   }
 
   public bool CanDoRainAttack(float targetAngle)
@@ -623,9 +623,9 @@ public class EnemyBellKnight : UnitObject
   {
     EnemyBellKnight enemyBellKnight = this;
     int num = (double) enemyBellKnight.Spine.skeleton.ScaleX > 0.0 ? 1 : -1;
-    enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.LineIceWallAttack(enemyBellKnight.transform.right * (float) num, enemyBellKnight.lineDistanceIceCross, enemyBellKnight.numStrikesPerLineIceCross));
-    enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.LineIceWallAttack((enemyBellKnight.transform.right + enemyBellKnight.transform.up).normalized * (float) num, enemyBellKnight.lineDistanceIceCross, enemyBellKnight.numStrikesPerLineIceCross));
-    enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.LineIceWallAttack((enemyBellKnight.transform.right + -enemyBellKnight.transform.up).normalized * (float) num, enemyBellKnight.lineDistanceIceCross, enemyBellKnight.numStrikesPerLineIceCross));
+    enemyBellKnight.StartCoroutine(enemyBellKnight.LineIceWallAttack(enemyBellKnight.transform.right * (float) num, enemyBellKnight.lineDistanceIceCross, enemyBellKnight.numStrikesPerLineIceCross));
+    enemyBellKnight.StartCoroutine(enemyBellKnight.LineIceWallAttack((enemyBellKnight.transform.right + enemyBellKnight.transform.up).normalized * (float) num, enemyBellKnight.lineDistanceIceCross, enemyBellKnight.numStrikesPerLineIceCross));
+    enemyBellKnight.StartCoroutine(enemyBellKnight.LineIceWallAttack((enemyBellKnight.transform.right + -enemyBellKnight.transform.up).normalized * (float) num, enemyBellKnight.lineDistanceIceCross, enemyBellKnight.numStrikesPerLineIceCross));
     yield return (object) new WaitForSeconds(enemyBellKnight.iceStrikeCooldown);
   }
 
@@ -647,7 +647,7 @@ public class EnemyBellKnight : UnitObject
     }
     else
       normalized = (enemyBellKnight.TargetObject.transform.position - enemyBellKnight.avalancheOrigin.position).normalized;
-    yield return (object) enemyBellKnight.StartCoroutine((IEnumerator) enemyBellKnight.LineIceWallAttackDouble(normalized, enemyBellKnight.lineDistanceQuickIce, enemyBellKnight.numStrikesPerLineQuickIce));
+    yield return (object) enemyBellKnight.StartCoroutine(enemyBellKnight.LineIceWallAttackDouble(normalized, enemyBellKnight.lineDistanceQuickIce, enemyBellKnight.numStrikesPerLineQuickIce));
   }
 
   public IEnumerator LineIceWallAttackDouble(
@@ -786,7 +786,7 @@ public class EnemyBellKnight : UnitObject
   {
     if (this.currentWalls.Count <= this.maxWalls)
       return;
-    this.currentWalls[0].DealDamage(999f, this.currentWalls[0].gameObject, this.currentWalls[0].transform.position);
+    this.currentWalls[0].DealDamage(999f, this.currentWalls[0].gameObject, this.currentWalls[0].transform.position, dealDamageImmediately: true);
   }
 
   public void OnCollisionEnter2D(Collision2D other)

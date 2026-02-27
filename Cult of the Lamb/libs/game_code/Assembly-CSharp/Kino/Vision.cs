@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Kino.Vision
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -185,8 +185,8 @@ public class Vision : MonoBehaviour
         indices[index] = index;
       this._mesh = new Mesh();
       this._mesh.hideFlags = HideFlags.DontSave;
-      this._mesh.SetVertices((List<Vector3>) inVertices);
-      this._mesh.SetUVs(0, (List<Vector2>) uvs);
+      this._mesh.SetVertices(inVertices);
+      this._mesh.SetUVs(0, uvs);
       this._mesh.SetIndices(indices, MeshTopology.Lines, 0);
       this._mesh.UploadMeshData(true);
       this.columnCount = columns;

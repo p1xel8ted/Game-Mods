@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SeasonsManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -246,7 +246,7 @@ public class SeasonsManager
   public static void Initialise()
   {
     SeasonsManager.isInitialized = false;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.WaitForPlayer());
+    GameManager.GetInstance().StartCoroutine(SeasonsManager.WaitForPlayer());
     TimeManager.OnNewPhaseStarted += new System.Action(SeasonsManager.OnNewPhaseStarted);
     TimeManager.OnNewDayStarted += new System.Action(SeasonsManager.OnNewDay);
   }
@@ -460,7 +460,7 @@ public class SeasonsManager
     if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter && season != SeasonsManager.Season.Winter && !DataManager.Instance.ShowCultWarmth)
       ++SeasonsManager.SeasonTimestamp;
     else
-      GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.WaitForPlayerInBase((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(SeasonsManager.WaitForPlayerInBase((System.Action) (() =>
       {
         if (!DataManager.Instance.WinterLoopEnabled && season == SeasonsManager.Season.Winter)
           return;
@@ -477,7 +477,7 @@ public class SeasonsManager
         SeasonsManager.PreviousSeason = SeasonsManager.CurrentSeason;
         SeasonsManager.WeatherEventTriggeredDay = TimeManager.CurrentDay;
         if (SeasonsManager.PreviousSeason == SeasonsManager.Season.Winter && season != SeasonsManager.Season.Winter)
-          GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.WaitForPlayerReady((System.Action) (() =>
+          GameManager.GetInstance().StartCoroutine(SeasonsManager.WaitForPlayerReady((System.Action) (() =>
           {
             if (!DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.WinterOver))
               return;
@@ -664,7 +664,7 @@ label_18:
         {
           if (!DataManager.Instance.OnboardedLongNights && !DataManager.Instance.LongNightActive)
           {
-            GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.WaitForPlayerReady((System.Action) (() => HUD_Time.Instance.LongNightSequence())));
+            GameManager.GetInstance().StartCoroutine(SeasonsManager.WaitForPlayerReady((System.Action) (() => HUD_Time.Instance.LongNightSequence())));
           }
           else
           {
@@ -1030,7 +1030,7 @@ label_18:
     TimeManager.PauseGameTime = false;
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = true;
     GameManager.GetInstance().OnConversationNew();
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeIn());
     Vector3 fromPos = GameManager.GetInstance().CamFollowTarget.transform.position;
     GameManager.SetGlobalOcclusionActive(false);
     BiomeBaseManager.Instance.ActivateRoom();
@@ -1144,7 +1144,7 @@ label_18:
       }
     }
     yield return (object) new WaitForSeconds(5f);
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeIn());
     foreach (Follower follower in Follower.Followers)
     {
       if (follower.Brain.CurrentTaskType == FollowerTaskType.ManualControl)
@@ -1159,7 +1159,7 @@ label_18:
     GameManager.GetInstance().CamFollowTarget.enabled = true;
     GameManager.SetGlobalOcclusionActive(true);
     BiomeBaseManager.Instance.ActivateDLCShrineRoom();
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeOut());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeOut());
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = false;
   }
 
@@ -1171,7 +1171,7 @@ label_18:
     TimeManager.PauseGameTime = false;
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = true;
     GameManager.GetInstance().OnConversationNew();
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeIn());
     Vector3 fromPos = GameManager.GetInstance().CamFollowTarget.transform.position;
     GameManager.SetGlobalOcclusionActive(false);
     BiomeBaseManager.Instance.ActivateRoom();
@@ -1242,7 +1242,7 @@ label_18:
       }
     }
     yield return (object) new WaitForSeconds(5f);
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeIn());
     foreach (Follower follower in Follower.Followers)
     {
       if (follower.Brain.CurrentTaskType == FollowerTaskType.ManualControl)
@@ -1257,7 +1257,7 @@ label_18:
     GameManager.GetInstance().CamFollowTarget.enabled = true;
     GameManager.SetGlobalOcclusionActive(true);
     BiomeBaseManager.Instance.ActivateDLCShrineRoom();
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeOut());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeOut());
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = false;
   }
 
@@ -1269,7 +1269,7 @@ label_18:
     TimeManager.PauseGameTime = false;
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = true;
     GameManager.GetInstance().OnConversationNew();
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeIn());
     Vector3 fromPos = GameManager.GetInstance().CamFollowTarget.transform.position;
     GameManager.SetGlobalOcclusionActive(false);
     BiomeBaseManager.Instance.ActivateRoom();
@@ -1317,7 +1317,7 @@ label_18:
     GameManager.GetInstance().CamFollowTarget.transform.localRotation = Quaternion.Euler(-45f, 0.0f, 0.0f);
     GameManager.GetInstance().CamFollowTarget.transform.DOMove(GameManager.GetInstance().CamFollowTarget.transform.position + Vector3.left * 2f, 10f);
     yield return (object) new WaitForSeconds(4f);
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.OnboardSnowedUnderIE());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.OnboardSnowedUnderIE());
     GameManager.GetInstance().CamFollowTarget.transform.DOKill();
     GameManager.GetInstance().CamFollowTarget.ForceSnapTo(new Vector3(0.0f, -18f, -6.5f));
     GameManager.GetInstance().CamFollowTarget.transform.DOMove(new Vector3(0.0f, -20f, -11f), 10f);
@@ -1340,7 +1340,7 @@ label_18:
       }
     }
     yield return (object) new WaitForSeconds(5f);
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeIn());
     foreach (Follower follower in Follower.Followers)
     {
       if (follower.Brain.CurrentTaskType == FollowerTaskType.ManualControl)
@@ -1355,7 +1355,7 @@ label_18:
     GameManager.GetInstance().CamFollowTarget.enabled = true;
     GameManager.SetGlobalOcclusionActive(true);
     BiomeBaseManager.Instance.ActivateDLCShrineRoom();
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FadeOut());
+    yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FadeOut());
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = false;
   }
 

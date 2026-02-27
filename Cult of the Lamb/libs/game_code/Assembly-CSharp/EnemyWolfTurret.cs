@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWolfTurret
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -97,7 +97,7 @@ public class EnemyWolfTurret : UnitObject, IProjectileTrap
     if ((UnityEngine.Object) this.headToLopOff == (UnityEngine.Object) null || !this.headToLopOff.activeSelf)
       return;
     this.headToLopOff.transform.SetParent((Transform) null);
-    this.headLoppingOffRoutine = this.StartCoroutine((IEnumerator) this.LopHeadRoutine(attackerPosition));
+    this.headLoppingOffRoutine = this.StartCoroutine(this.LopHeadRoutine(attackerPosition));
   }
 
   public IEnumerator LopHeadRoutine(Vector3 attackerPosition)
@@ -241,7 +241,7 @@ public class EnemyWolfTurret : UnitObject, IProjectileTrap
       this.shootDelay -= Time.deltaTime * this.spine.timeScale;
       if ((double) this.shootDelay >= 0.5)
         return;
-      this.StartCoroutine((IEnumerator) this.ShootArrowRoutine(this.targetObject.transform.position));
+      this.StartCoroutine(this.ShootArrowRoutine(this.targetObject.transform.position));
       if (!CoopManager.CoopActive || (double) this.targetSwitchTimer > 0.0 || (double) Vector3.Distance(this.targetObject.transform.position, this.transform.position) <= (double) this.visionRange * 0.33000001311302185 && (double) this.enemyHealth.HP > 0.0)
         return;
       this.GetNewTarget();
@@ -376,7 +376,7 @@ public class EnemyWolfTurret : UnitObject, IProjectileTrap
     this.enemyHealth.attackers.Add(this.gameObject);
     this.spine.AnimationState.SetAnimation(0, "activate", false);
     this.spine.AnimationState.AddAnimation(0, "idle", true, 0.0f);
-    this.StartCoroutine((IEnumerator) this.ShowWarning());
+    this.StartCoroutine(this.ShowWarning());
     ++this.shootDelay;
   }
 

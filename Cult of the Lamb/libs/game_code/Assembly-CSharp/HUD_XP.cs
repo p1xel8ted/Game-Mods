@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_XP
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -59,11 +59,11 @@ public class HUD_XP : BaseMonoBehaviour
       if (SceneManager.GetActiveScene().name != "Base Biome 1")
         this._transition.hideBar();
       this._cacheXP = this.XP;
-      this.StartCoroutine((IEnumerator) this.DungeonRoutine());
+      this.StartCoroutine(this.DungeonRoutine());
     }
   }
 
-  public void Start() => this.StartCoroutine((IEnumerator) this.OnGetXPRoutine(true));
+  public void Start() => this.StartCoroutine(this.OnGetXPRoutine(true));
 
   public IEnumerator DungeonRoutine()
   {
@@ -76,14 +76,14 @@ public class HUD_XP : BaseMonoBehaviour
         {
           Debug.Log((object) "XP != cache");
           if (this._transition.Hidden)
-            this._transition.StartCoroutine((IEnumerator) this._transition.MoveBarIn());
+            this._transition.StartCoroutine(this._transition.MoveBarIn());
           if (this._transition.Hidden)
             yield return (object) new WaitForSeconds(0.5f);
           this._xpTmp = this.XP <= this._targetXP ? this.XP : this._targetXP;
           this._tmpXPTarget = this._targetXP;
           this._cacheXP = this.XP;
           yield return (object) new WaitForSeconds(3f);
-          this._transition.StartCoroutine((IEnumerator) this._transition.MoveBarOut());
+          this._transition.StartCoroutine(this._transition.MoveBarOut());
           yield return (object) null;
         }
         if (!this._transition.Hidden)
@@ -103,7 +103,7 @@ public class HUD_XP : BaseMonoBehaviour
   {
     if (this._getXPCoroutine != null)
       this.StopCoroutine(this._getXPCoroutine);
-    this._getXPCoroutine = this.StartCoroutine((IEnumerator) this.OnGetXPRoutine(false));
+    this._getXPCoroutine = this.StartCoroutine(this.OnGetXPRoutine(false));
   }
 
   public IEnumerator OnGetXPRoutine(bool forced)
@@ -118,7 +118,7 @@ public class HUD_XP : BaseMonoBehaviour
       hudXp._lerpBar.rectTransform.localScale = hudXp._instantBar.rectTransform.localScale = Vector3.zero;
       if (hudXp._flashBarCoroutine != null)
         hudXp.StopCoroutine(hudXp._flashBarCoroutine);
-      hudXp.StartCoroutine((IEnumerator) hudXp.FlashBarRoutine());
+      hudXp.StartCoroutine(hudXp.FlashBarRoutine());
     }
     else
     {
@@ -129,7 +129,7 @@ public class HUD_XP : BaseMonoBehaviour
       if (hudXp._lerpBarCoroutine != null)
         hudXp.StopCoroutine(hudXp._lerpBarCoroutine);
       if ((double) hudXp._instantBar.rectTransform.localScale.x > (double) hudXp._lerpBar.rectTransform.localScale.x)
-        hudXp._lerpBarCoroutine = hudXp.StartCoroutine((IEnumerator) hudXp.LerpBarRoutine());
+        hudXp._lerpBarCoroutine = hudXp.StartCoroutine(hudXp.LerpBarRoutine());
       else
         hudXp._lerpBar.rectTransform.localScale = hudXp._instantBar.rectTransform.localScale;
     }

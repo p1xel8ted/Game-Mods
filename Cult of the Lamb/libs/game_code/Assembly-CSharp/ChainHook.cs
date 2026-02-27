@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ChainHook
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -321,7 +321,7 @@ public class ChainHook : MonoBehaviour, ISpellOwning
     this.hiding = true;
     this.hook.DOKill();
     if ((UnityEngine.Object) this.ownerSpine != (UnityEngine.Object) null)
-      this.StartCoroutine((IEnumerator) this.HideRoutine(instant));
+      this.StartCoroutine(this.HideRoutine(instant));
     else if (instant)
     {
       System.Action onHideStart = this.onHideStart;
@@ -335,7 +335,7 @@ public class ChainHook : MonoBehaviour, ISpellOwning
     }
     else
     {
-      this.StartCoroutine((IEnumerator) this.DelayedAction(this.onHideStart, this.delayHideTime));
+      this.StartCoroutine(this.DelayedAction(this.onHideStart, this.delayHideTime));
       this.hook.DOMove(this.startChainPoint.position, this.HideTime).SetDelay<TweenerCore<Vector3, Vector3, VectorOptions>>(this.delayHideTime).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InQuad).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
       {
         this.hiding = false;
@@ -521,7 +521,7 @@ public class ChainHook : MonoBehaviour, ISpellOwning
     if (this.damagedEnemies.Contains(health) || !((UnityEngine.Object) health != (UnityEngine.Object) null) || !health.enabled || health.team == this.ownerHealth.team && !health.IsCharmedEnemy && (!((UnityEngine.Object) health != (UnityEngine.Object) this.ownerHealth) || health.team != this.ownerHealth.team || !this.canHurtFriendlyUnits) || health.untouchable || health.invincible || !((UnityEngine.Object) health.state == (UnityEngine.Object) null) && health.state.CURRENT_STATE == StateMachine.State.Dodging)
       return;
     float num = this.ownerHealth.team != health.team || !this.canHurtFriendlyUnits ? 1f : this.team2DamageMult;
-    health.DealDamage(damage * num, this.owner, this.transform.position, AttackType: this.attackType, AttackFlags: this.attackFlags);
+    health.DealDamage(damage * num, this.owner, this.transform.position, AttackType: this.attackType, dealDamageImmediately: true, AttackFlags: this.attackFlags);
     this.damagedEnemies.Add(health);
     Action<Health> onDamageCollision = this.onDamageCollision;
     if (onDamageCollision == null)

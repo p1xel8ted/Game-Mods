@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: KnuckleBones.Dice
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -31,7 +31,7 @@ public class Dice : MonoBehaviour
     this.canvas = this.GetComponentInParent<Canvas>();
   }
 
-  public void Roll(float Duration) => this.StartCoroutine((IEnumerator) this.RollRoutine(Duration));
+  public void Roll(float Duration) => this.StartCoroutine(this.RollRoutine(Duration));
 
   public IEnumerator RollRoutine(float Duration, int luckyRoll = -1)
   {
@@ -62,7 +62,7 @@ public class Dice : MonoBehaviour
     AudioManager.Instance.PlayOneShot("event:/knuckle_bones/die_place");
   }
 
-  public void Shake() => this.StartCoroutine((IEnumerator) this.ShakeRoutine());
+  public void Shake() => this.StartCoroutine(this.ShakeRoutine());
 
   public IEnumerator ShakeRoutine()
   {
@@ -78,7 +78,7 @@ public class Dice : MonoBehaviour
     this.image.rectTransform.position = Position;
   }
 
-  public void Scale() => this.StartCoroutine((IEnumerator) this.ScaleRoutine());
+  public void Scale() => this.StartCoroutine(this.ScaleRoutine());
 
   public IEnumerator ScaleRoutine()
   {

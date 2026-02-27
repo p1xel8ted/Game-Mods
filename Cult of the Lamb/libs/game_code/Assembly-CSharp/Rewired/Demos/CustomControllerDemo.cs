@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Demos.CustomControllerDemo
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -36,7 +36,7 @@ public class CustomControllerDemo : MonoBehaviour
 
   public void Initialize()
   {
-    ReInput.InputSourceUpdateEvent += (Action) new Action(this.OnInputSourceUpdate);
+    ReInput.InputSourceUpdateEvent += new Action(this.OnInputSourceUpdate);
     this.joysticks = this.GetComponentsInChildren<TouchJoystickExample>();
     this.buttons = this.GetComponentsInChildren<TouchButtonExample>();
     this.axisCount = this.joysticks.Length * 2;
@@ -50,8 +50,8 @@ public class CustomControllerDemo : MonoBehaviour
       Debug.LogError((object) "Controller has wrong number of elements!");
     if (this.useUpdateCallbacks && this.controller != null)
     {
-      this.controller.SetAxisUpdateCallback((Func<int, float>) new Func<int, float>(this.GetAxisValueCallback));
-      this.controller.SetButtonUpdateCallback((Func<int, bool>) new Func<int, bool>(this.GetButtonValueCallback));
+      this.controller.SetAxisUpdateCallback(new Func<int, float>(this.GetAxisValueCallback));
+      this.controller.SetButtonUpdateCallback(new Func<int, bool>(this.GetButtonValueCallback));
     }
     this.initialized = true;
   }

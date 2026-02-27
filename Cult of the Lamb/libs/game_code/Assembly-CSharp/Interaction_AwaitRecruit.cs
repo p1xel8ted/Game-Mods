@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_AwaitRecruit
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -43,7 +43,7 @@ public class Interaction_AwaitRecruit : Interaction
   public void Recruit()
   {
     this.w.interaction_AwaitRecruit.enabled = false;
-    this.StartCoroutine((IEnumerator) this.RecruitFollower());
+    this.StartCoroutine(this.RecruitFollower());
   }
 
   public IEnumerator RecruitFollower()
@@ -78,18 +78,18 @@ public class Interaction_AwaitRecruit : Interaction
     GameManager.GetInstance().OnConversationNext(this.w.gameObject, 4f);
     GameManager.GetInstance().AddPlayerToCamera();
     this.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
-    this.StartCoroutine((IEnumerator) this.FollowerToAltar());
+    this.StartCoroutine(this.FollowerToAltar());
   }
 
   public IEnumerator FollowerToAltar()
   {
     Interaction_AwaitRecruit interactionAwaitRecruit = this;
-    interactionAwaitRecruit.StartCoroutine((IEnumerator) interactionAwaitRecruit.WaitForPlayerToAltar());
-    interactionAwaitRecruit.StartCoroutine((IEnumerator) interactionAwaitRecruit.WaitForFollowerToAltar());
+    interactionAwaitRecruit.StartCoroutine(interactionAwaitRecruit.WaitForPlayerToAltar());
+    interactionAwaitRecruit.StartCoroutine(interactionAwaitRecruit.WaitForFollowerToAltar());
     while (interactionAwaitRecruit.WaitingForPositions < 2)
       yield return (object) null;
     yield return (object) new WaitForSeconds(1f);
-    interactionAwaitRecruit.StartCoroutine((IEnumerator) interactionAwaitRecruit.SacrificeFollower());
+    interactionAwaitRecruit.StartCoroutine(interactionAwaitRecruit.SacrificeFollower());
   }
 
   public IEnumerator WaitForPlayerToAltar()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Meal
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -223,7 +223,7 @@ public class Meal : Interaction
     if (this.StructureInfo.Rotten || this.StructureInfo.Burned)
     {
       base.OnInteract(state);
-      this.StartCoroutine((IEnumerator) this.DoClean());
+      this.StartCoroutine(this.DoClean());
       this.Activated = true;
     }
     else
@@ -231,7 +231,7 @@ public class Meal : Interaction
       if (!UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_Eat) && !DataManager.Instance.SurvivalModeActive)
         return;
       base.OnInteract(state);
-      this.StartCoroutine((IEnumerator) this.EatRoutine(state.GetComponent<PlayerFarming>()));
+      this.StartCoroutine(this.EatRoutine(state.GetComponent<PlayerFarming>()));
       this.Activated = true;
     }
   }

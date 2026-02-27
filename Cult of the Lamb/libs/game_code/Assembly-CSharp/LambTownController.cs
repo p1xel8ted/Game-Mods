@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LambTownController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -147,7 +147,7 @@ public class LambTownController : MonoBehaviour
       this.yngyaSpine.gameObject.SetActive(false);
     if (!((UnityEngine.Object) GameManager.GetInstance() != (UnityEngine.Object) null))
       return;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForPlayer((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForPlayer((System.Action) (() =>
     {
       if (!PlayerFarming.IsAnyPlayerInInteractionWithRanchable())
         return;
@@ -215,7 +215,7 @@ public class LambTownController : MonoBehaviour
     this.ranchingShop.InitDailyShop();
     if ((UnityEngine.Object) GameManager.GetInstance() == (UnityEngine.Object) null)
       return;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForPlayer((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForPlayer((System.Action) (() =>
     {
       MonoSingleton<UIManager>.Instance.ForceBlockPause = true;
       this.ranchingShop.ItemsForSale[0].Bought = false;
@@ -223,7 +223,7 @@ public class LambTownController : MonoBehaviour
       this.ranchingShop.ItemsForSale[0].itemCost = DataManager.Instance.RanchingAnimalsAdded == 0 || this.noAnimals ? 0 : 2;
       if (this.ranchingShop.SoldOutSigns.ContainsKey(0))
         UnityEngine.Object.Destroy((UnityEngine.Object) this.ranchingShop.SoldOutSigns[0]);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForShop((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(this.WaitForShop((System.Action) (() =>
       {
         ShopLocationTracker shop = DataManager.Instance.GetShop(this.ranchingShop.Location, this.ranchingShop.gameObject.name);
         Interaction_BuyItem component = this.ranchingShop.itemSlots[0].GetComponent<Interaction_BuyItem>();
@@ -425,7 +425,7 @@ public class LambTownController : MonoBehaviour
 
   public void RanchingJobBoard_OnJobCompleted(ObjectivesData objective)
   {
-    this.StartCoroutine((IEnumerator) this.RanchingJobBoard_OnJobCompletedIE(objective));
+    this.StartCoroutine(this.RanchingJobBoard_OnJobCompletedIE(objective));
   }
 
   public IEnumerator RanchingJobBoard_OnJobCompletedIE(ObjectivesData objective)
@@ -557,7 +557,7 @@ public class LambTownController : MonoBehaviour
     FollowerBrain.SetFollowerCostume(this.yngyaSpine.Skeleton, directInfoAccess, forceUpdate: true);
     this.yngyaSpine.gameObject.SetActive(true);
     this.yngyaConvo.gameObject.SetActive(true);
-    this.yngyaConvo.Callback.AddListener((UnityAction) (() => this.StartCoroutine((IEnumerator) this.WaitForPlayer())));
+    this.yngyaConvo.Callback.AddListener((UnityAction) (() => this.StartCoroutine(this.WaitForPlayer())));
   }
 
   public IEnumerator WaitForPlayer()
@@ -611,7 +611,7 @@ public class LambTownController : MonoBehaviour
     this.ranchingShop.ItemsForSale[0].itemCost = DataManager.Instance.RanchingAnimalsAdded == 0 || this.noAnimals ? 0 : 2;
     if (this.ranchingShop.SoldOutSigns.ContainsKey(0))
       UnityEngine.Object.Destroy((UnityEngine.Object) this.ranchingShop.SoldOutSigns[0]);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForShop((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForShop((System.Action) (() =>
     {
       ShopLocationTracker shop = DataManager.Instance.GetShop(this.ranchingShop.Location, this.ranchingShop.gameObject.name);
       Interaction_BuyItem component = this.ranchingShop.itemSlots[0].GetComponent<Interaction_BuyItem>();
@@ -722,8 +722,5 @@ public class LambTownController : MonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CSetupYngyaConvo\u003Eb__68_0()
-  {
-    this.StartCoroutine((IEnumerator) this.WaitForPlayer());
-  }
+  public void \u003CSetupYngyaConvo\u003Eb__68_0() => this.StartCoroutine(this.WaitForPlayer());
 }

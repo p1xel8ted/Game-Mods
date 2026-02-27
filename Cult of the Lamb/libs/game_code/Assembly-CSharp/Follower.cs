@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Follower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -9,7 +9,6 @@ using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using FMOD.Studio;
 using Lamb.UI;
-using MMBiomeGeneration;
 using MMTools;
 using Pathfinding;
 using Spine;
@@ -1197,7 +1196,7 @@ label_86:
   {
     if (this.deathCoroutine != null)
       return;
-    this.deathCoroutine = GameManager.GetInstance().StartCoroutine((IEnumerator) this.FollowerDieIE(deathNotificationType, PlayAnimation, Dir, dieAnimation, deadAnimation, callback, force));
+    this.deathCoroutine = GameManager.GetInstance().StartCoroutine(this.FollowerDieIE(deathNotificationType, PlayAnimation, Dir, dieAnimation, deadAnimation, callback, force));
   }
 
   public IEnumerator FollowerDieIE(
@@ -1401,12 +1400,12 @@ label_86:
 
   public void LeaveWithAnimation()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.LeaveWithAnimationIE());
+    GameManager.GetInstance().StartCoroutine(this.LeaveWithAnimationIE());
   }
 
   public void LeaveWithAnimationSpy()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.LeaveWithAnimationSpyIE());
+    GameManager.GetInstance().StartCoroutine(this.LeaveWithAnimationSpyIE());
   }
 
   public IEnumerator LeaveWithAnimationSpyIE()
@@ -1790,7 +1789,7 @@ label_86:
 
   public void BlessFollower(Vector3 targetPos)
   {
-    this.blessFollowerCoroutine = this.StartCoroutine((IEnumerator) this.BlessFollowerIE(targetPos));
+    this.blessFollowerCoroutine = this.StartCoroutine(this.BlessFollowerIE(targetPos));
   }
 
   public void BlessFollowerInterruptedCallback()
@@ -1895,12 +1894,12 @@ label_86:
       double num = (double) this.SetBodyAnimation(animation, true);
     }
     else
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.PutHoodOnRoutine(animation));
+      GameManager.GetInstance().StartCoroutine(this.PutHoodOnRoutine(animation));
   }
 
   public void HoodOff(string animation = "idle", bool snap = false, System.Action onComplete = null)
   {
-    this.StartCoroutine((IEnumerator) this.HoodOffWaitForEndOfFrame(animation, snap, onComplete));
+    this.StartCoroutine(this.HoodOffWaitForEndOfFrame(animation, snap, onComplete));
   }
 
   public IEnumerator HoodOffWaitForEndOfFrame(string animation = "idle", bool snap = false, System.Action onComplete = null)
@@ -1920,7 +1919,7 @@ label_86:
       else
       {
         yield return (object) null;
-        follower.StartCoroutine((IEnumerator) follower.TakeHoodOffRoutine(animation, onComplete));
+        follower.StartCoroutine(follower.TakeHoodOffRoutine(animation, onComplete));
       }
     }
     else
@@ -2131,7 +2130,7 @@ label_86:
     if (PlayerFarming.Location != FollowerLocation.Base && PlayerFarming.Location != FollowerLocation.Church && PlayerFarming.Location != FollowerLocation.Dungeon1_5 && PlayerFarming.Location != FollowerLocation.Dungeon1_6)
       return;
     if ((UnityEngine.Object) this.PleasureUI != (UnityEngine.Object) null)
-      this.pleasureRoutine = this.StartCoroutine((IEnumerator) this.PleasureUI.IncreasePleasure());
+      this.pleasureRoutine = this.StartCoroutine(this.PleasureUI.IncreasePleasure());
     if (this.Brain == null || !this.Brain.CanGiveSin() || PlayerFarming.Location != FollowerLocation.Church && PlayerFarming.Location != FollowerLocation.Dungeon1_5 && PlayerFarming.Location != FollowerLocation.Dungeon1_6)
       return;
     this.GiveSinToPlayer((System.Action) null);
@@ -2140,7 +2139,7 @@ label_86:
   public void GiveSinToPlayer(System.Action Callback)
   {
     Debug.Log((object) nameof (GiveSinToPlayer));
-    this.StartCoroutine((IEnumerator) this.GiveSinToPlayerRoutine(Callback));
+    this.StartCoroutine(this.GiveSinToPlayerRoutine(Callback));
   }
 
   public IEnumerator GiveSinToPlayerRoutine(System.Action Callback)
@@ -2177,32 +2176,6 @@ label_86:
     Collider2D collider2D = Physics2D.OverlapCircle((Vector2) TargetPosition, 1.5f, LayerMask.GetMask(strArray));
     if ((UnityEngine.Object) collider2D != (UnityEngine.Object) null && ((double) collider2D.ClosestPoint((Vector2) TargetPosition).x < (double) TargetPosition.x && direction == 1 || (double) collider2D.ClosestPoint((Vector2) TargetPosition).x > (double) TargetPosition.x && direction == -1))
       TargetPosition = follower.transform.position + new Vector3(1.35f * (float) -direction, -0.1f);
-    Vector3 closestPoint1;
-    if (!BiomeGenerator.PointWithinIsland(TargetPosition, out closestPoint1))
-    {
-      TargetPosition = closestPoint1;
-      Vector3 closestPoint2;
-      if (!BiomeGenerator.PointWithinIsland(TargetPosition, out closestPoint2))
-      {
-        Vector3[] vector3Array = new Vector3[3]
-        {
-          follower.transform.position + new Vector3(1.35f * (float) -direction, -0.1f),
-          follower.transform.position + new Vector3(0.0f, 1.35f),
-          follower.transform.position + new Vector3(0.0f, -1.35f)
-        };
-        foreach (Vector3 point in vector3Array)
-        {
-          Vector3 closestPoint3;
-          if (BiomeGenerator.PointWithinIsland(point, out closestPoint3))
-          {
-            TargetPosition = closestPoint3;
-            break;
-          }
-        }
-        if (!BiomeGenerator.PointWithinIsland(TargetPosition, out closestPoint2))
-          TargetPosition = follower.transform.position;
-      }
-    }
     PlayerFarming.Instance.GoToAndStop(TargetPosition, follower.gameObject, GoToCallback: (System.Action) (() =>
     {
       PlayerFarming.Instance.transform.DOMove(TargetPosition, 0.3f);
@@ -2212,7 +2185,7 @@ label_86:
       PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
       this.FacePosition(PlayerFarming.Instance.transform.position);
       WaitForPlayer = false;
-    }), maxDuration: 3f);
+    }), maxDuration: 3f, forceAstar: true);
     bool WillPossess = false;
     if (DataManager.Instance.PreviousSinPointFollowers.Count >= DataManager.MAX_PREV_SIN)
       DataManager.Instance.PreviousSinPointFollowers.RemoveAt(0);
@@ -2260,18 +2233,8 @@ label_86:
     godTear.transform.DOScale(0.0f, 1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InBack).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() => UnityEngine.Object.Destroy((UnityEngine.Object) godTear.gameObject)));
     if (PlayerFarming.Location == FollowerLocation.Base && !DataManager.Instance.pleasurePointsRedeemedFollowerSpoken || PlayerFarming.Location == FollowerLocation.Church && !DataManager.Instance.pleasurePointsRedeemedTempleFollowerSpoken)
     {
-      Vector3 vector3 = follower.transform.position + Vector3.right * 1.5f * (float) direction;
-      Vector3 closestPoint4;
-      if (!BiomeGenerator.PointWithinIsland(vector3, out closestPoint4))
-      {
-        vector3 = closestPoint4;
-        if (!BiomeGenerator.PointWithinIsland(vector3, out Vector3 _))
-        {
-          Vector3 closestPoint5;
-          vector3 = BiomeGenerator.PointWithinIsland(follower.transform.position + Vector3.right * 1.5f * (float) -direction, out closestPoint5) ? closestPoint5 : follower.transform.position;
-        }
-      }
-      PlayerFarming.Instance.GoToAndStop(vector3, follower.gameObject);
+      Vector3 TargetPosition1 = follower.transform.position + Vector3.right * 1.5f * (float) direction;
+      PlayerFarming.Instance.GoToAndStop(TargetPosition1, follower.gameObject, forceAstar: true);
       yield return (object) new WaitForSeconds(1f);
       List<ConversationEntry> Entries = new List<ConversationEntry>();
       if (PlayerFarming.Location == FollowerLocation.Base && !DataManager.Instance.pleasurePointsRedeemedFollowerSpoken)
@@ -2303,7 +2266,7 @@ label_86:
     else
       yield return (object) new WaitForSeconds(1f);
     if (DataManager.Instance.pleasurePointsRedeemed >= 5 && DataManager.Instance.TailorEnabled && !DataManager.Instance.UnlockedClothing.Contains(FollowerClothingType.Special_5) && PlayerFarming.Location == FollowerLocation.Base && !FoundItemPickUp.IsOutfitPickUpActive(FollowerClothingType.Special_5))
-      follower.StartCoroutine((IEnumerator) follower.GiveOutfitIE());
+      follower.StartCoroutine(follower.GiveOutfitIE());
     follower.State.LockStateChanges = false;
     follower.PleasureUI.BarController.SetBarSize(0.0f, false, true);
     if (WillPossess)
@@ -2366,7 +2329,7 @@ label_86:
 
   public void BecomePossessed(System.Action Callback, bool Force)
   {
-    this.StartCoroutine((IEnumerator) this.BecomePossessedIE(Callback, Force));
+    this.StartCoroutine(this.BecomePossessedIE(Callback, Force));
   }
 
   public IEnumerator BecomePossessedIE(System.Action Callback, bool Force)

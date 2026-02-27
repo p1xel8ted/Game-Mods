@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UI.InfoCards.TutorialInfoCard
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -79,7 +79,7 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
     this._headerLoc.enabled = false;
     this._descriptionLoc.enabled = false;
     this._topContainer.SetActive(this._category.TopicImageRef.RuntimeKeyIsValid());
-    this.StartCoroutine((IEnumerator) this.ConfigurePage(0));
+    this.StartCoroutine(this.ConfigurePage(0));
   }
 
   public IEnumerator ConfigurePage(int page)
@@ -88,14 +88,14 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
     tutorialInfoCard._page = page;
     if (page > 0 && page <= tutorialInfoCard._category.Entries.Length)
     {
-      yield return (object) tutorialInfoCard.StartCoroutine((IEnumerator) tutorialInfoCard.LoadAsset(tutorialInfoCard._category.Entries[page - 1].ImageRef));
+      yield return (object) tutorialInfoCard.StartCoroutine(tutorialInfoCard.LoadAsset(tutorialInfoCard._category.Entries[page - 1].ImageRef));
       tutorialInfoCard._image.sprite = tutorialInfoCard.handles[tutorialInfoCard._category.Entries[page - 1].ImageRef].Result;
       tutorialInfoCard._tutorialBody.text = tutorialInfoCard._category.Entries[page - 1].Description;
       tutorialInfoCard._tutorialBodyLoc.enabled = false;
     }
     else
     {
-      yield return (object) tutorialInfoCard.StartCoroutine((IEnumerator) tutorialInfoCard.LoadAsset(tutorialInfoCard._category.TopicImageRef));
+      yield return (object) tutorialInfoCard.StartCoroutine(tutorialInfoCard.LoadAsset(tutorialInfoCard._category.TopicImageRef));
       tutorialInfoCard._image.sprite = tutorialInfoCard.handles[tutorialInfoCard._category.TopicImageRef].Result;
     }
     tutorialInfoCard._pageText.text = $"{page + 1}/{tutorialInfoCard._category.Entries.Length + 1}";
@@ -147,7 +147,7 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
       tutorialInfoCard.RectTransform.DOAnchorPos(new Vector2(-100f, 0.0f), 0.15f).SetEase<TweenerCore<Vector2, Vector2, VectorOptions>>(Ease.InSine).SetUpdate<TweenerCore<Vector2, Vector2, VectorOptions>>(true);
       tutorialInfoCard.CanvasGroup.DOFade(0.0f, 0.15f).SetUpdate<TweenerCore<float, float, FloatOptions>>(true);
       yield return (object) new WaitForSecondsRealtime(0.15f);
-      yield return (object) tutorialInfoCard.StartCoroutine((IEnumerator) tutorialInfoCard.ConfigurePage(tutorialInfoCard._page + 1));
+      yield return (object) tutorialInfoCard.StartCoroutine(tutorialInfoCard.ConfigurePage(tutorialInfoCard._page + 1));
       tutorialInfoCard.RectTransform.DOKill();
       tutorialInfoCard.RectTransform.anchoredPosition = new Vector2(100f, 0.0f);
       tutorialInfoCard.RectTransform.DOAnchorPos(new Vector2(0.0f, 0.0f), 0.15f).SetEase<TweenerCore<Vector2, Vector2, VectorOptions>>(Ease.OutSine).SetUpdate<TweenerCore<Vector2, Vector2, VectorOptions>>(true);
@@ -166,7 +166,7 @@ public class TutorialInfoCard : UIInfoCardBase<TutorialTopic>
       tutorialInfoCard.RectTransform.DOAnchorPos(new Vector2(100f, 0.0f), 0.15f).SetEase<TweenerCore<Vector2, Vector2, VectorOptions>>(Ease.InSine).SetUpdate<TweenerCore<Vector2, Vector2, VectorOptions>>(true);
       tutorialInfoCard.CanvasGroup.DOFade(0.0f, 0.15f).SetUpdate<TweenerCore<float, float, FloatOptions>>(true);
       yield return (object) new WaitForSecondsRealtime(0.15f);
-      yield return (object) tutorialInfoCard.StartCoroutine((IEnumerator) tutorialInfoCard.ConfigurePage(tutorialInfoCard._page - 1));
+      yield return (object) tutorialInfoCard.StartCoroutine(tutorialInfoCard.ConfigurePage(tutorialInfoCard._page - 1));
       tutorialInfoCard._topContainer.SetActive(tutorialInfoCard._page == 0);
       tutorialInfoCard._tutorialBody.gameObject.SetActive(tutorialInfoCard._page > 0);
       tutorialInfoCard.RectTransform.DOKill();

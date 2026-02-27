@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Unity.VideoHelper.OverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ public class OverlayController : MonoBehaviour
       return;
     this.target.SetActive(true);
     List<Canvas> results = new List<Canvas>();
-    this.GetComponentsInParent<Canvas>(false, (List<Canvas>) results);
+    this.GetComponentsInParent<Canvas>(false, results);
     if (results.Count == 0)
       return;
     this.blocker = this.CreateBlocker(results[0]);
@@ -72,7 +72,7 @@ public class OverlayController : MonoBehaviour
 
   public GameObject CreateBlocker(Canvas root)
   {
-    GameObject blocker = new GameObject("Blocker", (System.Type[]) new System.Type[5]
+    GameObject blocker = new GameObject("Blocker", new System.Type[5]
     {
       typeof (RectTransform),
       typeof (Canvas),

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TennisBall
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -133,7 +133,7 @@ public class TennisBall : MonoBehaviour, ISpellOwning
       this.health.OnHit -= new Health.HitAction(this.OnHit);
     this.destroyed = true;
     this.tennisballSprite.gameObject.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.RemoveTennisBallCoroutine());
+    this.StartCoroutine(this.RemoveTennisBallCoroutine());
   }
 
   public IEnumerator RemoveTennisBallCoroutine()
@@ -169,7 +169,7 @@ public class TennisBall : MonoBehaviour, ISpellOwning
         if ((double) num1 < (double) num2 / 2.0)
         {
           Debug.Log((object) ("Is player vulnerable " + this.targetUnit.state.CURRENT_STATE.ToString()));
-          this.targetUnit.DealDamage(1f, this.gameObject, this.transform.position, true);
+          this.targetUnit.DealDamage(1f, this.gameObject, this.transform.position, true, dealDamageImmediately: true);
           this.vfxHitExplosion.Play();
           this.RemoveTennisBall();
         }
@@ -244,7 +244,7 @@ public class TennisBall : MonoBehaviour, ISpellOwning
     if (usedSpell)
       return;
     Vector2 dir = (Vector2) (attackerUnit.transform.position - this.transform.position);
-    this.StartCoroutine((IEnumerator) this.RecoilUnit(attackerUnit, (Vector3) dir, 0.25f, 0.1f));
+    this.StartCoroutine(this.RecoilUnit(attackerUnit, (Vector3) dir, 0.25f, 0.1f));
   }
 
   public UnitObject GetAttackerUnit(GameObject Attacker, out bool usedSpell)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DemonSummoner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -150,7 +150,7 @@ public class Interaction_DemonSummoner : Interaction
         if (infoById != null)
         {
           FollowerBrain brain = FollowerBrain.GetOrCreateBrain(infoById);
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.SetFollowerPosition(brain));
+          GameManager.GetInstance().StartCoroutine(this.SetFollowerPosition(brain));
           NotificationCentre.Instance.PlayFollowerNotification(NotificationCentre.NotificationType.DemonPreserved, brain.Info, NotificationFollower.Animation.Normal);
           if (!structureRemoved)
           {
@@ -271,7 +271,7 @@ public class Interaction_DemonSummoner : Interaction
     brain.HardSwapToTask((FollowerTask) nextTask);
     followerById.transform.position = this.transform.position;
     DataManager.Instance.Followers_Transitioning_IDs.Add(followerInfo.ID);
-    this.StartCoroutine((IEnumerator) this.SentFollowerIE(followerById));
+    this.StartCoroutine(this.SentFollowerIE(followerById));
   }
 
   public IEnumerator SentFollowerIE(Follower follower)

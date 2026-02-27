@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyPetSummoner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -121,7 +121,7 @@ public class EnemyPetSummoner : UnitObject
 
   public override void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     base.OnEnable();
   }
 
@@ -157,7 +157,7 @@ public class EnemyPetSummoner : UnitObject
     while ((double) Vector3.Distance(enemyPetSummoner.TargetObject.transform.position, enemyPetSummoner.transform.position) > (double) enemyPetSummoner.Range)
       yield return (object) null;
     enemyPetSummoner.StopAllCoroutines();
-    enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+    enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
   }
 
   public override void OnHit(
@@ -180,7 +180,7 @@ public class EnemyPetSummoner : UnitObject
         this.knockBackVY = -this.KnockbackSpeed * Mathf.Sin(Utils.GetAngle(this.transform.position, AttackLocation) * ((float) Math.PI / 180f));
         this.simpleSpineFlash.FlashFillRed();
         this.StopAllCoroutines();
-        this.StartCoroutine((IEnumerator) this.DoStunned());
+        this.StartCoroutine(this.DoStunned());
       }
       else
       {
@@ -263,33 +263,33 @@ public class EnemyPetSummoner : UnitObject
         }
         enemyPetSummoner.FleeDelay = enemyPetSummoner.TeleportFleeDelayMax;
         enemyPetSummoner.TeleportDelay = UnityEngine.Random.Range(enemyPetSummoner.TeleportDelayMin, enemyPetSummoner.TeleportDelayMax);
-        yield return (object) enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.DoTeleport());
+        yield return (object) enemyPetSummoner.StartCoroutine(enemyPetSummoner.DoTeleport());
       }
       if (enemyPetSummoner.Summon && (double) (enemyPetSummoner.SummonDelay -= Time.deltaTime * enemyPetSummoner.skeletonAnimation.timeScale) < 0.0 && enemyPetSummoner.SummonedCount < 2)
       {
         enemyPetSummoner.StopAllCoroutines();
-        enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.DoSummon());
+        enemyPetSummoner.StartCoroutine(enemyPetSummoner.DoSummon());
         break;
       }
       if (enemyPetSummoner.FireBalls && (double) (enemyPetSummoner.FireBallDelay -= Time.deltaTime * enemyPetSummoner.skeletonAnimation.timeScale) < 0.0)
       {
         enemyPetSummoner.StopAllCoroutines();
         enemyPetSummoner.FireBallDelay = UnityEngine.Random.Range(2f, 3f);
-        enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.DoThrowFireBall());
+        enemyPetSummoner.StartCoroutine(enemyPetSummoner.DoThrowFireBall());
         break;
       }
       if (enemyPetSummoner.Mortar && (double) (enemyPetSummoner.MortarDelay -= Time.deltaTime * enemyPetSummoner.skeletonAnimation.timeScale) < 0.0)
       {
         enemyPetSummoner.StopAllCoroutines();
         enemyPetSummoner.MortarDelay = UnityEngine.Random.Range(3f, 5f);
-        enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.DoThrowMortar());
+        enemyPetSummoner.StartCoroutine(enemyPetSummoner.DoThrowMortar());
         break;
       }
       if (enemyPetSummoner.HealOthers && (double) (enemyPetSummoner.HealDelay -= Time.deltaTime * enemyPetSummoner.skeletonAnimation.timeScale) < 0.0 && Health.team2.Count > 1)
       {
         enemyPetSummoner.StopAllCoroutines();
         enemyPetSummoner.HealDelay = UnityEngine.Random.Range(3f, 4f);
-        enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.DoHealOthers());
+        enemyPetSummoner.StartCoroutine(enemyPetSummoner.DoHealOthers());
         break;
       }
       yield return (object) null;
@@ -327,7 +327,7 @@ public class EnemyPetSummoner : UnitObject
       enemyPetSummoner.EnemySpawnerGO = (GameObject) null;
     }
     enemyPetSummoner.StopAllCoroutines();
-    enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+    enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
   }
 
   public void RemoveSpawned(
@@ -357,7 +357,7 @@ public class EnemyPetSummoner : UnitObject
     if (!enemyPetSummoner.HealOthers)
       enemyPetSummoner.health.MeleeAttackVulnerability = 0.1f;
     enemyPetSummoner.StopAllCoroutines();
-    enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.DoTeleport());
+    enemyPetSummoner.StartCoroutine(enemyPetSummoner.DoTeleport());
   }
 
   public IEnumerator DoThrowFireBall()
@@ -379,13 +379,13 @@ public class EnemyPetSummoner : UnitObject
     }
     enemyPetSummoner.Shooting = false;
     enemyPetSummoner.StopAllCoroutines();
-    enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+    enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
   }
 
   public void FireMortar()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoThrowMortar());
+    this.StartCoroutine(this.DoThrowMortar());
   }
 
   public IEnumerator DoThrowMortar()
@@ -396,7 +396,7 @@ public class EnemyPetSummoner : UnitObject
     {
       if ((UnityEngine.Object) enemyPetSummoner.TargetObject == (UnityEngine.Object) null)
       {
-        enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+        enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
         yield break;
       }
       if (enemyPetSummoner.MortarShotsToFire > 1)
@@ -429,7 +429,7 @@ public class EnemyPetSummoner : UnitObject
       while ((double) (time += Time.deltaTime * enemyPetSummoner.skeletonAnimation.timeScale) < (double) enemyPetSummoner.timeBetweenShots)
         yield return (object) null;
     }
-    enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+    enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
   }
 
   public IEnumerator DoTeleport()
@@ -452,7 +452,7 @@ public class EnemyPetSummoner : UnitObject
     while ((double) (time += Time.deltaTime * enemyPetSummoner.skeletonAnimation.timeScale) < 0.800000011920929)
       yield return (object) null;
     enemyPetSummoner.StopAllCoroutines();
-    enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+    enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
   }
 
   public void Teleport()
@@ -555,11 +555,11 @@ public class EnemyPetSummoner : UnitObject
   {
     EnemyPetSummoner enemyPetSummoner = this;
     Health TargetToHeal = enemyPetSummoner.FindTargetToHeal();
-    Debug.Log((object) (" DoHealOthers() - TargetToHeal: " + ((object) TargetToHeal)?.ToString()));
+    Debug.Log((object) (" DoHealOthers() - TargetToHeal: " + TargetToHeal?.ToString()));
     if ((UnityEngine.Object) TargetToHeal == (UnityEngine.Object) null)
     {
       Debug.Log((object) "no target!");
-      enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+      enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
     }
     else
     {
@@ -591,7 +591,7 @@ public class EnemyPetSummoner : UnitObject
       while ((double) (time += Time.deltaTime * enemyPetSummoner.skeletonAnimation.timeScale) < 0.466666579246521)
         yield return (object) null;
       enemyPetSummoner.StopAllCoroutines();
-      enemyPetSummoner.StartCoroutine((IEnumerator) enemyPetSummoner.ChasePlayer());
+      enemyPetSummoner.StartCoroutine(enemyPetSummoner.ChasePlayer());
     }
   }
 

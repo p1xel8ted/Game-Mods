@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_GambleStatue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -65,7 +65,7 @@ public class Interaction_GambleStatue : Interaction
   {
     base.OnInteract(state);
     if (Inventory.Souls > this.Cost)
-      this.StartCoroutine((IEnumerator) this.PayDevotion());
+      this.StartCoroutine(this.PayDevotion());
     else
       this.playerFarming.indicator.PlayShake();
   }
@@ -100,7 +100,7 @@ public class Interaction_GambleStatue : Interaction
     interactionGambleStatue.state.CURRENT_STATE = StateMachine.State.Idle;
   }
 
-  public void Gamble() => this.StartCoroutine((IEnumerator) this.GambleRoutine());
+  public void Gamble() => this.StartCoroutine(this.GambleRoutine());
 
   public IEnumerator GambleRoutine()
   {
@@ -118,13 +118,13 @@ public class Interaction_GambleStatue : Interaction
     {
       case 0:
       case 1:
-        interactionGambleStatue.StartCoroutine((IEnumerator) interactionGambleStatue.FailRoutine());
+        interactionGambleStatue.StartCoroutine(interactionGambleStatue.FailRoutine());
         break;
       case 2:
-        interactionGambleStatue.StartCoroutine((IEnumerator) interactionGambleStatue.SingleRewardRoutine());
+        interactionGambleStatue.StartCoroutine(interactionGambleStatue.SingleRewardRoutine());
         break;
       case 3:
-        interactionGambleStatue.StartCoroutine((IEnumerator) interactionGambleStatue.DoubleRewardRoutine());
+        interactionGambleStatue.StartCoroutine(interactionGambleStatue.DoubleRewardRoutine());
         break;
     }
   }

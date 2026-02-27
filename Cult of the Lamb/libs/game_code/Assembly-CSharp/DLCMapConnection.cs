@@ -1,13 +1,12 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DLCMapConnection
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
 using Lamb.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -75,22 +74,12 @@ public class DLCMapConnection : MonoBehaviour
   {
     get
     {
-      IEnumerator enumerator = (IEnumerator) this._lineRendererNode.GetEnumerator();
-      try
+      foreach (Component component1 in this._lineRendererNode)
       {
-        while (enumerator.MoveNext())
-        {
-          MMUILineRenderer component;
-          if (((Component) enumerator.Current).gameObject.TryGetComponent<MMUILineRenderer>(out component))
-            yield return component;
-        }
+        MMUILineRenderer component2;
+        if (component1.gameObject.TryGetComponent<MMUILineRenderer>(out component2))
+          yield return component2;
       }
-      finally
-      {
-        if (enumerator is IDisposable disposable)
-          disposable.Dispose();
-      }
-      enumerator = (IEnumerator) null;
     }
   }
 

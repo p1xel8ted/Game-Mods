@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.DLCMap
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using src.Extensions;
@@ -18,7 +18,7 @@ public class DLCMap : MonoBehaviour
 {
   public static void ClearRot()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) DLCMap.ClearRotRoutine());
+    GameManager.GetInstance().StartCoroutine(DLCMap.ClearRotRoutine());
   }
 
   public static IEnumerator ClearRotRoutine()
@@ -39,7 +39,7 @@ public class DLCMap : MonoBehaviour
 
   public static void RevealDoorway()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) DLCMap.RevealDoorwayRoutine());
+    GameManager.GetInstance().StartCoroutine(DLCMap.RevealDoorwayRoutine());
   }
 
   public static IEnumerator RevealDoorwayRoutine()
@@ -62,7 +62,7 @@ public class DLCMap : MonoBehaviour
 
   public static void RevealHeart()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) DLCMap.RevealHeartRoutine());
+    GameManager.GetInstance().StartCoroutine(DLCMap.RevealHeartRoutine());
   }
 
   public static IEnumerator RevealHeartRoutine()
@@ -76,7 +76,7 @@ public class DLCMap : MonoBehaviour
 
   public static void EnableHeart()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) DLCMap.EnableHeartRoutine());
+    GameManager.GetInstance().StartCoroutine(DLCMap.EnableHeartRoutine());
   }
 
   public static IEnumerator EnableHeartRoutine()
@@ -221,7 +221,7 @@ public class DLCMap : MonoBehaviour
 
   public static void BreakDungeonLock(int lockCount, System.Action callback)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) DLCMap.BreakLockRoutine(lockCount, callback));
+    GameManager.GetInstance().StartCoroutine(DLCMap.BreakLockRoutine(lockCount, callback));
   }
 
   public static IEnumerator BreakLockRoutine(int lockCount, System.Action callback)

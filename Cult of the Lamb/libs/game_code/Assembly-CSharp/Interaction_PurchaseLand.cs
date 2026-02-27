@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_PurchaseLand
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -111,7 +111,7 @@ public class Interaction_PurchaseLand : Interaction
       state.CURRENT_STATE = StateMachine.State.CustomAnimation;
       this.playerFarming.state.facingAngle = this.playerFarming.state.LookAngle = Utils.GetAngle(this.playerFarming.transform.position, this.spine.transform.position);
       this.Interactable = false;
-      this.StartCoroutine((IEnumerator) this.GiveResources());
+      this.StartCoroutine(this.GiveResources());
     }
     else
       state.GetComponent<PlayerFarming>().indicator.PlayShake();
@@ -130,7 +130,7 @@ public class Interaction_PurchaseLand : Interaction
     }
     interactionPurchaseLand.HasChanged = true;
     ++DataManager.Instance.LandConvoProgress;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) interactionPurchaseLand.UnlockSequenceIE());
+    GameManager.GetInstance().StartCoroutine(interactionPurchaseLand.UnlockSequenceIE());
   }
 
   public IEnumerator UnlockSequenceIE()
@@ -163,7 +163,7 @@ public class Interaction_PurchaseLand : Interaction
     foreach (SkeletonAnimation worker in interactionPurchaseLand.workers)
     {
       worker.transform.position = new Vector3(interactionPurchaseLand.cameraTarget.transform.position.x, interactionPurchaseLand.cameraTarget.transform.position.y) + (Vector3) UnityEngine.Random.insideUnitCircle * 5f;
-      interactionPurchaseLand.StartCoroutine((IEnumerator) interactionPurchaseLand.WorkerRoutine(worker, UnityEngine.Random.Range(0.0f, 2f), 3f));
+      interactionPurchaseLand.StartCoroutine(interactionPurchaseLand.WorkerRoutine(worker, UnityEngine.Random.Range(0.0f, 2f), 3f));
     }
     yield return (object) new WaitForSeconds(3f);
     CameraManager.instance.ShakeCameraForDuration(0.7f, 0.9f, 2f);

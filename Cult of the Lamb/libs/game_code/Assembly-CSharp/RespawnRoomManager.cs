@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RespawnRoomManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Beffio.Dithering;
@@ -102,7 +102,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
       {
         Time.timeScale = 1f;
         if (LightingManager.Instance.IsTransitionActive)
-          LightingManager.Instance.StartCoroutine((IEnumerator) RespawnRoomManager.Instance.PlayRoutineDelayed());
+          LightingManager.Instance.StartCoroutine(RespawnRoomManager.Instance.PlayRoutineDelayed());
         else
           RespawnRoomManager.Instance.StartPlayRoutine();
       }
@@ -112,7 +112,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
   public void StartPlayRoutine()
   {
     RespawnRoomManager.Instance.gameObject.SetActive(true);
-    RespawnRoomManager.Instance.StartCoroutine((IEnumerator) RespawnRoomManager.Instance.PlayRoutine());
+    RespawnRoomManager.Instance.StartCoroutine(RespawnRoomManager.Instance.PlayRoutine());
     System.Action respawnRoomShown = RespawnRoomManager.OnRespawnRoomShown;
     if (respawnRoomShown == null)
       return;
@@ -156,7 +156,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
           RespawnRoomManager.BlackHearts = (float) BlackHearts;
           RespawnRoomManager.IceHearts = (float) IceHearts;
           RespawnRoomManager.FireHearts = (float) FireHearts;
-          this.StartCoroutine((IEnumerator) this.ConsumefollowerRoutine(f));
+          this.StartCoroutine(this.ConsumefollowerRoutine(f));
         }));
       }
     }
@@ -192,7 +192,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
         FollowerTask_ManualControl nextTask = new FollowerTask_ManualControl();
         Follower f = respawnRoomManager.followers[index].Follower;
         respawnRoomManager.followers[index].FollowerFakeBrain.HardSwapToTask((FollowerTask) nextTask);
-        nextTask.GoToAndStop(f, respawnRoomManager.GetCirclePosition(respawnRoomManager.followers.Count, index, 4f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.SpectatorCheer(f))));
+        nextTask.GoToAndStop(f, respawnRoomManager.GetCirclePosition(respawnRoomManager.followers.Count, index, 4f), (System.Action) (() => this.StartCoroutine(this.SpectatorCheer(f))));
       }
       int x = (double) sacraficeFollower.Follower.transform.position.x > (double) playerFarming.transform.position.x ? -1 : 1;
       bool waitForFollower = true;
@@ -233,7 +233,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
       respawnRoomManager.LoopInstance = AudioManager.Instance.CreateLoop("event:/followers/consume_loop", respawnRoomManager.gameObject, true);
       yield return (object) new WaitForSeconds(1f);
       GameManager.GetInstance().CamFollowTarget.targetDistance += 2f;
-      respawnRoomManager.StartCoroutine((IEnumerator) respawnRoomManager.SpawnSouls(sacraficeFollower.Follower.transform.position, 0.2f, 0.05f));
+      respawnRoomManager.StartCoroutine(respawnRoomManager.SpawnSouls(sacraficeFollower.Follower.transform.position, 0.2f, 0.05f));
       yield return (object) new WaitForSeconds(3f);
       playerFarming.transform.DOMove(respawnRoomManager.FollowerPosition.position, 0.5f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutSine);
     }
@@ -258,14 +258,14 @@ public class RespawnRoomManager : BaseMonoBehaviour
       yield return (object) new WaitForSeconds((float) (((double) duration - 1.5) / 2.0));
       respawnRoomManager.LoopInstance = AudioManager.Instance.CreateLoop("event:/followers/consume_loop", respawnRoomManager.gameObject, true);
       yield return (object) new WaitForSeconds((float) (((double) duration - 1.5) / 2.0));
-      respawnRoomManager.StartCoroutine((IEnumerator) respawnRoomManager.SpawnSouls(sacraficeFollower.Follower.transform.position, 0.025f, 0.015f));
+      respawnRoomManager.StartCoroutine(respawnRoomManager.SpawnSouls(sacraficeFollower.Follower.transform.position, 0.025f, 0.015f));
       GameManager.GetInstance().CamFollowTarget.targetDistance += 2f;
     }
     yield return (object) new WaitForSeconds(0.5f);
     AudioManager.Instance.StopLoop(respawnRoomManager.LoopInstance);
     AudioManager.Instance.PlayOneShot("event:/followers/consume_end", respawnRoomManager.gameObject);
     UnityEngine.Object.Destroy((UnityEngine.Object) sacraficeFollower.Follower.gameObject);
-    respawnRoomManager.StartCoroutine((IEnumerator) respawnRoomManager.FollowerConsumed());
+    respawnRoomManager.StartCoroutine(respawnRoomManager.FollowerConsumed());
     DataManager.Instance.First_Dungeon_Resurrecting = false;
   }
 
@@ -280,7 +280,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
   {
     this.generateRoom.RoomTransform.gameObject.SetActive(false);
     GameManager.GetInstance().CamFollowTarget.DisablePlayerLook = false;
-    this.StartCoroutine((IEnumerator) this.FollowerConsumed());
+    this.StartCoroutine(this.FollowerConsumed());
   }
 
   public IEnumerator FollowerConsumed()
@@ -307,10 +307,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
     return true;
   }
 
-  public void Respawn()
-  {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RespawnRoutine());
-  }
+  public void Respawn() => GameManager.GetInstance().StartCoroutine(this.RespawnRoutine());
 
   public IEnumerator RespawnRoutine()
   {
@@ -472,7 +469,7 @@ public class RespawnRoomManager : BaseMonoBehaviour
 
   public void SetCorruptedRoomGameObjects()
   {
-    this.StartCoroutine((IEnumerator) this.SetCorruptedRoomGameObjectsRoutine());
+    this.StartCoroutine(this.SetCorruptedRoomGameObjectsRoutine());
   }
 
   public IEnumerator SetCorruptedRoomGameObjectsRoutine()
@@ -490,6 +487,6 @@ public class RespawnRoomManager : BaseMonoBehaviour
   public void \u003CFollowerConsumed\u003Eb__39_0()
   {
     GameManager.GetInstance().OnConversationEnd();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RespawnRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RespawnRoutine());
   }
 }

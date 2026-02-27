@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WeatherSystemController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -201,7 +201,7 @@ public class WeatherSystemController : MonoBehaviour
         this.windSystem.Initialise(weatherData.ParticleSystemReference ?? weatherData.ParticleSystem);
     }
     this.TurnOffOverlays();
-    this.StartCoroutine((IEnumerator) this.WaitForPlayer());
+    this.StartCoroutine(this.WaitForPlayer());
   }
 
   public void TurnOffOverlays()
@@ -209,7 +209,10 @@ public class WeatherSystemController : MonoBehaviour
     if ((UnityEngine.Object) this.WeatherTintOverlay != (UnityEngine.Object) null)
       this.WeatherTintOverlay.enabled = false;
     if ((UnityEngine.Object) this.blizzardOverlay != (UnityEngine.Object) null)
+    {
+      this.blizzardOverlay.gameObject.SetActive(false);
       this.blizzardOverlay.enabled = false;
+    }
     if ((UnityEngine.Object) this.BlizzardCloudPlane1 != (UnityEngine.Object) null)
     {
       this.BlizzardCloudPlane1.SetActive(false);
@@ -398,6 +401,7 @@ public class WeatherSystemController : MonoBehaviour
         this.blizzardOverlay.DOKill();
         if (!GameManager.IsDungeon(PlayerFarming.Location))
         {
+          this.blizzardOverlay.gameObject.SetActive(true);
           this.blizzardOverlay.enabled = true;
           Color color = this.blizzardOverlay.color with
           {
@@ -407,6 +411,7 @@ public class WeatherSystemController : MonoBehaviour
           {
             if ((double) currentData.BlizzardOverlayOpacity > 0.0)
               return;
+            this.blizzardOverlay.gameObject.SetActive(false);
             this.blizzardOverlay.enabled = false;
             Debug.Log((object) $"WeatherSystemController: Blizzard overlay disabled (opacity: {currentData.BlizzardOverlayOpacity}, isNotDungeon: {!GameManager.IsDungeon(PlayerFarming.Location)})");
           }));
@@ -507,6 +512,7 @@ public class WeatherSystemController : MonoBehaviour
         a = 0.0f
       }, transitionDuration).OnComplete<TweenerCore<Color, Color, ColorOptions>>((TweenCallback) (() =>
       {
+        this.blizzardOverlay.gameObject.SetActive(false);
         this.blizzardOverlay.enabled = false;
         Debug.Log((object) "WeatherSystemController: Disabled blizzard overlay after fade out");
       }));
@@ -784,6 +790,7 @@ public class WeatherSystemController : MonoBehaviour
     if (!((UnityEngine.Object) this.blizzardOverlay != (UnityEngine.Object) null))
       return;
     this.blizzardOverlay.DOKill();
+    this.blizzardOverlay.gameObject.SetActive(true);
     this.blizzardOverlay.enabled = true;
     this.blizzardOverlay.DOColor(targetColor, transitionDuration);
   }

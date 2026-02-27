@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_WolfBase
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -54,6 +54,7 @@ public class Interaction_WolfBase : Interaction
   public bool contributedToCounter;
   public EventInstance howlEventInstance;
   public bool IsFleein;
+  public Coroutine knockbackRoutine;
   public static int PlayerCombo = 1;
   public EventInstance fleeLoopingSFX;
 
@@ -78,6 +79,11 @@ public class Interaction_WolfBase : Interaction
     this.HasSecondaryInteraction = true;
     this.SecondaryInteractable = true;
     this.Interactable = false;
+    if (this.knockbackRoutine == null || this.CurrentState != Interaction_WolfBase.State.Animating)
+      return;
+    this.knockbackRoutine = (Coroutine) null;
+    this.unitObject.UsePathing = true;
+    this.Flee();
   }
 
   public override void OnDisable()
@@ -207,7 +213,7 @@ public class Interaction_WolfBase : Interaction
   {
     this.CurrentState = Interaction_WolfBase.State.Animating;
     this.unitObject.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.KnockBackRoutine());
+    this.knockbackRoutine = this.StartCoroutine(this.KnockBackRoutine());
   }
 
   public IEnumerator KnockBackRoutine()
@@ -220,6 +226,7 @@ public class Interaction_WolfBase : Interaction
     this.spine.AnimationState.SetAnimation(0, "knockback-reset", false);
     this.spine.AnimationState.AddAnimation(0, "idle", true, 0.0f);
     yield return (object) new WaitForSeconds(0.9f);
+    this.knockbackRoutine = (Coroutine) null;
     this.unitObject.UsePathing = true;
     this.Flee();
   }
@@ -534,7 +541,7 @@ public class Interaction_WolfBase : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003CUpdate\u003Eb__60_0()
+  public void \u003CUpdate\u003Eb__61_0()
   {
     if (this.CurrentState != Interaction_WolfBase.State.Animating)
       return;
@@ -542,7 +549,7 @@ public class Interaction_WolfBase : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003CUpdate\u003Eb__60_1()
+  public void \u003CUpdate\u003Eb__61_1()
   {
     if ((UnityEngine.Object) this.spine != (UnityEngine.Object) null)
       this.spine.AnimationState.SetAnimation(0, "jump_land", false);
@@ -560,7 +567,7 @@ public class Interaction_WolfBase : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003CUpdate\u003Eb__60_2()
+  public void \u003CUpdate\u003Eb__61_2()
   {
     if ((UnityEngine.Object) this.spine != (UnityEngine.Object) null)
     {
@@ -573,7 +580,7 @@ public class Interaction_WolfBase : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnEndPath\u003Eb__61_0()
+  public void \u003COnEndPath\u003Eb__62_0()
   {
     if (!((UnityEngine.Object) this.trap != (UnityEngine.Object) null))
       return;

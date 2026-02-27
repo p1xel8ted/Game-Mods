@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualSacrifice
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -31,16 +31,16 @@ public class RitualSacrifice : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine());
+    this.StartCoroutine(this.SacrificeFollowerRoutine());
   }
 
   public IEnumerator SacrificeFollowerRoutine()
   {
     RitualSacrifice ritualSacrifice = this;
-    yield return (object) ritualSacrifice.StartCoroutine((IEnumerator) ritualSacrifice.CentreAndAnimatePlayer());
+    yield return (object) ritualSacrifice.StartCoroutine(ritualSacrifice.CentreAndAnimatePlayer());
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
     Debug.Log((object) "Ritual sacrifice begin gather");
-    yield return (object) ritualSacrifice.StartCoroutine((IEnumerator) ritualSacrifice.WaitFollowersFormCircle());
+    yield return (object) ritualSacrifice.StartCoroutine(ritualSacrifice.WaitFollowersFormCircle());
     Debug.Log((object) "Ritual sacrifice end gather");
     PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-start", 0, false);
     PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("rituals/ritual-loop", 0, true, 0.0f);
@@ -95,7 +95,7 @@ public class RitualSacrifice : Ritual
     UIFollowerSelectMenuController selectMenuController4 = followerSelectInstance;
     selectMenuController4.OnCancel = selectMenuController4.OnCancel + (System.Action) (() =>
     {
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.EndRitual());
+      GameManager.GetInstance().StartCoroutine(this.EndRitual());
       Cancelled = true;
       this.CompleteRitual(true);
       this.CancelFollowers();
@@ -128,7 +128,7 @@ public class RitualSacrifice : Ritual
         this.sacrificeFollower.gameObject.transform.DOMove(Interaction_TempleAltar.Instance.PortalEffect.transform.position, 2.5f).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
         {
           Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.DoSacrificeRoutine());
+          GameManager.GetInstance().StartCoroutine(this.DoSacrificeRoutine());
         }));
       }));
       GameManager.GetInstance().OnConversationNext(ritualSacrifice.sacrificeFollower.gameObject);
@@ -243,18 +243,18 @@ public class RitualSacrifice : Ritual
     {
       if (!GameManager.GetInstance().UpgradePlayerConfiguration.HasUnlockAvailable(true))
       {
-        yield return (object) ritualSacrifice.StartCoroutine((IEnumerator) ritualSacrifice.GiveSoulsRoutines(Interaction_TempleAltar.Instance.PortalEffect.transform, ritualSacrifice.sacrificeFollower.Brain.Info.SacrificialValue, followerID));
+        yield return (object) ritualSacrifice.StartCoroutine(ritualSacrifice.GiveSoulsRoutines(Interaction_TempleAltar.Instance.PortalEffect.transform, ritualSacrifice.sacrificeFollower.Brain.Info.SacrificialValue, followerID));
       }
       else
       {
         double xpBySermon = (double) DoctrineUpgradeSystem.GetXPBySermon(SermonCategory.PlayerUpgrade);
         float f = Mathf.Ceil(DoctrineUpgradeSystem.GetXPTargetBySermon(SermonCategory.PlayerUpgrade) * ((float) RitualSacrifice.GetDevotionGain(ritualSacrifice.sacrificeFollower.Brain.Info.XPLevel) / 100f) * 10f);
-        yield return (object) ritualSacrifice.StartCoroutine((IEnumerator) ritualSacrifice.UpgradePlayer(Mathf.RoundToInt(f)));
+        yield return (object) ritualSacrifice.StartCoroutine(ritualSacrifice.UpgradePlayer(Mathf.RoundToInt(f)));
       }
       yield return (object) new WaitForSeconds(1f);
       GameManager.GetInstance().OnConversationNext(Interaction_TempleAltar.Instance.RitualCameraPosition, 6f);
       if (!ritualSacrifice.sacrificeFollower.Brain.Info.IsSnowman && !ritualSacrifice.sacrificeFollower.Brain.HasTrait(FollowerTrait.TraitType.Mutated))
-        yield return (object) ritualSacrifice.StartCoroutine((IEnumerator) ritualSacrifice.GiveBonesAndMeat(Interaction_TempleAltar.Instance.PortalEffect.transform));
+        yield return (object) ritualSacrifice.StartCoroutine(ritualSacrifice.GiveBonesAndMeat(Interaction_TempleAltar.Instance.PortalEffect.transform));
     }
     yield return (object) new WaitForSeconds(0.5f);
     ritualSacrifice.StopSacrificePortalEffect();
@@ -277,7 +277,7 @@ public class RitualSacrifice : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num1 += Delay;
-      ritualSacrifice.StartCoroutine((IEnumerator) ritualSacrifice.DelayFollowerReaction(brain, Delay));
+      ritualSacrifice.StartCoroutine(ritualSacrifice.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1.5f);
     JudgementMeter.ShowModify(DataManager.Instance.CultTraits.Contains(FollowerTrait.TraitType.SacrificeEnthusiast) ? 1 : -1);
@@ -477,7 +477,7 @@ public class RitualSacrifice : Ritual
     this.\u003C\u003E1__state = -1;
     SermonController objectOfType = UnityEngine.Object.FindObjectOfType<SermonController>();
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) ritualSacrifice.StartCoroutine((IEnumerator) objectOfType.SacrificeLevelUp(PerCentGain, new System.Action(ritualSacrifice.StopCheering)));
+    this.\u003C\u003E2__current = (object) ritualSacrifice.StartCoroutine(objectOfType.SacrificeLevelUp(PerCentGain, new System.Action(ritualSacrifice.StopCheering)));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;

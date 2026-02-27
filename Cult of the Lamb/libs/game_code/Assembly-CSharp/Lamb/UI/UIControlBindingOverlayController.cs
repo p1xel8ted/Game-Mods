@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIControlBindingOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -113,13 +113,12 @@ public class UIControlBindingOverlayController : UIMenuBase
       actionRange = this._axisContribution.ToAxisRange()
     };
     this._inputMapper = InputMapper.Default;
-    InputMapper.Options options = this._inputMapper.options;
-    options.isElementAllowedCallback = (Predicate<ControllerPollingInfo>) Delegate.Combine((Delegate) options.isElementAllowedCallback, (Delegate) new Predicate<ControllerPollingInfo>(this.IsElementAllowed));
+    this._inputMapper.options.isElementAllowedCallback += new Predicate<ControllerPollingInfo>(this.IsElementAllowed);
     this._inputMapper.options.allowKeyboardModifierKeyAsPrimary = true;
     this._inputMapper.options.holdDurationToMapKeyboardModifierKeyAsPrimary = 0.0f;
     this._inputMapper.Start(mappingContext);
-    this._inputMapper.InputMappedEvent += (Action<InputMapper.InputMappedEventData>) new Action<InputMapper.InputMappedEventData>(this.InputMappedEvent);
-    this._inputMapper.ConflictFoundEvent += (Action<InputMapper.ConflictFoundEventData>) new Action<InputMapper.ConflictFoundEventData>(this.ConflictFoundEvent);
+    this._inputMapper.InputMappedEvent += new Action<InputMapper.InputMappedEventData>(this.InputMappedEvent);
+    this._inputMapper.ConflictFoundEvent += new Action<InputMapper.ConflictFoundEventData>(this.ConflictFoundEvent);
   }
 
   public bool IsElementAllowed(ControllerPollingInfo pollingInfo)
@@ -185,7 +184,7 @@ public class UIControlBindingOverlayController : UIMenuBase
   public void ConflictFoundEvent(InputMapper.ConflictFoundEventData data)
   {
     UnityEngine.Debug.Log((object) "Conflict Found Event".Colour(Color.red));
-    ((Action<InputMapper.ConflictResponse>) data.responseCallback)(InputMapper.ConflictResponse.Add);
+    data.responseCallback(InputMapper.ConflictResponse.Add);
   }
 
   public void Update()

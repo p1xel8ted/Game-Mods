@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GhostNPC
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -163,7 +163,7 @@ public class GhostNPC : BaseMonoBehaviour
       this.fixedShopInteraction.Callback.AddListener(new UnityAction(this.ConfigureBarks));
     if (this._isHome || !this._splineAnimate.IsPlaying)
       return;
-    this.StartCoroutine((IEnumerator) this.WaitToReachHome(new System.Action(this.ReachedHome)));
+    this.StartCoroutine(this.WaitToReachHome(new System.Action(this.ReachedHome)));
   }
 
   public void OnDisable()
@@ -266,11 +266,11 @@ public class GhostNPC : BaseMonoBehaviour
     if ((bool) (UnityEngine.Object) ghostNpc.rescueConversation)
     {
       ghostNpc.rescueConversation.Play();
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(ghostNpc.\u003CSummon\u003Eb__61_0));
+      yield return (object) new WaitUntil(new Func<bool>(ghostNpc.\u003CSummon\u003Eb__61_0));
     }
   }
 
-  public void ReturnHome() => this.StartCoroutine((IEnumerator) this.ReturnHomeRoutine());
+  public void ReturnHome() => this.StartCoroutine(this.ReturnHomeRoutine());
 
   public void SetGrumpyEmotion()
   {
@@ -289,7 +289,7 @@ public class GhostNPC : BaseMonoBehaviour
     ghostNpc._splineAnimate.Play();
     ghostNpc._skeletonAnimation.AnimationState.SetAnimation(0, ghostNpc.moveAnimation, true);
     AudioManager.Instance.PlayOneShot("event:/dlc/env/ghoststatue/ghost_move");
-    yield return (object) ghostNpc.StartCoroutine((IEnumerator) ghostNpc.WaitToReachHome(new System.Action(ghostNpc.ReachedHome)));
+    yield return (object) ghostNpc.StartCoroutine(ghostNpc.WaitToReachHome(new System.Action(ghostNpc.ReachedHome)));
   }
 
   public IEnumerator WaitToReachHome(System.Action onReachedHome)
@@ -309,7 +309,7 @@ public class GhostNPC : BaseMonoBehaviour
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = -1;
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) new WaitUntil((Func<bool>) new Func<bool>(ghostNpc.\u003CWaitToReachHome\u003Eb__65_0));
+    this.\u003C\u003E2__current = (object) new WaitUntil(new Func<bool>(ghostNpc.\u003CWaitToReachHome\u003Eb__65_0));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;

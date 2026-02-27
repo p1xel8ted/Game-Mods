@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Ritual_RanchMeat
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -23,7 +23,7 @@ public class Ritual_RanchMeat : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -34,7 +34,7 @@ public class Ritual_RanchMeat : Ritual
     Interaction_TempleAltar.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
     PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualRanchMeat.StartCoroutine((IEnumerator) ritualRanchMeat.WaitFollowersFormCircle());
+    yield return (object) ritualRanchMeat.StartCoroutine(ritualRanchMeat.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
@@ -62,7 +62,7 @@ public class Ritual_RanchMeat : Ritual
       if ((bool) (UnityEngine.Object) followerById)
       {
         followers.Add(followerById);
-        ritualRanchMeat.StartCoroutine((IEnumerator) ritualRanchMeat.MoveFollower(followerById, index, (System.Action) (() => ++waiting)));
+        ritualRanchMeat.StartCoroutine(ritualRanchMeat.MoveFollower(followerById, index, (System.Action) (() => ++waiting)));
       }
     }
     foreach (FollowerBrain followerBrain in followerBrainList)
@@ -98,7 +98,7 @@ public class Ritual_RanchMeat : Ritual
     yield return (object) new WaitForSeconds(1f);
     waiting = 0;
     for (int index = 0; index < 2; ++index)
-      ritualRanchMeat.StartCoroutine((IEnumerator) ritualRanchMeat.Harvest(followers[index], index, (System.Action) (() => ++waiting)));
+      ritualRanchMeat.StartCoroutine(ritualRanchMeat.Harvest(followers[index], index, (System.Action) (() => ++waiting)));
     yield return (object) new WaitForSeconds(2f);
     ranchAnimal.Die(false);
     yield return (object) new WaitForSeconds(1f);
@@ -127,7 +127,7 @@ public class Ritual_RanchMeat : Ritual
       {
         float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
         num += Delay;
-        ritualRanchMeat.StartCoroutine((IEnumerator) ritualRanchMeat.DelayFollowerReaction(brain, Delay));
+        ritualRanchMeat.StartCoroutine(ritualRanchMeat.DelayFollowerReaction(brain, Delay));
         brain.AddThought(Thought.RanchMeat);
       }
     }
@@ -154,7 +154,7 @@ public class Ritual_RanchMeat : Ritual
     while (waiting)
       yield return (object) null;
     FollowerBrain.SetFollowerCostume(follower.Spine.Skeleton, follower.Brain._directInfoAccess.XPLevel, follower.Brain._directInfoAccess.SkinName, follower.Brain._directInfoAccess.SkinColour, follower.Brain._directInfoAccess.Outfit, FollowerHatType.Ranch, follower.Brain._directInfoAccess.Clothing, follower.Brain._directInfoAccess.Customisation, follower.Brain._directInfoAccess.Special, follower.Brain._directInfoAccess.Necklace, follower.Brain._directInfoAccess.ClothingVariant, follower.Brain._directInfoAccess);
-    yield return (object) ritualRanchMeat.StartCoroutine((IEnumerator) follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
+    yield return (object) ritualRanchMeat.StartCoroutine(follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
     follower.FacePosition(ChurchFollowerManager.Instance.RitualCenterPosition.position);
     System.Action action = callback;
     if (action != null)
@@ -174,13 +174,13 @@ public class Ritual_RanchMeat : Ritual
       "action",
       "Ranching/add-wool"
     };
-    yield return (object) ritualRanchMeat.StartCoroutine((IEnumerator) follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index] * 0.5f));
+    yield return (object) ritualRanchMeat.StartCoroutine(follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index] * 0.5f));
     AudioManager.Instance.PlayOneShot("event:/dlc/ritual/gorging_butcher");
     follower.State.facingAngle = Utils.GetAngle(follower.transform.position, PlayerFarming.Instance.transform.position);
     double num = (double) follower.SetBodyAnimation(anims[0], true);
-    ritualRanchMeat.StartCoroutine((IEnumerator) ritualRanchMeat.SpawnItem(InventoryItem.ITEM_TYPE.MEAT, 5, new Vector2(0.4f, 0.5f), follower.transform.position));
+    ritualRanchMeat.StartCoroutine(ritualRanchMeat.SpawnItem(InventoryItem.ITEM_TYPE.MEAT, 5, new Vector2(0.4f, 0.5f), follower.transform.position));
     yield return (object) new WaitForSeconds(3f);
-    yield return (object) ritualRanchMeat.StartCoroutine((IEnumerator) follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
+    yield return (object) ritualRanchMeat.StartCoroutine(follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
     follower.FacePosition(ChurchFollowerManager.Instance.RitualCenterPosition.position);
     System.Action action = callback;
     if (action != null)
@@ -200,7 +200,7 @@ public class Ritual_RanchMeat : Ritual
       PickUp component = InventoryItem.Spawn(item, 1, pos - Vector3.forward).GetComponent<PickUp>();
       component.SetInitialSpeedAndDiraction(4f + UnityEngine.Random.Range(-0.5f, 1f), (float) (270 + UnityEngine.Random.Range(-90, 90)));
       component.MagnetToPlayer = false;
-      ritualRanchMeat.StartCoroutine((IEnumerator) ritualRanchMeat.DelayedCollect(component));
+      ritualRanchMeat.StartCoroutine(ritualRanchMeat.DelayedCollect(component));
       yield return (object) new WaitForSeconds(UnityEngine.Random.Range(timeBetween.x, timeBetween.y));
     }
   }

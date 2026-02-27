@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: IcegoreController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -84,7 +84,7 @@ public class IcegoreController : BaseMonoBehaviour
     icegoreController.skeleton.gameObject.transform.localScale = new Vector3(flag ? -1f : 1f, 1f, 1f);
     string animationName = icegoreController.hasPickedUpObject ? icegoreController.walkingWithPickupAnimation : icegoreController.walkAnimation;
     icegoreController.skeleton.AnimationState.SetAnimation(0, animationName, true);
-    Coroutine stomping = icegoreController.StartCoroutine((IEnumerator) icegoreController.StompEvery(1f));
+    Coroutine stomping = icegoreController.StartCoroutine(icegoreController.StompEvery(1f));
     yield return (object) icegoreController.transform.DOMove(position, speed).SetSpeedBased<TweenerCore<Vector3, Vector3, VectorOptions>>().WaitForCompletion();
     if (stomping != null)
       icegoreController.StopCoroutine(stomping);
@@ -94,7 +94,7 @@ public class IcegoreController : BaseMonoBehaviour
   public IEnumerator StompFor(float duration)
   {
     IcegoreController icegoreController = this;
-    Coroutine stomping = icegoreController.StartCoroutine((IEnumerator) icegoreController.StompEvery(1f));
+    Coroutine stomping = icegoreController.StartCoroutine(icegoreController.StompEvery(1f));
     yield return (object) new WaitForSeconds(duration);
     if (stomping != null)
       icegoreController.StopCoroutine(stomping);

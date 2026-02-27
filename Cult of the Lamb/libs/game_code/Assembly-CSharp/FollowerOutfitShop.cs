@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerOutfitShop
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -249,7 +249,7 @@ public class FollowerOutfitShop : Interaction
       this.Interactable = false;
       this.aquisitionMethod = FollowerOutfitShop.OutfitAquisitionMethod.Purchased;
       ++this.clothesForSalePerTimeSeeing;
-      this.StartCoroutine((IEnumerator) this.GiveSkin());
+      this.StartCoroutine(this.GiveSkin());
     }
     else
       this.CantAfford();
@@ -332,7 +332,7 @@ public class FollowerOutfitShop : Interaction
   public void PlayGiveSkinSquence()
   {
     this.talkedWithBopConvo.Callback.RemoveListener(new UnityAction(this.PlayGiveSkinSquence));
-    this.StartCoroutine((IEnumerator) this.GiveSkin());
+    this.StartCoroutine(this.GiveSkin());
   }
 
   public IEnumerator GiveSkin()
@@ -449,10 +449,7 @@ public class FollowerOutfitShop : Interaction
     this.aquisitionMethod = FollowerOutfitShop.OutfitAquisitionMethod.None;
   }
 
-  public void GiveMultipleOutfits()
-  {
-    this.StartCoroutine((IEnumerator) this.GiveMultipleOutfitsSequence());
-  }
+  public void GiveMultipleOutfits() => this.StartCoroutine(this.GiveMultipleOutfitsSequence());
 
   public IEnumerator GiveMultipleOutfitsSequence()
   {

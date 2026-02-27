@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIUnlockCurse
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -284,7 +284,7 @@ public class UIUnlockCurse : BaseMonoBehaviour
       this.IconContainerCanvasGroup.alpha = 0.0f;
       DOTween.To((DOGetter<float>) (() => this.IconContainerCanvasGroup.alpha), (DOSetter<float>) (x => this.IconContainerCanvasGroup.alpha = x), 1f, 1f);
       this.CurrentCurseIcon.costParent.SetActive(true);
-      this.StartCoroutine((IEnumerator) this.PlayRoutine(0.5f, false));
+      this.StartCoroutine(this.PlayRoutine(0.5f, false));
     }));
   }
 

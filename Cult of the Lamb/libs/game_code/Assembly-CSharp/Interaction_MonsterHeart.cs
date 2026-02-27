@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_MonsterHeart
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -28,7 +28,7 @@ public class Interaction_MonsterHeart : Interaction
   public void Start()
   {
     this.UpdateLocalisation();
-    this.heartBeatingRoutine = this.StartCoroutine((IEnumerator) this.BeatingHeartRoutine());
+    this.heartBeatingRoutine = this.StartCoroutine(this.BeatingHeartRoutine());
   }
 
   public IEnumerator BeatingHeartRoutine()
@@ -81,7 +81,7 @@ public class Interaction_MonsterHeart : Interaction
       transform = {
         position = this.transform.position + this.MoveToPosition
       }
-    }, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.TakeHeart())));
+    }, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.TakeHeart())));
     this.Enabled = false;
   }
 
@@ -148,15 +148,15 @@ public class Interaction_MonsterHeart : Interaction
       {
         ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/MonsterHeart", Objectives.CustomQuestTypes.MonsterHeart), true);
         if ((bool) (UnityEngine.Object) ChainDoor.Instance)
-          ChainDoor.Instance.Play((System.Action) (() => this.StartCoroutine((IEnumerator) this.DoHeartTaken())));
+          ChainDoor.Instance.Play((System.Action) (() => this.StartCoroutine(this.DoHeartTaken())));
         else
-          this.StartCoroutine((IEnumerator) this.DoHeartTaken());
+          this.StartCoroutine(this.DoHeartTaken());
       });
     }
     else if ((bool) (UnityEngine.Object) ChainDoor.Instance)
-      ChainDoor.Instance.Play((System.Action) (() => this.StartCoroutine((IEnumerator) this.DoHeartTaken())));
+      ChainDoor.Instance.Play((System.Action) (() => this.StartCoroutine(this.DoHeartTaken())));
     else
-      this.StartCoroutine((IEnumerator) this.DoHeartTaken());
+      this.StartCoroutine(this.DoHeartTaken());
   }
 
   public event Interaction_MonsterHeart.HeartTaken OnHeartTaken;
@@ -191,32 +191,23 @@ public class Interaction_MonsterHeart : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__12_0()
-  {
-    this.StartCoroutine((IEnumerator) this.TakeHeart());
-  }
+  public void \u003COnInteract\u003Eb__12_0() => this.StartCoroutine(this.TakeHeart());
 
   [CompilerGenerated]
   public void \u003CHeartHasBeenTaken\u003Eb__15_1()
   {
     ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/MonsterHeart", Objectives.CustomQuestTypes.MonsterHeart), true);
     if ((bool) (UnityEngine.Object) ChainDoor.Instance)
-      ChainDoor.Instance.Play((System.Action) (() => this.StartCoroutine((IEnumerator) this.DoHeartTaken())));
+      ChainDoor.Instance.Play((System.Action) (() => this.StartCoroutine(this.DoHeartTaken())));
     else
-      this.StartCoroutine((IEnumerator) this.DoHeartTaken());
+      this.StartCoroutine(this.DoHeartTaken());
   }
 
   [CompilerGenerated]
-  public void \u003CHeartHasBeenTaken\u003Eb__15_2()
-  {
-    this.StartCoroutine((IEnumerator) this.DoHeartTaken());
-  }
+  public void \u003CHeartHasBeenTaken\u003Eb__15_2() => this.StartCoroutine(this.DoHeartTaken());
 
   [CompilerGenerated]
-  public void \u003CHeartHasBeenTaken\u003Eb__15_0()
-  {
-    this.StartCoroutine((IEnumerator) this.DoHeartTaken());
-  }
+  public void \u003CHeartHasBeenTaken\u003Eb__15_0() => this.StartCoroutine(this.DoHeartTaken());
 
   public delegate void HeartTaken();
 }

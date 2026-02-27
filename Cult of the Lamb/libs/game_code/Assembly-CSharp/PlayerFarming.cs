@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerFarming
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -375,11 +375,11 @@ public class PlayerFarming : BaseMonoBehaviour
       if (!this._Healing && value)
       {
         this.HealingParticles.Play();
-        this.StartCoroutine((IEnumerator) this.DoHealing());
+        this.StartCoroutine(this.DoHealing());
       }
       if (this._Healing && !value)
       {
-        this.StopCoroutine((IEnumerator) this.DoHealing());
+        this.StopCoroutine(this.DoHealing());
         this.HealingParticles.Stop();
       }
       this._Healing = value;
@@ -468,7 +468,7 @@ public class PlayerFarming : BaseMonoBehaviour
     Health component = collider.GetComponent<Health>();
     if (!(bool) (UnityEngine.Object) component || component.team != Health.Team.Team2)
       return;
-    component.DealDamage(PlayerWeapon.GetDamage(0.1f, this.playerWeapon.CurrentWeaponLevel, this), this.gameObject, collider.transform.position, AttackType: Health.AttackTypes.NoHitStop);
+    component.DealDamage(PlayerWeapon.GetDamage(0.1f, this.playerWeapon.CurrentWeaponLevel, this), this.gameObject, collider.transform.position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: true);
   }
 
   public void OnNewPhaseStartedInDungeon()
@@ -609,7 +609,7 @@ public class PlayerFarming : BaseMonoBehaviour
   {
     if (!((UnityEngine.Object) this.gameObject != (UnityEngine.Object) null) || !this.gameObject.activeInHierarchy)
       return;
-    this.StartCoroutine((IEnumerator) this.CustomAnimationRoutine(Animation, Loop));
+    this.StartCoroutine(this.CustomAnimationRoutine(Animation, Loop));
   }
 
   public IEnumerator CustomAnimationRoutine(string Animation, bool Loop)
@@ -621,7 +621,7 @@ public class PlayerFarming : BaseMonoBehaviour
 
   public void CustomAnimationWithCallback(string Animation, bool Loop, System.Action Callback)
   {
-    this.StartCoroutine((IEnumerator) this.CustomAnimationWithCallBackRoutine(Animation, Loop, Callback));
+    this.StartCoroutine(this.CustomAnimationWithCallBackRoutine(Animation, Loop, Callback));
   }
 
   public IEnumerator CustomAnimationWithCallBackRoutine(
@@ -1256,7 +1256,7 @@ public class PlayerFarming : BaseMonoBehaviour
               this.state.CURRENT_STATE = StateMachine.State.ChargingSnowball;
             }
             else if (!InputManager.Gameplay.GetInteractButtonHeld(this) && this.state.CURRENT_STATE == StateMachine.State.ChargingSnowball)
-              this.StartCoroutine((IEnumerator) this.ThrowSnowball());
+              this.StartCoroutine(this.ThrowSnowball());
             if (this.state.CURRENT_STATE == StateMachine.State.ChargingSnowball)
               this.ChargeSnowball();
           }
@@ -1559,7 +1559,7 @@ public class PlayerFarming : BaseMonoBehaviour
         }
         if (InputManager.Gameplay.GetBleatButtonDown(this) && !this.IsKnockedOut && (!GameManager.IsDungeon(PlayerFarming.Location) || ((!GameManager.IsDungeon(PlayerFarming.Location) ? 0 : (Health.team2.Count <= 0 ? 1 : 0)) & (bleatButtonUp ? 1 : 0)) != 0))
         {
-          this.StartCoroutine((IEnumerator) this.BleatRoutine());
+          this.StartCoroutine(this.BleatRoutine());
           return false;
         }
         break;
@@ -1687,7 +1687,7 @@ public class PlayerFarming : BaseMonoBehaviour
       if ((UnityEngine.Object) componentInParent2 != (UnityEngine.Object) null && this.RepelProjectile(componentInParent2))
         return;
     }
-    componentInParent1.DealDamage(PlayerWeapon.GetDamage(1f, this.currentWeaponLevel / 2, this), this.gameObject, this.transform.position);
+    componentInParent1.DealDamage(PlayerWeapon.GetDamage(1f, this.currentWeaponLevel / 2, this), this.gameObject, this.transform.position, dealDamageImmediately: true);
   }
 
   public bool RepelProjectile(Projectile projectile)
@@ -1759,10 +1759,7 @@ public class PlayerFarming : BaseMonoBehaviour
     onGetXp();
   }
 
-  public void GetDisciple(float Delta)
-  {
-    this.StartCoroutine((IEnumerator) this.AddDisciple(Delta));
-  }
+  public void GetDisciple(float Delta) => this.StartCoroutine(this.AddDisciple(Delta));
 
   public IEnumerator AddDisciple(float Delta)
   {

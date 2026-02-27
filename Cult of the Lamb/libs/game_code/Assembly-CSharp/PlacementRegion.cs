@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlacementRegion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -211,12 +211,12 @@ public class PlacementRegion : BaseMonoBehaviour
   public void Play(Vector3 pos = default (Vector3))
   {
     this.positionOffset = pos;
-    this.StartCoroutine((IEnumerator) this.PlayRoutine(pos));
+    this.StartCoroutine(this.PlayRoutine(pos));
   }
 
   public void Play(int structureID)
   {
-    this.StartCoroutine((IEnumerator) this.PlayRoutine(StructureManager.GetStructureByID<StructureBrain>(structureID).Data.Position - Vector3.forward));
+    this.StartCoroutine(this.PlayRoutine(StructureManager.GetStructureByID<StructureBrain>(structureID).Data.Position - Vector3.forward));
   }
 
   public void PlayMove(Structure structure)
@@ -237,7 +237,7 @@ public class PlacementRegion : BaseMonoBehaviour
       if (buildingBeganMoving != null)
         buildingBeganMoving(structure.Structure_Info.ID);
     }
-    this.StartCoroutine((IEnumerator) this.PlayRoutine(structure.transform.position));
+    this.StartCoroutine(this.PlayRoutine(structure.transform.position));
   }
 
   public void OnStructuresMoved(StructuresData structure) => this.OnStructuresPlaced();
@@ -379,7 +379,7 @@ public class PlacementRegion : BaseMonoBehaviour
     WeedManager.HideAll();
     if (placementRegion.isPath)
       PathTileManager.Instance.ShowPathsBeingBuilt();
-    yield return (object) placementRegion.StartCoroutine((IEnumerator) placementRegion.PlaceObject());
+    yield return (object) placementRegion.StartCoroutine(placementRegion.PlaceObject());
     DLCLandController.Instance.ShowBridge();
     HUD_Manager.Instance.Show();
     WeatherSystemController.Instance.ShowWeather(false);
@@ -522,7 +522,7 @@ public class PlacementRegion : BaseMonoBehaviour
   {
     if (this.isClearingTiles)
       return;
-    this.StartCoroutine((IEnumerator) this.ClearTilesIE());
+    this.StartCoroutine(this.ClearTilesIE());
   }
 
   public IEnumerator ClearTilesIE()
@@ -762,7 +762,7 @@ public class PlacementRegion : BaseMonoBehaviour
           }
         }
       }
-      Debug.Log((object) ("CurrentStructureToUpgrade " + ((object) placementRegion.CurrentStructureToUpgrade)?.ToString()));
+      Debug.Log((object) ("CurrentStructureToUpgrade " + placementRegion.CurrentStructureToUpgrade?.ToString()));
       placementRegion.CurrentStructureToUpgrade = Closest;
       if ((bool) (UnityEngine.Object) placementRegion.CurrentStructureToUpgrade && (bool) (UnityEngine.Object) placementRegion.placementObject)
         placementRegion.placementObject.transform.position = placementRegion.CurrentStructureToUpgrade.transform.position;
@@ -1276,7 +1276,7 @@ label_181:
           }
         }
       }
-      Debug.Log((object) ("CurrentStructureToUpgrade " + ((object) placementRegion.CurrentStructureToUpgrade)?.ToString()));
+      Debug.Log((object) ("CurrentStructureToUpgrade " + placementRegion.CurrentStructureToUpgrade?.ToString()));
       placementRegion.CurrentStructureToUpgrade = structure1;
       if ((bool) (UnityEngine.Object) placementRegion.CurrentStructureToUpgrade && (bool) (UnityEngine.Object) placementRegion.placementObject)
         placementRegion.placementObject.transform.position = placementRegion.CurrentStructureToUpgrade.transform.position;

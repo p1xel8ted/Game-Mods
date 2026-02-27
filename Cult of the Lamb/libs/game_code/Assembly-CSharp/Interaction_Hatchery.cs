@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Hatchery
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -177,13 +177,13 @@ public class Interaction_Hatchery : Interaction
     base.OnInteract(state);
     if (this.eggReady)
     {
-      this.StartCoroutine((IEnumerator) this.HatchIE());
+      this.StartCoroutine(this.HatchIE());
     }
     else
     {
       if (!this.eggRequiresWatering)
         return;
-      this.StartCoroutine((IEnumerator) this.WaterIE());
+      this.StartCoroutine(this.WaterIE());
     }
   }
 
@@ -233,7 +233,7 @@ public class Interaction_Hatchery : Interaction
     yield return (object) new WaitForSeconds(1f);
     if (info.ID == 100000)
     {
-      interactionHatchery.StartCoroutine((IEnumerator) interactionHatchery.BringFollowersTogether());
+      interactionHatchery.StartCoroutine(interactionHatchery.BringFollowersTogether());
       yield return (object) new WaitForSeconds(3f);
     }
     info.Outfit = FollowerOutfitType.Follower;
@@ -254,7 +254,7 @@ public class Interaction_Hatchery : Interaction
     recruit.PlayConvo = false;
     if (info.ID == 100000)
     {
-      interactionHatchery.StartCoroutine((IEnumerator) interactionHatchery.ChosenChildHatchIE(recruit.Follower));
+      interactionHatchery.StartCoroutine(interactionHatchery.ChosenChildHatchIE(recruit.Follower));
       recruit.Follower.Spine.AnimationState.SetAnimation(0, "Baby/baby-hatch-chosen" + (interactionHatchery.structureBrain.Data.EggInfo.Golden ? "-gold" : ""), false);
       recruit.Follower.Spine.AnimationState.AddAnimation(0, "Baby/baby-idle-sit", true, 0.0f);
       yield return (object) new WaitForEndOfFrame();

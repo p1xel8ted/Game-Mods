@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SpiderNest
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -240,7 +240,7 @@ public class SpiderNest : BaseMonoBehaviour
                   spawnedEnemy = this.spawnedEnemies[index];
                   Vector3 position3 = spawnedEnemy.Key.transform.position;
                   Vector3 AttackLocation = Vector3.Lerp(position2, position3, 0.7f);
-                  health.DealDamage((float) int.MaxValue, gameObject, AttackLocation);
+                  health.DealDamage((float) int.MaxValue, gameObject, AttackLocation, dealDamageImmediately: true);
                 }
               }
               flag = true;
@@ -253,7 +253,7 @@ public class SpiderNest : BaseMonoBehaviour
             spawnedEnemy = this.spawnedEnemies[index];
             Health component = spawnedEnemy.Key.GetComponent<Health>();
             if ((UnityEngine.Object) component != (UnityEngine.Object) null)
-              component.DealDamage(1000f, (GameObject) null, Vector3.zero);
+              component.DealDamage(1000f, (GameObject) null, Vector3.zero, dealDamageImmediately: true);
             flag = true;
           }
           if (flag)
@@ -275,7 +275,7 @@ public class SpiderNest : BaseMonoBehaviour
       else
       {
         this.dropping = true;
-        this.StartCoroutine((IEnumerator) this.ShakeIE());
+        this.StartCoroutine(this.ShakeIE());
       }
     }
   }
@@ -298,10 +298,10 @@ public class SpiderNest : BaseMonoBehaviour
   {
     if (!this.Droppable)
       return;
-    this.StartCoroutine((IEnumerator) this.DropEnemiesIE());
+    this.StartCoroutine(this.DropEnemiesIE());
   }
 
-  public void Shake() => this.StartCoroutine((IEnumerator) this.ShakeIE());
+  public void Shake() => this.StartCoroutine(this.ShakeIE());
 
   public IEnumerator ShakeIE(float delay = 0.0f)
   {
@@ -320,7 +320,7 @@ public class SpiderNest : BaseMonoBehaviour
   {
     SpiderNest spiderNest = this;
     spiderNest.dropping = true;
-    yield return (object) spiderNest.StartCoroutine((IEnumerator) spiderNest.ShakeIE());
+    yield return (object) spiderNest.StartCoroutine(spiderNest.ShakeIE());
     yield return (object) new WaitForSeconds(0.3f);
     spiderNest.unbroken.transform.DOScaleX(1.25f, 0.6f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutBounce);
     spiderNest.unbroken.transform.DOScaleY(0.75f, 0.6f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutBounce);
@@ -378,7 +378,7 @@ public class SpiderNest : BaseMonoBehaviour
           {
             component.invincible = false;
             component.enabled = true;
-            component.DealDamage(float.PositiveInfinity, spiderNest.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+            component.DealDamage(float.PositiveInfinity, spiderNest.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
           }
         }
       }

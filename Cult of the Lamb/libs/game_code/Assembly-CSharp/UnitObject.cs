@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UnitObject
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -271,7 +271,7 @@ public class UnitObject : BaseMonoBehaviour
       this.StopCoroutine(this.knockRoutine);
     if (!appendForce)
       this.rb.velocity = (Vector2) Vector3.zero;
-    this.knockRoutine = this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), KnockbackModifier, Duration));
+    this.knockRoutine = this.StartCoroutine(this.ApplyForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), KnockbackModifier, Duration));
   }
 
   public virtual void DoKnockBack(
@@ -284,7 +284,7 @@ public class UnitObject : BaseMonoBehaviour
       this.StopCoroutine(this.knockRoutine);
     if (!appendForce)
       this.rb.velocity = (Vector2) Vector3.zero;
-    this.knockRoutine = this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(angle, KnockbackModifier, Duration));
+    this.knockRoutine = this.StartCoroutine(this.ApplyForceRoutine(angle, KnockbackModifier, Duration));
   }
 
   public IEnumerator ApplyForceRoutine(float angle, float KnockbackModifier, float Duration)
@@ -357,7 +357,7 @@ public class UnitObject : BaseMonoBehaviour
   public bool OnGround(Vector3 Position)
   {
     LayerMask mask = (LayerMask) LayerMask.GetMask("Island");
-    this.StartCoroutine((IEnumerator) this.DrawRay(Position));
+    this.StartCoroutine(this.DrawRay(Position));
     return Physics.Raycast(Position, Vector3.forward, out RaycastHit _, float.PositiveInfinity, (int) mask);
   }
 

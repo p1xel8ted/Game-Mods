@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FollowerSpawn
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -119,7 +119,7 @@ public class Interaction_FollowerSpawn : Interaction
     if (animate)
     {
       this.Interactable = false;
-      this.StartCoroutine((IEnumerator) this.WaitForFollowerToStopMoving(this.Spine.AnimationState.SetAnimation(0, "transform", false).Animation.Duration));
+      this.StartCoroutine(this.WaitForFollowerToStopMoving(this.Spine.AnimationState.SetAnimation(0, "transform", false).Animation.Duration));
     }
     this.Spine.AnimationState.AddAnimation(0, "unconverted", true, 0.0f);
     this.ForceSkin = ForceSkin;
@@ -241,9 +241,9 @@ public class Interaction_FollowerSpawn : Interaction
     }
     interactionFollowerSpawn.Interactable = false;
     if (true)
-      yield return (object) interactionFollowerSpawn.StartCoroutine((IEnumerator) interactionFollowerSpawn.ConvertFollower());
+      yield return (object) interactionFollowerSpawn.StartCoroutine(interactionFollowerSpawn.ConvertFollower());
     else
-      yield return (object) interactionFollowerSpawn.StartCoroutine((IEnumerator) interactionFollowerSpawn.ConsumefollowerRoutine());
+      yield return (object) interactionFollowerSpawn.StartCoroutine(interactionFollowerSpawn.ConsumefollowerRoutine());
     GameManager.GetInstance().OnConversationEnd();
     yield return (object) new WaitForSeconds(0.75f);
     interactionFollowerSpawn.state.CURRENT_STATE = StateMachine.State.Idle;
@@ -372,7 +372,7 @@ public class Interaction_FollowerSpawn : Interaction
     base.OnInteract(state);
     this.state = state;
     state.CURRENT_STATE = StateMachine.State.CustomAnimation;
-    this.StartCoroutine((IEnumerator) this.PositionPlayer());
+    this.StartCoroutine(this.PositionPlayer());
     this.Activated = true;
   }
 
@@ -401,7 +401,7 @@ public class Interaction_FollowerSpawn : Interaction
     while (interactionFollowerSpawn.playerFarming.GoToAndStopping)
       yield return (object) null;
     interactionFollowerSpawn.state.facingAngle = Utils.GetAngle(interactionFollowerSpawn.state.transform.position, interactionFollowerSpawn.transform.position);
-    interactionFollowerSpawn.StartCoroutine((IEnumerator) interactionFollowerSpawn.FollowerChoiceIE());
+    interactionFollowerSpawn.StartCoroutine(interactionFollowerSpawn.FollowerChoiceIE());
   }
 
   [CompilerGenerated]

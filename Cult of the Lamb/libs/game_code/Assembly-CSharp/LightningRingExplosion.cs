@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LightningRingExplosion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -238,7 +238,7 @@ public class LightningRingExplosion : BaseMonoBehaviour, ISpellOwning
     UnitObject componentInParent = collider.GetComponentInParent<UnitObject>();
     if ((UnityEngine.Object) this.EnemyHealth != (UnityEngine.Object) null && this.EnemyHealth.team != this.team && ((UnityEngine.Object) this.EnemyHealth != (UnityEngine.Object) this.Origin || (UnityEngine.Object) this.EnemyHealth == (UnityEngine.Object) this.Origin && this.includeOwner) && this.unitsToIgnore != null && !this.unitsToIgnore.Contains<UnitObject>(componentInParent))
     {
-      this.EnemyHealth.DealDamage(this.EnemyHealth.team == Health.Team.Team2 ? this.Team2Damage : this.Damage, this.gameObject, Vector3.Lerp(this.transform.position, this.EnemyHealth.transform.position, 0.7f), AttackType: Health.AttackTypes.NoHitStop, AttackFlags: this.attackFlags);
+      this.EnemyHealth.DealDamage(this.EnemyHealth.team == Health.Team.Team2 ? this.Team2Damage : this.Damage, this.gameObject, Vector3.Lerp(this.transform.position, this.EnemyHealth.transform.position, 0.7f), AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: this.EnemyHealth.team != Health.Team.PlayerTeam, AttackFlags: this.attackFlags);
       this.collisionDictionary[collider] = GameManager.GetInstance().CurrentTime;
     }
     if (!this.DoKnockback || this.unitsToIgnore == null || this.unitsToIgnore.Contains<UnitObject>(componentInParent))

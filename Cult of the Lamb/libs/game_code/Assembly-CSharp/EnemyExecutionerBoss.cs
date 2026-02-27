@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyExecutionerBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -66,7 +66,7 @@ public class EnemyExecutionerBoss : BaseMonoBehaviour
     foreach (FormationFighter formationFighter in this.GruntsToEnable)
     {
       if ((UnityEngine.Object) formationFighter != (UnityEngine.Object) null)
-        formationFighter.health.DealDamage(float.MaxValue, this.gameObject, this.transform.position);
+        formationFighter.health.DealDamage(float.MaxValue, this.gameObject, this.transform.position, dealDamageImmediately: true);
     }
   }
 
@@ -79,7 +79,7 @@ public class EnemyExecutionerBoss : BaseMonoBehaviour
       if (!this.NotDead || this.SummonedCount > 1 || (double) (this.Timer += Time.deltaTime) <= 7.0 || !this.enemyBrute.enabled || this.enemyBrute.state.CURRENT_STATE != StateMachine.State.Moving && this.enemyBrute.state.CURRENT_STATE != StateMachine.State.Idle)
         return;
       this.enemyBrute.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.Summon());
+      this.StartCoroutine(this.Summon());
     }
     else
     {
@@ -112,7 +112,7 @@ public class EnemyExecutionerBoss : BaseMonoBehaviour
     enemyExecutionerBoss.enemyBrute.enabled = true;
     enemyExecutionerBoss.enemyBrute.state.CURRENT_STATE = StateMachine.State.Idle;
     yield return (object) new WaitForEndOfFrame();
-    enemyExecutionerBoss.enemyBrute.StartCoroutine((IEnumerator) enemyExecutionerBoss.enemyBrute.ChasePlayer());
+    enemyExecutionerBoss.enemyBrute.StartCoroutine(enemyExecutionerBoss.enemyBrute.ChasePlayer());
   }
 
   public void RemoveSpawned(
@@ -126,7 +126,7 @@ public class EnemyExecutionerBoss : BaseMonoBehaviour
     Victim.OnDie -= new Health.DieAction(this.RemoveSpawned);
   }
 
-  public void Play() => this.StartCoroutine((IEnumerator) this.DoPlay());
+  public void Play() => this.StartCoroutine(this.DoPlay());
 
   public IEnumerator DoPlay()
   {

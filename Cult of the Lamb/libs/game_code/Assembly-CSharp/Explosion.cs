@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Explosion
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -158,7 +158,7 @@ public class Explosion : BaseMonoBehaviour, ISpellOwning
   public void OnEnable()
   {
     CameraManager.instance.ShakeCameraForDuration(0.5f * this.shakeMultiplier, 0.6f * this.shakeMultiplier, 0.3f * this.shakeMultiplier, false);
-    this.StartCoroutine((IEnumerator) this.DelayDestroy());
+    this.StartCoroutine(this.DelayDestroy());
   }
 
   public IEnumerator DelayDestroy()

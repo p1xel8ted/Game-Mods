@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: StealDevotionShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -121,10 +121,10 @@ public class StealDevotionShrine : MonoBehaviour
         InventoryItem.Spawn(InventoryItem.ITEM_TYPE.STONE, UnityEngine.Random.Range(1, 3), this.transform.position);
         this.droppedStone = true;
       }
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.ReformRoutine());
+      GameManager.GetInstance().StartCoroutine(this.ReformRoutine());
     }
     else if (!DungeonSandboxManager.Active)
-      this.StartCoroutine((IEnumerator) this.FindLegendaryWeapon((System.Action) (() =>
+      this.StartCoroutine(this.FindLegendaryWeapon((System.Action) (() =>
       {
         this.GetComponent<CircleCollider2D>().enabled = false;
         this.ContainerToHide.SetActive(false);
@@ -182,7 +182,7 @@ public class StealDevotionShrine : MonoBehaviour
   public IEnumerator ReformRoutine()
   {
     StealDevotionShrine stealDevotionShrine = this;
-    yield return (object) stealDevotionShrine.StartCoroutine((IEnumerator) stealDevotionShrine.FindLegendaryWeapon());
+    yield return (object) stealDevotionShrine.StartCoroutine(stealDevotionShrine.FindLegendaryWeapon());
     yield return (object) null;
     stealDevotionShrine.Spine.AnimationState.SetAnimation(0, "4", false);
     yield return (object) new WaitForSeconds(2f);

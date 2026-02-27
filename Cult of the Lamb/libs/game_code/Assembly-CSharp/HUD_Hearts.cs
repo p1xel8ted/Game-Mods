@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_Hearts
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -229,7 +229,7 @@ public class HUD_Hearts : BaseMonoBehaviour
         this.createdloop = true;
       }
       int num2 = (int) this.loopedSound.setVolume(0.5f);
-      this.StartCoroutine((IEnumerator) this.lowHealthEffect(2f, this.HeartIcons[0]));
+      this.StartCoroutine(this.lowHealthEffect(2f, this.HeartIcons[0]));
     }
     else if (num1 == 1 && !flag && !HUD_Manager.Instance._playerDamageNoti.Active)
     {
@@ -242,7 +242,7 @@ public class HUD_Hearts : BaseMonoBehaviour
         this.createdloop = true;
       }
       int num3 = (int) this.loopedSound.setVolume(1f);
-      this.StartCoroutine((IEnumerator) this.lowHealthEffect(1f, this.HeartIcons[0]));
+      this.StartCoroutine(this.lowHealthEffect(1f, this.HeartIcons[0]));
     }
     else
     {

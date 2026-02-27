@@ -1,0 +1,94 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: Lamb.UI.IngredientList
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using src.Extensions;
+using src.UINavigator;
+using System;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+
+#nullable disable
+namespace Lamb.UI;
+
+public class IngredientList : BaseMonoBehaviour
+{
+  public Action<InventoryItem.ITEM_TYPE, int> OnIngredientRemoved;
+  public Func<IMMSelectable> RequestSelectable;
+  [SerializeField]
+  private RectTransform _contentContainer;
+  [SerializeField]
+  private IngredientItem _inventoryItemTemplate;
+  [SerializeField]
+  private TextMeshProUGUI _count;
+  [SerializeField]
+  private GameObject[] _vacantSlots;
+  private StructuresData _kitchenData;
+  private List<IngredientItem> _items = new List<IngredientItem>();
+
+  public void Configure(StructuresData kitchenData)
+  {
+    this._kitchenData = kitchenData;
+    foreach (InventoryItem inventoryItem in kitchenData.Inventory)
+      this.AddIngredient((InventoryItem.ITEM_TYPE) inventoryItem.type);
+    this.UpdateCount();
+  }
+
+  public void AddIngredient(InventoryItem.ITEM_TYPE ingredient)
+  {
+    this.MakeIngredient(ingredient);
+    this.UpdateCount();
+  }
+
+  public void Clear()
+  {
+    foreach (Component component in this._items)
+      UnityEngine.Object.Destroy((UnityEngine.Object) component.gameObject);
+    this._items.Clear();
+    this.UpdateCount();
+  }
+
+  private void RemoveIngredient(IngredientItem item)
+  {
+    IMMSelectable selectableOnRight = item.Button.FindSelectableOnRight() as IMMSelectable;
+    IMMSelectable selectableOnLeft = item.Button.FindSelectableOnLeft() as IMMSelectable;
+    if (this._items.IndexOf(item) < this._items.Count - 1 && selectableOnRight != null)
+      MonoSingleton<UINavigatorNew>.Instance.NavigateToNew(selectableOnRight);
+    else if (this._items.IndexOf(item) > 0 && selectableOnLeft != null)
+      MonoSingleton<UINavigatorNew>.Instance.NavigateToNew(selectableOnLeft);
+    else
+      MonoSingleton<UINavigatorNew>.Instance.NavigateToNew(this.RequestSelectable());
+    Action<InventoryItem.ITEM_TYPE, int> ingredientRemoved = this.OnIngredientRemoved;
+    if (ingredientRemoved != null)
+      ingredientRemoved(item.Type, this._items.IndexOf(item));
+    this._items.Remove(item);
+    UnityEngine.Object.Destroy((UnityEngine.Object) item.gameObject);
+    this._vacantSlots[this._items.Count].SetActive(true);
+    this.UpdateCount();
+  }
+
+  private IngredientItem MakeIngredient(InventoryItem.ITEM_TYPE ingredient)
+  {
+    IngredientItem newItem = this._inventoryItemTemplate.Instantiate<IngredientItem>((Transform) this._contentContainer);
+    newItem.Configure(ingredient, true, false);
+    newItem.Button.onClick.AddListener((UnityAction) (() => this.RemoveIngredient(newItem)));
+    this._vacantSlots[this._items.Count].SetActive(false);
+    this._items.Add(newItem);
+    newItem.transform.SetSiblingIndex(this._items.Count - 1);
+    return newItem;
+  }
+
+  private void UpdateCount()
+  {
+    this._count.text = $"{this._kitchenData.Inventory.Count}/{3}".Colour(this._kitchenData.Inventory.Count >= 3 ? StaticColors.GreenColor : StaticColors.RedColor);
+  }
+
+  public IMMSelectable ProvideFirstSelectable()
+  {
+    return this._items.Count > 0 ? (IMMSelectable) this._items[0].Button : (IMMSelectable) null;
+  }
+}

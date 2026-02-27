@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJellyGrower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -67,7 +67,7 @@ public class EnemyJellyGrower : EnemyExploder
     if ((double) this.Spine.transform.localScale.x >= 1.0 || this.killed)
       return;
     this.killed = true;
-    this.health.DealDamage(this.health.totalHP, Attacker, AttackLocation, AttackType: Health.AttackTypes.Heavy);
+    this.health.DealDamage(this.health.totalHP, Attacker, AttackLocation, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
   }
 
   public void Grow()
@@ -91,8 +91,8 @@ public class EnemyJellyGrower : EnemyExploder
   public void Pop()
   {
     this.anticipating = false;
-    this.StartCoroutine((IEnumerator) this.ShootRoutine());
-    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+    this.StartCoroutine(this.ShootRoutine());
+    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
   }
 
   public IEnumerator ShootRoutine()

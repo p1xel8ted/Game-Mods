@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_Manager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -304,14 +304,14 @@ public class HUD_Manager : BaseMonoBehaviour
     else if (!both)
     {
       if (!GameManager.IsDungeon(PlayerFarming.Location))
-        this.StartCoroutine((IEnumerator) this.HideBaseHUD(Delay));
+        this.StartCoroutine(this.HideBaseHUD(Delay));
       else
-        this.StartCoroutine((IEnumerator) this.HideDungeonHUD(Delay));
+        this.StartCoroutine(this.HideDungeonHUD(Delay));
     }
     else
     {
-      this.StartCoroutine((IEnumerator) this.HideBaseHUD(Delay));
-      this.StartCoroutine((IEnumerator) this.HideDungeonHUD(Delay));
+      this.StartCoroutine(this.HideBaseHUD(Delay));
+      this.StartCoroutine(this.HideDungeonHUD(Delay));
     }
     if ((bool) (UnityEngine.Object) this._objectivesController)
       this._objectivesController.Hide(Snap);
@@ -342,8 +342,8 @@ public class HUD_Manager : BaseMonoBehaviour
 
   public void ShowBW(float Duration, float StartValue, float EndValue)
   {
-    this.StopCoroutine((IEnumerator) this.FadeInBW(Duration, StartValue, EndValue));
-    this.StartCoroutine((IEnumerator) this.FadeInBW(Duration, StartValue, EndValue));
+    this.StopCoroutine(this.FadeInBW(Duration, StartValue, EndValue));
+    this.StartCoroutine(this.FadeInBW(Duration, StartValue, EndValue));
   }
 
   public IEnumerator FadeInBW(float Duration, float StartValue, float EndValue)
@@ -366,7 +366,7 @@ public class HUD_Manager : BaseMonoBehaviour
       return;
     if (LetterBox.IsPlaying)
     {
-      this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() => this.Show(Delay, Force))));
+      this.StartCoroutine(this.FrameDelay((System.Action) (() => this.Show(Delay, Force))));
     }
     else
     {
@@ -431,9 +431,9 @@ public class HUD_Manager : BaseMonoBehaviour
         NotificationCentre.Instance.Show();
       Debug.Log((object) $"Are we in dungeon to start with? {GameManager.IsDungeon(PlayerFarming.Location).ToString()} {PlayerFarming.Location.ToString()}");
       if (GameManager.IsDungeon(PlayerFarming.Location))
-        this.StartCoroutine((IEnumerator) this.ShowDungeonHUD(Delay));
+        this.StartCoroutine(this.ShowDungeonHUD(Delay));
       else
-        this.StartCoroutine((IEnumerator) this.ShowBaseHUD(Delay));
+        this.StartCoroutine(this.ShowBaseHUD(Delay));
       this.Hidden = false;
     }
   }
@@ -684,6 +684,8 @@ public class HUD_Manager : BaseMonoBehaviour
 
   public void Update()
   {
+    if (MonoSingleton<UIManager>.Instance.IsPaused)
+      return;
     if ((UnityEngine.Object) CultFaithManager.Instance != (UnityEngine.Object) null && !CultFaithManager.Instance.gameObject.activeInHierarchy)
       CultFaithManager.Instance.BarController.Update();
     int itemQuantity = Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD);
@@ -760,43 +762,26 @@ public class HUD_Manager : BaseMonoBehaviour
           this.p2Tween = (Tween) null;
         }));
       int num = -50;
-      RectTransform rectTransform1 = this._playerOneWidget.rectTransform;
-      double x1 = (double) screenPos1.x;
-      double min1 = (double) this._playerOneWidget.rectTransform.rect.width + (double) (num * -1);
+      this._playerOneWidget.rectTransform.position = (Vector3) new Vector2(Mathf.Clamp(screenPos1.x, this._playerOneWidget.rectTransform.rect.width + (float) (num * -1), (float) Screen.width - this._playerOneWidget.rectTransform.rect.width - (float) (num * -1)), Mathf.Clamp(screenPos1.y, this._playerOneWidget.rectTransform.rect.height + (float) num, (float) Screen.height - this._playerOneWidget.rectTransform.rect.height - (float) num));
+      RectTransform rectTransform = this._playerTwoWidget.rectTransform;
+      double x1 = (double) screenPos2.x;
+      Rect rect = this._playerTwoWidget.rectTransform.rect;
+      double min1 = (double) rect.width + (double) (num * -1);
       double width1 = (double) Screen.width;
-      Rect rect = this._playerOneWidget.rectTransform.rect;
+      rect = this._playerTwoWidget.rectTransform.rect;
       double width2 = (double) rect.width;
       double max1 = width1 - width2 - (double) (num * -1);
       double x2 = (double) Mathf.Clamp((float) x1, (float) min1, (float) max1);
-      double y1 = (double) screenPos1.y;
-      rect = this._playerOneWidget.rectTransform.rect;
+      double y1 = (double) screenPos2.y;
+      rect = this._playerTwoWidget.rectTransform.rect;
       double min2 = (double) rect.height + (double) num;
       double height1 = (double) Screen.height;
-      rect = this._playerOneWidget.rectTransform.rect;
+      rect = this._playerTwoWidget.rectTransform.rect;
       double height2 = (double) rect.height;
       double max2 = height1 - height2 - (double) num;
       double y2 = (double) Mathf.Clamp((float) y1, (float) min2, (float) max2);
-      Vector3 vector3_1 = (Vector3) new Vector2((float) x2, (float) y2);
-      rectTransform1.position = vector3_1;
-      RectTransform rectTransform2 = this._playerTwoWidget.rectTransform;
-      double x3 = (double) screenPos2.x;
-      rect = this._playerTwoWidget.rectTransform.rect;
-      double min3 = (double) rect.width + (double) (num * -1);
-      double width3 = (double) Screen.width;
-      rect = this._playerTwoWidget.rectTransform.rect;
-      double width4 = (double) rect.width;
-      double max3 = width3 - width4 - (double) (num * -1);
-      double x4 = (double) Mathf.Clamp((float) x3, (float) min3, (float) max3);
-      double y3 = (double) screenPos2.y;
-      rect = this._playerTwoWidget.rectTransform.rect;
-      double min4 = (double) rect.height + (double) num;
-      double height3 = (double) Screen.height;
-      rect = this._playerTwoWidget.rectTransform.rect;
-      double height4 = (double) rect.height;
-      double max4 = height3 - height4 - (double) num;
-      double y4 = (double) Mathf.Clamp((float) y3, (float) min4, (float) max4);
-      Vector3 vector3_2 = (Vector3) new Vector2((float) x4, (float) y4);
-      rectTransform2.position = vector3_2;
+      Vector3 vector3 = (Vector3) new Vector2((float) x2, (float) y2);
+      rectTransform.position = vector3;
       this._playerOneArrow.up = this._playerOneArrow.transform.position - screenPos1;
       this._playerTwoArrow.up = this._playerTwoArrow.transform.position - screenPos2;
       if (this.p1Tween == null)
@@ -814,6 +799,8 @@ public class HUD_Manager : BaseMonoBehaviour
 
   public void LateUpdate()
   {
+    if (MonoSingleton<UIManager>.Instance.IsPaused)
+      return;
     if (PlayerFarming.Location == FollowerLocation.Base)
     {
       for (int index = 0; index < this._wolfWidgets.Length; ++index)

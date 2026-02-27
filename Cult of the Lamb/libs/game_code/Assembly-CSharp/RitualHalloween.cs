@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualHalloween
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -22,7 +22,7 @@ public class RitualHalloween : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -37,7 +37,7 @@ public class RitualHalloween : Ritual
       PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
       PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     }));
-    yield return (object) ritualHalloween.StartCoroutine((IEnumerator) ritualHalloween.WaitFollowersFormCircle());
+    yield return (object) ritualHalloween.StartCoroutine(ritualHalloween.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
     PlayerFarming.Instance.Spine.skeleton.UpdateWorldTransform();
@@ -66,7 +66,7 @@ public class RitualHalloween : Ritual
       followerBrainList.Remove(followerBrain);
       Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
       if ((bool) (UnityEngine.Object) followerById)
-        ritualHalloween.StartCoroutine((IEnumerator) ritualHalloween.DanceFolower(followerById, index));
+        ritualHalloween.StartCoroutine(ritualHalloween.DanceFolower(followerById, index));
     }
     yield return (object) new WaitForSeconds(2.5f);
     AudioManager.Instance.PlayOneShot("event:/rituals/consume_follower");
@@ -130,7 +130,7 @@ public class RitualHalloween : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num += Delay;
-      ritualHalloween.StartCoroutine((IEnumerator) ritualHalloween.DelayFollowerReaction(brain, Delay));
+      ritualHalloween.StartCoroutine(ritualHalloween.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1.5f);
     ritualHalloween.CompleteRitual();
@@ -168,7 +168,7 @@ public class RitualHalloween : Ritual
     follower.HoodOff(onComplete: (System.Action) (() => waiting = false));
     while (waiting)
       yield return (object) null;
-    yield return (object) ritualHalloween.StartCoroutine((IEnumerator) follower.GoToRoutine(PlayerFarming.Instance.transform.position + positions[index] * 0.75f));
+    yield return (object) ritualHalloween.StartCoroutine(follower.GoToRoutine(PlayerFarming.Instance.transform.position + positions[index] * 0.75f));
     follower.State.facingAngle = Utils.GetAngle(follower.transform.position, PlayerFarming.Instance.transform.position);
     double num = (double) follower.SetBodyAnimation("Sermons/bloodmoon", true);
   }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyArcher
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -112,7 +112,7 @@ public class EnemyArcher : UnitObject, IAttackResilient
   {
     if (this.cWaitForTarget != null)
       this.StopCoroutine(this.cWaitForTarget);
-    this.cWaitForTarget = this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.cWaitForTarget = this.StartCoroutine(this.WaitForTarget());
   }
 
   public override void OnEnable()
@@ -169,7 +169,7 @@ public class EnemyArcher : UnitObject, IAttackResilient
     if (!this.dodgeOnHit || !this.canDodgeOnHit || (double) Time.time <= (double) this.dodgedTimestamp || this.state.CURRENT_STATE == StateMachine.State.RecoverFromAttack || !((UnityEngine.Object) Attacker.GetComponent<PlayerFarming>() != (UnityEngine.Object) null))
       return;
     this.InternalStopAllCoroutines();
-    this.dodgeCoroutine = this.StartCoroutine((IEnumerator) this.DodgeOnHitIE(Attacker));
+    this.dodgeCoroutine = this.StartCoroutine(this.DodgeOnHitIE(Attacker));
   }
 
   public override void OnHit(
@@ -205,7 +205,7 @@ public class EnemyArcher : UnitObject, IAttackResilient
         this.state.CURRENT_STATE = StateMachine.State.HitLeft;
       this.InternalStopAllCoroutines();
       this.DisableForces = false;
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
 label_11:
     if (AttackType == Health.AttackTypes.Projectile && !this.health.HasShield)
@@ -300,7 +300,7 @@ label_11:
       }
       yield return (object) null;
     }
-    enemyArcher.StartCoroutine((IEnumerator) enemyArcher.ChasePlayer());
+    enemyArcher.StartCoroutine(enemyArcher.ChasePlayer());
   }
 
   public void PreventEndlessIdleState()
@@ -308,7 +308,7 @@ label_11:
     this.ClearPaths();
     this.InternalStopAllCoroutines();
     this.state.LookAngle = Utils.GetAngle(this.transform.position, this.TargetObject.transform.position);
-    this.StartCoroutine((IEnumerator) this.ShootArrowRoutine(1f, 2f));
+    this.StartCoroutine(this.ShootArrowRoutine(1f, 2f));
   }
 
   public IEnumerator ChasePlayer()
@@ -333,7 +333,7 @@ label_11:
         }
         if ((double) (enemyArcher.CloseCombatCooldown -= Time.deltaTime * enemyArcher.Spine.timeScale) < 0.0 && (double) Vector3.Distance(enemyArcher.transform.position, enemyArcher.TargetObject.transform.position) < 2.0)
         {
-          enemyArcher.StartCoroutine((IEnumerator) enemyArcher.CloseCombatAttack());
+          enemyArcher.StartCoroutine(enemyArcher.CloseCombatAttack());
           break;
         }
         if (enemyArcher.state.CURRENT_STATE == StateMachine.State.Moving)
@@ -357,7 +357,7 @@ label_11:
         {
           DataManager.Instance.LastArcherShot = TimeManager.TotalElapsedGameTime;
           EnemyArcher.LastArcherShot = GameManager.GetInstance().CurrentTime;
-          enemyArcher.StartCoroutine((IEnumerator) enemyArcher.ShootArrowRoutine());
+          enemyArcher.StartCoroutine(enemyArcher.ShootArrowRoutine());
           break;
         }
       }
@@ -639,7 +639,7 @@ label_11:
         this.Points.Add(new Vector3(raycastHit2D.centroid.x, raycastHit2D.centroid.y) + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset);
         this.PointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine((Vector3) raycastHit2D.centroid + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset));
+      this.StartCoroutine(this.TeleportRoutine((Vector3) raycastHit2D.centroid + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset));
     }
     else
     {
@@ -648,7 +648,7 @@ label_11:
         this.EndPoints.Add(new Vector3(Position.x, Position.y));
         this.EndPointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine(Position));
+      this.StartCoroutine(this.TeleportRoutine(Position));
     }
   }
 
@@ -683,7 +683,7 @@ label_11:
   public void GraveSpawn()
   {
     this.InternalStopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.GraveSpawnRoutine());
+    this.StartCoroutine(this.GraveSpawnRoutine());
   }
 
   public IEnumerator GraveSpawnRoutine()
@@ -699,7 +699,7 @@ label_11:
     yield return (object) new WaitForSeconds(2.33f);
     enemyArcher.health.invincible = false;
     enemyArcher.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemyArcher.StartCoroutine((IEnumerator) enemyArcher.WaitForTarget());
+    enemyArcher.StartCoroutine(enemyArcher.WaitForTarget());
   }
 
   public IEnumerator DodgeOnHitIE(GameObject attacker)
@@ -721,7 +721,7 @@ label_11:
       enemyArcher.SimpleSpineFlash.FlashMeWhite(Mathf.Lerp(0.0f, 0.8f, time / enemyArcher.dodgeDuration));
       yield return (object) null;
     }
-    enemyArcher.StartCoroutine((IEnumerator) enemyArcher.ShootArrowRoutine(hasCharge: false));
+    enemyArcher.StartCoroutine(enemyArcher.ShootArrowRoutine(hasCharge: false));
     enemyArcher.CleanupDodgeCoroutine();
   }
 

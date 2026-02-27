@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyReviver
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -43,7 +43,7 @@ public class EnemyReviver : UnitObject
     if (!((Object) this.currentDeadBody != (Object) null))
       return;
     this.Spine.transform.localPosition = this.Spine.transform.up * -2f;
-    this.StartCoroutine((IEnumerator) this.SpawnEnemyIE(this.currentDeadBody.GetComponentInChildren<Health>()));
+    this.StartCoroutine(this.SpawnEnemyIE(this.currentDeadBody.GetComponentInChildren<Health>()));
   }
 
   public override void Update()
@@ -53,7 +53,7 @@ public class EnemyReviver : UnitObject
       return;
     this.StopCoroutine(this.spawnRoutine);
     this.spawnRoutine = (Coroutine) null;
-    this.StartCoroutine((IEnumerator) this.PopOut());
+    this.StartCoroutine(this.PopOut());
   }
 
   public new void LateUpdate()
@@ -63,7 +63,7 @@ public class EnemyReviver : UnitObject
     {
       Health deadBody = this.FindDeadBody();
       if ((bool) (Object) deadBody)
-        this.spawnRoutine = this.StartCoroutine((IEnumerator) this.SpawnEnemyIE(deadBody));
+        this.spawnRoutine = this.StartCoroutine(this.SpawnEnemyIE(deadBody));
       this.checkBodyTimestamp = this.gm.CurrentTime + 0.2f;
     }
     List<Health> team2 = Health.team2;
@@ -80,7 +80,7 @@ public class EnemyReviver : UnitObject
     this.health.DamageModifier = 1f;
     this.health.untouchable = false;
     this.health.DestroyOnDeath = false;
-    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position);
+    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position, dealDamageImmediately: true);
     this.health.DestroyNextFrame();
   }
 
@@ -91,7 +91,7 @@ public class EnemyReviver : UnitObject
     enemyReviver.currentDeadBody = deadBody.gameObject;
     yield return (object) new WaitForSeconds(1f);
     enemyReviver.transform.position = deadBody.transform.position + (Vector3) Random.insideUnitCircle * 2f;
-    yield return (object) enemyReviver.StartCoroutine((IEnumerator) enemyReviver.PopIn());
+    yield return (object) enemyReviver.StartCoroutine(enemyReviver.PopIn());
     Vector3 startingPosition = deadBody.transform.position;
     float t = 0.0f;
     while ((double) t < (double) enemyReviver.reviveDuration)
@@ -103,7 +103,7 @@ public class EnemyReviver : UnitObject
     }
     enemyReviver.SpawnEnemy(deadBody.GetComponentInParent<EnemyRevivable>());
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) enemyReviver.StartCoroutine((IEnumerator) enemyReviver.PopOut());
+    yield return (object) enemyReviver.StartCoroutine(enemyReviver.PopOut());
   }
 
   public IEnumerator PopIn()

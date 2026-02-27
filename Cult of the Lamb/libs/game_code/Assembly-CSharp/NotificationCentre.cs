@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: NotificationCentre
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -120,7 +120,7 @@ public class NotificationCentre : BaseMonoBehaviour
       this.isNotificationsShown = true;
     }
     else
-      this.showCoroutine = this.StartCoroutine((IEnumerator) this.DoShow());
+      this.showCoroutine = this.StartCoroutine(this.DoShow());
   }
 
   public IEnumerator DoShow()
@@ -141,7 +141,7 @@ public class NotificationCentre : BaseMonoBehaviour
       this.isNotificationsShown = false;
     }
     else
-      this.hideCoroutine = this.StartCoroutine((IEnumerator) this.DoHide());
+      this.hideCoroutine = this.StartCoroutine(this.DoHide());
   }
 
   public IEnumerator DoHide()
@@ -248,14 +248,14 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     if (!NotificationCentre.NotificationsEnabled)
       return;
-    this.StartCoroutine((IEnumerator) this.PlayItemNotificationIE(itemType, delta));
+    this.StartCoroutine(this.PlayItemNotificationIE(itemType, delta));
   }
 
   public IEnumerator PlayItemNotificationIE(InventoryItem.ITEM_TYPE itemType, int delta)
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayItemNotificationIE\u003Eb__47_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayItemNotificationIE\u003Eb__47_0));
     foreach (NotificationBase notification in NotificationCentre.Notifications)
     {
       if (notification is NotificationItem notificationItem && notificationItem.ItemType == itemType)
@@ -279,14 +279,14 @@ public class NotificationCentre : BaseMonoBehaviour
     if (!NotificationCentre.NotificationsEnabled || this.notificationsThisFrame.Contains(locKey))
       return;
     this.notificationsThisFrame.Add(locKey);
-    this.StartCoroutine((IEnumerator) this.PlayGenericNotificationIE(locKey, flair));
+    this.StartCoroutine(this.PlayGenericNotificationIE(locKey, flair));
   }
 
   public IEnumerator PlayGenericNotificationIE(string locKey, NotificationBase.Flair flair = NotificationBase.Flair.None)
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayGenericNotificationIE\u003Eb__49_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayGenericNotificationIE\u003Eb__49_0));
     NotificationGeneric notificationGeneric = notificationCentre._genericNotificationTemplate.SpawnUI<NotificationGeneric>((Transform) notificationCentre._notificationContainer, false);
     notificationGeneric.Configure(locKey, flair);
     NotificationCentre.Notifications.Add((NotificationBase) notificationGeneric);
@@ -305,14 +305,14 @@ public class NotificationCentre : BaseMonoBehaviour
     if (this.notificationsThisFrame.Contains(str))
       return;
     this.notificationsThisFrame.Add(str);
-    this.StartCoroutine((IEnumerator) this.PlayGenericNotificationIE(type));
+    this.StartCoroutine(this.PlayGenericNotificationIE(type));
   }
 
   public IEnumerator PlayGenericNotificationIE(NotificationCentre.NotificationType type)
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayGenericNotificationIE\u003Eb__51_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayGenericNotificationIE\u003Eb__51_0));
     NotificationGeneric notificationGeneric = notificationCentre._genericNotificationTemplate.SpawnUI<NotificationGeneric>((Transform) notificationCentre._notificationContainer, false);
     notificationGeneric.Configure(type, NotificationCentre.GetFlair(type));
     NotificationCentre.Notifications.Add((NotificationBase) notificationGeneric);
@@ -328,7 +328,7 @@ public class NotificationCentre : BaseMonoBehaviour
     if (!NotificationCentre.NotificationsEnabled || this.ContainsNotificationThisFrameWithParams(locKey, nonLocalizedParameters))
       return;
     this.notificationsThisFrame.Add(locKey + (nonLocalizedParameters.Length != 0 ? nonLocalizedParameters[0] : ""));
-    this.StartCoroutine((IEnumerator) this.PlayGenericNotificationNonLocalizedParamsIE(locKey, nonLocalizedParameters));
+    this.StartCoroutine(this.PlayGenericNotificationNonLocalizedParamsIE(locKey, nonLocalizedParameters));
   }
 
   public IEnumerator PlayGenericNotificationNonLocalizedParamsIE(
@@ -337,7 +337,7 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayGenericNotificationNonLocalizedParamsIE\u003Eb__53_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayGenericNotificationNonLocalizedParamsIE\u003Eb__53_0));
     NotificationGeneric notificationGeneric = notificationCentre._genericNotificationTemplate.SpawnUI<NotificationGeneric>((Transform) notificationCentre._notificationContainer, false);
     notificationGeneric.ConfigureNonLocalizedParams(locKey, nonLocalizedParameters);
     NotificationCentre.Notifications.Add((NotificationBase) notificationGeneric);
@@ -354,7 +354,7 @@ public class NotificationCentre : BaseMonoBehaviour
     if (!NotificationCentre.NotificationsEnabled || this.ContainsNotificationThisFrameWithParams(locKey, localizedParameters))
       return;
     this.notificationsThisFrame.Add(locKey + (localizedParameters.Length != 0 ? localizedParameters[0] : ""));
-    this.StartCoroutine((IEnumerator) this.PlayGenericNotificationLocalizedParamsIE(locKey, localizedParameters));
+    this.StartCoroutine(this.PlayGenericNotificationLocalizedParamsIE(locKey, localizedParameters));
   }
 
   public IEnumerator PlayGenericNotificationLocalizedParamsIE(
@@ -363,7 +363,7 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayGenericNotificationLocalizedParamsIE\u003Eb__55_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayGenericNotificationLocalizedParamsIE\u003Eb__55_0));
     NotificationGeneric notificationGeneric = notificationCentre._genericNotificationTemplate.SpawnUI<NotificationGeneric>((Transform) notificationCentre._notificationContainer, false);
     notificationGeneric.ConfigureLocalizedParams(locKey, localizedParameters);
     NotificationCentre.Notifications.Add((NotificationBase) notificationGeneric);
@@ -378,14 +378,14 @@ public class NotificationCentre : BaseMonoBehaviour
     if (!NotificationCentre.NotificationsEnabled || this.notificationsThisFrame.Contains(locKey))
       return;
     this.notificationsThisFrame.Add(locKey);
-    this.StartCoroutine((IEnumerator) this.PlayTwitchNotificationIE(locKey, localizedParameters));
+    this.StartCoroutine(this.PlayTwitchNotificationIE(locKey, localizedParameters));
   }
 
   public IEnumerator PlayTwitchNotificationIE(string locKey, params string[] localizedParameters)
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayTwitchNotificationIE\u003Eb__57_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayTwitchNotificationIE\u003Eb__57_0));
     NotificationTwitch notificationTwitch = notificationCentre._twitchNotificationTemplate.SpawnUI<NotificationTwitch>((Transform) notificationCentre._notificationContainer, false);
     notificationTwitch.ConfigureLocalizedParams(locKey, localizedParameters);
     NotificationCentre.Notifications.Add((NotificationBase) notificationTwitch);
@@ -400,14 +400,14 @@ public class NotificationCentre : BaseMonoBehaviour
     if (!NotificationCentre.NotificationsEnabled || this.notificationsThisFrame.Contains(locKey))
       return;
     this.notificationsThisFrame.Add(locKey);
-    this.StartCoroutine((IEnumerator) this.PlayHelpHinderNotificationIE(locKey));
+    this.StartCoroutine(this.PlayHelpHinderNotificationIE(locKey));
   }
 
   public IEnumerator PlayHelpHinderNotificationIE(string locKey)
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayHelpHinderNotificationIE\u003Eb__59_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayHelpHinderNotificationIE\u003Eb__59_0));
     NotificationHelpHinder notificationHelpHinder = notificationCentre._helpHinderNotificationTemplate.SpawnUI<NotificationHelpHinder>((Transform) notificationCentre._notificationContainer, false);
     notificationHelpHinder.ConfigureLocalizedParams(locKey);
     NotificationCentre.Notifications.Add((NotificationBase) notificationHelpHinder);
@@ -429,7 +429,7 @@ public class NotificationCentre : BaseMonoBehaviour
     if (this.notificationsThisFrame.Contains(str))
       return;
     this.notificationsThisFrame.Add(str);
-    this.StartCoroutine((IEnumerator) this.PlaySinNotificationIE(locKey, sinDelta, flair, followerID, args));
+    this.StartCoroutine(this.PlaySinNotificationIE(locKey, sinDelta, flair, followerID, args));
   }
 
   public IEnumerator PlaySinNotificationIE(
@@ -441,7 +441,7 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlaySinNotificationIE\u003Eb__61_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlaySinNotificationIE\u003Eb__61_0));
     FollowerInfo infoById = FollowerInfo.GetInfoByID(followerID, true);
     if (infoById == null || !infoById.IsSnowman)
     {
@@ -474,9 +474,9 @@ public class NotificationCentre : BaseMonoBehaviour
       return;
     this.notificationsThisFrame.Add(str);
     if ((bool) (UnityEngine.Object) GameManager.GetInstance())
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlayFaithNotificationIE(locKey, faithDelta, flair, infoById, followerID, args));
+      GameManager.GetInstance().StartCoroutine(this.PlayFaithNotificationIE(locKey, faithDelta, flair, infoById, followerID, args));
     else
-      this.StartCoroutine((IEnumerator) this.PlayFaithNotificationIE(locKey, faithDelta, flair, infoById, followerID, args));
+      this.StartCoroutine(this.PlayFaithNotificationIE(locKey, faithDelta, flair, infoById, followerID, args));
   }
 
   public IEnumerator PlayFaithNotificationIE(
@@ -489,7 +489,7 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayFaithNotificationIE\u003Eb__63_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayFaithNotificationIE\u003Eb__63_0));
     NotificationFaith notificationFaith = notificationCentre._faithNotificationTemplate.SpawnUI<NotificationFaith>((Transform) notificationCentre._notificationContainer, false);
     notificationFaith.Configure(locKey, faithDelta, followerInfo, true, flair, false, args);
     NotificationCentre.Notifications.Add((NotificationBase) notificationFaith);
@@ -514,9 +514,9 @@ public class NotificationCentre : BaseMonoBehaviour
       return;
     this.notificationsThisFrame.Add(str);
     if ((bool) (UnityEngine.Object) GameManager.GetInstance())
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlayWarmthNotificationIE(locKey, faithDelta, flair, args));
+      GameManager.GetInstance().StartCoroutine(this.PlayWarmthNotificationIE(locKey, faithDelta, flair, args));
     else
-      this.StartCoroutine((IEnumerator) this.PlayWarmthNotificationIE(locKey, faithDelta, flair, args));
+      this.StartCoroutine(this.PlayWarmthNotificationIE(locKey, faithDelta, flair, args));
   }
 
   public IEnumerator PlayWarmthNotificationIE(
@@ -527,7 +527,7 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayWarmthNotificationIE\u003Eb__65_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayWarmthNotificationIE\u003Eb__65_0));
     foreach (NotificationBase notification in NotificationCentre.Notifications)
     {
       if (notification is NotificationFaith notificationFaith && notificationFaith.LocKey == locKey)
@@ -558,7 +558,7 @@ public class NotificationCentre : BaseMonoBehaviour
     if (this.notificationsThisFrame.Contains(str))
       return;
     this.notificationsThisFrame.Add(str);
-    this.StartCoroutine((IEnumerator) this.PlayFollowerNotificationIE(type, info, followerAnimation));
+    this.StartCoroutine(this.PlayFollowerNotificationIE(type, info, followerAnimation));
   }
 
   public IEnumerator PlayFollowerNotificationIE(
@@ -568,7 +568,7 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayFollowerNotificationIE\u003Eb__67_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayFollowerNotificationIE\u003Eb__67_0));
     FollowerInfo infoById = FollowerInfo.GetInfoByID(info.ID);
     NotificationFollower notificationFollower = notificationCentre._followerNotificationTemplate.SpawnUI<NotificationFollower>((Transform) notificationCentre._notificationContainer, false);
     notificationFollower.Configure(type, FollowerInfo.GetInfoByID(info.ID), followerAnimation, NotificationCentre.GetFlair(type));
@@ -596,7 +596,7 @@ public class NotificationCentre : BaseMonoBehaviour
     if (this.notificationsThisFrame.Contains(str))
       return;
     this.notificationsThisFrame.Add(str);
-    this.StartCoroutine((IEnumerator) this.PlayRelationshipNotificationIE(type, followerInfo, followerAnimation, otherFollowerInfo, otherAnimation));
+    this.StartCoroutine(this.PlayRelationshipNotificationIE(type, followerInfo, followerAnimation, otherFollowerInfo, otherAnimation));
   }
 
   public IEnumerator PlayRelationshipNotificationIE(
@@ -608,7 +608,7 @@ public class NotificationCentre : BaseMonoBehaviour
   {
     NotificationCentre notificationCentre = this;
     if (!notificationCentre.isNotificationsShown)
-      yield return (object) new WaitUntil((Func<bool>) new Func<bool>(notificationCentre.\u003CPlayRelationshipNotificationIE\u003Eb__69_0));
+      yield return (object) new WaitUntil(new Func<bool>(notificationCentre.\u003CPlayRelationshipNotificationIE\u003Eb__69_0));
     NotificationRelationship notificationRelationship = notificationCentre._relationshipNotificationTemplate.SpawnUI<NotificationRelationship>((Transform) notificationCentre._notificationContainer, false);
     notificationRelationship.Configure(type, followerInfo, otherFollowerInfo, followerAnimation, otherAnimation, NotificationCentre.GetFlair(type));
     NotificationCentre.Notifications.Add((NotificationBase) notificationRelationship);

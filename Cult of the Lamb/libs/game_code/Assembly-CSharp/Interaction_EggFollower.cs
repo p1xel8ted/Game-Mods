@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_EggFollower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -162,9 +162,9 @@ public class Interaction_EggFollower : Interaction
     base.OnInteract(state);
     this.structure.enabled = false;
     if (this.rotten)
-      this.StartCoroutine((IEnumerator) this.DoClean());
+      this.StartCoroutine(this.DoClean());
     else
-      this.StartCoroutine((IEnumerator) this.PickUpBody());
+      this.StartCoroutine(this.PickUpBody());
   }
 
   public void HandleEvent(TrackEntry trackEntry, Spine.Event e)
@@ -213,7 +213,7 @@ public class Interaction_EggFollower : Interaction
       return;
     base.OnSecondaryInteract(state);
     this.crakingEgg = true;
-    state.GetComponent<PlayerFarming>().StartCoroutine((IEnumerator) this.CrackIE());
+    state.GetComponent<PlayerFarming>().StartCoroutine(this.CrackIE());
   }
 
   public IEnumerator CrackIE()

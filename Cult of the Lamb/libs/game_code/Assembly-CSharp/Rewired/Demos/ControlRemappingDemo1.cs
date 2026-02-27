@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Demos.ControlRemappingDemo1
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -57,9 +57,9 @@ public class ControlRemappingDemo1 : MonoBehaviour
     this.dialog = new ControlRemappingDemo1.DialogHelper();
     this.actionQueue = new Queue<ControlRemappingDemo1.QueueEntry>();
     this.selectedController = new ControlRemappingDemo1.ControllerSelection();
-    ReInput.ControllerConnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.JoystickConnected);
-    ReInput.ControllerPreDisconnectEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.JoystickPreDisconnect);
-    ReInput.ControllerDisconnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.JoystickDisconnected);
+    ReInput.ControllerConnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.JoystickConnected);
+    ReInput.ControllerPreDisconnectEvent += new Action<ControllerStatusChangedEventArgs>(this.JoystickPreDisconnect);
+    ReInput.ControllerDisconnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.JoystickDisconnected);
     this.ResetAll();
     this.initialized = true;
     ReInput.userDataStore.Load();
@@ -82,8 +82,8 @@ public class ControlRemappingDemo1 : MonoBehaviour
   public void Subscribe()
   {
     this.Unsubscribe();
-    this.inputMapper.ConflictFoundEvent += (Action<InputMapper.ConflictFoundEventData>) new Action<InputMapper.ConflictFoundEventData>(this.OnConflictFound);
-    this.inputMapper.StoppedEvent += (Action<InputMapper.StoppedEventData>) new Action<InputMapper.StoppedEventData>(this.OnStopped);
+    this.inputMapper.ConflictFoundEvent += new Action<InputMapper.ConflictFoundEventData>(this.OnConflictFound);
+    this.inputMapper.StoppedEvent += new Action<InputMapper.StoppedEventData>(this.OnStopped);
   }
 
   public void Unsubscribe() => this.inputMapper.RemoveAllEventListeners();
@@ -321,7 +321,7 @@ public class ControlRemappingDemo1 : MonoBehaviour
     GUILayout.Space(15f);
     GUILayout.Label("Categories:");
     GUILayout.BeginHorizontal();
-    foreach (InputMapCategory assignableMapCategory in (IEnumerable<InputMapCategory>) ReInput.mapping.UserAssignableMapCategories)
+    foreach (InputMapCategory assignableMapCategory in ReInput.mapping.UserAssignableMapCategories)
     {
       if (!this.selectedPlayer.controllers.maps.ContainsMapInCategory(this.selectedController.type, assignableMapCategory.id))
         GUI.enabled = false;
@@ -361,7 +361,7 @@ public class ControlRemappingDemo1 : MonoBehaviour
     if (actionCategory == null)
       return;
     float width = 150f;
-    foreach (InputAction action in (IEnumerable<InputAction>) ReInput.mapping.ActionsInCategory(actionCategory.id))
+    foreach (InputAction action in ReInput.mapping.ActionsInCategory(actionCategory.id))
     {
       string text1 = action.descriptiveName != string.Empty ? action.descriptiveName : action.name;
       if (action.type == InputActionType.Button)
@@ -656,7 +656,7 @@ public class ControlRemappingDemo1 : MonoBehaviour
       this.calibrateScrollPos = GUILayout.BeginScrollView(this.calibrateScrollPos);
       if (calibration.recording)
         GUI.enabled = false;
-      IList<ControllerElementIdentifier> elementIdentifiers = (IList<ControllerElementIdentifier>) calibration.joystick.AxisElementIdentifiers;
+      IList<ControllerElementIdentifier> elementIdentifiers = calibration.joystick.AxisElementIdentifiers;
       for (int index = 0; index < elementIdentifiers.Count; ++index)
       {
         ControllerElementIdentifier elementIdentifier = elementIdentifiers[index];
@@ -949,13 +949,13 @@ public class ControlRemappingDemo1 : MonoBehaviour
     {
       if (entry.response == ControlRemappingDemo1.UserResponse.Confirm)
       {
-        ((Action<InputMapper.ConflictResponse>) this.conflictFoundEventData.responseCallback)(InputMapper.ConflictResponse.Replace);
+        this.conflictFoundEventData.responseCallback(InputMapper.ConflictResponse.Replace);
       }
       else
       {
         if (entry.response != ControlRemappingDemo1.UserResponse.Custom1)
           throw new NotImplementedException();
-        ((Action<InputMapper.ConflictResponse>) this.conflictFoundEventData.responseCallback)(InputMapper.ConflictResponse.Add);
+        this.conflictFoundEventData.responseCallback(InputMapper.ConflictResponse.Add);
       }
       return true;
     }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EyesInWoods
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -17,7 +17,7 @@ public class EyesInWoods : BaseMonoBehaviour
   public void Start()
   {
     this.waitTime = Random.Range(4f, 14f);
-    this.StartCoroutine((IEnumerator) this.WaitToChangeState());
+    this.StartCoroutine(this.WaitToChangeState());
   }
 
   public void TurnOn()
@@ -27,7 +27,7 @@ public class EyesInWoods : BaseMonoBehaviour
     this.toggle = true;
     this.animator.Play("Eyes-In");
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.WaitToChangeState());
+    this.StartCoroutine(this.WaitToChangeState());
   }
 
   public void TurnOff()
@@ -37,7 +37,7 @@ public class EyesInWoods : BaseMonoBehaviour
     this.toggle = false;
     this.animator.Play("Eyes-Out");
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.WaitToChangeState());
+    this.StartCoroutine(this.WaitToChangeState());
   }
 
   public IEnumerator WaitToChangeState()

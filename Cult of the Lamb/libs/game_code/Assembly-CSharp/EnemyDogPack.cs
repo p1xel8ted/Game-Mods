@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDogPack
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -126,7 +126,7 @@ public class EnemyDogPack : UnitObject
     }
     if (this.currentStateRoutine != null)
       this.StopCoroutine(this.currentStateRoutine);
-    this.currentStateRoutine = this.StartCoroutine((IEnumerator) newState);
+    this.currentStateRoutine = this.StartCoroutine(newState);
   }
 
   public override void Update()
@@ -334,7 +334,7 @@ public class EnemyDogPack : UnitObject
               {
                 if (!enemyDogPack.WasAlerted)
                 {
-                  yield return (object) enemyDogPack.StartCoroutine((IEnumerator) enemyDogPack.DoHowlRoutine());
+                  yield return (object) enemyDogPack.StartCoroutine(enemyDogPack.DoHowlRoutine());
                 }
                 else
                 {
@@ -529,7 +529,7 @@ public class EnemyDogPack : UnitObject
       yield return (object) new WaitForSeconds(0.05f);
       foreach (SimpleSpineFlash simpleSpineFlash in enemyDogPack.SimpleSpineFlashes)
         simpleSpineFlash.FlashWhite(0.0f);
-      yield return (object) enemyDogPack.StartCoroutine((IEnumerator) enemyDogPack.PounceAttack(enemyDogPack.circlingTarget));
+      yield return (object) enemyDogPack.StartCoroutine(enemyDogPack.PounceAttack(enemyDogPack.circlingTarget));
       yield return (object) new WaitForSeconds(0.5f);
       enemyDogPack.StartState(enemyDogPack.CirclingState());
     }
@@ -614,7 +614,7 @@ public class EnemyDogPack : UnitObject
     if ((!this.EnableBackStun || string.IsNullOrEmpty(this.BackStunnedAnimation) || string.IsNullOrEmpty(this.BackStunnedResetAnimation) || (double) num >= (double) this.BackStunHealthThreshold ? 0 : (this.hasBegunCircle ? 1 : 0)) != 0)
     {
       this.BackStunHealthThreshold = 0.0f;
-      this.StartCoroutine((IEnumerator) this.ApplyBackstunForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), 25f));
+      this.StartCoroutine(this.ApplyBackstunForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), 25f));
       this.StartState(this.BackStunnedRoutine());
       foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       {

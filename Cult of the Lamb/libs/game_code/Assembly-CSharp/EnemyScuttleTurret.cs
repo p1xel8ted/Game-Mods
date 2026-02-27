@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyScuttleTurret
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -90,7 +90,7 @@ public class EnemyScuttleTurret : UnitObject
     this.Shooting = false;
     this.health.OnAddCharm += new Health.StasisEvent(this.GetNewTarget);
     this.health.OnStasisCleared += new Health.StasisEvent(this.GetNewTarget);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
     this.secondaryAttackCounter = this.numSecondaryAttacks;
     this.speed = 0.0f;
     if (!((UnityEngine.Object) GameManager.GetInstance() != (UnityEngine.Object) null))
@@ -184,7 +184,7 @@ public class EnemyScuttleTurret : UnitObject
         enemyScuttleTurret.ShootDelay -= Time.deltaTime;
         if ((double) GameManager.GetInstance().CurrentTime > (double) enemyScuttleTurret.lastMegaAttackTime && (double) enemyScuttleTurret.ShootDelay <= (double) enemyScuttleTurret.anticipateDuration && !enemyScuttleTurret.Anticipating && enemyScuttleTurret.hasMegaAttack)
         {
-          enemyScuttleTurret.StartCoroutine((IEnumerator) enemyScuttleTurret.MegaAttackIE());
+          enemyScuttleTurret.StartCoroutine(enemyScuttleTurret.MegaAttackIE());
         }
         else
         {
@@ -203,7 +203,7 @@ public class EnemyScuttleTurret : UnitObject
           {
             enemyScuttleTurret.SimpleSpineFlash.FlashWhite(false);
             enemyScuttleTurret.Anticipating = false;
-            enemyScuttleTurret.StartCoroutine((IEnumerator) enemyScuttleTurret.ShootArrowRoutine());
+            enemyScuttleTurret.StartCoroutine(enemyScuttleTurret.ShootArrowRoutine());
           }
         }
       }
@@ -295,7 +295,7 @@ public class EnemyScuttleTurret : UnitObject
     else
       AudioManager.Instance.PlayOneShot("event:/enemy/vocals/jellyfish/gethit", this.transform.position);
     this.Anticipating = false;
-    this.StartCoroutine((IEnumerator) this.HurtRoutine(Attacker));
+    this.StartCoroutine(this.HurtRoutine(Attacker));
   }
 
   public override void OnDie(
@@ -376,7 +376,7 @@ public class EnemyScuttleTurret : UnitObject
         AudioManager.Instance.PlayOneShot("event:/enemy/vocals/jellyfish_large/warning", this.gameObject);
       else
         AudioManager.Instance.PlayOneShot("event:/enemy/vocals/jellyfish/warning", this.gameObject);
-      this.StartCoroutine((IEnumerator) this.ShowWarning());
+      this.StartCoroutine(this.ShowWarning());
       this.ShownWarning = true;
     }
     this.TargetObject = closestTarget.gameObject;

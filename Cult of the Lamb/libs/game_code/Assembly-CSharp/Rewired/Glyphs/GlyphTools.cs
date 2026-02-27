@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Glyphs.GlyphTools
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -220,7 +220,7 @@ public static class GlyphTools
     List<ActionElementMap> results)
   {
     int count = results.Count;
-    player.controllers.maps.GetElementMapsWithAction(controllerType, controllerId, actionId, skipDisabledMaps, (List<ActionElementMap>) results);
+    player.controllers.maps.GetElementMapsWithAction(controllerType, controllerId, actionId, skipDisabledMaps, results);
     GlyphTools.RemoveInvalidElementMaps(player, results, count);
     return results.Count - count;
   }
@@ -233,7 +233,7 @@ public static class GlyphTools
     List<ActionElementMap> results)
   {
     int count = results.Count;
-    player.controllers.maps.GetElementMapsWithAction(controllerType, actionId, skipDisabledMaps, (List<ActionElementMap>) results);
+    player.controllers.maps.GetElementMapsWithAction(controllerType, actionId, skipDisabledMaps, results);
     GlyphTools.RemoveInvalidElementMaps(player, results, count);
     return results.Count - count;
   }
@@ -245,7 +245,7 @@ public static class GlyphTools
     List<ActionElementMap> results)
   {
     int count = results.Count;
-    player.controllers.maps.GetElementMapsWithAction(actionId, skipDisabledMaps, (List<ActionElementMap>) results);
+    player.controllers.maps.GetElementMapsWithAction(actionId, skipDisabledMaps, results);
     GlyphTools.RemoveInvalidElementMaps(player, results, count);
     return results.Count - count;
   }

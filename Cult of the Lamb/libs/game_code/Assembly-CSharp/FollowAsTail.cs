@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowAsTail
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -46,7 +46,7 @@ public class FollowAsTail : BaseMonoBehaviour
   {
     if (this.isTransformParentChanged)
       return;
-    this.StartCoroutine((IEnumerator) this.AssignToCorrectParent());
+    this.StartCoroutine(this.AssignToCorrectParent());
   }
 
   public void Start()
@@ -161,8 +161,8 @@ public class FollowAsTail : BaseMonoBehaviour
       if (!this.hasHealth)
         return;
       this.collider2DList = new List<Collider2D>();
-      this.DamageCollider.GetContacts((List<Collider2D>) this.collider2DList);
-      Debug.Log((object) this.DamageCollider.GetContacts((List<Collider2D>) this.collider2DList));
+      this.DamageCollider.GetContacts(this.collider2DList);
+      Debug.Log((object) this.DamageCollider.GetContacts(this.collider2DList));
       foreach (Component component in this.collider2DList)
       {
         this.EnemyHealth = component.gameObject.GetComponent<Health>();

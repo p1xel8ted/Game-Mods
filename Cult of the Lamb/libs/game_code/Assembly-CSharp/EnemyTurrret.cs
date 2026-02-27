@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyTurrret
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -101,7 +101,7 @@ public class EnemyTurrret : UnitObject
     {
       if ((double) (this.ShootDelay -= Time.deltaTime) >= 0.5)
         return;
-      this.StartCoroutine((IEnumerator) this.ShootArrowRoutine());
+      this.StartCoroutine(this.ShootArrowRoutine());
       if (!CoopManager.CoopActive || (double) Vector3.Distance(this.TargetObject.transform.position, this.transform.position) <= (double) this.VisionRange * 0.33000001311302185)
         return;
       Health closestTarget = this.GetClosestTarget();
@@ -168,7 +168,7 @@ public class EnemyTurrret : UnitObject
     this.EnemyHealth = closestTarget;
     this.EnemyHealth.attackers.Add(this.gameObject);
     this.Spine.AnimationState.SetAnimation(0, "idle", true);
-    this.StartCoroutine((IEnumerator) this.ShowWarning());
+    this.StartCoroutine(this.ShowWarning());
     ++this.ShootDelay;
   }
 

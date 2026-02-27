@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GrenadeBullet
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Ara;
@@ -185,7 +185,7 @@ public class GrenadeBullet : BaseMonoBehaviour, ISpellOwning
     this.ShadowSpriteRenderer.enabled = false;
     if (this.damageColliderRoutine != null)
       this.StopCoroutine(this.damageColliderRoutine);
-    this.damageColliderRoutine = this.StartCoroutine((IEnumerator) this.TurnOnDamageColliderForDuration(0.2f));
+    this.damageColliderRoutine = this.StartCoroutine(this.TurnOnDamageColliderForDuration(0.2f));
     GameObject gameObject = (UnityEngine.Object) this.particleOverride != (UnityEngine.Object) null ? this.particleOverride.Spawn() : BiomeConstants.Instance.GrenadeBulletImpact_A.Spawn();
     gameObject.transform.position = this.t.transform.position;
     gameObject.transform.rotation = Quaternion.identity;

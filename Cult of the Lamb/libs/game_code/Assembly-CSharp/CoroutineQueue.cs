@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CoroutineQueue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -19,10 +19,7 @@ public class CoroutineQueue
 
   public CoroutineQueue(BaseMonoBehaviour aCoroutineOwner) => this.m_Owner = aCoroutineOwner;
 
-  public void StartLoop()
-  {
-    this.m_InternalCoroutine = this.m_Owner.StartCoroutine((IEnumerator) this.Process());
-  }
+  public void StartLoop() => this.m_InternalCoroutine = this.m_Owner.StartCoroutine(this.Process());
 
   public void StopLoop()
   {
@@ -38,7 +35,7 @@ public class CoroutineQueue
     {
       while (this.actions.Count <= 0)
         yield return (object) null;
-      yield return (object) this.m_Owner.StartCoroutine((IEnumerator) this.actions.Dequeue());
+      yield return (object) this.m_Owner.StartCoroutine(this.actions.Dequeue());
     }
   }
 }

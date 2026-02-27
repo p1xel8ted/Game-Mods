@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIObjective
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -109,7 +109,7 @@ public class UIObjective : BaseMonoBehaviour
   {
     if (this._deferredStrikethroughUpdate != null)
       this.StopCoroutine(this._deferredStrikethroughUpdate);
-    this._deferredStrikethroughUpdate = this.StartCoroutine((IEnumerator) this.DeferredStrikethroughUpdate());
+    this._deferredStrikethroughUpdate = this.StartCoroutine(this.DeferredStrikethroughUpdate());
   }
 
   public IEnumerator DeferredStrikethroughUpdate()
@@ -140,7 +140,7 @@ public class UIObjective : BaseMonoBehaviour
   public void CompleteObjective(System.Action andThen = null)
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoCompleteObjective(andThen));
+    this.StartCoroutine(this.DoCompleteObjective(andThen));
   }
 
   public IEnumerator DoCompleteObjective(System.Action andThen = null)
@@ -157,7 +157,7 @@ public class UIObjective : BaseMonoBehaviour
   public void FailObjective(System.Action andThen = null)
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoFailedObjective(andThen));
+    this.StartCoroutine(this.DoFailedObjective(andThen));
   }
 
   public IEnumerator DoFailedObjective(System.Action andThen = null)

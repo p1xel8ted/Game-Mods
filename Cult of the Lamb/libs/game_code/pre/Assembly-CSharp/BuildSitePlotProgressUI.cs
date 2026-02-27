@@ -1,0 +1,87 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: BuildSitePlotProgressUI
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+#nullable disable
+public class BuildSitePlotProgressUI : BaseMonoBehaviour
+{
+  public static List<BuildSitePlotProgressUI> BuildSiteProgressUI = new List<BuildSitePlotProgressUI>();
+  private float Scale;
+  private float ScaleSpeed;
+  private Canvas canvas;
+  public Vector3 Offset;
+  private float TargetScale = 0.5f;
+  public CanvasGroup canvasGroup;
+  private Camera camera;
+  private Coroutine cFadeOutRoutine;
+  public Image image;
+
+  private void OnEnable()
+  {
+    this.canvas = this.GetComponentInParent<Canvas>();
+    this.camera = Camera.main;
+    BuildSitePlotProgressUI.BuildSiteProgressUI.Add(this);
+  }
+
+  private void OnDisable() => BuildSitePlotProgressUI.BuildSiteProgressUI.Remove(this);
+
+  public void SetPosition(Vector3 Position)
+  {
+    this.transform.position = this.camera.WorldToScreenPoint(Position + this.Offset);
+  }
+
+  public void Show()
+  {
+    this.gameObject.SetActive(true);
+    this.canvasGroup.alpha = 1f;
+    this.transform.SetAsFirstSibling();
+  }
+
+  public void Hide()
+  {
+    if (!this.gameObject.activeSelf)
+      return;
+    if (this.cFadeOutRoutine != null)
+      this.StopCoroutine(this.cFadeOutRoutine);
+    this.StartCoroutine((IEnumerator) this.FadeOutRoutine());
+  }
+
+  private IEnumerator FadeOutRoutine()
+  {
+    BuildSitePlotProgressUI sitePlotProgressUi = this;
+    float Progress = 0.0f;
+    float Duration = 0.5f;
+    while ((double) (Progress += Time.deltaTime) < (double) Duration)
+    {
+      sitePlotProgressUi.canvasGroup.alpha = (float) (1.0 - (double) Progress / (double) Duration);
+      yield return (object) null;
+    }
+    sitePlotProgressUi.gameObject.SetActive(false);
+  }
+
+  private void LateUpdate() => this.transform.localScale = Vector3.one * this.Scale;
+
+  private void FixedUpdate()
+  {
+    this.ScaleSpeed += (float) (((double) this.TargetScale - (double) this.Scale) * 0.30000001192092896);
+    this.Scale += (this.ScaleSpeed *= 0.8f);
+  }
+
+  public void UpdateProgress(float Progress) => this.image.fillAmount = Progress;
+
+  public static void HideAll()
+  {
+    for (int index = BuildSitePlotProgressUI.BuildSiteProgressUI.Count - 1; index >= 0; --index)
+    {
+      if ((Object) BuildSitePlotProgressUI.BuildSiteProgressUI[index] != (Object) null)
+        BuildSitePlotProgressUI.BuildSiteProgressUI[index].gameObject.SetActive(false);
+    }
+  }
+}

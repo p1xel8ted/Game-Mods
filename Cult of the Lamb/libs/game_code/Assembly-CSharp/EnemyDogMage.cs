@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDogMage
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -156,20 +156,20 @@ public class EnemyDogMage : UnitObject
       this.health.invincible = false;
       foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
         simpleSpineFlash.FlashWhite(false);
-      this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+      this.StartCoroutine(this.ActiveRoutine());
     }
     else
     {
       switch (this.StartHidden)
       {
         case EnemyDogMage.StartingStates.Hidden:
-          this.StartCoroutine((IEnumerator) this.Hidden());
+          this.StartCoroutine(this.Hidden());
           break;
         case EnemyDogMage.StartingStates.Wandering:
-          this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+          this.StartCoroutine(this.ActiveRoutine());
           break;
         case EnemyDogMage.StartingStates.Animation:
-          this.StartCoroutine((IEnumerator) this.AnimationRoutine());
+          this.StartCoroutine(this.AnimationRoutine());
           break;
       }
     }
@@ -208,7 +208,7 @@ public class EnemyDogMage : UnitObject
     EnemyDogMage enemyDogMage = this;
     yield return (object) new WaitForEndOfFrame();
     enemyDogMage.health.invincible = true;
-    Debug.Log((object) ("Spine " + ((object) enemyDogMage.Spine)?.ToString()));
+    Debug.Log((object) ("Spine " + enemyDogMage.Spine?.ToString()));
     Debug.Log((object) ("Spine.AnimationState " + enemyDogMage.Spine.AnimationState?.ToString()));
     Debug.Log((object) ("UnawareAnimation " + enemyDogMage.UnawareAnimation));
     enemyDogMage.Spine.AnimationState.SetAnimation(0, enemyDogMage.UnawareAnimation, true);
@@ -222,7 +222,7 @@ public class EnemyDogMage : UnitObject
     enemyDogMage.health.invincible = false;
     enemyDogMage.Spine.AnimationState.SetAnimation(0, enemyDogMage.IdleAnimation, true);
     enemyDogMage.LineAttackTimer = 0.0f;
-    enemyDogMage.StartCoroutine((IEnumerator) enemyDogMage.ActiveRoutine());
+    enemyDogMage.StartCoroutine(enemyDogMage.ActiveRoutine());
   }
 
   public IEnumerator Hidden()
@@ -248,7 +248,7 @@ public class EnemyDogMage : UnitObject
       {
         dogMage.StopAllCoroutines();
         this.DisableForces = false;
-        dogMage.StartCoroutine((IEnumerator) dogMage.Reveal(num += 0.2f));
+        dogMage.StartCoroutine(dogMage.Reveal(num += 0.2f));
       }
     }
   }
@@ -285,7 +285,7 @@ public class EnemyDogMage : UnitObject
       yield return (object) null;
     enemyDogMage.Spine.AnimationState.SetAnimation(0, enemyDogMage.IdleAnimation, true);
     enemyDogMage.LineAttackTimer = 0.0f;
-    enemyDogMage.StartCoroutine((IEnumerator) enemyDogMage.ActiveRoutine());
+    enemyDogMage.StartCoroutine(enemyDogMage.ActiveRoutine());
   }
 
   public virtual IEnumerator ActiveRoutine()
@@ -320,9 +320,9 @@ public class EnemyDogMage : UnitObject
           enemyDogMage.LineAttackTimer -= Time.deltaTime;
           enemyDogMage.CircleAttackTimer -= Time.deltaTime;
           if (enemyDogMage.ShouldCircleAttack())
-            yield return (object) enemyDogMage.StartCoroutine((IEnumerator) enemyDogMage.CircleAvalanchesAttack());
+            yield return (object) enemyDogMage.StartCoroutine(enemyDogMage.CircleAvalanchesAttack());
           if (enemyDogMage.ShouldLineAttack())
-            yield return (object) enemyDogMage.StartCoroutine((IEnumerator) enemyDogMage.LineLightningAttack());
+            yield return (object) enemyDogMage.StartCoroutine(enemyDogMage.LineLightningAttack());
         }
         yield return (object) null;
       }
@@ -439,7 +439,7 @@ public class EnemyDogMage : UnitObject
       enemyDogMage.Spine.AnimationState.SetAnimation(0, enemyDogMage.AttackAnimation, false);
       enemyDogMage.Spine.AnimationState.AddAnimation(0, enemyDogMage.IdleAnimation, true, 0.0f);
       if ((double) enemyDogMage.DamageColliderDuration != -1.0)
-        enemyDogMage.StartCoroutine((IEnumerator) enemyDogMage.EnableCollider(enemyDogMage.DamageColliderDuration));
+        enemyDogMage.StartCoroutine(enemyDogMage.EnableCollider(enemyDogMage.DamageColliderDuration));
       time = 0.0f;
       while ((double) (time += Time.deltaTime * enemyDogMage.Spine.timeScale) < (double) enemyDogMage.AttackDuration * 0.699999988079071)
         yield return (object) null;
@@ -491,10 +491,10 @@ public class EnemyDogMage : UnitObject
     {
       this.StopAllCoroutines();
       this.DisableForces = false;
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && AttackType != Health.AttackTypes.NoReaction && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -539,9 +539,9 @@ public class EnemyDogMage : UnitObject
       yield return (object) null;
     enemyDogMage.DisableForces = false;
     enemyDogMage.IdleWait = 0.0f;
-    enemyDogMage.StartCoroutine((IEnumerator) enemyDogMage.ActiveRoutine());
+    enemyDogMage.StartCoroutine(enemyDogMage.ActiveRoutine());
     if (enemyDogMage.CounterAttack)
-      enemyDogMage.StartCoroutine(enemyDogMage.SlamAttack ? (IEnumerator) enemyDogMage.SlamRoutine() : (IEnumerator) enemyDogMage.AttackRoutine());
+      enemyDogMage.StartCoroutine(enemyDogMage.SlamAttack ? enemyDogMage.SlamRoutine() : enemyDogMage.AttackRoutine());
   }
 
   public void GetNewTargetPosition()
@@ -585,7 +585,7 @@ public class EnemyDogMage : UnitObject
     }
   }
 
-  public void DoBusiness() => this.StartCoroutine((IEnumerator) this.BusinessRoutine());
+  public void DoBusiness() => this.StartCoroutine(this.BusinessRoutine());
 
   public IEnumerator BusinessRoutine()
   {

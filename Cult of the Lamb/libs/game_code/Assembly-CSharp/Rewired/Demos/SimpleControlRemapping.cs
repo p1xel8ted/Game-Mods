@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Demos.SimpleControlRemapping
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -56,10 +56,10 @@ public class SimpleControlRemapping : MonoBehaviour
     this.inputMapper.options.timeout = 5f;
     this.inputMapper.options.ignoreMouseXAxis = true;
     this.inputMapper.options.ignoreMouseYAxis = true;
-    ReInput.ControllerConnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
-    ReInput.ControllerDisconnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
-    this.inputMapper.InputMappedEvent += (Action<InputMapper.InputMappedEventData>) new Action<InputMapper.InputMappedEventData>(this.OnInputMapped);
-    this.inputMapper.StoppedEvent += (Action<InputMapper.StoppedEventData>) new Action<InputMapper.StoppedEventData>(this.OnStopped);
+    ReInput.ControllerConnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
+    ReInput.ControllerDisconnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
+    this.inputMapper.InputMappedEvent += new Action<InputMapper.InputMappedEventData>(this.OnInputMapped);
+    this.inputMapper.StoppedEvent += new Action<InputMapper.StoppedEventData>(this.OnStopped);
     this.InitializeUI();
   }
 
@@ -67,8 +67,8 @@ public class SimpleControlRemapping : MonoBehaviour
   {
     this.inputMapper.Stop();
     this.inputMapper.RemoveAllEventListeners();
-    ReInput.ControllerConnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
-    ReInput.ControllerDisconnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
+    ReInput.ControllerConnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
+    ReInput.ControllerDisconnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnControllerChanged);
   }
 
   public void RedrawUI()
@@ -86,7 +86,7 @@ public class SimpleControlRemapping : MonoBehaviour
         InputAction action = this.rows[index1].action;
         string str = string.Empty;
         int actionElementMapId = -1;
-        foreach (ActionElementMap actionElementMap in (IEnumerable<ActionElementMap>) this.controllerMap.ElementMapsWithAction(action.id))
+        foreach (ActionElementMap actionElementMap in this.controllerMap.ElementMapsWithAction(action.id))
         {
           if (actionElementMap.ShowInField(row.actionRange))
           {
@@ -112,29 +112,11 @@ public class SimpleControlRemapping : MonoBehaviour
 
   public void InitializeUI()
   {
-    IEnumerator enumerator1 = (IEnumerator) this.actionGroupTransform.GetEnumerator();
-    try
-    {
-      while (enumerator1.MoveNext())
-        UnityEngine.Object.Destroy((UnityEngine.Object) ((Component) enumerator1.Current).gameObject);
-    }
-    finally
-    {
-      if (enumerator1 is IDisposable disposable)
-        disposable.Dispose();
-    }
-    IEnumerator enumerator2 = (IEnumerator) this.fieldGroupTransform.GetEnumerator();
-    try
-    {
-      while (enumerator2.MoveNext())
-        UnityEngine.Object.Destroy((UnityEngine.Object) ((Component) enumerator2.Current).gameObject);
-    }
-    finally
-    {
-      if (enumerator2 is IDisposable disposable)
-        disposable.Dispose();
-    }
-    foreach (InputAction action in (IEnumerable<InputAction>) ReInput.mapping.ActionsInCategory("Default"))
+    foreach (Component component in (Transform) this.actionGroupTransform)
+      UnityEngine.Object.Destroy((UnityEngine.Object) component.gameObject);
+    foreach (Component component in (Transform) this.fieldGroupTransform)
+      UnityEngine.Object.Destroy((UnityEngine.Object) component.gameObject);
+    foreach (InputAction action in ReInput.mapping.ActionsInCategory("Default"))
     {
       if (action.type == InputActionType.Axis)
       {
@@ -175,7 +157,7 @@ public class SimpleControlRemapping : MonoBehaviour
       flag = true;
     }
     int selectedControllerId = this.selectedControllerId;
-    this.selectedControllerId = this.selectedControllerType != ControllerType.Joystick ? 0 : (this.player.controllers.joystickCount <= 0 ? -1 : ((IList<Joystick>) this.player.controllers.Joysticks)[0].id);
+    this.selectedControllerId = this.selectedControllerType != ControllerType.Joystick ? 0 : (this.player.controllers.joystickCount <= 0 ? -1 : this.player.controllers.Joysticks[0].id);
     if (this.selectedControllerId != selectedControllerId)
       flag = true;
     if (!flag)
@@ -193,7 +175,7 @@ public class SimpleControlRemapping : MonoBehaviour
   {
     if (index < 0 || index >= this.rows.Count || this.controller == null)
       return;
-    this.StartCoroutine((IEnumerator) this.StartListeningDelayed(index, actionElementMapToReplaceId));
+    this.StartCoroutine(this.StartListeningDelayed(index, actionElementMapToReplaceId));
   }
 
   public IEnumerator StartListeningDelayed(int index, int actionElementMapToReplaceId)

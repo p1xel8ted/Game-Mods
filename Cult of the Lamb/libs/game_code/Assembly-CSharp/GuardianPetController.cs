@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GuardianPetController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -101,7 +101,7 @@ public class GuardianPetController : MonoBehaviour
       if ((Object) this.activePets[index] != (Object) null)
       {
         this.activePets[index].health.invincible = false;
-        this.activePets[index].health.DealDamage(9999f, this.HostHealth.gameObject, this.activePets[index].transform.position);
+        this.activePets[index].health.DealDamage(9999f, this.HostHealth.gameObject, this.activePets[index].transform.position, dealDamageImmediately: true);
       }
     }
   }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMRoomGeneration.IslandPiece
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Map;
@@ -300,7 +300,7 @@ public class IslandPiece : BaseMonoBehaviour
       float y = Mathf.Round(this.Collider.points[index].y * 2f) / 2f;
       points.Add(new Vector2(x, y));
     }
-    this.Collider.SetPath(0, (List<Vector2>) points);
+    this.Collider.SetPath(0, points);
   }
 
   public List<IslandConnector> GetConnectorsDirection(

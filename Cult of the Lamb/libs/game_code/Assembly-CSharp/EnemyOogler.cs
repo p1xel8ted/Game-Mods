@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyOogler
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -187,7 +187,7 @@ public class EnemyOogler : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.attackTime = Time.time + UnityEngine.Random.Range(this.timeBetweenAttacks.x, this.timeBetweenAttacks.y);
   }
@@ -276,7 +276,7 @@ public class EnemyOogler : UnitObject
     if (this.QueuedTeleport)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.CastTeleportMechanicRoutine(this.GetDistantRandomPoint()));
+    this.StartCoroutine(this.CastTeleportMechanicRoutine(this.GetDistantRandomPoint()));
   }
 
   public Vector3 GetDistantRandomPoint()
@@ -327,12 +327,12 @@ public class EnemyOogler : UnitObject
         enemyOogler.VisionRange = int.MaxValue;
         if (!enemyOogler.TargetHasBells(enemyOogler.TargetObject) && (double) UnityEngine.Random.value < 0.5)
         {
-          enemyOogler.StartCoroutine((IEnumerator) enemyOogler.CastOoglerBell());
+          enemyOogler.StartCoroutine(enemyOogler.CastOoglerBell());
           yield break;
         }
         if (enemyOogler.CanSpawnClones())
         {
-          enemyOogler.StartCoroutine((IEnumerator) enemyOogler.SpawnClones());
+          enemyOogler.StartCoroutine(enemyOogler.SpawnClones());
           yield break;
         }
       }
@@ -356,14 +356,14 @@ public class EnemyOogler : UnitObject
     if (enemyOogler.QueuedTeleport)
     {
       enemyOogler.StopAllCoroutines();
-      enemyOogler.StartCoroutine((IEnumerator) enemyOogler.CastTeleportMechanicRoutine(enemyOogler.GetDistantRandomPoint()));
+      enemyOogler.StartCoroutine(enemyOogler.CastTeleportMechanicRoutine(enemyOogler.GetDistantRandomPoint()));
     }
     bool InRange = false;
     while (!InRange)
     {
       if ((UnityEngine.Object) enemyOogler.TargetObject == (UnityEngine.Object) null)
       {
-        enemyOogler.StartCoroutine((IEnumerator) enemyOogler.WaitForTarget());
+        enemyOogler.StartCoroutine(enemyOogler.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(enemyOogler.TargetObject.transform.position, enemyOogler.transform.position);
@@ -376,7 +376,7 @@ public class EnemyOogler : UnitObject
       }
       yield return (object) null;
     }
-    enemyOogler.StartCoroutine((IEnumerator) enemyOogler.KeepDistanceFromPlayer());
+    enemyOogler.StartCoroutine(enemyOogler.KeepDistanceFromPlayer());
   }
 
   public bool TargetHasBells(GameObject target) => true;
@@ -401,7 +401,7 @@ public class EnemyOogler : UnitObject
     caster.attackTime = Time.time + UnityEngine.Random.Range(caster.timeBetweenAttacks.x, caster.timeBetweenAttacks.y);
     if ((UnityEngine.Object) caster.TargetObject == (UnityEngine.Object) null)
     {
-      caster.StartCoroutine((IEnumerator) caster.WaitForTarget());
+      caster.StartCoroutine(caster.WaitForTarget());
     }
     else
     {
@@ -411,7 +411,7 @@ public class EnemyOogler : UnitObject
         yield return (object) null;
       caster.Spine.AnimationState.SetAnimation(0, caster.idleAnim, true);
       UnityEngine.Object.Instantiate<EnemyOoglerBell>(caster.ooglerBell, caster.TargetObject.transform.position, Quaternion.identity).Initialize((UnitObject) caster, caster.TargetObject);
-      caster.StartCoroutine((IEnumerator) caster.WaitForTarget());
+      caster.StartCoroutine(caster.WaitForTarget());
     }
   }
 
@@ -422,7 +422,7 @@ public class EnemyOogler : UnitObject
     enemyOogler.attackTime = Time.time + UnityEngine.Random.Range(enemyOogler.timeBetweenAttacks.x, enemyOogler.timeBetweenAttacks.y);
     if ((UnityEngine.Object) enemyOogler.TargetObject == (UnityEngine.Object) null)
     {
-      enemyOogler.StartCoroutine((IEnumerator) enemyOogler.WaitForTarget());
+      enemyOogler.StartCoroutine(enemyOogler.WaitForTarget());
     }
     else
     {
@@ -473,7 +473,7 @@ public class EnemyOogler : UnitObject
             UnityEngine.Object.Destroy((UnityEngine.Object) component.GetComponent<SpawnDeadBodyOnDeath>());
           component.StopAllCoroutines();
           Health closestTarget = enemyOogler.GetClosestTarget();
-          component.StartCoroutine((IEnumerator) component.CloneAttack(closestTarget));
+          component.StartCoroutine(component.CloneAttack(closestTarget));
           SkeletonRendererCustomMaterials.AtlasMaterialOverride materialOverride = component.overrideMaterial.customMaterialOverrides[0] with
           {
             overrideDisabled = false
@@ -488,7 +488,7 @@ public class EnemyOogler : UnitObject
         yield return (object) new WaitForSeconds(delay);
       }
       enemyOogler.MyState = EnemyOogler.State.WaitAndTaunt;
-      enemyOogler.StartCoroutine((IEnumerator) enemyOogler.WaitForTarget());
+      enemyOogler.StartCoroutine(enemyOogler.WaitForTarget());
       ++enemyOogler.attacksPerformedCounter;
     }
   }
@@ -507,17 +507,17 @@ public class EnemyOogler : UnitObject
     {
       if ((UnityEngine.Object) enemyOogler.TargetObject == (UnityEngine.Object) null)
       {
-        enemyOogler.StartCoroutine((IEnumerator) enemyOogler.WaitForTarget());
+        enemyOogler.StartCoroutine(enemyOogler.WaitForTarget());
         break;
       }
       if (!enemyOogler.TargetHasBells(enemyOogler.TargetObject) && (double) UnityEngine.Random.value < 0.5)
       {
-        enemyOogler.StartCoroutine((IEnumerator) enemyOogler.CastOoglerBell());
+        enemyOogler.StartCoroutine(enemyOogler.CastOoglerBell());
         break;
       }
       if (enemyOogler.CanSpawnClones())
       {
-        enemyOogler.StartCoroutine((IEnumerator) enemyOogler.SpawnClones());
+        enemyOogler.StartCoroutine(enemyOogler.SpawnClones());
         break;
       }
       if ((UnityEngine.Object) enemyOogler.damageColliderEvents != (UnityEngine.Object) null)
@@ -544,7 +544,7 @@ public class EnemyOogler : UnitObject
                   enemyOogler.health.invincible = false;
                   enemyOogler.StopAllCoroutines();
                   enemyOogler.DisableForces = false;
-                  enemyOogler.StartCoroutine((IEnumerator) enemyOogler.FightPlayer());
+                  enemyOogler.StartCoroutine(enemyOogler.FightPlayer());
                 }
                 else if (!enemyOogler.health.HasShield)
                 {
@@ -571,7 +571,7 @@ public class EnemyOogler : UnitObject
               enemyOogler.health.invincible = false;
               enemyOogler.StopAllCoroutines();
               enemyOogler.DisableForces = false;
-              enemyOogler.StartCoroutine((IEnumerator) enemyOogler.FightPlayer());
+              enemyOogler.StartCoroutine(enemyOogler.FightPlayer());
             }
             else if (!enemyOogler.health.HasShield)
             {
@@ -602,7 +602,7 @@ public class EnemyOogler : UnitObject
     if ((double) a > (double) this.VisionRange)
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
       this.LookAtTarget();
   }
@@ -682,7 +682,7 @@ public class EnemyOogler : UnitObject
     enemyOogler.health.SetDrawBurnParticles(true);
     if (!string.IsNullOrEmpty(enemyOogler.TeleportAppearSFX))
       AudioManager.Instance.PlayOneShot(enemyOogler.TeleportAppearSFX);
-    enemyOogler.StartCoroutine((IEnumerator) enemyOogler.SpawnClones());
+    enemyOogler.StartCoroutine(enemyOogler.SpawnClones());
   }
 
   public void OnDrawGizmos()
@@ -746,11 +746,11 @@ public class EnemyOogler : UnitObject
               break;
             }
             enemyOogler.TargetObject = (GameObject) null;
-            enemyOogler.StartCoroutine((IEnumerator) enemyOogler.KeepDistanceFromPlayer());
+            enemyOogler.StartCoroutine(enemyOogler.KeepDistanceFromPlayer());
             yield break;
           case StateMachine.State.Moving:
             enemyOogler.TargetObject = (GameObject) null;
-            enemyOogler.StartCoroutine((IEnumerator) enemyOogler.WaitForTarget());
+            enemyOogler.StartCoroutine(enemyOogler.WaitForTarget());
             yield break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) enemyOogler.damageColliderEvents != (UnityEngine.Object) null)
@@ -767,7 +767,7 @@ public class EnemyOogler : UnitObject
               enemyOogler.speed = AttackSpeed * 0.0166666675f;
               enemyOogler.Spine.AnimationState.SetAnimation(0, "attack-impact", false);
               enemyOogler.canBeParried = true;
-              enemyOogler.StartCoroutine((IEnumerator) enemyOogler.EnableDamageCollider(0.0f));
+              enemyOogler.StartCoroutine(enemyOogler.EnableDamageCollider(0.0f));
               if (!string.IsNullOrEmpty(enemyOogler.AttackClawSwipeSFX))
                 AudioManager.Instance.PlayOneShot(enemyOogler.AttackClawSwipeSFX, enemyOogler.transform.position);
               if (!string.IsNullOrEmpty(enemyOogler.AttackClowSwipeVO))
@@ -804,7 +804,7 @@ public class EnemyOogler : UnitObject
       }
     }
     enemyOogler.TargetObject = (GameObject) null;
-    enemyOogler.StartCoroutine((IEnumerator) enemyOogler.WaitForTarget());
+    enemyOogler.StartCoroutine(enemyOogler.WaitForTarget());
   }
 
   public IEnumerator CloneAttack(Health target)
@@ -892,7 +892,7 @@ public class EnemyOogler : UnitObject
   {
     this.health.team = Health.Team.PlayerTeam;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.CloneAttack(this.cloneParentHealth));
+    this.StartCoroutine(this.CloneAttack(this.cloneParentHealth));
   }
 
   public void OnDamageTriggerEnter(Collider2D collider)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyKingJailerMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -273,7 +273,7 @@ public class EnemyKingJailerMiniboss : UnitObject
     base.OnEnable();
     this.health.OnHitEarly += new Health.HitAction(this.OnHitEarly);
     this.InitDamageColliders();
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.onStateChange += new EnemyKingJailerMiniboss.DorryStateChange(this.OnStateChange);
     this.trail.Clear();
@@ -335,7 +335,7 @@ public class EnemyKingJailerMiniboss : UnitObject
         {
           Health.team2[index].invincible = false;
           Health.team2[index].enabled = true;
-          Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position);
+          Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, dealDamageImmediately: true);
         }
       }
     }
@@ -449,17 +449,17 @@ public class EnemyKingJailerMiniboss : UnitObject
     yield return (object) null;
   }
 
-  public void Attack1() => this.StartCoroutine((IEnumerator) this.Attack_1());
+  public void Attack1() => this.StartCoroutine(this.Attack_1());
 
-  public void Attack2() => this.StartCoroutine((IEnumerator) this.Attack_2());
+  public void Attack2() => this.StartCoroutine(this.Attack_2());
 
-  public void Attack3() => this.StartCoroutine((IEnumerator) this.Attack_3());
+  public void Attack3() => this.StartCoroutine(this.Attack_3());
 
-  public void Attack4() => this.StartCoroutine((IEnumerator) this.Attack_4());
+  public void Attack4() => this.StartCoroutine(this.Attack_4());
 
-  public void Attack5() => this.StartCoroutine((IEnumerator) this.Attack_5());
+  public void Attack5() => this.StartCoroutine(this.Attack_5());
 
-  public void Attack6() => this.StartCoroutine((IEnumerator) this.Attack_6());
+  public void Attack6() => this.StartCoroutine(this.Attack_6());
 
   public IEnumerator Attack_1()
   {
@@ -553,7 +553,7 @@ public class EnemyKingJailerMiniboss : UnitObject
       yield return (object) null;
     }
     kingJailerMiniboss.ThrowBoomerang();
-    yield return (object) new WaitUntil((Func<bool>) new Func<bool>(kingJailerMiniboss.\u003CAttack_4\u003Eb__146_0));
+    yield return (object) new WaitUntil(new Func<bool>(kingJailerMiniboss.\u003CAttack_4\u003Eb__146_0));
     string animationName = kingJailerMiniboss.boomerangKnockedBack ? kingJailerMiniboss.boomerangHurtAnim : kingJailerMiniboss.boomerangCatchAnim;
     string soundPath = kingJailerMiniboss.boomerangKnockedBack ? kingJailerMiniboss.GetHitVO : kingJailerMiniboss.AttackBoomerangCatchSFX;
     if (!string.IsNullOrEmpty(soundPath))
@@ -689,7 +689,7 @@ public class EnemyKingJailerMiniboss : UnitObject
         this.Spine.AnimationState.SetAnimation(0, "idle", true);
         if (this.idleRoutine != null)
           this.StopCoroutine(this.idleRoutine);
-        this.idleRoutine = this.StartCoroutine((IEnumerator) this.IdleState());
+        this.idleRoutine = this.StartCoroutine(this.IdleState());
         break;
       case EnemyKingJailerMiniboss.KingJailerState.MoveToTarget:
         this.repathTimer = 1f;
@@ -697,7 +697,7 @@ public class EnemyKingJailerMiniboss : UnitObject
         this.Spine.AnimationState.SetAnimation(0, "move", true);
         if (this.moveRoutine != null)
           this.StopCoroutine(this.moveRoutine);
-        this.moveRoutine = this.StartCoroutine((IEnumerator) this.MoveToTargetState());
+        this.moveRoutine = this.StartCoroutine(this.MoveToTargetState());
         break;
       case EnemyKingJailerMiniboss.KingJailerState.Attack_1:
         this.FacePosition(this.targetObject.transform.position);
@@ -708,14 +708,14 @@ public class EnemyKingJailerMiniboss : UnitObject
           AudioManager.Instance.PlayOneShot(this.AttackArcStartVO);
         if (this.attack_1_Routine != null)
           this.StopCoroutine(this.attack_1_Routine);
-        this.attack_1_Routine = this.StartCoroutine((IEnumerator) this.Attack_1());
+        this.attack_1_Routine = this.StartCoroutine(this.Attack_1());
         break;
       case EnemyKingJailerMiniboss.KingJailerState.Attack_2:
         this.FacePosition(this.targetObject.transform.position);
         this.Spine.AnimationState.SetAnimation(0, "attack-throw-smash", false);
         if (this.attack_2_Routine != null)
           this.StopCoroutine(this.attack_2_Routine);
-        this.attack_2_Routine = this.StartCoroutine((IEnumerator) this.Attack_2());
+        this.attack_2_Routine = this.StartCoroutine(this.Attack_2());
         break;
       case EnemyKingJailerMiniboss.KingJailerState.Attack_3:
         this.FacePosition(this.targetObject.transform.position);
@@ -727,7 +727,7 @@ public class EnemyKingJailerMiniboss : UnitObject
           AudioManager.Instance.PlayOneShot(this.AttackBigCageStartVO);
         if (this.attack_3_Routine != null)
           this.StopCoroutine(this.attack_3_Routine);
-        this.attack_3_Routine = this.StartCoroutine((IEnumerator) this.Attack_3());
+        this.attack_3_Routine = this.StartCoroutine(this.Attack_3());
         break;
       case EnemyKingJailerMiniboss.KingJailerState.Attack_4:
         this.FacePosition(this.targetObject.transform.position);
@@ -739,7 +739,7 @@ public class EnemyKingJailerMiniboss : UnitObject
           AudioManager.Instance.PlayOneShot(this.AttackBoomerangStartVO);
         if (this.attack_4_Routine != null)
           this.StopCoroutine(this.attack_4_Routine);
-        this.attack_4_Routine = this.StartCoroutine((IEnumerator) this.Attack_4());
+        this.attack_4_Routine = this.StartCoroutine(this.Attack_4());
         break;
       case EnemyKingJailerMiniboss.KingJailerState.Attack_5:
         if (this.CountFleshBallTraps() >= this.maxFleshBallTraps)
@@ -755,7 +755,7 @@ public class EnemyKingJailerMiniboss : UnitObject
           AudioManager.Instance.PlayOneShot(this.AttackVO);
         if (this.attack_5_Routine != null)
           this.StopCoroutine(this.attack_5_Routine);
-        this.attack_5_Routine = this.StartCoroutine((IEnumerator) this.Attack_5());
+        this.attack_5_Routine = this.StartCoroutine(this.Attack_5());
         break;
       case EnemyKingJailerMiniboss.KingJailerState.Attack_6:
         if (this.CountRopeTraps() >= this.maxRopeTraps)
@@ -769,7 +769,7 @@ public class EnemyKingJailerMiniboss : UnitObject
           this.spinningTrapStartInstanceSFX = AudioManager.Instance.PlayOneShotWithInstanceCleanup(this.AttackSpinningTrapSFX, this.transform);
         if (this.attack_6_Routine != null)
           this.StopCoroutine(this.attack_6_Routine);
-        this.attack_6_Routine = this.StartCoroutine((IEnumerator) this.Attack_6());
+        this.attack_6_Routine = this.StartCoroutine(this.Attack_6());
         break;
     }
   }
@@ -1085,7 +1085,7 @@ public class EnemyKingJailerMiniboss : UnitObject
     boomerang.GetComponentInChildren<Rotator>().SetParentSpine(this.Spine);
     this.currentBoomerang = boomerang;
     this.currentBoomerangTimestamp = GameManager.GetInstance().CurrentTime;
-    this.StartCoroutine((IEnumerator) this.BoomerangMovement(boomerang));
+    this.StartCoroutine(this.BoomerangMovement(boomerang));
   }
 
   public IEnumerator BoomerangMovement(Projectile boomerang)

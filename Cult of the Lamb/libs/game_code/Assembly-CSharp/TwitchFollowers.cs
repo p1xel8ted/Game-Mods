@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TwitchFollowers
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Org.OpenAPITools.Model;
@@ -93,7 +93,7 @@ public static class TwitchFollowers
 
   public static void StartRaffle(TwitchFollowers.RaffleResponse raffleResponse)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchFollowers.StartRaffleIE(raffleResponse));
+    GameManager.GetInstance().StartCoroutine(TwitchFollowers.StartRaffleIE(raffleResponse));
   }
 
   public static IEnumerator StartRaffleIE(TwitchFollowers.RaffleResponse raffleResponse)
@@ -112,7 +112,7 @@ public static class TwitchFollowers
 
   public static void EndRaffle(TwitchFollowers.RaffleResponse raffleResponse)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchFollowers.EndRaffleIE(raffleResponse));
+    GameManager.GetInstance().StartCoroutine(TwitchFollowers.EndRaffleIE(raffleResponse));
   }
 
   public static IEnumerator EndRaffleIE(TwitchFollowers.RaffleResponse raffleResponse)
@@ -158,7 +158,7 @@ public static class TwitchFollowers
 
   public static void GetRaffle(TwitchFollowers.RaffleResponse raffleResponse)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchFollowers.GetRaffleIE(raffleResponse));
+    GameManager.GetInstance().StartCoroutine(TwitchFollowers.GetRaffleIE(raffleResponse));
   }
 
   public static IEnumerator GetRaffleIE(TwitchFollowers.RaffleResponse raffleResponse)
@@ -192,7 +192,7 @@ public static class TwitchFollowers
     }
     if (availableClothing.Count <= 0)
       availableClothing.Add(FollowerClothingType.None);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchFollowers.SendEnabledSkinsIE(followerNames, availableClothing));
+    GameManager.GetInstance().StartCoroutine(TwitchFollowers.SendEnabledSkinsIE(followerNames, availableClothing));
   }
 
   public static IEnumerator SendEnabledSkinsIE(

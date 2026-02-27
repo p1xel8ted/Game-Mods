@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ExecutionerNPC
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -71,7 +71,7 @@ public class ExecutionerNPC : UnitObject
         this.pathingRoutine = (Coroutine) null;
       }
       else if (!this.barkRepeating.IsSpeaking && this.pathingRoutine == null && !MMConversation.isPlaying)
-        this.pathingRoutine = this.StartCoroutine((IEnumerator) this.PathfindingIE());
+        this.pathingRoutine = this.StartCoroutine(this.PathfindingIE());
     }
     else
       this.delay -= Time.deltaTime;

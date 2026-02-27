@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: I2.Loc.ResourceManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -36,10 +36,10 @@ public class ResourceManager : MonoBehaviour
         ResourceManager.initialising = true;
       }
       if ((UnityEngine.Object) ResourceManager.mInstance == (UnityEngine.Object) null)
-        ResourceManager.mInstance = (ResourceManager) UnityEngine.Object.FindObjectOfType((System.Type) typeof (ResourceManager));
+        ResourceManager.mInstance = (ResourceManager) UnityEngine.Object.FindObjectOfType(typeof (ResourceManager));
       if ((UnityEngine.Object) ResourceManager.mInstance == (UnityEngine.Object) null)
       {
-        GameObject gameObject = new GameObject("I2ResourceManager", (System.Type[]) new System.Type[1]
+        GameObject gameObject = new GameObject("I2ResourceManager", new System.Type[1]
         {
           typeof (ResourceManager)
         });
@@ -112,7 +112,7 @@ public class ResourceManager : MonoBehaviour
         }
       }
       else
-        obj = Resources.Load(Path, (System.Type) typeof (T)) as T;
+        obj = Resources.Load(Path, typeof (T)) as T;
       if ((UnityEngine.Object) obj == (UnityEngine.Object) null)
         obj = this.LoadFromBundle<T>(Path);
       if ((UnityEngine.Object) obj != (UnityEngine.Object) null)

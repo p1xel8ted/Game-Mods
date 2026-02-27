@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMVibrate
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -233,7 +233,7 @@ public static class MMVibrate
   {
     if ((Object) playerFarming != (Object) null && !InputManager.General.InputIsController(playerFarming) || !coroutineSupport.gameObject.activeInHierarchy)
       return;
-    coroutineSupport.StartCoroutine((IEnumerator) MMVibrate.RumbleCoroutine(lowFrequency, highFrequency, duration, playerFarming, controllerID));
+    coroutineSupport.StartCoroutine(MMVibrate.RumbleCoroutine(lowFrequency, highFrequency, duration, playerFarming, controllerID));
   }
 
   public static void RumbleForAllPlayers(
@@ -281,7 +281,7 @@ public static class MMVibrate
   {
     if (!InputManager.General.InputIsController(playerFarming) || pattern == null || amplitudes == null)
       return;
-    coroutineSupport.StartCoroutine((IEnumerator) MMVibrate.RumblePatternCoroutine(pattern, amplitudes, amplitudes, repeat, coroutineSupport, playerFarming, controllerID));
+    coroutineSupport.StartCoroutine(MMVibrate.RumblePatternCoroutine(pattern, amplitudes, amplitudes, repeat, coroutineSupport, playerFarming, controllerID));
   }
 
   public static void Rumble(
@@ -295,7 +295,7 @@ public static class MMVibrate
   {
     if (pattern == null || lowFreqAmplitudes == null || highFreqAmplitudes == null)
       return;
-    coroutineSupport.StartCoroutine((IEnumerator) MMVibrate.RumblePatternCoroutine(pattern, lowFreqAmplitudes, highFreqAmplitudes, repeat, coroutineSupport, playerFarming, controllerID));
+    coroutineSupport.StartCoroutine(MMVibrate.RumblePatternCoroutine(pattern, lowFreqAmplitudes, highFreqAmplitudes, repeat, coroutineSupport, playerFarming, controllerID));
   }
 
   public static void RumblePad(Joystick Pad, int motorIndex, int motorLevel, float duration)

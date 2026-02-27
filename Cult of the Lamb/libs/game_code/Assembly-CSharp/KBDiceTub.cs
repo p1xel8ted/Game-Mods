@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: KBDiceTub
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -82,7 +82,7 @@ public class KBDiceTub : MonoBehaviour, ISelectHandler, IEventSystemHandler, IDe
       if (this.Dice[i].Num == dice.Num)
       {
         AudioManager.Instance.PlayOneShot("event:/material/stained_glass_impact");
-        yield return (object) this.Dice[i].StartCoroutine((IEnumerator) this.Dice[i].ShakeRoutine());
+        yield return (object) this.Dice[i].StartCoroutine(this.Dice[i].ShakeRoutine());
         UnityEngine.Object.Destroy((UnityEngine.Object) this.Dice[i].gameObject);
         this.Dice.RemoveAt(i);
         flag = true;

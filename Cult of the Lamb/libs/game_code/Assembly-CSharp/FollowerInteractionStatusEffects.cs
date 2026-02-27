@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerInteractionStatusEffects
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -45,7 +45,7 @@ public class FollowerInteractionStatusEffects : BaseMonoBehaviour
     float Delay,
     FollowerInteractionStatusEffects.EffectIcon Effect)
   {
-    this.StartCoroutine((IEnumerator) this.AddEffectRoutine(Instant, Delay, Effect));
+    this.StartCoroutine(this.AddEffectRoutine(Instant, Delay, Effect));
   }
 
   public IEnumerator AddEffectRoutine(
@@ -67,7 +67,7 @@ public class FollowerInteractionStatusEffects : BaseMonoBehaviour
       component.Text.text = "Test Effect!";
       component.RadialProgress.fillAmount = 0.2f;
     }
-    interactionStatusEffects.StartCoroutine((IEnumerator) interactionStatusEffects.ScaleIcon(gameObject.transform));
+    interactionStatusEffects.StartCoroutine(interactionStatusEffects.ScaleIcon(gameObject.transform));
   }
 
   public IEnumerator ScaleIcon(Transform t)

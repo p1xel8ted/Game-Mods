@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BasicBossIntroMouthMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -110,7 +110,7 @@ public class BasicBossIntroMouthMiniboss : BossIntro
     introMouthMiniboss.triggerEnemy3.Spine.transform.DOLocalMove(localPosition4, 0.33f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.Linear).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(UpdateType.Late).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>(new TweenCallback(introMouthMiniboss.\u003CPlayRoutine\u003Eb__10_3));
     yield return (object) new WaitForSeconds(0.75f);
     GameManager.GetInstance().OnConversationNext(introMouthMiniboss.CameraTarget, 7f);
-    introMouthMiniboss.StartCoroutine((IEnumerator) introMouthMiniboss.enemyHole.TriggerSurpriseAttack(introMouthMiniboss.BassIntroBigChompSFX));
+    introMouthMiniboss.StartCoroutine(introMouthMiniboss.enemyHole.TriggerSurpriseAttack(introMouthMiniboss.BassIntroBigChompSFX));
     yield return (object) new WaitForSeconds(0.5f);
     CameraManager.shakeCamera(3f);
     Explosion.CreateExplosion(introMouthMiniboss.triggerEnemy0.transform.position, introMouthMiniboss.triggerEnemy0.health.team, introMouthMiniboss.triggerEnemy0.health, 1f);
@@ -149,7 +149,7 @@ public class BasicBossIntroMouthMiniboss : BossIntro
     MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact);
   }
 
-  public void Play() => this.StartCoroutine((IEnumerator) this.PlayRoutine(false));
+  public void Play() => this.StartCoroutine(this.PlayRoutine(false));
 
   [CompilerGenerated]
   public void \u003CPlayRoutine\u003Eb__10_0()

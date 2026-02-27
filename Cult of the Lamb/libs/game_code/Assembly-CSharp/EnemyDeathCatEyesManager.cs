@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDeathCatEyesManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -78,7 +78,7 @@ public class EnemyDeathCatEyesManager : MonoBehaviour
 
   public void SetPositionsAndAttack()
   {
-    this.activeRoutine = this.StartCoroutine((IEnumerator) this.SetPositionsAndAttackIE());
+    this.activeRoutine = this.StartCoroutine(this.SetPositionsAndAttackIE());
   }
 
   public IEnumerator SetPositionsAndAttackIE()
@@ -133,7 +133,7 @@ public class EnemyDeathCatEyesManager : MonoBehaviour
         else
           break;
       }
-      deathCatEyesManager.activeRoutine = deathCatEyesManager.StartCoroutine((IEnumerator) deathCatEyesManager.Attack());
+      deathCatEyesManager.activeRoutine = deathCatEyesManager.StartCoroutine(deathCatEyesManager.Attack());
     }
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Missionaries
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -236,7 +236,7 @@ public class Interaction_Missionaries : Interaction
     followerById.OverridingOutfit = true;
     followerById.transform.position = this.MissionarySlots[this.StructureInfo.MultipleFollowerIDs.Count - 1].Free.transform.position;
     followerById.Interaction_FollowerInteraction.Interactable = false;
-    this.StartCoroutine((IEnumerator) this.SentFollowerIE(followerById));
+    this.StartCoroutine(this.SentFollowerIE(followerById));
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.SendFollowerOnMissionary, followerById.Brain.Info.ID);
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.SendSpouseOnMissionary, followerById.Brain.Info.ID);
   }

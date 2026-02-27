@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyMillipede
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -163,7 +163,7 @@ public class EnemyMillipede : UnitObject
       {
         bodyPart.enabled = true;
         bodyPart.DamageModifier = 1f;
-        bodyPart.DealDamage(bodyPart.totalHP, this.gameObject, AttackLocation, AttackType: Health.AttackTypes.Heavy);
+        bodyPart.DealDamage(bodyPart.totalHP, this.gameObject, AttackLocation, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }
@@ -181,10 +181,7 @@ public class EnemyMillipede : UnitObject
     this.LookAtAngle(Utils.GetAngle(this.transform.position, this.GetClosestTarget().transform.position));
   }
 
-  public void EnableDamageColliders()
-  {
-    this.StartCoroutine((IEnumerator) this.EnableDamageCollidersIE());
-  }
+  public void EnableDamageColliders() => this.StartCoroutine(this.EnableDamageCollidersIE());
 
   public IEnumerator EnableDamageCollidersIE()
   {
@@ -235,7 +232,7 @@ public class EnemyMillipede : UnitObject
     if (this.damaged)
       return;
     this.health.DealDamage(damage, attacker, attackLocation, AttackType: attackType, AttackFlags: attackFlag);
-    this.StartCoroutine((IEnumerator) this.InvincibleDelay());
+    this.StartCoroutine(this.InvincibleDelay());
   }
 
   public IEnumerator InvincibleDelay()

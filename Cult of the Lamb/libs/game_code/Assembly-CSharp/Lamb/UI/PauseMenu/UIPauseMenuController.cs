@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.PauseMenu.UIPauseMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -63,6 +63,8 @@ public class UIPauseMenuController : UIMenuBase
   [SerializeField]
   public ButtonHighlightController _buttonHighlightController;
   public bool saved;
+  public float GCTimer;
+  public const float GCInterval = 5f;
   public bool isLoading;
   public bool disabledDynamicRes;
   public bool DenyCoop;
@@ -94,7 +96,7 @@ public class UIPauseMenuController : UIMenuBase
     this._seedText.text = (UnityEngine.Object) BiomeGenerator.Instance == (UnityEngine.Object) null ? "" : BiomeGenerator.Instance.Seed.ToString();
     this._bugReportButton.onClick.AddListener((UnityAction) (() => this.Push<UIBugReportingOverlayController>(MonoSingleton<UIManager>.Instance.BugReportingOverlayTemplate)));
     this._discordButton.onClick.AddListener((UnityAction) (() => Application.OpenURL("https://discord.com/invite/massivemonster")));
-    this.StartCoroutine((IEnumerator) this.UpdateLoop());
+    this.StartCoroutine(this.UpdateLoop());
   }
 
   public void OnEnable()
@@ -109,7 +111,7 @@ public class UIPauseMenuController : UIMenuBase
       this._coopButtonText.text = ScriptLocalization.UI.CoopMenu_Add;
     if ((bool) (UnityEngine.Object) MonoSingleton<UIManager>.Instance)
       MonoSingleton<UIManager>.Instance.SetCurrentCursor(0);
-    ReInput.ControllerConnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
+    ReInput.ControllerConnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
     this._coopButton.OnSelected += new System.Action(this.CoopButtonOnSelected);
     this._coopButton.OnDeselected += new System.Action(this.CoopButtonOnDeselected);
   }
@@ -123,7 +125,7 @@ public class UIPauseMenuController : UIMenuBase
       MonoSingleton<UIManager>.Instance.SetPreviousCursor();
     if ((bool) (UnityEngine.Object) MonoSingleton<UIManager>.Instance)
       MonoSingleton<UIManager>.Instance.ResetPreviousCursor();
-    ReInput.ControllerConnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
+    ReInput.ControllerConnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
     this._coopButton.OnSelected -= new System.Action(this.CoopButtonOnSelected);
     this._coopButton.OnDeselected -= new System.Action(this.CoopButtonOnDeselected);
   }
@@ -151,9 +153,13 @@ public class UIPauseMenuController : UIMenuBase
   public void Update()
   {
     Time.timeScale = 0.0f;
-    if (ReInput.controllers == null || ReInput.controllers.joystickCount == this.previousJoystickCount || this.IsHiding)
+    if (ReInput.controllers != null && ReInput.controllers.joystickCount != this.previousJoystickCount && !this.IsHiding)
+      this.RefreshCoopText();
+    this.GCTimer += Time.unscaledDeltaTime;
+    if ((double) this.GCTimer < 5.0)
       return;
-    this.RefreshCoopText();
+    GC.Collect();
+    this.GCTimer = 0.0f;
   }
 
   public void OnSessionEnd(Guid sessionGuid, User sessionUser) => this.Hide(true);
@@ -186,7 +192,7 @@ public class UIPauseMenuController : UIMenuBase
   {
     if (this.isLoading)
       return;
-    this.StartCoroutine((IEnumerator) this.LoadPhotoMode());
+    this.StartCoroutine(this.LoadPhotoMode());
   }
 
   public IEnumerator LoadPhotoMode()
@@ -408,5 +414,5 @@ public class UIPauseMenuController : UIMenuBase
   }
 
   [CompilerGenerated]
-  public void \u003CLoadMainMenu\u003Eb__38_0() => this.Hide(true);
+  public void \u003CLoadMainMenu\u003Eb__40_0() => this.Hide(true);
 }

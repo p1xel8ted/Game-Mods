@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyLambKing
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -308,7 +308,7 @@ public class EnemyLambKing : UnitObject
     }
     this.initialDamageModifier = this.health.DamageModifier;
     if (!this.CheckAndTrySummon())
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.restoreArmorElapsed = this.timeToRestoreArmor;
     this.ResetMainAttackCooldown();
@@ -364,7 +364,7 @@ public class EnemyLambKing : UnitObject
     foreach (Health children in this.ChildrenList)
     {
       if ((UnityEngine.Object) children != (UnityEngine.Object) null && (double) children.HP > 0.0)
-        children.DealDamage(999f, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        children.DealDamage(999f, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
     }
     base.OnDie(Attacker, AttackLocation, Victim, AttackType, AttackFlags);
   }
@@ -403,7 +403,7 @@ public class EnemyLambKing : UnitObject
       ObjectPool.Recycle(this.currentJumpIndicator);
       this.currentJumpIndicator = (GameObject) null;
     }
-    this.StartCoroutine((IEnumerator) this.DoSummon(this.summonStack.Peek().Quantity));
+    this.StartCoroutine(this.DoSummon(this.summonStack.Peek().Quantity));
     this.summonStack.Pop();
     return true;
   }
@@ -450,7 +450,7 @@ public class EnemyLambKing : UnitObject
       }
       yield return (object) null;
     }
-    enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.ChasePlayer());
+    enemyLambKing.StartCoroutine(enemyLambKing.ChasePlayer());
   }
 
   public void LookAtTarget()
@@ -494,7 +494,7 @@ public class EnemyLambKing : UnitObject
     {
       if ((UnityEngine.Object) enemyLambKing.TargetObject == (UnityEngine.Object) null)
       {
-        enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+        enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
         break;
       }
       if ((UnityEngine.Object) enemyLambKing.MortarLineDamageColliderEvents != (UnityEngine.Object) null)
@@ -542,7 +542,7 @@ public class EnemyLambKing : UnitObject
                   enemyLambKing.TryExecuteJumpAttack(enemyLambKing.JumpAttack());
                   break;
                 default:
-                  enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+                  enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
                   break;
               }
             }
@@ -612,7 +612,7 @@ public class EnemyLambKing : UnitObject
     this.StopAllCoroutines();
     this.ClearPaths();
     this.state.CURRENT_STATE = StateMachine.State.Idle;
-    this.StartCoroutine((IEnumerator) attackRoutine);
+    this.StartCoroutine(attackRoutine);
   }
 
   public void TryExecuteJumpAttack(IEnumerator attackRoutine)
@@ -623,7 +623,7 @@ public class EnemyLambKing : UnitObject
     this.StopAllCoroutines();
     this.ClearPaths();
     this.state.CURRENT_STATE = StateMachine.State.Idle;
-    this.StartCoroutine((IEnumerator) attackRoutine);
+    this.StartCoroutine(attackRoutine);
   }
 
   public IEnumerator MortarCrossAttack()
@@ -661,7 +661,7 @@ public class EnemyLambKing : UnitObject
             break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) enemyLambKing.TargetObject == (UnityEngine.Object) null)
-              enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+              enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             enemyLambKing.SimpleSpineFlash.FlashWhite(enemyLambKing.state.Timer / SignPostDelay);
             enemyLambKing.state.Timer += Time.deltaTime * enemyLambKing.Spine.timeScale;
             if ((double) enemyLambKing.state.Timer >= (double) SignPostDelay)
@@ -692,7 +692,7 @@ public class EnemyLambKing : UnitObject
             break;
           default:
             enemyLambKing.TargetObject = (GameObject) null;
-            enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+            enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             yield break;
         }
         yield return (object) null;
@@ -700,7 +700,7 @@ public class EnemyLambKing : UnitObject
     }
     enemyLambKing.ResetMainAttackCooldown();
     enemyLambKing.TargetObject = (GameObject) null;
-    enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+    enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
   }
 
   public IEnumerator MortarRainAttack()
@@ -737,7 +737,7 @@ public class EnemyLambKing : UnitObject
             break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) enemyLambKing.TargetObject == (UnityEngine.Object) null)
-              enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+              enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             enemyLambKing.SimpleSpineFlash.FlashWhite(enemyLambKing.state.Timer / SignPostDelay);
             enemyLambKing.state.Timer += Time.deltaTime * enemyLambKing.Spine.timeScale;
             if ((double) enemyLambKing.state.Timer >= (double) SignPostDelay)
@@ -771,7 +771,7 @@ public class EnemyLambKing : UnitObject
             break;
           default:
             enemyLambKing.TargetObject = (GameObject) null;
-            enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+            enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             yield break;
         }
         yield return (object) null;
@@ -779,7 +779,7 @@ public class EnemyLambKing : UnitObject
     }
     enemyLambKing.ResetMainAttackCooldown();
     enemyLambKing.TargetObject = (GameObject) null;
-    enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+    enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
   }
 
   public IEnumerator MineLineAttack()
@@ -845,7 +845,7 @@ public class EnemyLambKing : UnitObject
                 enemyLambKing.shootPosition = aimPosition + vector3 * enemyLambKing.LineTargetDistanceFromPlayer;
                 enemyLambKing.ShootMortarProjectile(enemyLambKing.shootPosition, enemyLambKing.lineMortarTrajectoryDuration);
                 if (enemyLambKing.mineLineMeleeDamage)
-                  enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.EnableSlashDamageCollider(0.0f));
+                  enemyLambKing.StartCoroutine(enemyLambKing.EnableSlashDamageCollider(0.0f));
                 CameraManager.shakeCamera(0.4f, enemyLambKing.state.LookAngle);
                 float time = 0.0f;
                 while ((double) (time += Time.deltaTime * enemyLambKing.Spine.timeScale) < (double) enemyLambKing.timeBetweenLineShots)
@@ -868,7 +868,7 @@ public class EnemyLambKing : UnitObject
     }
     enemyLambKing.ResetMainAttackCooldown();
     enemyLambKing.TargetObject = (GameObject) null;
-    enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+    enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
   }
 
   public IEnumerator JumpAttack()
@@ -913,7 +913,7 @@ public class EnemyLambKing : UnitObject
             break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) enemyLambKing.TargetObject == (UnityEngine.Object) null)
-              enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+              enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             enemyLambKing.SimpleSpineFlash.FlashWhite(enemyLambKing.state.Timer / SignPostDelay);
             enemyLambKing.state.Timer += Time.deltaTime * enemyLambKing.Spine.timeScale;
             if ((double) enemyLambKing.state.Timer < (double) SignPostDelay && (UnityEngine.Object) enemyLambKing.currentJumpIndicator != (UnityEngine.Object) null)
@@ -964,7 +964,7 @@ public class EnemyLambKing : UnitObject
             Explosion.CreateExplosion(enemyLambKing.transform.position, enemyLambKing.health.team, enemyLambKing.health, 2f, 0.0f, shakeMultiplier: 2f);
             BiomeConstants.Instance.EmitSmokeExplosionVFX(enemyLambKing.transform.position);
             MMVibrate.Haptic(MMVibrate.HapticTypes.HeavyImpact);
-            enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.EnableJumpDamageCollider(0.0f));
+            enemyLambKing.StartCoroutine(enemyLambKing.EnableJumpDamageCollider(0.0f));
             while (shotsFired < enemyLambKing.landingAttack.attackWaves.Length)
             {
               enemyLambKing.Spine.AnimationState.SetAnimation(0, "jump-end", false);
@@ -993,7 +993,7 @@ public class EnemyLambKing : UnitObject
             break;
           default:
             enemyLambKing.TargetObject = (GameObject) null;
-            enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+            enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             yield break;
         }
         yield return (object) null;
@@ -1001,7 +1001,7 @@ public class EnemyLambKing : UnitObject
     }
     enemyLambKing.Seperate(0.5f);
     enemyLambKing.TargetObject = (GameObject) null;
-    enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+    enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
   }
 
   public Vector3 CheckForMapEdgeOnLanding(Vector3 targetPos, Vector3 startPos, float epsilon)
@@ -1072,7 +1072,7 @@ public class EnemyLambKing : UnitObject
             break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) enemyLambKing.TargetObject == (UnityEngine.Object) null)
-              enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+              enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             enemyLambKing.SimpleSpineFlash.FlashWhite(enemyLambKing.state.Timer / SignPostDelay);
             enemyLambKing.state.Timer += Time.deltaTime * enemyLambKing.Spine.timeScale;
             if ((double) enemyLambKing.state.Timer >= (double) SignPostDelay)
@@ -1109,7 +1109,7 @@ public class EnemyLambKing : UnitObject
             break;
           default:
             enemyLambKing.TargetObject = (GameObject) null;
-            enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+            enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
             yield break;
         }
         yield return (object) null;
@@ -1117,7 +1117,7 @@ public class EnemyLambKing : UnitObject
       }
     }
     enemyLambKing.ResetMainAttackCooldown();
-    enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+    enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
   }
 
   public IEnumerator ShotgunProjectilesAttack()
@@ -1131,7 +1131,7 @@ public class EnemyLambKing : UnitObject
     if ((UnityEngine.Object) enemyLambKing.TargetObject == (UnityEngine.Object) null)
     {
       enemyLambKing.StopAllCoroutines();
-      enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+      enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
     }
     Vector3 targetLastPosition = enemyLambKing.TargetObject.transform.position;
     enemyLambKing.SimpleSpineFlash.FlashWhite(enemyLambKing.state.Timer / SignPostDelay);
@@ -1164,7 +1164,7 @@ public class EnemyLambKing : UnitObject
         yield return (object) null;
     }
     enemyLambKing.ResetMainAttackCooldown();
-    enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+    enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
   }
 
   public void ShootProjectile(
@@ -1214,7 +1214,7 @@ public class EnemyLambKing : UnitObject
       {
         if (bomb.IsHit && (!bomb.IsHit || !this.hitBombsSpawnPattern))
           return;
-        this.StartCoroutine((IEnumerator) this.FireBombProjectilePattern(bomb.transform));
+        this.StartCoroutine(this.FireBombProjectilePattern(bomb.transform));
       });
     bomb.Play(this.transform.position + new Vector3(0.0f, 0.0f, -1.5f), trajectoryDuration, this.health, false);
     if (string.IsNullOrEmpty(this.AttackOrganLaunchSFX))
@@ -1299,10 +1299,10 @@ public class EnemyLambKing : UnitObject
         Health component4 = gameObject.GetComponent<Health>();
         component4.OnDie += new Health.DieAction(enemyLambKing.OnSpawnedDie);
         enemyLambKing.ChildrenList.Add(component4);
-        component4.StartCoroutine((IEnumerator) enemyLambKing.MoveTweenRoutine(gameObject.transform, 1f));
+        component4.StartCoroutine(enemyLambKing.MoveTweenRoutine(gameObject.transform, 1f));
       }
       enemyLambKing.Spawning = false;
-      enemyLambKing.StartCoroutine((IEnumerator) enemyLambKing.WaitForTarget());
+      enemyLambKing.StartCoroutine(enemyLambKing.WaitForTarget());
       yield return (object) null;
     }
   }
@@ -1336,7 +1336,7 @@ public class EnemyLambKing : UnitObject
     if ((double) a > (double) this.VisionRange)
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
       this.LookAtTarget();
   }
@@ -1376,7 +1376,7 @@ public class EnemyLambKing : UnitObject
     if (!((UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null) || !this.FollowPlayer)
       return;
     this.ClearPaths();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlaceIE());
+    GameManager.GetInstance().StartCoroutine(this.PlaceIE());
   }
 
   public IEnumerator PlaceIE()

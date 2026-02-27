@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: AutoFlip
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -43,7 +43,7 @@ public class AutoFlip : BaseMonoBehaviour
 
   public void StartFlipping(System.Action callback = null)
   {
-    this.StartCoroutine((IEnumerator) this.FlipToEnd(callback));
+    this.StartCoroutine(this.FlipToEnd(callback));
   }
 
   public void OnDisable() => this.isFlipping = false;
@@ -92,7 +92,7 @@ public class AutoFlip : BaseMonoBehaviour
     float xl = (float) (((double) this.ControledBook.EndBottomRight.x - (double) this.ControledBook.EndBottomLeft.x) / 2.0 * 0.89999997615814209);
     float h = Mathf.Abs(this.ControledBook.EndBottomRight.y) * 0.9f;
     float dx = xl * 2f / (float) this.AnimationFramesCount;
-    this.StartCoroutine((IEnumerator) this.FlipRTL(xc, xl, h, frameTime, dx));
+    this.StartCoroutine(this.FlipRTL(xc, xl, h, frameTime, dx));
     System.Action onPageFlipRight = this.OnPageFlipRight;
     if (onPageFlipRight != null)
       onPageFlipRight();
@@ -122,7 +122,7 @@ public class AutoFlip : BaseMonoBehaviour
     float xl = (float) (((double) this.ControledBook.EndBottomRight.x - (double) this.ControledBook.EndBottomLeft.x) / 2.0 * 0.89999997615814209);
     float h = Mathf.Abs(this.ControledBook.EndBottomRight.y) * 0.9f;
     float dx = xl * 2f / (float) this.AnimationFramesCount;
-    this.StartCoroutine((IEnumerator) this.FlipLTR(xc, xl, h, frameTime, dx));
+    this.StartCoroutine(this.FlipLTR(xc, xl, h, frameTime, dx));
     System.Action onPageFlipLeft = this.OnPageFlipLeft;
     if (onPageFlipLeft != null)
       onPageFlipLeft();
@@ -146,12 +146,12 @@ public class AutoFlip : BaseMonoBehaviour
       case FlipMode.RightToLeft:
         while (autoFlip.ControledBook.currentPage < autoFlip.ControledBook.TotalPageCount)
         {
-          autoFlip.StartCoroutine((IEnumerator) autoFlip.FlipRTL(xc, xl, h, frameTime, dx));
+          autoFlip.StartCoroutine(autoFlip.FlipRTL(xc, xl, h, frameTime, dx));
           yield return (object) new WaitForSeconds(autoFlip.TimeBetweenPages);
         }
         break;
       case FlipMode.LeftToRight:
-        autoFlip.StartCoroutine((IEnumerator) autoFlip.FlipLTR(xc, xl, h, frameTime, dx, true));
+        autoFlip.StartCoroutine(autoFlip.FlipLTR(xc, xl, h, frameTime, dx, true));
         ((RectTransform) autoFlip.transform).DOAnchorPos((Vector2) new Vector3(-280f, 0.0f, 0.0f), 1f);
         yield return (object) new WaitForSeconds(autoFlip.TimeBetweenPages);
         break;

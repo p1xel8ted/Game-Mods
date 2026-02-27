@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ChoiceIndicator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -140,7 +140,7 @@ public class ChoiceIndicator : BaseMonoBehaviour
     this._rectTransform.position = this._currentMain.WorldToScreenPoint(worldPosition) - this.Offset * this._offsetResolutionYMultiplier;
     this._informationBox.SetActive(false);
     this._promptBox.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.DoShow());
+    this.StartCoroutine(this.DoShow());
   }
 
   public void ShowObjectivesBox(ObjectivesData objectivesData)
@@ -230,7 +230,7 @@ public class ChoiceIndicator : BaseMonoBehaviour
       this._choice2.Button.onClick?.Invoke();
   }
 
-  public void Hide() => this.StartCoroutine((IEnumerator) this.DoHide());
+  public void Hide() => this.StartCoroutine(this.DoHide());
 
   public IEnumerator DoShow()
   {

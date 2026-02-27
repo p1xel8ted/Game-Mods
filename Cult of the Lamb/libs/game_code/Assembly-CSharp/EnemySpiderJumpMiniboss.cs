@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySpiderJumpMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -183,25 +183,25 @@ public class EnemySpiderJumpMiniboss : EnemySpider
         if (spiderJumpMiniboss.ShouldProjectileAttack() && num < 2)
         {
           AudioManager.Instance.PlayOneShot(spiderJumpMiniboss.warningSfx, spiderJumpMiniboss.gameObject);
-          spiderJumpMiniboss.StartCoroutine((IEnumerator) spiderJumpMiniboss.ProjectileAttack());
+          spiderJumpMiniboss.StartCoroutine(spiderJumpMiniboss.ProjectileAttack());
         }
         else if (spiderJumpMiniboss.ShouldAttack() && num < 5)
         {
           AudioManager.Instance.PlayOneShot(spiderJumpMiniboss.warningSfx, spiderJumpMiniboss.gameObject);
           spiderJumpMiniboss.attackCounter = 1;
-          spiderJumpMiniboss.StartCoroutine((IEnumerator) spiderJumpMiniboss.AttackRoutine());
+          spiderJumpMiniboss.StartCoroutine(spiderJumpMiniboss.AttackRoutine());
         }
         else if (spiderJumpMiniboss.ShouldSlam() && num < 7)
         {
           AudioManager.Instance.PlayOneShot(spiderJumpMiniboss.warningSfx, spiderJumpMiniboss.gameObject);
           spiderJumpMiniboss.attackCounter = 0;
-          spiderJumpMiniboss.StartCoroutine((IEnumerator) spiderJumpMiniboss.SlamRoutine());
+          spiderJumpMiniboss.StartCoroutine(spiderJumpMiniboss.SlamRoutine());
         }
         else if (spiderJumpMiniboss.ShouldTargetJump())
         {
           AudioManager.Instance.PlayOneShot(spiderJumpMiniboss.warningSfx, spiderJumpMiniboss.gameObject);
           spiderJumpMiniboss.attackCounter = 0;
-          spiderJumpMiniboss.StartCoroutine((IEnumerator) spiderJumpMiniboss.TargetJumpRoutine());
+          spiderJumpMiniboss.StartCoroutine(spiderJumpMiniboss.TargetJumpRoutine());
         }
         yield return (object) null;
       }
@@ -246,12 +246,12 @@ public class EnemySpiderJumpMiniboss : EnemySpider
         if ((bool) (UnityEngine.Object) component)
           component.Amount = 0;
         EnemySpider.EnemySpiders[index].health.enabled = true;
-        EnemySpider.EnemySpiders[index].health.DealDamage(EnemySpider.EnemySpiders[index].health.totalHP, this.gameObject, EnemySpider.EnemySpiders[index].transform.position);
+        EnemySpider.EnemySpiders[index].health.DealDamage(EnemySpider.EnemySpiders[index].health.totalHP, this.gameObject, EnemySpider.EnemySpiders[index].transform.position, dealDamageImmediately: true);
       }
     }
   }
 
-  public void Slam() => this.StartCoroutine((IEnumerator) this.SlamRoutine());
+  public void Slam() => this.StartCoroutine(this.SlamRoutine());
 
   public IEnumerator SlamRoutine()
   {
@@ -299,7 +299,7 @@ public class EnemySpiderJumpMiniboss : EnemySpider
     UnityEngine.Object.Instantiate<GameObject>(spiderJumpMiniboss.slamParticlePrefab, spiderJumpMiniboss.transform.position, Quaternion.identity);
     spiderJumpMiniboss.damageColliderEvents.gameObject.SetActive(true);
     spiderJumpMiniboss.indicatorIcon.gameObject.SetActive(false);
-    spiderJumpMiniboss.StartCoroutine((IEnumerator) spiderJumpMiniboss.slamProjectilePattern.ShootIE());
+    spiderJumpMiniboss.StartCoroutine(spiderJumpMiniboss.slamProjectilePattern.ShootIE());
     spiderJumpMiniboss.health.enabled = true;
     spiderJumpMiniboss.health.DontCombo = true;
     time = 0.0f;
@@ -393,7 +393,7 @@ public class EnemySpiderJumpMiniboss : EnemySpider
       }
       component1.DoKnockBack(angle, this.spawnForce, 0.5f);
       angle = Utils.Repeat(angle + (float) (360 / num), 360f);
-      component1.StartCoroutine((IEnumerator) this.DelayedEnemyHealthEnable(component1));
+      component1.StartCoroutine(this.DelayedEnemyHealthEnable(component1));
     }
   }
 
@@ -416,7 +416,7 @@ public class EnemySpiderJumpMiniboss : EnemySpider
     }
     spiderJumpMiniboss.SimpleSpineFlash.FlashWhite(false);
     AudioManager.Instance.PlayOneShot(spiderJumpMiniboss.attackSfx, spiderJumpMiniboss.gameObject);
-    yield return (object) spiderJumpMiniboss.StartCoroutine((IEnumerator) spiderJumpMiniboss.projectilePattern.ShootIE());
+    yield return (object) spiderJumpMiniboss.StartCoroutine(spiderJumpMiniboss.projectilePattern.ShootIE());
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * spiderJumpMiniboss.Spine.timeScale) < 1.0)
       yield return (object) null;

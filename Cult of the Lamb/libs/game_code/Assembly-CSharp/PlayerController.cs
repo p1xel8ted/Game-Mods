@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -245,7 +245,7 @@ public class PlayerController : BaseMonoBehaviour
     {
       if (this.HitEffectsCoroutine != null)
         this.StopCoroutine(this.HitEffectsCoroutine);
-      this.HitEffectsCoroutine = this.StartCoroutine((IEnumerator) this.HitEffects(StateMachine.State.HitThrown, StateMachine.State.HitRecover));
+      this.HitEffectsCoroutine = this.StartCoroutine(this.HitEffects(StateMachine.State.HitThrown, StateMachine.State.HitRecover));
       this.MakeUntouchable(1f * DifficultyManager.GetInvincibleTimeMultiplier(), false);
     }
     BiomeConstants.Instance.EmitHitVFX(AttackLocation, Quaternion.identity.z, "HitFX_Blocked");
@@ -264,13 +264,13 @@ public class PlayerController : BaseMonoBehaviour
     this.showGhostEffect = ghostEffect;
     this.health.untouchable = true;
     DeviceLightingManager.TransitionLighting(Color.red, Color.red, 0.0f, DeviceLightingManager.F_KEYS);
-    this.StartCoroutine((IEnumerator) this.Delay(0.1f, (System.Action) (() =>
+    this.StartCoroutine(this.Delay(0.1f, (System.Action) (() =>
     {
       DeviceLightingManager.TransitionLighting(Color.white, Color.white, 0.0f, DeviceLightingManager.F_KEYS);
-      this.StartCoroutine((IEnumerator) this.Delay(0.1f, (System.Action) (() =>
+      this.StartCoroutine(this.Delay(0.1f, (System.Action) (() =>
       {
         DeviceLightingManager.TransitionLighting(Color.red, Color.red, 0.0f, DeviceLightingManager.F_KEYS);
-        this.StartCoroutine((IEnumerator) this.Delay(0.1f, (System.Action) (() => DeviceLightingManager.PulseAllLighting(Color.white, Color.black, 0.1f, DeviceLightingManager.F_KEYS))));
+        this.StartCoroutine(this.Delay(0.1f, (System.Action) (() => DeviceLightingManager.PulseAllLighting(Color.white, Color.black, 0.1f, DeviceLightingManager.F_KEYS))));
       })));
     })));
   }
@@ -1117,7 +1117,7 @@ label_246:
             {
               UnitObject component = Health.team2[index].GetComponent<UnitObject>();
               if ((!((UnityEngine.Object) component != (UnityEngine.Object) null) || !component.IsBoss) && (UnityEngine.Object) Health.team2[index] != (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<BossIntro>() == (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<DeathCatController>() == (UnityEngine.Object) null)
-                this.StartCoroutine((IEnumerator) this.\u003CUpdate\u003Eg__DamageEnemy\u007C141_2(Health.team2[index]));
+                this.StartCoroutine(this.\u003CUpdate\u003Eg__DamageEnemy\u007C141_2(Health.team2[index]));
             }
           }
           if (resurrectionType != ResurrectionType.CoopRevive)
@@ -1458,7 +1458,7 @@ label_246:
   {
     if (this.UpdateRecoilRoutine != null)
       this.StopCoroutine(this.UpdateRecoilRoutine);
-    this.UpdateRecoilRoutine = this.StartCoroutine((IEnumerator) this.UpdateRecoil(recoilCurve, duration, powerMultiplier));
+    this.UpdateRecoilRoutine = this.StartCoroutine(this.UpdateRecoil(recoilCurve, duration, powerMultiplier));
   }
 
   public IEnumerator UpdateRecoil(
@@ -1520,10 +1520,10 @@ label_246:
   public void \u003CMakeUntouchable\u003Eb__84_0()
   {
     DeviceLightingManager.TransitionLighting(Color.white, Color.white, 0.0f, DeviceLightingManager.F_KEYS);
-    this.StartCoroutine((IEnumerator) this.Delay(0.1f, (System.Action) (() =>
+    this.StartCoroutine(this.Delay(0.1f, (System.Action) (() =>
     {
       DeviceLightingManager.TransitionLighting(Color.red, Color.red, 0.0f, DeviceLightingManager.F_KEYS);
-      this.StartCoroutine((IEnumerator) this.Delay(0.1f, (System.Action) (() => DeviceLightingManager.PulseAllLighting(Color.white, Color.black, 0.1f, DeviceLightingManager.F_KEYS))));
+      this.StartCoroutine(this.Delay(0.1f, (System.Action) (() => DeviceLightingManager.PulseAllLighting(Color.white, Color.black, 0.1f, DeviceLightingManager.F_KEYS))));
     })));
   }
 
@@ -1531,7 +1531,7 @@ label_246:
   public void \u003CMakeUntouchable\u003Eb__84_1()
   {
     DeviceLightingManager.TransitionLighting(Color.red, Color.red, 0.0f, DeviceLightingManager.F_KEYS);
-    this.StartCoroutine((IEnumerator) this.Delay(0.1f, (System.Action) (() => DeviceLightingManager.PulseAllLighting(Color.white, Color.black, 0.1f, DeviceLightingManager.F_KEYS))));
+    this.StartCoroutine(this.Delay(0.1f, (System.Action) (() => DeviceLightingManager.PulseAllLighting(Color.white, Color.black, 0.1f, DeviceLightingManager.F_KEYS))));
   }
 
   [CompilerGenerated]

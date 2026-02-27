@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBat
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -105,7 +105,7 @@ public class EnemyBat : UnitObject
       this.damageColliderEvents.SetActive(false);
     }
     this.RanDirection = (double) UnityEngine.Random.value < 0.5 ? -1 : 1;
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public void HandleEvent(TrackEntry trackEntry, Spine.Event e)
@@ -197,16 +197,16 @@ public class EnemyBat : UnitObject
     {
       this.Spine.AnimationState.SetAnimation(0, this.IdleAnimation, true);
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     else if (this.damageColliderEvents.gameObject.activeSelf)
     {
       this.Spine.AnimationState.SetAnimation(0, this.IdleAnimation, true);
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && (double) this.KnockbackForceModifier != 0.0)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     if (!(bool) (UnityEngine.Object) this.SimpleSpineFlash)
       return;
     this.SimpleSpineFlash.FlashFillRed();
@@ -224,7 +224,7 @@ public class EnemyBat : UnitObject
     while ((double) (time += Time.deltaTime * enemyBat.Spine.timeScale) < 0.5)
       yield return (object) null;
     enemyBat.DisableForces = false;
-    enemyBat.StartCoroutine((IEnumerator) enemyBat.ActiveRoutine());
+    enemyBat.StartCoroutine(enemyBat.ActiveRoutine());
   }
 
   public virtual IEnumerator ActiveRoutine()
@@ -283,7 +283,7 @@ public class EnemyBat : UnitObject
         }
         if (enemyBat.avoidTarget)
         {
-          enemyBat.StartCoroutine((IEnumerator) enemyBat.FleeRoutine());
+          enemyBat.StartCoroutine(enemyBat.FleeRoutine());
         }
         else
         {
@@ -308,11 +308,11 @@ public class EnemyBat : UnitObject
       enemyBat.state.facingAngle = enemyBat.Angle;
       yield return (object) null;
     }
-    enemyBat.StartCoroutine((IEnumerator) enemyBat.ChargingRoutine());
+    enemyBat.StartCoroutine(enemyBat.ChargingRoutine());
     yield break;
 label_24:
     enemyBat.CurrentAttackNum = 0;
-    enemyBat.StartCoroutine((IEnumerator) enemyBat.AttackRoutine());
+    enemyBat.StartCoroutine(enemyBat.AttackRoutine());
   }
 
   public virtual IEnumerator AttackRoutine()
@@ -373,7 +373,7 @@ label_24:
     enemyBat2.CurrentAttackNum = num2;
     if (num1 < enemyBat1.NumAttacks)
     {
-      enemyBat1.StartCoroutine((IEnumerator) enemyBat1.AttackRoutine());
+      enemyBat1.StartCoroutine(enemyBat1.AttackRoutine());
     }
     else
     {
@@ -386,7 +386,7 @@ label_24:
       System.Action onAttackComplete = enemyBat1.OnAttackComplete;
       if (onAttackComplete != null)
         onAttackComplete();
-      enemyBat1.StartCoroutine((IEnumerator) enemyBat1.ActiveRoutine());
+      enemyBat1.StartCoroutine(enemyBat1.ActiveRoutine());
     }
   }
 

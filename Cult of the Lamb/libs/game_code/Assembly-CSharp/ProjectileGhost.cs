@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ProjectileGhost
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -73,7 +73,7 @@ public class ProjectileGhost : BaseMonoBehaviour
 
   public static void SpawnGhost(Vector3 position, float delay, float damageMultplier, float scale = 1f)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) ProjectileGhost.DelayCallback(delay, (System.Action) (() => ProjectileGhost.SpawnGhost(position, damageMultplier, scale))));
+    GameManager.GetInstance().StartCoroutine(ProjectileGhost.DelayCallback(delay, (System.Action) (() => ProjectileGhost.SpawnGhost(position, damageMultplier, scale))));
   }
 
   public static void Unload()
@@ -207,13 +207,13 @@ public class ProjectileGhost : BaseMonoBehaviour
           if ((UnityEngine.Object) this.GetClosestTarget() != (UnityEngine.Object) null)
             this.TargetAngle = Utils.GetAngle(this.transform.position, this.GetClosestTarget().transform.position);
           this.collider2DList = new List<Collider2D>();
-          this.DamageCollider.GetContacts((List<Collider2D>) this.collider2DList);
+          this.DamageCollider.GetContacts(this.collider2DList);
           foreach (Component component in this.collider2DList)
           {
             this.CollisionHealth = component.gameObject.GetComponent<Health>();
             if (!this.DoubleHit.Contains(this.CollisionHealth) && (UnityEngine.Object) this.CollisionHealth != (UnityEngine.Object) null && !this.CollisionHealth.invincible && !this.CollisionHealth.untouchable && this.CollisionHealth.team == Health.Team.Team2)
             {
-              this.CollisionHealth.DealDamage(1f * this.damageMultiplier, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile);
+              this.CollisionHealth.DealDamage(1f * this.damageMultiplier, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
               AudioManager.Instance.StopLoop(this.sfxLoop);
               UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);
               return;
@@ -222,7 +222,7 @@ public class ProjectileGhost : BaseMonoBehaviour
         }
         if ((UnityEngine.Object) this.GetClosestTarget() != (UnityEngine.Object) null && (double) Vector3.Distance(this.transform.position, this.GetClosestTarget().transform.position) < 2.0)
         {
-          this.GetClosestTarget().DealDamage(1f * this.damageMultiplier, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile);
+          this.GetClosestTarget().DealDamage(1f * this.damageMultiplier, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
           AudioManager.Instance.StopLoop(this.sfxLoop);
           UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);
           return;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LongGrass
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -51,7 +51,7 @@ public class LongGrass : BaseMonoBehaviour
   {
     if (this.TURN_OFF_ON_LOW_QUALITY && SettingsManager.Settings != null && SettingsManager.Settings.Graphics.EnvironmentDetail == 0)
       this.TurnOffEverything();
-    this.StartCoroutine((IEnumerator) this.OnEnableIE());
+    this.StartCoroutine(this.OnEnableIE());
   }
 
   public void TurnOffEverything()
@@ -297,7 +297,7 @@ public class LongGrass : BaseMonoBehaviour
       AudioManager.Instance.PlayOneShot(this.altWalkSfx, collision.transform.position);
     if (this.cShakeGrassRoutine != null)
       this.StopCoroutine(this.cShakeGrassRoutine);
-    this.cShakeGrassRoutine = this.StartCoroutine((IEnumerator) this.ShakeGrassRoutine(collision));
+    this.cShakeGrassRoutine = this.StartCoroutine(this.ShakeGrassRoutine(collision));
   }
 
   public void CollisionExit(GameObject collision)
@@ -306,7 +306,7 @@ public class LongGrass : BaseMonoBehaviour
       return;
     if (this.cShakeGrassRoutine != null)
       this.StopCoroutine(this.cShakeGrassRoutine);
-    this.cShakeGrassRoutine = this.StartCoroutine((IEnumerator) this.ShakeGrassRoutine(collision));
+    this.cShakeGrassRoutine = this.StartCoroutine(this.ShakeGrassRoutine(collision));
   }
 
   public IEnumerator ShakeGrassRoutine(GameObject collision, float clampDistance = -1f)

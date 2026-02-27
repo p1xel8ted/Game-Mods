@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIFollowerXPIcon
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -29,7 +29,7 @@ public class UIFollowerXPIcon : BaseMonoBehaviour
   {
     if (this.cUpdateXPRoutine != null)
       this.StopCoroutine(this.cUpdateXPRoutine);
-    this.StartCoroutine((IEnumerator) this.FlashColour());
+    this.StartCoroutine(this.FlashColour());
     this.canvasGroup.alpha = 1f;
     this.UpdateBar();
   }
@@ -67,7 +67,7 @@ public class UIFollowerXPIcon : BaseMonoBehaviour
   {
     if (this.cUpdateXPRoutine != null)
       this.StopCoroutine(this.cUpdateXPRoutine);
-    this.cUpdateXPRoutine = this.StartCoroutine((IEnumerator) this.UpdateXPRoutine(Delay));
+    this.cUpdateXPRoutine = this.StartCoroutine(this.UpdateXPRoutine(Delay));
   }
 
   public IEnumerator UpdateXPRoutine(float Delay)
@@ -83,7 +83,7 @@ public class UIFollowerXPIcon : BaseMonoBehaviour
     }
     uiFollowerXpIcon.UpdateBar();
     yield return (object) new WaitForSecondsRealtime(0.2f);
-    uiFollowerXpIcon.StartCoroutine((IEnumerator) uiFollowerXpIcon.FlashColour());
+    uiFollowerXpIcon.StartCoroutine(uiFollowerXpIcon.FlashColour());
   }
 
   public IEnumerator FlashColour()

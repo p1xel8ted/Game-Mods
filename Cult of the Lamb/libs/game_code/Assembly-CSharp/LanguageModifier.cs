@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LanguageModifier
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -30,6 +30,8 @@ public class LanguageModifier : MonoBehaviour
   public string TurkishText;
   public string ItalianText;
   public string ArabicText;
+  public string FrenchCAText;
+  public string DutchText;
   public Text text;
   public TextMeshProUGUI text_TMP;
   public UnifyManager unifyManager;
@@ -85,10 +87,12 @@ public class LanguageModifier : MonoBehaviour
       this.text_TMP = this.GetComponent<TextMeshProUGUI>();
       text = this.text_TMP.text;
     }
+    this.text_TMP.isRightToLeftText = false;
     string replacement = this.EnglishText;
     switch (LocalizationManager.CurrentLanguage)
     {
       case "Arabic":
+        this.text_TMP.isRightToLeftText = true;
         replacement = this.ArabicText;
         break;
       case "Chinese (Simplified)":
@@ -97,11 +101,17 @@ public class LanguageModifier : MonoBehaviour
       case "Chinese (Traditional)":
         replacement = this.TChineseText;
         break;
+      case "Dutch":
+        replacement = this.DutchText;
+        break;
       case "English":
         replacement = this.EnglishText;
         break;
       case "French":
         replacement = this.FrenchText;
+        break;
+      case "French (Canadian)":
+        replacement = this.FrenchCAText;
         break;
       case "German":
         replacement = this.GermanText;
@@ -116,6 +126,8 @@ public class LanguageModifier : MonoBehaviour
         replacement = this.KoreanText;
         break;
       case "Portuguese":
+        replacement = this.PortugueseText;
+        break;
       case "Portuguese (Brazil)":
         replacement = this.BrazilianPortugueseText;
         break;
@@ -130,7 +142,10 @@ public class LanguageModifier : MonoBehaviour
         break;
     }
     if (replacement == null || replacement.Length <= 0)
+    {
+      this.text_TMP.isRightToLeftText = false;
       replacement = this.EnglishText;
+    }
     if ((Object) this.text != (Object) null)
       this.text.text = this.Replace(text, replacement, this.Token);
     else

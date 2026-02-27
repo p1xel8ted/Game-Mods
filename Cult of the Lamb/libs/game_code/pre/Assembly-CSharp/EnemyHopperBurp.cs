@@ -1,0 +1,109 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: EnemyHopperBurp
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+#nullable disable
+public class EnemyHopperBurp : EnemyHopper
+{
+  public int ShotsToFire = 10;
+  public float DetectEnemyRange = 10f;
+  public GameObject projectilePrefab;
+  protected float LookAngle;
+  [SerializeField]
+  protected float minTimeBetweenBurps = 6f;
+  protected float lastBurpedFliesTimestamp;
+  protected List<Projectile> activeProjectiles = new List<Projectile>();
+
+  public override void OnEnable()
+  {
+    base.OnEnable();
+    if (!((Object) this.gm != (Object) null))
+      return;
+    this.lastBurpedFliesTimestamp = this.gm.CurrentTime - Random.Range(0.0f, this.minTimeBetweenBurps);
+  }
+
+  protected override void UpdateStateCharging()
+  {
+    this.SimpleSpineFlash.FlashMeWhite();
+    if ((double) this.gm.TimeSince(this.chargingTimestamp) < (double) this.chargingDuration)
+      return;
+    this.BurpFlies();
+    this.state.CURRENT_STATE = StateMachine.State.Idle;
+  }
+
+  protected virtual void BurpFlies()
+  {
+    if ((Object) this.gm != (Object) null)
+      this.lastBurpedFliesTimestamp = this.gm.CurrentTime;
+    if (!string.IsNullOrEmpty(this.OnCroakSoundPath))
+      AudioManager.Instance.PlayOneShot(this.OnCroakSoundPath, this.transform.position);
+    this.SimpleSpineFlash.FlashWhite(false);
+    this.StartCoroutine((IEnumerator) this.ShootProjectileRoutine());
+  }
+
+  protected virtual IEnumerator ShootProjectileRoutine()
+  {
+    EnemyHopperBurp enemyHopperBurp = this;
+    CameraManager.shakeCamera(0.2f, enemyHopperBurp.LookAngle);
+    List<float> shootAngles = new List<float>(enemyHopperBurp.ShotsToFire);
+    for (int index = 0; index < enemyHopperBurp.ShotsToFire; ++index)
+      shootAngles.Add(360f / (float) enemyHopperBurp.ShotsToFire * (float) index);
+    shootAngles.Shuffle<float>();
+    Health h = enemyHopperBurp.GetClosestTarget();
+    float initAngle = Random.Range(0.0f, 360f);
+    for (int i = 0; i < shootAngles.Count; ++i)
+    {
+      Projectile component = Object.Instantiate<GameObject>(enemyHopperBurp.projectilePrefab, enemyHopperBurp.transform.parent).GetComponent<Projectile>();
+      component.transform.position = enemyHopperBurp.transform.position;
+      component.Angle = initAngle + shootAngles[i];
+      component.team = enemyHopperBurp.health.team;
+      component.Speed += Random.Range(-0.5f, 0.5f);
+      component.turningSpeed += Random.Range(-0.1f, 0.1f);
+      component.angleNoiseFrequency += Random.Range(-0.1f, 0.1f);
+      component.LifeTime += Random.Range(0.0f, 0.3f);
+      component.Owner = enemyHopperBurp.health;
+      component.SetTarget(h);
+      enemyHopperBurp.activeProjectiles.Add(component);
+      yield return (object) new WaitForSeconds(0.03f);
+    }
+  }
+
+  protected override bool ShouldStartCharging()
+  {
+    return GameManager.RoomActive && (double) this.gm.TimeSince(this.lastBurpedFliesTimestamp) >= (double) this.minTimeBetweenBurps && this.IsPlayerNearby();
+  }
+
+  protected bool IsPlayerNearby()
+  {
+    if (!GameManager.RoomActive)
+      return false;
+    foreach (Health allUnit in Health.allUnits)
+    {
+      if (allUnit.team != this.health.team && !allUnit.InanimateObject && allUnit.team != Health.Team.Neutral && (this.health.team != Health.Team.PlayerTeam || this.health.team == Health.Team.PlayerTeam && allUnit.team != Health.Team.DangerousAnimals) && (double) Vector2.Distance((Vector2) this.transform.position, (Vector2) allUnit.gameObject.transform.position) < (double) this.DetectEnemyRange)
+        return true;
+    }
+    return false;
+  }
+
+  public override void OnDie(
+    GameObject Attacker,
+    Vector3 AttackLocation,
+    Health Victim,
+    Health.AttackTypes AttackType,
+    Health.AttackFlags AttackFlags)
+  {
+    base.OnDie(Attacker, AttackLocation, Victim, AttackType, AttackFlags);
+    for (int index = 0; index < this.activeProjectiles.Count; ++index)
+    {
+      if ((Object) this.activeProjectiles[index] != (Object) null && this.activeProjectiles[index].gameObject.activeSelf)
+        this.activeProjectiles[index].DestroyWithVFX();
+    }
+    this.activeProjectiles.Clear();
+  }
+}

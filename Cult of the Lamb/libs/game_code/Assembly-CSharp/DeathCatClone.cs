@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DeathCatClone
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using CotL.Projectiles;
@@ -202,7 +202,7 @@ public class DeathCatClone : UnitObject
       this.SeperateObject = true;
       this.randomDirection = (float) UnityEngine.Random.Range(0, 360) * ((float) Math.PI / 180f);
       this.state.facingAngle = this.randomDirection * 57.29578f;
-      this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+      this.StartCoroutine(this.ActiveRoutine());
       this.speed = 0.0f;
       this.initialised = true;
       UIBossHUD.Play(this.health, ScriptLocalization.NAMES.DeathNPC);
@@ -210,11 +210,11 @@ public class DeathCatClone : UnitObject
       AudioManager.Instance.SetMusicRoomID(3, "deathcat_room_id");
     }
     else
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(this.FrameDelay((System.Action) (() =>
       {
         this.currentAttackRoutine = (Coroutine) null;
         AudioManager.Instance.SetMusicRoomID(3, "deathcat_room_id");
-        this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+        this.StartCoroutine(this.ActiveRoutine());
       })));
     LocalizationManager.OnLocalizeEvent += new LocalizationManager.OnLocalizeCallback(this.OnLanguageChanged);
   }
@@ -291,7 +291,7 @@ public class DeathCatClone : UnitObject
     }
   }
 
-  public void Reveal() => this.StartCoroutine((IEnumerator) this.RevealIE());
+  public void Reveal() => this.StartCoroutine(this.RevealIE());
 
   public IEnumerator RevealIE()
   {
@@ -302,7 +302,7 @@ public class DeathCatClone : UnitObject
     yield return (object) new WaitForSeconds(1f);
   }
 
-  public void Hide() => this.StartCoroutine((IEnumerator) this.HideIE());
+  public void Hide() => this.StartCoroutine(this.HideIE());
 
   public IEnumerator HideIE()
   {
@@ -340,9 +340,9 @@ public class DeathCatClone : UnitObject
     base.OnDie(Attacker, AttackLocation, Victim, AttackType, AttackFlags);
     this.StopAllCoroutines();
     this.enabled = false;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.DieIE());
+    GameManager.GetInstance().StartCoroutine(this.DieIE());
     if ((bool) (UnityEngine.Object) this.projectileCross)
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.projectileCross.DisableProjectiles());
+      GameManager.GetInstance().StartCoroutine(this.projectileCross.DisableProjectiles());
     PlayerFarming.Instance.playerWeapon.DoSlowMo(false);
     UIBossHUD.Hide();
   }
@@ -366,7 +366,7 @@ public class DeathCatClone : UnitObject
     deathCatClone.Chain4Spine.AnimationState.AddAnimation(0, deathCatClone.brokenAnimation, true, 0.0f);
     deathCatClone.Chain6Spine.AnimationState.AddAnimation(0, deathCatClone.brokenAnimation, true, 0.0f);
     deathCatClone.Chain8Spine.AnimationState.AddAnimation(0, deathCatClone.brokenAnimation, true, 0.0f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.DamagedRoutineIE(false, true, false));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.DamagedRoutineIE(false, true, false));
     DeathCatController.Instance.conversation3.Play();
     CameraManager.instance.Stopshake();
     MMVibrate.StopRumble();
@@ -376,7 +376,7 @@ public class DeathCatClone : UnitObject
     yield return (object) new WaitForEndOfFrame();
     GameManager.GetInstance().OnConversationNew();
     GameManager.GetInstance().OnConversationNext(deathCatClone.gameObject, 14f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportOutIE());
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.TeleportOutIE());
     deathCatClone.gameObject.SetActive(false);
     DeathCatController.Instance.DeathCatBigTransform();
   }
@@ -407,7 +407,7 @@ public class DeathCatClone : UnitObject
 
   public void ShootProjectileRings()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileRingsIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileRingsIE());
   }
 
   public IEnumerator ShootProjectileRingsIE()
@@ -440,7 +440,7 @@ public class DeathCatClone : UnitObject
 
   public void ShootProjectileCross()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileCrossIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileCrossIE());
   }
 
   public IEnumerator ShootProjectileCrossIE()
@@ -469,7 +469,7 @@ public class DeathCatClone : UnitObject
       }
       yield return (object) null;
     }
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.projectileCross.DisableProjectiles());
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.projectileCross.DisableProjectiles());
     deathCatClone.isMoving = true;
     deathCatClone.currentAttackRoutine = (Coroutine) null;
   }
@@ -478,14 +478,14 @@ public class DeathCatClone : UnitObject
   {
     this.Spine.AnimationState.SetAnimation(0, this.shootAnimation, false);
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileSwirlsIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileSwirlsIE());
   }
 
   public IEnumerator ShootProjectileSwirlsIE()
   {
     DeathCatClone deathCatClone = this;
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.swirls.ShootIE(target: deathCatClone.targetObject));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.swirls.ShootIE(target: deathCatClone.targetObject));
     yield return (object) new WaitForSeconds(1f);
     deathCatClone.currentAttackRoutine = (Coroutine) null;
   }
@@ -494,14 +494,14 @@ public class DeathCatClone : UnitObject
   {
     this.Spine.AnimationState.SetAnimation(0, this.shootAnimation, false);
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileBouncersIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileBouncersIE());
   }
 
   public IEnumerator ShootProjectileBouncersIE()
   {
     DeathCatClone deathCatClone = this;
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.bouncers.ShootIE(target: deathCatClone.targetObject));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.bouncers.ShootIE(target: deathCatClone.targetObject));
     deathCatClone.currentAttackRoutine = (Coroutine) null;
   }
 
@@ -509,14 +509,14 @@ public class DeathCatClone : UnitObject
   {
     this.Spine.AnimationState.SetAnimation(0, this.shootAnimation, false);
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
-    this.StartCoroutine((IEnumerator) this.ShootProjectileCirclesIE());
+    this.StartCoroutine(this.ShootProjectileCirclesIE());
   }
 
   public IEnumerator ShootProjectileCirclesIE()
   {
     DeathCatClone deathCatClone = this;
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.circles.ShootIE(target: deathCatClone.targetObject));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.circles.ShootIE(target: deathCatClone.targetObject));
     yield return (object) new WaitForSeconds(3f);
   }
 
@@ -524,14 +524,14 @@ public class DeathCatClone : UnitObject
   {
     this.Spine.AnimationState.SetAnimation(0, this.shootAnimation, false);
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileCirclesFastIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileCirclesFastIE());
   }
 
   public IEnumerator ShootProjectileCirclesFastIE()
   {
     DeathCatClone deathCatClone = this;
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.circlesFast.ShootIE(target: deathCatClone.targetObject));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.circlesFast.ShootIE(target: deathCatClone.targetObject));
     yield return (object) new WaitForSeconds(5f);
     deathCatClone.currentAttackRoutine = (Coroutine) null;
   }
@@ -540,14 +540,14 @@ public class DeathCatClone : UnitObject
   {
     this.Spine.AnimationState.SetAnimation(0, this.shootAnimation, false);
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectilePulseIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectilePulseIE());
   }
 
   public IEnumerator ShootProjectilePulseIE()
   {
     DeathCatClone deathCatClone = this;
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.pulse.ShootIE(target: deathCatClone.targetObject));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.pulse.ShootIE(target: deathCatClone.targetObject));
     deathCatClone.currentAttackRoutine = (Coroutine) null;
   }
 
@@ -558,7 +558,7 @@ public class DeathCatClone : UnitObject
 
   public void ShootProjectileRingsTriple()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileRingsTripleIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileRingsTripleIE());
   }
 
   public IEnumerator ShootProjectileRingsTripleIE()
@@ -589,7 +589,7 @@ public class DeathCatClone : UnitObject
 
   public void TrapPatternChasePlayer()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TrapPatternChasePlayerIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TrapPatternChasePlayerIE());
   }
 
   public void InitializeTraps() => ObjectPool.CreatePool(this.trapPrefab, 40);
@@ -619,7 +619,7 @@ public class DeathCatClone : UnitObject
 
   public void TrapPattern0()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TrapPattern0IE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TrapPattern0IE());
   }
 
   public IEnumerator TrapPattern0IE()
@@ -650,7 +650,7 @@ public class DeathCatClone : UnitObject
 
   public void TrapPattern1()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TrapPattern1IE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TrapPattern1IE());
   }
 
   public IEnumerator TrapPattern1IE()
@@ -678,7 +678,7 @@ public class DeathCatClone : UnitObject
 
   public void TrapPattern2()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TrapPattern2IE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TrapPattern2IE());
   }
 
   public IEnumerator TrapPattern2IE()
@@ -712,7 +712,7 @@ public class DeathCatClone : UnitObject
 
   public void TrapScattered()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TrapScatteredIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TrapScatteredIE());
   }
 
   public IEnumerator TrapScatteredIE(int c = 0)
@@ -751,7 +751,7 @@ public class DeathCatClone : UnitObject
     }
     if (c < 3 && UnityEngine.Random.Range(0, 2) == 0)
     {
-      deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TrapScatteredIE(c + 1));
+      deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine(deathCatClone.TrapScatteredIE(c + 1));
     }
     else
     {
@@ -763,13 +763,13 @@ public class DeathCatClone : UnitObject
 
   public void TeleportAttack0()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TeleportAttack0IE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TeleportAttack0IE());
   }
 
   public IEnumerator TeleportAttack0IE()
   {
     DeathCatClone deathCatClone = this;
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportToPositionIE(deathCatClone.GetPositionAwayFromPlayer()));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.TeleportToPositionIE(deathCatClone.GetPositionAwayFromPlayer()));
     deathCatClone.isMoving = false;
     deathCatClone.Spine.AnimationState.SetAnimation(0, deathCatClone.shootAnimation, false);
     deathCatClone.Spine.AnimationState.AddAnimation(0, deathCatClone.idleAnimation, true, 0.0f);
@@ -798,37 +798,37 @@ public class DeathCatClone : UnitObject
 
   public void TeleportAttack1()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TeleportAttack1IE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TeleportAttack1IE());
   }
 
   public IEnumerator TeleportAttack1IE()
   {
     DeathCatClone deathCatClone = this;
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportToPositionIE(deathCatClone.GetPositionAwayFromPlayer()));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.TeleportToPositionIE(deathCatClone.GetPositionAwayFromPlayer()));
     deathCatClone.isMoving = false;
-    yield return (object) (deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine((IEnumerator) deathCatClone.ShootProjectileRingsIE()));
+    yield return (object) (deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine(deathCatClone.ShootProjectileRingsIE()));
     deathCatClone.isMoving = true;
     deathCatClone.currentAttackRoutine = (Coroutine) null;
   }
 
   public void TeleportAttack2()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TeleportAttack12E());
+    this.currentAttackRoutine = this.StartCoroutine(this.TeleportAttack12E());
   }
 
   public IEnumerator TeleportAttack12E()
   {
     DeathCatClone deathCatClone = this;
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportToPositionIE(deathCatClone.GetPositionAwayFromPlayer()));
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.TeleportToPositionIE(deathCatClone.GetPositionAwayFromPlayer()));
     deathCatClone.isMoving = false;
-    yield return (object) (deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine((IEnumerator) deathCatClone.ShootProjectileRingsTripleIE()));
+    yield return (object) (deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine(deathCatClone.ShootProjectileRingsTripleIE()));
     deathCatClone.isMoving = true;
     deathCatClone.currentAttackRoutine = (Coroutine) null;
   }
 
   public void TeleportRandomly()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TeleportRandomlyIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.TeleportRandomlyIE());
   }
 
   public IEnumerator TeleportRandomlyIE(float endDelay = 1f)
@@ -848,7 +848,7 @@ public class DeathCatClone : UnitObject
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = -1;
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportToPositionIE(deathCatClone.GetRandomPosition(), endDelay));
+    this.\u003C\u003E2__current = (object) deathCatClone.StartCoroutine(deathCatClone.TeleportToPositionIE(deathCatClone.GetRandomPosition(), endDelay));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -857,10 +857,10 @@ public class DeathCatClone : UnitObject
   public IEnumerator TeleportToPositionIE(Vector3 position, float endDelay = 0.0f)
   {
     DeathCatClone deathCatClone = this;
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportOutIE());
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.TeleportOutIE());
     deathCatClone.transform.position = position;
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportInIE());
+    yield return (object) deathCatClone.StartCoroutine(deathCatClone.TeleportInIE());
     yield return (object) new WaitForSeconds(endDelay);
   }
 
@@ -1113,7 +1113,7 @@ public class DeathCatClone : UnitObject
 
   public void DamagedRoutine(bool teleportAfter)
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.DamagedRoutineIE(teleportAfter));
+    this.currentAttackRoutine = this.StartCoroutine(this.DamagedRoutineIE(teleportAfter));
   }
 
   public IEnumerator DamagedRoutineIE(
@@ -1158,7 +1158,7 @@ public class DeathCatClone : UnitObject
     deathCatClone.currentAttackRoutine = (Coroutine) null;
     if (teleportAfter)
     {
-      deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine((IEnumerator) deathCatClone.TeleportToPositionIE(Vector3.zero));
+      deathCatClone.currentAttackRoutine = deathCatClone.StartCoroutine(deathCatClone.TeleportToPositionIE(Vector3.zero));
       yield return (object) deathCatClone.currentAttackRoutine;
       deathCatClone.Attack(DeathCatClone.AttackType.Projectiles_Cross);
       deathCatClone.isSpawning = true;
@@ -1175,7 +1175,7 @@ public class DeathCatClone : UnitObject
     component.ScreenshakeOnHit = false;
     component.invincible = false;
     component.untouchable = false;
-    component.DealDamage(component.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Poison);
+    component.DealDamage(component.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Poison, dealDamageImmediately: true);
   }
 
   public IEnumerator ActiveRoutine()
@@ -1269,7 +1269,7 @@ public class DeathCatClone : UnitObject
   {
     this.currentAttackRoutine = (Coroutine) null;
     AudioManager.Instance.SetMusicRoomID(3, "deathcat_room_id");
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   [CompilerGenerated]

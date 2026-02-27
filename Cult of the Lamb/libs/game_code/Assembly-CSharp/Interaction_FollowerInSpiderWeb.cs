@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FollowerInSpiderWeb
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -75,7 +75,7 @@ public class Interaction_FollowerInSpiderWeb : Interaction
     if (this.IsDungeon)
       this.GetComponentInParent<spiderShop>().CheckCount();
     this.UpdateLocalisation();
-    this.StartCoroutine((IEnumerator) this.CheckSaleRoutine());
+    this.StartCoroutine(this.CheckSaleRoutine());
   }
 
   public override void OnEnableInteraction()
@@ -143,7 +143,7 @@ public class Interaction_FollowerInSpiderWeb : Interaction
 
   public void SetOld()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForFollowerInfoSet((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForFollowerInfoSet((System.Action) (() =>
     {
       if (!this._followerInfo.Traits.Contains(FollowerTrait.TraitType.Mutated))
         this._followerInfo.StartingCursedState = Thought.OldAge;
@@ -153,7 +153,7 @@ public class Interaction_FollowerInSpiderWeb : Interaction
 
   public void SetIll()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForFollowerInfoSet((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForFollowerInfoSet((System.Action) (() =>
     {
       if (!this._followerInfo.Traits.Contains(FollowerTrait.TraitType.Mutated))
         this._followerInfo.StartingCursedState = Thought.Ill;
@@ -163,7 +163,7 @@ public class Interaction_FollowerInSpiderWeb : Interaction
 
   public void SetFaithful()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForFollowerInfoSet((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForFollowerInfoSet((System.Action) (() =>
     {
       this._followerInfo.Traits.Clear();
       this._followerInfo.Traits.Add(FollowerTrait.TraitType.Faithful);
@@ -191,7 +191,7 @@ public class Interaction_FollowerInSpiderWeb : Interaction
 
   public void SetMutated()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForFollowerInfoSet((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.WaitForFollowerInfoSet((System.Action) (() =>
     {
       this._followerInfo.StartingCursedState = Thought.None;
       if (!this._followerInfo.Traits.Contains(FollowerTrait.TraitType.Mutated))
@@ -264,7 +264,7 @@ public class Interaction_FollowerInSpiderWeb : Interaction
   {
     base.OnInteract(state);
     if (Inventory.GetItemQuantity(20) >= this.GetCost() || CheatConsole.BuildingsFree)
-      this.StartCoroutine((IEnumerator) this.Purchase());
+      this.StartCoroutine(this.Purchase());
     else
       this.SpiderAnimationCantAfford();
   }
@@ -297,7 +297,7 @@ public class Interaction_FollowerInSpiderWeb : Interaction
       Inventory.ChangeItemQuantity(20, -followerInSpiderWeb.GetCost());
     }
     followerInSpiderWeb.BoughtFollowerCallback();
-    followerInSpiderWeb.StartCoroutine((IEnumerator) followerInSpiderWeb.BoughtFollower());
+    followerInSpiderWeb.StartCoroutine(followerInSpiderWeb.BoughtFollower());
     followerInSpiderWeb.Activated = true;
   }
 

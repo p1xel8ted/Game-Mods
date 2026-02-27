@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_TraitManipulating
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -65,7 +65,7 @@ public class FollowerTask_TraitManipulating : FollowerTask
         if (followerById.Spine.AnimationState.GetCurrent(1).Animation.Name != "Rituals/lobotomy-rehabilitated-idle")
           followerById.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "Rituals/lobotomy-rehabilitated-idle");
         AudioManager.Instance.StopLoop(this.loopingSound);
-        this._dissentBubbleCoroutine = followerById.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(followerById));
+        this._dissentBubbleCoroutine = followerById.StartCoroutine(this.DissentBubbleRoutine(followerById));
       }
     }
     if (!((UnityEngine.Object) this.follower != (UnityEngine.Object) null) || !this.follower.gameObject.activeInHierarchy)

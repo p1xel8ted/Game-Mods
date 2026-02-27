@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CookingData
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -2062,7 +2062,7 @@ public sealed class CookingData
             case CookingData.MealEffectType.InstantlyPoop:
               if ((double) IllnessBar.IllnessNormalized > 0.05000000074505806)
               {
-                GameManager.GetInstance().StartCoroutine((IEnumerator) CookingData.FrameDelay((System.Action) (() =>
+                GameManager.GetInstance().StartCoroutine(CookingData.FrameDelay((System.Action) (() =>
                 {
                   task = (FollowerTask) new FollowerTask_InstantPoop();
                   follower.HardSwapToTask(task);
@@ -2073,7 +2073,7 @@ public sealed class CookingData
             case CookingData.MealEffectType.InstantlyVomit:
               if ((double) IllnessBar.IllnessNormalized > 0.05000000074505806)
               {
-                GameManager.GetInstance().StartCoroutine((IEnumerator) CookingData.FrameDelay((System.Action) (() =>
+                GameManager.GetInstance().StartCoroutine(CookingData.FrameDelay((System.Action) (() =>
                 {
                   task = (FollowerTask) new FollowerTask_Vomit();
                   follower.HardSwapToTask(task);
@@ -2098,7 +2098,7 @@ public sealed class CookingData
               }
               continue;
             case CookingData.MealEffectType.CausesExhaustion:
-              GameManager.GetInstance().StartCoroutine((IEnumerator) CookingData.FrameDelay((System.Action) (() => follower.MakeExhausted())));
+              GameManager.GetInstance().StartCoroutine(CookingData.FrameDelay((System.Action) (() => follower.MakeExhausted())));
               continue;
             case CookingData.MealEffectType.CausesDissent:
               follower.MakeDissenter();
@@ -2124,7 +2124,7 @@ public sealed class CookingData
               {
                 follower.MakeSick();
                 follower._directInfoAccess.CursedStateVariant = 1;
-                GameManager.GetInstance().StartCoroutine((IEnumerator) CookingData.FrameDelay((System.Action) (() =>
+                GameManager.GetInstance().StartCoroutine(CookingData.FrameDelay((System.Action) (() =>
                 {
                   task = (FollowerTask) new FollowerTask_IllPoopy(true);
                   follower.HardSwapToTask(task);
@@ -2258,7 +2258,7 @@ public sealed class CookingData
 
   public static void InstantlyDie(FollowerBrain follower)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) CookingData.FrameDelay((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(CookingData.FrameDelay((System.Action) (() =>
     {
       if ((UnityEngine.Object) FollowerManager.FindFollowerByID(follower.Info.ID) != (UnityEngine.Object) null)
         FollowerManager.FindFollowerByID(follower.Info.ID).Die(NotificationCentre.NotificationType.DiedFromDeadlyMeal);

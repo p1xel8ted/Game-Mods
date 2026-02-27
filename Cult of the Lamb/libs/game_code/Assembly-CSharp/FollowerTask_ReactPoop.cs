@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_ReactPoop
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -50,7 +50,7 @@ public class FollowerTask_ReactPoop : FollowerTask
       this._brain.AddThought(Thought.ReactToPoopGermophobeTrait);
       if ((double) UnityEngine.Random.value >= 0.25)
         return;
-      GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerTask_ReactPoop.FrameDelay((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(FollowerTask_ReactPoop.FrameDelay((System.Action) (() =>
       {
         if ((double) IllnessBar.IllnessNormalized <= 0.05000000074505806)
           return;
@@ -66,7 +66,7 @@ public class FollowerTask_ReactPoop : FollowerTask
       this._brain.AddThought(Thought.ReactToPoop);
       if ((double) UnityEngine.Random.value >= 0.10000000149011612)
         return;
-      GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerTask_ReactPoop.FrameDelay((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(FollowerTask_ReactPoop.FrameDelay((System.Action) (() =>
       {
         if ((double) IllnessBar.IllnessNormalized <= 0.05000000074505806)
           return;

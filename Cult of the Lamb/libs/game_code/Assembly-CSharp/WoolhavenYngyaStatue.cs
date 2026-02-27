@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WoolhavenYngyaStatue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -221,7 +221,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     }
   }
 
-  public void PlayUnlockChain() => this.StartCoroutine((IEnumerator) this.UnlockChainSequence());
+  public void PlayUnlockChain() => this.StartCoroutine(this.UnlockChainSequence());
 
   public IEnumerator UnlockChainSequence()
   {
@@ -246,7 +246,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
       gameManager.OnConversationNext(woolhavenYngyaStatue.gameObject);
       gameManager.CameraSnapToPosition(woolhavenYngyaStatue.transform.position);
       gameManager.CameraSetOffset(new Vector3(0.0f, 0.0f, -2f));
-      yield return (object) woolhavenYngyaStatue.StartCoroutine((IEnumerator) WoolhavenYngyaStatue.FadeOut());
+      yield return (object) woolhavenYngyaStatue.StartCoroutine(WoolhavenYngyaStatue.FadeOut());
       AudioManager.Instance.PlayOneShot("event:/door/chain_break_sequence", woolhavenYngyaStatue.gameObject);
       GameManager.GetInstance().CameraZoom(8f, 1.5f);
       DOVirtual.DelayedCall(0.5f, (TweenCallback) (() => CameraManager.instance.ShakeCameraForDuration(0.1f, 0.5f, 1.5f)));
@@ -318,14 +318,11 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     }
   }
 
-  public void PlayYngyaAwoken()
-  {
-    this.onboardRoutine = this.StartCoroutine((IEnumerator) this.YngyaAwokenIE());
-  }
+  public void PlayYngyaAwoken() => this.onboardRoutine = this.StartCoroutine(this.YngyaAwokenIE());
 
   public static void PlayYngyaAwokenGlobal(bool playWinterSeqeunce = true, bool playIntroConversation = true)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) WoolhavenYngyaStatue.Instance.YngyaAwokenIE(playWinterSeqeunce, playIntroConversation));
+    GameManager.GetInstance().StartCoroutine(WoolhavenYngyaStatue.Instance.YngyaAwokenIE(playWinterSeqeunce, playIntroConversation));
   }
 
   public IEnumerator YngyaAwokenIE(bool playWinterSequence = true, bool playIntroConversation = true)
@@ -391,7 +388,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     WeatherSystemController.Instance.SetWeather(WeatherSystemController.WeatherType.Snowing, WeatherSystemController.WeatherStrength.Extreme);
     woolhavenYngyaStatue1.skeleton.AnimationState.SetAnimation(0, "next-bell", false);
     woolhavenYngyaStatue1.skeleton.AnimationState.AddAnimation(0, "animation", true, 0.0f);
-    woolhavenYngyaStatue1.StartCoroutine((IEnumerator) woolhavenYngyaStatue1.IceOverlayRevealIE(0.0f, 1f, 3f));
+    woolhavenYngyaStatue1.StartCoroutine(woolhavenYngyaStatue1.IceOverlayRevealIE(0.0f, 1f, 3f));
     woolhavenYngyaStatue1.ShowStatueEyes(true);
     DataManager.Instance.OnboardedYngyaAwoken = true;
     woolhavenYngyaStatue1.plaza.gameObject.SetActive(true);
@@ -423,10 +420,10 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     int num2 = (int) AudioManager.Instance.CurrentMusicInstance.setPaused(false);
     if (playWinterSequence)
     {
-      yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) SeasonsManager.FirstWinterIE(SeasonsManager.Season.Winter, (System.Action) null));
+      yield return (object) GameManager.GetInstance().StartCoroutine(SeasonsManager.FirstWinterIE(SeasonsManager.Season.Winter, (System.Action) null));
       BaseGoopDoor.WoolhavenDoor.SetDoorUp();
     }
-    woolhavenYngyaStatue1.StartCoroutine((IEnumerator) woolhavenYngyaStatue1.IceOverlayRevealIE(1f, 0.0f, 1f));
+    woolhavenYngyaStatue1.StartCoroutine(woolhavenYngyaStatue1.IceOverlayRevealIE(1f, 0.0f, 1f));
     woolhavenYngyaStatue1.ShowStatueEyes(false);
     Interaction_DLCYngyaShrine.Instance.XPBar.UpdateBar(0.0f);
     TimeManager.PauseGameTime = false;
@@ -473,12 +470,12 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
 
   public static void PlayWinterIncrementGlobal(bool skipVisuals = false)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) WoolhavenYngyaStatue.Instance.IncrementWinterIE(skipVisuals));
+    GameManager.GetInstance().StartCoroutine(WoolhavenYngyaStatue.Instance.IncrementWinterIE(skipVisuals));
   }
 
   public void TestIncrementWinter()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) WoolhavenYngyaStatue.Instance.IncrementWinterIE(true));
+    GameManager.GetInstance().StartCoroutine(WoolhavenYngyaStatue.Instance.IncrementWinterIE(true));
   }
 
   public IEnumerator IncrementWinterIE(bool skipVisuals = false)
@@ -490,7 +487,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     GameManager.GetInstance().OnConversationNext(woolhavenYngyaStatue.gameObject, 7f);
     GameManager.GetInstance().CameraSetOffset(new Vector3(0.0f, 0.0f, -3f));
     if (!skipVisuals)
-      yield return (object) woolhavenYngyaStatue.StartCoroutine((IEnumerator) woolhavenYngyaStatue.IncrementWinterVisualsIE());
+      yield return (object) woolhavenYngyaStatue.StartCoroutine(woolhavenYngyaStatue.IncrementWinterVisualsIE());
     BuildingShrine.ShowingDLCTree = true;
     BuildingShrine.AnimateSnowDLCTree = true;
     Interaction_DLCYngyaShrine.Instance.XPBar.UpdateBar(0.0f);
@@ -626,7 +623,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
 
   public void PlayIncrementWinterVisuals()
   {
-    this.StartCoroutine((IEnumerator) this.IncrementWinterVisualsIE(true));
+    this.StartCoroutine(this.IncrementWinterVisualsIE(true));
   }
 
   public IEnumerator IncrementWinterVisualsIE(bool setPlayerIdle = false)
@@ -637,7 +634,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     int stingerIndex = SeasonsManager.WinterSeverity + 1;
     woolhavenYngyaStatue.PlayShrinePowerupStinger(stingerIndex);
     yield return (object) new WaitForSeconds(1f);
-    yield return (object) woolhavenYngyaStatue.StartCoroutine((IEnumerator) woolhavenYngyaStatue.ShakeCameraWithRampUp());
+    yield return (object) woolhavenYngyaStatue.StartCoroutine(woolhavenYngyaStatue.ShakeCameraWithRampUp());
     BiomeConstants.Instance.ImpactFrameForDuration();
     CameraManager.instance.ShakeCameraForDuration(1.5f, 2f, 0.1f);
     AudioManager.Instance.PlayOneShot("event:/rituals/blood_sacrifice", woolhavenYngyaStatue.gameObject);
@@ -757,7 +754,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
 
   public void PlayWoolhavenIntro()
   {
-    this.onboardRoutine = GameManager.GetInstance().StartCoroutine((IEnumerator) this.WoolhavenIntroIE());
+    this.onboardRoutine = GameManager.GetInstance().StartCoroutine(this.WoolhavenIntroIE());
   }
 
   public IEnumerator WoolhavenIntroIE()
@@ -799,7 +796,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     yield return (object) new WaitForSeconds(3f);
     GameManager.GetInstance().CamFollowTarget.ForceSnapTo(new Vector3(0.0f, 17f, -10f));
     GameManager.GetInstance().CamFollowTarget.transform.DOKill();
-    woolhavenYngyaStatue.StartCoroutine((IEnumerator) woolhavenYngyaStatue.ShakeStatues());
+    woolhavenYngyaStatue.StartCoroutine(woolhavenYngyaStatue.ShakeStatues());
     yield return (object) new WaitForSeconds(2f);
     ConversationObject conv = new ConversationObject(new List<ConversationEntry>()
     {
@@ -830,7 +827,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     GameManager.GetInstance().CamFollowTarget.enabled = true;
     GameManager.GetInstance().OnConversationEnd();
     GameManager.SetGlobalOcclusionActive(true);
-    yield return (object) woolhavenYngyaStatue.StartCoroutine((IEnumerator) Interaction_DLCYngyaShrine.Instance.DoorDownIE());
+    yield return (object) woolhavenYngyaStatue.StartCoroutine(Interaction_DLCYngyaShrine.Instance.DoorDownIE());
     ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/GoToDLCDungeonFirstTime", Objectives.CustomQuestTypes.GoToDLCDungeonFirstTime), true, true);
     TimeManager.PauseGameTime = false;
   }
@@ -862,7 +859,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
 
   public void PlayOnboardLambGhostsNPC()
   {
-    this.onboardRoutine = GameManager.GetInstance().StartCoroutine((IEnumerator) this.OnboardLambGhostsNPC());
+    this.onboardRoutine = GameManager.GetInstance().StartCoroutine(this.OnboardLambGhostsNPC());
   }
 
   public IEnumerator OnboardLambGhostsNPC()
@@ -917,7 +914,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
 
   public void PlayYngyaFinalSequence()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.YngyaFinalSequence());
+    GameManager.GetInstance().StartCoroutine(this.YngyaFinalSequence());
   }
 
   public IEnumerator YngyaFinalSequence()
@@ -976,7 +973,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     yield return (object) woolhavenYngyaStatue.yngyaStatueSpriteFlowers.material.DOFloat(1f, "_RotReveal", 3f).From<float, float, FloatOptions>(0.0f).SetEase<TweenerCore<float, float, FloatOptions>>(Ease.Linear).WaitForCompletion();
     yield return (object) new WaitForSeconds(1f);
     yield return (object) DLCMap.ClearRotRoutine();
-    yield return (object) woolhavenYngyaStatue.StartCoroutine((IEnumerator) WoolhavenYngyaStatue.FadeIn());
+    yield return (object) woolhavenYngyaStatue.StartCoroutine(WoolhavenYngyaStatue.FadeIn());
     woolhavenYngyaStatue.SetYngyaSkin(WoolhavenYngyaStatue.YngyaRotSkin.Flowers, woolhavenYngyaStatue.ExpectedYngyaBellSkinIndex());
     woolhavenYngyaStatue.UpdateAmbientLoop(WoolhavenYngyaStatue.YngyaRotSkin.Flowers);
     woolhavenYngyaStatue.ghostNPCCircleContainer.gameObject.SetActive(false);
@@ -984,7 +981,7 @@ public class WoolhavenYngyaStatue : BaseMonoBehaviour
     GameManager.GetInstance().OnConversationEnd();
     GameManager.GetInstance().CameraSetOffset(Vector3.zero);
     int num2 = (int) AudioManager.Instance.CurrentMusicInstance.setPaused(false);
-    yield return (object) woolhavenYngyaStatue.StartCoroutine((IEnumerator) WoolhavenYngyaStatue.FadeOut());
+    yield return (object) woolhavenYngyaStatue.StartCoroutine(WoolhavenYngyaStatue.FadeOut());
     GameManager.SetGlobalOcclusionActive(true);
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = false;
     if (!UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ability_WinterChoice))

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_ConfessionBooth
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -76,7 +76,7 @@ public class Interaction_ConfessionBooth : Interaction
   public override void OnInteract(StateMachine state)
   {
     this.state = state;
-    this.StartCoroutine((IEnumerator) this.OnInteractIE(state));
+    this.StartCoroutine(this.OnInteractIE(state));
   }
 
   public IEnumerator OnInteractIE(StateMachine state)
@@ -101,7 +101,7 @@ public class Interaction_ConfessionBooth : Interaction
       else
       {
         interactionConfessionBooth.playerFarming.Spine.UseDeltaTime = false;
-        interactionConfessionBooth.StartCoroutine((IEnumerator) interactionConfessionBooth.PositionCharacters(interactionConfessionBooth.playerFarming.gameObject, interactionConfessionBooth.Position1.transform.position));
+        interactionConfessionBooth.StartCoroutine(interactionConfessionBooth.PositionCharacters(interactionConfessionBooth.playerFarming.gameObject, interactionConfessionBooth.Position1.transform.position));
         state.CURRENT_STATE = StateMachine.State.InActive;
         Time.timeScale = 0.0f;
         bool giveSin = false;
@@ -153,8 +153,8 @@ public class Interaction_ConfessionBooth : Interaction
           this.sacrificeFollower.Brain.HardSwapToTask((FollowerTask) this.Task);
           GameManager.GetInstance().OnConversationNext(this.sacrificeFollower.gameObject);
           this.sacrificeFollower.transform.position = this.Position3.transform.position;
-          this.StartCoroutine((IEnumerator) this.PositionCharacters(state.gameObject, this.Position1.transform.position));
-          this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine(giveSin));
+          this.StartCoroutine(this.PositionCharacters(state.gameObject, this.Position1.transform.position));
+          this.StartCoroutine(this.SacrificeFollowerRoutine(giveSin));
           SimulationManager.Pause();
         });
         UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
@@ -331,7 +331,7 @@ public class Interaction_ConfessionBooth : Interaction
     yield return (object) new WaitForSeconds(2f);
     AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup("TAKE_CONFESSION"));
     yield return (object) new WaitForSeconds(2f);
-    interactionConfessionBooth.StartCoroutine((IEnumerator) interactionConfessionBooth.DelayEnd());
+    interactionConfessionBooth.StartCoroutine(interactionConfessionBooth.DelayEnd());
   }
 
   public void CheckGiveOutfit()

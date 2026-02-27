@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.DLCMapComputeShaderController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI.Assets;
@@ -224,37 +224,17 @@ public class DLCMapComputeShaderController : MonoBehaviour
   public void GatherNodes()
   {
     this._treeNodes.Clear();
-    IEnumerator enumerator1 = (IEnumerator) this._nodeContainer.InsideContainer.GetEnumerator();
-    try
+    foreach (Transform transform in (Transform) this._nodeContainer.InsideContainer)
     {
-      while (enumerator1.MoveNext())
-      {
-        Transform current = (Transform) enumerator1.Current;
-        DungeonWorldMapIcon component;
-        if (!((UnityEngine.Object) current.gameObject == (UnityEngine.Object) null) && current.gameObject.TryGetComponent<DungeonWorldMapIcon>(out component))
-          this._treeNodes.Add(component);
-      }
+      DungeonWorldMapIcon component;
+      if (!((UnityEngine.Object) transform.gameObject == (UnityEngine.Object) null) && transform.gameObject.TryGetComponent<DungeonWorldMapIcon>(out component))
+        this._treeNodes.Add(component);
     }
-    finally
+    foreach (Transform transform in (Transform) this._nodeContainer.OutsideContainer)
     {
-      if (enumerator1 is IDisposable disposable)
-        disposable.Dispose();
-    }
-    IEnumerator enumerator2 = (IEnumerator) this._nodeContainer.OutsideContainer.GetEnumerator();
-    try
-    {
-      while (enumerator2.MoveNext())
-      {
-        Transform current = (Transform) enumerator2.Current;
-        DungeonWorldMapIcon component;
-        if (!((UnityEngine.Object) current.gameObject == (UnityEngine.Object) null) && current.gameObject.TryGetComponent<DungeonWorldMapIcon>(out component))
-          this._treeNodes.Add(component);
-      }
-    }
-    finally
-    {
-      if (enumerator2 is IDisposable disposable)
-        disposable.Dispose();
+      DungeonWorldMapIcon component;
+      if (!((UnityEngine.Object) transform.gameObject == (UnityEngine.Object) null) && transform.gameObject.TryGetComponent<DungeonWorldMapIcon>(out component))
+        this._treeNodes.Add(component);
     }
     this.InitialiseBuffers();
   }

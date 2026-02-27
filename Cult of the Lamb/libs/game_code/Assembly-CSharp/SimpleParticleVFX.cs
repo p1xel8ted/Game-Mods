@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SimpleParticleVFX
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -24,7 +24,7 @@ public class SimpleParticleVFX : BaseMonoBehaviour
     float num = 0.0f;
     this.gameObject.SetActive(true);
     if (this.useCustomEndTime)
-      this.StartCoroutine((IEnumerator) this.customEndTimer());
+      this.StartCoroutine(this.customEndTimer());
     if (this.setRotation)
       this.Rotation = num + (float) Random.Range(-10, 10);
     foreach (ParticleSystem particleSystem in this.particlesToPlay)
@@ -37,7 +37,7 @@ public class SimpleParticleVFX : BaseMonoBehaviour
     this.transform.position = Position;
     this.gameObject.SetActive(true);
     if (this.useCustomEndTime)
-      this.StartCoroutine((IEnumerator) this.customEndTimer());
+      this.StartCoroutine(this.customEndTimer());
     if (this.setRotation)
       this.Rotation = Angle + (float) Random.Range(-10, 10);
     foreach (ParticleSystem particleSystem in this.particlesToPlay)

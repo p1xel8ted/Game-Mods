@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_CrownShrineSherpa
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -38,7 +38,7 @@ public class Interaction_CrownShrineSherpa : Interaction
   {
     base.OnInteract(state);
     this.Interactable = false;
-    this.playerFarming.GoToAndStop(this.TargetPosition.transform.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.InteractIE())));
+    this.playerFarming.GoToAndStop(this.TargetPosition.transform.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.InteractIE())));
   }
 
   public void Start()
@@ -82,8 +82,5 @@ public class Interaction_CrownShrineSherpa : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__6_0()
-  {
-    this.StartCoroutine((IEnumerator) this.InteractIE());
-  }
+  public void \u003COnInteract\u003Eb__6_0() => this.StartCoroutine(this.InteractIE());
 }

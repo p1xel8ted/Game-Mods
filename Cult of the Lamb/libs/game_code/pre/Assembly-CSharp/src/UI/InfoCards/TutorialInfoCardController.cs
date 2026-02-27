@@ -1,0 +1,27 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: src.UI.InfoCards.TutorialInfoCardController
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using Lamb.UI;
+using src.UI.Items;
+using UnityEngine.UI;
+
+#nullable disable
+namespace src.UI.InfoCards;
+
+public class TutorialInfoCardController : UIInfoCardController<TutorialInfoCard, TutorialTopic>
+{
+  protected override bool IsSelectionValid(Selectable selectable, out TutorialTopic showParam)
+  {
+    showParam = TutorialTopic.None;
+    TutorialMenuItem component;
+    if (!selectable.TryGetComponent<TutorialMenuItem>(out component))
+      return false;
+    showParam = component.Topic;
+    return true;
+  }
+
+  protected override TutorialTopic DefaultShowParam() => TutorialTopic.None;
+}

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWormBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -376,18 +376,18 @@ public class EnemyWormBoss : UnitObject
     if (this.currentPhaseRoutine != null)
       this.StopCoroutine(this.currentPhaseRoutine);
     this.warningObject.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.DelayAddCamera());
+    this.StartCoroutine(this.DelayAddCamera());
     if (this.currentPhaseNumber == 1)
-      this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase1IE(false));
+      this.currentPhaseRoutine = this.StartCoroutine(this.Phase1IE(false));
     else if (this.currentPhaseNumber == 2)
     {
-      this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase2IE(false));
+      this.currentPhaseRoutine = this.StartCoroutine(this.Phase2IE(false));
     }
     else
     {
       if (this.currentPhaseNumber != 3)
         return;
-      this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase3IE(false));
+      this.currentPhaseRoutine = this.StartCoroutine(this.Phase3IE(false));
     }
   }
 
@@ -405,7 +405,7 @@ public class EnemyWormBoss : UnitObject
     GameManager.GetInstance().AddToCamera(this.cameraTarget);
     GameManager.GetInstance().CamFollowTarget.MinZoom = 9f;
     GameManager.GetInstance().CamFollowTarget.MaxZoom = 18f;
-    this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase1IE(true));
+    this.currentPhaseRoutine = this.StartCoroutine(this.Phase1IE(true));
   }
 
   public IEnumerator Phase1IE(bool firstLoop)
@@ -413,37 +413,34 @@ public class EnemyWormBoss : UnitObject
     EnemyWormBoss enemyWormBoss = this;
     enemyWormBoss.active = true;
     if (firstLoop)
-      yield return (object) (enemyWormBoss.currentSpawnEnemiesRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.SpawnIE(enemyWormBoss.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(enemyWormBoss.p1SpawnAmount.x, enemyWormBoss.p1SpawnAmount.y + 1f), enemyWormBoss.p1SpawnAnticipation, enemyWormBoss.p1DelayBetweenSpawns)));
+      yield return (object) (enemyWormBoss.currentSpawnEnemiesRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.SpawnIE(enemyWormBoss.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(enemyWormBoss.p1SpawnAmount.x, enemyWormBoss.p1SpawnAmount.y + 1f), enemyWormBoss.p1SpawnAnticipation, enemyWormBoss.p1DelayBetweenSpawns)));
     for (int i = 0; i < 3; ++i)
     {
-      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.TunnelMoveIE(enemyWormBoss.moveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
+      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.TunnelMoveIE(enemyWormBoss.moveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
       if (i == 2)
       {
         if (enemyWormBoss.juicedForm && (double) UnityEngine.Random.value > 0.5 && (UnityEngine.Object) enemyWormBoss.GetClosestTarget() != (UnityEngine.Object) null)
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootTargetedSpikesInDirectionIE(enemyWormBoss.directionalDelayBetweenSpikes / 3f, enemyWormBoss.directionalDistanceBetweenSpikes)));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.ShootTargetedSpikesInDirectionIE(enemyWormBoss.directionalDelayBetweenSpikes / 3f, enemyWormBoss.directionalDistanceBetweenSpikes)));
         else
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.spikeAmount, enemyWormBoss.directionalDelayBetweenSpikes, enemyWormBoss.directionalDistanceBetweenSpikes)));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.spikeAmount, enemyWormBoss.directionalDelayBetweenSpikes, enemyWormBoss.directionalDistanceBetweenSpikes)));
       }
       else
-        yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootIE()));
+        yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.ShootIE()));
     }
-    enemyWormBoss.currentPhaseRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.Phase1IE(false));
+    enemyWormBoss.currentPhaseRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.Phase1IE(false));
   }
 
-  public void BeginPhase2()
-  {
-    this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase2IE(true));
-  }
+  public void BeginPhase2() => this.currentPhaseRoutine = this.StartCoroutine(this.Phase2IE(true));
 
   public IEnumerator Phase2IE(bool firstLoop)
   {
     EnemyWormBoss enemyWormBoss = this;
     if (firstLoop)
     {
-      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.TunnelMoveIE(enemyWormBoss.p3MoveSpeed, enemyWormBoss.GetRandomPosition(7f), false)));
-      enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.EnragedIE());
+      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.TunnelMoveIE(enemyWormBoss.p3MoveSpeed, enemyWormBoss.GetRandomPosition(7f), false)));
+      enemyWormBoss.StartCoroutine(enemyWormBoss.EnragedIE());
       yield return (object) new WaitForSeconds(2f);
-      yield return (object) (enemyWormBoss.currentSpawnEnemiesRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.SpawnIE(enemyWormBoss.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(enemyWormBoss.p1SpawnAmount.x, enemyWormBoss.p1SpawnAmount.y + 1f), enemyWormBoss.p1SpawnAnticipation, enemyWormBoss.p1DelayBetweenSpawns, false)));
+      yield return (object) (enemyWormBoss.currentSpawnEnemiesRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.SpawnIE(enemyWormBoss.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(enemyWormBoss.p1SpawnAmount.x, enemyWormBoss.p1SpawnAmount.y + 1f), enemyWormBoss.p1SpawnAnticipation, enemyWormBoss.p1DelayBetweenSpawns, false)));
       yield return (object) new WaitForSeconds(2f);
     }
     for (int i = 0; i < 3; ++i)
@@ -455,41 +452,38 @@ public class EnemyWormBoss : UnitObject
       switch (num)
       {
         case 0:
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.JumpDiveIE()));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.JumpDiveIE()));
           break;
         case 1:
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.TunnelMoveIE(enemyWormBoss.moveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.TunnelMoveIE(enemyWormBoss.moveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
           if (enemyWormBoss.juicedForm && (double) UnityEngine.Random.value > 0.5 && (UnityEngine.Object) enemyWormBoss.GetClosestTarget() != (UnityEngine.Object) null)
           {
-            yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootTargetedSpikesInDirectionIE(enemyWormBoss.directionalDelayBetweenSpikes / 3f, enemyWormBoss.directionalDistanceBetweenSpikes)));
+            yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.ShootTargetedSpikesInDirectionIE(enemyWormBoss.directionalDelayBetweenSpikes / 3f, enemyWormBoss.directionalDistanceBetweenSpikes)));
             break;
           }
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.circleSpikeAmount, enemyWormBoss.circleDelayBetweenSpikes, enemyWormBoss.circleDistanceBetweenSpikes)));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.circleSpikeAmount, enemyWormBoss.circleDelayBetweenSpikes, enemyWormBoss.circleDistanceBetweenSpikes)));
           break;
         case 2:
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.TunnelMoveIE(enemyWormBoss.moveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootIE()));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.TunnelMoveIE(enemyWormBoss.moveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.ShootIE()));
           break;
       }
       yield return (object) new WaitForSeconds(UnityEngine.Random.Range(1f, 2f));
     }
-    enemyWormBoss.currentPhaseRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.Phase2IE(false));
+    enemyWormBoss.currentPhaseRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.Phase2IE(false));
   }
 
-  public void BeginPhase3()
-  {
-    this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase3IE(true));
-  }
+  public void BeginPhase3() => this.currentPhaseRoutine = this.StartCoroutine(this.Phase3IE(true));
 
   public IEnumerator Phase3IE(bool firstLoop)
   {
     EnemyWormBoss enemyWormBoss = this;
     if (firstLoop)
     {
-      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.TunnelMoveIE(enemyWormBoss.p3MoveSpeed, Vector3.zero, false)));
-      enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.EnragedIE());
+      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.TunnelMoveIE(enemyWormBoss.p3MoveSpeed, Vector3.zero, false)));
+      enemyWormBoss.StartCoroutine(enemyWormBoss.EnragedIE());
       yield return (object) new WaitForSeconds(2f);
-      yield return (object) (enemyWormBoss.currentSpawnEnemiesRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.SpawnIE(enemyWormBoss.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(enemyWormBoss.p3SpawnAmount.x, enemyWormBoss.p3SpawnAmount.y + 1f), enemyWormBoss.p3SpawnAnticipation, enemyWormBoss.p1DelayBetweenSpawns, false)));
+      yield return (object) (enemyWormBoss.currentSpawnEnemiesRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.SpawnIE(enemyWormBoss.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(enemyWormBoss.p3SpawnAmount.x, enemyWormBoss.p3SpawnAmount.y + 1f), enemyWormBoss.p3SpawnAnticipation, enemyWormBoss.p1DelayBetweenSpawns, false)));
       yield return (object) new WaitForSeconds(2f);
     }
     for (int i = 1; i < 3; ++i)
@@ -497,21 +491,21 @@ public class EnemyWormBoss : UnitObject
       if (i % 2 == 0)
       {
         if (enemyWormBoss.juicedForm && (double) UnityEngine.Random.value > 0.5 && (UnityEngine.Object) enemyWormBoss.GetClosestTarget() != (UnityEngine.Object) null)
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootTargetedSpikesInDirectionIE(enemyWormBoss.directionalDelayBetweenSpikes / 3f, enemyWormBoss.directionalDistanceBetweenSpikes)));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.ShootTargetedSpikesInDirectionIE(enemyWormBoss.directionalDelayBetweenSpikes / 3f, enemyWormBoss.directionalDistanceBetweenSpikes)));
         else
-          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.TunnelMoveIE(enemyWormBoss.p3MoveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
+          yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.TunnelMoveIE(enemyWormBoss.p3MoveSpeed, enemyWormBoss.GetRandomPosition(7f), true)));
       }
       else
-        yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.HeadSmashIE()));
+        yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.HeadSmashIE()));
     }
     if (UnityEngine.Random.Range(0, 2) == 0)
-      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.circleSpikeAmount, enemyWormBoss.circleDelayBetweenSpikes, enemyWormBoss.circleDistanceBetweenSpikes)));
+      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.circleSpikeAmount, enemyWormBoss.circleDelayBetweenSpikes, enemyWormBoss.circleDistanceBetweenSpikes)));
     else
-      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootIE()));
-    enemyWormBoss.currentPhaseRoutine = enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.Phase3IE(false));
+      yield return (object) (enemyWormBoss.currentAttackRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.ShootIE()));
+    enemyWormBoss.currentPhaseRoutine = enemyWormBoss.StartCoroutine(enemyWormBoss.Phase3IE(false));
   }
 
-  public void JumpDive() => this.StartCoroutine((IEnumerator) this.JumpDiveIE());
+  public void JumpDive() => this.StartCoroutine(this.JumpDiveIE());
 
   public IEnumerator JumpDiveIE()
   {
@@ -555,7 +549,7 @@ public class EnemyWormBoss : UnitObject
     enemyWormBoss.damageCollider.gameObject.SetActive(true);
     CameraManager.instance.ShakeCameraForDuration(2f, 2.2f, 0.2f);
     if (enemyWormBoss.juicedForm)
-      enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.circleSpikeAmount, enemyWormBoss.circleDelayBetweenSpikes / 2f, enemyWormBoss.circleDistanceBetweenSpikes, false));
+      enemyWormBoss.StartCoroutine(enemyWormBoss.SpawnSpikesInDirectionsIE(enemyWormBoss.circleSpikeAmount, enemyWormBoss.circleDelayBetweenSpikes / 2f, enemyWormBoss.circleDistanceBetweenSpikes, false));
     time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyWormBoss.Spine.timeScale) < 0.10000000149011612)
       yield return (object) null;
@@ -581,12 +575,12 @@ public class EnemyWormBoss : UnitObject
 
   public void SpawnSpikesInDirections()
   {
-    this.StartCoroutine((IEnumerator) this.SpawnSpikesInDirectionsIE(this.spikeAmount, this.directionalDelayBetweenSpikes, this.directionalDistanceBetweenSpikes));
+    this.StartCoroutine(this.SpawnSpikesInDirectionsIE(this.spikeAmount, this.directionalDelayBetweenSpikes, this.directionalDistanceBetweenSpikes));
   }
 
   public void SpawnSpikesInCircle()
   {
-    this.StartCoroutine((IEnumerator) this.SpawnSpikesInDirectionsIE(this.circleSpikeAmount, this.circleDelayBetweenSpikes, this.circleDistanceBetweenSpikes));
+    this.StartCoroutine(this.SpawnSpikesInDirectionsIE(this.circleSpikeAmount, this.circleDelayBetweenSpikes, this.circleDistanceBetweenSpikes));
   }
 
   public void InitializeSpawnedSpikes()
@@ -628,7 +622,7 @@ public class EnemyWormBoss : UnitObject
     for (int index = 0; index < amount; ++index)
     {
       Vector3 direction = new Vector3(Mathf.Cos((float) num * ((float) Math.PI / 180f)), Mathf.Sin((float) num * ((float) Math.PI / 180f)), 0.0f);
-      enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootSpikesInDirectionIE(direction, delayBetweenSpikes, distanceBetweenSpikes, anticipate));
+      enemyWormBoss.StartCoroutine(enemyWormBoss.ShootSpikesInDirectionIE(direction, delayBetweenSpikes, distanceBetweenSpikes, anticipate));
       num = (int) Utils.Repeat((float) (num + 360 / amount), 360f);
     }
     AudioManager.Instance.PlayOneShot("event:/boss/worm/spike_attack", AudioManager.Instance.Listener);
@@ -688,9 +682,9 @@ public class EnemyWormBoss : UnitObject
     Vector3 normalized = (enemyWormBoss.GetClosestTarget().transform.position - enemyWormBoss.transform.position).normalized;
     Vector3 direction1 = Quaternion.Euler(0.0f, 0.0f, -25f) * normalized;
     Vector3 direction2 = Quaternion.Euler(0.0f, 0.0f, 25f) * normalized;
-    enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootSpikesInDirectionIE(direction1, delayBetweenSpikes, distanceBetweenSpikes, false));
-    enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootSpikesInDirectionIE(direction2, delayBetweenSpikes, distanceBetweenSpikes, false));
-    yield return (object) enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.ShootSpikesInDirectionIE(normalized, delayBetweenSpikes, distanceBetweenSpikes, false));
+    enemyWormBoss.StartCoroutine(enemyWormBoss.ShootSpikesInDirectionIE(direction1, delayBetweenSpikes, distanceBetweenSpikes, false));
+    enemyWormBoss.StartCoroutine(enemyWormBoss.ShootSpikesInDirectionIE(direction2, delayBetweenSpikes, distanceBetweenSpikes, false));
+    yield return (object) enemyWormBoss.StartCoroutine(enemyWormBoss.ShootSpikesInDirectionIE(normalized, delayBetweenSpikes, distanceBetweenSpikes, false));
   }
 
   public GameObject GetSpawnSpike()
@@ -722,7 +716,7 @@ public class EnemyWormBoss : UnitObject
     return spawnSpike;
   }
 
-  public void Shoot() => this.StartCoroutine((IEnumerator) this.ShootIE());
+  public void Shoot() => this.StartCoroutine(this.ShootIE());
 
   public void InitializeGranadeBullets()
   {
@@ -751,7 +745,7 @@ public class EnemyWormBoss : UnitObject
     while ((double) ++index < (double) enemyWormBoss.numberOfShotsToFire)
     {
       AudioManager.Instance.PlayOneShot("event:/enemy/spit_gross_projectile", AudioManager.Instance.Listener);
-      enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.BulletDelay(angle, index, UnityEngine.Random.Range(enemyWormBoss.delayBetweenShots.x, enemyWormBoss.delayBetweenShots.y)));
+      enemyWormBoss.StartCoroutine(enemyWormBoss.BulletDelay(angle, index, UnityEngine.Random.Range(enemyWormBoss.delayBetweenShots.x, enemyWormBoss.delayBetweenShots.y)));
     }
     time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyWormBoss.Spine.timeScale) < 1.0)
@@ -773,12 +767,12 @@ public class EnemyWormBoss : UnitObject
 
   public void SpawnP1()
   {
-    this.StartCoroutine((IEnumerator) this.SpawnIE(this.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(this.p1SpawnAmount.x, this.p1SpawnAmount.y + 1f), this.p1SpawnAnticipation, this.p1DelayBetweenSpawns));
+    this.StartCoroutine(this.SpawnIE(this.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(this.p1SpawnAmount.x, this.p1SpawnAmount.y + 1f), this.p1SpawnAnticipation, this.p1DelayBetweenSpawns));
   }
 
   public void SpawnP3()
   {
-    this.StartCoroutine((IEnumerator) this.SpawnIE(this.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(this.p3SpawnAmount.x, this.p3SpawnAmount.y + 1f), this.p3SpawnAnticipation, this.p1DelayBetweenSpawns));
+    this.StartCoroutine(this.SpawnIE(this.loadedP1SpawnablesList, (int) UnityEngine.Random.Range(this.p3SpawnAmount.x, this.p3SpawnAmount.y + 1f), this.p3SpawnAnticipation, this.p1DelayBetweenSpawns));
   }
 
   public IEnumerator SpawnIE(
@@ -868,7 +862,7 @@ public class EnemyWormBoss : UnitObject
 
   public void TunnelMove()
   {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TunnelMoveIE(this.moveSpeed, this.GetRandomPosition(7f), true));
+    this.currentAttackRoutine = this.StartCoroutine(this.TunnelMoveIE(this.moveSpeed, this.GetRandomPosition(7f), true));
   }
 
   public void InitializeTrailSpikes()
@@ -976,7 +970,7 @@ public class EnemyWormBoss : UnitObject
     return trailSpike1;
   }
 
-  public void HeadSmash() => this.StartCoroutine((IEnumerator) this.HeadSmashIE());
+  public void HeadSmash() => this.StartCoroutine(this.HeadSmashIE());
 
   public IEnumerator HeadSmashIE()
   {
@@ -992,13 +986,13 @@ public class EnemyWormBoss : UnitObject
     enemyWormBoss.Spine.zSpacing = enemyWormBoss.zSpacing;
     yield return (object) new WaitForSeconds(0.5f);
     CameraManager.instance.ShakeCameraForDuration(1.3f, 1.5f, 0.3f);
-    yield return (object) enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.EnableDamageCollider(0.1f, enemyWormBoss.headSmashPositions[0]));
+    yield return (object) enemyWormBoss.StartCoroutine(enemyWormBoss.EnableDamageCollider(0.1f, enemyWormBoss.headSmashPositions[0]));
     yield return (object) new WaitForSeconds(0.5f);
     CameraManager.instance.ShakeCameraForDuration(1.3f, 1.5f, 0.3f);
-    yield return (object) enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.EnableDamageCollider(0.1f, enemyWormBoss.headSmashPositions[1]));
+    yield return (object) enemyWormBoss.StartCoroutine(enemyWormBoss.EnableDamageCollider(0.1f, enemyWormBoss.headSmashPositions[1]));
     yield return (object) new WaitForSeconds(0.8f);
     CameraManager.instance.ShakeCameraForDuration(1.6f, 1.8f, 0.3f);
-    yield return (object) enemyWormBoss.StartCoroutine((IEnumerator) enemyWormBoss.EnableDamageCollider(0.1f, enemyWormBoss.headSmashPositions[2]));
+    yield return (object) enemyWormBoss.StartCoroutine(enemyWormBoss.EnableDamageCollider(0.1f, enemyWormBoss.headSmashPositions[2]));
     DOTween.To(new DOGetter<float>(enemyWormBoss.\u003CHeadSmashIE\u003Eb__127_0), new DOSetter<float>(enemyWormBoss.\u003CHeadSmashIE\u003Eb__127_1), enemyWormBoss.ogSpacing, 0.25f);
     yield return (object) new WaitForSeconds(1f);
     enemyWormBoss.phaseChangeBlocked = false;
@@ -1070,7 +1064,7 @@ public class EnemyWormBoss : UnitObject
       this.StopCoroutine(this.currentSpawnEnemiesRoutine);
     if (this.currentPhaseRoutine != null)
       this.StopCoroutine(this.currentPhaseRoutine);
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
   }
 
   public IEnumerator Die()
@@ -1162,7 +1156,7 @@ public class EnemyWormBoss : UnitObject
         spawnedEnemy.health.enabled = true;
         spawnedEnemy.health.invincible = false;
         spawnedEnemy.health.untouchable = false;
-        spawnedEnemy.health.DealDamage(spawnedEnemy.health.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        spawnedEnemy.health.DealDamage(spawnedEnemy.health.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
     for (int index = Health.team2.Count - 1; index >= 0; --index)
@@ -1172,7 +1166,7 @@ public class EnemyWormBoss : UnitObject
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
         Health.team2[index].untouchable = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }

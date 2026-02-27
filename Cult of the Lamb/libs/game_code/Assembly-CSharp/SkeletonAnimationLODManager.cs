@@ -1,9 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SkeletonAnimationLODManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
+using Lamb.UI;
 using Spine.Unity;
 using UnityEngine;
 
@@ -130,7 +131,7 @@ public class SkeletonAnimationLODManager : MonoBehaviour
 
   public void Update()
   {
-    if ((Object) this.skeletonAnimation == (Object) null || this.skeletonUpdater == null || SkeletonAnimationLODGlobalManager.Instance.cameraFrustum == null || (Object) this.meshRenderer == (Object) null || (Object) this.skeletonAnimation.gameObject != (Object) null && !this.skeletonAnimation.gameObject.activeInHierarchy || !this.doUpdate)
+    if (MonoSingleton<UIManager>.Instance.IsPaused || (Object) this.skeletonAnimation == (Object) null || this.skeletonUpdater == null || SkeletonAnimationLODGlobalManager.Instance.cameraFrustum == null || (Object) this.meshRenderer == (Object) null || (Object) this.skeletonAnimation.gameObject != (Object) null && !this.skeletonAnimation.gameObject.activeInHierarchy || !this.doUpdate)
       return;
     if ((double) (this.timer -= Time.deltaTime) <= 0.0)
     {
@@ -147,7 +148,7 @@ public class SkeletonAnimationLODManager : MonoBehaviour
 
   public void LateUpdate()
   {
-    if (!this.doUpdate)
+    if (MonoSingleton<UIManager>.Instance.IsPaused || !this.doUpdate)
       return;
     this.skeletonUpdater.LateUpdate();
   }

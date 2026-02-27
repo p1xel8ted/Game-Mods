@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyYngyaBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -329,13 +329,13 @@ public class EnemyYngyaBoss : UnitObject
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.ProceedToYngya);
     if (this.TESTING)
       return;
-    this.StartCoroutine((IEnumerator) this.Phase1IE());
+    this.StartCoroutine(this.Phase1IE());
   }
 
   public bool DamageSelf(int amount)
   {
     int num = (double) this.health.HP - (double) amount * (double) this.DAMAGE_SELF_MULTIPLIER <= 0.0 ? 1 : 0;
-    this.health.DealDamage((float) amount * this.DAMAGE_SELF_MULTIPLIER, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop);
+    this.health.DealDamage((float) amount * this.DAMAGE_SELF_MULTIPLIER, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: true);
     return num != 0;
   }
 
@@ -386,9 +386,9 @@ public class EnemyYngyaBoss : UnitObject
     {
       do
       {
-        yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.MultiChunkMiniIE());
+        yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.MultiChunkMiniIE());
         yield return (object) CoroutineStatics.WaitForScaledSeconds(2f, enemyYngyaBoss.Spine);
-        enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.DelayedProjectilePatternPulse1(1.16666663f, false));
+        enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.DelayedProjectilePatternPulse1(1.16666663f, false));
         AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileArcOneStartSFX, enemyYngyaBoss.gameObject);
         for (int i = 0; i < UnityEngine.Random.Range(3, 6) * 2; ++i)
         {
@@ -400,12 +400,12 @@ public class EnemyYngyaBoss : UnitObject
         }
         enemyYngyaBoss.projectilePattern1.StopAllCoroutines();
         if ((double) UnityEngine.Random.Range(0, 101) < 50.0)
-          yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.RotBombsIE());
+          yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.RotBombsIE());
         else
-          yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.ProjectileBeam1AttackIE(enemyYngyaBoss.attackProjectileSpiralOneStartSFX, enemyYngyaBoss.attackProjectileSpiralOneStartVO));
+          yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.ProjectileBeam1AttackIE(enemyYngyaBoss.attackProjectileSpiralOneStartSFX, enemyYngyaBoss.attackProjectileSpiralOneStartVO));
         if ((double) enemyYngyaBoss.health.HP / (double) enemyYngyaBoss.health.totalHP <= 0.800000011920929)
         {
-          enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.Phase2IE());
+          enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.Phase2IE());
           yield break;
         }
       }
@@ -431,12 +431,12 @@ public class EnemyYngyaBoss : UnitObject
     {
       do
       {
-        yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.MultiChunkMediumIE());
+        yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.MultiChunkMediumIE());
         AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileArcTwoStartSFX, enemyYngyaBoss.gameObject);
         AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileArcTwoStartVO, enemyYngyaBoss.gameObject);
         enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-start", false);
         enemyYngyaBoss.Spine.AnimationState.AddAnimation(0, "particles-ring-fast-loop", true, 0.0f);
-        enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.DelayedProjectilePattern2(1.16666663f));
+        enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.DelayedProjectilePattern2(1.16666663f));
         for (int i = 0; i < UnityEngine.Random.Range(3, 6) * 2; ++i)
           yield return (object) CoroutineStatics.WaitForScaledSeconds(1.5f, enemyYngyaBoss.Spine);
         enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-end", false);
@@ -445,12 +445,12 @@ public class EnemyYngyaBoss : UnitObject
         enemyYngyaBoss.projectilePattern2.StopAllCoroutines();
         yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyYngyaBoss.Spine);
         if ((double) UnityEngine.Random.Range(0, 101) < 50.0)
-          yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.ProjectileBeam1AttackIE(enemyYngyaBoss.attackProjectileSpiralTwoStartSFX, enemyYngyaBoss.attackProjectileSpiralTwoStartVO));
+          yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.ProjectileBeam1AttackIE(enemyYngyaBoss.attackProjectileSpiralTwoStartSFX, enemyYngyaBoss.attackProjectileSpiralTwoStartVO));
         else
-          yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.PulsingProjectileCircleAttackIE());
+          yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.PulsingProjectileCircleAttackIE());
         if ((double) enemyYngyaBoss.health.HP / (double) enemyYngyaBoss.health.totalHP <= 0.60000002384185791)
         {
-          enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.Phase3IE());
+          enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.Phase3IE());
           yield break;
         }
       }
@@ -483,12 +483,12 @@ public class EnemyYngyaBoss : UnitObject
     {
       do
       {
-        yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.MultiChunkBigIE());
+        yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.MultiChunkBigIE());
         AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileArcThreeStartSFX, enemyYngyaBoss.gameObject);
         AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileArcThreeStartVO, enemyYngyaBoss.gameObject);
         enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-start", false);
         enemyYngyaBoss.Spine.AnimationState.AddAnimation(0, "particles-ring-fast-loop", true, 0.0f);
-        enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.DelayedProjectilePattern3(1.16666663f));
+        enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.DelayedProjectilePattern3(1.16666663f));
         for (int i = 0; i < UnityEngine.Random.Range(3, 6) * 2; ++i)
           yield return (object) CoroutineStatics.WaitForScaledSeconds(1.5f, enemyYngyaBoss.Spine);
         enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-end", false);
@@ -498,12 +498,12 @@ public class EnemyYngyaBoss : UnitObject
         yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyYngyaBoss.Spine);
         float num = (float) UnityEngine.Random.Range(0, 101);
         if ((double) num < 33.0)
-          yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.ProjeectileFireAttackIE());
+          yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.ProjeectileFireAttackIE());
         else if ((double) num < 66.0)
-          yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.ProjectileBeam2AttackIE(enemyYngyaBoss.attackProjectileSpiralThreeStartSFX, enemyYngyaBoss.attackProjectileSpiralThreeStartVO));
+          yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.ProjectileBeam2AttackIE(enemyYngyaBoss.attackProjectileSpiralThreeStartSFX, enemyYngyaBoss.attackProjectileSpiralThreeStartVO));
         if ((double) enemyYngyaBoss.health.HP / (double) enemyYngyaBoss.health.totalHP <= 0.40000000596046448)
         {
-          enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.Phase4IE());
+          enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.Phase4IE());
           yield break;
         }
       }
@@ -534,12 +534,12 @@ public class EnemyYngyaBoss : UnitObject
     yield return (object) CoroutineStatics.WaitForScaledSeconds(2.9333334f, enemyYngyaBoss.Spine);
     while (true)
     {
-      yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.MultiChunkHugeIE());
+      yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.MultiChunkHugeIE());
       AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileArcFourStartSFX, enemyYngyaBoss.gameObject);
       AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileArcFourStartVO, enemyYngyaBoss.gameObject);
       enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-start", false);
       enemyYngyaBoss.Spine.AnimationState.AddAnimation(0, "particles-ring-fast-loop", true, 0.0f);
-      enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.DelayedProjectilePattern4(1.16666663f));
+      enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.DelayedProjectilePattern4(1.16666663f));
       for (int i = 0; i < UnityEngine.Random.Range(3, 6) * 2; ++i)
         yield return (object) CoroutineStatics.WaitForScaledSeconds(1.5f, enemyYngyaBoss.Spine);
       enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-end", false);
@@ -548,9 +548,9 @@ public class EnemyYngyaBoss : UnitObject
       enemyYngyaBoss.projectilePattern4.StopAllCoroutines();
       yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyYngyaBoss.Spine);
       if ((double) UnityEngine.Random.Range(0, 101) < 50.0)
-        yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.PulsingProjectileCircleAttack2IE());
+        yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.PulsingProjectileCircleAttack2IE());
       else
-        yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.ProjectileBeam2AttackIE(enemyYngyaBoss.attackProjectileSpiralThreeStartSFX, enemyYngyaBoss.attackProjectileSpiralThreeStartVO));
+        yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.ProjectileBeam2AttackIE(enemyYngyaBoss.attackProjectileSpiralThreeStartSFX, enemyYngyaBoss.attackProjectileSpiralThreeStartVO));
     }
   }
 
@@ -617,13 +617,13 @@ public class EnemyYngyaBoss : UnitObject
     DataManager.Instance.BossesCompleted.Add(FollowerLocation.Dungeon1_5);
     DataManager.Instance.BossesCompleted.Add(FollowerLocation.Dungeon1_6);
     UIBossHUD.Hide();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.OnDieIE());
+    GameManager.GetInstance().StartCoroutine(this.OnDieIE());
   }
 
   public IEnumerator OnDieIE()
   {
     EnemyYngyaBoss enemyYngyaBoss = this;
-    enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SlowMo());
+    enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SlowMo());
     HUD_Manager.Instance.Hide(false);
     Debug.Log((object) $"Has Yngya been damaged by anything other then herself? {enemyYngyaBoss.hasReceivedExternalDamage}");
     AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup(AchievementsWrapper.Tags.BEAT_YNGYA));
@@ -658,12 +658,12 @@ public class EnemyYngyaBoss : UnitObject
       PlayerFarming playerFarming = PlayerFarming.Instance;
       playerFarming.GoToAndStop(new Vector3(0.0f, 70f, 0.0f), enemyYngyaBoss.gameObject);
       yield return (object) new WaitForSeconds(2f);
-      enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SpawnGhostsOut(180, 0.02f));
+      enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SpawnGhostsOut(180, 0.02f));
       GameManager.GetInstance().OnConversationNext(enemyYngyaBoss.cameraTarget, 12f);
       CameraManager.instance.ShakeCameraForDuration(1f, 1.5f, 5f);
       MMVibrate.RumbleForAllPlayers(1.5f, 1.75f, 5f);
       BiomeConstants.Instance.ImpactFrameForDuration();
-      enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SpawnSplatter(1000, 30f, enemyYngyaBoss.cameraTarget.transform.position));
+      enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SpawnSplatter(1000, 30f, enemyYngyaBoss.cameraTarget.transform.position));
       yield return (object) new WaitForSeconds(5f);
       for (int index = 0; index < enemyYngyaBoss.ghosts.Length; ++index)
       {
@@ -750,7 +750,7 @@ public class EnemyYngyaBoss : UnitObject
       yield return (object) new WaitForSeconds(3f);
       GameManager.GetInstance().OnConversationNew();
       if (!StructuresData.GetUnlocked(StructureBrain.TYPES.DECORATION_BOSS_TROPHY_DLC_YNGYA))
-        yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.PlayerPickUpThrophyDeco(followerSpawn.transform.position));
+        yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.PlayerPickUpThrophyDeco(followerSpawn.transform.position));
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(Follower.gameObject, 4f);
       GameManager.GetInstance().CamFollowTarget.TargetOffset = new Vector3(0.0f, 0.0f, 0.3f);
@@ -769,7 +769,7 @@ public class EnemyYngyaBoss : UnitObject
       while (PlayerFarming.Instance.GoToAndStopping)
         yield return (object) null;
       followerSpawn.Spine.GetComponent<SimpleSpineAnimator>().enabled = false;
-      yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) followerSpawn.ConvertFollower());
+      yield return (object) enemyYngyaBoss.StartCoroutine(followerSpawn.ConvertFollower());
       enemyYngyaBoss.YngyaRecruitSpine.gameObject.SetActive(false);
       AstarPath.active = (AstarPath) null;
       DataManager.Instance.DiedLastRun = false;
@@ -797,10 +797,7 @@ public class EnemyYngyaBoss : UnitObject
 
   public void StopBehaviour() => this.StopAllCoroutines();
 
-  public void ProjectileFireAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.ProjeectileFireAttackIE());
-  }
+  public void ProjectileFireAttack() => this.StartCoroutine(this.ProjeectileFireAttackIE());
 
   public IEnumerator ProjeectileFireAttackIE()
   {
@@ -833,7 +830,7 @@ public class EnemyYngyaBoss : UnitObject
 
   public void ProjectileBeam1Attack()
   {
-    this.StartCoroutine((IEnumerator) this.ProjectileBeam1AttackIE(this.attackProjectileSpiralOneStartSFX, this.attackProjectileSpiralOneStartVO));
+    this.StartCoroutine(this.ProjectileBeam1AttackIE(this.attackProjectileSpiralOneStartSFX, this.attackProjectileSpiralOneStartVO));
   }
 
   public IEnumerator ProjectileBeam1AttackIE(string startSFX, string startVO)
@@ -844,7 +841,7 @@ public class EnemyYngyaBoss : UnitObject
     enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-start", false);
     enemyYngyaBoss.Spine.AnimationState.AddAnimation(0, "particles-ring-fast-loop", true, 0.0f);
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyYngyaBoss.Spine);
-    yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.projectilePatternBeam1.ShootIE(0.0f, (GameObject) null, (Transform) null, true));
+    yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.projectilePatternBeam1.ShootIE(0.0f, (GameObject) null, (Transform) null, true));
     enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-end", false);
     enemyYngyaBoss.Spine.AnimationState.AddAnimation(0, "animation", true, 0.0f);
     AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileSpiralStopSFX, enemyYngyaBoss.gameObject);
@@ -853,7 +850,7 @@ public class EnemyYngyaBoss : UnitObject
 
   public void ProjectileBeam2Attack()
   {
-    this.StartCoroutine((IEnumerator) this.ProjectileBeam2AttackIE(this.attackProjectileSpiralTwoStartSFX, this.attackProjectileSpiralTwoStartVO));
+    this.StartCoroutine(this.ProjectileBeam2AttackIE(this.attackProjectileSpiralTwoStartSFX, this.attackProjectileSpiralTwoStartVO));
   }
 
   public IEnumerator ProjectileBeam2AttackIE(string startSFX, string startVO)
@@ -864,7 +861,7 @@ public class EnemyYngyaBoss : UnitObject
     enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-start", false);
     enemyYngyaBoss.Spine.AnimationState.AddAnimation(0, "particles-ring-fast-loop", true, 0.0f);
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1f, enemyYngyaBoss.Spine);
-    yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.projectilePatternBeam2.ShootIE(0.0f, (GameObject) null, (Transform) null, true));
+    yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.projectilePatternBeam2.ShootIE(0.0f, (GameObject) null, (Transform) null, true));
     enemyYngyaBoss.Spine.AnimationState.SetAnimation(0, "particles-ring-fast-end", false);
     enemyYngyaBoss.Spine.AnimationState.AddAnimation(0, "animation", true, 0.0f);
     AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileSpiralStopSFX, enemyYngyaBoss.gameObject);
@@ -873,13 +870,13 @@ public class EnemyYngyaBoss : UnitObject
 
   public void PulsingProjectileAttack()
   {
-    this.StartCoroutine((IEnumerator) this.PulsingProjectileCircleAttackIE());
+    this.StartCoroutine(this.PulsingProjectileCircleAttackIE());
   }
 
   public IEnumerator PulsingProjectileCircleAttackIE()
   {
     EnemyYngyaBoss enemyYngyaBoss = this;
-    enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.DelayedProjectilePatternPulse1(1f, true));
+    enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.DelayedProjectilePatternPulse1(1f, true));
     AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackProjectileCircleTwoStartSFX, enemyYngyaBoss.gameObject);
     for (int i = 0; i < 6; ++i)
     {
@@ -906,7 +903,7 @@ public class EnemyYngyaBoss : UnitObject
 
   public void PulsingProjectileAttack2()
   {
-    this.StartCoroutine((IEnumerator) this.PulsingProjectileCircleAttack2IE());
+    this.StartCoroutine(this.PulsingProjectileCircleAttack2IE());
   }
 
   public IEnumerator PulsingProjectileCircleAttack2IE()
@@ -930,7 +927,7 @@ public class EnemyYngyaBoss : UnitObject
 
   public void PulsingProjectileWaveShot(ProjectilePattern.BulletWave wave)
   {
-    this.StartCoroutine((IEnumerator) this.PulsingProjectileWaveIE(wave));
+    this.StartCoroutine(this.PulsingProjectileWaveIE(wave));
   }
 
   public IEnumerator PulsingProjectileWaveIE(ProjectilePattern.BulletWave wave)
@@ -959,7 +956,7 @@ label_3:
     goto label_3;
   }
 
-  public void RotBombs() => this.StartCoroutine((IEnumerator) this.RotBombsIE());
+  public void RotBombs() => this.StartCoroutine(this.RotBombsIE());
 
   public IEnumerator RotBombsIE()
   {
@@ -1000,7 +997,7 @@ label_3:
 
   public void SpawnChunk(YngyaChunk chunk, Vector3 target = default (Vector3), bool animate = true)
   {
-    this.StartCoroutine((IEnumerator) this.SpawnChunkIE(chunk, target, animate));
+    this.StartCoroutine(this.SpawnChunkIE(chunk, target, animate));
   }
 
   public IEnumerator SpawnChunkIE(YngyaChunk chunk, Vector3 target = default (Vector3), bool animate = true)
@@ -1023,7 +1020,7 @@ label_3:
     yngyaChunk.Configure(target != new Vector3() ? target : a);
   }
 
-  public void MultiChunkHuge() => this.StartCoroutine((IEnumerator) this.MultiChunkHugeIE());
+  public void MultiChunkHuge() => this.StartCoroutine(this.MultiChunkHugeIE());
 
   public IEnumerator MultiChunkHugeIE()
   {
@@ -1082,7 +1079,7 @@ label_3:
     }
   }
 
-  public void MultiChunkBig() => this.StartCoroutine((IEnumerator) this.MultiChunkBigIE());
+  public void MultiChunkBig() => this.StartCoroutine(this.MultiChunkBigIE());
 
   public IEnumerator MultiChunkBigIE()
   {
@@ -1118,7 +1115,7 @@ label_3:
     }
   }
 
-  public void MultiChunkMedium() => this.StartCoroutine((IEnumerator) this.MultiChunkMediumIE());
+  public void MultiChunkMedium() => this.StartCoroutine(this.MultiChunkMediumIE());
 
   public IEnumerator MultiChunkMediumIE()
   {
@@ -1152,13 +1149,13 @@ label_3:
     yield return (object) CoroutineStatics.WaitForScaledSeconds(2f, enemyYngyaBoss.Spine);
   }
 
-  public void MultiSpawnChunkMini() => this.StartCoroutine((IEnumerator) this.MultiChunkMiniIE());
+  public void MultiSpawnChunkMini() => this.StartCoroutine(this.MultiChunkMiniIE());
 
   public IEnumerator MultiChunkMiniIE()
   {
     EnemyYngyaBoss enemyYngyaBoss = this;
     float num = 0.6166667f;
-    enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.ShakeCameraWithRampUp(0.6166667f, num, enemyYngyaBoss.multiChunkMaxShake / 2f));
+    enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.ShakeCameraWithRampUp(0.6166667f, num, enemyYngyaBoss.multiChunkMaxShake / 2f));
     MMVibrate.RumbleForAllPlayers(1f, 1.2f, num);
     AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackMultiChunkOneStartSFX, enemyYngyaBoss.gameObject);
     AudioManager.Instance.PlayOneShot(enemyYngyaBoss.attackMultiChunkOneStartVO, enemyYngyaBoss.gameObject);
@@ -1221,10 +1218,10 @@ label_3:
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(this.cameraTarget, 10f);
       PlayerFarming.Instance.GoToAndStop(this.transform.position + Vector3.down * 2f, this.cameraTarget, maxDuration: 8f, forcePositionOnTimeout: true, groupAction: true);
-      this.bossIntro = this.StartCoroutine((IEnumerator) this.BossIntroIE(0.75f));
+      this.bossIntro = this.StartCoroutine(this.BossIntroIE(0.75f));
     }
     else
-      this.StartCoroutine((IEnumerator) this.IntroIE());
+      this.StartCoroutine(this.IntroIE());
   }
 
   public IEnumerator IntroIE()
@@ -1242,7 +1239,7 @@ label_3:
     yield return (object) new WaitForSeconds(1f);
     float num = 9f;
     DOTween.To((DOGetter<float>) (() => GameManager.GetInstance().CamFollowTarget.targetDistance), (DOSetter<float>) (x => GameManager.GetInstance().CamFollowTarget.targetDistance = x), 5f, num).SetEase<TweenerCore<float, float, FloatOptions>>(Ease.OutSine);
-    enemyYngyaBoss1.StartCoroutine((IEnumerator) enemyYngyaBoss1.Shake(1f, 2f, num));
+    enemyYngyaBoss1.StartCoroutine(enemyYngyaBoss1.Shake(1f, 2f, num));
     yield return (object) new WaitForSeconds(2f);
     SkeletonAnimation[] skeletonAnimationArray = enemyYngyaBoss1.ghosts;
     for (int index = 0; index < skeletonAnimationArray.Length; ++index)
@@ -1265,7 +1262,7 @@ label_3:
     while (MMConversation.isPlaying)
       yield return (object) null;
     AudioManager.Instance.PlayOneShot("event:/dlc/dungeon06/enemy/yngya/story_intro_flashback_01");
-    yield return (object) enemyYngyaBoss1.StartCoroutine((IEnumerator) enemyYngyaBoss1.Flicker());
+    yield return (object) enemyYngyaBoss1.StartCoroutine(enemyYngyaBoss1.Flicker());
     MMConversation.Play(new ConversationObject(new List<ConversationEntry>()
     {
       new ConversationEntry(enemyYngyaBoss1.ghosts[2].gameObject, "Conversation_NPC/Yngya/Fight/Ghosts/2", "farmer/farmer-talk", CharacterName: "NAMES/Rancher"),
@@ -1276,7 +1273,7 @@ label_3:
       yield return (object) null;
     EnemyYngyaIntro.Instance.SetYngyaVisionAnimation("idle");
     AudioManager.Instance.PlayOneShot("event:/dlc/dungeon06/enemy/yngya/story_intro_flashback_02");
-    yield return (object) enemyYngyaBoss1.StartCoroutine((IEnumerator) enemyYngyaBoss1.Flicker());
+    yield return (object) enemyYngyaBoss1.StartCoroutine(enemyYngyaBoss1.Flicker());
     MMConversation.Play(new ConversationObject(new List<ConversationEntry>()
     {
       new ConversationEntry(enemyYngyaBoss1.ghosts[3].gameObject, "Conversation_NPC/Yngya/Fight/Ghosts/4", "Priest/priest-talk-angry", CharacterName: "NAMES/GraveyardNPC")
@@ -1284,7 +1281,7 @@ label_3:
     yield return (object) null;
     while (MMConversation.isPlaying)
       yield return (object) null;
-    yield return (object) enemyYngyaBoss1.StartCoroutine((IEnumerator) enemyYngyaBoss1.StruggleIE());
+    yield return (object) enemyYngyaBoss1.StartCoroutine(enemyYngyaBoss1.StruggleIE());
     GameManager.GetInstance().OnConversationNext(enemyYngyaBoss1.gameObject);
     AudioManager.Instance.StopLoop(enemyYngyaBoss1.ambientIntroLoopInstance);
     AudioManager.Instance.StopLoop(enemyYngyaBoss1.introPreBattleLoopInstance);
@@ -1304,11 +1301,11 @@ label_3:
     yield return (object) new WaitForSeconds(3f);
     CameraManager.instance.ShakeCameraForDuration(2f, 3f, 0.5f, false);
     yield return (object) new WaitForSeconds(1f);
-    enemyYngyaBoss1.StartCoroutine((IEnumerator) enemyYngyaBoss1.Shake(1f, 1f, 6f));
+    enemyYngyaBoss1.StartCoroutine(enemyYngyaBoss1.Shake(1f, 1f, 6f));
     enemyYngyaBoss1.Spine.timeScale = 1f;
-    enemyYngyaBoss1.StartCoroutine((IEnumerator) enemyYngyaBoss1.GhostsFlyInIE());
+    enemyYngyaBoss1.StartCoroutine(enemyYngyaBoss1.GhostsFlyInIE());
     yield return (object) new WaitForSeconds(1.25f);
-    yield return (object) enemyYngyaBoss1.StartCoroutine((IEnumerator) enemyYngyaBoss1.BossIntroIE());
+    yield return (object) enemyYngyaBoss1.StartCoroutine(enemyYngyaBoss1.BossIntroIE());
   }
 
   public IEnumerator StruggleIE()
@@ -1499,18 +1496,18 @@ label_28:
     CameraManager.instance.ShakeCameraForDuration(2f, 2.5f, 0.5f);
     MMVibrate.RumbleForAllPlayers(1.5f, 1.75f, 0.35f);
     GameManager.GetInstance().OnConversationNext(enemyYngyaBoss.cameraTarget, 10f);
-    enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SpawnSplatter(25, 0.2f, enemyYngyaBoss.cameraTarget.transform.position));
+    enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SpawnSplatter(25, 0.2f, enemyYngyaBoss.cameraTarget.transform.position));
     enemyYngyaBoss.yngyaRevealParticles.Play();
     yield return (object) new WaitForSeconds(1f);
     CameraManager.instance.ShakeCameraForDuration(1f, 1.5f, 0.35f);
     MMVibrate.RumbleForAllPlayers(1.5f, 1.75f, 0.35f);
     GameManager.GetInstance().OnConversationNext(enemyYngyaBoss.cameraTarget, 11f);
-    enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SpawnSplatter(15, 0.1f, enemyYngyaBoss.cameraTarget.transform.position + Vector3.right * 3f - Vector3.forward * 2f));
+    enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SpawnSplatter(15, 0.1f, enemyYngyaBoss.cameraTarget.transform.position + Vector3.right * 3f - Vector3.forward * 2f));
     yield return (object) new WaitForSeconds(0.933333337f);
     CameraManager.instance.ShakeCameraForDuration(1f, 1.5f, 0.35f);
     MMVibrate.RumbleForAllPlayers(1.5f, 1.75f, 0.35f);
     GameManager.GetInstance().OnConversationNext(enemyYngyaBoss.cameraTarget, 10.5f);
-    enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SpawnSplatter(15, 0.1f, enemyYngyaBoss.cameraTarget.transform.position + Vector3.left * 3f - Vector3.forward * 2f));
+    enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SpawnSplatter(15, 0.1f, enemyYngyaBoss.cameraTarget.transform.position + Vector3.left * 3f - Vector3.forward * 2f));
     UnitObject.Action finishingTransformation = enemyYngyaBoss.OnFinishingTransformation;
     if (finishingTransformation != null)
       finishingTransformation();
@@ -1522,7 +1519,7 @@ label_28:
     enemyYngyaBoss.arenaLighting.SetActive(true);
     foreach (GameObject torch in enemyYngyaBoss.torches)
       torch.SetActive(true);
-    yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SpawnSplatter(100, 0.2f, enemyYngyaBoss.cameraTarget.transform.position));
+    yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SpawnSplatter(100, 0.2f, enemyYngyaBoss.cameraTarget.transform.position));
     HUD_DisplayName.Play(ScriptLocalization.NAMES.Yngya, 3, HUD_DisplayName.Positions.Centre);
     AudioManager.Instance.SetMusicParam("deathcat_room_id", 9f);
     AudioManager.Instance.StopOneShotInstanceEarly(enemyYngyaBoss.duckAtmostInstance, STOP_MODE.IMMEDIATE);
@@ -1539,7 +1536,7 @@ label_28:
   public void SkipIntro()
   {
     this.StopCoroutine(this.bossIntro);
-    this.StartCoroutine((IEnumerator) this.SkipIntroIE());
+    this.StartCoroutine(this.SkipIntroIE());
   }
 
   public IEnumerator SkipIntroIE()
@@ -1559,7 +1556,7 @@ label_28:
     enemyYngyaBoss.arenaLighting.SetActive(true);
     foreach (GameObject torch in enemyYngyaBoss.torches)
       torch.SetActive(true);
-    yield return (object) enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SpawnSplatter(100, 0.2f, enemyYngyaBoss.cameraTarget.transform.position));
+    yield return (object) enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SpawnSplatter(100, 0.2f, enemyYngyaBoss.cameraTarget.transform.position));
     HUD_DisplayName.Play(ScriptLocalization.NAMES.Yngya, 3, HUD_DisplayName.Positions.Centre);
     AudioManager.Instance.SetMusicParam("deathcat_room_id", 9f);
     AudioManager.Instance.StopOneShotInstanceEarly(enemyYngyaBoss.duckAtmostInstance, STOP_MODE.IMMEDIATE);
@@ -1652,7 +1649,7 @@ label_28:
     {
       if (1.0 - (double) this.health.HP / (double) this.health.totalHP > (double) ((float) (this.ghostsKnockedOut + 1) / 9f))
       {
-        this.health.StartCoroutine((IEnumerator) this.ReleaseGhostNPCIE());
+        this.health.StartCoroutine(this.ReleaseGhostNPCIE());
         flag = true;
       }
     }
@@ -1662,7 +1659,7 @@ label_28:
   public IEnumerator ReleaseGhostNPCIE()
   {
     EnemyYngyaBoss enemyYngyaBoss = this;
-    enemyYngyaBoss.StartCoroutine((IEnumerator) enemyYngyaBoss.SlowMo());
+    enemyYngyaBoss.StartCoroutine(enemyYngyaBoss.SlowMo());
     int ghostsKnockedOut = enemyYngyaBoss.ghostsKnockedOut;
     ++enemyYngyaBoss.ghostsKnockedOut;
     SkeletonAnimation ghost = enemyYngyaBoss.ghosts[ghostsKnockedOut];

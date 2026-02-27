@@ -1,0 +1,168 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: FollowerTask_BuildProject
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using Spine;
+using System;
+using UnityEngine;
+
+#nullable disable
+public class FollowerTask_BuildProject : FollowerTask
+{
+  private bool _helpingPlayer;
+  private int _buildSiteID;
+  private Structures_BuildSiteProject _buildSite;
+  private float _gameTimeSinceLastProgress;
+
+  public override FollowerTaskType Type => FollowerTaskType.Build;
+
+  public override FollowerLocation Location => this._buildSite.Data.Location;
+
+  public override bool BlockTaskChanges => this._helpingPlayer;
+
+  public override bool BlockReactTasks => true;
+
+  public override int UsingStructureID => this._buildSiteID;
+
+  public override float Priorty => 100f;
+
+  public override PriorityCategory GetPriorityCategory(
+    FollowerRole FollowerRole,
+    WorkerPriority WorkerPriority,
+    FollowerBrain brain)
+  {
+    return PriorityCategory.OverrideWorkPriority;
+  }
+
+  public FollowerTask_BuildProject(int buildSiteID)
+  {
+    this._buildSiteID = buildSiteID;
+    this._buildSite = StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID);
+  }
+
+  public FollowerTask_BuildProject(BuildSitePlotProject buildSite)
+  {
+    this._helpingPlayer = true;
+    this._buildSiteID = buildSite.StructureInfo.ID;
+    this._buildSite = buildSite.StructureBrain;
+    Interaction_PlayerBuildProject.PlayerActivatingEnd += new Action<BuildSitePlotProject>(this.OnPlayerActivatingEnd);
+  }
+
+  protected override int GetSubTaskCode() => this._buildSiteID;
+
+  public override void ClaimReservations()
+  {
+    if (this._helpingPlayer)
+      return;
+    Structures_BuildSiteProject structureById = StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID);
+    if (structureById != null && structureById.AvailableSlotCount > 0)
+      ++structureById.UsedSlotCount;
+    else
+      this.End();
+  }
+
+  public override void ReleaseReservations()
+  {
+    if (this._helpingPlayer)
+      return;
+    Structures_BuildSiteProject structureById = StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID);
+    if (structureById == null)
+      return;
+    --structureById.UsedSlotCount;
+  }
+
+  protected override void OnStart()
+  {
+    Structures_BuildSiteProject structureById = StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID);
+    if (structureById != null)
+    {
+      structureById.OnBuildComplete += new System.Action(this.OnBuildComplete);
+      this.SetState(FollowerTaskState.GoingTo);
+    }
+    else
+      this.End();
+  }
+
+  protected override void OnComplete()
+  {
+    Structures_BuildSiteProject structureById = StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID);
+    if (structureById != null)
+      structureById.OnBuildComplete -= new System.Action(this.OnBuildComplete);
+    Interaction_PlayerBuildProject.PlayerActivatingEnd -= new Action<BuildSitePlotProject>(this.OnPlayerActivatingEnd);
+  }
+
+  protected override void TaskTick(float deltaGameTime)
+  {
+    if (this.State != FollowerTaskState.Doing)
+      return;
+    this._gameTimeSinceLastProgress += deltaGameTime;
+  }
+
+  public override void ProgressTask()
+  {
+    StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID).BuildProgress += this._gameTimeSinceLastProgress * this._brain.Info.ProductivityMultiplier;
+    this._gameTimeSinceLastProgress = 0.0f;
+  }
+
+  private void OnBuildComplete()
+  {
+    this._brain.GetXP(1f);
+    this.End();
+  }
+
+  private void OnPlayerActivatingEnd(BuildSitePlotProject buildSite)
+  {
+    if (buildSite.StructureInfo.ID != this._buildSiteID)
+      return;
+    this.End();
+  }
+
+  protected override Vector3 UpdateDestination(Follower follower)
+  {
+    Structures_BuildSiteProject structureById = StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID);
+    return structureById.Data.Position + new Vector3(0.0f, (float) structureById.Data.Bounds.y / 2f) + (Vector3) (UnityEngine.Random.insideUnitCircle * ((float) structureById.Data.Bounds.x * 0.5f));
+  }
+
+  public override void Setup(Follower follower)
+  {
+    base.Setup(follower);
+    follower.Spine.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.HandleAnimationStateEvent);
+  }
+
+  public override void OnDoingBegin(Follower follower)
+  {
+    Structures_BuildSiteProject structureById = StructureManager.GetStructureByID<Structures_BuildSiteProject>(this._buildSiteID);
+    follower.State.facingAngle = Utils.GetAngle(follower.transform.position, structureById.Data.Position);
+    follower.State.CURRENT_STATE = StateMachine.State.CustomAnimation;
+    double num = (double) follower.SetBodyAnimation(follower.Brain.CurrentState.Type == FollowerStateType.Motivated ? "build-fast-scared" : "build", true);
+  }
+
+  public override void Cleanup(Follower follower)
+  {
+    base.Cleanup(follower);
+    follower.Spine.AnimationState.Event -= new Spine.AnimationState.TrackEntryEventDelegate(this.HandleAnimationStateEvent);
+  }
+
+  private void HandleAnimationStateEvent(TrackEntry trackEntry, Spine.Event e)
+  {
+    if (!(e.Data.Name == "Build"))
+      return;
+    this.ProgressTask();
+  }
+
+  private BuildSitePlotProject FindPlot()
+  {
+    BuildSitePlotProject plot = (BuildSitePlotProject) null;
+    foreach (BuildSitePlotProject buildSitePlot in BuildSitePlotProject.BuildSitePlots)
+    {
+      if (buildSitePlot.StructureInfo.ID == this._buildSiteID)
+      {
+        plot = buildSitePlot;
+        break;
+      }
+    }
+    return plot;
+  }
+}

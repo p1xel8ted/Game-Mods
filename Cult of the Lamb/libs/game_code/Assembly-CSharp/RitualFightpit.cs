@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualFightpit
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -28,16 +28,16 @@ public class RitualFightpit : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
   {
     RitualFightpit ritualFightpit = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
-    yield return (object) ritualFightpit.StartCoroutine((IEnumerator) ritualFightpit.CentreAndAnimatePlayer());
+    yield return (object) ritualFightpit.StartCoroutine(ritualFightpit.CentreAndAnimatePlayer());
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualFightpit.StartCoroutine((IEnumerator) ritualFightpit.WaitFollowersFormCircle());
+    yield return (object) ritualFightpit.StartCoroutine(ritualFightpit.WaitFollowersFormCircle());
     PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-start", 0, false);
     PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("rituals/ritual-loop", 0, true, 0.0f);
     yield return (object) new WaitForSeconds(1f);
@@ -53,13 +53,13 @@ public class RitualFightpit : Ritual
       this.loopedSound = AudioManager.Instance.CreateLoop("event:/sermon/preach_loop", PlayerFarming.Instance.gameObject, true, false);
       this.Task1 = new FollowerTask_ManualControl();
       RitualFightpit.contestant1.Brain.HardSwapToTask((FollowerTask) this.Task1);
-      this.StartCoroutine((IEnumerator) this.SetUpCombatant1Routine());
+      this.StartCoroutine(this.SetUpCombatant1Routine());
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance1;
     selectMenuController2.OnCancel = selectMenuController2.OnCancel + (System.Action) (() =>
     {
       AudioManager.Instance.StopLoop(this.loopedSound);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualFinished(true, -1, -1));
+      GameManager.GetInstance().StartCoroutine(this.RitualFinished(true, -1, -1));
       this.CancelFollowers();
     });
     UIFollowerSelectMenuController selectMenuController3 = followerSelectInstance1;
@@ -88,12 +88,12 @@ public class RitualFightpit : Ritual
       this.loopedSound = AudioManager.Instance.CreateLoop("event:/sermon/preach_loop", PlayerFarming.Instance.gameObject, true, false);
       this.Task2 = new FollowerTask_ManualControl();
       RitualFightpit.contestant2.Brain.HardSwapToTask((FollowerTask) this.Task2);
-      this.StartCoroutine((IEnumerator) this.SetUpCombatant2Routine());
+      this.StartCoroutine(this.SetUpCombatant2Routine());
     });
     UIFollowerSelectMenuController selectMenuController5 = followerSelectInstance2;
     selectMenuController5.OnCancel = selectMenuController5.OnCancel + (System.Action) (() =>
     {
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualFinished(true, -1, -1));
+      GameManager.GetInstance().StartCoroutine(this.RitualFinished(true, -1, -1));
       this.CancelFollowers();
     });
     UIFollowerSelectMenuController selectMenuController6 = followerSelectInstance2;
@@ -184,7 +184,7 @@ public class RitualFightpit : Ritual
     GameObject g = UnityEngine.Object.Instantiate(Resources.Load("Prefabs/UI/Choice Indicator"), GameObject.FindWithTag("Canvas").transform) as GameObject;
     ChoiceIndicator c = g.GetComponent<ChoiceIndicator>();
     c.Offset = new Vector3(0.0f, -350f);
-    c.Show("<sprite name=\"icon_ThumbsUp\">", "<sprite name=\"icon_ThumbsDown\">", (System.Action) (() => this.StartCoroutine((IEnumerator) this.ShowMercy())), (System.Action) (() => this.StartCoroutine((IEnumerator) this.Execute())), PlayerFarming.Instance.transform.position);
+    c.Show("<sprite name=\"icon_ThumbsUp\">", "<sprite name=\"icon_ThumbsDown\">", (System.Action) (() => this.StartCoroutine(this.ShowMercy())), (System.Action) (() => this.StartCoroutine(this.Execute())), PlayerFarming.Instance.transform.position);
     while ((UnityEngine.Object) g != (UnityEngine.Object) null)
     {
       c.UpdatePosition(PlayerFarming.Instance.transform.position);
@@ -260,7 +260,7 @@ public class RitualFightpit : Ritual
     RitualFightpit.contestant1.Brain.AddAdoration(FollowerBrain.AdorationActions.FightPitMercy, (System.Action) null);
     ChurchFollowerManager.Instance.AddBrainToAudience(RitualFightpit.contestant1.Brain);
     ChurchFollowerManager.Instance.AddBrainToAudience(RitualFightpit.contestant2.Brain);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.EndRitual(RitualFightpit.contestant1.Brain.Info.ID, RitualFightpit.contestant2.Brain.Info.ID));
+    GameManager.GetInstance().StartCoroutine(this.EndRitual(RitualFightpit.contestant1.Brain.Info.ID, RitualFightpit.contestant2.Brain.Info.ID));
     this.CheckGiveOutfit();
   }
 
@@ -306,7 +306,7 @@ public class RitualFightpit : Ritual
     }
     yield return (object) new WaitForSeconds(2f);
     RitualFightpit.contestant2.Brain.AddAdoration(FollowerBrain.AdorationActions.FightPitDeath, (System.Action) null);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.EndRitual(followerID_1, followerID_2));
+    GameManager.GetInstance().StartCoroutine(this.EndRitual(followerID_1, followerID_2));
   }
 
   public IEnumerator EndRitual(int follower1, int follower2)
@@ -320,10 +320,10 @@ public class RitualFightpit : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       EndingDelay += Delay;
-      ritualFightpit.StartCoroutine((IEnumerator) ritualFightpit.DelayFollowerReaction(brain, Delay));
+      ritualFightpit.StartCoroutine(ritualFightpit.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1f);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) ritualFightpit.RitualFinished(false, follower1, follower2));
+    GameManager.GetInstance().StartCoroutine(ritualFightpit.RitualFinished(false, follower1, follower2));
   }
 
   public IEnumerator RitualFinished(bool cancelled, int follower1, int follower2)

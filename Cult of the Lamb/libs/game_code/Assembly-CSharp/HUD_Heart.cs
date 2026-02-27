@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_Heart
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -81,7 +81,7 @@ public class HUD_Heart : BaseMonoBehaviour
     {
       if (!this.gameObject.activeInHierarchy)
         return;
-      this.StartCoroutine((IEnumerator) this.DeactivateWithEffect());
+      this.StartCoroutine(this.DeactivateWithEffect());
     }
     else
     {
@@ -97,7 +97,7 @@ public class HUD_Heart : BaseMonoBehaviour
     this.ClearCoroutines();
     if (!this.gameObject.activeInHierarchy)
       return;
-    this.StartCoroutine((IEnumerator) this.DoScale(Delay));
+    this.StartCoroutine(this.DoScale(Delay));
   }
 
   public IEnumerator DeactivateWithEffect()
@@ -105,7 +105,7 @@ public class HUD_Heart : BaseMonoBehaviour
     HUD_Heart hudHeart = this;
     hudHeart.isEffectActivated = true;
     hudHeart.Spine.AnimationState.SetAnimation(0, "disappear", false);
-    yield return (object) hudHeart.StartCoroutine((IEnumerator) hudHeart.DoCircle());
+    yield return (object) hudHeart.StartCoroutine(hudHeart.DoCircle());
     yield return (object) new WaitForSeconds(0.1f);
     hudHeart.gameObject.SetActive(false);
     hudHeart.isEffectActivated = false;
@@ -235,7 +235,7 @@ public class HUD_Heart : BaseMonoBehaviour
   public IEnumerator DoShake()
   {
     HUD_Heart hudHeart = this;
-    hudHeart.StartCoroutine((IEnumerator) hudHeart.DoCircle());
+    hudHeart.StartCoroutine(hudHeart.DoCircle());
     hudHeart.Shaking = true;
     hudHeart.ShakeTimer = 0.0f;
     hudHeart.ShakeSpeed = 10f;

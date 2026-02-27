@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualAscend
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -29,7 +29,7 @@ public class RitualAscend : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -37,7 +37,7 @@ public class RitualAscend : Ritual
     RitualAscend ritualAscend = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualAscend.StartCoroutine((IEnumerator) ritualAscend.WaitFollowersFormCircle());
+    yield return (object) ritualAscend.StartCoroutine(ritualAscend.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
     followerSelectInstance.VotingType = TwitchVoting.VotingType.RITUAL_ASCEND;
@@ -50,8 +50,8 @@ public class RitualAscend : Ritual
       this.loopedSound = AudioManager.Instance.CreateLoop("event:/sermon/preach_loop", PlayerFarming.Instance.gameObject, true, false);
       this.Task1 = new FollowerTask_ManualControl();
       this.contestant1.Brain.HardSwapToTask((FollowerTask) this.Task1);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.ContinueRitual());
-      this.StartCoroutine((IEnumerator) this.SetUpCombatant1Routine());
+      GameManager.GetInstance().StartCoroutine(this.ContinueRitual());
+      this.StartCoroutine(this.SetUpCombatant1Routine());
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnShow = selectMenuController2.OnShow + (System.Action) (() =>
@@ -196,7 +196,7 @@ public class RitualAscend : Ritual
     foreach (FollowerBrain brain in Ritual.FollowerToAttendSermon)
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
-      ritualAscend.StartCoroutine((IEnumerator) ritualAscend.DelayFollowerReaction(brain, Delay));
+      ritualAscend.StartCoroutine(ritualAscend.DelayFollowerReaction(brain, Delay));
       Follower followerById = FollowerManager.FindFollowerByID(brain.Info.ID);
       if ((bool) (UnityEngine.Object) followerById)
         followerById.Spine.randomOffset = false;

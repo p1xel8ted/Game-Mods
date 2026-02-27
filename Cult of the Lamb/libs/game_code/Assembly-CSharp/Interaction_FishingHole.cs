@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FishingHole
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -33,7 +33,7 @@ public class Interaction_FishingHole : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    this.playerFarming.GoToAndStop(this.transform.position + Vector3.right, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.FishIE())));
+    this.playerFarming.GoToAndStop(this.transform.position + Vector3.right, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.FishIE())));
   }
 
   public IEnumerator FishIE()
@@ -51,7 +51,7 @@ public class Interaction_FishingHole : Interaction
     interactionFishingHole.playerFarming.TimedAction(1f, (System.Action) null, "Fishing/fishing-catch");
     if (DataManager.Instance.OnboardedLegendaryWeapons && !DataManager.Instance.LegendaryWeaponsUnlockOrder.Contains(EquipmentType.Blunderbuss_Legendary))
     {
-      yield return (object) interactionFishingHole.StartCoroutine((IEnumerator) interactionFishingHole.FishOutWeapon());
+      yield return (object) interactionFishingHole.StartCoroutine(interactionFishingHole.FishOutWeapon());
     }
     else
     {
@@ -103,5 +103,5 @@ public class Interaction_FishingHole : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__1_0() => this.StartCoroutine((IEnumerator) this.FishIE());
+  public void \u003COnInteract\u003Eb__1_0() => this.StartCoroutine(this.FishIE());
 }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: spineChangeAnimationSimple
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -42,7 +42,7 @@ public class spineChangeAnimationSimple : BaseMonoBehaviour
           this.SkeletonData.AnimationState.SetAnimation(0, this.skeletonAnimation, this.loop);
         if (!this.sfx.IsNullOrEmpty())
           AudioManager.Instance.PlayOneShot(this.sfx, this.transform.position);
-        this.StartCoroutine((IEnumerator) this.DelayAddEvent());
+        this.StartCoroutine(this.DelayAddEvent());
       }));
     }
     else
@@ -58,7 +58,7 @@ public class spineChangeAnimationSimple : BaseMonoBehaviour
         AudioManager.Instance.PlayOneShot(this.sfx, this.transform.position);
       if (!this.gameObject.activeSelf)
         return;
-      this.StartCoroutine((IEnumerator) this.DelayAddEvent());
+      this.StartCoroutine(this.DelayAddEvent());
     }
   }
 
@@ -126,6 +126,6 @@ public class spineChangeAnimationSimple : BaseMonoBehaviour
       this.SkeletonData.AnimationState.SetAnimation(0, this.skeletonAnimation, this.loop);
     if (!this.sfx.IsNullOrEmpty())
       AudioManager.Instance.PlayOneShot(this.sfx, this.transform.position);
-    this.StartCoroutine((IEnumerator) this.DelayAddEvent());
+    this.StartCoroutine(this.DelayAddEvent());
   }
 }

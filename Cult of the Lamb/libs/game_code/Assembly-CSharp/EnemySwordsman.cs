@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySwordsman
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -138,7 +138,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.rb.simulated = true;
   }
@@ -177,7 +177,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     if (!((UnityEngine.Object) Attacker != (UnityEngine.Object) null) || !this.DodgeOnHit || !this.canDodgeOnHit || (double) this.dodgeCooldownTimer > 0.0 || this.state.CURRENT_STATE == StateMachine.State.RecoverFromAttack || !((UnityEngine.Object) Attacker.GetComponent<PlayerFarming>() != (UnityEngine.Object) null) || AttackType.HasFlag((Enum) Health.AttackTypes.Poison) || AttackType.HasFlag((Enum) Health.AttackTypes.Burn) || AttackType == Health.AttackTypes.Heavy || (double) this.Spine.timeScale <= 1.0 / 1000.0)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DodgeIE(Attacker));
+    this.StartCoroutine(this.DodgeIE(Attacker));
   }
 
   public IEnumerator DodgeIE(GameObject attacker)
@@ -210,7 +210,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     enemySwordsman.DoKnockBack(attacker, -enemySwordsman.dodgeMultiplier, enemySwordsman.dodgeDuration, false);
     yield return (object) CoroutineStatics.WaitForScaledSeconds(0.2f, enemySwordsman.Spine);
     enemySwordsman.health.invincible = false;
-    enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.FightPlayer(float.MaxValue, false, false));
+    enemySwordsman.StartCoroutine(enemySwordsman.FightPlayer(float.MaxValue, false, false));
     enemySwordsman.SimpleSpineFlash.FlashWhite(false);
     yield return (object) CoroutineStatics.WaitForScaledSeconds(0.2f, enemySwordsman.Spine);
     enemySwordsman.dodgeGhost.ghostingEnabled = false;
@@ -249,7 +249,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
         player.state.CURRENT_STATE = StateMachine.State.InActive;
         player.state.LockStateChanges = true;
       }
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.SnowmanConversationIE((System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(this.SnowmanConversationIE((System.Action) (() =>
       {
         if ((UnityEngine.Object) attackingPlayer == (UnityEngine.Object) null)
           attackingPlayer = PlayerFarming.Instance;
@@ -311,7 +311,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
       if ((double) AttackLocation.x < (double) this.transform.position.x && this.state.CURRENT_STATE != StateMachine.State.HitLeft)
         this.state.CURRENT_STATE = StateMachine.State.HitLeft;
       if (AttackType != Health.AttackTypes.Heavy && (!(AttackType == Health.AttackTypes.Projectile & FromBehind) || this.health.HasShield))
-        this.StartCoroutine((IEnumerator) this.HurtRoutine());
+        this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType == Health.AttackTypes.Projectile && !this.health.HasShield)
     {
@@ -319,7 +319,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
       this.Spine.skeleton.ScaleX = (double) this.state.LookAngle <= 90.0 || (double) this.state.LookAngle >= 270.0 ? -1f : 1f;
     }
     if (AttackType != Health.AttackTypes.NoKnockBack)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     this.SimpleSpineFlash.FlashFillRed();
   }
 
@@ -341,7 +341,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemySwordsman.Spine.timeScale) < 0.30000001192092896)
       yield return (object) null;
-    enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+    enemySwordsman.StartCoroutine(enemySwordsman.WaitForTarget());
   }
 
   public IEnumerator WaitForTarget()
@@ -383,7 +383,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     {
       if ((UnityEngine.Object) enemySwordsman.TargetObject == (UnityEngine.Object) null)
       {
-        enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+        enemySwordsman.StartCoroutine(enemySwordsman.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(enemySwordsman.TargetObject.transform.position, enemySwordsman.transform.position);
@@ -396,7 +396,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
       }
       yield return (object) null;
     }
-    enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.ChaseTarget());
+    enemySwordsman.StartCoroutine(enemySwordsman.ChaseTarget());
   }
 
   public override void Update()
@@ -451,7 +451,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     {
       if ((UnityEngine.Object) enemySwordsman.TargetObject == (UnityEngine.Object) null)
       {
-        enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+        enemySwordsman.StartCoroutine(enemySwordsman.WaitForTarget());
         break;
       }
       if ((UnityEngine.Object) enemySwordsman.damageColliderEvents != (UnityEngine.Object) null)
@@ -493,7 +493,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
                   enemySwordsman.health.invincible = false;
                   enemySwordsman.StopAllCoroutines();
                   enemySwordsman.DisableForces = false;
-                  enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.FightPlayer());
+                  enemySwordsman.StartCoroutine(enemySwordsman.FightPlayer());
                 }
                 else if (!enemySwordsman.health.HasShield)
                 {
@@ -533,7 +533,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
     {
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     }
     else
     {
@@ -602,7 +602,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
         this.Points.Add(new Vector3(raycastHit2D.centroid.x, raycastHit2D.centroid.y) + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset);
         this.PointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine((Vector3) raycastHit2D.centroid));
+      this.StartCoroutine(this.TeleportRoutine((Vector3) raycastHit2D.centroid));
     }
     else
     {
@@ -611,7 +611,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
         this.EndPoints.Add(new Vector3(Position.x, Position.y));
         this.EndPointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine(Position));
+      this.StartCoroutine(this.TeleportRoutine(Position));
     }
   }
 
@@ -655,7 +655,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
   public void GraveSpawn(bool longAnim = false, bool waitForEndOfFrame = true)
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.GraveSpawnRoutine(longAnim, waitForEndOfFrame));
+    this.StartCoroutine(this.GraveSpawnRoutine(longAnim, waitForEndOfFrame));
   }
 
   public IEnumerator GraveSpawnRoutine(bool longAnim = false, bool waitForEndOfFrame = true)
@@ -672,7 +672,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     yield return (object) CoroutineStatics.WaitForScaledSeconds(2.33f, enemySwordsman.Spine);
     enemySwordsman.health.invincible = false;
     enemySwordsman.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+    enemySwordsman.StartCoroutine(enemySwordsman.WaitForTarget());
   }
 
   public void OnDrawGizmos()
@@ -686,7 +686,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     EnemySwordsman enemySwordsman = this;
     if ((UnityEngine.Object) enemySwordsman.TargetObject == (UnityEngine.Object) null)
     {
-      enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+      enemySwordsman.StartCoroutine(enemySwordsman.WaitForTarget());
     }
     else
     {
@@ -720,7 +720,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
           {
             case StateMachine.State.Idle:
               enemySwordsman.TargetObject = (GameObject) null;
-              enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+              enemySwordsman.StartCoroutine(enemySwordsman.WaitForTarget());
               yield break;
             case StateMachine.State.Moving:
               if ((bool) (UnityEngine.Object) enemySwordsman.TargetObject & canChangeDirection && (double) enemySwordsman.Spine.timeScale > 1.0 / 1000.0)
@@ -772,7 +772,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
                 enemySwordsman.speed = AttackSpeed * 0.0166666675f;
                 enemySwordsman.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? "grunt-attack-impact2" : "grunt-attack-impact", false);
                 enemySwordsman.canBeParried = true;
-                enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.EnableDamageCollider(0.0f));
+                enemySwordsman.StartCoroutine(enemySwordsman.EnableDamageCollider(0.0f));
                 if (!string.IsNullOrEmpty(enemySwordsman.attackSoundPath))
                   AudioManager.Instance.PlayOneShot(enemySwordsman.attackSoundPath, enemySwordsman.transform.position);
                 if (!string.IsNullOrEmpty(enemySwordsman.AttackVO))
@@ -809,7 +809,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
         }
       }
       enemySwordsman.TargetObject = (GameObject) null;
-      enemySwordsman.StartCoroutine((IEnumerator) enemySwordsman.WaitForTarget());
+      enemySwordsman.StartCoroutine(enemySwordsman.WaitForTarget());
     }
   }
 
@@ -818,7 +818,7 @@ public class EnemySwordsman : UnitObject, IAttackResilient
     if (!((UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null) || !this.FollowPlayer)
       return;
     this.ClearPaths();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlaceIE());
+    GameManager.GetInstance().StartCoroutine(this.PlaceIE());
   }
 
   public IEnumerator PlaceIE()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ArrowLightningBeam
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -182,12 +182,12 @@ public class ArrowLightningBeam : MonoBehaviour, ISpellOwning
     this.polygonCollider.enabled = false;
     this.lineRenderer.startWidth = this.signpostWidth;
     this.lineRenderer.endWidth = this.signpostWidth;
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(this.signpostDuration, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForSeconds(this.signpostDuration, (System.Action) (() =>
     {
       this.polygonCollider.enabled = !this.disableCollision;
       this.lineRenderer.startWidth = this.startWidthAtZero ? 0.1f : this.width;
       this.lineRenderer.endWidth = this.width;
-      this.StartCoroutine((IEnumerator) this.WaitForSeconds(this.duration, (System.Action) (() =>
+      this.StartCoroutine(this.WaitForSeconds(this.duration, (System.Action) (() =>
       {
         this.polygonCollider.enabled = false;
         float t = 0.0f;
@@ -287,7 +287,7 @@ public class ArrowLightningBeam : MonoBehaviour, ISpellOwning
     this.polygonCollider.enabled = !this.disableCollision;
     this.lineRenderer.startWidth = this.startWidthAtZero ? 0.1f : this.width;
     this.lineRenderer.endWidth = this.width;
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(this.duration, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForSeconds(this.duration, (System.Action) (() =>
     {
       this.polygonCollider.enabled = false;
       float t = 0.0f;

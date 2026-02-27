@@ -1,14 +1,13 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerAbility
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
 using MMTools;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 #nullable disable
@@ -100,10 +99,7 @@ public class PlayerAbility : BaseMonoBehaviour
     }
   }
 
-  public void DoHealRoutine()
-  {
-    this.cHealRoutine = this.StartCoroutine((IEnumerator) this.DoHeal());
-  }
+  public void DoHealRoutine() => this.cHealRoutine = this.StartCoroutine(this.DoHeal());
 
   public IEnumerator DoHeal()
   {
@@ -112,11 +108,11 @@ public class PlayerAbility : BaseMonoBehaviour
       playerAbility.loopingSoundInstance = new EventInstance?(AudioManager.Instance.CreateLoop(playerAbility.LoopSound, true));
     playerAbility.KeyReleased = false;
     playerAbility.state.CURRENT_STATE = StateMachine.State.Heal;
-    playerAbility.cZoom = playerAbility.StartCoroutine((IEnumerator) playerAbility.DoZoom());
+    playerAbility.cZoom = playerAbility.StartCoroutine(playerAbility.DoZoom());
     yield return (object) new WaitForSeconds(1f);
     if (!playerAbility.CanHeal())
     {
-      playerAbility.StartCoroutine((IEnumerator) playerAbility.EndHeal());
+      playerAbility.StartCoroutine(playerAbility.EndHeal());
     }
     else
     {
@@ -138,7 +134,7 @@ public class PlayerAbility : BaseMonoBehaviour
         AudioManager.Instance.PlayOneShot("event:/followers/love_hearts", playerAbility.gameObject);
         yield return (object) new WaitForSeconds(1f);
       }
-      playerAbility.StartCoroutine((IEnumerator) playerAbility.EndHeal());
+      playerAbility.StartCoroutine(playerAbility.EndHeal());
     }
   }
 
@@ -151,7 +147,7 @@ public class PlayerAbility : BaseMonoBehaviour
   {
     if (this.cHealRoutine != null)
       this.StopCoroutine(this.cHealRoutine);
-    this.StartCoroutine((IEnumerator) this.EndHeal());
+    this.StartCoroutine(this.EndHeal());
   }
 
   public IEnumerator EndHeal()
@@ -175,21 +171,42 @@ public class PlayerAbility : BaseMonoBehaviour
     return this.playerFarming.playerSpells.faithAmmo.CanAfford((float) this.playerFarming.playerSpells.AmmoCost) && PlayerFleeceManager.BleatToBurrow() && !this.playerFarming.IsBurrowing;
   }
 
-  public void DoBurrowRoutine()
-  {
-    this.cBurrowRoutine = this.StartCoroutine((IEnumerator) this.BurrowRoutine());
-  }
+  public void DoBurrowRoutine() => this.cBurrowRoutine = this.StartCoroutine(this.BurrowRoutine());
 
   public IEnumerator BurrowRoutine()
   {
     PlayerAbility playerAbility = this;
+    bool burrowingEneded = false;
     AudioManager.Instance.PlayOneShot("event:/enemy/tunnel_worm/tunnel_worm_disappear_underground", playerAbility.gameObject);
     playerAbility.playerFarming.playerWeapon.enabled = false;
     playerAbility.playerFarming.playerSpells.enabled = false;
     playerAbility.playerFarming.AllowDodging = false;
     playerAbility.playerFarming.playerSpells.faithAmmo.UseAmmo((float) playerAbility.playerFarming.playerSpells.AmmoCost);
-    playerAbility.onEndBurrow = new System.Action(playerAbility.\u003CBurrowRoutine\u003Eb__31_0);
-    playerAbility.playerFarming.CustomAnimationWithCallback("burrow-in", false, new System.Action(playerAbility.\u003CBurrowRoutine\u003Eb__31_1));
+    playerAbility.onEndBurrow = (System.Action) (() =>
+    {
+      burrowingEneded = true;
+      this.playerFarming.playerWeapon.enabled = true;
+      this.playerFarming.playerSpells.enabled = true;
+      this.playerFarming.AllowDodging = true;
+      this.onEndBurrow = (System.Action) null;
+      this.playerFarming.playerController.ResetSpecificMovementAnimations();
+      this.playerFarming.IsBurrowing = false;
+      this.GiveSkin(this.playerFarming);
+      AudioManager.Instance.StopLoop(this.burrowLoopInstance);
+    });
+    playerAbility.playerFarming.CustomAnimationWithCallback("burrow-in", false, (System.Action) (() =>
+    {
+      if (burrowingEneded)
+        return;
+      this.SpawnTrails();
+      this.playerFarming.state.CURRENT_STATE = StateMachine.State.Idle;
+      this.playerFarming.IsBurrowing = true;
+      string str = "burrowed";
+      this.playerFarming.playerController.SetSpecificMovementAnimations(str, str, str, str, str, str);
+      BiomeConstants.Instance.EmitSmokeExplosionVFX(this.transform.position);
+      AudioManager.Instance.StopLoop(this.burrowLoopInstance);
+      this.burrowLoopInstance = AudioManager.Instance.CreateLoop("event:/dlc/player/fleece_ratau_burrow_loop", true, (bool) (UnityEngine.Object) this.playerFarming.gameObject);
+    }));
     while (playerAbility.playerFarming.state.CURRENT_STATE == StateMachine.State.CustomAnimation)
       yield return (object) null;
     yield return (object) new WaitForEndOfFrame();
@@ -211,7 +228,14 @@ public class PlayerAbility : BaseMonoBehaviour
     }
     AudioManager.Instance.PlayOneShot("event:/enemy/tunnel_worm/tunnel_worm_burst_out_of_ground", playerAbility.gameObject);
     BiomeConstants.Instance.EmitSmokeExplosionVFX(playerAbility.transform.position);
-    playerAbility.playerFarming.CustomAnimationWithCallback("burrow-out", false, new System.Action(playerAbility.\u003CBurrowRoutine\u003Eb__31_2));
+    playerAbility.playerFarming.CustomAnimationWithCallback("burrow-out", false, (System.Action) (() =>
+    {
+      this.playerFarming.state.CURRENT_STATE = StateMachine.State.Idle;
+      System.Action onEndBurrow = this.onEndBurrow;
+      if (onEndBurrow == null)
+        return;
+      onEndBurrow();
+    }));
   }
 
   public void GiveSkin(PlayerFarming playerFarming)
@@ -253,41 +277,5 @@ public class PlayerAbility : BaseMonoBehaviour
     this.t = UnityEngine.Object.Instantiate<GameObject>(this.trailPrefab, this.transform.position, Quaternion.identity, this.transform.parent);
     this.trail.Add(this.t);
     this.previousSpawnPosition = this.t.transform.position;
-  }
-
-  [CompilerGenerated]
-  public void \u003CBurrowRoutine\u003Eb__31_0()
-  {
-    this.playerFarming.playerWeapon.enabled = true;
-    this.playerFarming.playerSpells.enabled = true;
-    this.playerFarming.AllowDodging = true;
-    this.onEndBurrow = (System.Action) null;
-    this.playerFarming.playerController.ResetSpecificMovementAnimations();
-    this.playerFarming.IsBurrowing = false;
-    this.GiveSkin(this.playerFarming);
-    AudioManager.Instance.StopLoop(this.burrowLoopInstance);
-  }
-
-  [CompilerGenerated]
-  public void \u003CBurrowRoutine\u003Eb__31_1()
-  {
-    this.SpawnTrails();
-    this.playerFarming.state.CURRENT_STATE = StateMachine.State.Idle;
-    this.playerFarming.IsBurrowing = true;
-    string str = "burrowed";
-    this.playerFarming.playerController.SetSpecificMovementAnimations(str, str, str, str, str, str);
-    BiomeConstants.Instance.EmitSmokeExplosionVFX(this.transform.position);
-    AudioManager.Instance.StopLoop(this.burrowLoopInstance);
-    this.burrowLoopInstance = AudioManager.Instance.CreateLoop("event:/dlc/player/fleece_ratau_burrow_loop", true, (bool) (UnityEngine.Object) this.playerFarming.gameObject);
-  }
-
-  [CompilerGenerated]
-  public void \u003CBurrowRoutine\u003Eb__31_2()
-  {
-    this.playerFarming.state.CURRENT_STATE = StateMachine.State.Idle;
-    System.Action onEndBurrow = this.onEndBurrow;
-    if (onEndBurrow == null)
-      return;
-    onEndBurrow();
   }
 }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapFleshRock
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -121,7 +121,7 @@ public class TrapFleshRock : BaseMonoBehaviour
     this.colliderMask.transform.rotation = Quaternion.Euler(0.0f, 0.0f, (float) UnityEngine.Random.Range(0, 360));
   }
 
-  public void OnEnable() => this.StartCoroutine((IEnumerator) this.SpawnLoop());
+  public void OnEnable() => this.StartCoroutine(this.SpawnLoop());
 
   public void OnDestroy()
   {
@@ -176,7 +176,7 @@ public class TrapFleshRock : BaseMonoBehaviour
     if (CoopManager.Instance.IsSpawningPlayer || LetterBox.IsPlaying || MMConversation.isPlaying || MMTransition.IsPlaying)
       return;
     for (int index = 0; index < amount; ++index)
-      this.StartCoroutine((IEnumerator) this.SpawnRockTelegraphed());
+      this.StartCoroutine(this.SpawnRockTelegraphed());
   }
 
   public IEnumerator SpawnRockTelegraphed()
@@ -189,7 +189,7 @@ public class TrapFleshRock : BaseMonoBehaviour
       if (!(pos == trapFleshRock.TrapCenter))
       {
         trapFleshRock.reservedPositions.Add(pos);
-        trapFleshRock.StartCoroutine((IEnumerator) trapFleshRock.SpawnRumbleFX((Vector3) pos, trapFleshRock.spawnDelay));
+        trapFleshRock.StartCoroutine(trapFleshRock.SpawnRumbleFX((Vector3) pos, trapFleshRock.spawnDelay));
         if (trapFleshRock.spine.AnimationState != null)
           trapFleshRock.spine.AnimationState.SetAnimation(0, trapFleshRock.spawningAnimation, false);
         if (trapFleshRock.CanSpawnAtPoint(pos) && !string.IsNullOrEmpty(trapFleshRock.SpawnFleshBlocksSFX))

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDorryMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -240,7 +240,7 @@ public class EnemyDorryMiniboss : EnemyDual
     base.OnEnable();
     this.health.OnHitEarly += new Health.HitAction(this.OnHitEarly);
     this.InitDamageColliders();
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.onStateChange += new EnemyDorryMiniboss.DorryStateChange(this.OnStateChange);
     this.attackTogetherTimeStamp = GameManager.GetInstance().CurrentTime;
@@ -406,7 +406,7 @@ public class EnemyDorryMiniboss : EnemyDual
   public IEnumerator Attack_1()
   {
     EnemyDorryMiniboss enemyDorryMiniboss = this;
-    yield return (object) enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[0], enemyDorryMiniboss.attack_1_delay));
+    yield return (object) enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[0], enemyDorryMiniboss.attack_1_delay));
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_1_duration * enemyDorryMiniboss.Spine.timeScale);
     float num = UnityEngine.Random.value;
     enemyDorryMiniboss.CURRENT_DORRY_STATE = enemyDorryMiniboss.IsNG ? EnemyDorryMiniboss.DorryState.Attack_3 : ((double) num < (double) enemyDorryMiniboss.prob_attack_2_attack_4 ? EnemyDorryMiniboss.DorryState.Attack_2 : (enemyDorryMiniboss.rageActive ? EnemyDorryMiniboss.DorryState.Attack_8 : EnemyDorryMiniboss.DorryState.Attack_4));
@@ -415,9 +415,9 @@ public class EnemyDorryMiniboss : EnemyDual
   public IEnumerator Attack_2()
   {
     EnemyDorryMiniboss enemyDorryMiniboss = this;
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[1], enemyDorryMiniboss.attack_2_A_delay));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[1], enemyDorryMiniboss.attack_2_A_delay));
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_2_A_duration * enemyDorryMiniboss.Spine.timeScale);
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[2], enemyDorryMiniboss.attack_2_B_delay));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[2], enemyDorryMiniboss.attack_2_B_delay));
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_2_B_duration * enemyDorryMiniboss.Spine.timeScale);
     enemyDorryMiniboss.CURRENT_DORRY_STATE = EnemyDorryMiniboss.DorryState.Attack_3;
   }
@@ -431,7 +431,7 @@ public class EnemyDorryMiniboss : EnemyDual
       enemyDorryMiniboss.FacePosition(enemyDorryMiniboss.targetObject.transform.position);
       yield return (object) null;
     }
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[3], 0.0f));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[3], 0.0f));
     float time = 0.0f;
     float projectileTime = 0.0f;
     while ((double) (time += Time.deltaTime * enemyDorryMiniboss.Spine.timeScale) < (double) enemyDorryMiniboss.attack_3_duration)
@@ -469,7 +469,7 @@ public class EnemyDorryMiniboss : EnemyDual
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_4_delay * enemyDorryMiniboss.Spine.timeScale);
     enemyDorryMiniboss.Spine.AnimationState.SetAnimation(0, "attack-4-loop", true);
     enemyDorryMiniboss.levitateVFX.Play();
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[4], 0.0f));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[4], 0.0f));
     float time = 0.0f;
     enemyDorryMiniboss.FacePosition(enemyDorryMiniboss.targetObject.transform.position);
     while ((double) (time += Time.deltaTime * enemyDorryMiniboss.Spine.timeScale) < (double) enemyDorryMiniboss.attack_4_duration)
@@ -488,7 +488,7 @@ public class EnemyDorryMiniboss : EnemyDual
   public IEnumerator Attack_5()
   {
     EnemyDorryMiniboss enemyDorryMiniboss = this;
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[5], enemyDorryMiniboss.attack_5_delay));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[5], enemyDorryMiniboss.attack_5_delay));
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_5_duration * enemyDorryMiniboss.Spine.timeScale);
     enemyDorryMiniboss.CURRENT_DORRY_STATE = enemyDorryMiniboss.rageActive ? EnemyDorryMiniboss.DorryState.Attack_9 : EnemyDorryMiniboss.DorryState.Attack_6;
   }
@@ -519,7 +519,7 @@ public class EnemyDorryMiniboss : EnemyDual
     enemyDorryMiniboss.Spine.AnimationState.SetAnimation(0, "attack-6-charge", false);
     enemyDorryMiniboss.Spine.AnimationState.AddAnimation(0, "attack-6-impact", false, 0.0f);
     enemyDorryMiniboss.Spine.AnimationState.AddAnimation(0, enemyDorryMiniboss.IdleAnim, true, 0.0f);
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[6], enemyDorryMiniboss.attack_6_delay));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[6], enemyDorryMiniboss.attack_6_delay));
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_6_duration * enemyDorryMiniboss.Spine.timeScale);
     enemyDorryMiniboss.health.invincible = false;
     enemyDorryMiniboss.CURRENT_DORRY_STATE = EnemyDorryMiniboss.DorryState.Idle;
@@ -534,7 +534,7 @@ public class EnemyDorryMiniboss : EnemyDual
       enemyDorryMiniboss.FacePosition(enemyDorryMiniboss.targetObject.transform.position);
       yield return (object) null;
     }
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[7], 0.0f));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[7], 0.0f));
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyDorryMiniboss.Spine.timeScale) < (double) enemyDorryMiniboss.attack_7_duration)
     {
@@ -558,7 +558,7 @@ public class EnemyDorryMiniboss : EnemyDual
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_4_delay * enemyDorryMiniboss.Spine.timeScale);
     enemyDorryMiniboss.Spine.AnimationState.SetAnimation(0, "attack-4-loop", true);
     enemyDorryMiniboss.levitateVFX.Play();
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[4], 0.0f));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[4], 0.0f));
     float time = 0.0f;
     float projectileTime = 0.0f;
     float projectileAngleOffset = 0.0f;
@@ -612,7 +612,7 @@ public class EnemyDorryMiniboss : EnemyDual
     enemyDorryMiniboss.Spine.AnimationState.SetAnimation(0, "attack-6-charge", false);
     enemyDorryMiniboss.Spine.AnimationState.AddAnimation(0, "attack-6-impact", false, 0.0f);
     enemyDorryMiniboss.Spine.AnimationState.AddAnimation(0, enemyDorryMiniboss.IdleAnim, true, 0.0f);
-    yield return (object) enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[6], enemyDorryMiniboss.attack_9_delay));
+    yield return (object) enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageColliderTime(enemyDorryMiniboss.damageColliders[6], enemyDorryMiniboss.attack_9_delay));
     float num = 360f / enemyDorryMiniboss.attack_9_projectileCount;
     for (int index = 0; (double) index < (double) enemyDorryMiniboss.attack_9_projectileCount; ++index)
       enemyDorryMiniboss.ShootProjectile(enemyDorryMiniboss.rb.position, num * (float) index, 5f);
@@ -631,7 +631,7 @@ public class EnemyDorryMiniboss : EnemyDual
       delay += Time.deltaTime * enemyDorryMiniboss.Spine.timeScale;
       yield return (object) null;
     }
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[7], 0.0f));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[7], 0.0f));
     float time = 0.0f;
     float projectileTime = 0.0f;
     while ((double) (time += Time.deltaTime * enemyDorryMiniboss.Spine.timeScale) < (double) enemyDorryMiniboss.attack_12_duration)
@@ -675,7 +675,7 @@ public class EnemyDorryMiniboss : EnemyDual
     yield return (object) new WaitForSeconds(enemyDorryMiniboss.attack_together_delay * enemyDorryMiniboss.Spine.timeScale);
     enemyDorryMiniboss.Spine.AnimationState.SetAnimation(0, "attack-4-loop", true);
     enemyDorryMiniboss.levitateVFX.Play();
-    enemyDorryMiniboss.StartCoroutine((IEnumerator) enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[4], 0.0f));
+    enemyDorryMiniboss.StartCoroutine(enemyDorryMiniboss.EnableDamageCollider(enemyDorryMiniboss.damageColliders[4], 0.0f));
     float time = 0.0f;
     enemyDorryMiniboss.FacePosition(enemyDorryMiniboss.targetObject.transform.position, enemyDorryMiniboss.targetObject.transform.position);
     enemyDorryMiniboss.linealDirection = enemyDorryMiniboss.FacingDirection;
@@ -773,7 +773,7 @@ public class EnemyDorryMiniboss : EnemyDual
         this.Spine.AnimationState.SetAnimation(0, this.IdleAnim, true);
         if (this.idleRoutine != null)
           this.StopCoroutine(this.idleRoutine);
-        this.idleRoutine = this.StartCoroutine((IEnumerator) this.IdleState());
+        this.idleRoutine = this.StartCoroutine(this.IdleState());
         break;
       case EnemyDorryMiniboss.DorryState.Chase:
         this.repathTimer = 1f;
@@ -781,77 +781,77 @@ public class EnemyDorryMiniboss : EnemyDual
         this.Spine.AnimationState.SetAnimation(0, "move", true);
         if (this.moveRoutine != null)
           this.StopCoroutine(this.moveRoutine);
-        this.moveRoutine = this.StartCoroutine((IEnumerator) this.ChaseState());
+        this.moveRoutine = this.StartCoroutine(this.ChaseState());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_1:
         this.Spine.AnimationState.SetAnimation(0, "attack-1", false);
         this.Spine.AnimationState.AddAnimation(0, this.IdleAnim, true, 0.0f);
         if (this.attack_1_Routine != null)
           this.StopCoroutine(this.attack_1_Routine);
-        this.attack_1_Routine = this.StartCoroutine((IEnumerator) this.Attack_1());
+        this.attack_1_Routine = this.StartCoroutine(this.Attack_1());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_2:
         this.Spine.AnimationState.SetAnimation(0, "attack-2", false);
         this.Spine.AnimationState.AddAnimation(0, this.IdleAnim, true, 0.0f);
         if (this.attack_2_Routine != null)
           this.StopCoroutine(this.attack_2_Routine);
-        this.attack_2_Routine = this.StartCoroutine((IEnumerator) this.Attack_2());
+        this.attack_2_Routine = this.StartCoroutine(this.Attack_2());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_3:
         this.Spine.AnimationState.SetAnimation(0, "attack-3-start", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-3-loop", true, 0.0f);
         if (this.attack_3_Routine != null)
           this.StopCoroutine(this.attack_3_Routine);
-        this.attack_3_Routine = this.StartCoroutine((IEnumerator) this.Attack_3());
+        this.attack_3_Routine = this.StartCoroutine(this.Attack_3());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_4:
         this.Spine.AnimationState.SetAnimation(0, "attack-4-start", false);
         if (this.attack_4_Routine != null)
           this.StopCoroutine(this.attack_4_Routine);
-        this.attack_4_Routine = this.StartCoroutine((IEnumerator) this.Attack_4());
+        this.attack_4_Routine = this.StartCoroutine(this.Attack_4());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_5:
         this.Spine.AnimationState.SetAnimation(0, "attack-5", false);
         this.Spine.AnimationState.AddAnimation(0, "fly", true, 0.0f);
         if (this.attack_5_Routine != null)
           this.StopCoroutine(this.attack_5_Routine);
-        this.attack_5_Routine = this.StartCoroutine((IEnumerator) this.Attack_5());
+        this.attack_5_Routine = this.StartCoroutine(this.Attack_5());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_6:
         if (this.attack_6_Routine != null)
           this.StopCoroutine(this.attack_6_Routine);
-        this.attack_6_Routine = this.StartCoroutine((IEnumerator) this.Attack_6());
+        this.attack_6_Routine = this.StartCoroutine(this.Attack_6());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_7:
         this.Spine.AnimationState.SetAnimation(0, "attack-7-start", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-7-charge", true, 0.0f);
         if (this.attack_7_Routine != null)
           this.StopCoroutine(this.attack_7_Routine);
-        this.attack_7_Routine = this.StartCoroutine((IEnumerator) this.Attack_7());
+        this.attack_7_Routine = this.StartCoroutine(this.Attack_7());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_8:
         this.Spine.AnimationState.SetAnimation(0, "attack-4-start", false);
         if (this.attack_8_Routine != null)
           this.StopCoroutine(this.attack_8_Routine);
-        this.attack_8_Routine = this.StartCoroutine((IEnumerator) this.Attack_8());
+        this.attack_8_Routine = this.StartCoroutine(this.Attack_8());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_9:
         if (this.attack_9_Routine != null)
           this.StopCoroutine(this.attack_9_Routine);
-        this.attack_9_Routine = this.StartCoroutine((IEnumerator) this.Attack_9());
+        this.attack_9_Routine = this.StartCoroutine(this.Attack_9());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_12:
         this.Spine.AnimationState.SetAnimation(0, "attack-7-start", false);
         this.Spine.AnimationState.AddAnimation(0, "attack-7-charge", true, 0.0f);
         if (this.attack_12_Routine != null)
           this.StopCoroutine(this.attack_12_Routine);
-        this.attack_12_Routine = this.StartCoroutine((IEnumerator) this.Attack_12());
+        this.attack_12_Routine = this.StartCoroutine(this.Attack_12());
         break;
       case EnemyDorryMiniboss.DorryState.Sync:
         this.Spine.AnimationState.SetAnimation(0, this.IdleAnim, true);
         if (this.sync_Routine != null)
           this.StopCoroutine(this.sync_Routine);
-        this.sync_Routine = this.StartCoroutine((IEnumerator) this.Sync());
+        this.sync_Routine = this.StartCoroutine(this.Sync());
         break;
       case EnemyDorryMiniboss.DorryState.Attack_Together:
         this.Spine.AnimationState.SetAnimation(0, "attack-4-start", false);
@@ -859,12 +859,12 @@ public class EnemyDorryMiniboss : EnemyDual
           this.StopCoroutine(this.sync_Routine);
         if (this.attack_together_Routine != null)
           this.StopCoroutine(this.attack_together_Routine);
-        this.attack_together_Routine = this.StartCoroutine((IEnumerator) this.Attack_Together());
+        this.attack_together_Routine = this.StartCoroutine(this.Attack_Together());
         break;
       case EnemyDorryMiniboss.DorryState.Phase:
         if (this.phase_Routine != null)
           this.StopCoroutine(this.phase_Routine);
-        this.phase_Routine = this.StartCoroutine((IEnumerator) this.Phase());
+        this.phase_Routine = this.StartCoroutine(this.Phase());
         break;
     }
   }

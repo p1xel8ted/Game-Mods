@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WolfBossIntro
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -82,7 +82,7 @@ public class WolfBossIntro : MonoBehaviour
     if (!((Object) GameManager.GetInstance() != (Object) null))
       return;
     if (PlayerFarming.Location == FollowerLocation.Boss_Wolf)
-      this.StartCoroutine((IEnumerator) this.InitPlayerWalking());
+      this.StartCoroutine(this.InitPlayerWalking());
     this.rotSpreadLoop = AudioManager.Instance.CreateLoop("event:/dlc/env/rot/spread_loop", PlayerFarming.Instance.gameObject, true);
     this.rotSpreadMusic = AudioManager.Instance.CreateLoop("event:/dlc/music/marchosias/rot_spread_loop", true);
   }
@@ -109,7 +109,7 @@ public class WolfBossIntro : MonoBehaviour
       GameManager.GetInstance().CameraSetOffset(Vector3.zero);
       AudioManager.Instance.StopOneShotInstanceEarly(this.introTransformationEventInstance, STOP_MODE.IMMEDIATE);
       AudioManager.Instance.PlayOneShot(this.IntroTransformationShortSFX);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.RoarIE());
+      GameManager.GetInstance().StartCoroutine(this.RoarIE());
     }
     if (!((Object) PlayerFarming.Instance != (Object) null))
       return;
@@ -140,7 +140,7 @@ public class WolfBossIntro : MonoBehaviour
     }
   }
 
-  public void Transform() => this.StartCoroutine((IEnumerator) this.TransformIE());
+  public void Transform() => this.StartCoroutine(this.TransformIE());
 
   public IEnumerator TransformIE()
   {
@@ -169,7 +169,7 @@ public class WolfBossIntro : MonoBehaviour
       MMVibrate.RumbleForAllPlayers(1.5f, 1.75f, 1f);
       this.burstTopParitcle.gameObject.SetActive(true);
       yield return (object) new WaitForSeconds(1.66666663f);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.RoarIE());
+      GameManager.GetInstance().StartCoroutine(this.RoarIE());
     }
   }
 
@@ -301,7 +301,7 @@ public class WolfBossIntro : MonoBehaviour
   {
     BiomeConstants.Instance.EmitRoarDistortionVFX(this.roarFXSlot.position);
     foreach (PlayerFarming player in PlayerFarming.players)
-      this.StartCoroutine((IEnumerator) this.RoarPlayerKnocbackSequence(player));
+      this.StartCoroutine(this.RoarPlayerKnocbackSequence(player));
   }
 
   public IEnumerator RoarPlayerKnocbackSequence(PlayerFarming player)

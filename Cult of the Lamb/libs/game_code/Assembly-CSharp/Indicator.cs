@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Indicator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -80,6 +80,7 @@ public class Indicator : MonoBehaviour
   public Vector3 _lastPosition;
   public Resolution _lastResolution;
   public const float BOSS_ROOM_Y_MOD = 75f;
+  public Canvas canvas;
   public Vector2 Easing = new Vector2(0.2f, 0.55f);
   public float ClosingAlphaSpeed = 5f;
   public Vector3 WorldPosition;
@@ -152,7 +153,7 @@ public class Indicator : MonoBehaviour
       this.thirdControlPrompt.playerFarming = this.playerFarming;
       this.fourthControlPrompt.playerFarming = this.playerFarming;
     }
-    this.StartCoroutine((IEnumerator) this.RefreshUI());
+    this.StartCoroutine(this.RefreshUI());
   }
 
   public IEnumerator RefreshUI()

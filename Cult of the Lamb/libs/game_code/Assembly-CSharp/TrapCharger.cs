@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapCharger
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -146,7 +146,7 @@ public class TrapCharger : BaseMonoBehaviour
     this.SimpleSpriteFlashes = this.GetComponentsInChildren<SimpleSpriteFlash>();
     this.state.CURRENT_STATE = StateMachine.State.Idle;
     this.AttackDelay = 0.0f;
-    this.StartCoroutine((IEnumerator) this.WaitForTargetRoutine());
+    this.StartCoroutine(this.WaitForTargetRoutine());
   }
 
   public void OnDisable()
@@ -381,11 +381,11 @@ public class TrapCharger : BaseMonoBehaviour
     this.damageColliderEventsLeft.SetActive(false);
     this.damageColliderEventsRight.SetActive(false);
     CameraManager.shakeCamera(2f);
-    this.StartCoroutine((IEnumerator) this.ShakeRoutine(this.currentDirection));
+    this.StartCoroutine(this.ShakeRoutine(this.currentDirection));
     this.impactParticles.Play();
     this.AttackDelay = this.AttackDelayTime;
     this.movementParticles.Stop();
-    this.StartCoroutine((IEnumerator) this.WaitForTargetRoutine());
+    this.StartCoroutine(this.WaitForTargetRoutine());
   }
 
   public IEnumerator ShakeRoutine(TrapCharger.AttackDirection attackDirection)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDog
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -66,10 +66,9 @@ public class EnemyDog : UnitObject
   public int DistanceToPathTowardsPlayer = 6;
   public SkeletonAnimation warningIcon;
   public GameObject TrailPrefab;
-  public List<GameObject> Trails = new List<GameObject>();
+  public List<EnemyBurrowingTrail> Trails = new List<EnemyBurrowingTrail>();
   public float DelayBetweenTrails = 0.2f;
   public float TrailsTimer;
-  public GameObject lastTrailSegment;
   public Vector3 previousTrailsSpawnPosition;
   [EventRef]
   public string AttackVO = "event:/dlc/dungeon05/enemy/vocals_shared/dog_basic/attack";
@@ -210,6 +209,8 @@ public class EnemyDog : UnitObject
     this.SimpleSpineFlashes = this.GetComponentsInChildren<SimpleSpineFlash>();
   }
 
+  public void Start() => this.TrailPrefab.CreatePool(5, true);
+
   public override void OnEnable()
   {
     base.OnEnable();
@@ -228,7 +229,7 @@ public class EnemyDog : UnitObject
     this.health.invincible = false;
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashWhite(false);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDisable()
@@ -248,6 +249,21 @@ public class EnemyDog : UnitObject
     this.DisableForces = false;
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashWhite(false);
+  }
+
+  public override void OnDestroy()
+  {
+    this.ClearTrails(this.Trails);
+    base.OnDestroy();
+  }
+
+  public void ClearTrails(List<EnemyBurrowingTrail> trails)
+  {
+    for (int index = trails.Count - 1; index >= 0; --index)
+    {
+      if ((UnityEngine.Object) trails[index] != (UnityEngine.Object) null)
+        this.OnDecativateTrail(trails[index]);
+    }
   }
 
   public void ShowWarningIcon(float duration = 2f)
@@ -287,7 +303,7 @@ public class EnemyDog : UnitObject
     enemyDog.CanBeInterrupted = true;
     enemyDog.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyDog.IdleWait = 0.0f;
-    enemyDog.StartCoroutine((IEnumerator) enemyDog.ActiveRoutine());
+    enemyDog.StartCoroutine(enemyDog.ActiveRoutine());
   }
 
   public virtual IEnumerator ActiveRoutine()
@@ -310,7 +326,7 @@ public class EnemyDog : UnitObject
           {
             enemyDog.bombTimerUI?.SetTimerValue(1f);
             enemyDog.bombFuseParticles.SetActive(true);
-            enemyDog.StartCoroutine((IEnumerator) enemyDog.TimerRoutine());
+            enemyDog.StartCoroutine(enemyDog.TimerRoutine());
           }
         }
         if ((UnityEngine.Object) enemyDog.GetClosestTarget() != (UnityEngine.Object) null && !enemyDog.IsAttacking && !enemyDog.IsStunned && GameManager.RoomActive)
@@ -329,7 +345,7 @@ public class EnemyDog : UnitObject
           if ((UnityEngine.Object) enemyDog.GetClosestTarget() != (UnityEngine.Object) null && enemyDog.IsTargetVisible())
             enemyDog.ShowWarningIcon();
           else
-            yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.DoHowlRoutine());
+            yield return (object) enemyDog.StartCoroutine(enemyDog.DoHowlRoutine());
         }
         else
           yield return (object) enemyDog.DetermineMeleeType();
@@ -347,16 +363,16 @@ public class EnemyDog : UnitObject
     if (enemyDog.Melee && enemyDog.IsTargetWithinMeleeRange())
     {
       if (enemyDog.ShouldMeleeAttack())
-        yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.MeleeAttackRoutine());
+        yield return (object) enemyDog.StartCoroutine(enemyDog.MeleeAttackRoutine());
     }
     else if (enemyDog.Burrow && enemyDog.ShouldBurrowAttack())
     {
       enemyDog.currentBurrowDelay = enemyDog.BurrowDelay;
       enemyDog.currentBurrowAttackCount = enemyDog.BurrowAttackCount;
-      yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.BurrowAttackRoutine());
+      yield return (object) enemyDog.StartCoroutine(enemyDog.BurrowAttackRoutine());
     }
     else if (enemyDog.DiveBomb && enemyDog.ShouldDiveBomb())
-      yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.DiveBombRoutine(1f, 1f));
+      yield return (object) enemyDog.StartCoroutine(enemyDog.DiveBombRoutine(1f, 1f));
   }
 
   public IEnumerator DoHowlRoutine()
@@ -444,7 +460,7 @@ public class EnemyDog : UnitObject
       enemyDog.Spine.AnimationState.SetAnimation(0, enemyDog.AttackAnimation, false);
       enemyDog.Spine.AnimationState.AddAnimation(0, enemyDog.IdleAnimation, true, 0.0f);
       if ((double) enemyDog.DamageColliderDuration != -1.0)
-        enemyDog.StartCoroutine((IEnumerator) enemyDog.EnableCollider(enemyDog.DamageColliderDuration));
+        enemyDog.StartCoroutine(enemyDog.EnableCollider(enemyDog.DamageColliderDuration));
       time = 0.0f;
       while ((double) (time += Time.deltaTime * enemyDog.Spine.timeScale) < (double) enemyDog.AttackDuration * 0.699999988079071)
         yield return (object) null;
@@ -468,14 +484,14 @@ public class EnemyDog : UnitObject
     while (enemyDog.currentBurrowAttackCount > 0)
     {
       --enemyDog.currentBurrowAttackCount;
-      yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.DoDiveIntoGround());
-      yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.DoBurrowChase());
+      yield return (object) enemyDog.StartCoroutine(enemyDog.DoDiveIntoGround());
+      yield return (object) enemyDog.StartCoroutine(enemyDog.DoBurrowChase());
       if (GameManager.RoomActive)
       {
-        yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.PauseBeforeEmergeAttack());
-        yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.EmergeAttack());
+        yield return (object) enemyDog.StartCoroutine(enemyDog.PauseBeforeEmergeAttack());
+        yield return (object) enemyDog.StartCoroutine(enemyDog.EmergeAttack());
         if (enemyDog.currentBurrowAttackCount <= 0)
-          yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.StunnedRoutine());
+          yield return (object) enemyDog.StartCoroutine(enemyDog.StunnedRoutine());
         else
           yield return (object) new WaitForSeconds(enemyDog.delayBeforeRepeatBurrow);
       }
@@ -581,32 +597,30 @@ public class EnemyDog : UnitObject
     if ((double) (this.TrailsTimer += Time.deltaTime) <= (double) this.DelayBetweenTrails || (double) Vector3.Distance(this.transform.position, this.previousTrailsSpawnPosition) <= 0.10000000149011612)
       return;
     this.TrailsTimer = 0.0f;
-    this.lastTrailSegment = (GameObject) null;
-    if (this.Trails.Count > 0)
+    GameObject gameObject = this.TrailPrefab.Spawn(this.transform.parent, this.transform.position, Quaternion.identity);
+    EnemyBurrowingTrail component1 = gameObject.GetComponent<EnemyBurrowingTrail>();
+    SimpleSpineDeactivateAfterPlay component2 = gameObject.GetComponent<SimpleSpineDeactivateAfterPlay>();
+    if ((bool) (UnityEngine.Object) component2)
+      component2.RecycleOnComplete = true;
+    this.Trails.Add(component1);
+    if ((bool) (UnityEngine.Object) component1)
+      component1.OnDeactivate += new System.Action<EnemyBurrowingTrail>(this.OnDecativateTrail);
+    if ((bool) (UnityEngine.Object) component1.ColliderEvents)
     {
-      foreach (GameObject trail in this.Trails)
-      {
-        if (!trail.activeSelf)
-        {
-          this.lastTrailSegment = trail;
-          this.lastTrailSegment.transform.position = this.transform.position;
-          this.lastTrailSegment.SetActive(true);
-          break;
-        }
-      }
+      component1.ColliderEvents.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
+      component1.ColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
     }
-    if ((UnityEngine.Object) this.lastTrailSegment == (UnityEngine.Object) null)
-    {
-      this.lastTrailSegment = UnityEngine.Object.Instantiate<GameObject>(this.TrailPrefab, this.transform.position, Quaternion.identity, this.transform.parent);
-      this.Trails.Add(this.lastTrailSegment);
-      if (enableDamageColliders)
-      {
-        ColliderEvents componentInChildren = this.lastTrailSegment.GetComponentInChildren<ColliderEvents>();
-        if ((bool) (UnityEngine.Object) componentInChildren)
-          componentInChildren.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
-      }
-    }
-    this.previousTrailsSpawnPosition = this.lastTrailSegment.transform.position;
+    this.previousTrailsSpawnPosition = gameObject.transform.position;
+  }
+
+  public void OnDecativateTrail(EnemyBurrowingTrail trail)
+  {
+    trail.OnDeactivate -= new System.Action<EnemyBurrowingTrail>(this.OnDecativateTrail);
+    if (this.Trails.Contains(trail))
+      this.Trails.Remove(trail);
+    if (!(bool) (UnityEngine.Object) trail.ColliderEvents)
+      return;
+    trail.ColliderEvents.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
   }
 
   public IEnumerator PauseBeforeEmergeAttack()
@@ -716,7 +730,7 @@ public class EnemyDog : UnitObject
     if ((double) Vector3.Distance(enemyDog.transform.position, enemyDog.GetClosestTarget().transform.position) <= (double) enemyDog.ExplosionRadius * (double) explosionRadiusMultiplier)
       enemyDog.Explode();
     else
-      yield return (object) enemyDog.StartCoroutine((IEnumerator) enemyDog.MissRecoveryRoutine());
+      yield return (object) enemyDog.StartCoroutine(enemyDog.MissRecoveryRoutine());
     enemyDog.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyDog.IsDiveBombing = false;
     enemyDog.LockToGround = true;
@@ -742,8 +756,8 @@ public class EnemyDog : UnitObject
     MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact);
     CameraManager.instance.ShakeCameraForDuration(0.4f, 0.5f, 0.3f);
     this.AoEParticles.Play();
-    this.health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
-    this.StopCoroutine((IEnumerator) this.TimerRoutine());
+    this.health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
+    this.StopCoroutine(this.TimerRoutine());
     this.timerStarted = false;
     this.bombTimerUI?.SetTimerValue(0.0f);
   }
@@ -839,16 +853,16 @@ public class EnemyDog : UnitObject
       if ((1.0 / (double) this.health.totalHP * (double) this.health.HP >= (double) this.BackStunHealthThreshold || !this.EnableBackStun ? 0 : ((double) this.transform.position.z > -0.02500000037252903 ? 1 : 0)) != 0 && !string.IsNullOrEmpty(this.BackStunnedAnimation) && !string.IsNullOrEmpty(this.BackStunnedResetAnimation))
       {
         this.BackStunHealthThreshold = 0.0f;
-        this.StartCoroutine((IEnumerator) this.ApplyBackstunForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), 25f));
-        this.StartCoroutine((IEnumerator) this.BackStunnedRoutine());
+        this.StartCoroutine(this.ApplyBackstunForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), 25f));
+        this.StartCoroutine(this.BackStunnedRoutine());
       }
       else
-        this.StartCoroutine((IEnumerator) this.HurtRoutine());
+        this.StartCoroutine(this.HurtRoutine());
     }
     if (this.DiveBomb && AttackType != Health.AttackTypes.NoKnockBack && AttackType != Health.AttackTypes.NoReaction && !this.DisableKnockback && this.CanBeInterrupted && (UnityEngine.Object) Attacker != (UnityEngine.Object) null)
-      this.StartCoroutine((IEnumerator) this.DiveBombRoutine(0.25f, float.MaxValue));
+      this.StartCoroutine(this.DiveBombRoutine(0.25f, float.MaxValue));
     else if (AttackType != Health.AttackTypes.NoKnockBack && AttackType != Health.AttackTypes.NoReaction && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f)));
+      this.StartCoroutine(this.ApplyForceRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f)));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -857,7 +871,7 @@ public class EnemyDog : UnitObject
   {
     EnemyDog enemyDog = this;
     if (enemyDog.isKnockedTowardsEnemy)
-      enemyDog.StopCoroutine((IEnumerator) enemyDog.KnockTowardsEnemy(Attacker));
+      enemyDog.StopCoroutine(enemyDog.KnockTowardsEnemy(Attacker));
     enemyDog.isKnockedTowardsEnemy = true;
     Collider2D[] colliders = Physics2D.OverlapCircleAll((Vector2) enemyDog.transform.position, enemyDog.KnockbackTargetDistance, (int) enemyDog.lockOnMask);
     yield return (object) null;
@@ -901,12 +915,12 @@ public class EnemyDog : UnitObject
     if ((UnityEngine.Object) collider2D3 != (UnityEngine.Object) null && (UnityEngine.Object) collider2D3.gameObject != (UnityEngine.Object) enemyDog.gameObject && (double) enemyDog.MagnitudeFindDistanceBetween(collider2D3.transform.position, enemyDog.transform.position) < (double) enemyDog.KnockbackTargetDistance * (double) enemyDog.KnockbackTargetDistance)
     {
       float angle = Utils.GetAngle(enemyDog.transform.position, collider2D3.transform.position) * ((float) Math.PI / 180f);
-      enemyDog.StartCoroutine((IEnumerator) enemyDog.ApplyForceRoutine(angle));
+      enemyDog.StartCoroutine(enemyDog.ApplyForceRoutine(angle));
     }
     else
     {
       float angle = Utils.GetAngle(Attacker.transform.position, enemyDog.transform.position) * ((float) Math.PI / 180f);
-      enemyDog.StartCoroutine((IEnumerator) enemyDog.ApplyForceRoutine(angle));
+      enemyDog.StartCoroutine(enemyDog.ApplyForceRoutine(angle));
     }
     enemyDog.ClearPaths();
     enemyDog.isKnockedTowardsEnemy = false;
@@ -951,7 +965,7 @@ public class EnemyDog : UnitObject
     }
     enemyDog.transform.position = new Vector3(enemyDog.transform.position.x, enemyDog.transform.position.y, 0.0f);
     if (enemyDog.DiveBomb)
-      enemyDog.health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+      enemyDog.health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
     enemyDog.DisableForces = false;
   }
 
@@ -969,9 +983,9 @@ public class EnemyDog : UnitObject
       yield return (object) null;
     enemyDog.DisableForces = false;
     enemyDog.IdleWait = 0.0f;
-    enemyDog.StartCoroutine((IEnumerator) enemyDog.ActiveRoutine());
+    enemyDog.StartCoroutine(enemyDog.ActiveRoutine());
     if (enemyDog.CounterAttack)
-      enemyDog.StartCoroutine((IEnumerator) enemyDog.MeleeAttackRoutine());
+      enemyDog.StartCoroutine(enemyDog.MeleeAttackRoutine());
   }
 
   public void GetNewTargetPosition()
@@ -1031,7 +1045,7 @@ public class EnemyDog : UnitObject
     }
   }
 
-  public void DoBusiness() => this.StartCoroutine((IEnumerator) this.BusinessRoutine());
+  public void DoBusiness() => this.StartCoroutine(this.BusinessRoutine());
 
   public IEnumerator BusinessRoutine()
   {

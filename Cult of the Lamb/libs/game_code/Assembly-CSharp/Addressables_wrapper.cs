@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Addressables_wrapper
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -21,7 +21,7 @@ public class Addressables_wrapper : MonoBehaviour
     Addressables.InstantiateAsync(key).Completed += (Action<AsyncOperationHandle<GameObject>>) (obj =>
     {
       callback(obj);
-      obj.Result.AddComponent((System.Type) typeof (SelfCleanup));
+      obj.Result.AddComponent(typeof (SelfCleanup));
     });
   }
 
@@ -29,7 +29,7 @@ public class Addressables_wrapper : MonoBehaviour
   {
     AsyncOperationHandle<GameObject> asyncOperationHandle = Addressables.InstantiateAsync(key, parent);
     asyncOperationHandle.WaitForCompletion();
-    asyncOperationHandle.Result.AddComponent((System.Type) typeof (SelfCleanup));
+    asyncOperationHandle.Result.AddComponent(typeof (SelfCleanup));
     return asyncOperationHandle.Result;
   }
 
@@ -42,7 +42,7 @@ public class Addressables_wrapper : MonoBehaviour
     Addressables.InstantiateAsync(key, parent).Completed += (Action<AsyncOperationHandle<GameObject>>) (obj =>
     {
       callback(obj);
-      obj.Result.AddComponent((System.Type) typeof (SelfCleanup));
+      obj.Result.AddComponent(typeof (SelfCleanup));
     });
   }
 
@@ -56,7 +56,7 @@ public class Addressables_wrapper : MonoBehaviour
     Addressables.InstantiateAsync(key, parent, instantiateInWorldSpace).Completed += (Action<AsyncOperationHandle<GameObject>>) (obj =>
     {
       callback(obj);
-      obj.Result.AddComponent((System.Type) typeof (SelfCleanup));
+      obj.Result.AddComponent(typeof (SelfCleanup));
     });
   }
 
@@ -71,7 +71,7 @@ public class Addressables_wrapper : MonoBehaviour
     Addressables.InstantiateAsync(key, position, rotation, parent).Completed += (Action<AsyncOperationHandle<GameObject>>) (obj =>
     {
       callback(obj);
-      obj.Result.AddComponent((System.Type) typeof (SelfCleanup));
+      obj.Result.AddComponent(typeof (SelfCleanup));
     });
   }
 
@@ -83,7 +83,7 @@ public class Addressables_wrapper : MonoBehaviour
     Addressables.InstantiateAsync(key, instantiateParameters).Completed += (Action<AsyncOperationHandle<GameObject>>) (obj =>
     {
       callback(obj);
-      obj.Result.AddComponent((System.Type) typeof (SelfCleanup));
+      obj.Result.AddComponent(typeof (SelfCleanup));
     });
   }
 }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyHordeMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -129,12 +129,12 @@ public class EnemyHordeMiniboss : UnitObject
 
   public void SpawnHorizontalLine1()
   {
-    this.StartCoroutine((IEnumerator) this.SpawnHorizontalLineIE(this.horizontalSpawnPositions[0]));
+    this.StartCoroutine(this.SpawnHorizontalLineIE(this.horizontalSpawnPositions[0]));
   }
 
   public void SpawnHorizontalLine2()
   {
-    this.StartCoroutine((IEnumerator) this.SpawnHorizontalLineIE(this.horizontalSpawnPositions[1]));
+    this.StartCoroutine(this.SpawnHorizontalLineIE(this.horizontalSpawnPositions[1]));
   }
 
   public IEnumerator SpawnHorizontalLineIE(Vector3 spawnPosition)
@@ -158,7 +158,7 @@ public class EnemyHordeMiniboss : UnitObject
         float xStartPosition = -(float) ((double) enemyHordeMiniboss.horizontalDistanceBetween * (double) enemyHordeMiniboss.horizontalAmount / 2.0);
         for (int i = 0; i < enemyHordeMiniboss.horizontalAmount; ++i)
         {
-          enemyHordeMiniboss.StartCoroutine((IEnumerator) enemyHordeMiniboss.SpawnEnemy(new Vector3(xStartPosition + spawnPosition.x, spawnPosition.y, spawnPosition.z)));
+          enemyHordeMiniboss.StartCoroutine(enemyHordeMiniboss.SpawnEnemy(new Vector3(xStartPosition + spawnPosition.x, spawnPosition.y, spawnPosition.z)));
           xStartPosition += enemyHordeMiniboss.horizontalDistanceBetween;
           yield return (object) new WaitForSeconds(enemyHordeMiniboss.horizontalTimeBetween);
         }
@@ -168,7 +168,7 @@ public class EnemyHordeMiniboss : UnitObject
     }
   }
 
-  public void SpawnVerticalLine() => this.StartCoroutine((IEnumerator) this.SpawnVerticalLineIE());
+  public void SpawnVerticalLine() => this.StartCoroutine(this.SpawnVerticalLineIE());
 
   public IEnumerator SpawnVerticalLineIE()
   {
@@ -215,8 +215,8 @@ public class EnemyHordeMiniboss : UnitObject
         {
           Vector3 position1 = new Vector3(enemyHordeMiniboss.verticalSpawnPositions[0].x, enemyHordeMiniboss.verticalSpawnPositions[0].y + yStartPosition1, enemyHordeMiniboss.verticalSpawnPositions[0].z);
           Vector3 position2 = new Vector3(enemyHordeMiniboss.verticalSpawnPositions[1].x, enemyHordeMiniboss.verticalSpawnPositions[1].y + yStartPosition2, enemyHordeMiniboss.verticalSpawnPositions[1].z);
-          enemyHordeMiniboss.StartCoroutine((IEnumerator) enemyHordeMiniboss.SpawnEnemy(position1));
-          enemyHordeMiniboss.StartCoroutine((IEnumerator) enemyHordeMiniboss.SpawnEnemy(position2));
+          enemyHordeMiniboss.StartCoroutine(enemyHordeMiniboss.SpawnEnemy(position1));
+          enemyHordeMiniboss.StartCoroutine(enemyHordeMiniboss.SpawnEnemy(position2));
           yStartPosition1 += enemyHordeMiniboss.verticalDistanceBetween * (float) direction1;
           yStartPosition2 += enemyHordeMiniboss.verticalDistanceBetween * (float) direction2;
           yield return (object) new WaitForSeconds(enemyHordeMiniboss.verticalTimeBetween);
@@ -227,10 +227,7 @@ public class EnemyHordeMiniboss : UnitObject
     }
   }
 
-  public void SpawnCircleAroundPlayer()
-  {
-    this.StartCoroutine((IEnumerator) this.SpawnCircleAroundPlayerIE());
-  }
+  public void SpawnCircleAroundPlayer() => this.StartCoroutine(this.SpawnCircleAroundPlayerIE());
 
   public IEnumerator SpawnCircleAroundPlayerIE()
   {
@@ -257,7 +254,7 @@ public class EnemyHordeMiniboss : UnitObject
         for (int i = 0; i < enemyHordeMiniboss.circleAmount * 2; i += 2)
         {
           Vector3 position = playerPosition + (Vector3) (Utils.RadianToVector2(angle * ((float) Math.PI / 180f)) * enemyHordeMiniboss.circleRadius);
-          enemyHordeMiniboss.StartCoroutine((IEnumerator) enemyHordeMiniboss.SpawnEnemy(position));
+          enemyHordeMiniboss.StartCoroutine(enemyHordeMiniboss.SpawnEnemy(position));
           angle = Utils.Repeat(angle + increment * (float) direction, 360f);
           yield return (object) new WaitForSeconds(enemyHordeMiniboss.circleTimeBetween);
         }
@@ -358,7 +355,7 @@ public class EnemyHordeMiniboss : UnitObject
       {
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, Attacker, AttackLocation);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, Attacker, AttackLocation, dealDamageImmediately: true);
       }
     }
   }

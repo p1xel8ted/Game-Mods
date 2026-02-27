@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DungeonStronger
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -191,7 +191,7 @@ public class Interaction_DungeonStronger : Interaction
   {
     base.OnInteract(state);
     this.Interactable = false;
-    this.StartCoroutine((IEnumerator) this.InteractIE());
+    this.StartCoroutine(this.InteractIE());
   }
 
   public IEnumerator InteractIE()
@@ -220,7 +220,7 @@ public class Interaction_DungeonStronger : Interaction
     if (PlayerFarming.Location != FollowerLocation.Dungeon1_6)
       NotificationCentreScreen.Play(string.Format(LocalizationManager.GetTranslation("Notifications/EnemiesStronger"), (object) $"<color=#FFD201>{interactionDungeonStronger.LocationName()}</color>"));
     interactionDungeonStronger.SetVariable();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) interactionDungeonStronger.DelayWeaponsReveal());
+    GameManager.GetInstance().StartCoroutine(interactionDungeonStronger.DelayWeaponsReveal());
   }
 
   public IEnumerator DelayWeaponsReveal()

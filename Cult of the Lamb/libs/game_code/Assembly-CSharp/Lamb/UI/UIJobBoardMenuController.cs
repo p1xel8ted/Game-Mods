@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIJobBoardMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -114,7 +114,7 @@ public class UIJobBoardMenuController : UIMenuBase
     if (!this.jobItems.Any<JobBoardMenuItem>((Func<JobBoardMenuItem, bool>) (j => j.Completed && !j.CompletedClaimedReward)))
       return;
     Debug.Log((object) "We have a completed task that we havent claimed the reward for");
-    this.StartCoroutine((IEnumerator) this.ShowCompletedTask());
+    this.StartCoroutine(this.ShowCompletedTask());
   }
 
   public IEnumerator ShowCompletedTask()
@@ -139,7 +139,7 @@ public class UIJobBoardMenuController : UIMenuBase
       AudioManager.Instance.PlayOneShot("event:/dlc/music/woolhaven/jobboard_quest_complete");
       RectTransform rect = menuItem.GetComponent<RectTransform>();
       yield return (object) boardMenuController._scrollRect.DoScrollTo(rect);
-      menuItem.StartCoroutine((IEnumerator) menuItem.UnlockSequenceIE());
+      menuItem.StartCoroutine(menuItem.UnlockSequenceIE());
       rect.GetChild(0).DOPunchPosition(new Vector3(0.0f, 10f), 0.25f).SetUpdate<Tweener>(true);
       yield return (object) new WaitForSecondsRealtime(0.5f);
       Debug.Log((object) "Polish button");

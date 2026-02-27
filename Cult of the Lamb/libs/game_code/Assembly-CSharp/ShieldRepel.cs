@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ShieldRepel
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -84,12 +84,12 @@ public class ShieldRepel : MonoBehaviour
     if (!UpgradeSystem.GetUnlocked(UpgradeSystem.Type.PUpgrade_HA_Blunderbuss))
       return;
     int currentWeaponLevel = this.playerFarming.currentWeaponLevel;
-    unit.health.DealDamage((float) currentWeaponLevel, this.gameObject, Vector3.Lerp(this.playerFarming.transform.position, unit.transform.position, 0.8f));
+    unit.health.DealDamage((float) currentWeaponLevel, this.gameObject, Vector3.Lerp(this.playerFarming.transform.position, unit.transform.position, 0.8f), dealDamageImmediately: true);
   }
 
   public void DamageShieldEffect()
   {
-    Debug.Log((object) ("Damaging SHIELD " + ((object) this.shieldDestroyedEffect)?.ToString()));
+    Debug.Log((object) ("Damaging SHIELD " + this.shieldDestroyedEffect?.ToString()));
     AudioManager.Instance.PlayOneShot("event:/weapon/metal_medium", this.gameObject);
     CameraManager.shakeCamera(2f);
     if (!((UnityEngine.Object) this.shieldDamagedEffect != (UnityEngine.Object) null))
@@ -106,7 +106,7 @@ public class ShieldRepel : MonoBehaviour
   {
     AudioManager.Instance.PlayOneShot("event:/weapon/metal_heavy", this.gameObject);
     CameraManager.shakeCamera(2f);
-    Debug.Log((object) ("DESTROYING SHIELD " + ((object) this.shieldDestroyedEffect)?.ToString()));
+    Debug.Log((object) ("DESTROYING SHIELD " + this.shieldDestroyedEffect?.ToString()));
     if (!((UnityEngine.Object) this.shieldDestroyedEffect != (UnityEngine.Object) null))
       return;
     GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(this.shieldDestroyedEffect);

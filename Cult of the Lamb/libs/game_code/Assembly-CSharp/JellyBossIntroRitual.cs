@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: JellyBossIntroRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -123,7 +123,7 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
     this.cultLeaderSpine.AnimationState.SetAnimation(0, "transform", false).TrackTime = 10.2f;
     AudioManager.Instance.PlayOneShot("event:/boss/jellyfish/roar", this.gameObject);
     GameManager.GetInstance().CameraSetOffset(Vector3.zero);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.IntroDone());
+    GameManager.GetInstance().StartCoroutine(this.IntroDone());
     this.skipped = true;
     this.jellyBossHealth.untouchable = false;
     this.jellyBoss.EnemiesToTrack[0].enabled = true;
@@ -145,7 +145,7 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
     }
     else
       this.cultLeaderSpine.AnimationState.SetAnimation(0, "leader/idle", true);
-    this.StartCoroutine((IEnumerator) this.CompleteHealingBishopRoom());
+    this.StartCoroutine(this.CompleteHealingBishopRoom());
   }
 
   public void OnTriggerEnter2D(Collider2D collision)
@@ -165,7 +165,7 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
           this.playerBehindTargetPosition = Vector3.down * 6f;
         }
       }
-      this.StartCoroutine((IEnumerator) this.HealingIE());
+      this.StartCoroutine(this.HealingIE());
     }
     else
     {
@@ -178,7 +178,7 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
           this.playerBehindTargetPosition = collision.transform.position + Vector3.right * 1.5f;
         }
       }
-      this.StartCoroutine((IEnumerator) this.RitualRoutine());
+      this.StartCoroutine(this.RitualRoutine());
     }
   }
 
@@ -262,7 +262,7 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
       jellyBossIntroRitual.tweens.Add((Tween) DOTween.To((DOGetter<float>) (() => GameManager.GetInstance().CamFollowTarget.targetDistance), (DOSetter<float>) (x => GameManager.GetInstance().CamFollowTarget.targetDistance = x), 6f, 6f).SetEase<TweenerCore<float, float, FloatOptions>>(Ease.InSine));
       jellyBossIntroRitual.amplifyColorEffect.BlendTo((Texture) jellyBossIntroRitual.lutTexture, 6f, (System.Action) null);
       for (int index = 0; index < jellyBossIntroRitual.enemySpines.Length; ++index)
-        jellyBossIntroRitual.StartCoroutine((IEnumerator) jellyBossIntroRitual.SpawnSouls(jellyBossIntroRitual.enemySpines[index].transform.position));
+        jellyBossIntroRitual.StartCoroutine(jellyBossIntroRitual.SpawnSouls(jellyBossIntroRitual.enemySpines[index].transform.position));
       yield return (object) new WaitForSeconds(1f);
       jellyBossIntroRitual.bloodParticle.SetActive(true);
       yield return (object) new WaitForSeconds(2.3f);
@@ -316,9 +316,9 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
       }
       yield return (object) new WaitForSeconds(0.15f);
       foreach (LongGrass longGrass in jellyBossIntroRitual.surroundingGrass)
-        longGrass.StartCoroutine((IEnumerator) longGrass.ShakeGrassRoutine(jellyBossIntroRitual.gameObject, 2f));
+        longGrass.StartCoroutine(longGrass.ShakeGrassRoutine(jellyBossIntroRitual.gameObject, 2f));
       yield return (object) new WaitForSeconds(2.7f);
-      jellyBossIntroRitual.StartCoroutine((IEnumerator) jellyBossIntroRitual.IntroDone());
+      jellyBossIntroRitual.StartCoroutine(jellyBossIntroRitual.IntroDone());
     }
   }
 
@@ -456,6 +456,7 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
       yield return (object) null;
     if (accepted)
     {
+      bool changedBishopSkin = !follower.FollowerBrain.Info.SkinName.Contains("CultLeader");
       AudioManager.Instance.PlayOneShot("event:/Stings/bishop_healed", jellyBossIntroRitual.gameObject);
       GameManager.GetInstance().OnConversationNext(jellyBossIntroRitual.gameObject, 5f);
       jellyBossIntroRitual.healEffect.gameObject.SetActive(true);
@@ -474,7 +475,8 @@ public class JellyBossIntroRitual : BaseMonoBehaviour
       BiomeConstants.Instance.EmitSmokeExplosionVFX(Vector3.zero);
       AudioManager.Instance.PlayOneShot("event:/relics/puff_of_smoke", jellyBossIntroRitual.gameObject);
       follower.Follower.Spine.Skeleton.SetSkin(follower.FollowerBrain.Info.SkinName);
-      foreach (WorshipperData.SlotAndColor slotAndColour in WorshipperData.Instance.GetColourData(follower.FollowerBrain.Info.SkinName).SlotAndColours[follower.FollowerBrain.Info.SkinColour].SlotAndColours)
+      WorshipperData.SkinAndData colourData = WorshipperData.Instance.GetColourData(follower.FollowerBrain.Info.SkinName);
+      foreach (WorshipperData.SlotAndColor slotAndColour in (changedBishopSkin ? colourData.SlotAndColours[0] : colourData.SlotAndColours[follower.FollowerBrain.Info.SkinColour]).SlotAndColours)
       {
         Slot slot = follower.Follower.Spine.Skeleton.FindSlot(slotAndColour.Slot);
         if (slot != null)

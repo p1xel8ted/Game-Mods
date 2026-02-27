@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Throwable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -71,12 +71,12 @@ public class Throwable : BaseMonoBehaviour
       this.targetWarningInstance = Object.Instantiate<GameObject>(this.targetWarningPrefab, targetPosition, Quaternion.identity);
     if ((Object) this.targetVisualInstance != (Object) null && (Object) this.targetWarningInstance != (Object) null && (Object) this.targetCollider != (Object) null)
     {
-      this.StartCoroutine((IEnumerator) this.ScaleTargetWarning());
+      this.StartCoroutine(this.ScaleTargetWarning());
       if (this.enableTargetFlashing)
-        this.flashingRoutine = this.StartCoroutine((IEnumerator) this.FlashTargetWarning());
+        this.flashingRoutine = this.StartCoroutine(this.FlashTargetWarning());
     }
     float duration1 = (double) duration > 0.0 ? duration : this.moveDuration;
-    this.StartCoroutine((IEnumerator) this.LaunchRoutine(targetPosition, duration1));
+    this.StartCoroutine(this.LaunchRoutine(targetPosition, duration1));
     if (string.IsNullOrEmpty(this.LaunchSFX))
       return;
     this.launchInstanceSFX = AudioManager.Instance.PlayOneShotWithInstanceCleanup(this.LaunchSFX, this.transform);

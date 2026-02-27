@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBruteBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -712,7 +712,7 @@ public class EnemyBruteBoss : EnemyBrute
       {
         Health.team2[index].invincible = false;
         Health.team2[index].BloodOnDie = false;
-        Health.team2[index].DealDamage(Health.team2[index].HP, Health.team2[index].gameObject, Health.team2[index].transform.position);
+        Health.team2[index].DealDamage(Health.team2[index].HP, Health.team2[index].gameObject, Health.team2[index].transform.position, dealDamageImmediately: true);
       }
     }
     this.minions.Clear();
@@ -723,7 +723,7 @@ public class EnemyBruteBoss : EnemyBrute
     this.InterruptBehaviour();
     this.StopAllActiveSFX();
     this.KillAllMinions();
-    this.StartCoroutine((IEnumerator) phaseRoutine);
+    this.StartCoroutine(phaseRoutine);
     this.ResetAttackIndices();
   }
 
@@ -828,7 +828,7 @@ public class EnemyBruteBoss : EnemyBrute
       {
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, dealDamageImmediately: true);
       }
     }
     if ((UnityEngine.Object) ExecutionerAxe.AttackingAxe != (UnityEngine.Object) null)
@@ -844,7 +844,7 @@ public class EnemyBruteBoss : EnemyBrute
     GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() =>
     {
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.DieIE());
+      this.StartCoroutine(this.DieIE());
     }));
   }
 
@@ -896,7 +896,7 @@ public class EnemyBruteBoss : EnemyBrute
   {
     if (this.GetThrowableMinions().Count > 0)
       return;
-    this.StartCoroutine((IEnumerator) this.DoSpawnEnemyRoutine());
+    this.StartCoroutine(this.DoSpawnEnemyRoutine());
   }
 
   public IEnumerator DoSpawnEnemyRoutine()
@@ -1000,7 +1000,7 @@ public class EnemyBruteBoss : EnemyBrute
     return heavyUnitSpawnCount;
   }
 
-  public void ThrowSkeletons() => this.StartCoroutine((IEnumerator) this.DoThrowMinionsAttack());
+  public void ThrowSkeletons() => this.StartCoroutine(this.DoThrowMinionsAttack());
 
   public void InterruptBehaviour()
   {
@@ -1113,7 +1113,7 @@ public class EnemyBruteBoss : EnemyBrute
           EnemySwordsman component1 = minion.GetComponent<EnemySwordsman>();
           Health component2 = minion.GetComponent<Health>();
           enemyBruteBoss.DisableMinionForThrowing(minion, component2);
-          enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.RaiseMinionIntoAirForThrowing(minion, component1.Spine));
+          enemyBruteBoss.StartCoroutine(enemyBruteBoss.RaiseMinionIntoAirForThrowing(minion, component1.Spine));
         }
       }
       while ((double) progress < (double) enemyBruteBoss.levitateEnemiesAnimDuration)
@@ -1160,7 +1160,7 @@ public class EnemyBruteBoss : EnemyBrute
             Health component = availableMinions[i].GetComponent<Health>();
             if ((UnityEngine.Object) component != (UnityEngine.Object) null && (double) component.HP > 0.0)
             {
-              yield return (object) enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.MoveMinionTowardsTarget(availableMinions[i], component));
+              yield return (object) enemyBruteBoss.StartCoroutine(enemyBruteBoss.MoveMinionTowardsTarget(availableMinions[i], component));
               float t = 0.0f;
               while ((double) t < (double) enemyBruteBoss.DelayBetweenMinionThrow)
               {
@@ -1254,7 +1254,7 @@ public class EnemyBruteBoss : EnemyBrute
           AudioManager.Instance.PlayOneShot(enemyBruteBoss.AttackSkeletonThrowExplodeSFX, minion.transform.position);
         minion.state.CURRENT_STATE = StateMachine.State.Dieing;
         minionHealth.invincible = false;
-        minionHealth.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+        minionHealth.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
       }
     }
   }
@@ -1311,15 +1311,15 @@ public class EnemyBruteBoss : EnemyBrute
   public void HammerAttack()
   {
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.HammerAttackIE());
+    this.StartCoroutine(this.HammerAttackIE());
   }
 
-  public void HammerJumpAttack() => this.StartCoroutine((IEnumerator) this.HammerAttackIE(true));
+  public void HammerJumpAttack() => this.StartCoroutine(this.HammerAttackIE(true));
 
   public void MultiHammerAttack()
   {
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.DoMultiHammerAttack());
+    this.StartCoroutine(this.DoMultiHammerAttack());
   }
 
   public IEnumerator HammerAttackIE(bool jumpAttack = false)
@@ -1333,7 +1333,7 @@ public class EnemyBruteBoss : EnemyBrute
     if (jumpAttack)
     {
       Vector3 normalized = (enemyBruteBoss.transform.position - PlayerFarming.Instance.transform.position).normalized;
-      yield return (object) enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.JumpAwayIE(PlayerFarming.Instance.transform.position + normalized * 4f, enemyBruteBoss.jumpDuration / 2f, false, false));
+      yield return (object) enemyBruteBoss.StartCoroutine(enemyBruteBoss.JumpAwayIE(PlayerFarming.Instance.transform.position + normalized * 4f, enemyBruteBoss.jumpDuration / 2f, false, false));
       enemyBruteBoss.damageColliderEvents.transform.position = new Vector3(enemyBruteBoss.AxeBone.position.x, enemyBruteBoss.AxeBone.position.y, 0.0f);
     }
     enemyBruteBoss.Spine.AnimationState.SetAnimation(0, enemyBruteBoss.shockWaveStartAnimation, false);
@@ -1492,7 +1492,7 @@ public class EnemyBruteBoss : EnemyBrute
     }
   }
 
-  public void SlashAttack() => this.StartCoroutine((IEnumerator) this.DoSlashAttack());
+  public void SlashAttack() => this.StartCoroutine(this.DoSlashAttack());
 
   public IEnumerator DoSlashAttack()
   {
@@ -1526,7 +1526,7 @@ public class EnemyBruteBoss : EnemyBrute
     enemyBruteBoss.Spine.AnimationState.SetAnimation(0, enemyBruteBoss.idleAnimation, true);
   }
 
-  public void ShockWave() => this.StartCoroutine((IEnumerator) this.ShockWaveIE());
+  public void ShockWave() => this.StartCoroutine(this.ShockWaveIE());
 
   public IEnumerator ShockWaveIE()
   {
@@ -1560,7 +1560,7 @@ public class EnemyBruteBoss : EnemyBrute
     enemyBruteBoss.Spine.AnimationState.SetAnimation(0, enemyBruteBoss.idleAnimation, true);
   }
 
-  public void ThrowAttack() => this.StartCoroutine((IEnumerator) this.ThrowAttackIE());
+  public void ThrowAttack() => this.StartCoroutine(this.ThrowAttackIE());
 
   public IEnumerator ThrowAttackIE()
   {
@@ -1591,7 +1591,7 @@ public class EnemyBruteBoss : EnemyBrute
     enemyBruteBoss.Spine.AnimationState.SetAnimation(0, enemyBruteBoss.idleAnimation, true);
   }
 
-  public void ThrowAxeStraight() => this.StartCoroutine((IEnumerator) this.ThrowAxeIE());
+  public void ThrowAxeStraight() => this.StartCoroutine(this.ThrowAxeIE());
 
   public IEnumerator ThrowAxeIE()
   {
@@ -1600,7 +1600,7 @@ public class EnemyBruteBoss : EnemyBrute
     boss.ClearPaths();
     Health closestTarget = boss.GetClosestTarget();
     if ((double) Vector3.Distance(boss.transform.position, closestTarget.transform.position) < (double) boss.closeRangeDistance)
-      yield return (object) boss.StartCoroutine((IEnumerator) boss.JumpAwayIE(boss.GetPositionAwayFromPlayer(), boss.jumpDuration, setAttackFinishedAtEnd: false));
+      yield return (object) boss.StartCoroutine(boss.JumpAwayIE(boss.GetPositionAwayFromPlayer(), boss.jumpDuration, setAttackFinishedAtEnd: false));
     yield return (object) new WaitForEndOfFrame();
     boss.Spine.AnimationState.SetAnimation(0, boss.throwAxeAnimation, false);
     boss.Spine.AnimationState.AddAnimation(0, boss.throwAxeLoopAnimation, true, 0.0f);
@@ -1635,7 +1635,7 @@ public class EnemyBruteBoss : EnemyBrute
     boss.nextAttackTimer = UnityEngine.Random.Range(boss.timeBetweenAttacks.x, boss.timeBetweenAttacks.y);
   }
 
-  public void ThrowAxeCircle() => this.StartCoroutine((IEnumerator) this.ThrowAxeCircleIE());
+  public void ThrowAxeCircle() => this.StartCoroutine(this.ThrowAxeCircleIE());
 
   public IEnumerator ThrowAxeCircleIE()
   {
@@ -1680,10 +1680,7 @@ public class EnemyBruteBoss : EnemyBrute
     yield break;
   }
 
-  public void PardonExecuteChoice()
-  {
-    this.StartCoroutine((IEnumerator) this.PardonExecuteChoiceIE());
-  }
+  public void PardonExecuteChoice() => this.StartCoroutine(this.PardonExecuteChoiceIE());
 
   public IEnumerator PardonExecuteChoiceIE()
   {
@@ -1732,7 +1729,7 @@ public class EnemyBruteBoss : EnemyBrute
       yield return (object) new WaitForSeconds(1.7f);
       yield return (object) new WaitForEndOfFrame();
       if (!DataManager.Instance.LegendaryWeaponsUnlockOrder.Contains(EquipmentType.Axe_Legendary) && DataManager.Instance.OnboardedLegendaryWeapons)
-        yield return (object) enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.PlayerPickUpLegendaryAxe());
+        yield return (object) enemyBruteBoss.StartCoroutine(enemyBruteBoss.PlayerPickUpLegendaryAxe());
       enemyBruteBoss.pardonConvo.Play();
       yield return (object) null;
       while (MMConversation.isPlaying)
@@ -1748,10 +1745,10 @@ public class EnemyBruteBoss : EnemyBrute
       MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact);
       yield return (object) new WaitForSeconds(2.16666675f);
       if (!DataManager.Instance.LegendaryWeaponsUnlockOrder.Contains(EquipmentType.Axe_Legendary) && DataManager.Instance.OnboardedLegendaryWeapons)
-        yield return (object) enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.PlayerPickUpLegendaryAxe());
+        yield return (object) enemyBruteBoss.StartCoroutine(enemyBruteBoss.PlayerPickUpLegendaryAxe());
       yield return (object) new WaitForSeconds(0.5f);
       if (!StructuresData.GetUnlocked(StructureBrain.TYPES.DECORATION_BOSS_TROPHY_DLC_EXECUTIONER))
-        yield return (object) enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.PlayerPickUpTrophyDeco());
+        yield return (object) enemyBruteBoss.StartCoroutine(enemyBruteBoss.PlayerPickUpTrophyDeco());
       GameManager.GetInstance().CameraSetOffset(Vector3.zero);
       enemyBruteBoss.Spine.gameObject.SetActive(false);
       foreach (Behaviour collider in enemyBruteBoss.colliders)
@@ -1785,7 +1782,7 @@ public class EnemyBruteBoss : EnemyBrute
   public void JumpAway()
   {
     Debug.Log((object) "JumpAway!!!");
-    this.StartCoroutine((IEnumerator) this.JumpAwayIE(this.GetPositionAwayFromPlayer(), this.jumpDuration));
+    this.StartCoroutine(this.JumpAwayIE(this.GetPositionAwayFromPlayer(), this.jumpDuration));
   }
 
   public IEnumerator JumpAwayIE(
@@ -1881,7 +1878,7 @@ public class EnemyBruteBoss : EnemyBrute
     if (this.isDead)
       return;
     this.InterruptBehaviour();
-    this.StartCoroutine((IEnumerator) this.KnockedOutIE());
+    this.StartCoroutine(this.KnockedOutIE());
   }
 
   public IEnumerator KnockedOutIE()
@@ -1916,14 +1913,11 @@ public class EnemyBruteBoss : EnemyBrute
 
   public void InitializeTraps() => ObjectPool.CreatePool(this.trapPrefab, 40);
 
-  public void SingleDefensiveBoneWall()
-  {
-    this.StartCoroutine((IEnumerator) this.DoDefensiveBoneWall());
-  }
+  public void SingleDefensiveBoneWall() => this.StartCoroutine(this.DoDefensiveBoneWall());
 
   public void MultiDefensiveBoneWall()
   {
-    this.StartCoroutine((IEnumerator) this.DoDefensiveBoneWall(this.multiRingAttackCount));
+    this.StartCoroutine(this.DoDefensiveBoneWall(this.multiRingAttackCount));
   }
 
   public IEnumerator DoDefensiveBoneWall(int ringCount = 1)
@@ -2049,10 +2043,7 @@ label_12:
     enemyBruteBoss.attacking = false;
   }
 
-  public void SingleTargetedBoneCircle()
-  {
-    this.StartCoroutine((IEnumerator) this.DoSingleTargetedBoneCircle());
-  }
+  public void SingleTargetedBoneCircle() => this.StartCoroutine(this.DoSingleTargetedBoneCircle());
 
   public IEnumerator DoSingleTargetedBoneCircle()
   {
@@ -2064,7 +2055,7 @@ label_12:
       AudioManager.Instance.PlayOneShot(enemyBruteBoss.AttackBoneWallSingleSFX, enemyBruteBoss.transform.position);
     if (!string.IsNullOrEmpty(enemyBruteBoss.AttackBoneWallSingleVO))
       AudioManager.Instance.PlayOneShot(enemyBruteBoss.AttackBoneWallSingleVO, enemyBruteBoss.transform.position);
-    yield return (object) enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.TargetedBoneCircleAttack());
+    yield return (object) enemyBruteBoss.StartCoroutine(enemyBruteBoss.TargetedBoneCircleAttack());
     while ((double) progress < (double) enemyBruteBoss.chasingAtkCooldown)
     {
       progress += Time.deltaTime * enemyBruteBoss.Spine.timeScale;
@@ -2074,10 +2065,7 @@ label_12:
     enemyBruteBoss.attacking = false;
   }
 
-  public void MultiTargetedBoneCircle()
-  {
-    this.StartCoroutine((IEnumerator) this.DoMultipleTargetedBoneCircle());
-  }
+  public void MultiTargetedBoneCircle() => this.StartCoroutine(this.DoMultipleTargetedBoneCircle());
 
   public IEnumerator DoMultipleTargetedBoneCircle()
   {
@@ -2091,7 +2079,7 @@ label_12:
         enemyBruteBoss.boneWallChasingInstanceSFX = AudioManager.Instance.PlayOneShotWithInstanceCleanup(enemyBruteBoss.AttackBoneWallChasingSFX, enemyBruteBoss.transform);
       if (!string.IsNullOrEmpty(enemyBruteBoss.AttackBoneWallChasingVO))
         enemyBruteBoss.boneWallChasingInstanceVO = AudioManager.Instance.PlayOneShotWithInstanceCleanup(enemyBruteBoss.AttackBoneWallChasingVO, enemyBruteBoss.transform);
-      yield return (object) enemyBruteBoss.StartCoroutine((IEnumerator) enemyBruteBoss.TargetedBoneCircleAttack());
+      yield return (object) enemyBruteBoss.StartCoroutine(enemyBruteBoss.TargetedBoneCircleAttack());
       while ((double) progress < (double) enemyBruteBoss.chasingAtkPauseBetweenAttacks)
       {
         progress += Time.deltaTime * enemyBruteBoss.Spine.timeScale;
@@ -2158,7 +2146,7 @@ label_12:
     });
   }
 
-  public void ChangeConvoTitle() => this.StartCoroutine((IEnumerator) this.ChangeConvoTitleIE());
+  public void ChangeConvoTitle() => this.StartCoroutine(this.ChangeConvoTitleIE());
 
   public IEnumerator ChangeConvoTitleIE()
   {
@@ -2280,7 +2268,7 @@ label_12:
     }
   }
 
-  public void LeveaRoom() => this.StartCoroutine((IEnumerator) this.LeaveRoomRoutine());
+  public void LeveaRoom() => this.StartCoroutine(this.LeaveRoomRoutine());
 
   public IEnumerator LeaveRoomRoutine()
   {
@@ -2334,7 +2322,7 @@ label_12:
   public void \u003COnDie\u003Eb__226_0()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DieIE());
+    this.StartCoroutine(this.DieIE());
   }
 
   [Serializable]

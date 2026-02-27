@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WolfBossRotSpread
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -16,8 +16,13 @@ public class WolfBossRotSpread : MonoBehaviour
   public float movementSpeed;
   public EventInstance rotSpreadLoop;
   public EventInstance rotSpreadMusic;
+  public PlayerController playerController;
 
-  public void Start() => this.StartCoroutine((IEnumerator) this.InitPlayerWalking());
+  public void Start()
+  {
+    this.StartCoroutine(this.InitPlayerWalking());
+    this.playerController = PlayerFarming.Instance.playerController;
+  }
 
   public void Update()
   {
@@ -29,8 +34,8 @@ public class WolfBossRotSpread : MonoBehaviour
     }
     else
     {
-      this.movementSpeed = Mathf.Lerp(this.movementSpeed, (double) PlayerFarming.Instance.playerController.speed > 0.0 ? 1f : 0.0f, 2f * Time.deltaTime);
-      if ((double) PlayerFarming.Instance.playerController.speed <= 0.0 || this.IsPlayerOutsideRotBounds(PlayerFarming.Instance))
+      this.movementSpeed = Mathf.Lerp(this.movementSpeed, (double) this.playerController.speed > 0.0 ? 1f : 0.0f, 2f * Time.deltaTime);
+      if ((double) this.playerController.speed <= 0.0 || this.IsPlayerOutsideRotBounds(PlayerFarming.Instance))
         this.movementSpeed = 0.0f;
     }
     AudioManager.Instance.SetEventInstanceParameter(this.rotSpreadLoop, "playerMovementSpeed", this.movementSpeed);

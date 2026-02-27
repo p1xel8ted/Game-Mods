@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_WebberSkull
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -85,7 +85,7 @@ public class Interaction_WebberSkull : Interaction
       return;
     base.OnInteract(state);
     this.structure.enabled = false;
-    this.StartCoroutine((IEnumerator) this.PickUpBody());
+    this.StartCoroutine(this.PickUpBody());
   }
 
   public override void OnDisableInteraction()
@@ -199,7 +199,7 @@ public class Interaction_WebberSkull : Interaction
       interactionWebberSkull.CarryingBody = false;
       interactionWebberSkull.lightingVolume.transform.parent = (Transform) null;
       UnityEngine.Object.Destroy((UnityEngine.Object) interactionWebberSkull.gameObject);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) interactionWebberSkull.SpawnWebberFollowerIE(interactionWebberSkull.ClosestGrave));
+      GameManager.GetInstance().StartCoroutine(interactionWebberSkull.SpawnWebberFollowerIE(interactionWebberSkull.ClosestGrave));
     }
     else
       interactionWebberSkull.DropBody();

@@ -1,0 +1,150 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: BuildSitePlotProject
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+#nullable disable
+public class BuildSitePlotProject : BaseMonoBehaviour
+{
+  public static List<BuildSitePlotProject> BuildSitePlots = new List<BuildSitePlotProject>();
+  public GameObject SmokePrefab;
+  private GameObject SmokeObject;
+  public Interaction Interaction;
+  public GameObject PlacementSquare;
+  public Structure Structure;
+  private Structures_BuildSiteProject _StructureInfo;
+  public Vector2Int Bounds = new Vector2Int(1, 1);
+  public Transform RotatedObject;
+  public List<Worshipper> Worshippers = new List<Worshipper>();
+  private UIProgressIndicator _uiProgressIndicator;
+  public Vector3 CentrePosition;
+  private Coroutine cBuildSmokeRoutine;
+  private ParticleSystem[] particleSystems;
+
+  public static bool StructureOfTypeUnderConstruction(global::StructureBrain.TYPES Type)
+  {
+    foreach (BuildSitePlotProject buildSitePlot in BuildSitePlotProject.BuildSitePlots)
+    {
+      if (buildSitePlot.StructureBrain.Data.ToBuildType == Type)
+        return true;
+    }
+    return false;
+  }
+
+  public StructuresData StructureInfo => this.Structure.Structure_Info;
+
+  public virtual Structures_BuildSiteProject StructureBrain
+  {
+    get
+    {
+      if (this._StructureInfo == null)
+        this._StructureInfo = this.Structure.Brain as Structures_BuildSiteProject;
+      return this._StructureInfo;
+    }
+    set => this._StructureInfo = value;
+  }
+
+  private void OnEnable()
+  {
+    this.Structure.OnBrainAssigned += new System.Action(this.OnBrainAssigned);
+    BuildSitePlotProject.BuildSitePlots.Add(this);
+  }
+
+  private void OnDisable()
+  {
+    this.Structure.OnBrainAssigned -= new System.Action(this.OnBrainAssigned);
+    this.StructureBrain.OnBuildProgressChanged -= new System.Action(this.OnBuildProgressChanged);
+    BuildSitePlotProject.BuildSitePlots.Remove(this);
+  }
+
+  private void Start()
+  {
+    this.StructureBrain.OnBuildProgressChanged += new System.Action(this.OnBuildProgressChanged);
+    this.OnBuildProgressChanged();
+    this.Bounds = this.StructureBrain.Data.Bounds;
+    this.SpawnTiles();
+  }
+
+  private void OnBrainAssigned()
+  {
+    this.StructureBrain.OnBuildProgressChanged += new System.Action(this.OnBuildProgressChanged);
+  }
+
+  private void OnDestroy()
+  {
+    if ((UnityEngine.Object) this._uiProgressIndicator != (UnityEngine.Object) null)
+    {
+      this._uiProgressIndicator.Recycle<UIProgressIndicator>();
+      this._uiProgressIndicator = (UIProgressIndicator) null;
+    }
+    if (this.StructureBrain == null)
+      return;
+    this.StructureBrain.OnBuildProgressChanged -= new System.Action(this.OnBuildProgressChanged);
+  }
+
+  private void UpdateBar()
+  {
+    if (LetterBox.IsPlaying)
+      return;
+    float progress = this.StructureBrain.BuildProgress / (float) StructuresData.BuildDurationGameMinutes(this.StructureBrain.Data.ToBuildType);
+    if ((UnityEngine.Object) this._uiProgressIndicator == (UnityEngine.Object) null)
+    {
+      this._uiProgressIndicator = BiomeConstants.Instance.ProgressIndicatorTemplate.Spawn<UIProgressIndicator>(BiomeConstants.Instance.transform, this.transform.position + Vector3.back * 1.5f - BiomeConstants.Instance.transform.position);
+      this._uiProgressIndicator.Show(progress);
+      this._uiProgressIndicator.OnHidden += (System.Action) (() => this._uiProgressIndicator = (UIProgressIndicator) null);
+    }
+    else
+      this._uiProgressIndicator.SetProgress(progress);
+  }
+
+  private void OnBuildProgressChanged()
+  {
+    this.UpdateBar();
+    if (this.cBuildSmokeRoutine != null)
+      this.StopCoroutine(this.cBuildSmokeRoutine);
+    if (!this.gameObject.activeSelf)
+      return;
+    this.cBuildSmokeRoutine = this.StartCoroutine((IEnumerator) this.BuildSmokeRoutine());
+  }
+
+  private IEnumerator BuildSmokeRoutine()
+  {
+    BuildSitePlotProject buildSitePlotProject = this;
+    if ((UnityEngine.Object) buildSitePlotProject.SmokeObject == (UnityEngine.Object) null)
+    {
+      buildSitePlotProject.SmokeObject = UnityEngine.Object.Instantiate<GameObject>(buildSitePlotProject.SmokePrefab, buildSitePlotProject.transform.position + new Vector3(0.0f, (float) buildSitePlotProject.Bounds.y / 2f, 0.0f), Quaternion.Euler(-180f, 0.0f, 0.0f), buildSitePlotProject.transform);
+      buildSitePlotProject.SmokeObject.transform.localScale = Vector3.one * (float) Mathf.Max(buildSitePlotProject.Bounds.x, buildSitePlotProject.Bounds.y);
+      buildSitePlotProject.particleSystems = buildSitePlotProject.SmokeObject.GetComponentsInChildren<ParticleSystem>();
+      foreach (ParticleSystem particleSystem in buildSitePlotProject.particleSystems)
+        particleSystem.emission.rateOverTimeMultiplier *= (float) Mathf.Max(buildSitePlotProject.Bounds.x, buildSitePlotProject.Bounds.y);
+    }
+    else
+    {
+      foreach (ParticleSystem particleSystem in buildSitePlotProject.particleSystems)
+        particleSystem.Play();
+    }
+    yield return (object) new WaitForSeconds(0.5f);
+    foreach (ParticleSystem particleSystem in buildSitePlotProject.particleSystems)
+      particleSystem.Stop();
+  }
+
+  private void SpawnTiles()
+  {
+    int x = -1;
+    while (++x < this.Bounds.x)
+    {
+      int y = -1;
+      while (++y < this.Bounds.y)
+        UnityEngine.Object.Instantiate<GameObject>(this.PlacementSquare, this.RotatedObject.transform, false).transform.localPosition = new Vector3((float) x, (float) y);
+    }
+    this.CentrePosition = this.transform.position + new Vector3(0.0f, (float) this.Bounds.y / 2f);
+    this.CentrePosition = this.transform.position + new Vector3(0.0f, (float) this.Bounds.y / 2f);
+    this.Interaction.ActivatorOffset = this.CentrePosition - this.transform.position;
+    this.Interaction.ActivateDistance = (float) this.Bounds.x;
+  }
+}

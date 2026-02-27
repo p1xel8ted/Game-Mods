@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyScuttleScout
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -119,9 +119,9 @@ public class EnemyScuttleScout : EnemyScuttleSwiper
       else
       {
         if (!enemyScuttleScout.Attacking && (double) (enemyScuttleScout.CloseCombatCooldown -= Time.deltaTime * enemyScuttleScout.Spine.timeScale) < 0.0 && (double) Vector3.Distance(enemyScuttleScout.transform.position, enemyScuttleScout.TargetObject.transform.position) < 2.0)
-          enemyScuttleScout.StartCoroutine((IEnumerator) enemyScuttleScout.CloseCombatAttack());
+          enemyScuttleScout.StartCoroutine(enemyScuttleScout.CloseCombatAttack());
         if (enemyScuttleScout.ShouldMortar())
-          enemyScuttleScout.StartCoroutine((IEnumerator) enemyScuttleScout.DoThrowMortar());
+          enemyScuttleScout.StartCoroutine(enemyScuttleScout.DoThrowMortar());
       }
       yield return (object) null;
     }

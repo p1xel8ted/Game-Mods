@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Bed
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -292,7 +292,7 @@ public class Interaction_Bed : Interaction
     {
       base.OnInteract(state);
       if ((double) DataManager.Instance.SurvivalMode_Sleep <= 80.0 || this.playerCanSleep)
-        this.StartCoroutine((IEnumerator) this.SleepTillMorning());
+        this.StartCoroutine(this.SleepTillMorning());
       else
         this.playerFarming.GoToAndStop(this.transform.position + new Vector3(0.0f, -0.5f), this.gameObject, GoToCallback: (System.Action) (() => this.CloseAndSpeak("NotTired")));
     }
@@ -452,7 +452,7 @@ public class Interaction_Bed : Interaction
       if (this.Activating)
         return;
       this.Activating = true;
-      this.StartCoroutine((IEnumerator) this.GiveReward());
+      this.StartCoroutine(this.GiveReward());
     }
     else
       this.playerFarming.indicator.PlayShake();
@@ -472,7 +472,7 @@ public class Interaction_Bed : Interaction
     this.Interactable = false;
     this.StructureBrain.Data.ClaimedByPlayer = true;
     this.HasChanged = true;
-    this.StartCoroutine((IEnumerator) this.ClaimBedIE());
+    this.StartCoroutine(this.ClaimBedIE());
   }
 
   public IEnumerator ClaimBedIE()

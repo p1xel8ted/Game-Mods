@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CameraFollowTarget
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -319,7 +319,7 @@ public class CameraFollowTarget : BaseMonoBehaviour
       this.StopCoroutine(this.cSetTargetCamera);
     if (this.cResetTargetCamera != null)
       this.StopCoroutine(this.cResetTargetCamera);
-    this.cSetTargetCamera = this.StartCoroutine((IEnumerator) this.SetTargetCameraRoutine());
+    this.cSetTargetCamera = this.StartCoroutine(this.SetTargetCameraRoutine());
   }
 
   public IEnumerator SetTargetCameraRoutine()
@@ -355,7 +355,7 @@ public class CameraFollowTarget : BaseMonoBehaviour
       this.StopCoroutine(this.cSetTargetCamera);
     if (this.cResetTargetCamera != null)
       this.StopCoroutine(this.cResetTargetCamera);
-    this.cResetTargetCamera = this.StartCoroutine((IEnumerator) this.ResetTargetCameraRoutine());
+    this.cResetTargetCamera = this.StartCoroutine(this.ResetTargetCameraRoutine());
   }
 
   public IEnumerator ResetTargetCameraRoutine()

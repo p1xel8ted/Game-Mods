@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UINavigator.UINavigatorNew
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -127,31 +127,38 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
           Controller activeController1 = InputManager.General.GetLastActiveController(MonoSingleton<UIManager>.Instance.MenusBlocked ? this.AllowInputOnlyFromPlayer : (PlayerFarming) null);
           if (activeController1 != null)
           {
-            bool flag1 = (double) Vector3.Distance(Input.mousePosition, this._previousMouseInput) >= 25.0;
+            Vector2 a = (Vector2) Input.mousePosition;
+            bool flag1 = Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2);
+            PlayerFarming playerUsingMouse = this.GetPlayerUsingMouse();
+            if ((UnityEngine.Object) playerUsingMouse != (UnityEngine.Object) null && playerUsingMouse.rewiredPlayer != null && playerUsingMouse.rewiredPlayer.controllers.Mouse != null)
+            {
+              a = playerUsingMouse.rewiredPlayer.controllers.Mouse.screenPosition;
+              flag1 = playerUsingMouse.rewiredPlayer.controllers.Mouse.GetButtonDown(0) || playerUsingMouse.rewiredPlayer.controllers.Mouse.GetButtonDown(1) || playerUsingMouse.rewiredPlayer.controllers.Mouse.GetButtonDown(2);
+            }
+            bool flag2 = (double) Vector3.Distance((Vector3) a, this._previousMouseInput) >= 25.0;
             if (MonoSingleton<UIManager>.Instance.MenusBlocked && (UnityEngine.Object) this.AllowInputOnlyFromPlayer != (UnityEngine.Object) null && !this.AllowInputOnlyFromPlayer.canUseKeyboard)
               this._inputModule.allowMouseInput = true;
-            bool flag2 = Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2);
-            if (flag1 | flag2)
+            if (flag2 | flag1)
               this.inactiveCursorVisilibtyTimer = 0.0f;
             else if ((activeController1.type == ControllerType.Keyboard || activeController1.type == ControllerType.Mouse) && (double) this.inactiveCursorVisilibtyTimer < 1.5)
               this.inactiveCursorVisilibtyTimer += Time.unscaledDeltaTime;
             if (!this._inputModule.allowMouseInput)
             {
-              if (flag1)
+              if (flag2)
               {
                 this._inputModule.allowMouseInput = true;
                 InputManager.General.MouseInputActive = true;
                 Cursor.visible = true;
-                this._previousMouseInput = Input.mousePosition;
+                this._previousMouseInput = (Vector3) a;
                 break;
               }
               break;
             }
             if (activeController1.type == ControllerType.Joystick && (InputManager.General.GetAnyButton() || InputManager.General.GetAnyAxisHold()))
             {
-              if (!flag1 && !flag2)
+              if (!flag2 && !flag1)
               {
-                this._previousMouseInput = Input.mousePosition;
+                this._previousMouseInput = (Vector3) a;
                 this._inputModule.allowMouseInput = false;
                 bool flag3 = false;
                 if (PlayerFarming.playersCount > 1)
@@ -164,7 +171,7 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
                       flag3 = true;
                   }
                 }
-                bool flag4 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                bool flag4 = flag2 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
                 InputManager.General.MouseInputActive = flag3 & flag4;
                 Cursor.visible = flag3 & flag4;
                 if (this._currentSelectable != null && (UnityEngine.Object) this._currentSelectable.Selectable != (UnityEngine.Object) null)
@@ -174,70 +181,52 @@ public class UINavigatorNew : MonoSingleton<UINavigatorNew>
                 }
                 break;
               }
-              this._previousMouseInput = Input.mousePosition;
+              this._previousMouseInput = (Vector3) a;
               break;
             }
             if (activeController1.type == ControllerType.Keyboard || activeController1.type == ControllerType.Mouse)
             {
               bool flag5 = PlayerFarming.playersCount == 1;
               bool flag6;
-              if (activeController1.type == ControllerType.Mouse & flag1)
+              if (activeController1.type == ControllerType.Mouse & flag2)
               {
                 flag6 = true;
                 InputManager.General.MouseInputActive = true;
               }
               else if (PlayerFarming.playersCount == 0)
               {
-                flag1 = activeController1.type == ControllerType.Mouse;
-                bool flag7 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                flag2 = activeController1.type == ControllerType.Mouse;
+                bool flag7 = flag2 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
                 flag6 = flag7;
                 InputManager.General.MouseInputActive = flag7;
               }
               else if (flag5)
               {
                 if (PlayerFarming.Instance.CurrentWeaponInfo != null && (UnityEngine.Object) PlayerFarming.Instance.CurrentWeaponInfo.WeaponData != (UnityEngine.Object) null && PlayerFarming.Instance.CurrentWeaponInfo.WeaponData.PrimaryEquipmentType == EquipmentType.Blunderbuss)
-                  flag1 = activeController1.type == ControllerType.Mouse;
-                bool flag8 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                  flag2 = activeController1.type == ControllerType.Mouse;
+                bool flag8 = flag2 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
                 flag6 = flag8;
                 InputManager.General.MouseInputActive = flag8;
               }
               else
               {
-                PlayerFarming playerFarming = (PlayerFarming) null;
-                foreach (PlayerFarming player in PlayerFarming.players)
-                {
-                  Controller activeController3 = InputManager.General.GetLastActiveController(player);
-                  if (!((UnityEngine.Object) player == (UnityEngine.Object) null) && activeController3 != null && (!MonoSingleton<UIManager>.Instance.MenusBlocked || !((UnityEngine.Object) player != (UnityEngine.Object) this.AllowInputOnlyFromPlayer)) && player.canUseKeyboard)
-                  {
-                    switch (activeController3.type)
-                    {
-                      case ControllerType.Keyboard:
-                      case ControllerType.Mouse:
-                        playerFarming = player;
-                        goto label_40;
-                      default:
-                        continue;
-                    }
-                  }
-                }
-label_40:
-                if ((UnityEngine.Object) playerFarming != (UnityEngine.Object) null && playerFarming.CurrentWeaponInfo != null && (UnityEngine.Object) playerFarming.CurrentWeaponInfo.WeaponData != (UnityEngine.Object) null && playerFarming.CurrentWeaponInfo.WeaponData.PrimaryEquipmentType == EquipmentType.Blunderbuss)
-                  flag1 = activeController1.type == ControllerType.Mouse;
-                bool flag9 = flag1 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
-                flag6 = (UnityEngine.Object) playerFarming != (UnityEngine.Object) null & flag9;
+                if ((UnityEngine.Object) playerUsingMouse != (UnityEngine.Object) null && playerUsingMouse.CurrentWeaponInfo != null && (UnityEngine.Object) playerUsingMouse.CurrentWeaponInfo.WeaponData != (UnityEngine.Object) null && playerUsingMouse.CurrentWeaponInfo.WeaponData.PrimaryEquipmentType == EquipmentType.Blunderbuss)
+                  flag2 = activeController1.type == ControllerType.Mouse;
+                bool flag9 = flag2 || (double) this.inactiveCursorVisilibtyTimer < 1.5;
+                flag6 = (UnityEngine.Object) playerUsingMouse != (UnityEngine.Object) null & flag9;
                 InputManager.General.MouseInputActive = flag6;
               }
               Cursor.visible = flag6;
-              if (flag1 | flag2)
+              if (flag2 | flag1)
               {
-                this._previousMouseInput = Input.mousePosition;
+                this._previousMouseInput = (Vector3) a;
                 break;
               }
               break;
             }
-            if (flag1 | flag2)
+            if (flag2 | flag1)
             {
-              this._previousMouseInput = Input.mousePosition;
+              this._previousMouseInput = (Vector3) a;
               break;
             }
             break;
@@ -301,6 +290,26 @@ label_40:
       return;
     this._navigationHold = 0;
     this._selectionDelay = 0.0f;
+  }
+
+  public PlayerFarming GetPlayerUsingMouse()
+  {
+    foreach (PlayerFarming player in PlayerFarming.players)
+    {
+      Controller activeController = InputManager.General.GetLastActiveController(player);
+      if (!((UnityEngine.Object) player == (UnityEngine.Object) null) && activeController != null && (!MonoSingleton<UIManager>.Instance.MenusBlocked || !((UnityEngine.Object) player != (UnityEngine.Object) this.AllowInputOnlyFromPlayer)) && player.canUseKeyboard)
+      {
+        switch (activeController.type)
+        {
+          case ControllerType.Keyboard:
+          case ControllerType.Mouse:
+            return player;
+          default:
+            continue;
+        }
+      }
+    }
+    return (PlayerFarming) null;
   }
 
   public void PerformConfirmAction()

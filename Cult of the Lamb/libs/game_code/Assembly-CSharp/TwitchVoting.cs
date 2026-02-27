@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TwitchVoting
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -42,7 +42,7 @@ public static class TwitchVoting
     List<FollowerInfo> followers,
     TwitchVoting.VotingReadyResponse votingReadyResponse)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchVoting.StartVotingIE(reason, followers, votingReadyResponse));
+    GameManager.GetInstance().StartCoroutine(TwitchVoting.StartVotingIE(reason, followers, votingReadyResponse));
   }
 
   public static IEnumerator StartVotingIE(
@@ -75,7 +75,7 @@ public static class TwitchVoting
 
   public static void EndVoting(TwitchVoting.VotingResponse raffleResponse)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchVoting.EndVotingIE(raffleResponse));
+    GameManager.GetInstance().StartCoroutine(TwitchVoting.EndVotingIE(raffleResponse));
   }
 
   public static IEnumerator EndVotingIE(TwitchVoting.VotingResponse raffleResponse)
@@ -101,7 +101,7 @@ public static class TwitchVoting
 
   public static void GetVoting(Action<int> callback)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchVoting.GetVotingIE(callback));
+    GameManager.GetInstance().StartCoroutine(TwitchVoting.GetVotingIE(callback));
   }
 
   public static IEnumerator GetVotingIE(Action<int> callback)

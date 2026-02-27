@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BiomeConstants
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -282,7 +282,7 @@ public class BiomeConstants : BaseMonoBehaviour
     BiomeGenerator.OnBiomeChangeRoom += new BiomeGenerator.BiomeAction(this.BiomeGenerator_OnBiomeChangeRoom);
     TimeManager.OnNewPhaseStarted += new System.Action(this.newTimeOfDay);
     ObjectiveManager.OnObjectiveCompleted += new ObjectiveManager.ObjectiveUpdated(this.ObjectiveManager_OnObjectiveCompleted);
-    this.StartCoroutine((IEnumerator) this.SwapShaders());
+    this.StartCoroutine(this.SwapShaders());
     Camera main = Camera.main;
     this._postProcessLayer = main.GetComponent<PostProcessLayer>();
     main.allowHDR = true;
@@ -290,7 +290,7 @@ public class BiomeConstants : BaseMonoBehaviour
     GraphicsSettingsUtilities.OnEnvironmentSettingsChanged += new System.Action(this.SwapShadersStart);
   }
 
-  public void SwapShadersStart() => this.StartCoroutine((IEnumerator) this.SwapShaders());
+  public void SwapShadersStart() => this.StartCoroutine(this.SwapShaders());
 
   public IEnumerator SwapShaders()
   {
@@ -492,7 +492,7 @@ public class BiomeConstants : BaseMonoBehaviour
     this.depthoffield.aperture.value = aperture;
     if (this.depthOfFieldRoutine != null)
       this.StopCoroutine(this.depthOfFieldRoutine);
-    this.depthOfFieldRoutine = this.StartCoroutine((IEnumerator) this.DepthOfFieldRoutine(Duration, FocusLengthStart, FocusLengthEnd));
+    this.depthOfFieldRoutine = this.StartCoroutine(this.DepthOfFieldRoutine(Duration, FocusLengthStart, FocusLengthEnd));
   }
 
   public IEnumerator DepthOfFieldRoutine(
@@ -516,7 +516,7 @@ public class BiomeConstants : BaseMonoBehaviour
     if ((UnityEngine.Object) this.chromaticAbberration == (UnityEngine.Object) null)
       return;
     this.chromaticAbberration.enabled.value = SettingsManager.Settings.Graphics.ChromaticAberration;
-    this.StartCoroutine((IEnumerator) this.ChromaticAbberationRoutine(Duration, StartValue, EndValue));
+    this.StartCoroutine(this.ChromaticAbberationRoutine(Duration, StartValue, EndValue));
   }
 
   public IEnumerator ChromaticAbberationRoutine(float Duration, float StartValue, float EndValue)
@@ -537,7 +537,7 @@ public class BiomeConstants : BaseMonoBehaviour
     if ((UnityEngine.Object) this.vignette == (UnityEngine.Object) null)
       return;
     this.vignette.enabled.value = SettingsManager.Settings.Graphics.Vignette;
-    this.StartCoroutine((IEnumerator) this.VignetteRoutine(Duration, StartValue, EndValue));
+    this.StartCoroutine(this.VignetteRoutine(Duration, StartValue, EndValue));
   }
 
   public IEnumerator VignetteRoutine(float Duration, float StartValue, float EndValue)
@@ -564,9 +564,9 @@ public class BiomeConstants : BaseMonoBehaviour
       this.getPostProcessingItems();
     if ((UnityEngine.Object) this.desaturateStencil == (UnityEngine.Object) null)
       return;
-    this.StopCoroutine((IEnumerator) this.DesaturationStencilRoutine(Duration, StartValue, EndValue, BrightnessStart, BrightnessEnd));
+    this.StopCoroutine(this.DesaturationStencilRoutine(Duration, StartValue, EndValue, BrightnessStart, BrightnessEnd));
     this.desaturateStencil.enabled.value = true;
-    this.StartCoroutine((IEnumerator) this.DesaturationStencilRoutine(Duration, StartValue, EndValue, BrightnessStart, BrightnessEnd));
+    this.StartCoroutine(this.DesaturationStencilRoutine(Duration, StartValue, EndValue, BrightnessStart, BrightnessEnd));
   }
 
   public IEnumerator DesaturationStencilRoutine(
@@ -1208,7 +1208,7 @@ public class BiomeConstants : BaseMonoBehaviour
     Vector3 position,
     Vector3 scale)
   {
-    this.StartCoroutine((IEnumerator) this.SmokeInteractionVFXRoutine(duration, interval, position, scale));
+    this.StartCoroutine(this.SmokeInteractionVFXRoutine(duration, interval, position, scale));
   }
 
   public IEnumerator SmokeInteractionVFXRoutine(
@@ -1350,14 +1350,14 @@ public class BiomeConstants : BaseMonoBehaviour
     icon.transform.parent = parent;
     icon.transform.localPosition = Vector3.back + offset;
     icon.transform.DOPunchScale(Vector3.one * 0.5f, 0.2f);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayedCallback(0.75f, (System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.DelayedCallback(0.75f, (System.Action) (() =>
     {
       if ((bool) (UnityEngine.Object) icon)
       {
         icon.transform.DOLocalMoveZ(0.0f, 0.25f);
         icon.transform.DOScale(0.0f, 0.25f);
       }
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayedCallback(0.25f, (System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(this.DelayedCallback(0.25f, (System.Action) (() =>
       {
         if (!(bool) (UnityEngine.Object) icon)
           return;
@@ -1372,14 +1372,14 @@ public class BiomeConstants : BaseMonoBehaviour
     icon.transform.parent = parent;
     icon.transform.localPosition = Vector3.back + offset;
     icon.transform.DOPunchScale(Vector3.one * 0.5f, 0.2f);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayedCallback(0.75f, (System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.DelayedCallback(0.75f, (System.Action) (() =>
     {
       if ((bool) (UnityEngine.Object) icon)
       {
         icon.transform.DOLocalMoveZ(0.0f, 0.25f);
         icon.transform.DOScale(0.0f, 0.25f);
       }
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayedCallback(0.25f, (System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(this.DelayedCallback(0.25f, (System.Action) (() =>
       {
         if (!(bool) (UnityEngine.Object) icon)
           return;
@@ -1403,14 +1403,14 @@ public class BiomeConstants : BaseMonoBehaviour
     icon.transform.localPosition = Vector3.back + offset;
     icon.transform.DOPunchScale(Vector3.one * 0.5f, 0.2f);
     icon.GetComponentInChildren<TMP_Text>().text = damage.ToString();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayedCallback(0.75f, (System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.DelayedCallback(0.75f, (System.Action) (() =>
     {
       if ((bool) (UnityEngine.Object) icon)
       {
         icon.transform.DOLocalMoveZ(0.0f, 0.25f);
         icon.transform.DOScale(0.0f, 0.25f);
       }
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayedCallback(0.25f, (System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(this.DelayedCallback(0.25f, (System.Action) (() =>
       {
         if (!(bool) (UnityEngine.Object) icon)
           return;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Tailor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -143,7 +143,7 @@ public class Interaction_Tailor : Interaction
     GameManager.GetInstance().OnConversationNew();
     GameManager.GetInstance().OnConversationNext(this.playerFarming.CameraBone, 5f);
     this.isLoadingAssets = true;
-    this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadTailorMinigameAssets(), (System.Action) (() =>
+    this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadTailorMinigameAssets(), (System.Action) (() =>
     {
       this.isLoadingAssets = false;
       this._uiCookingMinigameOverlayController = MonoSingleton<UIManager>.Instance.TailorMinigameOverlayControllerTemplate.Instantiate<UITailorMinigameOverlayController>();
@@ -217,7 +217,7 @@ public class Interaction_Tailor : Interaction
     FollowerClothingType clothingType,
     string variant)
   {
-    this.assignRoutine = this.StartCoroutine((IEnumerator) this.AssignFollowerClothingIE(follower, clothingType, variant));
+    this.assignRoutine = this.StartCoroutine(this.AssignFollowerClothingIE(follower, clothingType, variant));
   }
 
   public IEnumerator AssignFollowerClothingIE(
@@ -227,7 +227,7 @@ public class Interaction_Tailor : Interaction
   {
     Interaction_Tailor interactionTailor = this;
     LetterBox.Instance.ShowSkipPrompt();
-    interactionTailor.StartCoroutine((IEnumerator) interactionTailor.WaitForSkip(follower, clothingType, variant));
+    interactionTailor.StartCoroutine(interactionTailor.WaitForSkip(follower, clothingType, variant));
     FollowerBrain followerWearingOutfit = TailorManager.GetClothingData(clothingType).SpecialClothing ? TailorManager.GetFollowerWearingOutfit(clothingType) : (FollowerBrain) null;
     Follower followerById = followerWearingOutfit != null ? FollowerManager.FindFollowerByID(followerWearingOutfit.Info.ID) : (Follower) null;
     if (!((UnityEngine.Object) followerById != (UnityEngine.Object) null))

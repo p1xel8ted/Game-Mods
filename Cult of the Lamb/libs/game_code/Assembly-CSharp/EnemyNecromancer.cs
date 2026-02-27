@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyNecromancer
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -162,7 +162,7 @@ public class EnemyNecromancer : UnitObject
       this.DamageColliderEvents.SetActive(false);
     }
     this.health.OnCharmed += new Health.StasisEvent(this.OnCharmed);
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     base.OnEnable();
   }
 
@@ -209,7 +209,7 @@ public class EnemyNecromancer : UnitObject
     while ((UnityEngine.Object) closestTarget != (UnityEngine.Object) null && (double) Vector3.Distance(enemyNecromancer.transform.position, closestTarget.transform.position) > (double) enemyNecromancer.Range)
       yield return (object) null;
     enemyNecromancer.StopAllCoroutines();
-    enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.ChaseTarget());
+    enemyNecromancer.StartCoroutine(enemyNecromancer.ChaseTarget());
   }
 
   public bool IsLoopPlaying(EventInstance loop)
@@ -243,7 +243,7 @@ public class EnemyNecromancer : UnitObject
         if (this.throwRoutine != null)
           return;
         this.StopAllCoroutines();
-        this.StartCoroutine((IEnumerator) this.DoStunned());
+        this.StartCoroutine(this.DoStunned());
       }
       else
       {
@@ -309,7 +309,7 @@ public class EnemyNecromancer : UnitObject
       if ((double) this.minions[index].health.HP > 0.0 && this.minions[index].health.team == this.health.team)
       {
         this.minions[index].health.invincible = false;
-        this.minions[index].health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+        this.minions[index].health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
         this.minions.RemoveAt(index);
       }
     }
@@ -323,7 +323,7 @@ public class EnemyNecromancer : UnitObject
       {
         this.minions[index].state.CURRENT_STATE = StateMachine.State.Dieing;
         this.minions[index].health.invincible = false;
-        this.minions[index].health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+        this.minions[index].health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
         this.minions.RemoveAt(index);
       }
     }
@@ -340,7 +340,7 @@ public class EnemyNecromancer : UnitObject
       Health closestTarget = enemyNecromancer.GetClosestTarget();
       if ((UnityEngine.Object) closestTarget == (UnityEngine.Object) null)
       {
-        enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.WaitForTarget());
+        enemyNecromancer.StartCoroutine(enemyNecromancer.WaitForTarget());
         break;
       }
       enemyNecromancer.TargetObject = closestTarget.gameObject;
@@ -352,23 +352,23 @@ public class EnemyNecromancer : UnitObject
         if ((double) enemyNecromancer.moveDelay < 0.0 && (double) num < (double) enemyNecromancer.FleeRadius)
           enemyNecromancer.ThrowDelay = UnityEngine.Random.Range(0.0f, 1f);
         enemyNecromancer.moveDelay = enemyNecromancer.FleeDelay;
-        yield return (object) enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.DoMove());
+        yield return (object) enemyNecromancer.StartCoroutine(enemyNecromancer.DoMove());
       }
       if (enemyNecromancer.Summon && (!enemyNecromancer.hasSummoned || enemyNecromancer.GetAliveMinions() <= 0) && (double) (enemyNecromancer.SummonDelay -= Time.deltaTime * enemyNecromancer.skeletonAnimation.timeScale) < 0.0 && !enemyNecromancer.health.IsCharmed)
       {
         enemyNecromancer.StopAllCoroutines();
-        yield return (object) enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.DoSummon());
+        yield return (object) enemyNecromancer.StartCoroutine(enemyNecromancer.DoSummon());
       }
       if ((double) (enemyNecromancer.CloseCombatCooldown -= Time.deltaTime * enemyNecromancer.skeletonAnimation.timeScale) < 0.0 && (double) Vector3.Distance(enemyNecromancer.transform.position, enemyNecromancer.TargetObject.transform.position) < (double) enemyNecromancer.meleeDistance)
       {
-        enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.DoCloseCombatAttack());
+        enemyNecromancer.StartCoroutine(enemyNecromancer.DoCloseCombatAttack());
         break;
       }
       if (enemyNecromancer.Throw && (double) (enemyNecromancer.ThrowDelay -= Time.deltaTime * enemyNecromancer.skeletonAnimation.timeScale) < 0.0 && enemyNecromancer.GetAliveMinions() > 0)
       {
         enemyNecromancer.StopAllCoroutines();
         enemyNecromancer.ThrowDelay = UnityEngine.Random.Range(2f, 3f);
-        enemyNecromancer.throwRoutine = enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.DoThrowMinionsAttack((double) UnityEngine.Random.value < (double) enemyNecromancer.ChanceOfThrowAll ? enemyNecromancer.minions.Count : 1));
+        enemyNecromancer.throwRoutine = enemyNecromancer.StartCoroutine(enemyNecromancer.DoThrowMinionsAttack((double) UnityEngine.Random.value < (double) enemyNecromancer.ChanceOfThrowAll ? enemyNecromancer.minions.Count : 1));
         break;
       }
       yield return (object) null;
@@ -430,7 +430,7 @@ public class EnemyNecromancer : UnitObject
       yield return (object) null;
     enemyNecromancer.hasSummoned = true;
     enemyNecromancer.StopAllCoroutines();
-    enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.ChaseTarget());
+    enemyNecromancer.StartCoroutine(enemyNecromancer.ChaseTarget());
   }
 
   public void OnDamageTriggerEnter(Collider2D collider)
@@ -463,7 +463,7 @@ public class EnemyNecromancer : UnitObject
     enemyNecromancer.Stunned = false;
     enemyNecromancer.health.ArrowAttackVulnerability = 1f;
     enemyNecromancer.StopAllCoroutines();
-    enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.ChaseTarget());
+    enemyNecromancer.StartCoroutine(enemyNecromancer.ChaseTarget());
   }
 
   public IEnumerator DoMove()
@@ -492,7 +492,7 @@ public class EnemyNecromancer : UnitObject
     enemyNecromancer.DisableForces = false;
     enemyNecromancer.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyNecromancer.StopAllCoroutines();
-    enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.ChaseTarget());
+    enemyNecromancer.StartCoroutine(enemyNecromancer.ChaseTarget());
   }
 
   public Vector3 GetFleeDirection()
@@ -556,7 +556,7 @@ public class EnemyNecromancer : UnitObject
     enemyNecromancer.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyNecromancer.moveDelay = 0.0f;
     enemyNecromancer.StopAllCoroutines();
-    enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.ChaseTarget());
+    enemyNecromancer.StartCoroutine(enemyNecromancer.ChaseTarget());
   }
 
   public IEnumerator DoThrowMinionsAttack(int count)
@@ -565,7 +565,7 @@ public class EnemyNecromancer : UnitObject
     List<UnitObject> minions = enemyNecromancer.GetAvailableMinions(count);
     enemyNecromancer.isThrowing = true;
     enemyNecromancer.state.CURRENT_STATE = StateMachine.State.Attacking;
-    enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.DoNecromancerRiseAnim());
+    enemyNecromancer.StartCoroutine(enemyNecromancer.DoNecromancerRiseAnim());
     if (minions.Count > 0)
     {
       foreach (UnitObject minion in minions)
@@ -575,7 +575,7 @@ public class EnemyNecromancer : UnitObject
           EnemySwordsman enemySwordsman = (EnemySwordsman) minion;
           Health component = minion.GetComponent<Health>();
           enemyNecromancer.DisableMinionForThrowing(minion, component);
-          enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.RaiseMinionIntoAirForThrowing(minion, enemySwordsman.Spine));
+          enemyNecromancer.StartCoroutine(enemyNecromancer.RaiseMinionIntoAirForThrowing(minion, enemySwordsman.Spine));
         }
       }
       float t = 0.0f;
@@ -604,7 +604,7 @@ public class EnemyNecromancer : UnitObject
           AudioManager.Instance.PlayOneShot(enemyNecromancer.AttackSkeletonThrowTossSFX, enemyNecromancer.gameObject);
           enemyNecromancer.skeletonAnimation.AnimationState.SetAnimation(0, enemyNecromancer.ThrowAnimation, false);
           enemyNecromancer.skeletonAnimation.AnimationState.AddAnimation(0, enemyNecromancer.IdleAnimation, true, 0.0f);
-          yield return (object) enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.MoveMinionTowardsTarget(minions[i], position));
+          yield return (object) enemyNecromancer.StartCoroutine(enemyNecromancer.MoveMinionTowardsTarget(minions[i], position));
           t = 0.0f;
           while ((double) t < (double) enemyNecromancer.DelayBetweenMinionThrow)
           {
@@ -618,7 +618,7 @@ public class EnemyNecromancer : UnitObject
     enemyNecromancer.isThrowing = false;
     enemyNecromancer.StopAllCoroutines();
     enemyNecromancer.throwRoutine = (Coroutine) null;
-    enemyNecromancer.StartCoroutine((IEnumerator) enemyNecromancer.ChaseTarget());
+    enemyNecromancer.StartCoroutine(enemyNecromancer.ChaseTarget());
   }
 
   public void LookAtTarget()
@@ -687,7 +687,7 @@ public class EnemyNecromancer : UnitObject
         if (enemyNecromancer.minions.Contains(minion))
           enemyNecromancer.minions.Remove(minion);
         minion.health.invincible = false;
-        minion.health.DealDamage(float.PositiveInfinity, enemyNecromancer.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+        minion.health.DealDamage(float.PositiveInfinity, enemyNecromancer.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
       }
     }
   }
@@ -776,7 +776,7 @@ public class EnemyNecromancer : UnitObject
     this.KillAllMinionsOfState(StateMachine.State.Flying);
     this.KillAllMinionsOfState(StateMachine.State.PickedUp);
     this.RecycleCurrentReticule();
-    this.StartCoroutine((IEnumerator) this.ChaseTarget());
+    this.StartCoroutine(this.ChaseTarget());
   }
 
   public void RecycleCurrentReticule()

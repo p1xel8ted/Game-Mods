@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BarricadeLine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -25,7 +25,7 @@ public class BarricadeLine : BaseMonoBehaviour
     this.Collider.enabled = this.StartingPosition == BarricadeLine.State.Closed;
   }
 
-  public void Open() => this.StartCoroutine((IEnumerator) this.OpenRoutine());
+  public void Open() => this.StartCoroutine(this.OpenRoutine());
 
   public IEnumerator OpenRoutine()
   {
@@ -37,7 +37,7 @@ public class BarricadeLine : BaseMonoBehaviour
     }
   }
 
-  public void Close() => this.StartCoroutine((IEnumerator) this.CloseRoutine());
+  public void Close() => this.StartCoroutine(this.CloseRoutine());
 
   public IEnumerator CloseRoutine()
   {

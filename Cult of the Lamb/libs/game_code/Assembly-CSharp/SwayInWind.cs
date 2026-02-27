@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SwayInWind
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -70,7 +70,7 @@ public class SwayInWind : MonoBehaviour
       this.swayContainer = this.transform;
     if (this.TURN_OFF_ON_LOW_QUALITY && SettingsManager.Settings != null && SettingsManager.Settings.Graphics.EnvironmentDetail == 0)
       this.TurnOffEverything();
-    this.StartCoroutine((IEnumerator) this.OnEnableIE());
+    this.StartCoroutine(this.OnEnableIE());
   }
 
   public void TurnOffEverything()
@@ -180,7 +180,7 @@ public class SwayInWind : MonoBehaviour
     this.impactPower += amount;
     if (this.decayRoutine != null)
       this.StopCoroutine(this.decayRoutine);
-    this.decayRoutine = this.StartCoroutine((IEnumerator) this.DecayImpactRoutine());
+    this.decayRoutine = this.StartCoroutine(this.DecayImpactRoutine());
     if (string.IsNullOrEmpty(this.impactSFX))
       return;
     AudioManager.Instance.PlayOneShot(this.impactSFX, this.transform.position);

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyTriDash
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -117,7 +117,7 @@ public class EnemyTriDash : UnitObject
       this.damageColliderEvents.SetActive(false);
     }
     this.state.CURRENT_STATE = StateMachine.State.Idle;
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDie(
@@ -193,7 +193,7 @@ public class EnemyTriDash : UnitObject
             enemyTriDash.SetAnimation(enemyTriDash.IdleAnimation, true);
         }
         if (enemyTriDash.ShouldAttack())
-          enemyTriDash.StartCoroutine((IEnumerator) enemyTriDash.AttackRoutine());
+          enemyTriDash.StartCoroutine(enemyTriDash.AttackRoutine());
         yield return (object) null;
       }
       yield return (object) null;
@@ -293,10 +293,10 @@ public class EnemyTriDash : UnitObject
     if (this.Attacking && this.CanBeInterrupted)
     {
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     this.SimpleSpineFlash.FlashFillRed();
     AudioManager.Instance.PlayOneShot(this.getHitSfx, this.transform.position);
   }
@@ -341,9 +341,9 @@ public class EnemyTriDash : UnitObject
     enemyTriDash.DisableForces = false;
     enemyTriDash.IdleWait = 0.0f;
     enemyTriDash.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemyTriDash.StartCoroutine((IEnumerator) enemyTriDash.ActiveRoutine());
+    enemyTriDash.StartCoroutine(enemyTriDash.ActiveRoutine());
     if (enemyTriDash.CounterAttack)
-      enemyTriDash.StartCoroutine((IEnumerator) enemyTriDash.AttackRoutine());
+      enemyTriDash.StartCoroutine(enemyTriDash.AttackRoutine());
   }
 
   public void GetNewTargetPosition()

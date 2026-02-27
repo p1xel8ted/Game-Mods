@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HubShoreManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -53,7 +53,7 @@ public class HubShoreManager : BaseMonoBehaviour
   {
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.FixTheLighthouse);
     DataManager.Instance.Lighthouse_Lit = true;
-    this.StartCoroutine((IEnumerator) this.GiveSkinAndOpenShop());
+    this.StartCoroutine(this.GiveSkinAndOpenShop());
   }
 
   public IEnumerator GiveSkinAndOpenShop()
@@ -69,7 +69,7 @@ public class HubShoreManager : BaseMonoBehaviour
     this.GotItem();
   }
 
-  public void CheckMusicRoutine() => this.StartCoroutine((IEnumerator) this.CheckMusic());
+  public void CheckMusicRoutine() => this.StartCoroutine(this.CheckMusic());
 
   public IEnumerator CheckMusic()
   {
@@ -202,7 +202,7 @@ public class HubShoreManager : BaseMonoBehaviour
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.LighthouseReturn);
     Inventory.ChangeItemQuantity(InventoryItem.ITEM_TYPE.CRYSTAL, -25);
     DataManager.Instance.CompletedLighthouseCrystalQuest = true;
-    this.StartCoroutine((IEnumerator) this.GiveItemsRoutine(InventoryItem.ITEM_TYPE.CRYSTAL, 25));
+    this.StartCoroutine(this.GiveItemsRoutine(InventoryItem.ITEM_TYPE.CRYSTAL, 25));
   }
 
   public IEnumerator GiveItemsRoutine(InventoryItem.ITEM_TYPE itemType, int quantity)
@@ -217,7 +217,7 @@ public class HubShoreManager : BaseMonoBehaviour
       ResourceCustomTarget.Create(hubShoreManager.CompleteCrystalQuestConvo, PlayerFarming.Instance.transform.position, itemType, (System.Action) null);
       yield return (object) new WaitForSeconds(0.025f);
     }
-    hubShoreManager.StartCoroutine((IEnumerator) hubShoreManager.GiveCrystalSkin());
+    hubShoreManager.StartCoroutine(hubShoreManager.GiveCrystalSkin());
   }
 
   public IEnumerator GiveCrystalSkin()

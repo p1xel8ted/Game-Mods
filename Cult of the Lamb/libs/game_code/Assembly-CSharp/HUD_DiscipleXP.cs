@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_DiscipleXP
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -49,7 +49,7 @@ public class HUD_DiscipleXP : MonoBehaviour
       this.LerpBar.rectTransform.localScale = this.InstantBar.rectTransform.localScale = Vector3.zero;
       if (this.cFlashBarRoutine != null)
         this.StopCoroutine(this.cFlashBarRoutine);
-      this.StartCoroutine((IEnumerator) this.FlashBarRoutine());
+      this.StartCoroutine(this.FlashBarRoutine());
     }
     else
     {
@@ -57,7 +57,7 @@ public class HUD_DiscipleXP : MonoBehaviour
       if (this.cLerpBarRoutine != null)
         this.StopCoroutine(this.cLerpBarRoutine);
       if ((double) this.InstantBar.rectTransform.localScale.x > (double) this.LerpBar.rectTransform.localScale.x)
-        this.cLerpBarRoutine = this.StartCoroutine((IEnumerator) this.LerpBarRoutine());
+        this.cLerpBarRoutine = this.StartCoroutine(this.LerpBarRoutine());
       else
         this.LerpBar.rectTransform.localScale = this.InstantBar.rectTransform.localScale;
     }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SimpleSpineAnimator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -344,7 +344,7 @@ public class SimpleSpineAnimator : BaseMonoBehaviour
     this.FlashingRed = true;
     if (this.cFlashFillRoutine != null)
       this.StopCoroutine(this.cFlashFillRoutine);
-    this.cFlashFillRoutine = this.StartCoroutine((IEnumerator) this.FlashOnHitRoutine(opacity));
+    this.cFlashFillRoutine = this.StartCoroutine(this.FlashOnHitRoutine(opacity));
   }
 
   public IEnumerator FlashOnHitRoutine(float opacity)
@@ -395,8 +395,8 @@ public class SimpleSpineAnimator : BaseMonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights)
       return;
-    this.StopCoroutine((IEnumerator) this.DoFlashTintRed());
-    this.StartCoroutine((IEnumerator) this.DoFlashTintRed());
+    this.StopCoroutine(this.DoFlashTintRed());
+    this.StartCoroutine(this.DoFlashTintRed());
   }
 
   public IEnumerator DoFlashTintRed()
@@ -414,8 +414,8 @@ public class SimpleSpineAnimator : BaseMonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights)
       return;
-    this.StopCoroutine((IEnumerator) this.DoFlashFillBlack(ignoreSpineTimeScale));
-    this.StartCoroutine((IEnumerator) this.DoFlashFillBlack(ignoreSpineTimeScale));
+    this.StopCoroutine(this.DoFlashFillBlack(ignoreSpineTimeScale));
+    this.StartCoroutine(this.DoFlashFillBlack(ignoreSpineTimeScale));
   }
 
   public IEnumerator DoFlashFillBlack(bool ignoreSpineTimeScale)
@@ -439,8 +439,8 @@ public class SimpleSpineAnimator : BaseMonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights)
       return;
-    this.StopCoroutine((IEnumerator) this.DoFlashFillGreen());
-    this.StartCoroutine((IEnumerator) this.DoFlashFillGreen());
+    this.StopCoroutine(this.DoFlashFillGreen());
+    this.StartCoroutine(this.DoFlashFillGreen());
   }
 
   public IEnumerator DoFlashFillGreen()

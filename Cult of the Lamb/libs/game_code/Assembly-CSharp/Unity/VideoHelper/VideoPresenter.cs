@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Unity.VideoHelper.VideoPresenter
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -154,7 +154,7 @@ public class VideoPresenter : MonoBehaviour, ITimelineProvider
     this.LoadingIndicator.SetGameObjectActive(false);
     if ((UnityEngine.Object) this.Duration != (UnityEngine.Object) null)
       this.Duration.text = this.PrettyTimeFormat(TimeSpan.FromSeconds((double) this.controller.Duration));
-    this.StartCoroutine((IEnumerator) this.SetCurrentPosition());
+    this.StartCoroutine(this.SetCurrentPosition());
     this.Volume.value = this.controller.Volume;
     this.NormalFullscreen.sprite = this.Fullscreen;
     this.PlayPause.sprite = this.Pause;

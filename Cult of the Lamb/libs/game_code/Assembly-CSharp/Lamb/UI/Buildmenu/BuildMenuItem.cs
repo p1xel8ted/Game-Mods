@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.BuildMenu.BuildMenuItem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -211,14 +211,14 @@ public class BuildMenuItem : MonoBehaviour, ISelectHandler, IEventSystemHandler,
     this._selectedIcon.enabled = true;
     this._alert.TryRemoveAlert();
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoSelected(this.transform.localScale.x, 1.2f));
+    this.StartCoroutine(this.DoSelected(this.transform.localScale.x, 1.2f));
   }
 
   public void OnDeselect(BaseEventData eventData)
   {
     this._selectedIcon.enabled = false;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoDeSelected());
+    this.StartCoroutine(this.DoDeSelected());
   }
 
   public IEnumerator DoSelected(float starting, float target)

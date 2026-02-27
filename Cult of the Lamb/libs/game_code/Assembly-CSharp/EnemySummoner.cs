@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySummoner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -120,7 +120,7 @@ public class EnemySummoner : UnitObject
 
   public override void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     base.OnEnable();
   }
 
@@ -152,7 +152,7 @@ public class EnemySummoner : UnitObject
     while ((double) PlayerFarming.GetClosestPlayerDist(enemySummoner.transform.position) > (double) enemySummoner.Range)
       yield return (object) null;
     enemySummoner.StopAllCoroutines();
-    enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+    enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
   }
 
   public override void OnHit(
@@ -175,7 +175,7 @@ public class EnemySummoner : UnitObject
         this.knockBackVY = -this.KnockbackSpeed * Mathf.Sin(Utils.GetAngle(this.transform.position, AttackLocation) * ((float) Math.PI / 180f));
         this.simpleSpineFlash.FlashFillRed();
         this.StopAllCoroutines();
-        this.StartCoroutine((IEnumerator) this.DoStunned());
+        this.StartCoroutine(this.DoStunned());
       }
       else
       {
@@ -239,33 +239,33 @@ public class EnemySummoner : UnitObject
         }
         enemySummoner.FleeDelay = enemySummoner.TeleportFleeDelayMax;
         enemySummoner.TeleportDelay = UnityEngine.Random.Range(enemySummoner.TeleportDelayMin, enemySummoner.TeleportDelayMax);
-        yield return (object) enemySummoner.StartCoroutine((IEnumerator) enemySummoner.DoTeleport());
+        yield return (object) enemySummoner.StartCoroutine(enemySummoner.DoTeleport());
       }
       if (enemySummoner.Summon && (double) (enemySummoner.SummonDelay -= Time.deltaTime * enemySummoner.skeletonAnimation.timeScale) < 0.0 && enemySummoner.SummonedCount < 2)
       {
         enemySummoner.StopAllCoroutines();
-        enemySummoner.StartCoroutine((IEnumerator) enemySummoner.DoSummon());
+        enemySummoner.StartCoroutine(enemySummoner.DoSummon());
         break;
       }
       if (enemySummoner.FireBalls && (double) (enemySummoner.FireBallDelay -= Time.deltaTime * enemySummoner.skeletonAnimation.timeScale) < 0.0)
       {
         enemySummoner.StopAllCoroutines();
         enemySummoner.FireBallDelay = UnityEngine.Random.Range(2f, 3f);
-        enemySummoner.StartCoroutine((IEnumerator) enemySummoner.DoThrowFireBall());
+        enemySummoner.StartCoroutine(enemySummoner.DoThrowFireBall());
         break;
       }
       if (enemySummoner.Mortar && (double) (enemySummoner.MortarDelay -= Time.deltaTime * enemySummoner.skeletonAnimation.timeScale) < 0.0)
       {
         enemySummoner.StopAllCoroutines();
         enemySummoner.MortarDelay = UnityEngine.Random.Range(3f, 5f);
-        enemySummoner.StartCoroutine((IEnumerator) enemySummoner.DoThrowMortar());
+        enemySummoner.StartCoroutine(enemySummoner.DoThrowMortar());
         break;
       }
       if (enemySummoner.HealOthers && (double) (enemySummoner.HealDelay -= Time.deltaTime * enemySummoner.skeletonAnimation.timeScale) < 0.0 && Health.team2.Count > 1)
       {
         enemySummoner.StopAllCoroutines();
         enemySummoner.HealDelay = UnityEngine.Random.Range(3f, 4f);
-        enemySummoner.StartCoroutine((IEnumerator) enemySummoner.DoHealOthers());
+        enemySummoner.StartCoroutine(enemySummoner.DoHealOthers());
         break;
       }
       yield return (object) null;
@@ -303,7 +303,7 @@ public class EnemySummoner : UnitObject
       enemySummoner.EnemySpawnerGO = (GameObject) null;
     }
     enemySummoner.StopAllCoroutines();
-    enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+    enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
   }
 
   public void RemoveSpawned(
@@ -334,7 +334,7 @@ public class EnemySummoner : UnitObject
     if (!enemySummoner.HealOthers)
       enemySummoner.health.MeleeAttackVulnerability = 0.1f;
     enemySummoner.StopAllCoroutines();
-    enemySummoner.StartCoroutine((IEnumerator) enemySummoner.DoTeleport());
+    enemySummoner.StartCoroutine(enemySummoner.DoTeleport());
   }
 
   public IEnumerator DoThrowFireBall()
@@ -356,13 +356,13 @@ public class EnemySummoner : UnitObject
     }
     enemySummoner.Shooting = false;
     enemySummoner.StopAllCoroutines();
-    enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+    enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
   }
 
   public void FireMortar()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoThrowMortar());
+    this.StartCoroutine(this.DoThrowMortar());
   }
 
   public IEnumerator DoThrowMortar()
@@ -373,7 +373,7 @@ public class EnemySummoner : UnitObject
     {
       if ((UnityEngine.Object) enemySummoner.TargetObject == (UnityEngine.Object) null)
       {
-        enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+        enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
         yield break;
       }
       if (enemySummoner.MortarShotsToFire > 1)
@@ -404,7 +404,7 @@ public class EnemySummoner : UnitObject
       while ((double) (time += Time.deltaTime * enemySummoner.skeletonAnimation.timeScale) < (double) enemySummoner.timeBetweenShots)
         yield return (object) null;
     }
-    enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+    enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
   }
 
   public IEnumerator DoTeleport()
@@ -427,7 +427,7 @@ public class EnemySummoner : UnitObject
     while ((double) (time += Time.deltaTime * enemySummoner.skeletonAnimation.timeScale) < 0.800000011920929)
       yield return (object) null;
     enemySummoner.StopAllCoroutines();
-    enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+    enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
   }
 
   public void Teleport()
@@ -532,11 +532,11 @@ public class EnemySummoner : UnitObject
   {
     EnemySummoner enemySummoner = this;
     Health TargetToHeal = enemySummoner.FindTargetToHeal();
-    Debug.Log((object) (" DoHealOthers() - TargetToHeal: " + ((object) TargetToHeal)?.ToString()));
+    Debug.Log((object) (" DoHealOthers() - TargetToHeal: " + TargetToHeal?.ToString()));
     if ((UnityEngine.Object) TargetToHeal == (UnityEngine.Object) null)
     {
       Debug.Log((object) "no target!");
-      enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+      enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
     }
     else
     {
@@ -568,7 +568,7 @@ public class EnemySummoner : UnitObject
       while ((double) (time += Time.deltaTime * enemySummoner.skeletonAnimation.timeScale) < 0.466666579246521)
         yield return (object) null;
       enemySummoner.StopAllCoroutines();
-      enemySummoner.StartCoroutine((IEnumerator) enemySummoner.ChasePlayer());
+      enemySummoner.StartCoroutine(enemySummoner.ChasePlayer());
     }
   }
 

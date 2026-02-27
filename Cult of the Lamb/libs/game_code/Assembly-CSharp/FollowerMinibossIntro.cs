@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerMinibossIntro
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -100,7 +100,7 @@ public class FollowerMinibossIntro : BossIntro
     GameManager.GetInstance().OnConversationNext(followerMinibossIntro.gameObject);
     followerMinibossIntro.afterMathConversation.Play();
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) new WaitUntil((Func<bool>) new Func<bool>(followerMinibossIntro.\u003CPlayAfterMathConversation\u003Eb__13_0));
+    this.\u003C\u003E2__current = (object) new WaitUntil(new Func<bool>(followerMinibossIntro.\u003CPlayAfterMathConversation\u003Eb__13_0));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;

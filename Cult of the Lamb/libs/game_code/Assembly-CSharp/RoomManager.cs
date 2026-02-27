@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RoomManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMRoomGeneration;
@@ -121,7 +121,7 @@ public class RoomManager : BaseMonoBehaviour
     Health.OnDieAny -= new Health.DieAllAction(this.OnDieAny);
   }
 
-  public void OnWorldGenerated() => this.StartCoroutine((IEnumerator) this.DoWorldGeneration());
+  public void OnWorldGenerated() => this.StartCoroutine(this.DoWorldGeneration());
 
   public IEnumerator DoWorldGeneration()
   {
@@ -133,7 +133,7 @@ public class RoomManager : BaseMonoBehaviour
       CameraFollowTarget.Instance.distance = 30f;
     }
     roomManager.RoomPrefabs = new List<RoomInfo>();
-    yield return (object) roomManager.StartCoroutine((IEnumerator) roomManager.CreateRooms());
+    yield return (object) roomManager.StartCoroutine(roomManager.CreateRooms());
     roomManager.ChangeRoom();
     MMTransition.ResumePlay();
   }

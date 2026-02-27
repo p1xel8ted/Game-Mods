@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FollowerSinNPC
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -58,12 +58,12 @@ public class Interaction_FollowerSinNPC : Interaction
     base.OnInteract(state);
     if (this.firstInteraction)
     {
-      this.StartCoroutine((IEnumerator) this.FirstChatIE());
+      this.StartCoroutine(this.FirstChatIE());
       this.Activated = true;
     }
     else
     {
-      this.StartCoroutine((IEnumerator) this.InteractIE());
+      this.StartCoroutine(this.InteractIE());
       this.Activated = true;
     }
   }
@@ -161,7 +161,7 @@ public class Interaction_FollowerSinNPC : Interaction
       follower.State.CURRENT_STATE = StateMachine.State.CustomAnimation;
       follower.Spine.AnimationState.SetAnimation(0, "spawn-in", false);
       follower.Spine.AnimationState.AddAnimation(0, "idle", true, 0.0f);
-      this.StartCoroutine((IEnumerator) this.GiveFollowerReward(spawnedFollower, follower));
+      this.StartCoroutine(this.GiveFollowerReward(spawnedFollower, follower));
     });
     UIFollowerSelectMenuController selectMenuController4 = followerSelectInstance;
     selectMenuController4.OnCancel = selectMenuController4.OnCancel + (System.Action) (() =>

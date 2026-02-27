@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySpiker
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -79,7 +79,7 @@ public class EnemySpiker : UnitObject
     }
     this.SimpleSpineFlashes = this.GetComponentsInChildren<SimpleSpineFlash>();
     this.state.CURRENT_STATE = StateMachine.State.Idle;
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDisable()
@@ -122,9 +122,9 @@ public class EnemySpiker : UnitObject
       else
       {
         if (enemySpiker.ShouldAttack())
-          enemySpiker.StartCoroutine((IEnumerator) enemySpiker.SlamRoutine());
+          enemySpiker.StartCoroutine(enemySpiker.SlamRoutine());
         if (enemySpiker.ShouldSlam())
-          enemySpiker.StartCoroutine((IEnumerator) enemySpiker.AttackRoutine());
+          enemySpiker.StartCoroutine(enemySpiker.AttackRoutine());
       }
       yield return (object) null;
     }
@@ -244,10 +244,10 @@ public class EnemySpiker : UnitObject
     if (!this.Attacking && this.CanBeInterrupted)
     {
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -318,9 +318,9 @@ public class EnemySpiker : UnitObject
     enemySpiker.IdleWait = 0.0f;
     enemySpiker.state.CURRENT_STATE = StateMachine.State.Idle;
     enemySpiker.Spine.AnimationState.SetAnimation(0, enemySpiker.IdleAnimation, true);
-    enemySpiker.StartCoroutine((IEnumerator) enemySpiker.ActiveRoutine());
+    enemySpiker.StartCoroutine(enemySpiker.ActiveRoutine());
     if (enemySpiker.CounterAttack)
-      enemySpiker.StartCoroutine(enemySpiker.SlamAttack ? (IEnumerator) enemySpiker.SlamRoutine() : (IEnumerator) enemySpiker.AttackRoutine());
+      enemySpiker.StartCoroutine(enemySpiker.SlamAttack ? enemySpiker.SlamRoutine() : enemySpiker.AttackRoutine());
   }
 
   public void GetNewTargetPosition()

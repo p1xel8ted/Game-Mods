@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCYngyaShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -182,12 +182,12 @@ public class Interaction_DLCYngyaShrine : Interaction
     if (this.CanRevealDLCHeart)
     {
       this.Active = true;
-      this.StartCoroutine((IEnumerator) this.EnableHeartFallbackIE());
+      this.StartCoroutine(this.EnableHeartFallbackIE());
     }
     else
     {
       this.Active = true;
-      this.StartCoroutine((IEnumerator) this.GiveGhostJuice());
+      this.StartCoroutine(this.GiveGhostJuice());
     }
   }
 
@@ -196,9 +196,9 @@ public class Interaction_DLCYngyaShrine : Interaction
     base.OnSecondaryInteract(state);
     DataManager.Instance.WinterLoopEnabled = !DataManager.Instance.WinterLoopEnabled;
     if (!DataManager.Instance.WinterLoopEnabled && SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter)
-      this.StartCoroutine((IEnumerator) this.DisableWinterIE());
+      this.StartCoroutine(this.DisableWinterIE());
     else if (DataManager.Instance.WinterLoopEnabled && SeasonsManager.CurrentSeason != SeasonsManager.Season.Winter)
-      this.StartCoroutine((IEnumerator) this.EnableWinterIE());
+      this.StartCoroutine(this.EnableWinterIE());
     this.HasChanged = true;
   }
 
@@ -256,7 +256,7 @@ public class Interaction_DLCYngyaShrine : Interaction
   {
     if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.SPECIAL_WOOL_RANCHER) > 0)
       return;
-    this.StartCoroutine((IEnumerator) this.DoorDownIE());
+    this.StartCoroutine(this.DoorDownIE());
   }
 
   public IEnumerator DoorDownIE()
@@ -328,7 +328,7 @@ public class Interaction_DLCYngyaShrine : Interaction
 
   public void AddGhostJuiceFromLostWool()
   {
-    this.StartCoroutine((IEnumerator) this.AddGhostJuiceFromLostWoolIE());
+    this.StartCoroutine(this.AddGhostJuiceFromLostWoolIE());
   }
 
   public IEnumerator AddGhostJuiceFromLostWoolIE()
@@ -495,7 +495,7 @@ public class Interaction_DLCYngyaShrine : Interaction
     PlayerFarming.Instance.GetXP(1f);
   }
 
-  public void GiveFirepitRitual() => this.StartCoroutine((IEnumerator) this.GiveFirepitRitualIE());
+  public void GiveFirepitRitual() => this.StartCoroutine(this.GiveFirepitRitualIE());
 
   public IEnumerator GiveFirepitRitualIE()
   {
@@ -518,7 +518,7 @@ public class Interaction_DLCYngyaShrine : Interaction
     UpgradeSystem.ClearCooldown(UpgradeSystem.Type.Ritual_FirePit_2);
   }
 
-  public void GiveHealingTouch() => this.StartCoroutine((IEnumerator) this.GiveHealingTouchIE());
+  public void GiveHealingTouch() => this.StartCoroutine(this.GiveHealingTouchIE());
 
   public IEnumerator GiveHealingTouchIE()
   {
@@ -538,7 +538,7 @@ public class Interaction_DLCYngyaShrine : Interaction
     MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
   }
 
-  public void GiveRotChoice() => this.StartCoroutine((IEnumerator) this.GiveRotChoiceIE());
+  public void GiveRotChoice() => this.StartCoroutine(this.GiveRotChoiceIE());
 
   public IEnumerator GiveRotChoiceIE()
   {

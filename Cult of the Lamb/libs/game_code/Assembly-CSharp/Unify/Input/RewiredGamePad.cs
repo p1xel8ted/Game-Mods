@@ -1,11 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Unify.Input.RewiredGamePad
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired;
-using System.Collections.Generic;
 
 #nullable disable
 namespace Unify.Input;
@@ -90,7 +89,7 @@ public class RewiredGamePad : GamePad
     if (this.playerId < 0)
       return false;
     if (ReInput.players.GetPlayer(this.playerId) != null)
-      num += ((ICollection<Joystick>) ReInput.players.GetPlayer(this.playerId).controllers.Joysticks).Count;
+      num += ReInput.players.GetPlayer(this.playerId).controllers.Joysticks.Count;
     if ((UnifyManager.platform == UnifyManager.Platform.Standalone || UnifyManager.platform == UnifyManager.Platform.None) && ReInput.players.GetPlayer(this.playerId).controllers.hasKeyboard)
       ++num;
     return num > 0;

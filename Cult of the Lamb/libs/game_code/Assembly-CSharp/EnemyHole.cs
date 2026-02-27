@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyHole
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -122,7 +122,7 @@ public class EnemyHole : UnitObject
       this.health.invincible = false;
       if (this.attackRoutineRef != null)
         this.StopCoroutine(this.attackRoutineRef);
-      this.attackRoutineRef = this.StartCoroutine((IEnumerator) this.AttackRoutine());
+      this.attackRoutineRef = this.StartCoroutine(this.AttackRoutine());
     }
     else if (this.firstEnable || !this.IsBoss)
     {
@@ -137,7 +137,7 @@ public class EnemyHole : UnitObject
       this.health.invincible = false;
       if (this.attackRoutineRef != null)
         this.StopCoroutine(this.attackRoutineRef);
-      this.attackRoutineRef = this.StartCoroutine((IEnumerator) this.AttackRoutine());
+      this.attackRoutineRef = this.StartCoroutine(this.AttackRoutine());
     }
     this.firstEnable = false;
   }
@@ -181,7 +181,7 @@ public class EnemyHole : UnitObject
       yield return (object) enemyHole.TriggerSurpriseAttack();
       if (enemyHole.attackRoutineRef != null)
         enemyHole.StopCoroutine(enemyHole.attackRoutineRef);
-      enemyHole.attackRoutineRef = enemyHole.StartCoroutine((IEnumerator) enemyHole.AttackRoutine());
+      enemyHole.attackRoutineRef = enemyHole.StartCoroutine(enemyHole.AttackRoutine());
     }
   }
 
@@ -214,7 +214,7 @@ public class EnemyHole : UnitObject
       enemyHole.health.invincible = false;
       if (enemyHole.attackRoutineRef != null)
         enemyHole.StopCoroutine(enemyHole.attackRoutineRef);
-      enemyHole.attackRoutineRef = enemyHole.StartCoroutine((IEnumerator) enemyHole.AttackRoutine());
+      enemyHole.attackRoutineRef = enemyHole.StartCoroutine(enemyHole.AttackRoutine());
     }
   }
 
@@ -265,9 +265,9 @@ public class EnemyHole : UnitObject
       enemyHole.SimpleSpineFlash.FlashWhite(false);
       if (enemyHole.IsBoss)
       {
-        enemyHole.StartCoroutine((IEnumerator) enemyHole.TriggerTridentShockwave(right));
+        enemyHole.StartCoroutine(enemyHole.TriggerTridentShockwave(right));
         if ((double) enemyHole.health.HP <= (double) enemyHole.health.totalHP / 2.0)
-          enemyHole.StartCoroutine((IEnumerator) enemyHole.TriggerTridentShockwaveVertical(down));
+          enemyHole.StartCoroutine(enemyHole.TriggerTridentShockwaveVertical(down));
         CameraManager.shakeCamera(6f);
         yield return (object) CoroutineStatics.WaitForScaledSeconds(0.25f, enemyHole.Spine);
       }
@@ -288,7 +288,7 @@ public class EnemyHole : UnitObject
   {
     EnemyHole enemyHole = this;
     Vector3 vector3_1 = right ? Vector3.right : Vector3.left;
-    Explosion.CreateExplosion(enemyHole.transform.position, enemyHole.health.team, enemyHole.health, enemyHole.rockDamageRadius * 0.8f, 0.0f, enemyHole.explosionScale * 0.7f);
+    Explosion.CreateExplosion(enemyHole.transform.position, enemyHole.health.team, enemyHole.health, enemyHole.rockDamageRadius * 0.8f, 1f, enemyHole.explosionScale * 0.7f);
     CameraManager.shakeCamera(1f);
     MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact);
     Health closestTarget = enemyHole.GetClosestTarget();
@@ -461,7 +461,7 @@ public class EnemyHole : UnitObject
   {
     if (this.rockPrefabs == null || this.rockPrefabs.Length == 0)
       return;
-    this.StartCoroutine((IEnumerator) this.DropRockRoutine(position, delay));
+    this.StartCoroutine(this.DropRockRoutine(position, delay));
   }
 
   public IEnumerator DropRockRoutine(Vector3 targetPosition, float delay)
@@ -482,7 +482,7 @@ public class EnemyHole : UnitObject
     rock.transform.DOMove(targetPosition, 1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InQuad).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
     {
       MMVibrate.Haptic(MMVibrate.HapticTypes.HeavyImpact);
-      Explosion.CreateExplosion(targetPosition, this.health.team, this.health, this.rockDamageRadius, 0.0f, this.explosionScale);
+      Explosion.CreateExplosion(targetPosition, this.health.team, this.health, this.rockDamageRadius, 1f, this.explosionScale);
       CameraManager.shakeCamera(1.5f);
       if (!((UnityEngine.Object) rock != (UnityEngine.Object) null))
         return;
@@ -648,7 +648,7 @@ label_17:
     if ((UnityEngine.Object) target == (UnityEngine.Object) null)
     {
       enemyHole.health.invincible = false;
-      enemyHole.attackRoutineRef = enemyHole.StartCoroutine((IEnumerator) enemyHole.AttackRoutine());
+      enemyHole.attackRoutineRef = enemyHole.StartCoroutine(enemyHole.AttackRoutine());
     }
   }
 
@@ -723,7 +723,7 @@ label_17:
   {
     if (PlayerRelic.TimeFrozen || Health.isGlobalTimeFreeze || !(bool) (UnityEngine.Object) collider.GetComponent<PlayerFarming>() || this.isAttacking)
       return;
-    this.StartCoroutine((IEnumerator) this.AttackPlayer());
+    this.StartCoroutine(this.AttackPlayer());
   }
 
   public void onDamageColliderTriggerEnter(Collider2D collider)
@@ -747,7 +747,7 @@ label_17:
     this.DoKnockBack(Attacker, 0.25f, 0.25f);
     CameraManager.shakeCamera(2f);
     if (!PlayerRelic.TimeFrozen && !Health.isGlobalTimeFreeze && !this.isAttacking)
-      this.StartCoroutine((IEnumerator) this.AttackPlayer());
+      this.StartCoroutine(this.AttackPlayer());
     if (this.enemysToSpawnAtHalfHealth != null && (double) this.health.HP < (double) this.health.totalHP * 0.5)
     {
       for (int index = 0; index < this.enemysToSpawnAtHalfHealth.Length; ++index)

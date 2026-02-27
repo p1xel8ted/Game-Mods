@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LoreOffering_Interaction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -91,7 +91,7 @@ public class LoreOffering_Interaction : Interaction
     if ((double) this.playerFarming.health.HP >= 3.0)
     {
       this.Activated = true;
-      this.StartCoroutine((IEnumerator) this.offeringSequence());
+      this.StartCoroutine(this.offeringSequence());
     }
     else
       this.playerFarming.indicator.PlayShake();
@@ -222,7 +222,7 @@ public class LoreOffering_Interaction : Interaction
   [CompilerGenerated]
   public void \u003CofferingSequence\u003Eb__22_0()
   {
-    this.StartCoroutine((IEnumerator) this.offeringSequenceSecond());
+    this.StartCoroutine(this.offeringSequenceSecond());
   }
 
   [CompilerGenerated]

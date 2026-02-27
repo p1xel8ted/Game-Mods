@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_JellyFishBank
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -51,7 +51,7 @@ public class Interaction_JellyFishBank : Interaction
       this.State = Interaction_JellyFishBank.States.DonationProcessing;
   }
 
-  public void LeaveMenu() => this.StartCoroutine((IEnumerator) this.LeaveMenuRoutine());
+  public void LeaveMenu() => this.StartCoroutine(this.LeaveMenuRoutine());
 
   public IEnumerator LeaveMenuRoutine()
   {
@@ -138,7 +138,7 @@ public class Interaction_JellyFishBank : Interaction
           this.playerFarming.indicator.PlayShake();
           break;
         }
-        this.StartCoroutine((IEnumerator) this.UnlockBank());
+        this.StartCoroutine(this.UnlockBank());
         break;
       case Interaction_JellyFishBank.States.AwaitInvestment:
         if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.BLACK_GOLD) < this.InvestmentAmount)
@@ -146,7 +146,7 @@ public class Interaction_JellyFishBank : Interaction
           this.playerFarming.indicator.PlayShake();
           break;
         }
-        this.StartCoroutine((IEnumerator) this.DepositRoutine());
+        this.StartCoroutine(this.DepositRoutine());
         break;
       case Interaction_JellyFishBank.States.Active:
         state.CURRENT_STATE = StateMachine.State.InActive;
@@ -179,7 +179,7 @@ public class Interaction_JellyFishBank : Interaction
       this.State = Interaction_JellyFishBank.States.DonationProcessing;
   }
 
-  public void GetReward() => this.StartCoroutine((IEnumerator) this.GetRewardRoutine());
+  public void GetReward() => this.StartCoroutine(this.GetRewardRoutine());
 
   public IEnumerator GetRewardRoutine()
   {
@@ -266,7 +266,7 @@ public class Interaction_JellyFishBank : Interaction
 
   public void GiveCoins(int quantity, InventoryItem.ITEM_TYPE item)
   {
-    this.StartCoroutine((IEnumerator) this.GiveCoinsRoutine(quantity, item));
+    this.StartCoroutine(this.GiveCoinsRoutine(quantity, item));
   }
 
   public IEnumerator GiveCoinsRoutine(int quantity, InventoryItem.ITEM_TYPE item)

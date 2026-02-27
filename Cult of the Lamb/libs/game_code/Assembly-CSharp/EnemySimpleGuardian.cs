@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySimpleGuardian
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -146,7 +146,7 @@ public class EnemySimpleGuardian : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.health.OnAddCharm += new Health.StasisEvent(this.ReconsiderTarget);
     this.health.OnStasisCleared += new Health.StasisEvent(this.ReconsiderTarget);
     this.TargetPosition = this.transform.position;
@@ -301,7 +301,7 @@ public class EnemySimpleGuardian : UnitObject
     {
       if ((UnityEngine.Object) enemySimpleGuardian.TargetObject == (UnityEngine.Object) null)
       {
-        enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.WaitForTarget());
+        enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(enemySimpleGuardian.TargetObject.transform.position, enemySimpleGuardian.transform.position);
@@ -314,7 +314,7 @@ public class EnemySimpleGuardian : UnitObject
       }
       yield return (object) null;
     }
-    enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+    enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
   }
 
   public void SetTargetObject()
@@ -664,7 +664,7 @@ public class EnemySimpleGuardian : UnitObject
       while ((double) (time += Time.deltaTime * enemySimpleGuardian.Spine.timeScale) < 1.0)
         yield return (object) null;
     }
-    enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+    enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
   }
 
   public override void OnDestroy()
@@ -686,7 +686,7 @@ public class EnemySimpleGuardian : UnitObject
   public void SpawnPet()
   {
     this.StopAllCoroutines();
-    this.spawningPetsRoutine = GameManager.GetInstance().StartCoroutine((IEnumerator) this.SpawnPetRoutine());
+    this.spawningPetsRoutine = GameManager.GetInstance().StartCoroutine(this.SpawnPetRoutine());
   }
 
   public IEnumerator SpawnPetRoutine()
@@ -709,7 +709,7 @@ public class EnemySimpleGuardian : UnitObject
     enemySimpleGuardian.state.CURRENT_STATE = StateMachine.State.Idle;
     enemySimpleGuardian.Spine.AnimationState.SetAnimation(0, enemySimpleGuardian.idleAnim, true);
     enemySimpleGuardian.ReconsiderTarget();
-    enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+    enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
     if (enemySimpleGuardian.isMiniBoss)
     {
       time = 0.0f;
@@ -733,7 +733,7 @@ public class EnemySimpleGuardian : UnitObject
         yield return (object) null;
       enemySimpleGuardian.SecondaryPetController.Launch();
       enemySimpleGuardian.ReconsiderTarget();
-      enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+      enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
       time = 0.0f;
       while (true)
       {
@@ -772,7 +772,7 @@ label_22:
       while ((double) (time += Time.deltaTime * enemySimpleGuardian.Spine.timeScale) < 1.0)
         yield return (object) null;
       enemySimpleGuardian.ReconsiderTarget();
-      enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+      enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
       flipFlop = flipFlop == 2 ? 0 : 2;
       enemySimpleGuardian.petSkins.Clear();
       time = 0.0f;
@@ -807,7 +807,7 @@ label_22:
       while ((double) (time += Time.deltaTime * enemySimpleGuardian.Spine.timeScale) < 1.0)
         yield return (object) null;
       enemySimpleGuardian.ReconsiderTarget();
-      enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+      enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
       time = 0.0f;
       while (true)
       {
@@ -830,7 +830,7 @@ label_22:
         yield return (object) null;
       enemySimpleGuardian.SecondaryPetController.Launch();
       enemySimpleGuardian.ReconsiderTarget();
-      enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+      enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
       time = 0.0f;
       while (true)
       {
@@ -855,7 +855,7 @@ label_22:
   public void ProjectileRings()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectileRingsRoutine());
+    this.StartCoroutine(this.ProjectileRingsRoutine());
   }
 
   public virtual IEnumerator ProjectileRingsRoutine()
@@ -899,13 +899,13 @@ label_22:
     enemySimpleGuardian.state.CURRENT_STATE = StateMachine.State.Idle;
     enemySimpleGuardian.Spine.AnimationState.SetAnimation(0, enemySimpleGuardian.idleAnim, true);
     enemySimpleGuardian.ReconsiderTarget();
-    enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+    enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
   }
 
   public void ProjectilePatternShot()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectilePatternShotRoutine());
+    this.StartCoroutine(this.ProjectilePatternShotRoutine());
   }
 
   public IEnumerator ProjectilePatternShotRoutine()
@@ -944,13 +944,13 @@ label_22:
       yield return (object) null;
     enemySimpleGuardian1.state.CURRENT_STATE = StateMachine.State.Idle;
     enemySimpleGuardian1.Spine.AnimationState.SetAnimation(0, enemySimpleGuardian1.idleAnim, true);
-    enemySimpleGuardian1.StartCoroutine((IEnumerator) enemySimpleGuardian1.FightPlayer());
+    enemySimpleGuardian1.StartCoroutine(enemySimpleGuardian1.FightPlayer());
   }
 
   public void ProjectileBoomerangs()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectileBoomerangsRoutine());
+    this.StartCoroutine(this.ProjectileBoomerangsRoutine());
   }
 
   public IEnumerator ProjectileBoomerangsRoutine()
@@ -1033,13 +1033,13 @@ label_22:
       yield return (object) null;
     enemySimpleGuardian.state.CURRENT_STATE = StateMachine.State.Idle;
     enemySimpleGuardian.ReconsiderTarget();
-    enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.FightPlayer());
+    enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.FightPlayer());
   }
 
   public void GraveSpawn()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.GraveSpawnRoutine());
+    this.StartCoroutine(this.GraveSpawnRoutine());
   }
 
   public IEnumerator GraveSpawnRoutine()
@@ -1054,7 +1054,7 @@ label_22:
     yield return (object) new WaitForSeconds(1.5f);
     enemySimpleGuardian.health.invincible = false;
     enemySimpleGuardian.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemySimpleGuardian.StartCoroutine((IEnumerator) enemySimpleGuardian.WaitForTarget());
+    enemySimpleGuardian.StartCoroutine(enemySimpleGuardian.WaitForTarget());
   }
 
   [CompilerGenerated]

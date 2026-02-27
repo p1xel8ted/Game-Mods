@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_GiveChalice
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -30,7 +30,7 @@ public class Interaction_GiveChalice : Interaction
   {
     base.OnInteract(state);
     this.playerFarming = state.GetComponent<PlayerFarming>();
-    this.StartCoroutine((IEnumerator) this.GoToAndGiveChalice());
+    this.StartCoroutine(this.GoToAndGiveChalice());
   }
 
   public IEnumerator GoToAndGiveChalice()
@@ -50,7 +50,7 @@ public class Interaction_GiveChalice : Interaction
 
   public void PlayerInactive() => this.state.CURRENT_STATE = StateMachine.State.InActive;
 
-  public void ChaliceComplete() => this.StartCoroutine((IEnumerator) this.ChaliceCompleteWait());
+  public void ChaliceComplete() => this.StartCoroutine(this.ChaliceCompleteWait());
 
   public IEnumerator ChaliceCompleteWait()
   {

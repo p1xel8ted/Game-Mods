@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerBrain
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -1454,7 +1454,7 @@ public class FollowerBrain
       if ((bool) (UnityEngine.Object) follower && follower.gameObject.activeInHierarchy)
       {
         follower.AdorationUI.BarController.SetBarSize(adoration / this.Stats.MAX_ADORATION, false, true);
-        follower.StartCoroutine((IEnumerator) this.AddAdorationIE(follower, Action, Callback));
+        follower.StartCoroutine(this.AddAdorationIE(follower, Action, Callback));
       }
       else
       {
@@ -1470,9 +1470,9 @@ public class FollowerBrain
     FollowerBrain.AdorationActions Action,
     System.Action Callback)
   {
-    yield return (object) follower.StartCoroutine((IEnumerator) follower.AdorationUI.IncreaseAdorationIE());
+    yield return (object) follower.StartCoroutine(follower.AdorationUI.IncreaseAdorationIE());
     if ((double) this.Stats.Adoration >= (double) this.Stats.MAX_ADORATION)
-      yield return (object) follower.StartCoroutine((IEnumerator) follower.LevelUpRoutine());
+      yield return (object) follower.StartCoroutine(follower.LevelUpRoutine());
     System.Action action = Callback;
     if (action != null)
       action();

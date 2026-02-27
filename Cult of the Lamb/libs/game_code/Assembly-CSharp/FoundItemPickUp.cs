@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FoundItemPickUp
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -11,7 +11,6 @@ using I2.Loc;
 using Lamb.UI;
 using Spine.Unity;
 using src.Extensions;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -302,15 +301,15 @@ public class FoundItemPickUp : Interaction
     if (this.isLoadingAssets)
       return;
     this.spawningMenu = true;
-    PlayerFarming component = this.state.GetComponent<PlayerFarming>();
-    this.GetStartingWeapon(component);
+    PlayerFarming component1 = this.state.GetComponent<PlayerFarming>();
+    this.GetStartingWeapon(component1);
     BiomeConstants.Instance.EmitPickUpVFX(this.transform.position);
     switch (this.typeOfCard)
     {
       case UINewItemOverlayController.TypeOfCard.Weapon:
         Debug.Log((object) this.TypeOfWeapon);
         this.state.GetComponent<PlayerWeapon>().SetWeapon(this.TypeOfWeapon, this.WeaponLevel);
-        this.StartCoroutine((IEnumerator) this.PlayerShowWeaponRoutine());
+        this.StartCoroutine(this.PlayerShowWeaponRoutine());
         break;
       case UINewItemOverlayController.TypeOfCard.Decoration:
         this.itemType = this.gameObject.GetComponent<PickUp>().type;
@@ -331,7 +330,7 @@ public class FoundItemPickUp : Interaction
         }
         else
         {
-          this.StartCoroutine((IEnumerator) this.PickUpRoutine());
+          this.StartCoroutine(this.PickUpRoutine());
           this.spawningMenu = false;
         }
         Inventory.AddItem((int) this.itemType, 1);
@@ -360,7 +359,7 @@ public class FoundItemPickUp : Interaction
         Debug.Log((object) "AA");
         Debug.Log((object) this.Location);
         this.isLoadingAssets = true;
-        this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadWorldMapAssets(), (System.Action) (() =>
+        this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadWorldMapAssets(), (System.Action) (() =>
         {
           this.isLoadingAssets = false;
           MonoSingleton<UIManager>.Instance.ShowWorldMap().Show(this.Location);
@@ -381,7 +380,7 @@ public class FoundItemPickUp : Interaction
             DataManager.Instance.CanFindLeaderRelic = false;
         }
         UIRelicMenuController relicMenuController = MonoSingleton<UIManager>.Instance.RelicMenuTemplate.Instantiate<UIRelicMenuController>();
-        relicMenuController.Show(this.TypeOfRelic, component);
+        relicMenuController.Show(this.TypeOfRelic, component1);
         relicMenuController.OnHidden = relicMenuController.OnHidden + (System.Action) (() =>
         {
           this.CloseMenuCallback();
@@ -397,8 +396,8 @@ public class FoundItemPickUp : Interaction
           ObjectiveManager.UpdateObjective((ObjectivesData) objective);
         }
         if (GameManager.IsDungeon(PlayerFarming.Location))
-          component.playerRelic.EquipRelic(EquipmentManager.GetRelicData(this.TypeOfRelic), initialEquip: true);
-        component.indicator.text.text = "";
+          component1.playerRelic.EquipRelic(EquipmentManager.GetRelicData(this.TypeOfRelic), initialEquip: true);
+        component1.indicator.text.text = "";
         this.Interactable = false;
         this.HasChanged = true;
         break;
@@ -419,17 +418,8 @@ public class FoundItemPickUp : Interaction
     this.CallbackEnd?.Invoke();
     if (this.spawningMenu)
     {
-      IEnumerator enumerator = (IEnumerator) this.transform.GetEnumerator();
-      try
-      {
-        while (enumerator.MoveNext())
-          ((Component) enumerator.Current).gameObject.SetActive(false);
-      }
-      finally
-      {
-        if (enumerator is IDisposable disposable)
-          disposable.Dispose();
-      }
+      foreach (Component component2 in this.transform)
+        component2.gameObject.SetActive(false);
     }
     this.Interactable = false;
     this.Label = " ";

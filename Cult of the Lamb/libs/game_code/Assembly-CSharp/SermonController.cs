@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SermonController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -34,7 +34,7 @@ public class SermonController : MonoBehaviour
   {
     this.state = state;
     this.TempleAltar = this.GetComponent<Interaction_TempleAltar>();
-    this.StartCoroutine((IEnumerator) this.TeachSermonRoutine());
+    this.StartCoroutine(this.TeachSermonRoutine());
   }
 
   public IEnumerator TeachSermonRoutine()
@@ -48,9 +48,9 @@ public class SermonController : MonoBehaviour
     PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
     AudioManager.Instance.PlayOneShot("event:/sermon/start_sermon", PlayerFarming.Instance.gameObject);
     AudioManager.Instance.PlayOneShot("event:/building/building_bell_ring", PlayerFarming.Instance.gameObject);
-    sermonController.StartCoroutine((IEnumerator) sermonController.TempleAltar.CentrePlayer());
+    sermonController.StartCoroutine(sermonController.TempleAltar.CentrePlayer());
     GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.CameraBone, 12f);
-    yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.TempleAltar.FollowersEnterForSermonRoutine());
+    yield return (object) sermonController.StartCoroutine(sermonController.TempleAltar.FollowersEnterForSermonRoutine());
     SimulationManager.Pause();
     GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.CameraBone, 7f);
     GameManager.GetInstance().CameraSetOffset(new Vector3(0.0f, 0.0f, -0.5f));
@@ -87,21 +87,21 @@ public class SermonController : MonoBehaviour
       sermonController.UIDoctrineBar = gameObject.GetComponent<UIDoctrineBar>();
       float xp = DoctrineUpgradeSystem.GetXPBySermon(sermonController.SermonCategory);
       float target = DoctrineUpgradeSystem.GetXPTargetBySermon(sermonController.SermonCategory);
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Show(xp, sermonController.SermonCategory));
+      yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Show(xp, sermonController.SermonCategory));
       GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.CameraBone, 11f);
       UITutorialOverlayController TutorialOverlay;
       if (Mathf.RoundToInt(xp * 10f) >= Mathf.RoundToInt(target * 10f))
       {
-        yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
-        sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
+        yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+        sermonController.StartCoroutine(sermonController.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
         yield return (object) new WaitForSeconds(0.5f);
-        yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Hide());
+        yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Hide());
         TutorialOverlay = (UITutorialOverlayController) null;
         if (DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.PlayerLevelUp))
           TutorialOverlay = MonoSingleton<UIManager>.Instance.ShowTutorialOverlay(TutorialTopic.PlayerLevelUp);
         while ((UnityEngine.Object) TutorialOverlay != (UnityEngine.Object) null)
           yield return (object) null;
-        yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.PlayerUpgrade());
+        yield return (object) sermonController.StartCoroutine(sermonController.PlayerUpgrade());
         xp = 0.0f;
         target = DoctrineUpgradeSystem.GetXPTargetBySermon(sermonController.SermonCategory);
         TutorialOverlay = (UITutorialOverlayController) null;
@@ -112,7 +112,7 @@ public class SermonController : MonoBehaviour
       int xpGained = 0;
       int count = 0;
       LetterBox.Instance.ShowSkipPrompt();
-      Coroutine skipRoutine = sermonController.StartCoroutine((IEnumerator) sermonController.WaitForSkip());
+      Coroutine skipRoutine = sermonController.StartCoroutine(sermonController.WaitForSkip());
       while (GameManager.GetInstance().UpgradePlayerConfiguration.HasUnlockAvailable(true) || DataManager.Instance.MAJOR_DLC && DataManager.Instance.InteractedDLCShrine && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Major_DLC_Sermon_Packs))
       {
         int level = Mathf.Clamp(Ritual.FollowerToAttendSermon[count].Info.XPLevel, 1, 5);
@@ -146,24 +146,24 @@ public class SermonController : MonoBehaviour
         yield return (object) new WaitForSeconds(delay);
         if (Mathf.RoundToInt(xp * 10f) >= Mathf.RoundToInt(target * 10f))
         {
-          yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
-          sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
+          yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+          sermonController.StartCoroutine(sermonController.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
           yield return (object) new WaitForSeconds(0.5f);
-          yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Hide());
+          yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Hide());
           TutorialOverlay = (UITutorialOverlayController) null;
           if (DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.PlayerLevelUp))
             TutorialOverlay = MonoSingleton<UIManager>.Instance.ShowTutorialOverlay(TutorialTopic.PlayerLevelUp);
           while ((UnityEngine.Object) TutorialOverlay != (UnityEngine.Object) null)
             yield return (object) null;
-          yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.PlayerUpgrade());
+          yield return (object) sermonController.StartCoroutine(sermonController.PlayerUpgrade());
           xp = 0.0f;
           if (count < followersCount - 1 && GameManager.GetInstance().UpgradePlayerConfiguration.HasUnlockAvailable(true))
           {
-            yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Show(0.0f, sermonController.SermonCategory));
+            yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Show(0.0f, sermonController.SermonCategory));
             sermonController.barLocalXP = 0.0f;
           }
           else
-            sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Hide());
+            sermonController.StartCoroutine(sermonController.UIDoctrineBar.Hide());
           target = DoctrineUpgradeSystem.GetXPTargetBySermon(sermonController.SermonCategory);
           TutorialOverlay = (UITutorialOverlayController) null;
         }
@@ -175,9 +175,9 @@ public class SermonController : MonoBehaviour
       LetterBox.Instance.HideSkipPrompt();
       ChurchFollowerManager.Instance.EndSermonEffect();
       yield return (object) new WaitForSeconds(0.5f);
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+      yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
       yield return (object) new WaitForSeconds(0.5f);
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Hide());
+      yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Hide());
       DoctrineUpgradeSystem.SetXPBySermon(sermonController.SermonCategory, xp);
       sermonXpOverlayController.Hide();
       UnityEngine.Object.Destroy((UnityEngine.Object) sermonController.UIDoctrineBar.gameObject);
@@ -230,10 +230,10 @@ public class SermonController : MonoBehaviour
               return;
             f.Brain.CurrentTask.StartAgain(f);
           }));
-        sermonController.StartCoroutine((IEnumerator) sermonController.TempleAltar.DelayFollowerReaction(allBrain, UnityEngine.Random.Range(0.1f, 0.5f)));
+        sermonController.StartCoroutine(sermonController.TempleAltar.DelayFollowerReaction(allBrain, UnityEngine.Random.Range(0.1f, 0.5f)));
       }
     }
-    yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.AwaitDoctrine());
+    yield return (object) sermonController.StartCoroutine(sermonController.AwaitDoctrine());
     DataManager.Instance.PreviousSermonCategory = sermonController.SermonCategory;
     sermonController.TempleAltar.ResetSprite();
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.GiveSermon);
@@ -276,13 +276,13 @@ public class SermonController : MonoBehaviour
   public void IncrementXPBar()
   {
     this.barLocalXP += 0.1f;
-    this.StartCoroutine((IEnumerator) this.UIDoctrineBar.UpdateFirstBar(this.barLocalXP, 0.1f));
+    this.StartCoroutine(this.UIDoctrineBar.UpdateFirstBar(this.barLocalXP, 0.1f));
   }
 
   public void IncrementCustomXPBar(float value)
   {
     this.barLocalXP += value;
-    this.StartCoroutine((IEnumerator) this.UIDoctrineBar.UpdateFirstBar(this.barLocalXP, 0.1f));
+    this.StartCoroutine(this.UIDoctrineBar.UpdateFirstBar(this.barLocalXP, 0.1f));
   }
 
   public IEnumerator SacrificeLevelUp(int amount, System.Action Callback)
@@ -294,7 +294,7 @@ public class SermonController : MonoBehaviour
     sermonController.TempleAltar = Interaction_TempleAltar.Instance;
     GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(sermonController.TempleAltar.DoctrineXPPrefab, GameObject.FindWithTag("Canvas").transform);
     sermonController.UIDoctrineBar = gameObject.GetComponent<UIDoctrineBar>();
-    yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Show(xp, sermonController.SermonCategory));
+    yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Show(xp, sermonController.SermonCategory));
     float num1 = DoctrineUpgradeSystem.GetXPBySermon(sermonController.SermonCategory) * 10f;
     float increment = (float) (2.0 / ((double) (DoctrineUpgradeSystem.GetXPTargetBySermon(sermonController.SermonCategory) * 10f) - (double) num1));
     while (amount > 0)
@@ -309,22 +309,22 @@ public class SermonController : MonoBehaviour
     }
     if (Mathf.RoundToInt(xp * 10f) >= Mathf.RoundToInt(DoctrineUpgradeSystem.GetXPTargetBySermon(sermonController.SermonCategory) * 10f))
     {
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+      yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
       yield return (object) new WaitForSeconds(0.5f);
-      sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
+      sermonController.StartCoroutine(sermonController.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
       yield return (object) new WaitForSeconds(0.5f);
       xp = 0.0f;
       DoctrineUpgradeSystem.SetXPBySermon(sermonController.SermonCategory, xp);
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Hide());
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.PlayerUpgrade());
+      yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Hide());
+      yield return (object) sermonController.StartCoroutine(sermonController.PlayerUpgrade());
     }
     else
       DoctrineUpgradeSystem.SetXPBySermon(sermonController.SermonCategory, xp);
     if (amount <= 0 || !GameManager.GetInstance().UpgradePlayerConfiguration.HasUnlockAvailable(true))
     {
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+      yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
       yield return (object) new WaitForSeconds(0.5f);
-      sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Hide());
+      sermonController.StartCoroutine(sermonController.UIDoctrineBar.Hide());
       Debug.Log((object) "End now don't give any more souls!");
       System.Action action = Callback;
       if (action != null)
@@ -332,7 +332,7 @@ public class SermonController : MonoBehaviour
     }
     else
     {
-      yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Show(0.0f, sermonController.SermonCategory));
+      yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Show(0.0f, sermonController.SermonCategory));
       sermonController.barLocalXP = 0.0f;
       if (GameManager.GetInstance().UpgradePlayerConfiguration.HasUnlockAvailable(true))
       {
@@ -348,10 +348,10 @@ public class SermonController : MonoBehaviour
           else
             break;
         }
-        yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+        yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
         yield return (object) new WaitForSeconds(0.5f);
         DoctrineUpgradeSystem.SetXPBySermon(sermonController.SermonCategory, xp);
-        yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.UIDoctrineBar.Hide());
+        yield return (object) sermonController.StartCoroutine(sermonController.UIDoctrineBar.Hide());
       }
       System.Action action = Callback;
       if (action != null)
@@ -384,7 +384,7 @@ public class SermonController : MonoBehaviour
     }
     UpgradeSystem.DisciplePoints = 0;
     ++DataManager.Instance.Doctrine_PlayerUpgrade_Level;
-    yield return (object) sermonController.StartCoroutine((IEnumerator) sermonController.EmitParticles(upgradeType));
+    yield return (object) sermonController.StartCoroutine(sermonController.EmitParticles(upgradeType));
   }
 
   public IEnumerator WaitForSkip()

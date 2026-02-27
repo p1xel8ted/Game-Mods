@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_DissentListen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -68,7 +68,7 @@ public class FollowerTask_DissentListen : FollowerTask
     }
     Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
     if ((UnityEngine.Object) followerById != (UnityEngine.Object) null && followerById.gameObject.activeInHierarchy)
-      this.delayedReactionRoutine = followerById.StartCoroutine((IEnumerator) this.DelayReaction(followerById));
+      this.delayedReactionRoutine = followerById.StartCoroutine(this.DelayReaction(followerById));
     else
       this.End();
   }
@@ -130,7 +130,7 @@ public class FollowerTask_DissentListen : FollowerTask
     Follower followerById = FollowerManager.FindFollowerByID(this._brain.Info.ID);
     if (!(bool) (UnityEngine.Object) followerById)
       return;
-    followerById.StartCoroutine((IEnumerator) this.DelayBubble(bubbleType, followerById));
+    followerById.StartCoroutine(this.DelayBubble(bubbleType, followerById));
   }
 
   public IEnumerator DelayBubble(WorshipperBubble.SPEECH_TYPE bubbleType, Follower self)

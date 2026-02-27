@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerSpells
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -635,7 +635,7 @@ public class PlayerSpells : BaseMonoBehaviour
       this.ArrowAttackDelay = EquipmentManager.GetCurseData(this.playerFarming.currentCurse).Delay;
       this.castTimer = EquipmentManager.GetCurseData(this.playerFarming.currentCurse).CastingDuration;
     }
-    this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() => this.AimTarget = (Health) null)));
+    this.StartCoroutine(this.FrameDelay((System.Action) (() => this.AimTarget = (Health) null)));
   }
 
   public bool IsShooterAPlayer(GameObject shooter)
@@ -682,7 +682,7 @@ public class PlayerSpells : BaseMonoBehaviour
   {
     if (fireballType == EquipmentType.Fireball_Swarm)
     {
-      this.StartCoroutine((IEnumerator) this.Spell_Fireball_Swarm(smallScale, shooter, playSFX: playSFX));
+      this.StartCoroutine(this.Spell_Fireball_Swarm(smallScale, shooter, playSFX: playSFX));
     }
     else
     {
@@ -827,7 +827,7 @@ public class PlayerSpells : BaseMonoBehaviour
     for (int index = 0; index < num2; ++index)
     {
       Vector3 position = vector3_1 + new Vector3((float) index * num4 * Mathf.Cos(this.AimAngle * ((float) Math.PI / 180f)), (float) index * num4 * Mathf.Sin(this.AimAngle * ((float) Math.PI / 180f)), 0.0f);
-      this.StartCoroutine((IEnumerator) this.SpawnGroundCrack(delay, position, Utils.Repeat(this.AimAngle, 360f), smallScale));
+      this.StartCoroutine(this.SpawnGroundCrack(delay, position, Utils.Repeat(this.AimAngle, 360f), smallScale));
       delay += 0.2f;
     }
     AudioManager.Instance.PlayOneShot("event:/player/Curses/tentacles", this.gameObject);

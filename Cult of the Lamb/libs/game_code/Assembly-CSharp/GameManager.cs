@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GameManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
   public static int WindDiection = Shader.PropertyToID("_WindDiection");
   public static int ItemInWoodsColor = Shader.PropertyToID("_ItemInWoodsColor");
   public static int GlobalTimeUnscaled = Shader.PropertyToID("_GlobalTimeUnscaled");
+  public float autoRunGC;
 
   public static bool RoomActive
   {
@@ -226,7 +227,7 @@ public class GameManager : MonoBehaviour
 
   public void TwitchAuthentication_OnAuthenticated()
   {
-    this.StartCoroutine((IEnumerator) GameManager.\u003CTwitchAuthentication_OnAuthenticated\u003Eg__Wait\u007C35_0());
+    this.StartCoroutine(GameManager.\u003CTwitchAuthentication_OnAuthenticated\u003Eg__Wait\u007C35_0());
     TwitchFollowers.SendFollowers();
     DataManager.Instance.TwitchSentFollowers = true;
   }
@@ -250,7 +251,7 @@ public class GameManager : MonoBehaviour
     MMConversation.OnConversationNew += new MMConversation.ConversationNew(this.OnConversationNew);
     MMConversation.OnConversationNext += new MMConversation.ConversationNext(this.OnConversationNext);
     MMConversation.OnConversationEnd += new MMConversation.ConversationEnd(this.OnConversationEnd);
-    Application.quitting += (System.Action) new System.Action(this.OnQuit);
+    Application.quitting += new System.Action(this.OnQuit);
     TimeManager.OnNewDayStarted += new System.Action(this.Save);
     TwitchAuthentication.TryAuthenticate((Action<TwitchRequest.ResponseType>) null);
     if (CheatConsole.IN_DEMO)
@@ -353,7 +354,7 @@ public class GameManager : MonoBehaviour
     MMConversation.OnConversationNew -= new MMConversation.ConversationNew(this.OnConversationNew);
     MMConversation.OnConversationNext -= new MMConversation.ConversationNext(this.OnConversationNext);
     MMConversation.OnConversationEnd -= new MMConversation.ConversationEnd(this.OnConversationEnd);
-    Application.quitting -= (System.Action) new System.Action(this.OnQuit);
+    Application.quitting -= new System.Action(this.OnQuit);
     TimeManager.OnNewDayStarted -= new System.Action(this.Save);
     Singleton<AccessibilityManager>.Instance.OnStopTimeInCrusadeChanged -= new Action<bool>(this.OnStopTimeInCrusadeSettingChanged);
   }
@@ -370,7 +371,7 @@ public class GameManager : MonoBehaviour
   public void CheckDLCStatus()
   {
     Debug.Log((object) "## Wait For DLC Check");
-    this.StartCoroutine((IEnumerator) GameManager.WaitForTime(1f, (System.Action) (() =>
+    this.StartCoroutine(GameManager.WaitForTime(1f, (System.Action) (() =>
     {
       Debug.Log((object) "## Checking DLC");
       if (!GameManager.AuthenticateHereticDLC() && DataManager.Instance.DLC_Heretic_Pack)
@@ -403,7 +404,7 @@ public class GameManager : MonoBehaviour
         Debug.Log((object) "## Deactivate PRE PURCHASE");
         DataManager.DeactivateWoolhavenDLC();
       }
-      this.StartCoroutine((IEnumerator) GameManager.WaitForDLCCheck(1f, (System.Action) (() =>
+      this.StartCoroutine(GameManager.WaitForDLCCheck(1f, (System.Action) (() =>
       {
         float delay = 2f;
         if (PlayerFarming.Location == FollowerLocation.Base)
@@ -413,7 +414,7 @@ public class GameManager : MonoBehaviour
           {
             Debug.Log((object) "## Activate SINGFUL DLC");
             if (DataManager.ActivateSinfulDLC())
-              this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+              this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
               {
                 Debug.Log((object) "## SINGFUL DLC Notification");
                 NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/SinfulEdition");
@@ -424,7 +425,7 @@ public class GameManager : MonoBehaviour
             delay += 0.5f;
             Debug.Log((object) "## Activate HERETIC DLC");
             if (DataManager.ActivateHereticDLC())
-              this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+              this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
               {
                 Debug.Log((object) "## HERETIC DLC Notification");
                 NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/HereticEdition");
@@ -435,7 +436,7 @@ public class GameManager : MonoBehaviour
             delay += 0.5f;
             Debug.Log((object) "## Activate CULTIST DLC");
             if (DataManager.ActivateCultistDLC())
-              this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+              this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
               {
                 Debug.Log((object) "## CULTIST DLC Notification");
                 NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/CultistEdition");
@@ -446,7 +447,7 @@ public class GameManager : MonoBehaviour
             delay += 0.5f;
             Debug.Log((object) "## Activate PILGRIM DLC");
             if (DataManager.ActivatePilgrimDLC())
-              this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+              this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
               {
                 Debug.Log((object) "## PILGRIM DLC Notification");
                 NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/PilgrimPack");
@@ -457,7 +458,7 @@ public class GameManager : MonoBehaviour
             delay += 0.5f;
             Debug.Log((object) "## Activate MAJOR DLC");
             if (DataManager.ActivateMajorDLC())
-              this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+              this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
               {
                 Debug.Log((object) "## MAJOR DLC Notification");
                 NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/Name");
@@ -470,7 +471,7 @@ public class GameManager : MonoBehaviour
             float num = delay + 0.5f;
             Debug.Log((object) "## Activate PRE PURCHASE");
             if (DataManager.ActivatePrePurchaseDLC())
-              this.StartCoroutine((IEnumerator) GameManager.WaitForTime(num + 1.5f, (System.Action) (() =>
+              this.StartCoroutine(GameManager.WaitForTime(num + 1.5f, (System.Action) (() =>
               {
                 Debug.Log((object) "## PRE PURCHASE DLC Notification");
                 NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/CthuluPack");
@@ -585,7 +586,7 @@ public class GameManager : MonoBehaviour
   {
     if (GameManager.AdjustShadersCoroutine != null)
       GameManager.instance.StopCoroutine(GameManager.AdjustShadersCoroutine);
-    GameManager.AdjustShadersCoroutine = GameManager.instance.StartCoroutine((IEnumerator) GameManager.instance.adjustGlobalShaders(MyList, BlendTime, Start, Target));
+    GameManager.AdjustShadersCoroutine = GameManager.instance.StartCoroutine(GameManager.instance.adjustGlobalShaders(MyList, BlendTime, Start, Target));
   }
 
   public static void SetGlobalOcclusionActive(bool active)
@@ -1094,7 +1095,7 @@ public class GameManager : MonoBehaviour
       this.StopCoroutine(this.currentZoomRoutine);
       this.currentZoomRoutine = (Coroutine) null;
     }
-    this.currentZoomRoutine = this.StartCoroutine((IEnumerator) this.CameraZoomRoutine(zoom, duration));
+    this.currentZoomRoutine = this.StartCoroutine(this.CameraZoomRoutine(zoom, duration));
   }
 
   public IEnumerator CameraZoomRoutine(float zoom, float duration)
@@ -1154,7 +1155,7 @@ public class GameManager : MonoBehaviour
       return;
     if (CoopManager.CoopActive)
       SleepDuration /= 2f;
-    this.StartCoroutine((IEnumerator) this.HitStopRoutine(SleepDuration));
+    this.StartCoroutine(this.HitStopRoutine(SleepDuration));
   }
 
   public IEnumerator HitStopRoutine(float SleepDuration)
@@ -1268,7 +1269,7 @@ public class GameManager : MonoBehaviour
       return;
     if (GameManager.GetInstance().cGeneratePathfinding != null)
       GameManager.GetInstance().StopCoroutine(GameManager.GetInstance().cGeneratePathfinding);
-    GameManager.GetInstance().cGeneratePathfinding = GameManager.GetInstance().StartCoroutine((IEnumerator) GameManager.GetInstance().GeneratePathfinding(immediate ? 0.0f : 1f, resumePlay, callback));
+    GameManager.GetInstance().cGeneratePathfinding = GameManager.GetInstance().StartCoroutine(GameManager.GetInstance().GeneratePathfinding(immediate ? 0.0f : 1f, resumePlay, callback));
   }
 
   public IEnumerator GeneratePathfinding(float Delay, bool resumePlay = true, System.Action callback = null)
@@ -1463,7 +1464,7 @@ public class GameManager : MonoBehaviour
 
   public void WaitForLetterbox(System.Action callback)
   {
-    this.StartCoroutine((IEnumerator) this.WaitForLetterboxIE(callback));
+    this.StartCoroutine(this.WaitForLetterboxIE(callback));
   }
 
   public IEnumerator WaitForLetterboxIE(System.Action callback)
@@ -1477,12 +1478,12 @@ public class GameManager : MonoBehaviour
 
   public void WaitForSeconds(float seconds, System.Action callback)
   {
-    this.StartCoroutine((IEnumerator) this.WaitForSecondsIE(seconds, false, callback));
+    this.StartCoroutine(this.WaitForSecondsIE(seconds, false, callback));
   }
 
   public void WaitForSecondsRealtime(float seconds, System.Action callback)
   {
-    this.StartCoroutine((IEnumerator) this.WaitForSecondsIE(seconds, true, callback));
+    this.StartCoroutine(this.WaitForSecondsIE(seconds, true, callback));
   }
 
   public IEnumerator WaitForSecondsIE(float seconds, bool realtime, System.Action callback)
@@ -1578,7 +1579,7 @@ public class GameManager : MonoBehaviour
       Debug.Log((object) "## Deactivate PRE PURCHASE");
       DataManager.DeactivateWoolhavenDLC();
     }
-    this.StartCoroutine((IEnumerator) GameManager.WaitForDLCCheck(1f, (System.Action) (() =>
+    this.StartCoroutine(GameManager.WaitForDLCCheck(1f, (System.Action) (() =>
     {
       float delay = 2f;
       if (PlayerFarming.Location == FollowerLocation.Base)
@@ -1588,7 +1589,7 @@ public class GameManager : MonoBehaviour
         {
           Debug.Log((object) "## Activate SINGFUL DLC");
           if (DataManager.ActivateSinfulDLC())
-            this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+            this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
             {
               Debug.Log((object) "## SINGFUL DLC Notification");
               NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/SinfulEdition");
@@ -1599,7 +1600,7 @@ public class GameManager : MonoBehaviour
           delay += 0.5f;
           Debug.Log((object) "## Activate HERETIC DLC");
           if (DataManager.ActivateHereticDLC())
-            this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+            this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
             {
               Debug.Log((object) "## HERETIC DLC Notification");
               NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/HereticEdition");
@@ -1610,7 +1611,7 @@ public class GameManager : MonoBehaviour
           delay += 0.5f;
           Debug.Log((object) "## Activate CULTIST DLC");
           if (DataManager.ActivateCultistDLC())
-            this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+            this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
             {
               Debug.Log((object) "## CULTIST DLC Notification");
               NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/CultistEdition");
@@ -1621,7 +1622,7 @@ public class GameManager : MonoBehaviour
           delay += 0.5f;
           Debug.Log((object) "## Activate PILGRIM DLC");
           if (DataManager.ActivatePilgrimDLC())
-            this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+            this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
             {
               Debug.Log((object) "## PILGRIM DLC Notification");
               NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/PilgrimPack");
@@ -1632,7 +1633,7 @@ public class GameManager : MonoBehaviour
           delay += 0.5f;
           Debug.Log((object) "## Activate MAJOR DLC");
           if (DataManager.ActivateMajorDLC())
-            this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+            this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
             {
               Debug.Log((object) "## MAJOR DLC Notification");
               NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/Name");
@@ -1645,7 +1646,7 @@ public class GameManager : MonoBehaviour
           float num = delay + 0.5f;
           Debug.Log((object) "## Activate PRE PURCHASE");
           if (DataManager.ActivatePrePurchaseDLC())
-            this.StartCoroutine((IEnumerator) GameManager.WaitForTime(num + 1.5f, (System.Action) (() =>
+            this.StartCoroutine(GameManager.WaitForTime(num + 1.5f, (System.Action) (() =>
             {
               Debug.Log((object) "## PRE PURCHASE DLC Notification");
               NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/CthuluPack");
@@ -1716,7 +1717,7 @@ public class GameManager : MonoBehaviour
       {
         Debug.Log((object) "## Activate SINGFUL DLC");
         if (DataManager.ActivateSinfulDLC())
-          this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+          this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
           {
             Debug.Log((object) "## SINGFUL DLC Notification");
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/SinfulEdition");
@@ -1727,7 +1728,7 @@ public class GameManager : MonoBehaviour
         delay += 0.5f;
         Debug.Log((object) "## Activate HERETIC DLC");
         if (DataManager.ActivateHereticDLC())
-          this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+          this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
           {
             Debug.Log((object) "## HERETIC DLC Notification");
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/HereticEdition");
@@ -1738,7 +1739,7 @@ public class GameManager : MonoBehaviour
         delay += 0.5f;
         Debug.Log((object) "## Activate CULTIST DLC");
         if (DataManager.ActivateCultistDLC())
-          this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+          this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
           {
             Debug.Log((object) "## CULTIST DLC Notification");
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/CultistEdition");
@@ -1749,7 +1750,7 @@ public class GameManager : MonoBehaviour
         delay += 0.5f;
         Debug.Log((object) "## Activate PILGRIM DLC");
         if (DataManager.ActivatePilgrimDLC())
-          this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+          this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
           {
             Debug.Log((object) "## PILGRIM DLC Notification");
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/PilgrimPack");
@@ -1760,7 +1761,7 @@ public class GameManager : MonoBehaviour
         delay += 0.5f;
         Debug.Log((object) "## Activate MAJOR DLC");
         if (DataManager.ActivateMajorDLC())
-          this.StartCoroutine((IEnumerator) GameManager.WaitForTime(delay, (System.Action) (() =>
+          this.StartCoroutine(GameManager.WaitForTime(delay, (System.Action) (() =>
           {
             Debug.Log((object) "## MAJOR DLC Notification");
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/Name");
@@ -1773,7 +1774,7 @@ public class GameManager : MonoBehaviour
         float num = delay + 0.5f;
         Debug.Log((object) "## Activate PRE PURCHASE");
         if (DataManager.ActivatePrePurchaseDLC())
-          this.StartCoroutine((IEnumerator) GameManager.WaitForTime(num + 1.5f, (System.Action) (() =>
+          this.StartCoroutine(GameManager.WaitForTime(num + 1.5f, (System.Action) (() =>
           {
             Debug.Log((object) "## PRE PURCHASE DLC Notification");
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("UI/DLC/ActivatedPack", "UI/DLC/CthuluPack");

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BaseChainDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -27,7 +27,7 @@ public class BaseChainDoor : BaseMonoBehaviour
   {
     BaseChainDoor.Instance = this;
     DataManager.Instance.DoorRoomChainProgress = Mathf.Clamp(DataManager.Instance.DoorRoomChainProgress, 0, 5);
-    this.StartCoroutine((IEnumerator) this.WaitForPlayer());
+    this.StartCoroutine(this.WaitForPlayer());
   }
 
   public IEnumerator WaitForPlayer()
@@ -57,18 +57,18 @@ public class BaseChainDoor : BaseMonoBehaviour
     baseChainDoor.Play();
   }
 
-  public void Play() => this.StartCoroutine((IEnumerator) this.PlayRoutine());
+  public void Play() => this.StartCoroutine(this.PlayRoutine());
 
   public void PlayDoor1(System.Action CallBack)
   {
-    this.StartCoroutine((IEnumerator) this.PlayDoor1Routine(CallBack));
+    this.StartCoroutine(this.PlayDoor1Routine(CallBack));
   }
 
   public IEnumerator PlayDoor1Routine(System.Action CallBack)
   {
     BaseChainDoor baseChainDoor = this;
     DataManager.Instance.DoorRoomChainProgress = -1;
-    yield return (object) baseChainDoor.StartCoroutine((IEnumerator) baseChainDoor.PlayRoutine());
+    yield return (object) baseChainDoor.StartCoroutine(baseChainDoor.PlayRoutine());
     yield return (object) new WaitForSeconds(0.5f);
     System.Action action = CallBack;
     if (action != null)

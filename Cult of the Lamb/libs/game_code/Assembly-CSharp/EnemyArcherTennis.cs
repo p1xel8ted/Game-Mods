@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyArcherTennis
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -130,7 +130,7 @@ public class EnemyArcherTennis : UnitObject
   {
     if (this.cWaitForTarget != null)
       this.StopCoroutine(this.cWaitForTarget);
-    this.cWaitForTarget = this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.cWaitForTarget = this.StartCoroutine(this.WaitForTarget());
   }
 
   public override void OnEnable()
@@ -265,11 +265,11 @@ public class EnemyArcherTennis : UnitObject
       }
       else
       {
-        enemyArcherTennis.StartCoroutine((IEnumerator) enemyArcherTennis.ChasePlayer());
+        enemyArcherTennis.StartCoroutine(enemyArcherTennis.ChasePlayer());
         yield break;
       }
     }
-    enemyArcherTennis.StartCoroutine((IEnumerator) enemyArcherTennis.ChasePlayer());
+    enemyArcherTennis.StartCoroutine(enemyArcherTennis.ChasePlayer());
   }
 
   public void ReturnFire(bool success)
@@ -278,7 +278,7 @@ public class EnemyArcherTennis : UnitObject
     {
       CameraManager.shakeCamera(2f);
       AudioManager.Instance.PlayOneShot("event:/player/Curses/arrow_hit", this.transform.position);
-      this.StartCoroutine((IEnumerator) this.CloseCombatAttack(0.1f, 0.1f));
+      this.StartCoroutine(this.CloseCombatAttack(0.1f, 0.1f));
     }
     else
     {
@@ -309,7 +309,7 @@ public class EnemyArcherTennis : UnitObject
         }
         if ((double) (enemyArcherTennis.CloseCombatCooldown -= Time.deltaTime * enemyArcherTennis.Spine.timeScale) < 0.0 && (double) Vector3.Distance(enemyArcherTennis.transform.position, enemyArcherTennis.TargetObject.transform.position) < 2.0)
         {
-          enemyArcherTennis.StartCoroutine((IEnumerator) enemyArcherTennis.CloseCombatAttack());
+          enemyArcherTennis.StartCoroutine(enemyArcherTennis.CloseCombatAttack());
           break;
         }
         if (enemyArcherTennis.state.CURRENT_STATE == StateMachine.State.Moving)
@@ -329,7 +329,7 @@ public class EnemyArcherTennis : UnitObject
         if (!enemyArcherTennis.tennisBall.isActive && (double) (enemyArcherTennis.ShootDelay -= Time.deltaTime * enemyArcherTennis.Spine.timeScale) < 0.0 && (double) Vector3.Distance(enemyArcherTennis.transform.position, enemyArcherTennis.TargetObject.transform.position) < (double) enemyArcherTennis.maxTennisDist && (double) Time.realtimeSinceStartup > ((double) enemyArcherTennis.lastShot + (double) enemyArcherTennis.GlobalShotDelay) / (double) enemyArcherTennis.Spine.timeScale)
         {
           enemyArcherTennis.lastShot = Time.realtimeSinceStartup;
-          enemyArcherTennis.StartCoroutine((IEnumerator) enemyArcherTennis.ShootArrowRoutine());
+          enemyArcherTennis.StartCoroutine(enemyArcherTennis.ShootArrowRoutine());
           break;
         }
       }
@@ -551,7 +551,7 @@ public class EnemyArcherTennis : UnitObject
         this.Points.Add(new Vector3(raycastHit2D.centroid.x, raycastHit2D.centroid.y) + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset);
         this.PointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine((Vector3) raycastHit2D.centroid + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset));
+      this.StartCoroutine(this.TeleportRoutine((Vector3) raycastHit2D.centroid + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset));
     }
     else
     {
@@ -560,7 +560,7 @@ public class EnemyArcherTennis : UnitObject
         this.EndPoints.Add(new Vector3(Position.x, Position.y));
         this.EndPointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine(Position));
+      this.StartCoroutine(this.TeleportRoutine(Position));
     }
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySpiderShooterMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -89,7 +89,7 @@ public class EnemySpiderShooterMiniboss : EnemySpider
       float shootTimestamp = this.shootTimestamp;
       if ((double) currentTime.GetValueOrDefault() > (double) shootTimestamp & currentTime.HasValue && (bool) (UnityEngine.Object) PlayerFarming.Instance && (double) Vector3.Distance(this.transform.position, PlayerFarming.Instance.transform.position) > (double) this.minShootDistance)
       {
-        this.StartCoroutine((IEnumerator) this.ShootIE(this.shots[UnityEngine.Random.Range(0, this.shots.Length)]));
+        this.StartCoroutine(this.ShootIE(this.shots[UnityEngine.Random.Range(0, this.shots.Length)]));
         return;
       }
     }
@@ -99,7 +99,7 @@ public class EnemySpiderShooterMiniboss : EnemySpider
     float spawnTimestamp = this.spawnTimestamp;
     if (!((double) currentTime.GetValueOrDefault() > (double) spawnTimestamp & currentTime.HasValue) || Health.team2.Count - 1 >= this.maxActiveEnemies)
       return;
-    this.StartCoroutine((IEnumerator) this.SpawnIE());
+    this.StartCoroutine(this.SpawnIE());
   }
 
   public IEnumerator ShootIE(EnemySpiderShooterMiniboss.Shot shot)
@@ -129,7 +129,7 @@ public class EnemySpiderShooterMiniboss : EnemySpider
       spiderShooterMiniboss.SimpleSpineFlash.FlashWhite(false);
       spiderShooterMiniboss.SetAnimation(shot.shootAnimation);
       spiderShooterMiniboss.state.CURRENT_STATE = StateMachine.State.Attacking;
-      spiderShooterMiniboss.StartCoroutine((IEnumerator) shot.ProjectilePattern.ShootIE());
+      spiderShooterMiniboss.StartCoroutine(shot.ProjectilePattern.ShootIE());
       AudioManager.Instance.PlayOneShot(spiderShooterMiniboss.attackSfx, spiderShooterMiniboss.transform.position);
       spiderShooterMiniboss.TargetEnemy = spiderShooterMiniboss.GetClosestTarget();
       spiderShooterMiniboss.LookAtTarget();
@@ -186,7 +186,7 @@ public class EnemySpiderShooterMiniboss : EnemySpider
         }
       }
       component1.DoKnockBack(UnityEngine.Random.Range(0.0f, 360f), 2f, 1f);
-      component1.StartCoroutine((IEnumerator) spiderShooterMiniboss.DelayedEnemyHealthEnable(component1));
+      component1.StartCoroutine(spiderShooterMiniboss.DelayedEnemyHealthEnable(component1));
     }
     time = 0.0f;
     while ((double) (time += Time.deltaTime * spiderShooterMiniboss.Spine.timeScale) < 1.0)
@@ -209,7 +209,7 @@ public class EnemySpiderShooterMiniboss : EnemySpider
     {
       Health component = collider2D.GetComponent<Health>();
       if ((UnityEngine.Object) component != (UnityEngine.Object) null && component.team == Health.Team.Neutral)
-        collider2D.GetComponent<Health>().DealDamage((float) int.MaxValue, enemy.gameObject, Vector3.Lerp(component.transform.position, enemy.transform.position, 0.7f));
+        collider2D.GetComponent<Health>().DealDamage((float) int.MaxValue, enemy.gameObject, Vector3.Lerp(component.transform.position, enemy.transform.position, 0.7f), dealDamageImmediately: true);
     }
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PalworldBlacksmith
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -110,7 +110,7 @@ public class PalworldBlacksmith : MonoBehaviour
     this.egg.AnimationState.Event -= new Spine.AnimationState.TrackEntryEventDelegate(this.AnimationState_Event);
   }
 
-  public void GiveEgg() => this.StartCoroutine((IEnumerator) this.GiveEggIE());
+  public void GiveEgg() => this.StartCoroutine(this.GiveEggIE());
 
   public IEnumerator GiveEggIE()
   {
@@ -165,7 +165,7 @@ public class PalworldBlacksmith : MonoBehaviour
     AudioManager.Instance.PlayOneShot("event:/material/egg_bounce", this.egg.gameObject);
   }
 
-  public void GiveDecos() => this.StartCoroutine((IEnumerator) this.GiveDecosIE());
+  public void GiveDecos() => this.StartCoroutine(this.GiveDecosIE());
 
   public IEnumerator GiveDecosIE()
   {

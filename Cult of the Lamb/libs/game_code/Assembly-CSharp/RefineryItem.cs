@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RefineryItem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -126,14 +126,14 @@ public class RefineryItem : UIInventoryItem, ISelectHandler, IEventSystemHandler
   {
     this._selectedIcon.enabled = true;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.Selected(this.transform.localScale.x, 1.2f));
+    this.StartCoroutine(this.Selected(this.transform.localScale.x, 1.2f));
   }
 
   public void OnDeselect(BaseEventData eventData)
   {
     this._selectedIcon.enabled = false;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DeSelected());
+    this.StartCoroutine(this.DeSelected());
   }
 
   public IEnumerator Selected(float starting, float target)

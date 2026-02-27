@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GuardianPet_BulletHell
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -75,7 +75,7 @@ public class GuardianPet_BulletHell : GuardianPet
     this.transform.DOMoveZ(-1f, 1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
     {
       this.health.enabled = true;
-      this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+      this.StartCoroutine(this.ActiveRoutine());
     })).SetDelay<TweenerCore<Vector3, Vector3, VectorOptions>>(0.5f);
     this.transform.DOMoveY(this.transform.position.y - 1f, 1f);
   }
@@ -88,10 +88,10 @@ public class GuardianPet_BulletHell : GuardianPet
   {
     base.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() =>
+    this.StartCoroutine(this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() =>
     {
       this.AttackCoolDown = UnityEngine.Random.Range(this.AttackCoolDownDuration.x, this.AttackCoolDownDuration.y);
-      this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+      this.StartCoroutine(this.ActiveRoutine());
     })));
   }
 
@@ -217,7 +217,7 @@ public class GuardianPet_BulletHell : GuardianPet
   public void StartShootRoutine()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ShootRoutine());
+    this.StartCoroutine(this.ShootRoutine());
   }
 
   public IEnumerator ShootRoutine()
@@ -274,7 +274,7 @@ public class GuardianPet_BulletHell : GuardianPet
     guardianPetBulletHell.state.CURRENT_STATE = StateMachine.State.Idle;
     guardianPetBulletHell.AttackCoolDown = UnityEngine.Random.Range(guardianPetBulletHell.AttackCoolDownDuration.x, guardianPetBulletHell.AttackCoolDownDuration.y);
     guardianPetBulletHell.EndShootAttack();
-    guardianPetBulletHell.StartCoroutine((IEnumerator) guardianPetBulletHell.ActiveRoutine());
+    guardianPetBulletHell.StartCoroutine(guardianPetBulletHell.ActiveRoutine());
   }
 
   public void EndShootAttack()
@@ -303,14 +303,14 @@ public class GuardianPet_BulletHell : GuardianPet
   public void \u003CPlay\u003Eb__28_0()
   {
     this.health.enabled = true;
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   [CompilerGenerated]
   public void \u003COnHit\u003Eb__29_0()
   {
     this.AttackCoolDown = UnityEngine.Random.Range(this.AttackCoolDownDuration.x, this.AttackCoolDownDuration.y);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   [Serializable]

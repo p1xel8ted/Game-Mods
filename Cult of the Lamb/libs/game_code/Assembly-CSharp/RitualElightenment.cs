@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualElightenment
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -21,7 +21,7 @@ public class RitualElightenment : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -35,7 +35,7 @@ public class RitualElightenment : Ritual
       PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
       PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     }));
-    yield return (object) ritualElightenment.StartCoroutine((IEnumerator) ritualElightenment.WaitFollowersFormCircle());
+    yield return (object) ritualElightenment.StartCoroutine(ritualElightenment.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
     PlayerFarming.Instance.Spine.skeleton.UpdateWorldTransform();
@@ -87,7 +87,7 @@ public class RitualElightenment : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num += Delay;
-      ritualElightenment.StartCoroutine((IEnumerator) ritualElightenment.DelayFollowerReaction(brain, Delay));
+      ritualElightenment.StartCoroutine(ritualElightenment.DelayFollowerReaction(brain, Delay));
       brain.AddThought(Thought.EnlightenmentRitual);
     }
     Interaction_TempleAltar.Instance.CloseUpCamera.Reset();
@@ -115,7 +115,7 @@ public class RitualElightenment : Ritual
     follower.HoodOff(onComplete: (System.Action) (() => waiting = false));
     while (waiting)
       yield return (object) null;
-    yield return (object) ritualElightenment.StartCoroutine((IEnumerator) follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
+    yield return (object) ritualElightenment.StartCoroutine(follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
     double num = (double) follower.SetBodyAnimation("dance-hooded", true);
   }
 }

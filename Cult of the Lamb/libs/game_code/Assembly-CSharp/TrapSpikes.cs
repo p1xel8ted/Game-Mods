@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapSpikes
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -173,7 +173,7 @@ public class TrapSpikes : BaseMonoBehaviour
     if (this.CurrentState != TrapSpikes.State.Idle || !((Object) this.EnemyHealth != (Object) null) || this.EnemyHealth.team != Health.Team.PlayerTeam || !((Object) this.EnemyHealth.state != (Object) null) || this.EnemyHealth.state.CURRENT_STATE == StateMachine.State.Dodging)
       return;
     this.CurrentState = TrapSpikes.State.Warning;
-    this.StartCoroutine((IEnumerator) this.DoAttack(this.EnemyHealth.GetComponent<PlayerFarming>()));
+    this.StartCoroutine(this.DoAttack(this.EnemyHealth.GetComponent<PlayerFarming>()));
   }
 
   public void SpikesUp() => this.showSpikes();

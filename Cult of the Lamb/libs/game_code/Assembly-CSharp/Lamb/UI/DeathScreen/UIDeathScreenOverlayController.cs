@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.DeathScreen.UIDeathScreenOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Coffee.UIExtensions;
@@ -314,10 +314,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
     this._xpText.text = $"0{FontImageNames.GetIconByType(InventoryItem.ITEM_TYPE.GOD_TEAR_FRAGMENT)}/{DataManager.Instance.CurrentChallengeModeTargetXP.ToString()}";
   }
 
-  public void MoveChallengeGold()
-  {
-    this.StartCoroutine((IEnumerator) this.MoveChallengeGoldRoutine());
-  }
+  public void MoveChallengeGold() => this.StartCoroutine(this.MoveChallengeGoldRoutine());
 
   public IEnumerator MoveChallengeGoldRoutine()
   {
@@ -349,7 +346,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
 
   public void UpdateSandboxXPBar(float Delay = 0.0f)
   {
-    this.StartCoroutine((IEnumerator) this.UpdateSandboxXpBarRoutine(Delay));
+    this.StartCoroutine(this.UpdateSandboxXpBarRoutine(Delay));
   }
 
   public IEnumerator UpdateSandboxXpBarRoutine(float Delay)
@@ -365,7 +362,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
       float num2 = 0.5f;
-      overlayController.StartCoroutine((IEnumerator) overlayController.TweenText(num2));
+      overlayController.StartCoroutine(overlayController.TweenText(num2));
       overlayController._xpBar.DOScale(new Vector3(Mathf.Min(TargetScale, 1f), 1f), num2).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>(new TweenCallback(overlayController.\u003CUpdateSandboxXpBarRoutine\u003Eb__69_0));
       return false;
     }
@@ -820,7 +817,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
         if (index < DataManager.Instance.dungeonVisitedRooms.Count - 1 && (bool) (UnityEngine.Object) MapManager.Instance.DungeonConfig)
         {
           NodeBlueprint blueprint = MapManager.GetBlueprint(DataManager.Instance.dungeonVisitedRooms[index], MapManager.Instance.DungeonConfig);
-          Debug.Log((object) $"config:{((object) MapManager.Instance.DungeonConfig)?.ToString()} type: {DataManager.Instance.dungeonVisitedRooms[index].ToString()} blueprint: {((object) blueprint)?.ToString()}");
+          Debug.Log((object) $"config:{MapManager.Instance.DungeonConfig?.ToString()} type: {DataManager.Instance.dungeonVisitedRooms[index].ToString()} blueprint: {blueprint?.ToString()}");
           if ((UnityEngine.Object) blueprint != (UnityEngine.Object) null)
           {
             component.icon.sprite = blueprint.GetSprite(DataManager.Instance.dungeonLocationsVisited[index], false);
@@ -846,7 +843,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
         {
           component.Play((float) index * 0.5f, overlayController._result == UIDeathScreenOverlayController.Results.Killed || overlayController._result == UIDeathScreenOverlayController.Results.Escaped ? UIDeathScreenLevelNode.ResultTypes.Killed : UIDeathScreenLevelNode.ResultTypes.Completed, LevelNodeSkin1, index, index == levels - 1);
           component.icon.gameObject.SetActive(overlayController._result != 0);
-          overlayController.StartCoroutine((IEnumerator) overlayController.ShowPenaltyRoutine(overlayController.inventoryItems, (float) index * 0.5f));
+          overlayController.StartCoroutine(overlayController.ShowPenaltyRoutine(overlayController.inventoryItems, (float) index * 0.5f));
         }
         else
         {
@@ -874,7 +871,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
         gameObject.SetActive(true);
         UIDeathScreenLevelNode component = gameObject.GetComponent<UIDeathScreenLevelNode>();
         Map.NodeType dungeonVisitedRoom = DataManager.Instance.dungeonVisitedRooms[index];
-        Debug.Log((object) $"type: {dungeonVisitedRoom.ToString()} blueprint: {((object) blueprint)?.ToString()}");
+        Debug.Log((object) $"type: {dungeonVisitedRoom.ToString()} blueprint: {blueprint?.ToString()}");
         if ((UnityEngine.Object) blueprint != (UnityEngine.Object) null && index < DataManager.Instance.dungeonLocationsVisited.Count)
         {
           component.icon.sprite = blueprint.GetSprite(DataManager.Instance.dungeonLocationsVisited[index], false);
@@ -900,7 +897,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
           ResultType = UIDeathScreenLevelNode.ResultTypes.Unreached;
         component.Play((float) index * 0.5f, ResultType, LevelNodeSkin, index, index == DataManager.Instance.dungeonVisitedRooms.Count - 1);
         if (index == DataManager.Instance.dungeonVisitedRooms.Count - 1)
-          overlayController.StartCoroutine((IEnumerator) overlayController.ShowPenaltyRoutine(overlayController.inventoryItems, (float) ((double) index * 0.5 + 0.5)));
+          overlayController.StartCoroutine(overlayController.ShowPenaltyRoutine(overlayController.inventoryItems, (float) ((double) index * 0.5 + 0.5)));
       }
     }
     while (overlayController.DisplayinPenalty)
@@ -951,7 +948,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
   public void ShowContinueButton()
   {
     Debug.Log((object) "ShowContinueButton()");
-    this.StartCoroutine((IEnumerator) this.ShowContinueButtonRoutine());
+    this.StartCoroutine(this.ShowContinueButtonRoutine());
   }
 
   public IEnumerator ShowContinueButtonRoutine()
@@ -1081,7 +1078,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
     inventoryItem.AmountText.text = Inventory.GetDungeonItemByType((int) inventoryItem.Type).quantity.ToString();
     if (!UIDeathScreenOverlayController._excludeLootFromBonus.Contains(inventoryItem.Type))
     {
-      if (this._lootDelta[inventoryItem.Type] == 0)
+      if (!this._lootDelta.ContainsKey(inventoryItem.Type) || this._lootDelta[inventoryItem.Type] == 0)
         return;
       inventoryItem.ShowDelta(this._lootDelta[inventoryItem.Type]);
       inventoryItem.DeltaText.transform.localScale = Vector3.one * 2f;
@@ -1193,10 +1190,7 @@ public class UIDeathScreenOverlayController : UIMenuBase
   public void Update() => Time.timeScale = 0.0f;
 
   [CompilerGenerated]
-  public void \u003CUpdateSandboxXpBarRoutine\u003Eb__69_0()
-  {
-    this.StartCoroutine((IEnumerator) this.CheckXP());
-  }
+  public void \u003CUpdateSandboxXpBarRoutine\u003Eb__69_0() => this.StartCoroutine(this.CheckXP());
 
   [CompilerGenerated]
   public void \u003COnShowStarted\u003Eb__76_0() => this.Hide();

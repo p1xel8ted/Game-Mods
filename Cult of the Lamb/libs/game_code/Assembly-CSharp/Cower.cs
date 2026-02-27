@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Cower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -73,7 +73,7 @@ public class Cower : BaseMonoBehaviour
       this.SpawnDeadBodyOnDeath.enabled = false;
     }
     if (this.CoweringActivated)
-      this.StartCoroutine((IEnumerator) this.CowerRoutine());
+      this.StartCoroutine(this.CowerRoutine());
     System.Action onFinishDeath = this.OnFinishDeath;
     if (onFinishDeath != null)
       onFinishDeath();
@@ -115,7 +115,7 @@ public class Cower : BaseMonoBehaviour
     {
       case Health.AttackTypes.Heavy:
         this.health.DestroyOnDeath = false;
-        this.StartCoroutine((IEnumerator) this.KnockbackRoutine(Attacker, AttackLocation));
+        this.StartCoroutine(this.KnockbackRoutine(Attacker, AttackLocation));
         break;
       case Health.AttackTypes.Projectile:
         this.SpawnDeadBodyOnDeath?.OnDie(Attacker, AttackLocation, Victim, AttackType, AttackFlags);
@@ -155,7 +155,7 @@ public class Cower : BaseMonoBehaviour
       switch (AttackType)
       {
         case Health.AttackTypes.Heavy:
-          this.StartCoroutine((IEnumerator) this.KnockbackRoutine(Attacker, AttackLocation));
+          this.StartCoroutine(this.KnockbackRoutine(Attacker, AttackLocation));
           return;
         case Health.AttackTypes.Projectile:
           break;
@@ -167,7 +167,7 @@ public class Cower : BaseMonoBehaviour
     }
     if (this.cStaggeredRoutine != null)
       this.StopCoroutine(this.cStaggeredRoutine);
-    this.cStaggeredRoutine = this.StartCoroutine((IEnumerator) this.StaggerRoutine(Attacker));
+    this.cStaggeredRoutine = this.StartCoroutine(this.StaggerRoutine(Attacker));
   }
 
   public IEnumerator StaggerRoutine(GameObject Attacker)

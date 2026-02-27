@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DoctrineController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -39,13 +39,13 @@ public class DoctrineController : MonoBehaviour
   public void Play()
   {
     this._currency = InventoryItem.ITEM_TYPE.DOCTRINE_STONE;
-    this.StartCoroutine((IEnumerator) this.PlayIE());
+    this.StartCoroutine(this.PlayIE());
   }
 
   public void PlayCrystalDoctrine()
   {
     this._currency = InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE;
-    this.StartCoroutine((IEnumerator) this.PlayIE());
+    this.StartCoroutine(this.PlayIE());
   }
 
   public IEnumerator PlayIE()
@@ -59,17 +59,17 @@ public class DoctrineController : MonoBehaviour
     AudioManager.Instance.PlayOneShot("event:/sermon/start_sermon", PlayerFarming.Instance.gameObject);
     AudioManager.Instance.PlayOneShot("event:/building/building_bell_ring", PlayerFarming.Instance.gameObject);
     doctrineController.loop = AudioManager.Instance.CreateLoop("event:/sermon/preach_loop", PlayerFarming.Instance.gameObject, true, false);
-    doctrineController.StartCoroutine((IEnumerator) doctrineController.TempleAltar.CentrePlayer());
+    doctrineController.StartCoroutine(doctrineController.TempleAltar.CentrePlayer());
     GameManager.GetInstance().CameraSetOffset(Vector3.zero);
     GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.CameraBone, 12f);
     float t = Time.time;
-    yield return (object) doctrineController.StartCoroutine((IEnumerator) Interaction_TempleAltar.Instance.FollowersEnterForSermonRoutine());
+    yield return (object) doctrineController.StartCoroutine(Interaction_TempleAltar.Instance.FollowersEnterForSermonRoutine());
     if ((double) Time.time - (double) t < 0.5)
       yield return (object) new WaitForSeconds(1f);
     if (!DoctrineUpgradeSystem.GetUnlocked(DoctrineUpgradeSystem.DoctrineType.Special_Bonfire))
     {
       doctrineController.TempleAltar.SermonCategory = SermonCategory.Special;
-      doctrineController.StartCoroutine((IEnumerator) doctrineController.DeclareDoctrine());
+      doctrineController.StartCoroutine(doctrineController.DeclareDoctrine());
       AudioManager.Instance.PlayOneShot("event:/sermon/select_sermon", PlayerFarming.Instance.gameObject);
     }
     else
@@ -90,7 +90,7 @@ public class DoctrineController : MonoBehaviour
       if (sermonCategory != SermonCategory.None)
       {
         doctrineController.TempleAltar.SermonCategory = sermonCategory;
-        doctrineController.StartCoroutine((IEnumerator) doctrineController.DeclareDoctrine());
+        doctrineController.StartCoroutine(doctrineController.DeclareDoctrine());
         AudioManager.Instance.PlayOneShot("event:/sermon/select_sermon", PlayerFarming.Instance.gameObject);
       }
       else
@@ -112,7 +112,7 @@ public class DoctrineController : MonoBehaviour
     ChurchFollowerManager.Instance.StartSermonEffectClean();
     AudioManager.Instance.PlayOneShot("event:/sermon/upgrade_menu_appear");
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) doctrineController.StartCoroutine((IEnumerator) doctrineController.TempleAltar.AskQuestionRoutine(doctrineController._currency));
+    yield return (object) doctrineController.StartCoroutine(doctrineController.TempleAltar.AskQuestionRoutine(doctrineController._currency));
     PlayerFarming.Instance.Spine.AnimationState.SetAnimation(0, "sermons/declare-doctrine", false);
     PlayerFarming.Instance.Spine.AnimationState.AddAnimation(0, "idle", true, 0.0f);
     if (!DoctrineController.SinOnboarding)
@@ -161,7 +161,7 @@ public class DoctrineController : MonoBehaviour
           allBrain.AddThought(Thought.WatchedSermon);
         FollowerManager.FindFollowerByID(allBrain.Info.ID);
         allBrain.AddAdoration(FollowerBrain.AdorationActions.Sermon, (System.Action) null);
-        doctrineController.StartCoroutine((IEnumerator) doctrineController.TempleAltar.DelayFollowerReaction(allBrain, UnityEngine.Random.Range(0.1f, 0.5f)));
+        doctrineController.StartCoroutine(doctrineController.TempleAltar.DelayFollowerReaction(allBrain, UnityEngine.Random.Range(0.1f, 0.5f)));
       }
     }
     PlayerFarming.Instance.PlayerDoctrineStone.Spine.Skeleton.SetSkin("normal");

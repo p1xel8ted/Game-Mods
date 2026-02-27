@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIWorldMapMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -224,7 +224,7 @@ public class UIWorldMapMenuController : UIMenuBase
     Vector2 targetPosition = location.ParallaxPosition.normalized * num * 150f;
     if (this._focusCoroutine != null)
       this.StopCoroutine(this._focusCoroutine);
-    this._focusCoroutine = this.StartCoroutine((IEnumerator) this.DoFocusPosition(targetPosition, time));
+    this._focusCoroutine = this.StartCoroutine(this.DoFocusPosition(targetPosition, time));
   }
 
   public IEnumerator DoFocusLocation(WorldMapIcon location, float time)

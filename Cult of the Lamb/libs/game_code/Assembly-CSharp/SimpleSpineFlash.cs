@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SimpleSpineFlash
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -80,7 +80,7 @@ public class SimpleSpineFlash : BaseMonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights)
       return;
-    this.StartCoroutine((IEnumerator) this.FlashRoutine(color, duration));
+    this.StartCoroutine(this.FlashRoutine(color, duration));
   }
 
   public IEnumerator FlashRoutine(Color color, float duration)
@@ -160,7 +160,7 @@ public class SimpleSpineFlash : BaseMonoBehaviour
       this.StopCoroutine(this.cFlashFillRoutine);
     if (!this.gameObject.activeSelf)
       return;
-    this.cFlashFillRoutine = this.StartCoroutine((IEnumerator) this.FlashOnHitRoutine(opacity));
+    this.cFlashFillRoutine = this.StartCoroutine(this.FlashOnHitRoutine(opacity));
   }
 
   public IEnumerator FlashOnHitRoutine(float opacity)
@@ -212,8 +212,8 @@ public class SimpleSpineFlash : BaseMonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights)
       return;
-    this.StopCoroutine((IEnumerator) this.DoFlashFillGreen());
-    this.StartCoroutine((IEnumerator) this.DoFlashFillGreen());
+    this.StopCoroutine(this.DoFlashFillGreen());
+    this.StartCoroutine(this.DoFlashFillGreen());
   }
 
   public IEnumerator DoFlashFillGreen()
@@ -235,8 +235,8 @@ public class SimpleSpineFlash : BaseMonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights)
       return;
-    this.StopCoroutine((IEnumerator) this.DoFlashFillBlack(ignoreSpineTimescale));
-    this.StartCoroutine((IEnumerator) this.DoFlashFillBlack(ignoreSpineTimescale));
+    this.StopCoroutine(this.DoFlashFillBlack(ignoreSpineTimescale));
+    this.StartCoroutine(this.DoFlashFillBlack(ignoreSpineTimescale));
   }
 
   public IEnumerator DoFlashFillBlack(bool ignoreSpineTimescale)
@@ -258,8 +258,8 @@ public class SimpleSpineFlash : BaseMonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights)
       return;
-    this.StopCoroutine((IEnumerator) this.DoFlashTintRed());
-    this.StartCoroutine((IEnumerator) this.DoFlashTintRed());
+    this.StopCoroutine(this.DoFlashTintRed());
+    this.StartCoroutine(this.DoFlashTintRed());
   }
 
   public IEnumerator DoFlashTintRed()
@@ -297,7 +297,7 @@ public class SimpleSpineFlash : BaseMonoBehaviour
     Color color1 = !(color == Color.white) || !(this.baseColor != new Color(0.0f, 0.0f, 0.0f, 0.0f)) ? color : new Color(this.baseColor.r, this.baseColor.g, this.baseColor.b);
     if (this.fadeRoutine != null)
       this.StopCoroutine(this.fadeRoutine);
-    this.fadeRoutine = this.StartCoroutine((IEnumerator) this.FadeTintAway(color1));
+    this.fadeRoutine = this.StartCoroutine(this.FadeTintAway(color1));
   }
 
   public IEnumerator FadeTintAway(Color color)

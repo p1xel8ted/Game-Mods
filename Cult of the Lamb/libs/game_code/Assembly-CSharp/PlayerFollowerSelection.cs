@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerFollowerSelection
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -59,7 +59,7 @@ public class PlayerFollowerSelection : BaseMonoBehaviour
       yield return (object) null;
     }
 label_7:
-    followerSelection.StartCoroutine((IEnumerator) followerSelection.SelectRoutine());
+    followerSelection.StartCoroutine(followerSelection.SelectRoutine());
   }
 
   public IEnumerator SelectRoutine()
@@ -68,7 +68,7 @@ label_7:
     PlayerFollowerSelection.IsPlaying = true;
     if (followerSelection.cScaleCirlce != null)
       followerSelection.StopCoroutine(followerSelection.cScaleCirlce);
-    followerSelection.cScaleCirlce = followerSelection.StartCoroutine((IEnumerator) followerSelection.ScaleCirlce(0.0f, followerSelection.Distance, 0.3f));
+    followerSelection.cScaleCirlce = followerSelection.StartCoroutine(followerSelection.ScaleCirlce(0.0f, followerSelection.Distance, 0.3f));
     yield return (object) new WaitForSeconds(0.3f);
     while (InputManager.UI.GetPageNavigateLeftHeld() && !followerSelection.playerFarming.GoToAndStopping && !LetterBox.IsPlaying)
     {
@@ -89,11 +89,11 @@ label_7:
     }
     if (followerSelection.cScaleCirlce != null)
       followerSelection.StopCoroutine(followerSelection.cScaleCirlce);
-    followerSelection.cScaleCirlce = followerSelection.StartCoroutine((IEnumerator) followerSelection.ScaleCirlce(followerSelection.Image.transform.localScale.x, 0.0f, 0.3f));
+    followerSelection.cScaleCirlce = followerSelection.StartCoroutine(followerSelection.ScaleCirlce(followerSelection.Image.transform.localScale.x, 0.0f, 0.3f));
     if (followerSelection.SelectedFollowers.Count <= 0)
     {
       PlayerFollowerSelection.IsPlaying = false;
-      followerSelection.StartCoroutine((IEnumerator) followerSelection.IdleRoutine());
+      followerSelection.StartCoroutine(followerSelection.IdleRoutine());
     }
     else
     {
@@ -161,7 +161,7 @@ label_7:
       }
       PlayerFollowerSelection.IsPlaying = false;
       this.SelectedFollowers.Clear();
-      this.StartCoroutine((IEnumerator) this.IdleRoutine());
+      this.StartCoroutine(this.IdleRoutine());
     });
   }
 
@@ -236,6 +236,6 @@ label_7:
     }
     PlayerFollowerSelection.IsPlaying = false;
     this.SelectedFollowers.Clear();
-    this.StartCoroutine((IEnumerator) this.IdleRoutine());
+    this.StartCoroutine(this.IdleRoutine());
   }
 }

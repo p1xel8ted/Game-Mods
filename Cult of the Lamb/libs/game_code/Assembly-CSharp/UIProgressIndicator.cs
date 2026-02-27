@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIProgressIndicator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -77,7 +77,7 @@ public class UIProgressIndicator : MonoBehaviour, IPoolListener
     this._hiding = false;
     if (this._showHideCoroutine != null)
       this.StopCoroutine(this._showHideCoroutine);
-    this._showHideCoroutine = this.StartCoroutine((IEnumerator) this.DoShow(duration));
+    this._showHideCoroutine = this.StartCoroutine(this.DoShow(duration));
     this.SetProgress(progress, 0.0f);
   }
 
@@ -100,7 +100,7 @@ public class UIProgressIndicator : MonoBehaviour, IPoolListener
     this._showing = false;
     if (this._showHideCoroutine != null)
       this.StopCoroutine(this._showHideCoroutine);
-    this._showHideCoroutine = this.StartCoroutine((IEnumerator) this.DoHide(duration, delay));
+    this._showHideCoroutine = this.StartCoroutine(this.DoHide(duration, delay));
   }
 
   public IEnumerator DoHide(float duration, float delay)
@@ -125,7 +125,7 @@ public class UIProgressIndicator : MonoBehaviour, IPoolListener
   {
     if (this._progressCoroutine != null)
       this.StopCoroutine(this._progressCoroutine);
-    this._progressCoroutine = this.StartCoroutine((IEnumerator) this.DoSetProgress(progress, duration));
+    this._progressCoroutine = this.StartCoroutine(this.DoSetProgress(progress, duration));
     if (ineffective)
     {
       this._iconEffective.gameObject.SetActive(false);

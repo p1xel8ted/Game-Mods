@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DoubleUIBossHUD
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -203,7 +203,7 @@ public class DoubleUIBossHUD : BaseMonoBehaviour
       this.ForceHealthAmount1(this.targetHealthAmount1);
     }
     this.targetHealthAmount1 = normHealthAmount;
-    this.healthRoutine1 = this.StartCoroutine((IEnumerator) this.HealthBarUpdated1(normHealthAmount));
+    this.healthRoutine1 = this.StartCoroutine(this.HealthBarUpdated1(normHealthAmount));
   }
 
   public void HealthUpdated1WithTime(float normHealthAmount, float time)
@@ -216,7 +216,7 @@ public class DoubleUIBossHUD : BaseMonoBehaviour
       this.ForceHealthAmount1(this.targetHealthAmount1);
     }
     this.targetHealthAmount1 = normHealthAmount;
-    this.healthRoutine1 = this.StartCoroutine((IEnumerator) this.HealthBarUpdated1WithTime(normHealthAmount, time));
+    this.healthRoutine1 = this.StartCoroutine(this.HealthBarUpdated1WithTime(normHealthAmount, time));
   }
 
   public void HealthUpdated2(float normHealthAmount)
@@ -229,7 +229,7 @@ public class DoubleUIBossHUD : BaseMonoBehaviour
       this.ForceHealthAmount2(this.targetHealthAmount2);
     }
     this.targetHealthAmount2 = normHealthAmount;
-    this.healthRoutine2 = this.StartCoroutine((IEnumerator) this.HealthBarUpdated2(normHealthAmount));
+    this.healthRoutine2 = this.StartCoroutine(this.HealthBarUpdated2(normHealthAmount));
   }
 
   public void HealthUpdated2WithTime(float normHealthAmount, float time)
@@ -242,7 +242,7 @@ public class DoubleUIBossHUD : BaseMonoBehaviour
       this.ForceHealthAmount2(this.targetHealthAmount2);
     }
     this.targetHealthAmount2 = normHealthAmount;
-    this.healthRoutine2 = this.StartCoroutine((IEnumerator) this.HealthBarUpdated2WithTime(normHealthAmount, time));
+    this.healthRoutine2 = this.StartCoroutine(this.HealthBarUpdated2WithTime(normHealthAmount, time));
   }
 
   public void ForceHealthAmount1(float normHealthAmount)

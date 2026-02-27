@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TeleportHome
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -142,7 +142,7 @@ public class Interaction_TeleportHome : Interaction
       transform.gameObject.SetActive(true);
       transform = transform.parent;
     }
-    this.enableTeleporterCoroutine = GameManager.GetInstance().StartCoroutine((IEnumerator) this.IEnableTeleporter(scale, doSpawnVFX));
+    this.enableTeleporterCoroutine = GameManager.GetInstance().StartCoroutine(this.IEnableTeleporter(scale, doSpawnVFX));
   }
 
   public IEnumerator IEnableTeleporter(Vector3 scale, bool doSpawnVFX)
@@ -151,7 +151,7 @@ public class Interaction_TeleportHome : Interaction
     interactionTeleportHome.Activating = false;
     if (doSpawnVFX)
     {
-      interactionTeleportHome.emitSmokeCoroutine = interactionTeleportHome.StartCoroutine((IEnumerator) interactionTeleportHome.EmitSmoke());
+      interactionTeleportHome.emitSmokeCoroutine = interactionTeleportHome.StartCoroutine(interactionTeleportHome.EmitSmoke());
       interactionTeleportHome.transform.DOMove(interactionTeleportHome.CachePosition, 2f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuad);
       interactionTeleportHome.transform.DOScale(scale, 2f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuad);
       yield return (object) new WaitForSeconds(1f);
@@ -220,21 +220,21 @@ public class Interaction_TeleportHome : Interaction
     this.skeletonAnimation.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.HandleAnimationStateEvent);
     if (!((UnityEngine.Object) this.playerFarming != (UnityEngine.Object) null) || this.playerFarming.GoToAndStopping)
       return;
-    this.StartCoroutine((IEnumerator) this.BreakDLCLock((System.Action) (() =>
+    this.StartCoroutine(this.BreakDLCLock((System.Action) (() =>
     {
       PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive, PlayerNotToInclude: this.playerFarming);
       if (this.TeleportOutOnlyInteractingPlayer)
-        this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoTeleportOut(this.playerFarming))));
+        this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoTeleportOut(this.playerFarming))));
       else if (!this.Debug_WarpIn)
       {
         foreach (PlayerFarming player1 in PlayerFarming.players)
         {
           PlayerFarming player = player1;
-          player.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoTeleportOut(player))));
+          player.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoTeleportOut(player))));
         }
       }
       else
-        this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoTeleportIn())));
+        this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoTeleportIn())));
     })));
   }
 
@@ -455,28 +455,25 @@ public class Interaction_TeleportHome : Interaction
   {
     PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive, PlayerNotToInclude: this.playerFarming);
     if (this.TeleportOutOnlyInteractingPlayer)
-      this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoTeleportOut(this.playerFarming))));
+      this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoTeleportOut(this.playerFarming))));
     else if (!this.Debug_WarpIn)
     {
       foreach (PlayerFarming player1 in PlayerFarming.players)
       {
         PlayerFarming player = player1;
-        player.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoTeleportOut(player))));
+        player.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoTeleportOut(player))));
       }
     }
     else
-      this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoTeleportIn())));
+      this.playerFarming.GoToAndStop(this.PlayerPosition.position, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoTeleportIn())));
   }
 
   [CompilerGenerated]
   public void \u003COnInteract\u003Eb__45_1()
   {
-    this.StartCoroutine((IEnumerator) this.DoTeleportOut(this.playerFarming));
+    this.StartCoroutine(this.DoTeleportOut(this.playerFarming));
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__45_2()
-  {
-    this.StartCoroutine((IEnumerator) this.DoTeleportIn());
-  }
+  public void \u003COnInteract\u003Eb__45_2() => this.StartCoroutine(this.DoTeleportIn());
 }

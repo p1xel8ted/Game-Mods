@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: StructureManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -1489,7 +1489,7 @@ label_32:
     for (int index = structuresOfType.Count - 1; index >= 0; --index)
     {
       StructureBrain vomit = structuresOfType[index];
-      GameManager.GetInstance().StartCoroutine((IEnumerator) StructureManager.\u003CClearAllWaste\u003Eg__Delay\u007C80_0(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(StructureManager.\u003CClearAllWaste\u003Eg__Delay\u007C80_0(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
       {
         BiomeConstants.Instance.EmitBloodSplatter(vomit.Data.Position, Vector3.back, Color.green);
         BiomeConstants.Instance.EmitBloodDieEffect(vomit.Data.Position, Vector3.back, Color.green);
@@ -1501,7 +1501,7 @@ label_32:
     for (int index = result.Count - 1; index >= 0; --index)
     {
       StructureBrain poop = (StructureBrain) result[index];
-      GameManager.GetInstance().StartCoroutine((IEnumerator) StructureManager.\u003CClearAllWaste\u003Eg__Delay\u007C80_0(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(StructureManager.\u003CClearAllWaste\u003Eg__Delay\u007C80_0(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
       {
         BiomeConstants.Instance.EmitSmokeExplosionVFX(poop.Data.Position);
         AudioManager.Instance.PlayOneShot("event:/followers/poop_pop", poop.Data.Position);

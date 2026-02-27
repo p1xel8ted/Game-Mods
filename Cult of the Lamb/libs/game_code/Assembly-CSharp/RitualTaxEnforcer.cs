@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualTaxEnforcer
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -27,7 +27,7 @@ public class RitualTaxEnforcer : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -35,7 +35,7 @@ public class RitualTaxEnforcer : Ritual
     RitualTaxEnforcer ritualTaxEnforcer = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualTaxEnforcer.StartCoroutine((IEnumerator) ritualTaxEnforcer.WaitFollowersFormCircle());
+    yield return (object) ritualTaxEnforcer.StartCoroutine(ritualTaxEnforcer.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     List<FollowerSelectEntry> followerSelectEntries = new List<FollowerSelectEntry>();
     foreach (FollowerBrain followerBrain in Ritual.GetFollowersAvailableToAttendSermon())
@@ -69,8 +69,8 @@ public class RitualTaxEnforcer : Ritual
             followerById.SetHat(FollowerHatType.None);
         }
       }
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.ContinueRitual());
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.SetUpCombatant1Routine());
+      GameManager.GetInstance().StartCoroutine(this.ContinueRitual());
+      GameManager.GetInstance().StartCoroutine(this.SetUpCombatant1Routine());
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnShow = selectMenuController2.OnShow + (System.Action) (() => { });
@@ -79,7 +79,7 @@ public class RitualTaxEnforcer : Ritual
     {
       AudioManager.Instance.StopLoop(this.loopedSound);
       Interaction_TempleAltar.Instance.RitualCloseSetCamera.Reset();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.EndRitual());
+      GameManager.GetInstance().StartCoroutine(this.EndRitual());
       this.CompleteRitual(true);
       this.CancelFollowers();
       Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
@@ -164,7 +164,7 @@ public class RitualTaxEnforcer : Ritual
     {
       brain.CompleteCurrentTask();
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
-      ritualTaxEnforcer.StartCoroutine((IEnumerator) ritualTaxEnforcer.DelayFollowerReaction(brain, Delay));
+      ritualTaxEnforcer.StartCoroutine(ritualTaxEnforcer.DelayFollowerReaction(brain, Delay));
       Follower followerById = FollowerManager.FindFollowerByID(brain.Info.ID);
       if ((bool) (UnityEngine.Object) followerById)
         followerById.Spine.randomOffset = false;

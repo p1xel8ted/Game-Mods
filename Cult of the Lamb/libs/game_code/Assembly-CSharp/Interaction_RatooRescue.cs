@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_RatooRescue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -57,10 +57,10 @@ public class Interaction_RatooRescue : Interaction
     if (!this.isNowFollowing)
     {
       DataManager.Instance.RatooNeedsRescue = false;
-      this.StartCoroutine((IEnumerator) this.IntroToLostRatoo());
+      this.StartCoroutine(this.IntroToLostRatoo());
     }
     else if (this.foundTeleporter)
-      this.StartCoroutine((IEnumerator) this.OutroToLostRatoo());
+      this.StartCoroutine(this.OutroToLostRatoo());
     base.OnInteract(state);
   }
 
@@ -112,7 +112,7 @@ public class Interaction_RatooRescue : Interaction
     this.companion.enabled = false;
     UnityEngine.Object.Destroy((UnityEngine.Object) this.companion);
     this.foundTeleporter = true;
-    this.StartCoroutine((IEnumerator) this.DigToTeleporter());
+    this.StartCoroutine(this.DigToTeleporter());
   }
 
   public void ShowRoomClearedBark()
@@ -176,12 +176,12 @@ public class Interaction_RatooRescue : Interaction
     }
     while (MMConversation.CURRENT_CONVERSATION != null)
       yield return (object) null;
-    yield return (object) interactionRatooRescue.StartCoroutine((IEnumerator) interactionRatooRescue.GiveHeartRoutine());
+    yield return (object) interactionRatooRescue.StartCoroutine(interactionRatooRescue.GiveHeartRoutine());
     interactionRatooRescue.Label = "";
     interactionRatooRescue.rewardGiven = true;
     AudioManager.Instance.PlayOneShot("event:/pentagram/pentagram_teleport_segment", interactionRatooRescue.gameObject);
     interactionRatooRescue.teleporter.animator.SetTrigger("warpOut");
-    yield return (object) interactionRatooRescue.StartCoroutine((IEnumerator) interactionRatooRescue.PlayAnimationAndWait(interactionRatooRescue.DigDownAnimation));
+    yield return (object) interactionRatooRescue.StartCoroutine(interactionRatooRescue.PlayAnimationAndWait(interactionRatooRescue.DigDownAnimation));
     PlayerFarming.SetStateForAllPlayers();
     GameManager.GetInstance().OnConversationEnd();
     UnityEngine.Object.Destroy((UnityEngine.Object) interactionRatooRescue.gameObject);

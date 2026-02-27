@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UpgradeShopItem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -72,7 +72,7 @@ public class UpgradeShopItem :
       this._icon.material = this._blackAndWhiteMaterialInstance;
       this._cantAffordIcon.material = this._blackAndWhiteMaterialInstance;
     }
-    this.StartCoroutine((IEnumerator) this.FadeIn(delay));
+    this.StartCoroutine(this.FadeIn(delay));
   }
 
   public void OnButtonClicked()
@@ -125,7 +125,7 @@ public class UpgradeShopItem :
     this._selectedIcon.enabled = true;
     if (this.cSelectionRoutine != null)
       this.StopCoroutine(this.cSelectionRoutine);
-    this.cSelectionRoutine = this.StartCoroutine((IEnumerator) this.Selected(this.transform.localScale.x, 1.2f));
+    this.cSelectionRoutine = this.StartCoroutine(this.Selected(this.transform.localScale.x, 1.2f));
   }
 
   public void OnDeselect(BaseEventData eventData)
@@ -133,7 +133,7 @@ public class UpgradeShopItem :
     this._selectedIcon.enabled = false;
     if (this.cSelectionRoutine != null)
       this.StopCoroutine(this.cSelectionRoutine);
-    this.cSelectionRoutine = this.StartCoroutine((IEnumerator) this.DeSelected());
+    this.cSelectionRoutine = this.StartCoroutine(this.DeSelected());
   }
 
   public IEnumerator Selected(float Starting, float Target)

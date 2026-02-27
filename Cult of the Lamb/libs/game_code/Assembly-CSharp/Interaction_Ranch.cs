@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranch
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -123,13 +123,26 @@ public class Interaction_Ranch : Interaction
     this.Structure.OnBrainAssigned -= new System.Action(this.OnBrainAssigned);
     this.Brain.OnAnimalAdded += new Structures_Ranch.AnimalEvent(this.Brain_OnAnimalAdded);
     this.CheckValidEnclosure((StructuresData) null);
-    if (!((UnityEngine.Object) PlacementRegion.Instance != (UnityEngine.Object) null) || PlacementRegion.Instance.structureBrain == null)
+    if ((UnityEngine.Object) PlacementRegion.Instance != (UnityEngine.Object) null && PlacementRegion.Instance.structureBrain != null)
+    {
+      PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(this.transform.position);
+      if (tileAtWorldPosition != null && tileAtWorldPosition.ObjectID != this.Brain.Data.ID)
+      {
+        this.Brain.Data.GridTilePosition = tileAtWorldPosition.Position;
+        PlacementRegion.Instance.structureBrain.AddStructureToGrid(this.Brain.Data, tileAtWorldPosition.Position);
+      }
+    }
+    if (DataManager.Instance.OnboardedWool || DataManager.Instance.RanchingAnimalsAdded < 1 || ObjectiveManager.HasObjectiveOfGroupID("Objectives/GroupTitles/RanchingAnimal"))
       return;
-    PlacementRegion.TileGridTile tileAtWorldPosition = PlacementRegion.Instance.GetClosestTileGridTileAtWorldPosition(this.transform.position);
-    if (tileAtWorldPosition == null || tileAtWorldPosition.ObjectID == this.Brain.Data.ID)
-      return;
-    this.Brain.Data.GridTilePosition = tileAtWorldPosition.Position;
-    PlacementRegion.Instance.structureBrain.AddStructureToGrid(this.Brain.Data, tileAtWorldPosition.Position);
+    this.GiveRanchingAnimalObjectives();
+    foreach (StructuresData.Ranchable_Animal animal in this.Brain.Data.Animals)
+    {
+      if (animal.Age >= 2)
+      {
+        ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.WaitForAnimalToGrowUp);
+        break;
+      }
+    }
   }
 
   public int GetAnimalCount()
@@ -161,9 +174,13 @@ public class Interaction_Ranch : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    if (!this.IsValid)
-      return;
-    this.ShowRanchMenu();
+    if (this.IsValid)
+      this.ShowRanchMenu();
+    foreach (ObjectivesData objective in ObjectiveManager.GetAllObjectivesOfGroupID("Objectives/GroupTitles/BuildRanch"))
+    {
+      if (objective.Type == Objectives.TYPES.UNLOCK)
+        ObjectiveManager.UpdateObjective(objective);
+    }
   }
 
   public static void RemoveAnimalFromRanch(RanchSelectEntry animal)
@@ -471,18 +488,23 @@ public class Interaction_Ranch : Interaction
     System.Action spawnAnimalCallback)
   {
     if (DataManager.Instance.RanchingAnimalsAdded <= 1)
-      this.StartCoroutine((IEnumerator) this.AddAnimalSequenceIE(animal, position, (System.Action) (() =>
+      this.StartCoroutine(this.AddAnimalSequenceIE(animal, position, (System.Action) (() =>
       {
-        ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/RanchingAnimal", Objectives.CustomQuestTypes.FeedAnimal), true, true);
-        ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/RanchingAnimal", Objectives.CustomQuestTypes.WaitForAnimalToGrowUp), true, true);
-        ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/RanchingAnimal", Objectives.CustomQuestTypes.SheerAnimal), true, true);
+        this.GiveRanchingAnimalObjectives();
         System.Action action = spawnAnimalCallback;
         if (action == null)
           return;
         action();
       })));
     else
-      this.StartCoroutine((IEnumerator) this.AddAnimalSequenceIE(animal, position, spawnAnimalCallback));
+      this.StartCoroutine(this.AddAnimalSequenceIE(animal, position, spawnAnimalCallback));
+  }
+
+  public void GiveRanchingAnimalObjectives()
+  {
+    ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/RanchingAnimal", Objectives.CustomQuestTypes.FeedAnimal), true, true);
+    ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/RanchingAnimal", Objectives.CustomQuestTypes.WaitForAnimalToGrowUp), true, true);
+    ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/RanchingAnimal", Objectives.CustomQuestTypes.SheerAnimal), true, true);
   }
 
   public GameObject GetClosestConnectionPoint(Vector3 position)

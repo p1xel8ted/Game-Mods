@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SimpleVFX
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -54,7 +54,7 @@ public class SimpleVFX : BaseMonoBehaviour
   public void Play()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+    this.StartCoroutine(this.FrameDelay((System.Action) (() =>
     {
       this.Spine.AnimationState.Start += new Spine.AnimationState.TrackEntryDelegate(this.EnableSpine);
       if (!this.justPlayParticles)
@@ -66,12 +66,12 @@ public class SimpleVFX : BaseMonoBehaviour
         this.Spine.gameObject.SetActive(true);
         this.Spine.AnimationState.Complete += new Spine.AnimationState.TrackEntryDelegate(this.AnimationState_Complete);
         if (this.useCustomEndTime)
-          this.StartCoroutine((IEnumerator) this.customEndTimer());
+          this.StartCoroutine(this.customEndTimer());
         if (this.setRotation)
           this.Rotation = num + (float) UnityEngine.Random.Range(-10, 10);
       }
       else if (this.useCustomEndTime && ObjectPool.IsSpawned(this.gameObject))
-        this.StartCoroutine((IEnumerator) this.customEndTimer());
+        this.StartCoroutine(this.customEndTimer());
       if (this.particlesToPlay.Count <= 0)
         return;
       if ((UnityEngine.Object) this.particlesToPlay[0] != (UnityEngine.Object) null)
@@ -87,7 +87,7 @@ public class SimpleVFX : BaseMonoBehaviour
     this.StopAllCoroutines();
     this.gameObject.SetActive(true);
     this.gameObject.transform.position = Position;
-    this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+    this.StartCoroutine(this.FrameDelay((System.Action) (() =>
     {
       if (!this.justPlayParticles)
       {
@@ -97,12 +97,12 @@ public class SimpleVFX : BaseMonoBehaviour
         this.Spine.gameObject.SetActive(true);
         this.Spine.AnimationState.Complete += new Spine.AnimationState.TrackEntryDelegate(this.AnimationState_Complete);
         if (this.useCustomEndTime)
-          this.StartCoroutine((IEnumerator) this.customEndTimer());
+          this.StartCoroutine(this.customEndTimer());
         if (this.setRotation)
           this.Rotation = Angle + (float) UnityEngine.Random.Range(-10, 10);
       }
       else if (this.useCustomEndTime && ObjectPool.IsSpawned(this.gameObject))
-        this.StartCoroutine((IEnumerator) this.customEndTimer());
+        this.StartCoroutine(this.customEndTimer());
       if (this.particlesToPlay.Count <= 0)
         return;
       if ((UnityEngine.Object) this.particlesToPlay[0] != (UnityEngine.Object) null)
@@ -117,7 +117,7 @@ public class SimpleVFX : BaseMonoBehaviour
   public void Play(Vector3 Position, float Angle, string animation)
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+    this.StartCoroutine(this.FrameDelay((System.Action) (() =>
     {
       if (!this.justPlayParticles)
       {
@@ -135,12 +135,12 @@ public class SimpleVFX : BaseMonoBehaviour
         this.mesh.enabled = true;
         this.gameObject.SetActive(true);
         if (this.useCustomEndTime)
-          this.StartCoroutine((IEnumerator) this.customEndTimer());
+          this.StartCoroutine(this.customEndTimer());
         if (this.setRotation)
           this.Rotation = Angle + (float) UnityEngine.Random.Range(-10, 10);
       }
       else if (this.useCustomEndTime && ObjectPool.IsSpawned(this.gameObject))
-        this.StartCoroutine((IEnumerator) this.customEndTimer());
+        this.StartCoroutine(this.customEndTimer());
       if (this.particlesToPlay.Count <= 0)
         return;
       if ((UnityEngine.Object) this.particlesToPlay[0] != (UnityEngine.Object) null)
@@ -215,12 +215,12 @@ public class SimpleVFX : BaseMonoBehaviour
       this.Spine.gameObject.SetActive(true);
       this.Spine.AnimationState.Complete += new Spine.AnimationState.TrackEntryDelegate(this.AnimationState_Complete);
       if (this.useCustomEndTime)
-        this.StartCoroutine((IEnumerator) this.customEndTimer());
+        this.StartCoroutine(this.customEndTimer());
       if (this.setRotation)
         this.Rotation = num + (float) UnityEngine.Random.Range(-10, 10);
     }
     else if (this.useCustomEndTime && ObjectPool.IsSpawned(this.gameObject))
-      this.StartCoroutine((IEnumerator) this.customEndTimer());
+      this.StartCoroutine(this.customEndTimer());
     if (this.particlesToPlay.Count <= 0)
       return;
     if ((UnityEngine.Object) this.particlesToPlay[0] != (UnityEngine.Object) null)

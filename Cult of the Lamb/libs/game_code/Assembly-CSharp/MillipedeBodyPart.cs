@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MillipedeBodyPart
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -55,7 +55,7 @@ public class MillipedeBodyPart : BaseMonoBehaviour
 
   public void SpawnEnemy(List<AsyncOperationHandle<GameObject>> enemies, Transform parent)
   {
-    this.StartCoroutine((IEnumerator) this.SpawnIE(enemies, parent));
+    this.StartCoroutine(this.SpawnIE(enemies, parent));
   }
 
   public IEnumerator SpawnIE(List<AsyncOperationHandle<GameObject>> enemies, Transform parent)

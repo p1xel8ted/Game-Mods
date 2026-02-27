@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIDrumMinigameOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -94,7 +94,7 @@ public class UIDrumMinigameOverlayController : MonoBehaviour
     this.target.gameObject.SetActive(false);
     this.currentMelody = this.Melodies[song];
     this.SetPrompts();
-    this.StartCoroutine((IEnumerator) this.PlayMelody());
+    this.StartCoroutine(this.PlayMelody());
     this.ForceSinAmount(0.0f);
     InputManager.General.OnActiveControllerChanged += new Action<Controller>(this.UpdateController);
     MonoSingleton<UIManager>.Instance.ForceBlockPause = true;
@@ -343,7 +343,7 @@ public class UIDrumMinigameOverlayController : MonoBehaviour
       this.ForceSinAmount(this.targetSinNorm);
     }
     this.targetSinNorm = sinNorm;
-    this.routine = this.StartCoroutine((IEnumerator) this.SinBarUpdated(this.targetSinNorm));
+    this.routine = this.StartCoroutine(this.SinBarUpdated(this.targetSinNorm));
   }
 
   public void ForceSinAmount(float normSinAmount)

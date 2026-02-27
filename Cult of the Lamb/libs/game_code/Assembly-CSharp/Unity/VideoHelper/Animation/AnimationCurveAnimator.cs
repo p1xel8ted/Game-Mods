@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Unity.VideoHelper.Animation.AnimationCurveAnimator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -76,7 +76,7 @@ public abstract class AnimationCurveAnimator : MonoBehaviour
     if (this.currentCoroutine != null)
       this.StopCoroutine(this.currentCoroutine);
     this.time = !this.smooth ? 0.0f : Mathf.Clamp(duration - this.time, 0.0f, duration);
-    this.currentCoroutine = this.StartCoroutine((IEnumerator) this.AnimateInternal(curve, duration, action));
+    this.currentCoroutine = this.StartCoroutine(this.AnimateInternal(curve, duration, action));
   }
 
   public virtual IEnumerator AnimateInternal(

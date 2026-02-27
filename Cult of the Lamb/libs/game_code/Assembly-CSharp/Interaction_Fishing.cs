@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Fishing
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using EasyCurvedLine;
@@ -106,6 +106,7 @@ public class Interaction_Fishing : Interaction
   public float hookDirectionChangeTimer;
   public float hookDirectionSpeed = 1f;
   public int hookDirection = 1;
+  public bool caughtFishSkin;
   public const int maxFish = 20;
   public bool startedCastLoop;
   public bool changedState;
@@ -290,7 +291,7 @@ public class Interaction_Fishing : Interaction
         if ((UnityEngine.Object) this._fishingOverlayControllerUI[index] != (UnityEngine.Object) null)
         {
           UIFishingOverlayController overlayController = this._fishingOverlayControllerUI[index];
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+          GameManager.GetInstance().StartCoroutine(this.FrameDelay((System.Action) (() =>
           {
             overlayController.Hide();
             playerFarming.indicator.Reset();
@@ -400,7 +401,7 @@ public class Interaction_Fishing : Interaction
     if ((double) this.ReeledAmount[playerIndex] <= 0.0)
     {
       this.currentFish[playerIndex].Spooked();
-      this.StartCoroutine((IEnumerator) this.NoCatch(playerIndex, true));
+      this.StartCoroutine(this.NoCatch(playerIndex, true));
     }
     else if ((double) this.ReeledAmount[playerIndex] >= 1.0)
       this.FishCaught(playerIndex);
@@ -457,13 +458,13 @@ public class Interaction_Fishing : Interaction
         overlayController.Hide(true);
     }
     this._fishingOverlayControllerUI.Clear();
-    this.waitForPlayersCoroutine = this.StartCoroutine((IEnumerator) this.WaitForPlayersToArriveIE((System.Action) (() =>
+    this.waitForPlayersCoroutine = this.StartCoroutine(this.WaitForPlayersToArriveIE((System.Action) (() =>
     {
       for (int index = 0; index < PlayerFarming.players.Count; ++index)
       {
         PlayerFarming player = PlayerFarming.players[index];
         this.gameObject.SetActive(true);
-        this.StartCoroutine((IEnumerator) this.BeganFishingIE(player));
+        this.StartCoroutine(this.BeganFishingIE(player));
       }
       this.waitForPlayersCoroutine = (Coroutine) null;
     })));
@@ -481,14 +482,14 @@ public class Interaction_Fishing : Interaction
     this.ReelDistance = Vector3.Distance(this.fishingHooks[playerIndex].transform.position, PlayerFarming.players[playerIndex].transform.position);
     if ((double) Vector3.Distance(this.fishingHooks[playerIndex].transform.position, PlayerFarming.players[playerIndex].transform.position) >= 2.0999999046325684)
       return;
-    this.StartCoroutine((IEnumerator) this.NoCatch(playerIndex, false));
+    this.StartCoroutine(this.NoCatch(playerIndex, false));
   }
 
   public void CastLine(int playerIndex)
   {
     AudioManager.Instance.PlayOneShot("event:/ui/hold_activate", PlayerFarming.players[playerIndex].gameObject.transform.position);
     AudioManager.Instance.StopLoop(this.CastLoopedSound);
-    this.StartCoroutine((IEnumerator) this.CastLineIE(playerIndex));
+    this.StartCoroutine(this.CastLineIE(playerIndex));
   }
 
   public IEnumerator CastLineIE(int playerIndex)
@@ -592,10 +593,7 @@ public class Interaction_Fishing : Interaction
     this.currentFish[playerIndex] = currentFish;
   }
 
-  public void FishCaught(int playerIndex)
-  {
-    this.StartCoroutine((IEnumerator) this.FishCaughtIE(playerIndex));
-  }
+  public void FishCaught(int playerIndex) => this.StartCoroutine(this.FishCaughtIE(playerIndex));
 
   public IEnumerator FishCaughtIE(int playerIndex)
   {
@@ -644,17 +642,18 @@ public class Interaction_Fishing : Interaction
     AudioManager.Instance.PlayOneShot("event:/followers/pop_in", PlayerFarming.players[playerIndex].transform.position);
     if (!DataManager.Instance.GetVariable(DataManager.Variables.ShoreFishFished))
     {
-      if ((interactionFishing.currentFish[playerIndex].ItemType == InventoryItem.ITEM_TYPE.FOUND_ITEM_FOLLOWERSKIN && DataManager.Instance.FishCaughtTotal > 1 || DataManager.Instance.FishCaughtTotal >= 4) && !DataManager.GetFollowerSkinUnlocked("Fish") && playerIndex == 0)
+      if ((interactionFishing.currentFish[playerIndex].ItemType == InventoryItem.ITEM_TYPE.FOUND_ITEM_FOLLOWERSKIN && DataManager.Instance.FishCaughtTotal > 1 || DataManager.Instance.FishCaughtTotal >= 4) && !DataManager.GetFollowerSkinUnlocked("Fish") && playerIndex == 0 && !interactionFishing.caughtFishSkin)
       {
         FoundItemPickUp component = InventoryItem.Spawn(InventoryItem.ITEM_TYPE.FOUND_ITEM_FOLLOWERSKIN, 1, PlayerFarming.players[playerIndex].transform.position).GetComponent<FoundItemPickUp>();
         component.FollowerSkinForceSelection = true;
         component.SkinToForce = "Fish";
+        interactionFishing.caughtFishSkin = true;
       }
       else if ((interactionFishing.currentFish[playerIndex].ItemType == InventoryItem.ITEM_TYPE.RELIC || DataManager.Instance.FishCaughtTotal >= 20) && !DataManager.Instance.PlayerFoundRelics.Contains(RelicType.FillUpFervour) && DataManager.Instance.OnboardedRelics && playerIndex == 0)
       {
         interactionFishing.currentFish[playerIndex].ItemType = InventoryItem.ITEM_TYPE.RELIC;
         interactionFishing.waiting = true;
-        GameObject Speaker = RelicCustomTarget.Create(interactionFishing.currentFish[playerIndex].transform.position, PlayerFarming.players[playerIndex].transform.position, 1f, RelicType.FillUpFervour, new System.Action(interactionFishing.\u003CFishCaughtIE\u003Eb__116_0));
+        GameObject Speaker = RelicCustomTarget.Create(interactionFishing.currentFish[playerIndex].transform.position, PlayerFarming.players[playerIndex].transform.position, 1f, RelicType.FillUpFervour, new System.Action(interactionFishing.\u003CFishCaughtIE\u003Eb__117_0));
         GameManager.GetInstance().OnConversationNew();
         GameManager.GetInstance().OnConversationNext(Speaker, 6f);
         while (interactionFishing.waiting)
@@ -664,7 +663,7 @@ public class Interaction_Fishing : Interaction
       {
         InventoryItem.ITEM_TYPE type = interactionFishing.currentFish[playerIndex].ItemType;
         int quantity = interactionFishing.currentFish[playerIndex].Quantity;
-        if (type == InventoryItem.ITEM_TYPE.FOUND_ITEM_FOLLOWERSKIN && (DataManager.GetFollowerSkinUnlocked("Fish") || playerIndex != 0))
+        if (type == InventoryItem.ITEM_TYPE.FOUND_ITEM_FOLLOWERSKIN && (DataManager.GetFollowerSkinUnlocked("Fish") || playerIndex != 0 || interactionFishing.caughtFishSkin))
         {
           type = InventoryItem.ITEM_TYPE.FISH_BIG;
         }
@@ -807,7 +806,7 @@ public class Interaction_Fishing : Interaction
     interactionFishing.HasChanged = true;
     interactionFishing.Activated = false;
     CoopManager.Instance.UnlockAddRemovePlayer();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) interactionFishing.FrameDelay(new System.Action(interactionFishing.\u003CNoCatch\u003Eb__118_0)));
+    GameManager.GetInstance().StartCoroutine(interactionFishing.FrameDelay(new System.Action(interactionFishing.\u003CNoCatch\u003Eb__119_0)));
   }
 
   public IEnumerator FrameDelay(System.Action callback)
@@ -941,7 +940,7 @@ public class Interaction_Fishing : Interaction
       if ((UnityEngine.Object) this._fishingOverlayControllerUI[index] != (UnityEngine.Object) null)
       {
         UIFishingOverlayController overlayController = this._fishingOverlayControllerUI[index];
-        GameManager.GetInstance().StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+        GameManager.GetInstance().StartCoroutine(this.FrameDelay((System.Action) (() =>
         {
           overlayController.Hide();
           this.playerFarming.indicator.Reset();
@@ -959,22 +958,22 @@ public class Interaction_Fishing : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__105_0()
+  public void \u003COnInteract\u003Eb__106_0()
   {
     for (int index = 0; index < PlayerFarming.players.Count; ++index)
     {
       PlayerFarming player = PlayerFarming.players[index];
       this.gameObject.SetActive(true);
-      this.StartCoroutine((IEnumerator) this.BeganFishingIE(player));
+      this.StartCoroutine(this.BeganFishingIE(player));
     }
     this.waitForPlayersCoroutine = (Coroutine) null;
   }
 
   [CompilerGenerated]
-  public void \u003CFishCaughtIE\u003Eb__116_0() => this.waiting = false;
+  public void \u003CFishCaughtIE\u003Eb__117_0() => this.waiting = false;
 
   [CompilerGenerated]
-  public void \u003CNoCatch\u003Eb__118_0() => this.playerFarming.indicator.Reset();
+  public void \u003CNoCatch\u003Eb__119_0() => this.playerFarming.indicator.Reset();
 
   [Serializable]
   public class FishType

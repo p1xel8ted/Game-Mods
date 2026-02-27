@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GuardianPet_BeamAttack
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -116,7 +116,7 @@ public class GuardianPet_BeamAttack : GuardianPet
     this.health.HP = this.health.totalHP;
     this.health.enabled = true;
     this.AttackCoolDown = UnityEngine.Random.Range(this.AttackCoolDownDuration.x, this.AttackCoolDownDuration.y);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnHit(
@@ -126,10 +126,10 @@ public class GuardianPet_BeamAttack : GuardianPet
     bool FromBehind = false)
   {
     base.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
-    this.StartCoroutine((IEnumerator) this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() =>
+    this.StartCoroutine(this.KnockBackRoutine(Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f), (System.Action) (() =>
     {
       this.AttackCoolDown = UnityEngine.Random.Range(this.AttackCoolDownDuration.x, this.AttackCoolDownDuration.y);
-      this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+      this.StartCoroutine(this.ActiveRoutine());
     })));
   }
 
@@ -234,7 +234,7 @@ public class GuardianPet_BeamAttack : GuardianPet
       guardianPetBeamAttack1.currentIndicator.Recycle();
       guardianPetBeamAttack1.currentIndicator = (GameObject) null;
     }
-    yield return (object) guardianPetBeamAttack1.StartCoroutine((IEnumerator) guardianPetBeamAttack1.BeamAttackRoutine());
+    yield return (object) guardianPetBeamAttack1.StartCoroutine(guardianPetBeamAttack1.BeamAttackRoutine());
     GuardianPet_BeamAttack guardianPetBeamAttack2 = guardianPetBeamAttack1;
     int num3 = guardianPetBeamAttack1.AttackCycle + 1;
     int num4 = num3;
@@ -302,7 +302,7 @@ public class GuardianPet_BeamAttack : GuardianPet
       for (int index = 0; index < 5; ++index)
       {
         Vector3 target = (UnityEngine.Object) guardianPetBeamAttack.currentIndicator != (UnityEngine.Object) null ? guardianPetBeamAttack.currentIndicator.transform.position : currentTarget.transform.position;
-        guardianPetBeamAttack.StartCoroutine((IEnumerator) guardianPetBeamAttack.CreateBeam(guardianPetBeamAttack.transform.position + Vector3.down * 0.15f, target, index == 0));
+        guardianPetBeamAttack.StartCoroutine(guardianPetBeamAttack.CreateBeam(guardianPetBeamAttack.transform.position + Vector3.down * 0.15f, target, index == 0));
       }
       if (!string.IsNullOrEmpty(guardianPetBeamAttack.AttackBeamShootSFX))
         AudioManager.Instance.PlayOneShot(guardianPetBeamAttack.AttackBeamShootSFX, guardianPetBeamAttack.gameObject);
@@ -330,7 +330,7 @@ public class GuardianPet_BeamAttack : GuardianPet
     guardianPetBeamAttack.AttackCoolDown = UnityEngine.Random.Range(guardianPetBeamAttack.AttackCoolDownDuration.x, guardianPetBeamAttack.AttackCoolDownDuration.y);
     guardianPetBeamAttack.EndBeamAttack();
     yield return (object) new WaitForSeconds(1f);
-    guardianPetBeamAttack.StartCoroutine((IEnumerator) guardianPetBeamAttack.ActiveRoutine());
+    guardianPetBeamAttack.StartCoroutine(guardianPetBeamAttack.ActiveRoutine());
   }
 
   public IEnumerator CreateBeam(Vector3 from, Vector3 target, bool triggerSFX)
@@ -381,6 +381,6 @@ public class GuardianPet_BeamAttack : GuardianPet
   public void \u003COnHit\u003Eb__40_0()
   {
     this.AttackCoolDown = UnityEngine.Random.Range(this.AttackCoolDownDuration.x, this.AttackCoolDownDuration.y);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 }

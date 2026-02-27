@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MiniBossManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -140,11 +140,11 @@ public class MiniBossManager : BaseMonoBehaviour
 
   public void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+    this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
     {
       if (!((UnityEngine.Object) this.Follower != (UnityEngine.Object) null) && !((UnityEngine.Object) Interaction_DivineCrystal.Instance != (UnityEngine.Object) null))
         return;
-      this.StartCoroutine((IEnumerator) this.WaitForFollowerToBeRecruited());
+      this.StartCoroutine(this.WaitForFollowerToBeRecruited());
     })));
   }
 
@@ -183,7 +183,7 @@ public class MiniBossManager : BaseMonoBehaviour
       else
         health.OnDie += new Health.DieAction(this.H_OnDie);
     }
-    this.StartCoroutine((IEnumerator) this.IntroRoutine());
+    this.StartCoroutine(this.IntroRoutine());
   }
 
   public IEnumerator IntroRoutine()
@@ -196,7 +196,7 @@ public class MiniBossManager : BaseMonoBehaviour
     yield return (object) new WaitForEndOfFrame();
     PlayerFarming.SetStateForAllPlayers(StateMachine.State.CustomAnimation);
     yield return (object) new WaitForSeconds(0.5f);
-    yield return (object) miniBossManager.StartCoroutine((IEnumerator) miniBossManager.CurrentMiniBoss.IntroRoutine());
+    yield return (object) miniBossManager.StartCoroutine(miniBossManager.CurrentMiniBoss.IntroRoutine());
     miniBossManager.forceEnemiesPos = false;
   }
 
@@ -296,7 +296,7 @@ public class MiniBossManager : BaseMonoBehaviour
     if (this.introPlayed && !this.revealed && this.DeathCount >= this.CurrentMiniBoss.EnemiesToTrack.Count)
     {
       this.revealed = true;
-      this.StartCoroutine((IEnumerator) this.RevealRoutine());
+      this.StartCoroutine(this.RevealRoutine());
     }
     this.ForceBossIntoCorrectPosition();
     if (!((UnityEngine.Object) this.CurrentMiniBoss != (UnityEngine.Object) null) || !this.CurrentMiniBoss.multipleBoss || !this.forceEnemiesPos || !this.CurrentMiniBoss.forceMinibossIntoCorrectPosition)
@@ -309,11 +309,11 @@ public class MiniBossManager : BaseMonoBehaviour
   {
     MiniBossManager miniBossManager = this;
     AudioManager.Instance.SetMusicRoomID(SoundConstants.RoomID.BossEntryAmbience);
-    yield return (object) miniBossManager.StartCoroutine((IEnumerator) miniBossManager.CurrentMiniBoss.OutroRoutine());
+    yield return (object) miniBossManager.StartCoroutine(miniBossManager.CurrentMiniBoss.OutroRoutine());
     yield return (object) new WaitForSecondsRealtime(1.25f);
     if (!DataManager.Instance.CheckKilledBosses(miniBossManager.CurrentMiniBoss.name) && !DungeonSandboxManager.Active)
       yield return (object) new WaitForSeconds(2.5f);
-    miniBossManager.StartCoroutine((IEnumerator) miniBossManager.WaitForFollowerToBeRecruited());
+    miniBossManager.StartCoroutine(miniBossManager.WaitForFollowerToBeRecruited());
   }
 
   public void SetFollowerToWaitFor(GameObject follower) => this.Follower = follower;
@@ -351,12 +351,12 @@ public class MiniBossManager : BaseMonoBehaviour
                 weaponPodium2.enabled = false;
               }
             }
-            miniBossManager.StartCoroutine((IEnumerator) miniBossManager.WaitForUIToFinish(miniBossManager.ForceReward, 1f));
+            miniBossManager.StartCoroutine(miniBossManager.WaitForUIToFinish(miniBossManager.ForceReward, 1f));
           });
         }
       }
       else
-        miniBossManager1.StartCoroutine((IEnumerator) miniBossManager1.WaitForUIToFinish(miniBossManager1.ForceReward));
+        miniBossManager1.StartCoroutine(miniBossManager1.WaitForUIToFinish(miniBossManager1.ForceReward));
     }
     else if (miniBossManager1.SingleChoiceRewardOptions.Count > 0)
     {
@@ -404,19 +404,19 @@ public class MiniBossManager : BaseMonoBehaviour
   {
     if (!((UnityEngine.Object) this.Follower != (UnityEngine.Object) null) && !((UnityEngine.Object) Interaction_DivineCrystal.Instance != (UnityEngine.Object) null))
       return;
-    this.StartCoroutine((IEnumerator) this.WaitForFollowerToBeRecruited());
+    this.StartCoroutine(this.WaitForFollowerToBeRecruited());
   }
 
   [CompilerGenerated]
   public void \u003CWaitForFollowerToBeRecruited\u003Eb__32_0()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForUIToFinish(this.ForceReward));
+    this.StartCoroutine(this.WaitForUIToFinish(this.ForceReward));
   }
 
   [CompilerGenerated]
   public void \u003CWaitForFollowerToBeRecruited\u003Eb__32_3()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForUIToFinish(this.ForceReward));
+    this.StartCoroutine(this.WaitForUIToFinish(this.ForceReward));
   }
 
   [CompilerGenerated]

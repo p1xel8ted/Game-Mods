@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Follower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -160,7 +160,7 @@ public class Interaction_Follower : Interaction
     PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive, PlayerNotToInclude: this.playerFarming);
     GameManager.GetInstance().OnConversationNew(false, false, state.GetComponent<PlayerFarming>());
     GameManager.GetInstance().OnConversationNext(this.playerFarming.gameObject);
-    this.playerFarming.GoToAndStop(this.transform.position + Vector3.left * 1.5f, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.FollowerChoiceIE())));
+    this.playerFarming.GoToAndStop(this.transform.position + Vector3.left * 1.5f, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.FollowerChoiceIE())));
   }
 
   public IEnumerator GiveSouls()
@@ -232,9 +232,9 @@ public class Interaction_Follower : Interaction
     GameManager.GetInstance().OnConversationNext(interactionFollower.ConversionBone, 4f);
     GameManager.GetInstance().AddPlayerToCamera();
     if (true)
-      yield return (object) interactionFollower.StartCoroutine((IEnumerator) interactionFollower.ConvertIE());
+      yield return (object) interactionFollower.StartCoroutine(interactionFollower.ConvertIE());
     else
-      yield return (object) interactionFollower.StartCoroutine((IEnumerator) interactionFollower.ConsumefollowerRoutine());
+      yield return (object) interactionFollower.StartCoroutine(interactionFollower.ConsumefollowerRoutine());
     if (Interaction_Follower.Recruits.Count <= 1)
     {
       RoomLockController.RoomCompleted();
@@ -331,8 +331,5 @@ public class Interaction_Follower : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__28_0()
-  {
-    this.StartCoroutine((IEnumerator) this.FollowerChoiceIE());
-  }
+  public void \u003COnInteract\u003Eb__28_0() => this.StartCoroutine(this.FollowerChoiceIE());
 }

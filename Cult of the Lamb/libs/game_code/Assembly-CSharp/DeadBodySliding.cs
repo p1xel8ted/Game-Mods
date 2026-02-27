@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DeadBodySliding
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -84,7 +84,7 @@ public class DeadBodySliding : BaseMonoBehaviour
     }
     if (this.explode || !DataManager.Instance.BonesEnabled || flag)
       return;
-    this.health.DealDamage((float) int.MaxValue, this.gameObject, this.transform.position);
+    this.health.DealDamage((float) int.MaxValue, this.gameObject, this.transform.position, dealDamageImmediately: true);
   }
 
   public void Init(GameObject enemy, float Angle, float Speed = 1700f, bool explode = false)
@@ -102,17 +102,17 @@ public class DeadBodySliding : BaseMonoBehaviour
     this.SetFacing();
     if (this.gameObject.activeInHierarchy)
     {
-      this.StartCoroutine((IEnumerator) this.DelayForce());
-      this.StartCoroutine((IEnumerator) this.DoScale());
-      this.StartCoroutine((IEnumerator) this.DoBounce());
-      this.StartCoroutine((IEnumerator) this.HealthRoutine());
+      this.StartCoroutine(this.DelayForce());
+      this.StartCoroutine(this.DoScale());
+      this.StartCoroutine(this.DoBounce());
+      this.StartCoroutine(this.HealthRoutine());
     }
     if ((UnityEngine.Object) this.GetComponentInChildren<Health>(true) != (UnityEngine.Object) null)
       this.GetComponentInChildren<Health>(true).OnEnable();
     this.explode = explode;
     if (!explode)
       return;
-    this.StartCoroutine((IEnumerator) this.ExplodeRoutine());
+    this.StartCoroutine(this.ExplodeRoutine());
   }
 
   public IEnumerator ExplodeRoutine()
@@ -239,6 +239,6 @@ public class DeadBodySliding : BaseMonoBehaviour
 
   public void Destroy()
   {
-    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position);
+    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position, dealDamageImmediately: true);
   }
 }

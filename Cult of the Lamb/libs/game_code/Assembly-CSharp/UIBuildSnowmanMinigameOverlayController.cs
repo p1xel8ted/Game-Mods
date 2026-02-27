@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIBuildSnowmanMinigameOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Coffee.UIExtensions;
@@ -161,7 +161,7 @@ public class UIBuildSnowmanMinigameOverlayController : UIMenuBase
   {
     Time.timeScale = 0.0f;
     base.OnShowCompleted();
-    this.StartCoroutine((IEnumerator) this.TweenInSnowBall());
+    this.StartCoroutine(this.TweenInSnowBall());
   }
 
   public IEnumerator TweenInSnowBall()
@@ -353,7 +353,7 @@ public class UIBuildSnowmanMinigameOverlayController : UIMenuBase
     }));
   }
 
-  public void Close(bool failed) => this.StartCoroutine((IEnumerator) this.CloseRoutine(failed));
+  public void Close(bool failed) => this.StartCoroutine(this.CloseRoutine(failed));
 
   public IEnumerator CloseRoutine(bool failed)
   {

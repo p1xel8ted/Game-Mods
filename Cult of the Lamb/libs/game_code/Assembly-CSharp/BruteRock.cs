@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BruteRock
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -19,14 +19,14 @@ public class BruteRock : BaseMonoBehaviour
 
   public void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.ScaleCircle());
+    this.StartCoroutine(this.ScaleCircle());
     this.Rock.SetActive(false);
   }
 
   public void Play(Vector3 Position)
   {
-    this.StartCoroutine((IEnumerator) this.MoveRock(Position));
-    this.StartCoroutine((IEnumerator) this.FlashCircle());
+    this.StartCoroutine(this.MoveRock(Position));
+    this.StartCoroutine(this.FlashCircle());
   }
 
   public IEnumerator ScaleCircle()
@@ -93,7 +93,7 @@ public class BruteRock : BaseMonoBehaviour
     {
       Health component2 = component1.gameObject.GetComponent<Health>();
       if ((UnityEngine.Object) component2 != (UnityEngine.Object) null)
-        component2.DealDamage(1f, bruteRock.gameObject, Vector3.Lerp(bruteRock.transform.position, component2.transform.position, 0.8f));
+        component2.DealDamage(1f, bruteRock.gameObject, Vector3.Lerp(bruteRock.transform.position, component2.transform.position, 0.8f), dealDamageImmediately: true);
     }
     UnityEngine.Object.Destroy((UnityEngine.Object) bruteRock.gameObject);
   }

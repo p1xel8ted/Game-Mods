@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBrute
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -58,7 +58,7 @@ public class EnemyBrute : UnitObject
     this.simpleSpineEventListener.OnSpineEvent += new SimpleSpineEventListener.SpineEvent(this.OnSpineEvent);
     this.TargetWarning.gameObject.SetActive(false);
     this.ParticleSystem.Stop();
-    this.StartCoroutine((IEnumerator) this.WaitForEnemy());
+    this.StartCoroutine(this.WaitForEnemy());
     if (!((UnityEngine.Object) this.damageColliderEvents != (UnityEngine.Object) null))
       return;
     this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
@@ -129,7 +129,7 @@ public class EnemyBrute : UnitObject
     while ((UnityEngine.Object) (enemyBrute.TargetObject = PlayerFarming.FindClosestPlayerGameObject(enemyBrute.transform.position)) == (UnityEngine.Object) null)
       yield return (object) null;
     enemyBrute.TargetObject.GetComponent<Health>().attackers.Add(enemyBrute.gameObject);
-    enemyBrute.StartCoroutine((IEnumerator) enemyBrute.ChasePlayer());
+    enemyBrute.StartCoroutine(enemyBrute.ChasePlayer());
   }
 
   public IEnumerator LassoPlayer()
@@ -177,11 +177,11 @@ public class EnemyBrute : UnitObject
     }
     PlayerState.CURRENT_STATE = StateMachine.State.Idle;
     enemyBrute.lineRenderer.gameObject.SetActive(false);
-    enemyBrute.StartCoroutine((IEnumerator) enemyBrute.ChasePlayer());
+    enemyBrute.StartCoroutine(enemyBrute.ChasePlayer());
     enemyBrute.AttackType = EnemyBrute.AttackTypes.Area;
     enemyBrute.state.CURRENT_STATE = StateMachine.State.SignPostAttack;
     enemyBrute.simpleSpineAnimator.Animate("attack-charge", 0, false);
-    enemyBrute.StartCoroutine((IEnumerator) enemyBrute.LassoTimerCountDown());
+    enemyBrute.StartCoroutine(enemyBrute.LassoTimerCountDown());
   }
 
   public IEnumerator LassoTimerCountDown()
@@ -203,7 +203,7 @@ public class EnemyBrute : UnitObject
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
       enemyBrute.state.CURRENT_STATE = StateMachine.State.Idle;
-      enemyBrute.StartCoroutine((IEnumerator) enemyBrute.ChasePlayer());
+      enemyBrute.StartCoroutine(enemyBrute.ChasePlayer());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -316,7 +316,7 @@ public class EnemyBrute : UnitObject
             {
               enemyBrute1.ClearTarget();
               Loop = false;
-              enemyBrute1.StartCoroutine((IEnumerator) enemyBrute1.WaitForEnemy());
+              enemyBrute1.StartCoroutine(enemyBrute1.WaitForEnemy());
             }
             else
             {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyScuttleChargerMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -25,7 +25,7 @@ public class EnemyScuttleChargerMiniboss : EnemyScuttleCharger
     base.OnEnable();
     if (this.StartHidden != EnemyScuttleSwiper.StartingStates.Intro)
       return;
-    this.StartCoroutine((IEnumerator) this.IntroRoutine());
+    this.StartCoroutine(this.IntroRoutine());
   }
 
   public IEnumerator IntroRoutine()
@@ -37,7 +37,7 @@ public class EnemyScuttleChargerMiniboss : EnemyScuttleCharger
     scuttleChargerMiniboss.Spine.AnimationState.AddAnimation(0, scuttleChargerMiniboss.IdleAnimation, true, 0.0f);
     scuttleChargerMiniboss.AttackDelay = 0.0f;
     yield return (object) new WaitForSeconds(1.5f);
-    scuttleChargerMiniboss.StartCoroutine((IEnumerator) scuttleChargerMiniboss.ActiveRoutine());
+    scuttleChargerMiniboss.StartCoroutine(scuttleChargerMiniboss.ActiveRoutine());
   }
 
   public override IEnumerator AttackRoutine()
@@ -98,7 +98,7 @@ public class EnemyScuttleChargerMiniboss : EnemyScuttleCharger
   {
     base.ChargeIntoWall();
     CameraManager.shakeCamera(1f, this.state.LookAngle);
-    this.StartCoroutine((IEnumerator) this.ShootArrowRoutine());
+    this.StartCoroutine(this.ShootArrowRoutine());
   }
 
   public void TurnTowardsTarget()

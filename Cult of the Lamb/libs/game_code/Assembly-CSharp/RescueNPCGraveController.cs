@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RescueNPCGraveController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -38,7 +38,7 @@ public class RescueNPCGraveController : BaseMonoBehaviour
 
   public int Index => DataManager.Instance.NPCRescueRoomsCompleted;
 
-  public void OnEnable() => this.StartCoroutine((IEnumerator) this.WaitForPlayer());
+  public void OnEnable() => this.StartCoroutine(this.WaitForPlayer());
 
   public void Awake() => RescueNPCGraveController.Instance = this;
 
@@ -58,7 +58,7 @@ public class RescueNPCGraveController : BaseMonoBehaviour
     }
   }
 
-  public void RevealItemNPC() => this.StartCoroutine((IEnumerator) this.RevealItemRoutine());
+  public void RevealItemNPC() => this.StartCoroutine(this.RevealItemRoutine());
 
   public IEnumerator RevealItemRoutine()
   {
@@ -74,7 +74,7 @@ public class RescueNPCGraveController : BaseMonoBehaviour
     CameraManager.instance.ShakeCameraForDuration(1.3f, 1.4f, 0.4f);
     BiomeConstants.Instance.EmitParticleChunk(BiomeConstants.TypeOfParticle.stone, npcGraveController.transform.position, Vector3.forward * 50f, 20);
     AudioManager.Instance.PlayOneShot("event:/followers/break_free");
-    yield return (object) npcGraveController.StartCoroutine((IEnumerator) npcGraveController.PlayerPickUpBook());
+    yield return (object) npcGraveController.StartCoroutine(npcGraveController.PlayerPickUpBook());
     ++DataManager.Instance.NPCRescueRoomsCompleted;
     GameManager.GetInstance().OnConversationEnd();
     if (DataManager.Instance.PuzzleRoomsCompleted == 2 && DataManager.Instance.NPCRescueRoomsCompleted >= 3 || DataManager.Instance.PuzzleRoomsCompleted <= 3 && DataManager.Instance.NPCRescueRoomsCompleted >= 5 || DataManager.Instance.PuzzleRoomsCompleted <= 1 || DataManager.Instance.PuzzleRoomsCompleted > 3)

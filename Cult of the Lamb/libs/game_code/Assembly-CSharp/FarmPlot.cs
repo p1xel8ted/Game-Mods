@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FarmPlot
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -85,6 +85,10 @@ public class FarmPlot : Interaction
   public string sFertilize;
   public string sFrozenGround;
   public EventInstance loopedSound;
+  public const int MaxWaterUpdatesPerFrame = 5;
+  public static int _waterUpdatesThisFrame = 0;
+  public static int _waterUpdateFrame = -1;
+  public Coroutine _waterUpdateRoutine;
   public GameObject BirdPrefab;
   public CritterBaseBird Bird;
   public Coroutine cBirdRoutine;
@@ -126,16 +130,23 @@ public class FarmPlot : Interaction
   {
     base.OnEnable();
     Interaction_FarmCropGrower.OnRotate += new System.Action<Interaction_FarmCropGrower>(this.OnFarmCropGrowerRotate);
+    SeasonsManager.OnSeasonChanged += new SeasonsManager.SeasonEvent(this.OnSeasonsChanged);
   }
 
   public override void OnDisable()
   {
     base.OnDisable();
     Interaction_FarmCropGrower.OnRotate -= new System.Action<Interaction_FarmCropGrower>(this.OnFarmCropGrowerRotate);
+    SeasonsManager.OnSeasonChanged -= new SeasonsManager.SeasonEvent(this.OnSeasonsChanged);
   }
 
   public void Awake()
   {
+    ObjectPool.CreatePool(MonoSingleton<UIManager>.Instance.WateredGameObjectTemplate, 16 /*0x10*/);
+    ObjectPool.CreatePool(MonoSingleton<UIManager>.Instance.UnWateredGameObjectTemplate, 16 /*0x10*/);
+    ObjectPool.CreatePool(MonoSingleton<UIManager>.Instance.WateredRotGameObjectTemplate, 16 /*0x10*/);
+    ObjectPool.CreatePool(MonoSingleton<UIManager>.Instance.UnWateredRotGameObjectTemplate, 16 /*0x10*/);
+    ObjectPool.CreatePool(MonoSingleton<UIManager>.Instance.FrozenGroundObjectTemplate, 16 /*0x10*/);
     this._cropPrefabsBySeedType = new Dictionary<InventoryItem.ITEM_TYPE, CropController>();
     foreach (CropController cropPrefab in this.CropPrefabs)
       this._cropPrefabsBySeedType.Add(cropPrefab.SeedType, cropPrefab);
@@ -198,7 +209,7 @@ public class FarmPlot : Interaction
         this.Bird.gameObject.SetActive(true);
         if ((UnityEngine.Object) this.Bird.skeletonAnimationLODManager != (UnityEngine.Object) null)
           this.Bird.skeletonAnimationLODManager.DoUpdate = true;
-        this.cBirdRoutine = this.StartCoroutine((IEnumerator) this.LandedBird());
+        this.cBirdRoutine = this.StartCoroutine(this.LandedBird());
       }
     }
     this.UpdateLocalisation();
@@ -404,7 +415,7 @@ public class FarmPlot : Interaction
       this.IndicateHighlighted(playerFarming);
       this._isWateringActivated = true;
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.WaterRoutine());
+      this.StartCoroutine(this.WaterRoutine());
     }
     else
     {
@@ -506,7 +517,7 @@ public class FarmPlot : Interaction
       this.StructureInfo.Watered = (double) UnityEngine.Random.Range(0.0f, 1f) < 0.004999999888241291;
     if (this.StructureInfo.Watered == this._watered)
       return;
-    this.UpdateWatered();
+    this.RequestUpdateWatered();
   }
 
   public bool IsEnoughFertilizerEnRoute()
@@ -556,36 +567,74 @@ public class FarmPlot : Interaction
       this.wateringIndicator.SetActive(false);
   }
 
+  public void RequestUpdateWatered()
+  {
+    if (this._waterUpdateRoutine != null)
+      return;
+    this._waterUpdateRoutine = this.StartCoroutine(this.UpdateWatered_WhenSlotAvailable());
+  }
+
+  public IEnumerator UpdateWatered_WhenSlotAvailable()
+  {
+    while (true)
+    {
+      if (FarmPlot._waterUpdateFrame != Time.frameCount)
+      {
+        FarmPlot._waterUpdateFrame = Time.frameCount;
+        FarmPlot._waterUpdatesThisFrame = 0;
+      }
+      if (FarmPlot._waterUpdatesThisFrame >= 5)
+        yield return (object) new WaitForEndOfFrame();
+      else
+        break;
+    }
+    ++FarmPlot._waterUpdatesThisFrame;
+    this.UpdateWatered();
+    this._waterUpdateRoutine = (Coroutine) null;
+  }
+
   public void UpdateWatered()
   {
     this._watered = this.StructureInfo.Watered;
     if (this._watered)
     {
       if ((UnityEngine.Object) this.UnWateredGameObject != (UnityEngine.Object) null)
-        UnityEngine.Object.Destroy((UnityEngine.Object) this.UnWateredGameObject);
+      {
+        this.UnWateredGameObject.Recycle();
+        this.UnWateredGameObject = (GameObject) null;
+      }
       if (this.StructureBrain.Data.DefrostedCrop)
       {
         if ((UnityEngine.Object) this.WateredGameObject != (UnityEngine.Object) null)
-          UnityEngine.Object.Destroy((UnityEngine.Object) this.WateredGameObject);
+        {
+          this.WateredGameObject.Recycle();
+          this.WateredGameObject = (GameObject) null;
+        }
         if ((UnityEngine.Object) this.WateredRotGameObject == (UnityEngine.Object) null)
-          this.WateredGameObject = UnityEngine.Object.Instantiate<GameObject>(MonoSingleton<UIManager>.Instance.WateredRotGameObjectTemplate, this.DirtTransform);
+          this.WateredGameObject = MonoSingleton<UIManager>.Instance.WateredRotGameObjectTemplate.Spawn(this.DirtTransform);
       }
       else if ((UnityEngine.Object) this.WateredGameObject == (UnityEngine.Object) null)
-        this.WateredGameObject = UnityEngine.Object.Instantiate<GameObject>(MonoSingleton<UIManager>.Instance.WateredGameObjectTemplate, this.DirtTransform);
+        this.WateredGameObject = MonoSingleton<UIManager>.Instance.WateredGameObjectTemplate.Spawn(this.DirtTransform);
     }
     else
     {
       if ((UnityEngine.Object) this.WateredGameObject != (UnityEngine.Object) null)
-        UnityEngine.Object.Destroy((UnityEngine.Object) this.WateredGameObject);
+      {
+        this.WateredGameObject.Recycle();
+        this.WateredGameObject = (GameObject) null;
+      }
       if (this.StructureBrain.Data.DefrostedCrop)
       {
         if ((UnityEngine.Object) this.UnWateredGameObject != (UnityEngine.Object) null)
-          UnityEngine.Object.Destroy((UnityEngine.Object) this.UnWateredGameObject);
+        {
+          this.UnWateredGameObject.Recycle();
+          this.UnWateredGameObject = (GameObject) null;
+        }
         if ((UnityEngine.Object) this.UnWateredRotGameObject == (UnityEngine.Object) null)
-          this.UnWateredRotGameObject = UnityEngine.Object.Instantiate<GameObject>(MonoSingleton<UIManager>.Instance.UnWateredRotGameObjectTemplate, this.DirtTransform);
+          this.UnWateredRotGameObject = MonoSingleton<UIManager>.Instance.UnWateredRotGameObjectTemplate.Spawn(this.DirtTransform);
       }
       else if ((UnityEngine.Object) this.UnWateredGameObject == (UnityEngine.Object) null)
-        this.UnWateredGameObject = UnityEngine.Object.Instantiate<GameObject>(MonoSingleton<UIManager>.Instance.UnWateredGameObjectTemplate, this.DirtTransform);
+        this.UnWateredGameObject = MonoSingleton<UIManager>.Instance.UnWateredGameObjectTemplate.Spawn(this.DirtTransform);
     }
     this.EndIndicateHighlighted(this.playerFarming);
     this.HasChanged = true;
@@ -673,13 +722,16 @@ public class FarmPlot : Interaction
     {
       if ((UnityEngine.Object) this.FrozenGroundObject == (UnityEngine.Object) null)
       {
-        this.FrozenGroundObject = UnityEngine.Object.Instantiate<GameObject>(MonoSingleton<UIManager>.Instance.FrozenGroundObjectTemplate, this.transform);
+        this.FrozenGroundObject = MonoSingleton<UIManager>.Instance.FrozenGroundObjectTemplate.Spawn(this.transform);
         if ((double) SeasonsManager.SEASON_NORMALISED_PROGRESS < 0.10000000149011612)
           AudioManager.Instance.PlayOneShot("event:/dlc/env/plant/wither", this.transform.position);
       }
     }
     else if ((UnityEngine.Object) this.FrozenGroundObject != (UnityEngine.Object) null)
-      UnityEngine.Object.Destroy((UnityEngine.Object) this.FrozenGroundObject);
+    {
+      this.FrozenGroundObject.Recycle();
+      this.FrozenGroundObject = (GameObject) null;
+    }
     Interaction_Berries componentInChildren = this.GetComponentInChildren<Interaction_Berries>();
     if ((UnityEngine.Object) componentInChildren != (UnityEngine.Object) null)
     {
@@ -705,7 +757,7 @@ public class FarmPlot : Interaction
   {
     if (!((UnityEngine.Object) this.UnWateredGameObject == (UnityEngine.Object) null))
       return;
-    this.UnWateredGameObject = UnityEngine.Object.Instantiate<GameObject>(MonoSingleton<UIManager>.Instance.UnWateredGameObjectTemplate, this.DirtTransform);
+    this.UnWateredGameObject = MonoSingleton<UIManager>.Instance.UnWateredGameObjectTemplate.Spawn(this.DirtTransform);
   }
 
   public void UpdateFertilizerStatus(ref GameObject go, GameObject template, int type)
@@ -752,7 +804,7 @@ public class FarmPlot : Interaction
     this.Bird.ManualControl = true;
     this.Bird.FlipTimerIntervals /= 2f;
     this.Bird.EatChance = 0.75f;
-    this.cBirdRoutine = this.StartCoroutine((IEnumerator) this.BirdRoutine());
+    this.cBirdRoutine = this.StartCoroutine(this.BirdRoutine());
   }
 
   public IEnumerator BirdRoutine()
@@ -771,7 +823,7 @@ public class FarmPlot : Interaction
     while (farmPlot.Bird.CurrentState != CritterBaseBird.State.Idle)
       yield return (object) null;
     farmPlot.Bird.CurrentState = CritterBaseBird.State.Idle;
-    farmPlot.cBirdRoutine = farmPlot.StartCoroutine((IEnumerator) farmPlot.LandedBird());
+    farmPlot.cBirdRoutine = farmPlot.StartCoroutine(farmPlot.LandedBird());
   }
 
   public IEnumerator LandedBird()
@@ -818,6 +870,8 @@ public class FarmPlot : Interaction
     this.StructureInfo.HasBird = false;
   }
 
+  public void OnSeasonsChanged(SeasonsManager.Season newSeasons) => this.UpdateCropImage();
+
   [CompilerGenerated]
-  public void \u003CUpdateScareCrowSymbol\u003Eb__86_0() => this.ScareCrowSymbol.SetActive(false);
+  public void \u003CUpdateScareCrowSymbol\u003Eb__92_0() => this.ScareCrowSymbol.SetActive(false);
 }

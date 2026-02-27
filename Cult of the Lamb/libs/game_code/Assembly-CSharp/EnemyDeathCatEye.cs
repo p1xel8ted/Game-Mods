@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDeathCatEye
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using CotL.Projectiles;
@@ -142,7 +142,7 @@ public class EnemyDeathCatEye : UnitObject
 
   public void Attack(int index, int activeEyes, float delay)
   {
-    this.StartCoroutine((IEnumerator) this.AttackIE(index, activeEyes, delay));
+    this.StartCoroutine(this.AttackIE(index, activeEyes, delay));
   }
 
   public IEnumerator AttackIE(int index, int activeEyes, float delay)
@@ -160,19 +160,19 @@ public class EnemyDeathCatEye : UnitObject
       switch (index)
       {
         case 0:
-          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine((IEnumerator) enemyDeathCatEye.ShootProjectileRingsIE(activeEyes)));
+          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine(enemyDeathCatEye.ShootProjectileRingsIE(activeEyes)));
           break;
         case 1:
-          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine((IEnumerator) enemyDeathCatEye.ShootProjectileBeamIE(activeEyes)));
+          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine(enemyDeathCatEye.ShootProjectileBeamIE(activeEyes)));
           break;
         case 2:
-          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine((IEnumerator) enemyDeathCatEye.ShootProjectileCircleIE(activeEyes)));
+          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine(enemyDeathCatEye.ShootProjectileCircleIE(activeEyes)));
           break;
         case 3:
-          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine((IEnumerator) enemyDeathCatEye.ShootGrenadeBulletsIE(activeEyes)));
+          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine(enemyDeathCatEye.ShootGrenadeBulletsIE(activeEyes)));
           break;
         case 4:
-          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine((IEnumerator) enemyDeathCatEye.ShootProjectileChunkIE(activeEyes)));
+          yield return (object) (enemyDeathCatEye.attackingRoutine = enemyDeathCatEye.StartCoroutine(enemyDeathCatEye.ShootProjectileChunkIE(activeEyes)));
           break;
       }
       enemyDeathCatEye.Spine.AnimationState.SetAnimation(0, enemyDeathCatEye.attackEndAnimation, false);
@@ -194,10 +194,7 @@ public class EnemyDeathCatEye : UnitObject
     ObjectPool.CreatePool<ProjectileCircleBase>(this.projectilePatternRings, initialPoolSize);
   }
 
-  public void ShootProjectileRings()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileRingsIE(3));
-  }
+  public void ShootProjectileRings() => this.StartCoroutine(this.ShootProjectileRingsIE(3));
 
   public IEnumerator ShootProjectileRingsIE(int activeEyes)
   {
@@ -221,10 +218,7 @@ public class EnemyDeathCatEye : UnitObject
     }
   }
 
-  public void ShootProjectileBeam()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileBeamIE(3));
-  }
+  public void ShootProjectileBeam() => this.StartCoroutine(this.ShootProjectileBeamIE(3));
 
   public IEnumerator ShootProjectileBeamIE(int activeEyes)
   {
@@ -242,10 +236,7 @@ public class EnemyDeathCatEye : UnitObject
     yield return (object) new WaitForSeconds(postDelay);
   }
 
-  public void ShootProjectileCircle()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileCircleIE(3));
-  }
+  public void ShootProjectileCircle() => this.StartCoroutine(this.ShootProjectileCircleIE(3));
 
   public IEnumerator ShootProjectileCircleIE(int activeEyes)
   {
@@ -261,10 +252,7 @@ public class EnemyDeathCatEye : UnitObject
     yield return (object) new WaitForSeconds(1f);
   }
 
-  public void ShootGrenadeBullets()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootGrenadeBulletsIE(3));
-  }
+  public void ShootGrenadeBullets() => this.StartCoroutine(this.ShootGrenadeBulletsIE(3));
 
   public void InitializeGranadeBullets()
   {
@@ -296,10 +284,7 @@ public class EnemyDeathCatEye : UnitObject
   }
 
   [SerializeField]
-  public void ShootProjectileChunk()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileChunkIE(3));
-  }
+  public void ShootProjectileChunk() => this.StartCoroutine(this.ShootProjectileChunkIE(3));
 
   public IEnumerator ShootProjectileChunkIE(int activeEyes)
   {
@@ -340,7 +325,7 @@ public class EnemyDeathCatEye : UnitObject
   public void Hide(float delay)
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.HideIE(delay));
+    this.StartCoroutine(this.HideIE(delay));
   }
 
   public IEnumerator HideIE(float delay = 0.0f)
@@ -371,7 +356,7 @@ public class EnemyDeathCatEye : UnitObject
     }
   }
 
-  public void Show() => this.StartCoroutine((IEnumerator) this.ShowIE());
+  public void Show() => this.StartCoroutine(this.ShowIE());
 
   public IEnumerator ShowIE()
   {
@@ -393,7 +378,7 @@ public class EnemyDeathCatEye : UnitObject
 
   public void Reposition(Vector3 position, float delayBetween)
   {
-    this.movementRoutine = this.StartCoroutine((IEnumerator) this.RepositionIE(position, delayBetween));
+    this.movementRoutine = this.StartCoroutine(this.RepositionIE(position, delayBetween));
   }
 
   public IEnumerator RepositionIE(Vector3 position, float delayBetween)
@@ -443,14 +428,14 @@ public class EnemyDeathCatEye : UnitObject
         this.StopCoroutine(this.attackingRoutine);
       EnemyDeathCatBoss.Instance.EyeDestroyed();
       this.StopAllCoroutines();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.Die());
+      GameManager.GetInstance().StartCoroutine(this.Die());
     }
     else if ((double) this.currentHP - (double) this.health.HP >= (double) this.damageRequiredToHide && this.Attacking)
     {
       if (this.hidingRoutine == null)
       {
         this.StopAllCoroutines();
-        this.hidingRoutine = this.StartCoroutine((IEnumerator) this.HideIE());
+        this.hidingRoutine = this.StartCoroutine(this.HideIE());
       }
       AudioManager.Instance.PlayOneShot("event:/enemy/impact_squishy", this.gameObject);
       AudioManager.Instance.PlayOneShot("event:/enemy/fly_spawn", this.gameObject);
@@ -459,9 +444,9 @@ public class EnemyDeathCatEye : UnitObject
     EnemyDeathCatBoss.Instance.health.team = Health.Team.Neutral;
     PlayerFarming farmingComponent = PlayerFarming.GetPlayerFarmingComponent(Attacker);
     if (AttackType == Health.AttackTypes.Melee)
-      EnemyDeathCatBoss.Instance.health.DealDamage(PlayerWeapon.GetDamage(1f, farmingComponent.currentWeaponLevel, farmingComponent), Attacker, AttackLocation);
+      EnemyDeathCatBoss.Instance.health.DealDamage(PlayerWeapon.GetDamage(1f, farmingComponent.currentWeaponLevel, farmingComponent), Attacker, AttackLocation, dealDamageImmediately: true);
     else
-      EnemyDeathCatBoss.Instance.health.DealDamage(EquipmentManager.GetCurseData(farmingComponent.currentCurse).Damage * PlayerSpells.GetCurseDamageMultiplier(farmingComponent), Attacker, AttackLocation, AttackType: Health.AttackTypes.Projectile);
+      EnemyDeathCatBoss.Instance.health.DealDamage(EquipmentManager.GetCurseData(farmingComponent.currentCurse).Damage * PlayerSpells.GetCurseDamageMultiplier(farmingComponent), Attacker, AttackLocation, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
     EnemyDeathCatBoss.Instance.health.team = Health.Team.Team2;
     EnemyDeathCatBoss.Instance.health.invincible = true;
   }

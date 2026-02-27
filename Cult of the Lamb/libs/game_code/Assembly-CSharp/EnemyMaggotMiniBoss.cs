@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyMaggotMiniBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -83,7 +83,7 @@ public class EnemyMaggotMiniBoss : UnitObject
     foreach (FollowAsTail tailPiece in this.TailPieces)
       tailPiece.ForcePosition(Vector3.up);
     this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, 0.0f);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDisable()
@@ -104,7 +104,7 @@ public class EnemyMaggotMiniBoss : UnitObject
     base.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
     this.EscapeIfHit = false;
     if (AttackType != Health.AttackTypes.NoKnockBack)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -120,7 +120,7 @@ public class EnemyMaggotMiniBoss : UnitObject
         return false;
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
-      enemyMaggotMiniBoss.StartCoroutine((IEnumerator) enemyMaggotMiniBoss.ActiveRoutine());
+      enemyMaggotMiniBoss.StartCoroutine(enemyMaggotMiniBoss.ActiveRoutine());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -169,10 +169,10 @@ public class EnemyMaggotMiniBoss : UnitObject
       switch (enemyMaggotMiniBoss.ActionPaterrn)
       {
         case EnemyMaggotMiniBoss.AttackPatterns.Dive:
-          enemyMaggotMiniBoss.StartCoroutine((IEnumerator) enemyMaggotMiniBoss.DiveMoveRoutine());
+          enemyMaggotMiniBoss.StartCoroutine(enemyMaggotMiniBoss.DiveMoveRoutine());
           break;
         case EnemyMaggotMiniBoss.AttackPatterns.Shoot:
-          enemyMaggotMiniBoss.StartCoroutine((IEnumerator) enemyMaggotMiniBoss.ShootRoutine());
+          enemyMaggotMiniBoss.StartCoroutine(enemyMaggotMiniBoss.ShootRoutine());
           break;
       }
       ++enemyMaggotMiniBoss.ActionPaterrn;
@@ -243,7 +243,7 @@ public class EnemyMaggotMiniBoss : UnitObject
     }
     yield return (object) new WaitForEndOfFrame();
     enemyMaggotMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemyMaggotMiniBoss.StartCoroutine((IEnumerator) enemyMaggotMiniBoss.ActiveRoutine());
+    enemyMaggotMiniBoss.StartCoroutine(enemyMaggotMiniBoss.ActiveRoutine());
   }
 
   public void ForceTailDirection(Vector3 Direction)
@@ -333,7 +333,7 @@ public class EnemyMaggotMiniBoss : UnitObject
     while ((double) (time += Time.deltaTime * enemyMaggotMiniBoss1.Spine.timeScale) < 2.0)
       yield return (object) null;
     enemyMaggotMiniBoss1.EscapeIfHit = false;
-    enemyMaggotMiniBoss1.StartCoroutine((IEnumerator) enemyMaggotMiniBoss1.ActiveRoutine());
+    enemyMaggotMiniBoss1.StartCoroutine(enemyMaggotMiniBoss1.ActiveRoutine());
   }
 
   public IEnumerator MoveRoutine()
@@ -356,7 +356,7 @@ public class EnemyMaggotMiniBoss : UnitObject
     while ((double) (time += Time.deltaTime * enemyMaggotMiniBoss.Spine.timeScale) < 0.5)
       yield return (object) null;
     enemyMaggotMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemyMaggotMiniBoss.StartCoroutine((IEnumerator) enemyMaggotMiniBoss.ActiveRoutine());
+    enemyMaggotMiniBoss.StartCoroutine(enemyMaggotMiniBoss.ActiveRoutine());
   }
 
   public void ReconsiderTarget() => this.currentTarget = this.ReconsiderPlayerTarget();

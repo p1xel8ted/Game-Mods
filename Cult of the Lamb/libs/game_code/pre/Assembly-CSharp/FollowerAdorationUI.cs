@@ -1,0 +1,166 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: FollowerAdorationUI
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
+using System.Collections;
+using UnityEngine;
+
+#nullable disable
+public class FollowerAdorationUI : MonoBehaviour
+{
+  private bool IsPlaying;
+  public Follower follower;
+  public GameObject BarContainer;
+  public GameObject CompleteContainer;
+  public BarController bc;
+  public BarController BarController;
+  public DG.Tweening.Sequence Sequence;
+  public Follower Follower;
+
+  private void Awake() => this.BarContainer.gameObject.SetActive(false);
+
+  private void Start()
+  {
+    if ((UnityEngine.Object) this.follower != (UnityEngine.Object) null && this.follower.Brain != null && this.follower.Brain.Stats != null && (UnityEngine.Object) this.BarController != (UnityEngine.Object) null)
+      this.BarController.SetBarSize(this.Follower.Brain.Stats.Adoration / this.Follower.Brain.Stats.MAX_ADORATION, false);
+    this.transform.localScale = Vector3.zero;
+    if (this.follower.Brain == null)
+      this.follower.OnFollowerBrainAssigned += new System.Action(this.AddListener);
+    else
+      this.AddListener();
+  }
+
+  private void AddListener()
+  {
+    this.follower.Interaction_FollowerInteraction.OnGivenRewards += new System.Action(this.SetObjects);
+  }
+
+  private void OnDestroy()
+  {
+    if (this.Sequence != null)
+    {
+      this.Sequence.Kill();
+      this.Sequence = (DG.Tweening.Sequence) null;
+    }
+    this.transform.DOKill();
+    if (!((UnityEngine.Object) this.follower != (UnityEngine.Object) null))
+      return;
+    if ((UnityEngine.Object) this.follower.Interaction_FollowerInteraction != (UnityEngine.Object) null)
+      this.follower.Interaction_FollowerInteraction.OnGivenRewards -= new System.Action(this.SetObjects);
+    this.follower.OnFollowerBrainAssigned -= new System.Action(this.AddListener);
+  }
+
+  public void Show()
+  {
+    if (this.IsPlaying || !DataManager.Instance.ShowLoyaltyBars)
+      return;
+    this.EnableBarContainerGameobject();
+    this.transform.DOKill();
+    this.BarController.SetBarSize(this.Follower.Brain.Stats.Adoration / this.Follower.Brain.Stats.MAX_ADORATION, false);
+    if (this.follower.Brain.Stats.HasLevelledUp)
+    {
+      this.transform.localScale = Vector3.one * 0.7f;
+    }
+    else
+    {
+      this.transform.localScale = Vector3.zero;
+      this.transform.DOScale(Vector3.one * 0.7f, 0.3f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
+    }
+    this.SetObjects();
+  }
+
+  private IEnumerator FlashLevelUpIcon()
+  {
+    while (this.follower.Brain.Stats.HasLevelledUp)
+    {
+      this.CompleteContainer.transform.DOKill();
+      this.CompleteContainer.transform.DOPunchScale(new Vector3(0.15f, 0.15f), 0.5f);
+      yield return (object) new WaitForSeconds(2f);
+    }
+    this.CompleteContainer.transform.DOKill();
+  }
+
+  public void SetObjects()
+  {
+    if (this.follower.Brain.Location == FollowerLocation.Church)
+      return;
+    this.EnableBarContainerGameobject();
+    this.BarContainer.SetActive(!this.follower.Brain.Stats.HasLevelledUp);
+    this.CompleteContainer.transform.DOKill();
+    this.CompleteContainer.transform.DOPunchScale(new Vector3(0.15f, 0.15f), 0.5f);
+    this.CompleteContainer.SetActive(this.follower.Brain.Stats.HasLevelledUp);
+    if (this.follower.Brain.Stats.HasLevelledUp && this.transform.localScale != Vector3.one * 0.7f)
+      this.transform.DOScale(Vector3.one * 0.7f, 0.3f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
+    if (!this.follower.Brain.Stats.HasLevelledUp)
+      return;
+    this.bc.enabled = false;
+  }
+
+  public void Hide()
+  {
+    if (this.IsPlaying || this.transform.localScale == Vector3.zero)
+      return;
+    if (this.follower.Brain.Stats.HasLevelledUp)
+    {
+      this.SetObjects();
+    }
+    else
+    {
+      this.transform.DOKill();
+      this.transform.DOScale(Vector3.zero, 0.3f).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InBack).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() => this.BarContainer.gameObject.SetActive(false)));
+    }
+  }
+
+  private void Test(FollowerBrain.AdorationActions Action)
+  {
+    this.follower.Brain.AddAdoration(Action, (System.Action) null);
+  }
+
+  public IEnumerator IncreaseAdorationIE()
+  {
+    FollowerAdorationUI followerAdorationUi = this;
+    if (DataManager.Instance.ShowLoyaltyBars)
+    {
+      followerAdorationUi.EnableBarContainerGameobject();
+      followerAdorationUi.IsPlaying = true;
+      yield return (object) new WaitForSeconds(0.01f);
+      Debug.Log((object) $"INCREASE ADORATION!  {(object) followerAdorationUi.Follower.Brain.Stats.Adoration}  {(object) followerAdorationUi.Follower.Brain.Stats.MAX_ADORATION}");
+      if (followerAdorationUi.Sequence != null)
+        followerAdorationUi.Sequence.Kill();
+      float num1 = 0.0f;
+      followerAdorationUi.Sequence = DOTween.Sequence();
+      followerAdorationUi.Sequence.SetUpdate<DG.Tweening.Sequence>(true);
+      if (followerAdorationUi.transform.localScale != Vector3.one * 0.7f)
+      {
+        followerAdorationUi.transform.localScale = Vector3.zero;
+        followerAdorationUi.Sequence.Append((Tween) followerAdorationUi.transform.DOScale(Vector3.one * 0.7f, 0.5f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true));
+        num1 += 0.5f;
+      }
+      // ISSUE: reference to a compiler-generated method
+      followerAdorationUi.Sequence.AppendCallback(new TweenCallback(followerAdorationUi.\u003CIncreaseAdorationIE\u003Eb__17_0));
+      followerAdorationUi.Sequence.AppendInterval(1f).SetUpdate<DG.Tweening.Sequence>(true);
+      float num2 = num1 + 1f;
+      followerAdorationUi.Sequence.Append((Tween) followerAdorationUi.transform.DOScale(Vector3.zero, 0.5f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InBack).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true));
+      float time = num2 + 0.5f;
+      followerAdorationUi.Sequence.Play<DG.Tweening.Sequence>();
+      yield return (object) new WaitForSecondsRealtime(time);
+      followerAdorationUi.BarContainer.gameObject.SetActive(false);
+      followerAdorationUi.IsPlaying = false;
+    }
+  }
+
+  private void EnableBarContainerGameobject()
+  {
+    if ((UnityEngine.Object) this.BarContainer != (UnityEngine.Object) null)
+      this.BarContainer.gameObject.SetActive(true);
+    FaithCanvasOptimization componentInParent = this.GetComponentInParent<FaithCanvasOptimization>();
+    if (!((UnityEngine.Object) componentInParent != (UnityEngine.Object) null))
+      return;
+    componentInParent.ActivateCanvas();
+  }
+}

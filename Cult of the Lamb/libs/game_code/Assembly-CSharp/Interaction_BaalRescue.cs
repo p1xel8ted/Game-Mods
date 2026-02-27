@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_BaalRescue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -81,9 +81,9 @@ public class Interaction_BaalRescue : Interaction
     this.Label = "";
     this.HasChanged = true;
     if (!this.isNowFollowing)
-      this.StartCoroutine((IEnumerator) this.IntroToLostBaal());
+      this.StartCoroutine(this.IntroToLostBaal());
     else if (this.foundTeleporter)
-      this.StartCoroutine((IEnumerator) this.OutroToLostBaal());
+      this.StartCoroutine(this.OutroToLostBaal());
     base.OnInteract(state);
   }
 
@@ -137,7 +137,7 @@ public class Interaction_BaalRescue : Interaction
     this.companion.enabled = false;
     UnityEngine.Object.Destroy((UnityEngine.Object) this.companion);
     this.foundTeleporter = true;
-    this.StartCoroutine((IEnumerator) this.MoveToTeleporter());
+    this.StartCoroutine(this.MoveToTeleporter());
   }
 
   public void ShowRoomClearedBark()
@@ -196,7 +196,7 @@ public class Interaction_BaalRescue : Interaction
     if ((bool) (UnityEngine.Object) interactionBaalRescue.AymSpine)
       interactionBaalRescue.FaceTarget(interactionBaalRescue.AymSpine.transform.position);
     yield return (object) new WaitForSeconds(1f);
-    interactionBaalRescue.StartCoroutine((IEnumerator) interactionBaalRescue.OutroToLostBaal());
+    interactionBaalRescue.StartCoroutine(interactionBaalRescue.OutroToLostBaal());
   }
 
   public IEnumerator OutroToLostBaal()
@@ -219,7 +219,7 @@ public class Interaction_BaalRescue : Interaction
     }
     while (MMConversation.CURRENT_CONVERSATION != null)
       yield return (object) null;
-    yield return (object) interactionBaalRescue.StartCoroutine((IEnumerator) interactionBaalRescue.GiveHeartRoutine());
+    yield return (object) interactionBaalRescue.StartCoroutine(interactionBaalRescue.GiveHeartRoutine());
     interactionBaalRescue.Label = "";
     interactionBaalRescue.rewardGiven = true;
     interactionBaalRescue.Spine.AnimationState.SetAnimation(0, interactionBaalRescue.RunAnimation, true);

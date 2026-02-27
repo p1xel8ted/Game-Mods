@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualCannibal
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -31,7 +31,7 @@ public class RitualCannibal : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -39,7 +39,7 @@ public class RitualCannibal : Ritual
     RitualCannibal ritualCannibal = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualCannibal.StartCoroutine((IEnumerator) ritualCannibal.WaitFollowersFormCircle());
+    yield return (object) ritualCannibal.StartCoroutine(ritualCannibal.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
     followerSelectInstance.VotingType = TwitchVoting.VotingType.RITUAL_CANNIBAL;
@@ -51,8 +51,8 @@ public class RitualCannibal : Ritual
       AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/select_follower", PlayerFarming.Instance.gameObject);
       this.Task1 = new FollowerTask_ManualControl();
       this.contestant1.Brain.HardSwapToTask((FollowerTask) this.Task1);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.ContinueRitual());
-      this.StartCoroutine((IEnumerator) this.SetUpCombatant1Routine());
+      GameManager.GetInstance().StartCoroutine(this.ContinueRitual());
+      this.StartCoroutine(this.SetUpCombatant1Routine());
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnShow = selectMenuController2.OnShow + (System.Action) (() =>
@@ -104,15 +104,15 @@ public class RitualCannibal : Ritual
       {
         Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
         if ((UnityEngine.Object) followerById != (UnityEngine.Object) null)
-          ritualCannibal.StartCoroutine((IEnumerator) ritualCannibal.FollowerMoveRoutine(followerById));
+          ritualCannibal.StartCoroutine(ritualCannibal.FollowerMoveRoutine(followerById));
       }
     }
     yield return (object) new WaitForSeconds(2.5f);
     ritualCannibal.eatingLoop = AudioManager.Instance.CreateLoop("event:/material/body_cannibalised_loop", ritualCannibal.contestant1.gameObject, true);
     if (ritualCannibal.contestant1.Brain.HasTrait(FollowerTrait.TraitType.Mutated))
-      ritualCannibal.StartCoroutine((IEnumerator) ritualCannibal.SpawnItem(InventoryItem.ITEM_TYPE.MAGMA_STONE, 10, new Vector2(0.15f, 0.25f), ritualCannibal.contestant1.transform.position));
+      ritualCannibal.StartCoroutine(ritualCannibal.SpawnItem(InventoryItem.ITEM_TYPE.MAGMA_STONE, 10, new Vector2(0.15f, 0.25f), ritualCannibal.contestant1.transform.position));
     else if (!ritualCannibal.contestant1.Brain.Info.IsSnowman)
-      ritualCannibal.StartCoroutine((IEnumerator) ritualCannibal.SpawnItem(InventoryItem.ITEM_TYPE.FOLLOWER_MEAT, 10, new Vector2(0.15f, 0.25f), ritualCannibal.contestant1.transform.position));
+      ritualCannibal.StartCoroutine(ritualCannibal.SpawnItem(InventoryItem.ITEM_TYPE.FOLLOWER_MEAT, 10, new Vector2(0.15f, 0.25f), ritualCannibal.contestant1.transform.position));
     CameraManager.instance.ShakeCameraForDuration(0.5f, 0.7f, 2f);
     yield return (object) new WaitForSeconds(2f);
     AudioManager.Instance.StopLoop(ritualCannibal.eatingLoop);
@@ -147,7 +147,7 @@ public class RitualCannibal : Ritual
         anim = "Sick/chunder";
         animTime = 3f;
       }
-      ritualCannibal.StartCoroutine((IEnumerator) ritualCannibal.DelayFollowerReaction(Ritual.FollowerToAttendSermon[index], anim, Delay, false, animTime));
+      ritualCannibal.StartCoroutine(ritualCannibal.DelayFollowerReaction(Ritual.FollowerToAttendSermon[index], anim, Delay, false, animTime));
       Follower followerById = FollowerManager.FindFollowerByID(Ritual.FollowerToAttendSermon[index].Info.ID);
       if ((bool) (UnityEngine.Object) followerById)
         followerById.Spine.randomOffset = false;
@@ -206,7 +206,7 @@ public class RitualCannibal : Ritual
       component.SetInitialSpeedAndDiraction(4f + UnityEngine.Random.Range(-0.5f, 1f), (float) (270 + UnityEngine.Random.Range(-90, 90)));
       component.MagnetToPlayer = false;
       ritualCannibal.Pickups.Add(component);
-      ritualCannibal.StartCoroutine((IEnumerator) ritualCannibal.DelayedCollect(component));
+      ritualCannibal.StartCoroutine(ritualCannibal.DelayedCollect(component));
       yield return (object) new WaitForSeconds(UnityEngine.Random.Range(timeBetween.x, timeBetween.y));
     }
   }

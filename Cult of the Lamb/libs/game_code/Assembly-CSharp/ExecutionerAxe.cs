@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ExecutionerAxe
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -135,7 +135,7 @@ public class ExecutionerAxe : UnitObject, ISpellOwning
     {
       if (this.smackedBack)
       {
-        this.boss.health.DealDamage(this.boss.health.totalHP * 0.1f, this.boss.gameObject, this.boss.transform.position);
+        this.boss.health.DealDamage(this.boss.health.totalHP * 0.1f, this.boss.gameObject, this.boss.transform.position, dealDamageImmediately: true);
         this.boss.KnockedOut();
         UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);
       }
@@ -236,14 +236,14 @@ public class ExecutionerAxe : UnitObject, ISpellOwning
     ExecutionerAxe.AttackingAxe = (ExecutionerAxe) null;
   }
 
-  public void Slash() => this.StartCoroutine((IEnumerator) this.SlashIE());
+  public void Slash() => this.StartCoroutine(this.SlashIE());
 
   public IEnumerator SlashIE()
   {
     ExecutionerAxe executionerAxe = this;
     ExecutionerAxe.AttackingAxe = executionerAxe;
     executionerAxe.attacking = true;
-    yield return (object) executionerAxe.StartCoroutine((IEnumerator) executionerAxe.FadeWhite(executionerAxe.slashAnticipation));
+    yield return (object) executionerAxe.StartCoroutine(executionerAxe.FadeWhite(executionerAxe.slashAnticipation));
     executionerAxe.rb.velocity = Vector2.zero;
     executionerAxe.DoKnockBack(Utils.GetAngle(executionerAxe.transform.position, PlayerFarming.Instance.transform.position) * ((float) Math.PI / 180f), executionerAxe.slashForce, executionerAxe.slashDuration);
     yield return (object) new WaitForSeconds(executionerAxe.slashDuration * executionerAxe.boss.Spine.timeScale);

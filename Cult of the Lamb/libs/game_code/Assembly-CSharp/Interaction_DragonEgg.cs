@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DragonEgg
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -79,7 +79,7 @@ public class Interaction_DragonEgg : Interaction
     if (Inventory.GetItemQuantity(this.costType) >= this.cost)
     {
       AudioManager.Instance.PlayOneShot("event:/shop/buy");
-      this.StartCoroutine((IEnumerator) this.GiveEggIE());
+      this.StartCoroutine(this.GiveEggIE());
     }
     else
       state.GetComponent<PlayerFarming>().indicator.PlayShake();

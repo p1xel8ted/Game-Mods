@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DLCShrineRoomLocationManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMRoomGeneration;
@@ -77,7 +77,7 @@ public class DLCShrineRoomLocationManager : HubLocationManager
   public override void Start()
   {
     base.Start();
-    this.StartCoroutine((IEnumerator) this.SetupColliderCullingIE());
+    this.StartCoroutine(this.SetupColliderCullingIE());
   }
 
   public IEnumerator SetupColliderCullingIE()
@@ -233,7 +233,7 @@ public class DLCShrineRoomLocationManager : HubLocationManager
 
   public void GenerateSceneryColliderDelayed()
   {
-    this.StartCoroutine((IEnumerator) this.GenerateSceneryColliderDelayedIE());
+    this.StartCoroutine(this.GenerateSceneryColliderDelayedIE());
   }
 
   public IEnumerator GenerateSceneryColliderDelayedIE()

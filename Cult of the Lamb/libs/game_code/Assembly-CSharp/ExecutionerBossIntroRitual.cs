@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ExecutionerBossIntroRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -90,7 +90,7 @@ public class ExecutionerBossIntroRitual : BaseMonoBehaviour
     this.cultLeaderSpine.Skeleton.SetSlotsToSetupPose();
     AudioManager.Instance.PlayOneShot(this.IntroTransformationSkippedSFX);
     GameManager.GetInstance().CameraSetOffset(Vector3.zero);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.IntroDone());
+    GameManager.GetInstance().StartCoroutine(this.IntroDone());
     this.skipped = true;
     this.executionerBossHealth.untouchable = false;
     this.executionerBoss.EnemiesToTrack[0].enabled = true;
@@ -104,7 +104,7 @@ public class ExecutionerBossIntroRitual : BaseMonoBehaviour
   {
     if (this.triggered || this.skipped || !(collision.tag == "Player"))
       return;
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public void StopAllActiveSFX()
@@ -184,11 +184,11 @@ public class ExecutionerBossIntroRitual : BaseMonoBehaviour
       yield return (object) new WaitForSeconds(0.15f);
       transformAninTotalDuraiton -= 0.15f;
       foreach (LongGrass longGrass in executionerBossIntroRitual.surroundingGrass)
-        longGrass.StartCoroutine((IEnumerator) longGrass.ShakeGrassRoutine(executionerBossIntroRitual.gameObject, 2f));
+        longGrass.StartCoroutine(longGrass.ShakeGrassRoutine(executionerBossIntroRitual.gameObject, 2f));
       yield return (object) new WaitForSeconds(transformAninTotalDuraiton);
       foreach (PlayerFarming player in PlayerFarming.players)
         MMVibrate.StopRumble(player);
-      executionerBossIntroRitual.StartCoroutine((IEnumerator) executionerBossIntroRitual.IntroDone());
+      executionerBossIntroRitual.StartCoroutine(executionerBossIntroRitual.IntroDone());
     }
   }
 

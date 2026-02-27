@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_IceBlock
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -83,7 +83,7 @@ public class Interaction_IceBlock : Interaction
       this.activated = true;
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.CameraBone);
-      this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadBuildSnowmanMinigameAssets(), (System.Action) (() =>
+      this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadBuildSnowmanMinigameAssets(), (System.Action) (() =>
       {
         SimulationManager.Pause();
         this.uIBuildSnowmanMinigameOverlayController = MonoSingleton<UIManager>.Instance.BuildSnowmanMinigameOverlayControllerTemplate.Instantiate<UIBuildSnowmanMinigameOverlayController>();
@@ -122,7 +122,7 @@ public class Interaction_IceBlock : Interaction
           {
             UIManager.PlayAudio("event:/dlc/env/snowman/minigame_spawn");
             this.transform.DOScale(new Vector3(0.0f, 0.0f, 0.0f), 1f);
-            GameManager.GetInstance().StartCoroutine((IEnumerator) this.RemoveStructureAfterDelay(this.structure.Brain, 3f));
+            GameManager.GetInstance().StartCoroutine(this.RemoveStructureAfterDelay(this.structure.Brain, 3f));
             StructuresData infoByType = StructuresData.GetInfoByType(StructureBrain.TYPES.SNOWMAN, 0);
             if (level < 6)
             {
@@ -162,7 +162,7 @@ public class Interaction_IceBlock : Interaction
             this.Interactable = false;
             ++DataManager.Instance.SnowmenCreated;
             if (DataManager.Instance.SnowmenCreated >= 3 && !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.Ritual_Snowman))
-              GameManager.GetInstance().StartCoroutine((IEnumerator) this.SnowmanRitualIE());
+              GameManager.GetInstance().StartCoroutine(this.SnowmanRitualIE());
             else
               GameManager.GetInstance().OnConversationEnd();
           }
@@ -173,10 +173,10 @@ public class Interaction_IceBlock : Interaction
     else if (this.structure.Type == StructureBrain.TYPES.SNOW_BALL)
     {
       this.structure.enabled = false;
-      this.StartCoroutine((IEnumerator) this.PickUpSnowball());
+      this.StartCoroutine(this.PickUpSnowball());
     }
     else
-      this.StartCoroutine((IEnumerator) this.DoClean());
+      this.StartCoroutine(this.DoClean());
   }
 
   public IEnumerator RemoveStructureAfterDelay(StructureBrain brain, float seconds)
@@ -185,7 +185,7 @@ public class Interaction_IceBlock : Interaction
     brain.Remove();
   }
 
-  public void SnowManRitual() => this.StartCoroutine((IEnumerator) this.SnowmanRitualIE());
+  public void SnowManRitual() => this.StartCoroutine(this.SnowmanRitualIE());
 
   public IEnumerator SnowmanRitualIE()
   {

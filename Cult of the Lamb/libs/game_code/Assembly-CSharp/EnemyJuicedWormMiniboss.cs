@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJuicedWormMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -304,10 +304,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
     this.moving = false;
   }
 
-  public void EnragedAttack()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.EnragedAttackIE());
-  }
+  public void EnragedAttack() => this.currentAttack = this.StartCoroutine(this.EnragedAttackIE());
 
   public IEnumerator EnragedAttackIE()
   {
@@ -336,7 +333,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
       t += Time.deltaTime;
       juicedWormMiniboss.speed = juicedWormMiniboss.maxSpeed;
       if (shootCoroutine == null)
-        shootCoroutine = juicedWormMiniboss.StartCoroutine((IEnumerator) juicedWormMiniboss.ShootIE(false, (System.Action) (() => shootCoroutine = (Coroutine) null)));
+        shootCoroutine = juicedWormMiniboss.StartCoroutine(juicedWormMiniboss.ShootIE(false, (System.Action) (() => shootCoroutine = (Coroutine) null)));
       yield return (object) null;
     }
     juicedWormMiniboss.maxSpeed = juicedWormMiniboss.originalMaxSpeed;
@@ -359,10 +356,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
     juicedWormMiniboss.roamTime = UnityEngine.Random.Range(juicedWormMiniboss.timeBetweenAttacks.x, juicedWormMiniboss.timeBetweenAttacks.y);
   }
 
-  public void TargetedShoot()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.TargetedShootIE());
-  }
+  public void TargetedShoot() => this.currentAttack = this.StartCoroutine(this.TargetedShootIE());
 
   public IEnumerator TargetedShootIE()
   {
@@ -385,7 +379,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
       }
       juicedWormMiniboss.Spine.AnimationState.SetAnimation(0, juicedWormMiniboss.shootAttackAnimation, false);
       juicedWormMiniboss.Spine.AnimationState.AddAnimation(0, juicedWormMiniboss.idleAnimation, true, 0.0f);
-      yield return (object) juicedWormMiniboss.StartCoroutine((IEnumerator) juicedWormMiniboss.ShootIE(true, (System.Action) null));
+      yield return (object) juicedWormMiniboss.StartCoroutine(juicedWormMiniboss.ShootIE(true, (System.Action) null));
     }
     time = 0.0f;
     while ((double) (time += Time.deltaTime * juicedWormMiniboss.Spine.timeScale) < (double) juicedWormMiniboss.targetedShootingPost)
@@ -395,7 +389,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
     juicedWormMiniboss.roamTime = UnityEngine.Random.Range(juicedWormMiniboss.timeBetweenAttacks.x, juicedWormMiniboss.timeBetweenAttacks.y);
   }
 
-  public void Shoot() => this.StartCoroutine((IEnumerator) this.ShootIE(false, (System.Action) null));
+  public void Shoot() => this.StartCoroutine(this.ShootIE(false, (System.Action) null));
 
   public IEnumerator ShootIE(bool shootAtTarget, System.Action callback)
   {
@@ -429,10 +423,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
       action();
   }
 
-  public void ChargeAttack()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.ChargeAttackIE());
-  }
+  public void ChargeAttack() => this.currentAttack = this.StartCoroutine(this.ChargeAttackIE());
 
   public IEnumerator ChargeAttackIE()
   {
@@ -496,10 +487,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
     }
   }
 
-  public void SpawnEnemies()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.SpawnEnemiesIE());
-  }
+  public void SpawnEnemies() => this.currentAttack = this.StartCoroutine(this.SpawnEnemiesIE());
 
   public IEnumerator SpawnEnemiesIE()
   {
@@ -536,10 +524,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
     juicedWormMiniboss.spawnTime = UnityEngine.Random.Range(juicedWormMiniboss.timeBetweenEnemySpawns.x, juicedWormMiniboss.timeBetweenEnemySpawns.y);
   }
 
-  public void DashAttack()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.DashAttackIE());
-  }
+  public void DashAttack() => this.currentAttack = this.StartCoroutine(this.DashAttackIE());
 
   public virtual IEnumerator DashAttackIE()
   {
@@ -584,7 +569,7 @@ public class EnemyJuicedWormMiniboss : UnitObject
       }
       juicedWormMiniboss.Spine.AnimationState.SetAnimation(0, juicedWormMiniboss.dashAttackImpactAnimation, false);
       juicedWormMiniboss.Spine.AnimationState.AddAnimation(0, juicedWormMiniboss.idleAnimation, true, 0.0f);
-      juicedWormMiniboss.StartCoroutine((IEnumerator) juicedWormMiniboss.EnabledDamageCollider(juicedWormMiniboss.dashDuration / 1.5f));
+      juicedWormMiniboss.StartCoroutine(juicedWormMiniboss.EnabledDamageCollider(juicedWormMiniboss.dashDuration / 1.5f));
       juicedWormMiniboss.canBeKnockedBack = false;
       float time = 0.0f;
       while ((double) (time += Time.deltaTime * juicedWormMiniboss.Spine.timeScale) < (double) juicedWormMiniboss.dashDuration)

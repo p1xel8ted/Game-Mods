@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Tentacle
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -100,7 +100,7 @@ public class Tentacle : UnitObject, ISpellOwning
     this.playExitSFX = playExitSFX;
     if ((bool) (Object) this.Spine)
       this.Spine.gameObject.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.Attack(Delay, Duration, continousDamage));
+    this.StartCoroutine(this.Attack(Delay, Duration, continousDamage));
   }
 
   public new void OnDie(
@@ -114,7 +114,7 @@ public class Tentacle : UnitObject, ISpellOwning
       return;
     CameraManager.shakeCamera(0.5f, Utils.GetAngle(Attacker.transform.position, this.transform.position));
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
     this.CircleCollider2D.enabled = false;
   }
 
@@ -122,7 +122,7 @@ public class Tentacle : UnitObject, ISpellOwning
   {
     if ((double) (this.timeBeforeNextShot += Time.deltaTime * ((Object) this.Spine != (Object) null ? this.Spine.timeScale : 1f)) < (double) this.TimeBetweenProjectiles || !this.ShootsProjectiles)
       return;
-    this.StartCoroutine((IEnumerator) this.FireSpiralProjectiles());
+    this.StartCoroutine(this.FireSpiralProjectiles());
     this.timeBeforeNextShot = 0.0f;
     AudioManager.Instance.PlayOneShot("event:/enemy/shoot_magicenergy", this.gameObject);
     if (!(bool) (Object) this.Spine)
@@ -286,7 +286,7 @@ public class Tentacle : UnitObject, ISpellOwning
           this.Spine.AnimationState.SetAnimation(0, "attack", false);
           this.Spine.AnimationState.AddAnimation(0, "idle" + (Random.Range(0, 2) == 0 ? "2" : ""), true, 0.0f);
         }
-        this.EnemyHealth.DealDamage(this.damage, this.gameObject, Vector3.Lerp(this.transform.position, this.EnemyHealth.transform.position, 0.7f), AttackType: Health.AttackTypes.Projectile, AttackFlags: this.AttackFlags);
+        this.EnemyHealth.DealDamage(this.damage, this.gameObject, Vector3.Lerp(this.transform.position, this.EnemyHealth.transform.position, 0.7f), AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: this.AttackFlags);
         this.DamagedEnemies.Add(this.EnemyHealth);
         Tentacle.TotalDamagedEnemies.Add(this.EnemyHealth);
       }

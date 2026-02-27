@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyFleshSwarmer
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -147,7 +147,7 @@ public class EnemyFleshSwarmer : UnitObject
     }
     if (this.isInProcessOfReveal && !this.isRevealed)
     {
-      this.AutoRevealCoroutine = this.StartCoroutine((IEnumerator) this.Reveal(0.0f, instantReveal: true));
+      this.AutoRevealCoroutine = this.StartCoroutine(this.Reveal(0.0f, instantReveal: true));
     }
     else
     {
@@ -175,7 +175,7 @@ public class EnemyFleshSwarmer : UnitObject
     if ((double) this.health.HP <= 0.0)
       return;
     this.health.invincible = false;
-    this.health.DealDamage(1000f, this.gameObject, this.transform.position);
+    this.health.DealDamage(1000f, this.gameObject, this.transform.position, dealDamageImmediately: true);
   }
 
   public override void OnDisable()
@@ -225,7 +225,7 @@ public class EnemyFleshSwarmer : UnitObject
       if (this.RevealAllOtherFleshSwarmersOnReveal)
         this.RevealAll();
       else if (this.AutoRevealCoroutine == null)
-        this.AutoRevealCoroutine = this.StartCoroutine((IEnumerator) this.Reveal(0.5f));
+        this.AutoRevealCoroutine = this.StartCoroutine(this.Reveal(0.5f));
     }
     if (!this.isRevealed && !this.isInProcessOfReveal)
     {
@@ -257,7 +257,7 @@ public class EnemyFleshSwarmer : UnitObject
         fleshHopper.StopAllCoroutines();
         this.DisableForces = false;
         if (fleshHopper.AutoRevealCoroutine == null)
-          fleshHopper.AutoRevealCoroutine = fleshHopper.StartCoroutine((IEnumerator) fleshHopper.Reveal(0.2f + (num += 0.2f), !instantReveal, instantReveal, startInCombat));
+          fleshHopper.AutoRevealCoroutine = fleshHopper.StartCoroutine(fleshHopper.Reveal(0.2f + (num += 0.2f), !instantReveal, instantReveal, startInCombat));
       }
     }
   }
@@ -430,7 +430,7 @@ public class EnemyFleshSwarmer : UnitObject
         if ((UnityEngine.Object) Physics2D.Raycast((Vector2) this.transform.position, direction, distance, LayerMask.GetMask("Obstacles Player Ignore")).collider == (UnityEngine.Object) null)
         {
           this.rb.AddForce(force);
-          this.StartCoroutine((IEnumerator) this.TurnOnDamageColliderForDuration(0.3f));
+          this.StartCoroutine(this.TurnOnDamageColliderForDuration(0.3f));
           if (string.IsNullOrEmpty(this.MoveSFX))
             break;
           AudioManager.Instance.PlayOneShot(this.MoveSFX, this.transform.position);
@@ -644,7 +644,7 @@ public class EnemyFleshSwarmer : UnitObject
       Debug.Log((object) "Stopping previous reveal coroutine");
       this.StopCoroutine(this.AutoRevealCoroutine);
     }
-    this.AutoRevealCoroutine = this.StartCoroutine((IEnumerator) this.Reveal(0.0f, false, true, true, true));
+    this.AutoRevealCoroutine = this.StartCoroutine(this.Reveal(0.0f, false, true, true, true));
     this.RevealAllOtherFleshSwarmersOnReveal = false;
     if (this.TryGetComponent<Rigidbody2D>(out Rigidbody2D _) && (UnityEngine.Object) this.SimpleSpineFlash != (UnityEngine.Object) null)
     {
@@ -682,7 +682,7 @@ public class EnemyFleshSwarmer : UnitObject
       Debug.Log((object) "Stopping previous reveal coroutine");
       enemyFleshSpawner.StopCoroutine(enemyFleshSpawner.AutoRevealCoroutine);
     }
-    enemyFleshSpawner.AutoRevealCoroutine = enemyFleshSpawner.StartCoroutine((IEnumerator) enemyFleshSpawner.Reveal(0.0f, false, true, true, true));
+    enemyFleshSpawner.AutoRevealCoroutine = enemyFleshSpawner.StartCoroutine(enemyFleshSpawner.Reveal(0.0f, false, true, true, true));
     enemyFleshSpawner.RevealAllOtherFleshSwarmersOnReveal = false;
     Rigidbody2D component2;
     if (!enemyFleshSpawner.TryGetComponent<Rigidbody2D>(out component2))

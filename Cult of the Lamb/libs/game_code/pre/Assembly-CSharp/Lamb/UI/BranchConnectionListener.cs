@@ -1,0 +1,80 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: Lamb.UI.BranchConnectionListener
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+#nullable disable
+namespace Lamb.UI;
+
+public class BranchConnectionListener : ConnectionListener
+{
+  [SerializeReference]
+  public List<ConnectionListener> Connections = new List<ConnectionListener>();
+
+  public override void Configure(MMUILineRenderer.Branch rootBranch)
+  {
+    base.Configure(rootBranch);
+    Debug.Log((object) "Configure Branch Connection Listener".Colour(Color.yellow));
+    foreach (ConnectionListener connection in this.Connections)
+    {
+      if (connection.HighestNodeState > this._highestNodeState)
+        this._highestNodeState = connection.HighestNodeState;
+    }
+    this._targetNodeState = this._highestNodeState;
+    this.UpdateState(this.Branch.FillStyle == MMUILineRenderer.FillStyle.Reverse ? 0.0f : 1f);
+  }
+
+  private void OnConnectionStateDidChange(ConnectionListener connectionListener)
+  {
+    if (this.Branch.FillStyle == MMUILineRenderer.FillStyle.Reverse)
+    {
+      if (connectionListener.TargetNodeState > this._highestNodeState)
+      {
+        this._targetNodeState = connectionListener.TargetNodeState;
+        this._isDirty = true;
+      }
+    }
+    else if (connectionListener.HighestNodeState > this._highestNodeState)
+    {
+      this._highestNodeState = connectionListener.HighestNodeState;
+      this._isDirty = true;
+    }
+    if (!this._isDirty)
+      return;
+    Action<ConnectionListener> onStateChanged = this.OnStateChanged;
+    if (onStateChanged != null)
+      onStateChanged((ConnectionListener) this);
+    this.UpdateState(this.Branch.FillStyle == MMUILineRenderer.FillStyle.Reverse ? 1f : 0.0f);
+  }
+
+  private void OnEnable()
+  {
+    foreach (ConnectionListener connection in this.Connections)
+      connection.OnStateChanged += new Action<ConnectionListener>(this.OnConnectionStateDidChange);
+  }
+
+  private void OnDisable()
+  {
+    foreach (ConnectionListener connection in this.Connections)
+      connection.OnStateChanged -= new Action<ConnectionListener>(this.OnConnectionStateDidChange);
+  }
+
+  protected override IEnumerator DoFillAnimation()
+  {
+    BranchConnectionListener connectionListener = this;
+    // ISSUE: reference to a compiler-generated method
+    yield return (object) connectionListener.\u003C\u003En__0();
+    foreach (ConnectionListener connection in connectionListener.Connections)
+    {
+      if (connection.IsDirty)
+        connection.PerformFillAnimation();
+    }
+    connectionListener._isDirty = false;
+  }
+}

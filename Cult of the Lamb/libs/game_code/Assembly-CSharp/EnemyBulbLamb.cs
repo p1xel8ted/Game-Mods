@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBulbLamb
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -116,7 +116,7 @@ public class EnemyBulbLamb : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.MovementRoutine());
+    this.StartCoroutine(this.MovementRoutine());
   }
 
   public override void FixedUpdate()
@@ -140,10 +140,10 @@ public class EnemyBulbLamb : UnitObject
       this.CleanupAttackState();
       this.Spine.AnimationState.SetAnimation(0, this.IdleAnimation, true);
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && (double) this.KnockbackForceModifier != 0.0)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     this.SimpleSpineFlash.FlashFillRed();
   }
 
@@ -162,7 +162,7 @@ public class EnemyBulbLamb : UnitObject
     while ((double) (time += Time.deltaTime * enemyBulbLamb.Spine.timeScale) < 0.5)
       yield return (object) null;
     enemyBulbLamb.DisableForces = false;
-    enemyBulbLamb.StartCoroutine((IEnumerator) enemyBulbLamb.MovementRoutine());
+    enemyBulbLamb.StartCoroutine(enemyBulbLamb.MovementRoutine());
   }
 
   public IEnumerator MovementRoutine()
@@ -242,9 +242,9 @@ public class EnemyBulbLamb : UnitObject
     enemyBulbLamb.repositionCounter = enemyBulbLamb.RepositionsBetweenAttacks;
     enemyBulbLamb.TargetEnemy = enemyBulbLamb.GetClosestTarget(ignoreNonUnits: true);
     if ((UnityEngine.Object) enemyBulbLamb.TargetEnemy != (UnityEngine.Object) null && (double) Vector3.Distance(enemyBulbLamb.transform.position, enemyBulbLamb.TargetEnemy.transform.position) < (double) enemyBulbLamb.slamAttackRange)
-      enemyBulbLamb.currentAttackRoutine = enemyBulbLamb.StartCoroutine((IEnumerator) enemyBulbLamb.AttackSlamRoutine());
+      enemyBulbLamb.currentAttackRoutine = enemyBulbLamb.StartCoroutine(enemyBulbLamb.AttackSlamRoutine());
     else
-      enemyBulbLamb.StartCoroutine((IEnumerator) enemyBulbLamb.AttackWithTimeout());
+      enemyBulbLamb.StartCoroutine(enemyBulbLamb.AttackWithTimeout());
   }
 
   public IEnumerator ShootProjectileRoutine()
@@ -290,7 +290,7 @@ public class EnemyBulbLamb : UnitObject
             yield return (object) null;
         }
         enemyBulbLamb.Attacking = false;
-        enemyBulbLamb.StartCoroutine((IEnumerator) enemyBulbLamb.MovementRoutine());
+        enemyBulbLamb.StartCoroutine(enemyBulbLamb.MovementRoutine());
       }
     }
   }
@@ -402,7 +402,7 @@ public class EnemyBulbLamb : UnitObject
       this.currentAttackRoutine = (Coroutine) null;
     }
     this.CleanupAttackState();
-    this.StartCoroutine((IEnumerator) this.MovementRoutine());
+    this.StartCoroutine(this.MovementRoutine());
   }
 
   public void CleanupAttackState()
@@ -424,7 +424,7 @@ public class EnemyBulbLamb : UnitObject
   {
     EnemyBulbLamb enemyBulbLamb = this;
     float attackStartTime = Time.time;
-    enemyBulbLamb.currentAttackRoutine = enemyBulbLamb.StartCoroutine((IEnumerator) enemyBulbLamb.ShootProjectileRoutine());
+    enemyBulbLamb.currentAttackRoutine = enemyBulbLamb.StartCoroutine(enemyBulbLamb.ShootProjectileRoutine());
     while (enemyBulbLamb.Attacking && (double) Time.time - (double) attackStartTime < 10.0)
     {
       yield return (object) new WaitForSeconds(0.1f);
@@ -487,7 +487,7 @@ public class EnemyBulbLamb : UnitObject
         while (!attackSequence.IsComplete() && attackSequence.active)
           yield return (object) null;
         enemyBulbLamb.Attacking = false;
-        enemyBulbLamb.StartCoroutine((IEnumerator) enemyBulbLamb.MovementRoutine());
+        enemyBulbLamb.StartCoroutine(enemyBulbLamb.MovementRoutine());
       }
     }
   }

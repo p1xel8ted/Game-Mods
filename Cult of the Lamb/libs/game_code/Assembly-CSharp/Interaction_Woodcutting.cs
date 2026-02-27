@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Woodcutting
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -256,12 +256,12 @@ public class Interaction_Woodcutting : TreeBase
       return;
     this.activatingPlayers.Add(this._playerFarming);
     this._playerFarming.Spine.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.HandleEvent);
-    this.StartCoroutine((IEnumerator) this.DoWoodCutting(this._playerFarming));
+    this.StartCoroutine(this.DoWoodCutting(this._playerFarming));
   }
 
   public void OnRegrowTree()
   {
-    Debug.Log((object) ("OnRegrowTree!!!! " + ((object) this.digUpStump)?.ToString()));
+    Debug.Log((object) ("OnRegrowTree!!!! " + this.digUpStump?.ToString()));
     this.enabled = true;
     if ((UnityEngine.Object) this.TreeSpine != (UnityEngine.Object) null)
     {
@@ -360,12 +360,12 @@ public class Interaction_Woodcutting : TreeBase
     if ((double) player.gameObject.transform.position.x < (double) this.transform.position.x)
     {
       Vector3 TargetPosition = (UnityEngine.Object) Physics2D.Raycast((Vector2) this.transform.position, (Vector2) (this.PlayerPositionLeft.transform.position - this.transform.position).normalized, Vector3.Distance(this.transform.position, this.PlayerPositionRight.transform.position), (int) this.collisionMask).collider != (UnityEngine.Object) null ? this.PlayerPositionRight.transform.position : this.PlayerPositionLeft.transform.position;
-      player.GoToAndStop(TargetPosition, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoWoodCutting(player))));
+      player.GoToAndStop(TargetPosition, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoWoodCutting(player))));
     }
     else
     {
       Vector3 TargetPosition = (UnityEngine.Object) Physics2D.Raycast((Vector2) this.transform.position, (Vector2) (this.PlayerPositionRight.transform.position - this.transform.position).normalized, Vector3.Distance(this.transform.position, this.PlayerPositionLeft.transform.position), (int) this.collisionMask).collider != (UnityEngine.Object) null ? this.PlayerPositionLeft.transform.position : this.PlayerPositionRight.transform.position;
-      player.GoToAndStop(TargetPosition, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoWoodCutting(player))));
+      player.GoToAndStop(TargetPosition, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoWoodCutting(player))));
     }
   }
 

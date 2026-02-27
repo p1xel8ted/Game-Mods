@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_VolcanicSpa
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -106,7 +106,7 @@ public class Interaction_VolcanicSpa : Interaction
           this.StopCoroutine(this.endPoolPartyCoroutine);
           this.endPoolPartyCoroutine = (Coroutine) null;
         }
-        this.endPoolPartyCoroutine = this.StartCoroutine((IEnumerator) this.EndPoolParty());
+        this.endPoolPartyCoroutine = this.StartCoroutine(this.EndPoolParty());
       }
     }
     if (this.someoneEnteringOrExiting || this.isLockedByCoupleKiss)
@@ -203,7 +203,7 @@ public class Interaction_VolcanicSpa : Interaction
           this.StopCoroutine(this.healingRoutineCoroutine);
           this.healingRoutineCoroutine = (Coroutine) null;
         }
-        this.healingRoutineCoroutine = this.StartCoroutine((IEnumerator) this.HealingRoutine(followerById));
+        this.healingRoutineCoroutine = this.StartCoroutine(this.HealingRoutine(followerById));
       }
       foreach (InventoryItem inventoryItem in cost)
         Inventory.ChangeItemQuantity(inventoryItem.type, -inventoryItem.quantity);
@@ -255,7 +255,7 @@ public class Interaction_VolcanicSpa : Interaction
     if (!interactionVolcanicSpa.forceWorkInAllSeasons && (SeasonsManager.CurrentSeason != SeasonsManager.Season.Winter || interactionVolcanicSpa.forceWarmSeasonBehaviour))
     {
       Debug.Log((object) "BURN call top");
-      yield return (object) interactionVolcanicSpa.StartCoroutine((IEnumerator) interactionVolcanicSpa.BurnConfirm());
+      yield return (object) interactionVolcanicSpa.StartCoroutine(interactionVolcanicSpa.BurnConfirm());
       if (!interactionVolcanicSpa.confirmBurn)
       {
         if (interactionVolcanicSpa.currentSpaOccupants.Count > 0)
@@ -430,9 +430,9 @@ public class Interaction_VolcanicSpa : Interaction
             DOTween.To((DOGetter<float>) (() => GameManager.GetInstance().CamFollowTarget.targetDistance), (DOSetter<float>) (x => GameManager.GetInstance().CamFollowTarget.targetDistance = x), 3f, 3f).SetEase<TweenerCore<float, float, FloatOptions>>(Ease.InSine);
             yield return (object) new WaitForSeconds(2.9f);
             if (follower.Brain.HasTrait(FollowerTrait.TraitType.Mutated))
-              interactionVolcanicSpa.StartCoroutine((IEnumerator) interactionVolcanicSpa.SpawnItem(InventoryItem.ITEM_TYPE.MAGMA_STONE, 10, new Vector2(0.05f, 0.1f), follower.transform.position));
+              interactionVolcanicSpa.StartCoroutine(interactionVolcanicSpa.SpawnItem(InventoryItem.ITEM_TYPE.MAGMA_STONE, 10, new Vector2(0.05f, 0.1f), follower.transform.position));
             else if (!follower.Brain.Info.IsSnowman)
-              interactionVolcanicSpa.StartCoroutine((IEnumerator) interactionVolcanicSpa.SpawnItem(InventoryItem.ITEM_TYPE.FOLLOWER_MEAT, 10, new Vector2(0.05f, 0.1f), follower.transform.position));
+              interactionVolcanicSpa.StartCoroutine(interactionVolcanicSpa.SpawnItem(InventoryItem.ITEM_TYPE.FOLLOWER_MEAT, 10, new Vector2(0.05f, 0.1f), follower.transform.position));
             NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("Notifications/Follower/DiedFromOverheating", follower.Brain.Info.Name);
             follower.transform.SetParent(BiomeBaseManager.Instance.Room.CustomTransform.transform, true);
             follower.Die(NotificationCentre.NotificationType.BurntToDeath, false, force: true);
@@ -483,7 +483,7 @@ label_63:
         }
         interactionVolcanicSpa1.giveSin = false;
       }
-      interactionVolcanicSpa1.StartCoroutine((IEnumerator) interactionVolcanicSpa1.StopParticleEffect(interactionVolcanicSpa1.heatBubbles));
+      interactionVolcanicSpa1.StartCoroutine(interactionVolcanicSpa1.StopParticleEffect(interactionVolcanicSpa1.heatBubbles));
       if (interactionVolcanicSpa1.makeEggMeal)
       {
         if ((UnityEngine.Object) interactionVolcanicSpa1.RewardPosition != (UnityEngine.Object) null)
@@ -532,7 +532,7 @@ label_63:
         interactionVolcanicSpa1._occupantSlots.Remove(follower.Brain.Info.ID);
         follower.Interaction_FollowerInteraction.Interactable = true;
       }
-      interactionVolcanicSpa1.StartCoroutine((IEnumerator) interactionVolcanicSpa1.StopParticleEffect(interactionVolcanicSpa1.loveBubbles));
+      interactionVolcanicSpa1.StartCoroutine(interactionVolcanicSpa1.StopParticleEffect(interactionVolcanicSpa1.loveBubbles));
       AudioManager.Instance.StopLoop(interactionVolcanicSpa1.poolPartyLoopInstance);
       interactionVolcanicSpa1.currentSpaOccupants.Clear();
       for (int index = 0; index < interactionVolcanicSpa1.spaSlotOccupied.Length; ++index)
@@ -540,7 +540,7 @@ label_63:
       if ((UnityEngine.Object) interactionVolcanicSpa1.WaterRenderer != (UnityEngine.Object) null)
         interactionVolcanicSpa1.WaterRenderer.DOColor(interactionVolcanicSpa1.ColdWaterColor, 1f);
       if ((UnityEngine.Object) interactionVolcanicSpa1.heatBubbles != (UnityEngine.Object) null)
-        interactionVolcanicSpa1.StartCoroutine((IEnumerator) interactionVolcanicSpa1.StopParticleEffect(interactionVolcanicSpa1.heatBubbles));
+        interactionVolcanicSpa1.StartCoroutine(interactionVolcanicSpa1.StopParticleEffect(interactionVolcanicSpa1.heatBubbles));
       interactionVolcanicSpa1.isLockedByCoupleKiss = false;
       interactionVolcanicSpa1.HasChanged = true;
       interactionVolcanicSpa1.Interactable = true;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Plimbo
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -94,7 +94,7 @@ public class Interaction_Plimbo : Interaction
     {
       base.OnInteract(state);
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.GiveBeholderEye());
+      this.StartCoroutine(this.GiveBeholderEye());
     }
   }
 
@@ -135,7 +135,7 @@ public class Interaction_Plimbo : Interaction
     interactionPlimbo.GetConversation();
     while (interactionPlimbo.Waiting)
       yield return (object) null;
-    yield return (object) interactionPlimbo.StartCoroutine((IEnumerator) interactionPlimbo.GiveKeyPieceRoutine());
+    yield return (object) interactionPlimbo.StartCoroutine(interactionPlimbo.GiveKeyPieceRoutine());
     while ((UnityEngine.Object) Interaction_KeyPiece.Instance != (UnityEngine.Object) null)
       yield return (object) null;
     ++interactionPlimbo.StoryProgress;
@@ -163,7 +163,7 @@ public class Interaction_Plimbo : Interaction
     }
   }
 
-  public void GiveLoreNote() => this.StartCoroutine((IEnumerator) this.GiveLoreNoteIE());
+  public void GiveLoreNote() => this.StartCoroutine(this.GiveLoreNoteIE());
 
   public IEnumerator GiveLoreNoteIE()
   {
@@ -254,7 +254,7 @@ public class Interaction_Plimbo : Interaction
     KeyPiece.OnInteract(interactionPlimbo.playerFarming.state);
   }
 
-  public void RevealShrine() => this.StartCoroutine((IEnumerator) this.RevealShrineIE());
+  public void RevealShrine() => this.StartCoroutine(this.RevealShrineIE());
 
   public IEnumerator RevealShrineIE()
   {
@@ -310,7 +310,7 @@ public class Interaction_Plimbo : Interaction
           }));
           break;
         default:
-          this.StartCoroutine((IEnumerator) this.AcceptBeholderEye());
+          this.StartCoroutine(this.AcceptBeholderEye());
           break;
       }
     }

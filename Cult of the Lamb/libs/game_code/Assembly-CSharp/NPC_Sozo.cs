@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: NPC_Sozo
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -154,32 +154,32 @@ public class NPC_Sozo : Interaction
     if (this.StoryProgress == 1)
     {
       if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MUSHROOM_SMALL) >= 10)
-        this.StartCoroutine((IEnumerator) this.GiveMushrooms(10));
+        this.StartCoroutine(this.GiveMushrooms(10));
       else
-        this.StartCoroutine((IEnumerator) this.NeedMoreMushroomsIE());
+        this.StartCoroutine(this.NeedMoreMushroomsIE());
     }
     else if (this.StoryProgress == 2)
     {
       if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MUSHROOM_SMALL) >= 20)
-        this.StartCoroutine((IEnumerator) this.GiveMushrooms(20));
+        this.StartCoroutine(this.GiveMushrooms(20));
       else
-        this.StartCoroutine((IEnumerator) this.NeedMoreMushroomsIE());
+        this.StartCoroutine(this.NeedMoreMushroomsIE());
     }
     else if (this.StoryProgress == 3)
     {
       if (!DataManager.Instance.PerformedMushroomRitual)
         return;
-      this.StartCoroutine((IEnumerator) this.GiveDecorationRoutine());
+      this.StartCoroutine(this.GiveDecorationRoutine());
     }
     else if (this.StoryProgress == 4)
     {
       if (!DataManager.Instance.BuiltMushroomDecoration)
         return;
-      this.StartCoroutine((IEnumerator) this.EndQuestRoutine());
+      this.StartCoroutine(this.EndQuestRoutine());
     }
     else if (this.StoryProgress == 5 && DataManager.Instance.SozoDead && !DataManager.Instance.SozoTakenMushroom)
     {
-      this.StartCoroutine((IEnumerator) this.TakeSozoMushroom());
+      this.StartCoroutine(this.TakeSozoMushroom());
     }
     else
     {
@@ -449,7 +449,7 @@ public class NPC_Sozo : Interaction
     }
   }
 
-  public void Ritual() => this.StartCoroutine((IEnumerator) this.RitualIE());
+  public void Ritual() => this.StartCoroutine(this.RitualIE());
 
   public IEnumerator RitualIE()
   {
@@ -477,13 +477,13 @@ public class NPC_Sozo : Interaction
     npcSozo.worshipper3.AnimationState.SetAnimation(0, "ritual", true);
     npcSozo.worshipper4.AnimationState.SetAnimation(0, "ritual", true);
     float delay1 = 0.0f;
-    npcSozo.StartCoroutine((IEnumerator) npcSozo.GiveShrooms(npcSozo.worshipper1.gameObject, 5f, delay1));
+    npcSozo.StartCoroutine(npcSozo.GiveShrooms(npcSozo.worshipper1.gameObject, 5f, delay1));
     float delay2 = delay1 + 0.1f;
-    npcSozo.StartCoroutine((IEnumerator) npcSozo.GiveShrooms(npcSozo.worshipper2.gameObject, 5f, delay2));
+    npcSozo.StartCoroutine(npcSozo.GiveShrooms(npcSozo.worshipper2.gameObject, 5f, delay2));
     float delay3 = delay2 + 0.1f;
-    npcSozo.StartCoroutine((IEnumerator) npcSozo.GiveShrooms(npcSozo.worshipper3.gameObject, 5f, delay3));
+    npcSozo.StartCoroutine(npcSozo.GiveShrooms(npcSozo.worshipper3.gameObject, 5f, delay3));
     float delay4 = delay3 + 0.1f;
-    npcSozo.StartCoroutine((IEnumerator) npcSozo.GiveShrooms(npcSozo.worshipper4.gameObject, 5f, delay4));
+    npcSozo.StartCoroutine(npcSozo.GiveShrooms(npcSozo.worshipper4.gameObject, 5f, delay4));
     BiomeConstants.Instance.PsychedelicFadeIn(5f);
     AudioManager.Instance.SetMusicPsychedelic(1f);
     yield return (object) new WaitForSeconds(5f);
@@ -552,7 +552,7 @@ public class NPC_Sozo : Interaction
 
   public void GiveKeyPiece(System.Action Callback)
   {
-    this.StartCoroutine((IEnumerator) this.GiveKeyPieceRoutine(Callback));
+    this.StartCoroutine(this.GiveKeyPieceRoutine(Callback));
   }
 
   public IEnumerator GiveKeyPieceRoutine(System.Action Callback)
@@ -686,13 +686,13 @@ public class NPC_Sozo : Interaction
   public void \u003CGiveMushrooms\u003Eb__52_0()
   {
     Debug.Log((object) "CALL BACK 2!");
-    this.GiveKeyPiece((System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayGiveObjective(Objectives.CustomQuestTypes.BringSozoMushrooms2, 2))));
+    this.GiveKeyPiece((System.Action) (() => GameManager.GetInstance().StartCoroutine(this.DelayGiveObjective(Objectives.CustomQuestTypes.BringSozoMushrooms2, 2))));
   }
 
   [CompilerGenerated]
   public void \u003CGiveMushrooms\u003Eb__52_1()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayGiveObjective(Objectives.CustomQuestTypes.BringSozoMushrooms2, 2));
+    GameManager.GetInstance().StartCoroutine(this.DelayGiveObjective(Objectives.CustomQuestTypes.BringSozoMushrooms2, 2));
   }
 
   [CompilerGenerated]
@@ -705,6 +705,6 @@ public class NPC_Sozo : Interaction
   [CompilerGenerated]
   public void \u003CRitualIE\u003Eb__54_1()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayGiveObjective(Objectives.CustomQuestTypes.SozoPerformRitual, 3));
+    GameManager.GetInstance().StartCoroutine(this.DelayGiveObjective(Objectives.CustomQuestTypes.SozoPerformRitual, 3));
   }
 }

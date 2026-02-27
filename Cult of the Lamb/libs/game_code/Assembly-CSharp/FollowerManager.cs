@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI.FollowerSelect;
@@ -1204,7 +1204,7 @@ label_9:
     {
       FollowerBrain brain = allBrain;
       if (!FollowerManager.FollowerLocked(brain.Info.ID))
-        GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerManager.Delay(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
+        GameManager.GetInstance().StartCoroutine(FollowerManager.Delay(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
         {
           if (FollowerManager.FollowerLocked(brain.Info.ID) || brain.CurrentTaskType == FollowerTaskType.Sleep || brain.CurrentTaskType == FollowerTaskType.SleepBedRest)
             return;
@@ -1246,7 +1246,7 @@ label_9:
     {
       FollowerBrain brain = allBrain;
       if (!FollowerManager.FollowerLocked(brain.Info.ID))
-        GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerManager.Delay(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
+        GameManager.GetInstance().StartCoroutine(FollowerManager.Delay(UnityEngine.Random.Range(0.0f, 1f), (System.Action) (() =>
         {
           if (FollowerManager.FollowerLocked(brain.Info.ID))
             return;
@@ -1313,7 +1313,7 @@ label_9:
 
   public static void ResurrectBurriedFollower()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) FollowerManager.ResurrectBurriedFollowerIE());
+    GameManager.GetInstance().StartCoroutine(FollowerManager.ResurrectBurriedFollowerIE());
   }
 
   public static IEnumerator ResurrectBurriedFollowerIE()
@@ -1485,7 +1485,7 @@ label_9:
     List<int> ts = new List<int>();
     foreach (Follower follower in FollowerManager.FollowersAtLocation(FollowerLocation.Base))
     {
-      if ((excludeList != null && !excludeList.Contains(follower.Brain.Info.ID) || excludeList == null) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID) && !follower.Brain.Info.IsSnowman)
+      if ((excludeList != null && !excludeList.Contains(follower.Brain.Info.ID) || excludeList == null) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID) && !follower.Brain.Info.IsSnowman && follower.Brain.Info.CursedState != Thought.Child)
         ts.Add(follower.Brain.Info.ID);
     }
     ts.Shuffle<int>();

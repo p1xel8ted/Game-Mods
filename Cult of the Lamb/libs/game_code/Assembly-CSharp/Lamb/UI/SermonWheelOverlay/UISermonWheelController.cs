@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.SermonWheelOverlay.UISermonWheelController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -90,13 +90,13 @@ public class UISermonWheelController : UIRadialMenuBase<SermonWheelCategory, Ser
     base.OnShowStarted();
     if (!DataManager.Instance.PleasureDoctrineOnboarded && DataManager.Instance.HasBuiltPleasureShrine)
     {
-      this.StartCoroutine((IEnumerator) this.OnboardPleasureDoctrineIE());
+      this.StartCoroutine(this.OnboardPleasureDoctrineIE());
     }
     else
     {
       if (DataManager.Instance.WinterDoctrineEnabled || this._currency == InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE || !DataManager.Instance.WinterDoctrineAvailable)
         return;
-      this.StartCoroutine((IEnumerator) this.OnboardWinterDoctrineIE());
+      this.StartCoroutine(this.OnboardWinterDoctrineIE());
     }
   }
 

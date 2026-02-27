@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyLambFlesh
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -166,7 +166,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
       this.triggerColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnTriggerEnterEvent);
       this.triggerColliderEvents.SetActive(true);
     }
-    this.StartCoroutine(!this.StandaloneSpawn ? (IEnumerator) this.AwaitOnReadyAction() : (IEnumerator) this.MovementRoutine());
+    this.StartCoroutine(!this.StandaloneSpawn ? this.AwaitOnReadyAction() : this.MovementRoutine());
   }
 
   public override void OnDestroy()
@@ -234,7 +234,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     if (!this.canDodge || this.MyState == EnemyLambFlesh.State.Attacking || (double) Time.time <= (double) this.dodgedTimestamp || this.state.CURRENT_STATE == StateMachine.State.RecoverFromAttack || AttackType == Health.AttackTypes.Projectile)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DodgeIE(Attacker));
+    this.StartCoroutine(this.DodgeIE(Attacker));
   }
 
   public override void OnHit(
@@ -244,9 +244,9 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     bool FromBehind)
   {
     base.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
-    this.StartCoroutine((IEnumerator) this.HurtRoutine());
+    this.StartCoroutine(this.HurtRoutine());
     if (AttackType != Health.AttackTypes.NoKnockBack && (double) this.KnockbackForceModifier != 0.0)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     this.SimpleSpineFlash.FlashFillRed();
   }
 
@@ -261,7 +261,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     while ((double) (time += Time.deltaTime * enemyLambFlesh.Spine.timeScale) < 0.5)
       yield return (object) null;
     enemyLambFlesh.DisableForces = false;
-    enemyLambFlesh.StartCoroutine((IEnumerator) enemyLambFlesh.MovementRoutine());
+    enemyLambFlesh.StartCoroutine(enemyLambFlesh.MovementRoutine());
   }
 
   public IEnumerator DodgeIE(GameObject attacker)
@@ -308,7 +308,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     enemyLambFlesh.dodgeGhost.ghostingEnabled = false;
     enemyLambFlesh.MyState = EnemyLambFlesh.State.Idle;
     enemyLambFlesh.triggerColliderEvents.SetActive(true);
-    enemyLambFlesh.WaitForTargetRoutine = enemyLambFlesh.StartCoroutine((IEnumerator) enemyLambFlesh.WaitForTarget());
+    enemyLambFlesh.WaitForTargetRoutine = enemyLambFlesh.StartCoroutine(enemyLambFlesh.WaitForTarget());
   }
 
   public Vector3 CalculateCurrentDodgeTargetPosition(GameObject attacker)
@@ -388,7 +388,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
             enemyLambFlesh.state.CURRENT_STATE = StateMachine.State.Idle;
           if (enemyLambFlesh.WaitForTargetRoutine != null)
             enemyLambFlesh.StopCoroutine(enemyLambFlesh.WaitForTargetRoutine);
-          enemyLambFlesh.WaitForTargetRoutine = enemyLambFlesh.StartCoroutine((IEnumerator) enemyLambFlesh.WaitForTarget());
+          enemyLambFlesh.WaitForTargetRoutine = enemyLambFlesh.StartCoroutine(enemyLambFlesh.WaitForTarget());
         }
         if (!enemyLambFlesh.merging)
         {
@@ -421,8 +421,8 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
       return;
     this.SimpleSpineFlash.FlashWhite(this.state.Timer / this.attackDelay);
     this.Spine.AnimationState.SetAnimation(0, this.SignPostAttackAnimation, false);
-    this.StartCoroutine((IEnumerator) this.EnableDamageCollider(this.attackDelay));
-    this.StartCoroutine((IEnumerator) this.DisableTriggerCollider(this.AttackCoolDown));
+    this.StartCoroutine(this.EnableDamageCollider(this.attackDelay));
+    this.StartCoroutine(this.DisableTriggerCollider(this.AttackCoolDown));
   }
 
   public IEnumerator DisableTriggerCollider(float cooldown)
@@ -485,7 +485,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
         enemyLambFlesh.RemoveFleshlingFromList();
         enemyLambFlesh.TryAddFleshlingToList();
       }
-      enemyLambFlesh.StartCoroutine((IEnumerator) enemyLambFlesh.MovementRoutine());
+      enemyLambFlesh.StartCoroutine(enemyLambFlesh.MovementRoutine());
       yield return (object) null;
     }
     yield return (object) null;
@@ -589,13 +589,13 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
 
   public void StartMerge(bool initiatedMerge)
   {
-    this.StartCoroutine((IEnumerator) this.ShowWarning());
+    this.StartCoroutine(this.ShowWarning());
     this.merging = true;
     this.state.CURRENT_STATE = StateMachine.State.Idle;
     this.StopAllCoroutines();
     if (initiatedMerge)
       this.mergeTarget.StartMerge(false);
-    this.StartCoroutine((IEnumerator) this.MergeRoutine(initiatedMerge));
+    this.StartCoroutine(this.MergeRoutine(initiatedMerge));
   }
 
   public IEnumerator MergeRoutine(bool initiatedMerge)
@@ -625,7 +625,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
 
   public void SpawnTween(Transform t, Vector3 destination, float duration)
   {
-    this.StartCoroutine((IEnumerator) this.SpawnTweenRoutine(t, destination, duration));
+    this.StartCoroutine(this.SpawnTweenRoutine(t, destination, duration));
   }
 
   public IEnumerator SpawnTweenRoutine(Transform t, Vector3 destination, float duration)
@@ -646,7 +646,7 @@ public class EnemyLambFlesh : UnitObject, IAttackResilient
     t.position = TargetPosition;
     enemyLambFlesh.health.untouchable = false;
     enemyLambFlesh.spawning = false;
-    enemyLambFlesh.StartCoroutine((IEnumerator) enemyLambFlesh.MovementRoutine());
+    enemyLambFlesh.StartCoroutine(enemyLambFlesh.MovementRoutine());
   }
 
   public IEnumerator ShowWarning()

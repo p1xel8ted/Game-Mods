@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Task_BuryBody
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -23,7 +23,7 @@ public class Task_BuryBody : Task
     this.Worshipper.GoToAndStop(this.DeadWorshipper.gameObject, new System.Action(this.PickUpBody), this.DeadWorshipper.gameObject, false);
   }
 
-  public void PickUpBody() => this.t.StartCoroutine((IEnumerator) this.PickUpBodyRoutine());
+  public void PickUpBody() => this.t.StartCoroutine(this.PickUpBodyRoutine());
 
   public IEnumerator PickUpBodyRoutine()
   {
@@ -44,7 +44,7 @@ public class Task_BuryBody : Task
     }
   }
 
-  public void BuryBody() => this.t.StartCoroutine((IEnumerator) this.BuryBodyRoutine());
+  public void BuryBody() => this.t.StartCoroutine(this.BuryBodyRoutine());
 
   public IEnumerator BuryBodyRoutine()
   {

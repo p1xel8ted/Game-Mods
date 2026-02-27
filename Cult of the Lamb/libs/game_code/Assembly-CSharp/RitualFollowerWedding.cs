@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualFollowerWedding
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -35,7 +35,7 @@ public class RitualFollowerWedding : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -52,7 +52,7 @@ public class RitualFollowerWedding : Ritual
       PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
     }), maxDuration: 5f, forcePositionOnTimeout: true);
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualFollowerWedding.StartCoroutine((IEnumerator) ritualFollowerWedding.WaitFollowersFormCircle());
+    yield return (object) ritualFollowerWedding.StartCoroutine(ritualFollowerWedding.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     List<FollowerSelectEntry> followerSelectEntries = Ritual.GetFollowerSelectEntriesForSermon();
     for (int index = followerSelectEntries.Count - 1; index >= 0; --index)
@@ -105,13 +105,13 @@ public class RitualFollowerWedding : Ritual
         RitualFollowerWedding.contestant2.Brain.HardSwapToTask((FollowerTask) this.Task2);
       }
       else
-        this.StartCoroutine((IEnumerator) this.SetUpCombatant1Routine());
+        this.StartCoroutine(this.SetUpCombatant1Routine());
     });
     UIFollowerSelectMenuController selectMenuController3 = followerSelectInstance1;
     selectMenuController3.OnCancel = selectMenuController3.OnCancel + (System.Action) (() =>
     {
       AudioManager.Instance.StopLoop(this.loopedSound);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualFinished(true, -1, -1));
+      GameManager.GetInstance().StartCoroutine(this.RitualFinished(true, -1, -1));
       this.CancelFollowers();
       canceled = true;
     });
@@ -123,7 +123,7 @@ public class RitualFollowerWedding : Ritual
     {
       if (ritualFollowerWedding.isDivorce)
       {
-        yield return (object) ritualFollowerWedding.StartCoroutine((IEnumerator) ritualFollowerWedding.ContinueRitualDivorce());
+        yield return (object) ritualFollowerWedding.StartCoroutine(ritualFollowerWedding.ContinueRitualDivorce());
       }
       else
       {
@@ -148,12 +148,12 @@ public class RitualFollowerWedding : Ritual
           this.loopedSound = AudioManager.Instance.CreateLoop("event:/sermon/preach_loop", PlayerFarming.Instance.gameObject, true, false);
           this.Task2 = new FollowerTask_ManualControl();
           RitualFollowerWedding.contestant2.Brain.HardSwapToTask((FollowerTask) this.Task2);
-          this.StartCoroutine((IEnumerator) this.SetUpCombatant2Routine());
+          this.StartCoroutine(this.SetUpCombatant2Routine());
         });
         UIFollowerSelectMenuController selectMenuController7 = followerSelectInstance2;
         selectMenuController7.OnCancel = selectMenuController7.OnCancel + (System.Action) (() =>
         {
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualFinished(true, -1, -1));
+          GameManager.GetInstance().StartCoroutine(this.RitualFinished(true, -1, -1));
           this.CancelFollowers();
           canceled = true;
         });
@@ -314,7 +314,7 @@ public class RitualFollowerWedding : Ritual
           yield return (object) new WaitForSeconds(0.5f);
           ChurchFollowerManager.Instance.AddBrainToAudience(RitualFollowerWedding.contestant1.Brain);
           ChurchFollowerManager.Instance.AddBrainToAudience(RitualFollowerWedding.contestant2.Brain);
-          GameManager.GetInstance().StartCoroutine((IEnumerator) ritualFollowerWedding.EndRitual(RitualFollowerWedding.contestant1.Brain.Info.ID, RitualFollowerWedding.contestant2.Brain.Info.ID));
+          GameManager.GetInstance().StartCoroutine(ritualFollowerWedding.EndRitual(RitualFollowerWedding.contestant1.Brain.Info.ID, RitualFollowerWedding.contestant2.Brain.Info.ID));
         }
       }
     }
@@ -392,8 +392,8 @@ public class RitualFollowerWedding : Ritual
     Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
     Interaction_TempleAltar.Instance.CloseUpCamera.Play();
     ritualFollowerWedding.Waiting = true;
-    yield return (object) ritualFollowerWedding.StartCoroutine((IEnumerator) ritualFollowerWedding.SetUpCombatant1Routine());
-    yield return (object) ritualFollowerWedding.StartCoroutine((IEnumerator) ritualFollowerWedding.SetUpCombatant2Routine());
+    yield return (object) ritualFollowerWedding.StartCoroutine(ritualFollowerWedding.SetUpCombatant1Routine());
+    yield return (object) ritualFollowerWedding.StartCoroutine(ritualFollowerWedding.SetUpCombatant2Routine());
     while (ritualFollowerWedding.Waiting)
       yield return (object) null;
     PlayerFarming.Instance.simpleSpineAnimator.Animate("bleat", 0, false);
@@ -430,7 +430,7 @@ public class RitualFollowerWedding : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num += Delay;
-      ritualFollowerWedding.StartCoroutine((IEnumerator) ritualFollowerWedding.DelayFollowerReaction(brain, Delay));
+      ritualFollowerWedding.StartCoroutine(ritualFollowerWedding.DelayFollowerReaction(brain, Delay));
     }
     AudioManager.Instance.StopLoop(ritualFollowerWedding.loopedSound);
     Interaction_TempleAltar.Instance.CloseUpCamera.Reset();
@@ -480,10 +480,10 @@ public class RitualFollowerWedding : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       EndingDelay += Delay;
-      ritualFollowerWedding.StartCoroutine((IEnumerator) ritualFollowerWedding.DelayFollowerReaction(brain, Delay));
+      ritualFollowerWedding.StartCoroutine(ritualFollowerWedding.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1f);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) ritualFollowerWedding.RitualFinished(false, follower1, follower2));
+    GameManager.GetInstance().StartCoroutine(ritualFollowerWedding.RitualFinished(false, follower1, follower2));
   }
 
   public IEnumerator RitualFinished(bool cancelled, int follower1, int follower2)

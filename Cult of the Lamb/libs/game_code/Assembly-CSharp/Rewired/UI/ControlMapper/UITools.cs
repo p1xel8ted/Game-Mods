@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.UI.ControlMapper.UITools
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using UnityEngine;
@@ -75,7 +75,7 @@ public static class UITools
     T component = gameObject.GetComponent<T>();
     if ((Object) component == (Object) null)
     {
-      Debug.LogError((object) $"{name} prefab is missing the {((object) component).GetType().ToString()} component!");
+      Debug.LogError((object) $"{name} prefab is missing the {component.GetType().ToString()} component!");
       return (GameObject) null;
     }
     if ((Object) parent != (Object) null)

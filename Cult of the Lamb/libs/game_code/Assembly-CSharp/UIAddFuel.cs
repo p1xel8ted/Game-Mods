@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIAddFuel
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -112,7 +112,7 @@ public class UIAddFuel : BaseMonoBehaviour
       this.ForceFuelAmount(this.targetFuelBarAmount);
     }
     this.targetFuelBarAmount = normFuelAmount;
-    this.fuelIncreasedRoutine = this.StartCoroutine((IEnumerator) this.FuelBarUpdated(normFuelAmount));
+    this.fuelIncreasedRoutine = this.StartCoroutine(this.FuelBarUpdated(normFuelAmount));
   }
 
   public void ForceFuelAmount(float normFuelAmount)
@@ -141,7 +141,7 @@ public class UIAddFuel : BaseMonoBehaviour
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = -1;
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) uiAddFuel.StartCoroutine((IEnumerator) uiAddFuel.BarUpdated(normAmount, uiAddFuel.fuelBar, uiAddFuel.fuelFlashBar));
+    this.\u003C\u003E2__current = (object) uiAddFuel.StartCoroutine(uiAddFuel.BarUpdated(normAmount, uiAddFuel.fuelBar, uiAddFuel.fuelFlashBar));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;

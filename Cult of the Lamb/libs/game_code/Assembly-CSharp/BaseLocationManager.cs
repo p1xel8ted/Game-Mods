@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BaseLocationManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -86,10 +86,7 @@ public class BaseLocationManager : LocationManager
     return destLocation != FollowerLocation.Church ? BiomeBaseManager.Instance.PlayerSpawnLocation.transform.position : Interaction_Temple.Instance.Entrance.transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0.0f);
   }
 
-  public override void PrePlacingStructures()
-  {
-    this.StartCoroutine((IEnumerator) this.CombineCollidersIE());
-  }
+  public override void PrePlacingStructures() => this.StartCoroutine(this.CombineCollidersIE());
 
   public IEnumerator CombineCollidersIE()
   {

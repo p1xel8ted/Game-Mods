@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyScuttleSwiper
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -125,20 +125,20 @@ public class EnemyScuttleSwiper : UnitObject
       this.health.invincible = false;
       foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
         simpleSpineFlash.FlashWhite(false);
-      this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+      this.StartCoroutine(this.ActiveRoutine());
     }
     else
     {
       switch (this.StartHidden)
       {
         case EnemyScuttleSwiper.StartingStates.Hidden:
-          this.StartCoroutine((IEnumerator) this.Hidden());
+          this.StartCoroutine(this.Hidden());
           break;
         case EnemyScuttleSwiper.StartingStates.Wandering:
-          this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+          this.StartCoroutine(this.ActiveRoutine());
           break;
         case EnemyScuttleSwiper.StartingStates.Animation:
-          this.StartCoroutine((IEnumerator) this.AnimationRoutine());
+          this.StartCoroutine(this.AnimationRoutine());
           break;
       }
     }
@@ -177,7 +177,7 @@ public class EnemyScuttleSwiper : UnitObject
     EnemyScuttleSwiper enemyScuttleSwiper = this;
     yield return (object) new WaitForEndOfFrame();
     enemyScuttleSwiper.health.invincible = true;
-    Debug.Log((object) ("Spine " + ((object) enemyScuttleSwiper.Spine)?.ToString()));
+    Debug.Log((object) ("Spine " + enemyScuttleSwiper.Spine?.ToString()));
     Debug.Log((object) ("Spine.AnimationState " + enemyScuttleSwiper.Spine.AnimationState?.ToString()));
     Debug.Log((object) ("UnawareAnimation " + enemyScuttleSwiper.UnawareAnimation));
     enemyScuttleSwiper.Spine.AnimationState.SetAnimation(0, enemyScuttleSwiper.UnawareAnimation, true);
@@ -197,7 +197,7 @@ public class EnemyScuttleSwiper : UnitObject
     enemyScuttleSwiper.health.invincible = false;
     enemyScuttleSwiper.Spine.AnimationState.SetAnimation(0, enemyScuttleSwiper.IdleAnimation, true);
     enemyScuttleSwiper.AttackDelay = 0.0f;
-    enemyScuttleSwiper.StartCoroutine((IEnumerator) enemyScuttleSwiper.ActiveRoutine());
+    enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.ActiveRoutine());
   }
 
   public IEnumerator Hidden()
@@ -215,10 +215,17 @@ public class EnemyScuttleSwiper : UnitObject
         enemyScuttleSwiper.GetNewTarget();
       yield return (object) null;
     }
-    while (enemyScuttleSwiper.DetectPlayerWhileHidden && ((UnityEngine.Object) enemyScuttleSwiper.TargetObject == (UnityEngine.Object) null || (double) Vector3.Distance((enemyScuttleSwiper.HiddenOffsetIsGlobalPosition ? Vector3.zero : enemyScuttleSwiper.transform.position) + enemyScuttleSwiper.HiddenOffset, enemyScuttleSwiper.TargetObject.transform.position) > (double) enemyScuttleSwiper.HiddenRadius))
+    while (enemyScuttleSwiper.DetectPlayerWhileHidden)
     {
-      if (!enemyScuttleSwiper.TargetObject.gameObject.activeInHierarchy)
+      if ((UnityEngine.Object) enemyScuttleSwiper.TargetObject == (UnityEngine.Object) null)
         enemyScuttleSwiper.GetNewTarget();
+      else if ((double) Vector3.Distance((enemyScuttleSwiper.HiddenOffsetIsGlobalPosition ? Vector3.zero : enemyScuttleSwiper.transform.position) + enemyScuttleSwiper.HiddenOffset, enemyScuttleSwiper.TargetObject.transform.position) > (double) enemyScuttleSwiper.HiddenRadius)
+      {
+        if (!enemyScuttleSwiper.TargetObject.gameObject.activeInHierarchy)
+          enemyScuttleSwiper.GetNewTarget();
+      }
+      else
+        break;
       yield return (object) null;
     }
     enemyScuttleSwiper.RevealAll();
@@ -233,7 +240,7 @@ public class EnemyScuttleSwiper : UnitObject
       {
         scuttler.StopAllCoroutines();
         this.DisableForces = false;
-        scuttler.StartCoroutine((IEnumerator) scuttler.Reveal(num += 0.2f));
+        scuttler.StartCoroutine(scuttler.Reveal(num += 0.2f));
       }
     }
   }
@@ -271,7 +278,7 @@ public class EnemyScuttleSwiper : UnitObject
       yield return (object) null;
     enemyScuttleSwiper.Spine.AnimationState.SetAnimation(0, enemyScuttleSwiper.IdleAnimation, true);
     enemyScuttleSwiper.AttackDelay = 0.0f;
-    enemyScuttleSwiper.StartCoroutine((IEnumerator) enemyScuttleSwiper.ActiveRoutine());
+    enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.ActiveRoutine());
   }
 
   public virtual IEnumerator ActiveRoutine()
@@ -304,9 +311,9 @@ public class EnemyScuttleSwiper : UnitObject
         else
         {
           if (enemyScuttleSwiper.ShouldSlam())
-            enemyScuttleSwiper.StartCoroutine((IEnumerator) enemyScuttleSwiper.SlamRoutine());
+            enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.SlamRoutine());
           if (enemyScuttleSwiper.ShouldAttack())
-            enemyScuttleSwiper.StartCoroutine((IEnumerator) enemyScuttleSwiper.AttackRoutine());
+            enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.AttackRoutine());
         }
         yield return (object) null;
       }
@@ -423,7 +430,7 @@ public class EnemyScuttleSwiper : UnitObject
       enemyScuttleSwiper.Spine.AnimationState.SetAnimation(0, enemyScuttleSwiper.AttackAnimation, false);
       enemyScuttleSwiper.Spine.AnimationState.AddAnimation(0, enemyScuttleSwiper.IdleAnimation, true, 0.0f);
       if ((double) enemyScuttleSwiper.DamageColliderDuration != -1.0)
-        enemyScuttleSwiper.StartCoroutine((IEnumerator) enemyScuttleSwiper.EnableCollider(enemyScuttleSwiper.DamageColliderDuration));
+        enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.EnableCollider(enemyScuttleSwiper.DamageColliderDuration));
       time = 0.0f;
       while ((double) (time += Time.deltaTime * enemyScuttleSwiper.Spine.timeScale) < (double) enemyScuttleSwiper.AttackDuration * 0.699999988079071)
         yield return (object) null;
@@ -475,10 +482,10 @@ public class EnemyScuttleSwiper : UnitObject
     {
       this.StopAllCoroutines();
       this.DisableForces = false;
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && AttackType != Health.AttackTypes.NoReaction && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -523,9 +530,9 @@ public class EnemyScuttleSwiper : UnitObject
       yield return (object) null;
     enemyScuttleSwiper.DisableForces = false;
     enemyScuttleSwiper.IdleWait = 0.0f;
-    enemyScuttleSwiper.StartCoroutine((IEnumerator) enemyScuttleSwiper.ActiveRoutine());
+    enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.ActiveRoutine());
     if (enemyScuttleSwiper.CounterAttack)
-      enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.SlamAttack ? (IEnumerator) enemyScuttleSwiper.SlamRoutine() : (IEnumerator) enemyScuttleSwiper.AttackRoutine());
+      enemyScuttleSwiper.StartCoroutine(enemyScuttleSwiper.SlamAttack ? enemyScuttleSwiper.SlamRoutine() : enemyScuttleSwiper.AttackRoutine());
   }
 
   public virtual void GetNewTargetPosition()
@@ -580,7 +587,7 @@ public class EnemyScuttleSwiper : UnitObject
     this.EnemyHealth = closestTarget;
   }
 
-  public void DoBusiness() => this.StartCoroutine((IEnumerator) this.BusinessRoutine());
+  public void DoBusiness() => this.StartCoroutine(this.BusinessRoutine());
 
   public IEnumerator BusinessRoutine()
   {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Swipe
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -30,6 +30,7 @@ public class Swipe : BaseMonoBehaviour
   public bool destroyAfterDuration = true;
   public float frameTime;
   public List<Health> objsHitThisFrame = new List<Health>();
+  public List<Projectile> hitProjectiles = new List<Projectile>();
 
   public void Init(
     Vector3 Position,
@@ -52,9 +53,9 @@ public class Swipe : BaseMonoBehaviour
     this.CallBack = CallBack;
     if ((UnityEngine.Object) this.damageCollider != (UnityEngine.Object) null)
     {
-      if (((object) this.damageCollider).GetType() == typeof (CircleCollider2D))
+      if (this.damageCollider.GetType() == typeof (CircleCollider2D))
         (this.damageCollider as CircleCollider2D).radius = Radius;
-      else if (!(((object) this.damageCollider).GetType() == typeof (PolygonCollider2D)))
+      else if (!(this.damageCollider.GetType() == typeof (PolygonCollider2D)))
         ;
     }
     else
@@ -82,6 +83,8 @@ public class Swipe : BaseMonoBehaviour
       }
     }
   }
+
+  public void Update() => this.DamageProjectiles();
 
   public void OnTriggerEnter2D(Collider2D collider)
   {
@@ -119,13 +122,13 @@ public class Swipe : BaseMonoBehaviour
           PlayerWeapon.CriticalHitTimer = 0.0f;
         }
       }
-      component1.DealDamage(damage, this.Origin.gameObject, AttackLocation, AttackType: this.AttackType, AttackFlags: attackFlags);
+      component1.DealDamage(damage, this.Origin.gameObject, AttackLocation, AttackType: this.AttackType, dealDamageImmediately: true, AttackFlags: attackFlags);
     }
     if ((double) this.Damage != 0.0 || component2.currentWeapon == EquipmentType.Sword_Ratau)
     {
       if (attackFlags.HasFlag((Enum) Health.AttackFlags.Crit))
         damage *= num;
-      component1.DealDamage(damage, this.Origin.gameObject, AttackLocation, AttackType: this.AttackType, AttackFlags: attackFlags);
+      component1.DealDamage(damage, this.Origin.gameObject, AttackLocation, AttackType: this.AttackType, dealDamageImmediately: true, AttackFlags: attackFlags);
     }
     Action<Health, Health.AttackTypes, Health.AttackFlags, float> callBack = this.CallBack;
     if (callBack == null)
@@ -152,4 +155,24 @@ public class Swipe : BaseMonoBehaviour
   public void OnDestroy() => this.RemoveSwipe();
 
   public void OnDrawGizmos() => Utils.DrawCircleXY(this.transform.position, this.radius, Color.red);
+
+  public void DamageProjectiles()
+  {
+    for (int index = 0; index < Projectile.Projectiles.Count; ++index)
+    {
+      Projectile projectile = Projectile.Projectiles[index];
+      if (!projectile.IsProjectilesParent && !this.hitProjectiles.Contains(projectile) && this.damageCollider.OverlapPoint((Vector2) projectile.transform.position))
+      {
+        this.hitProjectiles.Add(projectile);
+        this.DamageProjetile(projectile);
+      }
+    }
+  }
+
+  public void DamageProjetile(Projectile projectile)
+  {
+    if (!(bool) (UnityEngine.Object) projectile || projectile.IsAttachedToProjectileTrap() || projectile.IsProjectilesParent || !((UnityEngine.Object) projectile.health != (UnityEngine.Object) null) || projectile.health.team == this.team || !((UnityEngine.Object) projectile.health != (UnityEngine.Object) projectile.Owner) || !projectile.health.gameObject.activeInHierarchy)
+      return;
+    projectile.health.DealDamage(0.0f, this.Origin.gameObject, this.transform.position, dealDamageImmediately: true);
+  }
 }

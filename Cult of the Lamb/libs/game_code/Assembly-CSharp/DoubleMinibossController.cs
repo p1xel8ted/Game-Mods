@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DoubleMinibossController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -131,7 +131,7 @@ public class DoubleMinibossController : MiniBossController
     else
       DataManager.Instance.LastRunResults = UIDeathScreenOverlayController.Results.BeatenMiniBoss;
     SimulationManager.UnPause();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.KillEnemiesDelay());
+    GameManager.GetInstance().StartCoroutine(this.KillEnemiesDelay());
     int _cultLeader;
     switch (SceneManager.GetActiveScene().name)
     {
@@ -173,7 +173,7 @@ public class DoubleMinibossController : MiniBossController
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
         Health.team2[index].untouchable = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, minibossController.gameObject, minibossController.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, minibossController.gameObject, minibossController.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }
@@ -269,10 +269,7 @@ public class DoubleMinibossController : MiniBossController
 
   public new void OnPlayerHit() => this.PlayerHit = true;
 
-  public new void Play(bool skipped = false)
-  {
-    this.StartCoroutine((IEnumerator) this.IntroRoutine(skipped));
-  }
+  public new void Play(bool skipped = false) => this.StartCoroutine(this.IntroRoutine(skipped));
 
   public override IEnumerator IntroRoutine(bool skipped = false)
   {
@@ -293,7 +290,7 @@ public class DoubleMinibossController : MiniBossController
       if ((bool) (Object) component2)
         component2.enabled = false;
     }
-    yield return (object) minibossController.StartCoroutine((IEnumerator) minibossController.BossIntro.PlayRoutine(skipped));
+    yield return (object) minibossController.StartCoroutine(minibossController.BossIntro.PlayRoutine(skipped));
     minibossController.SetMusic();
     foreach (Behaviour behaviour in minibossController.ComponentsToToggleEnabled)
       behaviour.enabled = true;

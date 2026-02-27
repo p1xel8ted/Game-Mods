@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FaithBarFake
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -32,7 +32,7 @@ public class FaithBarFake : MonoBehaviour
       component.transform.localScale = Vector3.zero;
       component.transform.DOScale(1f, 0.5f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutBack).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
       component.barController.SetBarSize(FollowerBrainStats.BrainWashed ? 1f : CultFaithManager.CultFaithNormalised, false, true);
-      component.StartCoroutine((IEnumerator) component.SequenceIE(newFaithNormalised));
+      component.StartCoroutine(component.SequenceIE(newFaithNormalised));
       component.lockParent.SetActive(FollowerBrainStats.BrainWashed);
     }));
   }
@@ -42,7 +42,7 @@ public class FaithBarFake : MonoBehaviour
     if (HUD_Manager.Instance.Hidden || this.hiding)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.SequenceOut());
+    this.StartCoroutine(this.SequenceOut());
     this.hiding = true;
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WarriorTrioManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -71,11 +71,11 @@ public class WarriorTrioManager : UnitObject
     if (this.currentCombatRoutine != null)
       this.StopCoroutine(this.currentCombatRoutine);
     if (!this.IsInFinalPhase)
-      this.currentCombatRoutine = this.StartCoroutine((IEnumerator) this.CombatRoutine());
+      this.currentCombatRoutine = this.StartCoroutine(this.CombatRoutine());
     UIBossHUD.Play(this.health, LocalizationManager.GetTranslation(this.bossName));
   }
 
-  public void StartCombat() => this.StartCoroutine((IEnumerator) this.PreCombatSequence());
+  public void StartCombat() => this.StartCoroutine(this.PreCombatSequence());
 
   public override void OnDieEarly(
     GameObject Attacker,
@@ -104,7 +104,7 @@ public class WarriorTrioManager : UnitObject
       if ((double) this.health.HP > 0.0 && this.finalPhaseDeathCount < 3)
         return;
       this.transform.position = warrior.transform.position;
-      this.health.DealDamage(999f, this.gameObject, this.transform.position);
+      this.health.DealDamage(999f, this.gameObject, this.transform.position, dealDamageImmediately: true);
     }
     else
     {
@@ -119,7 +119,7 @@ public class WarriorTrioManager : UnitObject
     if (this.falseDeathCount < 2 || this.IsInFinalPhase)
       return;
     this.IsInFinalPhase = true;
-    this.StartCoroutine((IEnumerator) this.FinalPhaseSequence());
+    this.StartCoroutine(this.FinalPhaseSequence());
   }
 
   public void IncrementFinalPhaseDeaths()
@@ -180,7 +180,7 @@ public class WarriorTrioManager : UnitObject
     MMVibrate.StopRumble();
     startingWarrior.GoToIdleState();
     warriorTrioManager.isActive = true;
-    warriorTrioManager.currentCombatRoutine = warriorTrioManager.StartCoroutine((IEnumerator) warriorTrioManager.CombatRoutine());
+    warriorTrioManager.currentCombatRoutine = warriorTrioManager.StartCoroutine(warriorTrioManager.CombatRoutine());
   }
 
   public IEnumerator CombatRoutine()
@@ -212,19 +212,19 @@ public class WarriorTrioManager : UnitObject
     warriorTrioManager.ClearStatusEffects();
     EnemyWolfGuardian finalWarrior = warriorTrioManager.InActiveWarriors[0];
     List<EnemyWolfGuardian> downedWarriors = warriorTrioManager.GetOtherWarriors(finalWarrior);
-    yield return (object) warriorTrioManager.StartCoroutine((IEnumerator) warriorTrioManager.BringInFinalWarrior(finalWarrior));
+    yield return (object) warriorTrioManager.StartCoroutine(warriorTrioManager.BringInFinalWarrior(finalWarrior));
     float tauntAnimDuration = finalWarrior.GetTauntAnimDuration();
     finalWarrior.GoToTauntState();
     MMVibrate.RumbleContinuous(1.5f, 1.75f);
     yield return (object) new WaitForSeconds(tauntAnimDuration);
     MMVibrate.StopRumble();
-    yield return (object) warriorTrioManager.StartCoroutine((IEnumerator) warriorTrioManager.ReactivateFalseDeathWarriors());
+    yield return (object) warriorTrioManager.StartCoroutine(warriorTrioManager.ReactivateFalseDeathWarriors());
     warriorTrioManager.ActiveWarriors.Add(finalWarrior);
     warriorTrioManager.health.totalHP = (float) warriorTrioManager.finalPhaseHP;
     warriorTrioManager.health.HP = (float) warriorTrioManager.finalPhaseHP;
     foreach (EnemyWolfGuardian enemyWolfGuardian in downedWarriors)
       enemyWolfGuardian.GoToTauntState();
-    yield return (object) warriorTrioManager.StartCoroutine((IEnumerator) warriorTrioManager.RefillHealthBar());
+    yield return (object) warriorTrioManager.StartCoroutine(warriorTrioManager.RefillHealthBar());
     float num = warriorTrioManager.health.HP / 3f;
     foreach (EnemyWolfGuardian warrior in warriorTrioManager.warriors)
     {

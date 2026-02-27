@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualDivorce
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
@@ -27,7 +27,7 @@ public class RitualDivorce : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -40,7 +40,7 @@ public class RitualDivorce : Ritual
       Interaction_TempleAltar.Instance.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
       PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
     }));
-    yield return (object) ritualDivorce.StartCoroutine((IEnumerator) ritualDivorce.WaitFollowersFormCircle());
+    yield return (object) ritualDivorce.StartCoroutine(ritualDivorce.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     List<FollowerSelectEntry> followerSelectEntries = new List<FollowerSelectEntry>();
     foreach (FollowerBrain followerBrain in Ritual.GetFollowersAvailableToAttendSermon())
@@ -62,7 +62,7 @@ public class RitualDivorce : Ritual
       AudioManager.Instance.PlayOneShot("event:/rituals/wedding_select_follower", PlayerFarming.Instance.gameObject);
       this.Task1 = new FollowerTask_ManualControl();
       this.contestant1.Brain.HardSwapToTask((FollowerTask) this.Task1);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.ContinueRitual());
+      GameManager.GetInstance().StartCoroutine(this.ContinueRitual());
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnShownCompleted = selectMenuController2.OnShownCompleted + (System.Action) (() =>
@@ -77,7 +77,7 @@ public class RitualDivorce : Ritual
     selectMenuController3.OnCancel = selectMenuController3.OnCancel + (System.Action) (() =>
     {
       Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.EndRitual());
+      GameManager.GetInstance().StartCoroutine(this.EndRitual());
       this.CancelFollowers();
       AudioManager.Instance.StopLoop(this.loopedSound);
       this.CompleteRitual(true);
@@ -93,7 +93,7 @@ public class RitualDivorce : Ritual
     Interaction_TempleAltar.Instance.CloseUpCamera.Play();
     PlayerFarming.Instance.simpleSpineAnimator.Animate("idle", 0, true);
     PlayerFarming.Instance.state.facingAngle = Utils.GetAngle(ritualDivorce.transform.position, ritualDivorce.contestant1.transform.position);
-    yield return (object) ritualDivorce.StartCoroutine((IEnumerator) ritualDivorce.SetUpCombatant1Routine());
+    yield return (object) ritualDivorce.StartCoroutine(ritualDivorce.SetUpCombatant1Routine());
     PlayerFarming.Instance.simpleSpineAnimator.Animate("bleat", 0, false);
     PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("reactions/react-happy", 0, false, 0.0f);
     PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
@@ -143,7 +143,7 @@ public class RitualDivorce : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num5 += Delay;
-      ritualDivorce.StartCoroutine((IEnumerator) ritualDivorce.DelayFollowerReaction(brain, Delay));
+      ritualDivorce.StartCoroutine(ritualDivorce.DelayFollowerReaction(brain, Delay));
     }
     AudioManager.Instance.StopLoop(ritualDivorce.loopedSound);
     Interaction_TempleAltar.Instance.CloseUpCamera.Reset();

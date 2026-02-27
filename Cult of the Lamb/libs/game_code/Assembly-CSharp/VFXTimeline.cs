@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: VFXTimeline
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -30,8 +30,8 @@ public class VFXTimeline : VFXObject, INotificationReceiver
   {
     if (this.Playing)
       this._playableDirector.Stop();
-    this._playableDirector.stopped -= (Action<PlayableDirector>) new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
-    this._playableDirector.stopped += (Action<PlayableDirector>) new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
+    this._playableDirector.stopped -= new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
+    this._playableDirector.stopped += new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
     base.PlayVFX(addEmissionDelay, playSFX: playSFX);
   }
 
@@ -43,7 +43,7 @@ public class VFXTimeline : VFXObject, INotificationReceiver
 
   public void OnPlayableDirectorStopped(PlayableDirector director)
   {
-    this._playableDirector.stopped -= (Action<PlayableDirector>) new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
+    this._playableDirector.stopped -= new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
     this.CancelVFX();
   }
 
@@ -61,6 +61,6 @@ public class VFXTimeline : VFXObject, INotificationReceiver
   {
     if (!((UnityEngine.Object) this._playableDirector != (UnityEngine.Object) null))
       return;
-    this._playableDirector.stopped -= (Action<PlayableDirector>) new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
+    this._playableDirector.stopped -= new Action<PlayableDirector>(this.OnPlayableDirectorStopped);
   }
 }

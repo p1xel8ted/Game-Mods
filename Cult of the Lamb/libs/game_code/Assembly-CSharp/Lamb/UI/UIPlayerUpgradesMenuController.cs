@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIPlayerUpgradesMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -504,7 +504,7 @@ public class UIPlayerUpgradesMenuController : UIMenuBase
       }
       if (!this._fleeceItems[fleeceIndex].Cost.CanAfford())
         return;
-      this.StartCoroutine((IEnumerator) this.FocusCard(this._fleeceInfoCardController.CurrentCard.RectTransform, this._fleeceInfoCardController.CurrentCard._redOutline, (System.Action) (() =>
+      this.StartCoroutine(this.FocusCard(this._fleeceInfoCardController.CurrentCard.RectTransform, this._fleeceInfoCardController.CurrentCard._redOutline, (System.Action) (() =>
       {
         int playerFleece = DataManager.Instance.PlayerFleece;
         Inventory.ChangeItemQuantity(this._fleeceItems[fleeceIndex].Cost.CostItem, -this._fleeceItems[fleeceIndex].Cost.CostValue);
@@ -587,7 +587,7 @@ public class UIPlayerUpgradesMenuController : UIMenuBase
   {
     if (UpgradeSystem.GetUnlocked(upgradeItem.Type) || !upgradeItem.Cost.CanAfford())
       return;
-    this.StartCoroutine((IEnumerator) this.FocusCard(this._crownAbilityInfoCardController.CurrentCard.RectTransform, this._crownAbilityInfoCardController.CurrentCard._redOutline, (System.Action) (() =>
+    this.StartCoroutine(this.FocusCard(this._crownAbilityInfoCardController.CurrentCard.RectTransform, this._crownAbilityInfoCardController.CurrentCard._redOutline, (System.Action) (() =>
     {
       Inventory.ChangeItemQuantity(upgradeItem.Cost.CostItem, -upgradeItem.Cost.CostValue);
       UpgradeSystem.UnlockAbility(upgradeItem.Type);
@@ -628,7 +628,7 @@ public class UIPlayerUpgradesMenuController : UIMenuBase
     if (this._showingFleeces || this._showingCrystal || DataManager.Instance.UnlockedFleeces.Count <= 1 || !InputManager.UI.GetEditBuildingsButtonDown(MonoSingleton<UINavigatorNew>.Instance.AllowInputOnlyFromPlayer) || this.startedCoroutine || !this._customiseFleeceButton.activeInHierarchy)
       return;
     this.startedCoroutine = true;
-    this.StartCoroutine((IEnumerator) this.FocusCardFleece(this._fleeceInfoCardController.CurrentCard.RectTransform, this._fleeceInfoCardController.CurrentCard._redOutline, (System.Action) null));
+    this.StartCoroutine(this.FocusCardFleece(this._fleeceInfoCardController.CurrentCard.RectTransform, this._fleeceInfoCardController.CurrentCard._redOutline, (System.Action) null));
   }
 
   public override void OnHideStarted()

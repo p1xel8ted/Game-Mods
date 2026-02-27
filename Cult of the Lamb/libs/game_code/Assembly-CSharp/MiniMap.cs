@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MiniMap
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -92,7 +92,7 @@ public class MiniMap : BaseMonoBehaviour
     }
     if (!this.MoveMap || !((Object) this.CurrentIcon != (Object) null))
       return;
-    this.StartCoroutine((IEnumerator) this.MoveMiniMap(0.7f));
+    this.StartCoroutine(this.MoveMiniMap(0.7f));
   }
 
   public void Awake()
@@ -103,7 +103,7 @@ public class MiniMap : BaseMonoBehaviour
   {
     MiniMap.Instance = this;
     this.IconContainerRect = this.IconContainer.GetComponent<RectTransform>();
-    this.StartCoroutine((IEnumerator) this.Wait());
+    this.StartCoroutine(this.Wait());
   }
 
   public IEnumerator Wait()

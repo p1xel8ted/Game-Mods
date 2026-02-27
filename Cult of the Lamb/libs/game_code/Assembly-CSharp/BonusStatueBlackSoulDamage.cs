@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BonusStatueBlackSoulDamage
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -29,14 +29,14 @@ public class BonusStatueBlackSoulDamage : BaseMonoBehaviour
     Health component = Attacker.GetComponent<Health>();
     if ((UnityEngine.Object) component == (UnityEngine.Object) null)
       return;
-    this.StartCoroutine((IEnumerator) this.GiveBlackSoulsRoutine(component, Attacker));
+    this.StartCoroutine(this.GiveBlackSoulsRoutine(component, Attacker));
   }
 
   public IEnumerator GiveBlackSoulsRoutine(Health AttackerHealth, GameObject Target)
   {
     BonusStatueBlackSoulDamage statueBlackSoulDamage = this;
     yield return (object) new WaitForSeconds(0.25f);
-    AttackerHealth.DealDamage(1f, statueBlackSoulDamage.gameObject, Vector3.Lerp(statueBlackSoulDamage.transform.position, AttackerHealth.transform.position, 0.8f));
+    AttackerHealth.DealDamage(1f, statueBlackSoulDamage.gameObject, Vector3.Lerp(statueBlackSoulDamage.transform.position, AttackerHealth.transform.position, 0.8f), dealDamageImmediately: true);
     yield return (object) new WaitForSeconds(1f);
     float SoulsToGive = 0.0f;
     while ((double) ++SoulsToGive <= 20.0 && !((UnityEngine.Object) Target == (UnityEngine.Object) null))

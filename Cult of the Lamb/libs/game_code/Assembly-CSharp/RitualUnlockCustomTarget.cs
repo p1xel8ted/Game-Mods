@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualUnlockCustomTarget
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -72,7 +72,7 @@ public class RitualUnlockCustomTarget : MonoBehaviour
     sequence.Append((Tween) this.transform.DOMove(EndPosition + Vector3.back * 0.5f, Duration).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InBack).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
     {
       this.SpriteRenderer.enabled = false;
-      this.StartCoroutine((IEnumerator) this.GiveRitual());
+      this.StartCoroutine(this.GiveRitual());
     })));
     sequence.Play<DG.Tweening.Sequence>();
   }
@@ -91,7 +91,7 @@ public class RitualUnlockCustomTarget : MonoBehaviour
     this.BackToIdle();
   }
 
-  public void BackToIdle() => this.StartCoroutine((IEnumerator) this.BackToIdleRoutine());
+  public void BackToIdle() => this.StartCoroutine(this.BackToIdleRoutine());
 
   public IEnumerator BackToIdleRoutine()
   {
@@ -102,7 +102,7 @@ public class RitualUnlockCustomTarget : MonoBehaviour
     unlockCustomTarget.state.CURRENT_STATE = StateMachine.State.Idle;
     yield return (object) null;
     unlockCustomTarget.StopAllCoroutines();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) unlockCustomTarget.DelayEffectsRoutine());
+    GameManager.GetInstance().StartCoroutine(unlockCustomTarget.DelayEffectsRoutine());
     System.Action callback = unlockCustomTarget.Callback;
     if (callback != null)
       callback();
@@ -135,6 +135,6 @@ public class RitualUnlockCustomTarget : MonoBehaviour
   public void \u003CPlay\u003Eb__12_0()
   {
     this.SpriteRenderer.enabled = false;
-    this.StartCoroutine((IEnumerator) this.GiveRitual());
+    this.StartCoroutine(this.GiveRitual());
   }
 }

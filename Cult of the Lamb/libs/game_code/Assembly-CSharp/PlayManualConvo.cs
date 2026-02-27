@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayManualConvo
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -42,7 +42,7 @@ public class PlayManualConvo : MonoBehaviour
     transform.GetComponent<RectTransform>().sizeDelta = new Vector2(900f, 100f);
     if (!this.useTimer)
       return;
-    this.StartCoroutine((IEnumerator) this.TimerStop());
+    this.StartCoroutine(this.TimerStop());
   }
 
   public IEnumerator TimerStop()
@@ -57,7 +57,7 @@ public class PlayManualConvo : MonoBehaviour
     this.mmC.TextPlayer.ShowText(this.convList[this.count]);
     if (!this.useTimer)
       return;
-    this.StartCoroutine((IEnumerator) this.TimerStop());
+    this.StartCoroutine(this.TimerStop());
   }
 
   public void Stop()

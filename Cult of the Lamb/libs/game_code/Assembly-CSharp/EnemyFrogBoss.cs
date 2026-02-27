@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyFrogBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -402,18 +402,18 @@ public class EnemyFrogBoss : UnitObject
     this.usingTongue = false;
     foreach (Component tongue in this.tongues)
       tongue.gameObject.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.DelayAddCamera());
+    this.StartCoroutine(this.DelayAddCamera());
     if (this.currentPhaseNumber == 1)
-      this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase1IE(false));
+      this.currentPhaseRoutine = this.StartCoroutine(this.Phase1IE(false));
     else if (this.currentPhaseNumber == 2)
     {
-      this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase2IE(false));
+      this.currentPhaseRoutine = this.StartCoroutine(this.Phase2IE(false));
     }
     else
     {
       if (this.currentPhaseNumber != 3 || this.miniBossesKilled < this.miniBossFrogsSpawnAmount)
         return;
-      this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase3IE(false));
+      this.currentPhaseRoutine = this.StartCoroutine(this.Phase3IE(false));
     }
   }
 
@@ -433,7 +433,7 @@ public class EnemyFrogBoss : UnitObject
     GameManager.GetInstance().CamFollowTarget.MaxZoom = 18f;
     this.health.untouchable = false;
     this.currentPhaseNumber = 1;
-    this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase1IE(true));
+    this.currentPhaseRoutine = this.StartCoroutine(this.Phase1IE(true));
   }
 
   public IEnumerator Phase1IE(bool firstLoop)
@@ -454,29 +454,26 @@ public class EnemyFrogBoss : UnitObject
       {
         case 0:
           if (enemyFrogBoss.juicedForm && (double) UnityEngine.Random.value > 0.5)
-            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
+            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
           else
-            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.BurpProjectilesIE()));
+            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.BurpProjectilesIE()));
           break;
         case 1:
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.sitPosition)));
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.TongueRapidAttackIE()));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.sitPosition)));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.TongueRapidAttackIE()));
           break;
         case 2:
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.MortarStrikeTargetedIE()));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.MortarStrikeTargetedIE()));
           yield return (object) new WaitForSeconds(1f);
           break;
       }
     }
-    enemyFrogBoss.currentPhaseRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.Phase1IE(false));
+    enemyFrogBoss.currentPhaseRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.Phase1IE(false));
   }
 
-  public void BeginPhase2()
-  {
-    this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase2IE(true));
-  }
+  public void BeginPhase2() => this.currentPhaseRoutine = this.StartCoroutine(this.Phase2IE(true));
 
   public IEnumerator Phase2IE(bool firstLoop)
   {
@@ -496,29 +493,26 @@ public class EnemyFrogBoss : UnitObject
       switch (num)
       {
         case 0:
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.MortarStrikeRandomIE()));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.MortarStrikeRandomIE()));
           break;
         case 1:
           if (enemyFrogBoss.juicedForm && (double) UnityEngine.Random.value > 0.5)
-            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
+            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
           else
-            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.BurpProjectilesIE(1.3f)));
+            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.BurpProjectilesIE(1.3f)));
           break;
         case 2:
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.sitPosition)));
-          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.TongueRapidAttackIE()));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.sitPosition)));
+          yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.TongueRapidAttackIE()));
           break;
       }
     }
-    enemyFrogBoss.currentPhaseRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.Phase2IE(false));
+    enemyFrogBoss.currentPhaseRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.Phase2IE(false));
   }
 
-  public void BeginPhase3()
-  {
-    this.currentPhaseRoutine = this.StartCoroutine((IEnumerator) this.Phase3IE(true));
-  }
+  public void BeginPhase3() => this.currentPhaseRoutine = this.StartCoroutine(this.Phase3IE(true));
 
   public IEnumerator Phase3IE(bool firstLoop)
   {
@@ -527,10 +521,10 @@ public class EnemyFrogBoss : UnitObject
       yield return (object) null;
     if (firstLoop)
     {
-      yield return (object) enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(Vector3.zero));
-      enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.SpawnMiniBossesIE());
-      yield return (object) enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.EnragedIE());
-      yield return (object) enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopUpIE(enemyFrogBoss.hopAnticipation));
+      yield return (object) enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(Vector3.zero));
+      enemyFrogBoss.StartCoroutine(enemyFrogBoss.SpawnMiniBossesIE());
+      yield return (object) enemyFrogBoss.StartCoroutine(enemyFrogBoss.EnragedIE());
+      yield return (object) enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopUpIE(enemyFrogBoss.hopAnticipation));
     }
     else
     {
@@ -545,32 +539,29 @@ public class EnemyFrogBoss : UnitObject
         {
           case 0:
             if (enemyFrogBoss.juicedForm && (double) UnityEngine.Random.value > 0.5)
-              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
+              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
             else
-              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
-            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.MortarStrikeTargetedIE()));
+              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
+            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.MortarStrikeTargetedIE()));
             break;
           case 1:
-            yield return (object) enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.sitPosition));
-            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.TongueScatterAttackIE()));
+            yield return (object) enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.sitPosition));
+            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.TongueScatterAttackIE()));
             break;
           case 2:
             if (enemyFrogBoss.juicedForm && (double) UnityEngine.Random.value > 0.5)
-              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
+              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopToPositionIE(enemyFrogBoss.currentTarget.transform.position)));
             else
-              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
-            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.BurpProjectilesIE(1.6f)));
+              yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopIE(enemyFrogBoss.hopAnticipation, enemyFrogBoss.GetAngleToTarget())));
+            yield return (object) (enemyFrogBoss.currentAttackRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.BurpProjectilesIE(1.6f)));
             break;
         }
       }
-      enemyFrogBoss.currentPhaseRoutine = enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.Phase3IE(false));
+      enemyFrogBoss.currentPhaseRoutine = enemyFrogBoss.StartCoroutine(enemyFrogBoss.Phase3IE(false));
     }
   }
 
-  public void MortarStrikeRandom()
-  {
-    this.StartCoroutine((IEnumerator) this.MortarStrikeRandomIE());
-  }
+  public void MortarStrikeRandom() => this.StartCoroutine(this.MortarStrikeRandomIE());
 
   public void InitializeMortarStrikes()
   {
@@ -611,7 +602,7 @@ public class EnemyFrogBoss : UnitObject
     for (int i = 0; i < shotsToFire; ++i)
     {
       Vector3 targetPosition = enemyFrogBoss.transform.position + (Vector3) Utils.DegreeToVector2(aimingAngle) * UnityEngine.Random.Range(enemyFrogBoss.randomMortarDistance.x, enemyFrogBoss.randomMortarDistance.y);
-      enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.ShootMortarPosition(targetPosition));
+      enemyFrogBoss.StartCoroutine(enemyFrogBoss.ShootMortarPosition(targetPosition));
       aimingAngle += (float) (360 / shotsToFire);
       float dur = UnityEngine.Random.Range(enemyFrogBoss.randomMortarDelayBetweenShots.x, enemyFrogBoss.randomMortarDelayBetweenShots.y);
       time = 0.0f;
@@ -626,10 +617,7 @@ public class EnemyFrogBoss : UnitObject
     enemyFrogBoss.facePlayer = true;
   }
 
-  public void MortarStrikeTargeted()
-  {
-    this.StartCoroutine((IEnumerator) this.MortarStrikeTargetedIE());
-  }
+  public void MortarStrikeTargeted() => this.StartCoroutine(this.MortarStrikeTargetedIE());
 
   public IEnumerator MortarStrikeTargetedIE()
   {
@@ -698,27 +686,24 @@ public class EnemyFrogBoss : UnitObject
     return true;
   }
 
-  public void SpawnEggs() => this.StartCoroutine((IEnumerator) this.SpawnEggsIE());
+  public void SpawnEggs() => this.StartCoroutine(this.SpawnEggsIE());
 
-  public void SpawnEggsCircle() => this.StartCoroutine((IEnumerator) this.SpawnEggsCircleIE(1f));
+  public void SpawnEggsCircle() => this.StartCoroutine(this.SpawnEggsCircleIE(1f));
 
-  public void SpawnEggsForward()
-  {
-    this.StartCoroutine((IEnumerator) this.SpawnEggsForward(1f, 1.3f));
-  }
+  public void SpawnEggsForward() => this.StartCoroutine(this.SpawnEggsForward(1f, 1.3f));
 
   public IEnumerator SpawnEggsIE()
   {
     EnemyFrogBoss enemyFrogBoss = this;
     int eggCount = (int) UnityEngine.Random.Range(enemyFrogBoss.eggsToSpawn.x, enemyFrogBoss.eggsToSpawn.y + 1f);
-    yield return (object) enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopIE(0.0f, enemyFrogBoss.GetAngleToTarget()));
+    yield return (object) enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopIE(0.0f, enemyFrogBoss.GetAngleToTarget()));
     for (int i = 0; i < eggCount; ++i)
     {
       enemyFrogBoss.Spine.AnimationState.SetAnimation(0, enemyFrogBoss.eggSpawnAnimation, false);
       yield return (object) new WaitForSeconds(enemyFrogBoss.eggSpawnDelay);
       enemyFrogBoss.SpawnEgg(enemyFrogBoss.transform.position, 0.75f, (float) UnityEngine.Random.Range(0, 360));
       yield return (object) new WaitForSeconds(0.25f);
-      yield return (object) enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopIE(0.0f, enemyFrogBoss.GetAngleToTarget()));
+      yield return (object) enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopIE(0.0f, enemyFrogBoss.GetAngleToTarget()));
     }
     yield return (object) new WaitForSeconds(1f);
   }
@@ -775,22 +760,19 @@ public class EnemyFrogBoss : UnitObject
 
   public void Hop()
   {
-    this.StartCoroutine((IEnumerator) this.HopIE(this.hopAnticipation, this.GetAngleToTarget()));
+    this.StartCoroutine(this.HopIE(this.hopAnticipation, this.GetAngleToTarget()));
   }
 
-  public void HopToBack()
-  {
-    this.StartCoroutine((IEnumerator) this.HopToPositionIE(this.sitPosition));
-  }
+  public void HopToBack() => this.StartCoroutine(this.HopToPositionIE(this.sitPosition));
 
   public void HopAOE()
   {
-    this.StartCoroutine((IEnumerator) this.HopIE(this.hopAnticipation, this.GetAngleToTarget()));
+    this.StartCoroutine(this.HopIE(this.hopAnticipation, this.GetAngleToTarget()));
   }
 
-  public void HopUp() => this.StartCoroutine((IEnumerator) this.HopUpIE(this.hopAnticipation));
+  public void HopUp() => this.StartCoroutine(this.HopUpIE(this.hopAnticipation));
 
-  public void HopDown() => this.StartCoroutine((IEnumerator) this.HopDownIE());
+  public void HopDown() => this.StartCoroutine(this.HopDownIE());
 
   public IEnumerator HopIE(float anticipation, float angle)
   {
@@ -925,9 +907,9 @@ public class EnemyFrogBoss : UnitObject
   public void DoAOE()
   {
     if (this.damageColliderRoutine != null)
-      this.StopCoroutine((IEnumerator) this.damageColliderRoutine);
+      this.StopCoroutine(this.damageColliderRoutine);
     this.damageColliderRoutine = this.TurnOnDamageColliderForDuration(this.damageColliderEvents.gameObject, this.aoeDuration);
-    this.StartCoroutine((IEnumerator) this.damageColliderRoutine);
+    this.StartCoroutine(this.damageColliderRoutine);
     if ((UnityEngine.Object) this.aoeParticles != (UnityEngine.Object) null)
       this.aoeParticles.Play();
     float radius = 3f;
@@ -947,7 +929,7 @@ public class EnemyFrogBoss : UnitObject
     CameraManager.instance.ShakeCameraForDuration(1f, 1f, 0.2f);
   }
 
-  public void BurpProjectiles() => this.StartCoroutine((IEnumerator) this.BurpProjectilesIE());
+  public void BurpProjectiles() => this.StartCoroutine(this.BurpProjectilesIE());
 
   public void InitializeBurpingProjectiles()
   {
@@ -1001,7 +983,7 @@ public class EnemyFrogBoss : UnitObject
       yield return (object) null;
   }
 
-  public void BounceAOE() => this.StartCoroutine((IEnumerator) this.BounceAOEIE());
+  public void BounceAOE() => this.StartCoroutine(this.BounceAOEIE());
 
   public IEnumerator BounceAOEIE()
   {
@@ -1022,12 +1004,9 @@ public class EnemyFrogBoss : UnitObject
     }
   }
 
-  public void TongueRapidAttack() => this.StartCoroutine((IEnumerator) this.TongueRapidAttackIE());
+  public void TongueRapidAttack() => this.StartCoroutine(this.TongueRapidAttackIE());
 
-  public void TongueScatterAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.TongueScatterAttackIE());
-  }
+  public void TongueScatterAttack() => this.StartCoroutine(this.TongueScatterAttackIE());
 
   public IEnumerator TongueRapidAttackIE()
   {
@@ -1048,7 +1027,7 @@ public class EnemyFrogBoss : UnitObject
       enemyFrogBoss.attacking = true;
       AudioManager.Instance.PlayOneShot("event:/boss/frog/tongue_attack");
       Vector3 position = enemyFrogBoss.currentTarget.transform.position;
-      enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.GetTongue().SpitTongueIE(position, enemyFrogBoss.tongueSpitDelay, enemyFrogBoss.tongueWhipDuration, enemyFrogBoss.tongueRetrieveDelay, enemyFrogBoss.tongueRetrieveDuration));
+      enemyFrogBoss.StartCoroutine(enemyFrogBoss.GetTongue().SpitTongueIE(position, enemyFrogBoss.tongueSpitDelay, enemyFrogBoss.tongueWhipDuration, enemyFrogBoss.tongueRetrieveDelay, enemyFrogBoss.tongueRetrieveDuration));
       time = 0.0f;
       while ((double) (time += Time.deltaTime * enemyFrogBoss.Spine.timeScale) < (double) enemyFrogBoss.tongueWhipDuration + (double) enemyFrogBoss.tongueRetrieveDelay + 0.5)
         yield return (object) null;
@@ -1081,7 +1060,7 @@ public class EnemyFrogBoss : UnitObject
       Vector3 targetPosition = (Vector3) (UnityEngine.Random.insideUnitCircle * enemyFrogBoss.tongueScatterRadius);
       if (i == randomTargetPlayerNumber)
         targetPosition = enemyFrogBoss.currentTarget.transform.position;
-      enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.GetTongue().SpitTongueIE(targetPosition, enemyFrogBoss.tongueScatterWhipDuration, enemyFrogBoss.tongueWhipDuration, (float) ((double) enemyFrogBoss.tongueRetrieveDelay - (double) delay + 0.5), enemyFrogBoss.tongueRetrieveDuration));
+      enemyFrogBoss.StartCoroutine(enemyFrogBoss.GetTongue().SpitTongueIE(targetPosition, enemyFrogBoss.tongueScatterWhipDuration, enemyFrogBoss.tongueWhipDuration, (float) ((double) enemyFrogBoss.tongueRetrieveDelay - (double) delay + 0.5), enemyFrogBoss.tongueRetrieveDuration));
       if (i != amount - 1)
       {
         float d = UnityEngine.Random.Range(enemyFrogBoss.tongueScatterDelay.x, enemyFrogBoss.tongueScatterDelay.y);
@@ -1123,7 +1102,7 @@ public class EnemyFrogBoss : UnitObject
     return tongue1;
   }
 
-  public void SpawnMiniBosses() => this.StartCoroutine((IEnumerator) this.SpawnMiniBossesIE());
+  public void SpawnMiniBosses() => this.StartCoroutine(this.SpawnMiniBossesIE());
 
   public IEnumerator SpawnMiniBossesIE()
   {
@@ -1162,24 +1141,24 @@ public class EnemyFrogBoss : UnitObject
     ++this.miniBossesKilled;
     if (this.miniBossesKilled < this.miniBossFrogsSpawnAmount)
       return;
-    this.StartCoroutine((IEnumerator) this.AllMiniBossesKilled());
+    this.StartCoroutine(this.AllMiniBossesKilled());
   }
 
   public IEnumerator AllMiniBossesKilled()
   {
     EnemyFrogBoss enemyFrogBoss = this;
-    yield return (object) enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.HopDownIE());
+    yield return (object) enemyFrogBoss.StartCoroutine(enemyFrogBoss.HopDownIE());
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyFrogBoss.Spine.timeScale) < 1.5)
       yield return (object) null;
-    enemyFrogBoss.StartCoroutine((IEnumerator) enemyFrogBoss.Phase3IE(false));
+    enemyFrogBoss.StartCoroutine(enemyFrogBoss.Phase3IE(false));
   }
 
   public void AnimationEvent(TrackEntry trackEntry, Spine.Event e)
   {
     if (!(e.Data.Name == "mortar"))
       return;
-    this.StartCoroutine((IEnumerator) this.ShootMortarTarget());
+    this.StartCoroutine(this.ShootMortarTarget());
   }
 
   public override void OnDie(
@@ -1211,7 +1190,7 @@ public class EnemyFrogBoss : UnitObject
     AudioManager.Instance.PlayOneShot("event:/boss/frog/death");
     this.isDead = true;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
   }
 
   public IEnumerator EnragedIE()
@@ -1387,7 +1366,7 @@ public class EnemyFrogBoss : UnitObject
       if ((UnityEngine.Object) this.spawnedEnemies[index] != (UnityEngine.Object) null)
       {
         this.spawnedEnemies[index].health.enabled = true;
-        this.spawnedEnemies[index].health.DealDamage(this.spawnedEnemies[index].health.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        this.spawnedEnemies[index].health.DealDamage(this.spawnedEnemies[index].health.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
     foreach (Component tongue in this.tongues)

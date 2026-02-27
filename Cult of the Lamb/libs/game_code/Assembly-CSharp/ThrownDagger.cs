@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ThrownDagger
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -42,7 +42,7 @@ public class ThrownDagger : MonoBehaviour, IHeavyAttackWeapon, ISpellOwning
     Sprite DaggerImage,
     GameObject owner)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) ThrownDagger.DelayCallback(Delay, (System.Action) (() => ThrownDagger.SpawnThrownDagger(position, Damage, DaggerImage, owner))));
+    GameManager.GetInstance().StartCoroutine(ThrownDagger.DelayCallback(Delay, (System.Action) (() => ThrownDagger.SpawnThrownDagger(position, Damage, DaggerImage, owner))));
   }
 
   public static IEnumerator DelayCallback(float delay, System.Action callback)
@@ -75,10 +75,7 @@ public class ThrownDagger : MonoBehaviour, IHeavyAttackWeapon, ISpellOwning
     this.ShadowSpriteRenderer.enabled = false;
   }
 
-  public void Throw(Sprite DaggerImage)
-  {
-    this.StartCoroutine((IEnumerator) this.ThrowRoutine(DaggerImage));
-  }
+  public void Throw(Sprite DaggerImage) => this.StartCoroutine(this.ThrowRoutine(DaggerImage));
 
   public IEnumerator ThrowRoutine(Sprite DaggerImage)
   {
@@ -111,7 +108,7 @@ public class ThrownDagger : MonoBehaviour, IHeavyAttackWeapon, ISpellOwning
     thrownDagger.SpriteRenderer.transform.DOScale(Vector3.one, 0.3f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack);
     AudioManager.Instance.PlayOneShot("event:/enemy/impact_normal", thrownDagger.gameObject);
     thrownDagger.collider2DList = new List<Collider2D>();
-    thrownDagger.DamageCollider.GetContacts((List<Collider2D>) thrownDagger.collider2DList);
+    thrownDagger.DamageCollider.GetContacts(thrownDagger.collider2DList);
     foreach (Collider2D collider2D in thrownDagger.collider2DList)
     {
       thrownDagger.CollisionHealth = collider2D.gameObject.GetComponent<Health>();
@@ -120,7 +117,7 @@ public class ThrownDagger : MonoBehaviour, IHeavyAttackWeapon, ISpellOwning
         Health.AttackTypes AttackType = Health.AttackTypes.Projectile;
         if (thrownDagger.CollisionHealth.HasShield)
           AttackType = Health.AttackTypes.Heavy;
-        thrownDagger.CollisionHealth.DealDamage(thrownDagger.Damage, thrownDagger.gameObject, thrownDagger.transform.position, AttackType: AttackType, AttackFlags: Health.AttackFlags.Penetration);
+        thrownDagger.CollisionHealth.DealDamage(thrownDagger.Damage, thrownDagger.gameObject, thrownDagger.transform.position, AttackType: AttackType, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.Penetration);
       }
     }
     yield return (object) new WaitForSeconds(thrownDagger.LifeTimeDuration);

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PerformanceTest
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using LeTai.Asset.TranslucentImage;
@@ -57,8 +57,8 @@ public class PerformanceTest : MonoBehaviour
   public void OnEnable()
   {
     this._uiNavigator = this.OptionTemplate.transform.parent.GetComponent<UINavigator>();
-    this.CurrentPostProcessVolume = (PostProcessVolume) UnityEngine.Object.FindObjectOfType((System.Type) typeof (PostProcessVolume));
-    PostProcessLayer ppLayer = (PostProcessLayer) UnityEngine.Object.FindObjectOfType((System.Type) typeof (PostProcessLayer));
+    this.CurrentPostProcessVolume = (PostProcessVolume) UnityEngine.Object.FindObjectOfType(typeof (PostProcessVolume));
+    PostProcessLayer ppLayer = (PostProcessLayer) UnityEngine.Object.FindObjectOfType(typeof (PostProcessLayer));
     this.AddToggle("Shadows Enabled", (Action<TMP_Text>) (label => QualitySettings.shadows = QualitySettings.shadows == ShadowQuality.Disable ? ShadowQuality.All : ShadowQuality.Disable), (Action<TMP_Text>) (label => label.text = QualitySettings.shadows == ShadowQuality.Disable ? "O" : "I"));
     this.AddToggle("Depth Texture", (Action<TMP_Text>) (label => Camera.main.depthTextureMode = Camera.main.depthTextureMode == DepthTextureMode.None ? DepthTextureMode.Depth : DepthTextureMode.None), (Action<TMP_Text>) (label => label.text = Camera.main.depthTextureMode == DepthTextureMode.None ? "O" : "I"));
     this.AddToggle("Reduce CPU", (Action<TMP_Text>) (label =>
@@ -133,8 +133,8 @@ public class PerformanceTest : MonoBehaviour
     {
       GameObject gameObject3 = UnityEngine.Object.Instantiate<GameObject>(this.OptionTemplate, this.OptionTemplate.transform.parent);
       gameObject3.transform.SetAsLastSibling();
-      gameObject3.name = ((object) this.CurrentPostProcessVolume.profile.settings[index1]).GetType().ToString();
-      gameObject3.transform.GetChild(0).GetComponent<Text>().text = ((object) this.CurrentPostProcessVolume.profile.settings[index1]).GetType().ToString().Replace("UnityEngine.Rendering.PostProcessing.", "");
+      gameObject3.name = this.CurrentPostProcessVolume.profile.settings[index1].GetType().ToString();
+      gameObject3.transform.GetChild(0).GetComponent<Text>().text = this.CurrentPostProcessVolume.profile.settings[index1].GetType().ToString().Replace("UnityEngine.Rendering.PostProcessing.", "");
       Button componentInChildren3 = gameObject3.transform.GetComponentInChildren<Button>();
       int index2 = index1;
       this._uiNavigator.Buttons.Add(new Buttons()
@@ -142,7 +142,7 @@ public class PerformanceTest : MonoBehaviour
         Button = componentInChildren3.gameObject,
         Index = 3 + index1
       });
-      System.Type t = ((object) this.CurrentPostProcessVolume.profile.settings[index2]).GetType();
+      System.Type t = this.CurrentPostProcessVolume.profile.settings[index2].GetType();
       TMP_Text buttonlabel = componentInChildren3.transform.GetChild(0).GetComponent<TMP_Text>();
       buttonlabel.text = !this.CurrentPostProcessVolume.profile.settings[index1].active ? "O" : "I";
       Debug.Log((object) t.ToString());

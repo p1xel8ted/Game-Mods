@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DeviceLightingManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -172,7 +172,7 @@ public class DeviceLightingManager : MonoSingleton<DeviceLightingManager>
     CultFaithManager.OnPulse -= new System.Action(this.PulseLowFaithBar);
     BiomeGenerator.OnBiomeChangeRoom += new BiomeGenerator.BiomeAction(this.OnBiomeChangeRoom);
     this.UpdateHealth((HealthPlayer) null);
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(0.5f, (System.Action) (() => this.UpdateHealth((HealthPlayer) null))));
+    this.StartCoroutine(this.WaitForSeconds(0.5f, (System.Action) (() => this.UpdateHealth((HealthPlayer) null))));
   }
 
   public void SetBaseLayout()
@@ -181,7 +181,7 @@ public class DeviceLightingManager : MonoSingleton<DeviceLightingManager>
     this.currentEffectType = DeviceLightingManager.EffectType.None;
     this.OnNewPhaseStarted();
     this.UpdateFaith();
-    this.StartCoroutine((IEnumerator) this.UpdateXPBar());
+    this.StartCoroutine(this.UpdateXPBar());
     CultFaithManager.OnPulse += new System.Action(this.PulseLowFaithBar);
     BiomeGenerator.OnBiomeChangeRoom -= new BiomeGenerator.BiomeAction(this.OnBiomeChangeRoom);
   }
@@ -232,7 +232,7 @@ public class DeviceLightingManager : MonoSingleton<DeviceLightingManager>
     if ((double) this.previousHP < (double) Target.HP)
     {
       DeviceLightingManager.StopAll();
-      this.StartCoroutine((IEnumerator) this.WaitForEndOfFrame((System.Action) (() => DeviceLightingManager.UpdateLocation())));
+      this.StartCoroutine(this.WaitForEndOfFrame((System.Action) (() => DeviceLightingManager.UpdateLocation())));
     }
     this.previousHP = Target.HP;
   }
@@ -444,7 +444,7 @@ public class DeviceLightingManager : MonoSingleton<DeviceLightingManager>
   {
     if ((UnityEngine.Object) MonoSingleton<DeviceLightingManager>.Instance == (UnityEngine.Object) null)
       return;
-    MonoSingleton<DeviceLightingManager>.Instance.StartCoroutine((IEnumerator) MonoSingleton<DeviceLightingManager>.Instance.PulseAllLightingIE(previousColor, targetColor, transitionDuration, excludedKeys));
+    MonoSingleton<DeviceLightingManager>.Instance.StartCoroutine(MonoSingleton<DeviceLightingManager>.Instance.PulseAllLightingIE(previousColor, targetColor, transitionDuration, excludedKeys));
   }
 
   public IEnumerator PulseAllLightingIE(
@@ -571,7 +571,7 @@ public class DeviceLightingManager : MonoSingleton<DeviceLightingManager>
 
   public void UpdateVideo()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForEndOfFrame((System.Action) (() =>
+    this.StartCoroutine(this.WaitForEndOfFrame((System.Action) (() =>
     {
       Texture2D texture2D = new Texture2D(210, 70, TextureFormat.RGB24, false);
       RenderTexture.active = this.videoPlayer.isPlaying ? this.videoPlayer.targetTexture : RenderTexture.active;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: AreaBurnTick
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -32,6 +32,7 @@ public class AreaBurnTick : MonoBehaviour
   public ColliderEvents damageColliderEvents;
   public List<AreaBurnTick.IntervalHitEvent> burnedEnemies;
   public Health.AttackFlags attackFlags = Health.AttackFlags.Burn;
+  public Dictionary<Collider2D, Health> _healthCache = new Dictionary<Collider2D, Health>();
 
   public void Initialize()
   {
@@ -68,13 +69,13 @@ public class AreaBurnTick : MonoBehaviour
 
   public void TryAttackTarget(Collider2D collider)
   {
-    Health component = collider.GetComponent<Health>();
-    if ((UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null && (UnityEngine.Object) component == (UnityEngine.Object) this.ownerHealth && !this.areaAffectsOwner)
+    Health health = this.GetHealth(collider);
+    if ((UnityEngine.Object) health == (UnityEngine.Object) null || (UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null && (UnityEngine.Object) health == (UnityEngine.Object) this.ownerHealth && !this.areaAffectsOwner)
       return;
     Health.Team team = !((UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null) ? this.team : this.ownerHealth.team;
-    if (!((UnityEngine.Object) component != (UnityEngine.Object) null) || component.invincible || component.untouchable || (team != Health.Team.Team2 || !component.IsCharmedEnemy && component.team == Health.Team.Team2) && (team != Health.Team.PlayerTeam || component.team == Health.Team.PlayerTeam) && team != Health.Team.KillAll || component.IsBurned)
+    if (!((UnityEngine.Object) health != (UnityEngine.Object) null) || health.invincible || health.untouchable || (team != Health.Team.Team2 || !health.IsCharmedEnemy && health.team == Health.Team.Team2) && (team != Health.Team.PlayerTeam || health.team == Health.Team.PlayerTeam) && team != Health.Team.KillAll || health.IsBurned)
       return;
-    this.ProcessDamageTick(component);
+    this.ProcessDamageTick(health);
   }
 
   public void ProcessDamageTick(Health targetHealth)
@@ -107,22 +108,34 @@ public class AreaBurnTick : MonoBehaviour
     woodmanFlammableUnit.TrySetFire();
   }
 
+  public Health GetHealth(Collider2D col)
+  {
+    Health component;
+    if (!this._healthCache.TryGetValue(col, out component) || (UnityEngine.Object) component == (UnityEngine.Object) null)
+    {
+      component = col.GetComponent<Health>();
+      this._healthCache[col] = component;
+    }
+    return component;
+  }
+
   public void TryBurnTarget(Collider2D collider)
   {
-    Health component = collider.GetComponent<Health>();
-    if ((UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null && (UnityEngine.Object) component == (UnityEngine.Object) this.ownerHealth && !this.areaAffectsOwner)
+    Health health = this.GetHealth(collider);
+    if ((UnityEngine.Object) health == (UnityEngine.Object) null || (UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null && (UnityEngine.Object) health == (UnityEngine.Object) this.ownerHealth && !this.areaAffectsOwner)
       return;
     Health.Team team = !((UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null) ? this.team : this.ownerHealth.team;
-    if (!((UnityEngine.Object) component != (UnityEngine.Object) null) || component.invincible || component.untouchable || (team != Health.Team.Team2 || !component.IsCharmedEnemy && component.team == Health.Team.Team2) && (team != Health.Team.PlayerTeam || component.team == Health.Team.PlayerTeam) && team != Health.Team.KillAll || component.IsBurned || component.team == Health.Team.PlayerTeam && (UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null && (LetterBox.IsPlaying || PlayerFarming.Instance._state.CURRENT_STATE == StateMachine.State.CustomAnimation))
+    if (!((UnityEngine.Object) health != (UnityEngine.Object) null) || health.invincible || health.untouchable || (team != Health.Team.Team2 || !health.IsCharmedEnemy && health.team == Health.Team.Team2) && (team != Health.Team.PlayerTeam || health.team == Health.Team.PlayerTeam) && team != Health.Team.KillAll || health.IsBurned || health.team == Health.Team.PlayerTeam && (UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null && (LetterBox.IsPlaying || PlayerFarming.Instance._state.CURRENT_STATE == StateMachine.State.CustomAnimation))
       return;
     if ((UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null)
-      component.AddBurn(this.ownerHealth.gameObject, attackFlags: this.attackFlags);
+      health.AddBurn(this.ownerHealth.gameObject, attackFlags: this.attackFlags);
     else
-      component.AddBurn(this.gameObject, attackFlags: this.attackFlags);
+      health.AddBurn(this.gameObject, attackFlags: this.attackFlags);
   }
 
   public void RemoveBurn(Collider2D collider)
   {
+    this._healthCache.Remove(collider);
     Health.Team team = !((UnityEngine.Object) this.ownerHealth != (UnityEngine.Object) null) ? this.team : this.ownerHealth.team;
     Health component = collider.GetComponent<Health>();
     if (!((UnityEngine.Object) component != (UnityEngine.Object) null) || component.team == team)

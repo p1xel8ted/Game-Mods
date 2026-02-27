@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Demon_Shooty
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -72,7 +72,7 @@ public class Demon_Shooty : Demon
     this.SpineVZ = -1.5f;
     this.SpineVY = 0.5f;
     this.spine.transform.localPosition = new Vector3(0.0f, this.SpineVY, this.SpineVZ + 0.1f * Mathf.Cos(this.Bobbing += 5f * Time.deltaTime));
-    this.StartCoroutine((IEnumerator) this.SetSkin());
+    this.StartCoroutine(this.SetSkin());
   }
 
   public override IEnumerator SetSkin()
@@ -91,7 +91,7 @@ public class Demon_Shooty : Demon
   public override void Init(int followerID, int forcedLevel = -1)
   {
     base.Init(followerID, forcedLevel);
-    this.StartCoroutine((IEnumerator) this.SetSkin());
+    this.StartCoroutine(this.SetSkin());
     this.attackDelay = 3f;
     this.attackDelay -= 0.15f * (float) this.Level;
     this.bombCooldown = this.baseBombCooldown - this.bombCooldownReductionPerLevel * (float) this.Level;

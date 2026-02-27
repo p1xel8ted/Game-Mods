@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CheatConsole
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using CodeStage.AdvancedFPSCounter;
@@ -589,7 +589,7 @@ public class CheatConsole : BaseMonoBehaviour
     GameObject withTag = GameObject.FindWithTag("Player");
     if (!((UnityEngine.Object) withTag != (UnityEngine.Object) null))
       return;
-    withTag.GetComponent<Health>().DealDamage(1f, withTag, withTag.transform.position);
+    withTag.GetComponent<Health>().DealDamage(1f, withTag, withTag.transform.position, dealDamageImmediately: true);
   }
 
   public static void Damage5()
@@ -598,7 +598,7 @@ public class CheatConsole : BaseMonoBehaviour
     GameObject withTag = GameObject.FindWithTag("Player");
     if (!((UnityEngine.Object) withTag != (UnityEngine.Object) null))
       return;
-    withTag.GetComponent<Health>().DealDamage(5f, withTag, withTag.transform.position);
+    withTag.GetComponent<Health>().DealDamage(5f, withTag, withTag.transform.position, dealDamageImmediately: true);
   }
 
   public static void Die()
@@ -606,7 +606,7 @@ public class CheatConsole : BaseMonoBehaviour
     GameObject withTag = GameObject.FindWithTag("Player");
     if (!((UnityEngine.Object) withTag != (UnityEngine.Object) null))
       return;
-    withTag.GetComponent<Health>().DealDamage(9999f, withTag, withTag.transform.position);
+    withTag.GetComponent<Health>().DealDamage(9999f, withTag, withTag.transform.position, dealDamageImmediately: true);
   }
 
   public static void Die2()
@@ -617,7 +617,7 @@ public class CheatConsole : BaseMonoBehaviour
     GameObject withTag = GameObject.FindWithTag("Player");
     if (!((UnityEngine.Object) withTag != (UnityEngine.Object) null))
       return;
-    withTag.GetComponent<Health>().DealDamage(9999f, withTag, withTag.transform.position);
+    withTag.GetComponent<Health>().DealDamage(9999f, withTag, withTag.transform.position, dealDamageImmediately: true);
   }
 
   public static void Die3()
@@ -629,7 +629,7 @@ public class CheatConsole : BaseMonoBehaviour
     GameObject withTag = GameObject.FindWithTag("Player");
     if (!((UnityEngine.Object) withTag != (UnityEngine.Object) null))
       return;
-    withTag.GetComponent<Health>().DealDamage(9999f, withTag, withTag.transform.position);
+    withTag.GetComponent<Health>().DealDamage(9999f, withTag, withTag.transform.position, dealDamageImmediately: true);
   }
 
   public static void MoreHearts()
@@ -639,7 +639,7 @@ public class CheatConsole : BaseMonoBehaviour
     GameObject withTag = GameObject.FindWithTag("Player");
     if (!((UnityEngine.Object) withTag != (UnityEngine.Object) null))
       return;
-    withTag.GetComponent<Health>().DealDamage(0.0f, withTag, withTag.transform.position);
+    withTag.GetComponent<Health>().DealDamage(0.0f, withTag, withTag.transform.position, dealDamageImmediately: true);
   }
 
   public static void NextSandboxLayer()
@@ -647,7 +647,7 @@ public class CheatConsole : BaseMonoBehaviour
     DungeonSandboxManager.Instance.SetDungeonType(FollowerLocation.Dungeon1_4);
     MapManager.Instance.MapGenerated = false;
     UIAdventureMapOverlayController overlayController = MapManager.Instance.ShowMap(true);
-    MapManager.Instance.StartCoroutine((IEnumerator) overlayController.NextSandboxLayer());
+    MapManager.Instance.StartCoroutine(overlayController.NextSandboxLayer());
   }
 
   public static void BlueHearts()
@@ -950,7 +950,7 @@ public class CheatConsole : BaseMonoBehaviour
           followerSelectEntries.Add(new FollowerSelectEntry(follower.Brain._directInfoAccess, FollowerManager.GetFollowerAvailabilityStatus(follower.Brain, true)));
       }
       System.Threading.Tasks.Task task = MonoSingleton<UIManager>.Instance.LoadMatingMenuAssets();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) UIManager.LoadAssets(task, (System.Action) (() =>
+      GameManager.GetInstance().StartCoroutine(UIManager.LoadAssets(task, (System.Action) (() =>
       {
         UIMatingMenuController matingMenuController = MonoSingleton<UIManager>.Instance.MatingMenuControllerTemplate.Instantiate<UIMatingMenuController>();
         Interaction_MatingTent tent = Interaction_MatingTent.Instance;
@@ -1133,7 +1133,7 @@ public class CheatConsole : BaseMonoBehaviour
     CheatConsole.UnlockAllRituals = true;
     for (int index = 0; index < Enum.GetNames(typeof (UpgradeSystem.Type)).Length; ++index)
       UpgradeSystem.UnlockAbility((UpgradeSystem.Type) index);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) UpgradeSystem.ListOfUnlocksRoutine());
+    GameManager.GetInstance().StartCoroutine(UpgradeSystem.ListOfUnlocksRoutine());
   }
 
   public static void UnlockWeapons()
@@ -1155,7 +1155,7 @@ public class CheatConsole : BaseMonoBehaviour
     UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Curses_Barrier);
     UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Curses_Fire);
     UpgradeSystem.UnlockAbility(UpgradeSystem.Type.Curses_Teleport);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) UpgradeSystem.ListOfUnlocksRoutine());
+    GameManager.GetInstance().StartCoroutine(UpgradeSystem.ListOfUnlocksRoutine());
   }
 
   public static void RunTrinket(TarotCards.TarotCard card)
@@ -1439,7 +1439,7 @@ public class CheatConsole : BaseMonoBehaviour
       {
         health.invincible = false;
         health.enabled = true;
-        health.DealDamage(float.PositiveInfinity, health.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+        health.DealDamage(float.PositiveInfinity, health.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
       }
     }
   }
@@ -1502,7 +1502,7 @@ public class CheatConsole : BaseMonoBehaviour
     List<Follower> possibleQuestFollowers = new List<Follower>();
     foreach (Follower follower in Follower.Followers)
     {
-      if (FollowerBrain.CanFollowerGiveQuest(follower.Brain._directInfoAccess) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID) && !follower.Brain.Info.IsSnowman)
+      if (FollowerBrain.CanFollowerGiveQuest(follower.Brain._directInfoAccess) && !FollowerManager.UniqueFollowerIDs.Contains(follower.Brain.Info.ID) && !follower.Brain.Info.IsSnowman && follower.Brain.Info.CursedState != Thought.Child)
         possibleQuestFollowers.Add(follower);
     }
     return possibleQuestFollowers;

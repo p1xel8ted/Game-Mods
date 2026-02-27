@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MiniBossController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -128,7 +128,7 @@ public class MiniBossController : BaseMonoBehaviour
     else
       DataManager.Instance.LastRunResults = Lamb.UI.DeathScreen.UIDeathScreenOverlayController.Results.BeatenMiniBoss;
     SimulationManager.UnPause();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.KillEnemiesDelay());
+    GameManager.GetInstance().StartCoroutine(this.KillEnemiesDelay());
     int _cultLeader;
     switch (SceneManager.GetActiveScene().name)
     {
@@ -170,7 +170,7 @@ public class MiniBossController : BaseMonoBehaviour
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
         Health.team2[index].untouchable = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, miniBossController.gameObject, miniBossController.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, miniBossController.gameObject, miniBossController.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }
@@ -263,10 +263,7 @@ public class MiniBossController : BaseMonoBehaviour
 
   public void OnPlayerHit() => this.PlayerHit = true;
 
-  public void Play(bool skipped = false)
-  {
-    this.StartCoroutine((IEnumerator) this.IntroRoutine(skipped));
-  }
+  public void Play(bool skipped = false) => this.StartCoroutine(this.IntroRoutine(skipped));
 
   public virtual IEnumerator IntroRoutine(bool skipped = false)
   {
@@ -290,7 +287,7 @@ public class MiniBossController : BaseMonoBehaviour
         component.enabled = false;
     }
     GameManager.SetGlobalOcclusionActive(false);
-    yield return (object) miniBossController.StartCoroutine((IEnumerator) miniBossController.BossIntro.PlayRoutine(skipped));
+    yield return (object) miniBossController.StartCoroutine(miniBossController.BossIntro.PlayRoutine(skipped));
     GameManager.SetGlobalOcclusionActive(true);
     miniBossController.SetMusic();
     foreach (Behaviour behaviour in miniBossController.ComponentsToToggleEnabled)

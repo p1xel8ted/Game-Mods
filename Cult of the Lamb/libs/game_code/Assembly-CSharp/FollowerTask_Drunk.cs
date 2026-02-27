@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Drunk
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -194,7 +194,7 @@ public class FollowerTask_Drunk : FollowerTask
       Follower follower = followerList[UnityEngine.Random.Range(0, followerList.Count)];
       FollowerTask_Drunk.wokenFollowers.Add(follower);
       followerList.Remove(follower);
-      follower.StartCoroutine((IEnumerator) this.WakeUpFollowerAnnoyed(follower));
+      follower.StartCoroutine(this.WakeUpFollowerAnnoyed(follower));
     }
   }
 

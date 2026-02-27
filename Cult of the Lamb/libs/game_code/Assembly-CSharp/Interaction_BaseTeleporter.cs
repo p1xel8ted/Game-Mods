@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_BaseTeleporter
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -134,7 +134,7 @@ public class Interaction_BaseTeleporter : Interaction
     this.Activating = true;
     GameManager.GetInstance().OnConversationNew(false);
     GameManager.GetInstance().OnConversationNext(this.gameObject, 8f);
-    this.playerFarming.GoToAndStop(this.transform.position, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.TeleportOut())));
+    this.playerFarming.GoToAndStop(this.transform.position, GoToCallback: (System.Action) (() => this.StartCoroutine(this.TeleportOut())));
   }
 
   public override void Update()
@@ -175,7 +175,7 @@ public class Interaction_BaseTeleporter : Interaction
       interactionBaseTeleporter.BlackWhiteOverlay.SetActive(false);
   }
 
-  public void TeleportIn() => this.StartCoroutine((IEnumerator) this.DoTeleportRoutine());
+  public void TeleportIn() => this.StartCoroutine(this.DoTeleportRoutine());
 
   public IEnumerator DoTeleportRoutine()
   {
@@ -193,9 +193,9 @@ public class Interaction_BaseTeleporter : Interaction
     for (int i = PlayerFarming.players.Count - 1; i >= 0; --i)
     {
       if (i == 0)
-        yield return (object) interactionBaseTeleporter.StartCoroutine((IEnumerator) interactionBaseTeleporter.SpawnPlayerIE(PlayerFarming.players[i], PlayerFarming.players.Count > 1 ? Vector3.left / 2f : Vector3.zero));
+        yield return (object) interactionBaseTeleporter.StartCoroutine(interactionBaseTeleporter.SpawnPlayerIE(PlayerFarming.players[i], PlayerFarming.players.Count > 1 ? Vector3.left / 2f : Vector3.zero));
       else
-        interactionBaseTeleporter.StartCoroutine((IEnumerator) interactionBaseTeleporter.SpawnPlayerIE(PlayerFarming.players[i], Vector3.right / 2f));
+        interactionBaseTeleporter.StartCoroutine(interactionBaseTeleporter.SpawnPlayerIE(PlayerFarming.players[i], Vector3.right / 2f));
     }
     if (!CheatConsole.IN_DEMO && Onboarding.CurrentPhase != DataManager.OnboardingPhase.Done && !DataManager.Instance.DifficultyChosen)
     {
@@ -336,7 +336,7 @@ public class Interaction_BaseTeleporter : Interaction
 
   public override void OnDrawGizmos() => base.OnDrawGizmos();
 
-  public void ActivateRoutine() => this.StartCoroutine((IEnumerator) this.ActivateIE());
+  public void ActivateRoutine() => this.StartCoroutine(this.ActivateIE());
 
   public IEnumerator ActivateIE()
   {
@@ -357,7 +357,7 @@ public class Interaction_BaseTeleporter : Interaction
     GameManager.GetInstance().OnConversationEnd();
   }
 
-  public void WakeUpInBase() => this.StartCoroutine((IEnumerator) this.WakeUpInBaseRoutine());
+  public void WakeUpInBase() => this.StartCoroutine(this.WakeUpInBaseRoutine());
 
   public IEnumerator WakeUpInBaseRoutine()
   {
@@ -390,8 +390,5 @@ public class Interaction_BaseTeleporter : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__25_0()
-  {
-    this.StartCoroutine((IEnumerator) this.TeleportOut());
-  }
+  public void \u003COnInteract\u003Eb__25_0() => this.StartCoroutine(this.TeleportOut());
 }

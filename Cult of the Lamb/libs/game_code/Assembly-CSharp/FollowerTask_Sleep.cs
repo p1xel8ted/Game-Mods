@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Sleep
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -522,7 +522,7 @@ public class FollowerTask_Sleep : FollowerTask
         }
       }
     }
-    follower.StartCoroutine((IEnumerator) this.RandomDelay(follower));
+    follower.StartCoroutine(this.RandomDelay(follower));
     follower.InsomniacIcon.gameObject.SetActive(false);
     follower.HibernationIcon.gameObject.SetActive(false);
     follower.AestivationIcon.gameObject.SetActive(false);
@@ -611,7 +611,7 @@ public class FollowerTask_Sleep : FollowerTask
     if (!this.playedNotification)
       NotificationCentre.Instance.PlayGenericNotificationLocalizedParams("Notifications/SnorerWokeFollowers", this._brain.Info.Name);
     this.playedNotification = true;
-    follower1.StartCoroutine((IEnumerator) this.WakeUpFollowerAnnoyed(follower1));
+    follower1.StartCoroutine(this.WakeUpFollowerAnnoyed(follower1));
   }
 
   public IEnumerator WakeUpFollowerAnnoyed(Follower follower)

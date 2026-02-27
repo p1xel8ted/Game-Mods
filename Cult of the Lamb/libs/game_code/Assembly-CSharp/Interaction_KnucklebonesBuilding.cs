@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_KnucklebonesBuilding
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -85,7 +85,7 @@ public class Interaction_KnucklebonesBuilding : Interaction
       Follower followerById = FollowerManager.FindFollowerByID(info.ID);
       if (TimeManager.IsNight && followerById.Brain.CurrentTask != null && followerById.Brain.CurrentTask.State == FollowerTaskState.Doing && (followerById.Brain.CurrentTaskType == FollowerTaskType.Sleep || followerById.Brain.CurrentTaskType == FollowerTaskType.SleepBedRest))
         CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, followerById.Brain.Info.ID);
-      this.StartCoroutine((IEnumerator) this.PlayMatchIE(followerById));
+      this.StartCoroutine(this.PlayMatchIE(followerById));
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectMenu;
     selectMenuController2.OnHidden = selectMenuController2.OnHidden + (System.Action) (() =>
@@ -126,7 +126,7 @@ public class Interaction_KnucklebonesBuilding : Interaction
     base.OnSecondaryInteract(state);
     this.StopFollowersPlaying();
     int num = state.GetComponent<PlayerFarming>().isLamb ? 1 : 0;
-    this.StartCoroutine((IEnumerator) this.PlayMatchCoop());
+    this.StartCoroutine(this.PlayMatchCoop());
   }
 
   public override void OnThirdInteract(StateMachine state)
@@ -134,7 +134,7 @@ public class Interaction_KnucklebonesBuilding : Interaction
     base.OnThirdInteract(state);
     this.StopFollowersPlaying();
     int num = state.GetComponent<PlayerFarming>().isLamb ? 1 : 0;
-    this.StartCoroutine((IEnumerator) this.PlayMatchTwitch());
+    this.StartCoroutine(this.PlayMatchTwitch());
   }
 
   public void GameQuit()

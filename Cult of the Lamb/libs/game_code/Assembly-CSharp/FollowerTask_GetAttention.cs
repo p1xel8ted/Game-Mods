@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_GetAttention
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -89,7 +89,7 @@ public class FollowerTask_GetAttention : FollowerTask
   {
     base.Setup(follower);
     follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, this.GetMovingAnimation());
-    this._dissentBubbleCoroutine = follower.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(follower));
+    this._dissentBubbleCoroutine = follower.StartCoroutine(this.DissentBubbleRoutine(follower));
     this.startTimeStamp = TimeManager.TotalElapsedGameTime + 240f;
     this._follower = follower;
     if (!Interaction_Daycare.IsInDaycare(follower.Brain.Info.ID))
@@ -151,7 +151,7 @@ public class FollowerTask_GetAttention : FollowerTask
         }
       }
       if (this._dissentBubbleCoroutine == null && (bool) (UnityEngine.Object) this._follower && this.showSpeechBubble)
-        this._dissentBubbleCoroutine = this._follower.WorshipperBubble.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(this._follower));
+        this._dissentBubbleCoroutine = this._follower.WorshipperBubble.StartCoroutine(this.DissentBubbleRoutine(this._follower));
       if (this._state == FollowerTaskState.Doing || (double) (this._giveUpTimer += deltaGameTime) < 60.0 || !this.CanGiveUp)
         return;
       this.EndInAnger();

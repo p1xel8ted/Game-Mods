@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FishermanRatoo
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -166,7 +166,7 @@ public class Interaction_FishermanRatoo : Interaction
     this.CompleteObjective();
     ++this.Progress;
     this.Start();
-    this.StartCoroutine((IEnumerator) this.CaughtFishGiveTarot());
+    this.StartCoroutine(this.CaughtFishGiveTarot());
   }
 
   public IEnumerator CaughtFishGiveTarot()
@@ -279,7 +279,7 @@ public class Interaction_FishermanRatoo : Interaction
     itemSelector.OnItemChosen += (System.Action<InventoryItem.ITEM_TYPE>) (chosenItem =>
     {
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.GiveItem(chosenItem));
+      this.StartCoroutine(this.GiveItem(chosenItem));
     });
     UIItemSelectorOverlayController overlayController1 = itemSelector;
     overlayController1.OnCancel = overlayController1.OnCancel + (System.Action) (() => HUD_Manager.Instance.Show(0));
@@ -318,7 +318,7 @@ public class Interaction_FishermanRatoo : Interaction
     interactionFishermanRatoo.GetConversation(toGive);
     while (interactionFishermanRatoo.Waiting)
       yield return (object) null;
-    yield return (object) interactionFishermanRatoo.StartCoroutine((IEnumerator) interactionFishermanRatoo.GiveKeyPieceRoutine());
+    yield return (object) interactionFishermanRatoo.StartCoroutine(interactionFishermanRatoo.GiveKeyPieceRoutine());
     while ((UnityEngine.Object) Interaction_KeyPiece.Instance != (UnityEngine.Object) null)
       yield return (object) null;
     Inventory.ChangeItemQuantity((int) toGive, -1);
@@ -398,7 +398,7 @@ public class Interaction_FishermanRatoo : Interaction
   public void \u003CCaughtFishGiveTarot\u003Eb__27_0()
   {
     GameManager.GetInstance().OnConversationEnd();
-    this.StartCoroutine((IEnumerator) this.IGiveAllFishObjects());
+    this.StartCoroutine(this.IGiveAllFishObjects());
   }
 
   [CompilerGenerated]

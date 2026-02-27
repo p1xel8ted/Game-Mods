@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyHopperAOE
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -146,7 +146,7 @@ public class EnemyHopperAOE : EnemyHopper
     return base.ShouldStartCharging() && this.state.CURRENT_STATE != StateMachine.State.Aiming;
   }
 
-  public void Shoot() => this.StartCoroutine((IEnumerator) this.ShootIE());
+  public void Shoot() => this.StartCoroutine(this.ShootIE());
 
   public IEnumerator ShootIE()
   {
@@ -201,7 +201,7 @@ public class EnemyHopperAOE : EnemyHopper
     }
   }
 
-  public void RageHop() => this.StartCoroutine((IEnumerator) this.RageHopIE());
+  public void RageHop() => this.StartCoroutine(this.RageHopIE());
 
   public IEnumerator RageHopIE()
   {

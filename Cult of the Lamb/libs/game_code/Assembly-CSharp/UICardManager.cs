@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UICardManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -29,7 +29,7 @@ public class UICardManager : BaseMonoBehaviour
   public void Start()
   {
     this.SoulsCount.text = "<sprite name=\"icon_spirits\"> " + Inventory.Souls.ToString();
-    this.StartCoroutine((IEnumerator) this.Begin());
+    this.StartCoroutine(this.Begin());
     this.SpawnTrinketsCards();
     this.DisplayFeature.gameObject.SetActive(false);
     GameManager.GetInstance().CameraSetOffset(new Vector3(-3f, 0.0f, 0.0f));
@@ -87,7 +87,7 @@ public class UICardManager : BaseMonoBehaviour
     this.UpdateCard(CurrentButton as UICardManager.ButtonsUICardManager);
     if ((double) (CurrentButton as UICardManager.ButtonsUICardManager).Card.UnlockProgress < 1.0)
       return;
-    this.StartCoroutine((IEnumerator) this.UnlockCard(CurrentButton as UICardManager.ButtonsUICardManager, this.WeaponsUINavigator));
+    this.StartCoroutine(this.UnlockCard(CurrentButton as UICardManager.ButtonsUICardManager, this.WeaponsUINavigator));
   }
 
   public void OnCardCompleteCurses(Buttons CurrentButton)
@@ -96,7 +96,7 @@ public class UICardManager : BaseMonoBehaviour
     this.UpdateCard(CurrentButton as UICardManager.ButtonsUICardManager);
     if ((double) (CurrentButton as UICardManager.ButtonsUICardManager).Card.UnlockProgress < 1.0)
       return;
-    this.StartCoroutine((IEnumerator) this.UnlockCard(CurrentButton as UICardManager.ButtonsUICardManager, this.CursesUINavigator));
+    this.StartCoroutine(this.UnlockCard(CurrentButton as UICardManager.ButtonsUICardManager, this.CursesUINavigator));
   }
 
   public void OnCardCompleteTrinkets(Buttons CurrentButton)
@@ -105,7 +105,7 @@ public class UICardManager : BaseMonoBehaviour
     this.UpdateCard(CurrentButton as UICardManager.ButtonsUICardManager);
     if ((double) (CurrentButton as UICardManager.ButtonsUICardManager).Card.UnlockProgress < 1.0)
       return;
-    this.StartCoroutine((IEnumerator) this.UnlockCard(CurrentButton as UICardManager.ButtonsUICardManager, this.TrinketsUINavigator));
+    this.StartCoroutine(this.UnlockCard(CurrentButton as UICardManager.ButtonsUICardManager, this.TrinketsUINavigator));
   }
 
   public void SpawnWeaponCards()

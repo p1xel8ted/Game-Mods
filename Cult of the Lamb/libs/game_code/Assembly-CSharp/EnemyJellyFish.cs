@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJellyFish
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -43,7 +43,7 @@ public class EnemyJellyFish : UnitObject
     this.RanDirection = (double) Random.value < 0.5 ? -1 : 1;
     this.damageColliderEvents.SetActive(false);
     this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDisable()
@@ -93,7 +93,7 @@ public class EnemyJellyFish : UnitObject
     if (DestroyOnComplete)
       Object.Destroy((Object) enemyJellyFish.gameObject);
     else
-      enemyJellyFish.StartCoroutine((IEnumerator) enemyJellyFish.ActiveRoutine());
+      enemyJellyFish.StartCoroutine(enemyJellyFish.ActiveRoutine());
   }
 
   public override void OnHit(
@@ -106,7 +106,7 @@ public class EnemyJellyFish : UnitObject
     if (AttackType != Health.AttackTypes.NoKnockBack)
       this.DoKnockBack(Attacker, this.KnockbackModifier, 0.5f);
     this.AttackCoolDown = Mathf.Min(this.AttackCoolDown, 0.5f);
-    this.StartCoroutine((IEnumerator) this.HurtRoutine());
+    this.StartCoroutine(this.HurtRoutine());
     this.SimpleSpineFlash.FlashWhite(false);
     this.SimpleSpineFlash.FlashFillRed();
   }
@@ -122,7 +122,7 @@ public class EnemyJellyFish : UnitObject
     this.StopAllCoroutines();
     if (AttackType != Health.AttackTypes.NoKnockBack)
       this.DoKnockBack(Attacker, this.KnockbackModifier, 0.5f);
-    this.StartCoroutine((IEnumerator) this.AttackRoutine(true));
+    this.StartCoroutine(this.AttackRoutine(true));
   }
 
   public IEnumerator HurtRoutine()

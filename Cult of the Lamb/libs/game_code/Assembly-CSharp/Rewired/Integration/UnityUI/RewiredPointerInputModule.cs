@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Integration.UnityUI.RewiredPointerInputModule
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired.UI;
@@ -419,7 +419,7 @@ public abstract class RewiredPointerInputModule : BaseInputModule
 
   public override string ToString()
   {
-    StringBuilder stringBuilder = new StringBuilder("<b>Pointer Input Module of type: </b>" + ((object) this).GetType()?.ToString());
+    StringBuilder stringBuilder = new StringBuilder("<b>Pointer Input Module of type: </b>" + this.GetType()?.ToString());
     stringBuilder.AppendLine();
     foreach (KeyValuePair<int, Dictionary<int, PlayerPointerEventData>[]> keyValuePair1 in this.m_PlayerPointerData)
     {

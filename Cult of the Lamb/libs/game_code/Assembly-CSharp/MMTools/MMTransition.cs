@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMTools.MMTransition
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -167,7 +167,7 @@ public class MMTransition : MonoBehaviour
       return;
     if (MMTransition.mmTransition.currentTransition != null)
     {
-      MMTransition.mmTransition.StopCoroutine((IEnumerator) MMTransition.mmTransition.currentTransition);
+      MMTransition.mmTransition.StopCoroutine(MMTransition.mmTransition.currentTransition);
       SimulationManager.UnPause();
       MMTransition.IsPlaying = false;
     }
@@ -230,7 +230,7 @@ public class MMTransition : MonoBehaviour
       Debug.Log((object) "A".Colour(Color.green));
       if (this.currentTransition == null)
         return;
-      this.StartCoroutine((IEnumerator) this.currentTransition);
+      this.StartCoroutine(this.currentTransition);
     }
   }
 
@@ -239,7 +239,7 @@ public class MMTransition : MonoBehaviour
     MMTransition mmTransition = this;
     if (MMTransition.ForceShowIcon)
       mmTransition.loadingIcon.gameObject.SetActive(true);
-    yield return (object) mmTransition.StartCoroutine((IEnumerator) mmTransition.FadeInRoutine());
+    yield return (object) mmTransition.StartCoroutine(mmTransition.FadeInRoutine());
     Time.timeScale = 0.0f;
     yield return (object) new WaitForSecondsRealtime(0.1f);
     System.Action callBack = mmTransition.CallBack;
@@ -247,7 +247,7 @@ public class MMTransition : MonoBehaviour
       callBack();
     yield return (object) new WaitForSecondsRealtime(0.1f);
     if (mmTransition.SceneToLoad != MMTransition.NO_SCENE)
-      yield return (object) mmTransition.StartCoroutine((IEnumerator) mmTransition.LoadScene());
+      yield return (object) mmTransition.StartCoroutine(mmTransition.LoadScene());
     if (mmTransition.SceneToLoad == "MAIN MENU")
       Debug.Log((object) "MAIN MENU LOADED");
     MMTransition.ResumePlay();
@@ -266,7 +266,7 @@ public class MMTransition : MonoBehaviour
     }
     else
       Debug.Log((object) "Current Playerfarming No player faming instance to destroy");
-    yield return (object) mmTransition.StartCoroutine((IEnumerator) mmTransition.FadeInRoutine());
+    yield return (object) mmTransition.StartCoroutine(mmTransition.FadeInRoutine());
     yield return (object) new WaitForSecondsRealtime(0.1f);
     mmTransition.loadingIcon.gameObject.SetActive(true);
     mmTransition.pentagramImage.enabled = true;
@@ -285,13 +285,13 @@ public class MMTransition : MonoBehaviour
       callBack();
     yield return (object) new WaitForSecondsRealtime(0.1f);
     if (mmTransition.SceneToLoad != MMTransition.NO_SCENE)
-      yield return (object) mmTransition.StartCoroutine((IEnumerator) mmTransition.LoadScene());
+      yield return (object) mmTransition.StartCoroutine(mmTransition.LoadScene());
   }
 
   public IEnumerator ChangeRoomRoutine()
   {
     MMTransition mmTransition = this;
-    mmTransition.StartCoroutine((IEnumerator) mmTransition.FadeInRoutine());
+    mmTransition.StartCoroutine(mmTransition.FadeInRoutine());
     yield return (object) new WaitForSecondsRealtime(0.3f * mmTransition.Duration);
     Time.timeScale = 0.0f;
     yield return (object) new WaitForSecondsRealtime(0.4f * mmTransition.Duration);
@@ -310,16 +310,17 @@ public class MMTransition : MonoBehaviour
 
   public IEnumerator LoadAndFadeOutRoutine()
   {
-    if (this.SceneToLoad != MMTransition.NO_SCENE)
+    MMTransition mmTransition = this;
+    if (mmTransition.SceneToLoad != MMTransition.NO_SCENE)
     {
-      this.loadingIcon.gameObject.SetActive(true);
-      this.pentagramImage.enabled = true;
-      this.pentagramImage.color = new Color(1f, 1f, 1f, 0.0f);
-      DOTweenModuleUI.DOFade(this.pentagramImage, 1f, 0.5f).SetUpdate<TweenerCore<Color, Color, ColorOptions>>(true);
-      this.pentagramImage.sprite = this.pentagramImages[UnityEngine.Random.Range(0, this.pentagramImages.Count)];
-      this.pentagramImage.transform.localScale = Vector3.one;
-      yield return (object) this.LoadScene();
-      yield return (object) this.FadeOutRoutine();
+      mmTransition.loadingIcon.gameObject.SetActive(true);
+      mmTransition.pentagramImage.enabled = true;
+      mmTransition.pentagramImage.color = new Color(1f, 1f, 1f, 0.0f);
+      DOTweenModuleUI.DOFade(mmTransition.pentagramImage, 1f, 0.5f).SetUpdate<TweenerCore<Color, Color, ColorOptions>>(true);
+      mmTransition.pentagramImage.sprite = mmTransition.pentagramImages[UnityEngine.Random.Range(0, mmTransition.pentagramImages.Count)];
+      mmTransition.pentagramImage.transform.localScale = Vector3.one;
+      yield return (object) mmTransition.LoadScene();
+      yield return (object) (MMTransition.mmTransition.cFadeOut = mmTransition.StartCoroutine(mmTransition.FadeOutRoutine()));
     }
   }
 
@@ -387,7 +388,7 @@ public class MMTransition : MonoBehaviour
     if ((UnityEngine.Object) MonoSingleton<UIManager>.Instance != (UnityEngine.Object) null)
       MonoSingleton<UIManager>.Instance.UnloadFlockadePiecesAssets();
     yield return (object) null;
-    yield return (object) mmTransition.StartCoroutine((IEnumerator) ObjectPool.PoolReset());
+    yield return (object) mmTransition.StartCoroutine(ObjectPool.PoolReset());
     yield return (object) null;
     yield return (object) UnityEngine.Resources.UnloadUnusedAssets();
     yield return (object) null;
@@ -462,7 +463,7 @@ public class MMTransition : MonoBehaviour
     if (!MMTransition.IsPlaying || !MMTransition.CanResume)
       return;
     if (MMTransition.mmTransition.cFadeOut == null)
-      MMTransition.mmTransition.cFadeOut = MMTransition.mmTransition.StartCoroutine((IEnumerator) MMTransition.mmTransition.FadeOutRoutine(andThen, resumeSimulation, resumeTimeScale));
+      MMTransition.mmTransition.cFadeOut = MMTransition.mmTransition.StartCoroutine(MMTransition.mmTransition.FadeOutRoutine(andThen, resumeSimulation, resumeTimeScale));
     CoopManager.HandleSignOutDuringTransistions();
   }
 
@@ -471,7 +472,7 @@ public class MMTransition : MonoBehaviour
     if ((UnityEngine.Object) MMTransition.Instance != (UnityEngine.Object) null)
     {
       MMTransition.Instance.gameObject.SetActive(true);
-      this.StartCoroutine((IEnumerator) this.FadeInRoutine());
+      this.StartCoroutine(this.FadeInRoutine());
     }
     return this.Duration;
   }

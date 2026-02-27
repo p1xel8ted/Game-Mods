@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_MysticShop
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -252,7 +252,7 @@ public class Interaction_MysticShop : Interaction
       if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.GOD_TEAR) >= this.GodTearCost)
       {
         ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.MysticShopReturn);
-        this.StartCoroutine((IEnumerator) this.DoRewardSequence());
+        this.StartCoroutine(this.DoRewardSequence());
       }
       else
       {
@@ -274,7 +274,7 @@ public class Interaction_MysticShop : Interaction
 
   public void NameMysticKeeper()
   {
-    this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadMysticSellerNameMenuAssets(), (System.Action) (() =>
+    this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadMysticSellerNameMenuAssets(), (System.Action) (() =>
     {
       ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.MysticShopReturn);
       UIMysticSellerNameMenuController mysticSellerNameMenu = MonoSingleton<UIManager>.Instance.MysticSellerNameMenuTemplate.Instantiate<UIMysticSellerNameMenuController>();
@@ -493,7 +493,7 @@ public class Interaction_MysticShop : Interaction
       itemTypeList1.Remove(InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE);
     }
     InventoryItem.ITEM_TYPE chosenReward = InventoryItem.ITEM_TYPE.NONE;
-    this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadMysticShopAssets(), (System.Action) (() =>
+    this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadMysticShopAssets(), (System.Action) (() =>
     {
       UIMysticShopOverlayController overlayController = MonoSingleton<UIManager>.Instance.MysticShopOverlayTemplate.Instantiate<UIMysticShopOverlayController>();
       overlayController.Show(rewards);
@@ -501,7 +501,7 @@ public class Interaction_MysticShop : Interaction
       overlayController.OnHidden = overlayController.OnHidden + (System.Action) (() =>
       {
         DataManager.Instance.PreviousMysticShopItem = chosenReward;
-        this.StartCoroutine((IEnumerator) this.GiveChosenReward(chosenReward));
+        this.StartCoroutine(this.GiveChosenReward(chosenReward));
         this.LUTOverlay.gameObject.SetActive(false);
       });
     })));
@@ -730,7 +730,7 @@ public class Interaction_MysticShop : Interaction
     if (!((UnityEngine.Object) collision.GetComponent<PlayerFarming>() != (UnityEngine.Object) null))
       return;
     PlayerFarming.SetMainPlayer(collision);
-    this.StartCoroutine((IEnumerator) this.AngrySequenceIE(collision.GetComponent<PlayerFarming>()));
+    this.StartCoroutine(this.AngrySequenceIE(collision.GetComponent<PlayerFarming>()));
   }
 
   public void TestFinalReward()
@@ -744,10 +744,7 @@ public class Interaction_MysticShop : Interaction
     this.beatenAllA.Play();
   }
 
-  public void GiveDeathCatReward()
-  {
-    this.StartCoroutine((IEnumerator) this.GiveDeathCatRewardIE());
-  }
+  public void GiveDeathCatReward() => this.StartCoroutine(this.GiveDeathCatRewardIE());
 
   public IEnumerator GiveDeathCatRewardIE()
   {
@@ -895,7 +892,7 @@ public class Interaction_MysticShop : Interaction
   {
     Debug.Log((object) "CheckConversation()".Colour(Color.yellow));
     if (!DataManager.Instance.MysticKeeperBeatenAll && DataManager.Instance.BeatenLeshyLayer2 && DataManager.Instance.BeatenHeketLayer2 && DataManager.Instance.BeatenKallamarLayer2 && DataManager.Instance.BeatenShamuraLayer2)
-      this.StartCoroutine((IEnumerator) this.WaitForConvoToFinish());
+      this.StartCoroutine(this.WaitForConvoToFinish());
     else
       this.StopMusic();
   }

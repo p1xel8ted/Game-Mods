@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIDLCUpgradeTreeMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -71,7 +71,7 @@ public class UIDLCUpgradeTreeMenuController : UIUpgradeTreeMenuController
     }
     if (!this._animateSnow)
       return;
-    this.StartCoroutine((IEnumerator) this.DoIncrementSnowAnimation());
+    this.StartCoroutine(this.DoIncrementSnowAnimation());
   }
 
   public override void Update()
@@ -198,7 +198,7 @@ public class UIDLCUpgradeTreeMenuController : UIUpgradeTreeMenuController
     foreach (UpgradeTreeNode upgradeTreeNode in changedNodes)
     {
       upgradeTreeNode.ShowNode(hideOnComplete);
-      treeMenuController.StartCoroutine((IEnumerator) upgradeTreeNode.DoUpdateStateAnimation());
+      treeMenuController.StartCoroutine(upgradeTreeNode.DoUpdateStateAnimation());
       yield return (object) new WaitForSecondsRealtime(0.1f);
     }
     foreach (NodeConnectionLine nodeConnection in treeMenuController._nodeConnections)
@@ -212,7 +212,7 @@ public class UIDLCUpgradeTreeMenuController : UIUpgradeTreeMenuController
     DOTween.To((DOGetter<float>) (() => t), (DOSetter<float>) (x => t = x), 1f, 4f).OnUpdate<TweenerCore<float, float, FloatOptions>>((TweenCallback) (() => Shader.SetGlobalFloat("_DLCTreeReveal", Mathf.Lerp(1f, currentTreeReveal, t)))).SetUpdate<TweenerCore<float, float, FloatOptions>>(true);
     yield return (object) new WaitForSecondsRealtime(4f);
     if (treeMenuController.revealType == UpgradeSystem.Type.WinterSystem || treeMenuController.revealType == UpgradeSystem.Type.RanchingSystem)
-      treeMenuController.StartCoroutine((IEnumerator) treeMenuController.DoIncrementSnowAnimation(true));
+      treeMenuController.StartCoroutine(treeMenuController.DoIncrementSnowAnimation(true));
     else
       treeMenuController.Hide();
   }

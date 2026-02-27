@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ArrowLightning
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Ara;
@@ -87,7 +87,7 @@ public class ArrowLightning : MonoBehaviour
           BiomeConstants.Instance.EmitGroundSmashVFXParticles(arrow.transform.position, 3f);
           Explosion.CreateExplosion(arrow.transform.position, Health.Team.PlayerTeam, owner, 2f, Team2Damage: damage);
           if ((UnityEngine.Object) arrow.trail != (UnityEngine.Object) null)
-            arrow.StartCoroutine((IEnumerator) ArrowLightning.\u003CCreateProjectiles\u003Eg__Delay\u007C8_2(1f, (System.Action) (() =>
+            arrow.StartCoroutine(ArrowLightning.\u003CCreateProjectiles\u003Eg__Delay\u007C8_2(1f, (System.Action) (() =>
             {
               if (!((UnityEngine.Object) arrow != (UnityEngine.Object) null))
                 return;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyMillipedeSplitterMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -96,7 +96,7 @@ public class EnemyMillipedeSplitterMiniboss : EnemyMillipedeSpiker
     float num = this.shootTimestamp / this.Spine.timeScale;
     if (!((double) currentTime.GetValueOrDefault() > (double) num & currentTime.HasValue) || this.attacking)
       return;
-    this.StartCoroutine((IEnumerator) this.ShootProjectiles());
+    this.StartCoroutine(this.ShootProjectiles());
   }
 
   public override void OnHit(
@@ -123,7 +123,7 @@ public class EnemyMillipedeSplitterMiniboss : EnemyMillipedeSpiker
     this.flashes.RemoveAt(this.flashes.Count - 1);
     bodyPart.DroppedPart();
     this.spines.Remove(bodyPart.GetComponent<SkeletonAnimation>());
-    this.StartCoroutine((IEnumerator) this.ThrowBodyPart(bodyPart));
+    this.StartCoroutine(this.ThrowBodyPart(bodyPart));
   }
 
   public IEnumerator ThrowBodyPart(MillipedeBodyPart bodyPart)

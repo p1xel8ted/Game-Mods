@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBatBurpSwarm
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -99,7 +99,7 @@ public class EnemyBatBurpSwarm : UnitObject
     return (double) currentTime.GetValueOrDefault() > (double) attackTimestamp & currentTime.HasValue;
   }
 
-  public void SingleBeam() => this.StartCoroutine((IEnumerator) this.SingleBeamIE());
+  public void SingleBeam() => this.StartCoroutine(this.SingleBeamIE());
 
   public IEnumerator SingleBeamIE()
   {
@@ -112,7 +112,7 @@ public class EnemyBatBurpSwarm : UnitObject
     yield return (object) new WaitForSeconds(enemyBatBurpSwarm.anticipation);
     for (int i = 0; i < enemyBatBurpSwarm.beamAmount; ++i)
     {
-      enemyBatBurpSwarm.StartCoroutine((IEnumerator) enemyBatBurpSwarm.SpawnProjectile(enemyBatBurpSwarm.transform.position + (Vector3) (UnityEngine.Random.insideUnitCircle * enemyBatBurpSwarm.radius), Utils.GetAngle(enemyBatBurpSwarm.transform.position, enemyBatBurpSwarm.targetPlayerFarming.transform.position), UnityEngine.Random.Range(enemyBatBurpSwarm.beamSetTargetTime.x, enemyBatBurpSwarm.beamSetTargetTime.y)));
+      enemyBatBurpSwarm.StartCoroutine(enemyBatBurpSwarm.SpawnProjectile(enemyBatBurpSwarm.transform.position + (Vector3) (UnityEngine.Random.insideUnitCircle * enemyBatBurpSwarm.radius), Utils.GetAngle(enemyBatBurpSwarm.transform.position, enemyBatBurpSwarm.targetPlayerFarming.transform.position), UnityEngine.Random.Range(enemyBatBurpSwarm.beamSetTargetTime.x, enemyBatBurpSwarm.beamSetTargetTime.y)));
       if ((double) enemyBatBurpSwarm.beamTimeBetween != 0.0)
         yield return (object) new WaitForSeconds(enemyBatBurpSwarm.beamTimeBetween);
     }
@@ -120,7 +120,7 @@ public class EnemyBatBurpSwarm : UnitObject
     enemyBatBurpSwarm.attackTimestamp = GameManager.GetInstance().CurrentTime + UnityEngine.Random.Range(enemyBatBurpSwarm.attackCoolDownDuration.x, enemyBatBurpSwarm.attackCoolDownDuration.y);
   }
 
-  public void Circle() => this.StartCoroutine((IEnumerator) this.CircleIE());
+  public void Circle() => this.StartCoroutine(this.CircleIE());
 
   public IEnumerator CircleIE()
   {
@@ -137,7 +137,7 @@ public class EnemyBatBurpSwarm : UnitObject
     float initAngle = UnityEngine.Random.Range(0.0f, 360f);
     for (int i = 0; i < shootAngles.Count; ++i)
     {
-      enemyBatBurpSwarm.StartCoroutine((IEnumerator) enemyBatBurpSwarm.SpawnProjectile(enemyBatBurpSwarm.transform.position + (Vector3) (UnityEngine.Random.insideUnitCircle * enemyBatBurpSwarm.radius), initAngle + shootAngles[i], UnityEngine.Random.Range(enemyBatBurpSwarm.circleSetTargetTime.x, enemyBatBurpSwarm.circleSetTargetTime.y)));
+      enemyBatBurpSwarm.StartCoroutine(enemyBatBurpSwarm.SpawnProjectile(enemyBatBurpSwarm.transform.position + (Vector3) (UnityEngine.Random.insideUnitCircle * enemyBatBurpSwarm.radius), initAngle + shootAngles[i], UnityEngine.Random.Range(enemyBatBurpSwarm.circleSetTargetTime.x, enemyBatBurpSwarm.circleSetTargetTime.y)));
       if ((double) enemyBatBurpSwarm.circleTimeBetween != 0.0)
         yield return (object) new WaitForSeconds(enemyBatBurpSwarm.circleTimeBetween);
     }
@@ -145,7 +145,7 @@ public class EnemyBatBurpSwarm : UnitObject
     enemyBatBurpSwarm.attackTimestamp = GameManager.GetInstance().CurrentTime + UnityEngine.Random.Range(enemyBatBurpSwarm.attackCoolDownDuration.x, enemyBatBurpSwarm.attackCoolDownDuration.y);
   }
 
-  public void Scatter() => this.StartCoroutine((IEnumerator) this.ScatterIE());
+  public void Scatter() => this.StartCoroutine(this.ScatterIE());
 
   public IEnumerator ScatterIE()
   {
@@ -158,7 +158,7 @@ public class EnemyBatBurpSwarm : UnitObject
     yield return (object) new WaitForSeconds(enemyBatBurpSwarm.anticipation);
     for (int i = 0; i < enemyBatBurpSwarm.scatterAmount; ++i)
     {
-      enemyBatBurpSwarm.StartCoroutine((IEnumerator) enemyBatBurpSwarm.SpawnProjectile(enemyBatBurpSwarm.transform.position + (Vector3) (UnityEngine.Random.insideUnitCircle * enemyBatBurpSwarm.radius), UnityEngine.Random.Range(0.0f, 360f), UnityEngine.Random.Range(enemyBatBurpSwarm.scatterSetTargetTime.x, enemyBatBurpSwarm.scatterSetTargetTime.y)));
+      enemyBatBurpSwarm.StartCoroutine(enemyBatBurpSwarm.SpawnProjectile(enemyBatBurpSwarm.transform.position + (Vector3) (UnityEngine.Random.insideUnitCircle * enemyBatBurpSwarm.radius), UnityEngine.Random.Range(0.0f, 360f), UnityEngine.Random.Range(enemyBatBurpSwarm.scatterSetTargetTime.x, enemyBatBurpSwarm.scatterSetTargetTime.y)));
       if ((double) enemyBatBurpSwarm.scatterTimeBetween != 0.0)
         yield return (object) new WaitForSeconds(enemyBatBurpSwarm.scatterTimeBetween);
     }
@@ -222,7 +222,7 @@ public class EnemyBatBurpSwarm : UnitObject
     for (int index = this.activeProjectiles.Count - 1; index >= 0; --index)
     {
       if ((UnityEngine.Object) this.activeProjectiles[index] != (UnityEngine.Object) null)
-        this.activeProjectiles[index].health.DealDamage(100f, this.gameObject, this.transform.position);
+        this.activeProjectiles[index].health.DealDamage(100f, this.gameObject, this.transform.position, dealDamageImmediately: true);
     }
   }
 

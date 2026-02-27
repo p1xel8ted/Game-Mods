@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: AudioManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using AOT;
@@ -158,7 +158,7 @@ public class AudioManager : BaseMonoBehaviour
 
   public void ToggleFilter(string SoundParam, bool toggle, float delay)
   {
-    this.StartCoroutine((IEnumerator) this.ToggleFilterDelay(SoundParam, toggle, delay));
+    this.StartCoroutine(this.ToggleFilterDelay(SoundParam, toggle, delay));
   }
 
   public IEnumerator ToggleFilterDelay(string SoundParam, bool toggle, float delay)
@@ -457,14 +457,14 @@ public class AudioManager : BaseMonoBehaviour
   {
     if (!this.IsSoundPathValid(soundPath))
       return;
-    this.StartCoroutine((IEnumerator) this.OneShotDelayedTransform(soundPath, delay, t));
+    this.StartCoroutine(this.OneShotDelayedTransform(soundPath, delay, t));
   }
 
   public void PlayOneShotDelayed(string soundPath, float delay)
   {
     if (!this.IsSoundPathValid(soundPath))
       return;
-    this.StartCoroutine((IEnumerator) this.OneShotDelayed(soundPath, delay));
+    this.StartCoroutine(this.OneShotDelayed(soundPath, delay));
   }
 
   public IEnumerator OneShotDelayedTransform(string soundPath, float delay, Transform t = null)
@@ -668,7 +668,7 @@ public class AudioManager : BaseMonoBehaviour
 
   public void StopOneShotDelay(EventInstance _event, float _delay)
   {
-    this.StartCoroutine((IEnumerator) this.StopOneShotDelayRoutine(_event, _delay));
+    this.StartCoroutine(this.StopOneShotDelayRoutine(_event, _delay));
   }
 
   public IEnumerator StopOneShotDelayRoutine(EventInstance _event, float _delay)
@@ -1000,7 +1000,7 @@ public class AudioManager : BaseMonoBehaviour
     if (!eventInstance.isValid())
       UnityEngine.Debug.Log((object) "Event Instance not valid");
     else
-      this.StartCoroutine((IEnumerator) this.SetEventInstanceParameterDelay(eventInstance, name, value, awaitPlaybackState));
+      this.StartCoroutine(this.SetEventInstanceParameterDelay(eventInstance, name, value, awaitPlaybackState));
   }
 
   public IEnumerator SetEventInstanceParameterDelay(

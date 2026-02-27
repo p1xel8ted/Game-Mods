@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UITraitManipulatorResultsScreen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Coffee.UIExtensions;
@@ -90,18 +90,18 @@ public class UITraitManipulatorResultsScreen : UIMenuBase
     manipulatorResultsScreen.SetActiveStateForMenu(false);
     yield return (object) new WaitForSecondsRealtime(0.5f);
     if (manipulatorResultsScreen.type == UITraitManipulatorMenuController.Type.Shuffle)
-      yield return (object) manipulatorResultsScreen.StartCoroutine((IEnumerator) manipulatorResultsScreen.ShuffleTraitsIE());
+      yield return (object) manipulatorResultsScreen.StartCoroutine(manipulatorResultsScreen.ShuffleTraitsIE());
     else if (manipulatorResultsScreen.type == UITraitManipulatorMenuController.Type.Remove)
-      yield return (object) manipulatorResultsScreen.StartCoroutine((IEnumerator) manipulatorResultsScreen.RemoveTraitIE());
+      yield return (object) manipulatorResultsScreen.StartCoroutine(manipulatorResultsScreen.RemoveTraitIE());
     else if (manipulatorResultsScreen.type == UITraitManipulatorMenuController.Type.Add)
-      yield return (object) manipulatorResultsScreen.StartCoroutine((IEnumerator) manipulatorResultsScreen.AddTraitIE());
+      yield return (object) manipulatorResultsScreen.StartCoroutine(manipulatorResultsScreen.AddTraitIE());
     yield return (object) new WaitForSecondsRealtime(1f);
     manipulatorResultsScreen.CanvasGroup.interactable = true;
     manipulatorResultsScreen.controlPrompts.gameObject.SetActive(true);
     manipulatorResultsScreen.OverrideDefaultOnce((Selectable) manipulatorResultsScreen.traitItems[0].Selectable);
     manipulatorResultsScreen.SetActiveStateForMenu(true);
     yield return (object) new WaitForEndOfFrame();
-    manipulatorResultsScreen.StartCoroutine((IEnumerator) manipulatorResultsScreen.WaitForContinue());
+    manipulatorResultsScreen.StartCoroutine(manipulatorResultsScreen.WaitForContinue());
   }
 
   public IEnumerator WaitForContinue()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Reveal_MysticShop
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -86,7 +86,7 @@ public class Reveal_MysticShop : MonoBehaviour
       gameObject.SetActive(false);
   }
 
-  public void Reveal() => this.StartCoroutine((IEnumerator) this.RevealRoutine());
+  public void Reveal() => this.StartCoroutine(this.RevealRoutine());
 
   public IEnumerator RevealRoutine()
   {
@@ -112,7 +112,7 @@ public class Reveal_MysticShop : MonoBehaviour
     AudioManager.Instance.PlayOneShot("event:/material/earthquake", revealMysticShop.transform.position);
     AudioManager.Instance.PlayOneShot("event:/boss/frog/transition_intro_zoom");
     MMVibrate.RumbleContinuous(1f, 5f);
-    revealMysticShop.StartCoroutine((IEnumerator) revealMysticShop.ShakeCameraWithRampUp());
+    revealMysticShop.StartCoroutine(revealMysticShop.ShakeCameraWithRampUp());
     foreach (GameObject gameObject in revealMysticShop.ObjectsToMove)
     {
       if (gameObject.activeSelf)
@@ -272,7 +272,7 @@ public class Reveal_MysticShop : MonoBehaviour
     component5.Interactable = true;
   }
 
-  public void DLCReveal() => this.StartCoroutine((IEnumerator) this.DLCRevealRoutine());
+  public void DLCReveal() => this.StartCoroutine(this.DLCRevealRoutine());
 
   public IEnumerator DLCRevealRoutine()
   {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJailer
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -185,7 +185,7 @@ public class EnemyJailer : UnitObject
     base.OnEnable();
     this.health.OnHitEarly += new Health.HitAction(this.OnHitEarly);
     this.InitDamageColliders();
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.onStateChange += new EnemyJailer.DorryStateChange(this.OnStateChange);
     this.trail.emitting = false;
@@ -451,7 +451,7 @@ public class EnemyJailer : UnitObject
         this.Spine.AnimationState.SetAnimation(0, "idle", true);
         if (this.idleRoutine != null)
           this.StopCoroutine(this.idleRoutine);
-        this.idleRoutine = this.StartCoroutine((IEnumerator) this.IdleState());
+        this.idleRoutine = this.StartCoroutine(this.IdleState());
         break;
       case EnemyJailer.JailerState.MoveToTarget:
         this.repathTimer = 1f;
@@ -459,49 +459,49 @@ public class EnemyJailer : UnitObject
         this.Spine.AnimationState.SetAnimation(0, "move", true);
         if (this.moveRoutine != null)
           this.StopCoroutine(this.moveRoutine);
-        this.moveRoutine = this.StartCoroutine((IEnumerator) this.MoveToTargetState());
+        this.moveRoutine = this.StartCoroutine(this.MoveToTargetState());
         break;
       case EnemyJailer.JailerState.Attack_0:
         this.FacePosition(this.GetClosestTarget().transform.position);
         Debug.Log((object) "Jailer attack 0");
         if (this.attack_0_Routine != null)
           this.StopCoroutine(this.attack_0_Routine);
-        this.attack_0_Routine = this.StartCoroutine((IEnumerator) this.Attack_0());
+        this.attack_0_Routine = this.StartCoroutine(this.Attack_0());
         break;
       case EnemyJailer.JailerState.Attack_1:
         this.FacePosition(this.GetClosestTarget().transform.position);
         Debug.Log((object) "Jailer attack 1");
         if (this.attack_1_Routine != null)
           this.StopCoroutine(this.attack_1_Routine);
-        this.attack_1_Routine = this.StartCoroutine((IEnumerator) this.Attack_1());
+        this.attack_1_Routine = this.StartCoroutine(this.Attack_1());
         break;
       case EnemyJailer.JailerState.Attack_2:
         this.FacePosition(this.GetClosestTarget().transform.position);
         Debug.Log((object) "Jailer attack 2");
         if (this.attack_2_Routine != null)
           this.StopCoroutine(this.attack_2_Routine);
-        this.attack_2_Routine = this.StartCoroutine((IEnumerator) this.Attack_2());
+        this.attack_2_Routine = this.StartCoroutine(this.Attack_2());
         break;
       case EnemyJailer.JailerState.Attack_3:
         this.FacePosition(this.GetClosestTarget().transform.position);
         Debug.Log((object) "Jailer attack 3");
         if (this.attack_3_Routine != null)
           this.StopCoroutine(this.attack_3_Routine);
-        this.attack_3_Routine = this.StartCoroutine((IEnumerator) this.Attack_3());
+        this.attack_3_Routine = this.StartCoroutine(this.Attack_3());
         break;
       case EnemyJailer.JailerState.Attack_4:
         this.FacePosition(this.GetClosestTarget().transform.position);
         Debug.Log((object) "Jailer attack 4");
         if (this.attack_4_Routine != null)
           this.StopCoroutine(this.attack_4_Routine);
-        this.attack_4_Routine = this.StartCoroutine((IEnumerator) this.Attack_4());
+        this.attack_4_Routine = this.StartCoroutine(this.Attack_4());
         break;
       case EnemyJailer.JailerState.Attack_5:
         this.FacePosition(this.GetClosestTarget().transform.position, true);
         Debug.Log((object) "Jailer attack 5");
         if (this.attack_5_Routine != null)
           this.StopCoroutine(this.attack_5_Routine);
-        this.attack_5_Routine = this.StartCoroutine((IEnumerator) this.Attack_5());
+        this.attack_5_Routine = this.StartCoroutine(this.Attack_5());
         break;
     }
   }
@@ -520,7 +520,7 @@ public class EnemyJailer : UnitObject
     if (!((UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null))
       return;
     this.ClearPaths();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlaceIE());
+    GameManager.GetInstance().StartCoroutine(this.PlaceIE());
   }
 
   public IEnumerator PlaceIE()

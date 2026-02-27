@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DeathCatController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -200,7 +200,7 @@ public class DeathCatController : BaseMonoBehaviour
       this.playerBehind.transform.position = this.playerBehindTargetPosition;
     }
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.SkipIntro());
+    this.StartCoroutine(this.SkipIntro());
   }
 
   public void LateUpdate() => SimulationManager.Pause();
@@ -270,7 +270,7 @@ public class DeathCatController : BaseMonoBehaviour
     GameManager.GetInstance().OnConversationNext(deathCatController.guardian1.gameObject, 6f);
     deathCatController.ResetPlayerWalking();
     AudioManager.Instance.SetMusicRoomID(3, "deathcat_room_id");
-    deathCatController.StartCoroutine((IEnumerator) deathCatController.guardian1Intro.PlayRoutine(false));
+    deathCatController.StartCoroutine(deathCatController.guardian1Intro.PlayRoutine(false));
   }
 
   public void SpawnFollowersInCage()
@@ -311,7 +311,7 @@ public class DeathCatController : BaseMonoBehaviour
     DataManager.Instance.PlayerVisualFleece = this.originalVisualFleece;
   }
 
-  public void Play() => this.StartCoroutine((IEnumerator) this.IntroIE());
+  public void Play() => this.StartCoroutine(this.IntroIE());
 
   public IEnumerator IntroIE()
   {
@@ -340,7 +340,7 @@ public class DeathCatController : BaseMonoBehaviour
       yield return (object) null;
     deathCatController.skippable = false;
     LetterBox.Instance.HideSkipPrompt();
-    yield return (object) deathCatController.StartCoroutine((IEnumerator) deathCatController.SpawnFollowersInCageIE());
+    yield return (object) deathCatController.StartCoroutine(deathCatController.SpawnFollowersInCageIE());
   }
 
   public IEnumerator SpawnFollowersInCageIE()
@@ -400,7 +400,7 @@ public class DeathCatController : BaseMonoBehaviour
     this.playerFarming.state.CURRENT_STATE = StateMachine.State.Idle;
   }
 
-  public void KneelCallback() => this.StartCoroutine((IEnumerator) this.IKneelCallback());
+  public void KneelCallback() => this.StartCoroutine(this.IKneelCallback());
 
   public IEnumerator IKneelCallback()
   {
@@ -446,7 +446,7 @@ public class DeathCatController : BaseMonoBehaviour
     foreach (FollowerManager.SpawnedFollower cagedFollower in deathCatController.cagedFollowers)
     {
       FollowerManager.SpawnedFollower f = cagedFollower;
-      deathCatController.StartCoroutine((IEnumerator) deathCatController.DelayCallback(UnityEngine.Random.Range(0.0f, 0.5f), (System.Action) (() =>
+      deathCatController.StartCoroutine(deathCatController.DelayCallback(UnityEngine.Random.Range(0.0f, 0.5f), (System.Action) (() =>
       {
         double num = (double) f.Follower.SetBodyAnimation("Reactions/react-scared-long", false);
         f.Follower.AddBodyAnimation("idle", true, 0.0f);
@@ -486,7 +486,7 @@ public class DeathCatController : BaseMonoBehaviour
     }
   }
 
-  public void RefuseToKneel() => this.StartCoroutine((IEnumerator) this.RefuseToKneelRoutine());
+  public void RefuseToKneel() => this.StartCoroutine(this.RefuseToKneelRoutine());
 
   public IEnumerator RefuseToKneelRoutine()
   {
@@ -523,7 +523,7 @@ public class DeathCatController : BaseMonoBehaviour
         guardian1Component.enabled = true;
     }
     deathCatController.ResetPlayerWalking();
-    deathCatController.StartCoroutine((IEnumerator) deathCatController.guardian1Intro.PlayRoutine(false));
+    deathCatController.StartCoroutine(deathCatController.guardian1Intro.PlayRoutine(false));
   }
 
   public void OnSpineEvent(string eventname)
@@ -629,10 +629,7 @@ public class DeathCatController : BaseMonoBehaviour
     }
   }
 
-  public void DeathCatCloneTransform()
-  {
-    this.StartCoroutine((IEnumerator) this.DeathCatCloneTransformIE());
-  }
+  public void DeathCatCloneTransform() => this.StartCoroutine(this.DeathCatCloneTransformIE());
 
   public IEnumerator DeathCatCloneTransformIE()
   {
@@ -672,7 +669,7 @@ public class DeathCatController : BaseMonoBehaviour
     foreach (FollowerManager.SpawnedFollower cagedFollower in deathCatController.cagedFollowers)
     {
       FollowerManager.SpawnedFollower f = cagedFollower;
-      deathCatController.StartCoroutine((IEnumerator) deathCatController.DelayCallback(UnityEngine.Random.Range(0.0f, 0.5f), (System.Action) (() =>
+      deathCatController.StartCoroutine(deathCatController.DelayCallback(UnityEngine.Random.Range(0.0f, 0.5f), (System.Action) (() =>
       {
         double num = (double) f.Follower.SetBodyAnimation("Reactions/react-scared-long", false);
         f.Follower.AddBodyAnimation("idle", true, 0.0f);
@@ -715,10 +712,7 @@ public class DeathCatController : BaseMonoBehaviour
     this.DeathCatBigTransform();
   }
 
-  public void DeathCatBigTransform()
-  {
-    this.StartCoroutine((IEnumerator) this.DeathCatBigTransformIE());
-  }
+  public void DeathCatBigTransform() => this.StartCoroutine(this.DeathCatBigTransformIE());
 
   public IEnumerator DeathCatBigTransformIE()
   {
@@ -817,7 +811,7 @@ public class DeathCatController : BaseMonoBehaviour
       for (int index = 0; index < coroutineSupport.followerChains.Length; ++index)
       {
         if (index < count)
-          coroutineSupport.StartCoroutine((IEnumerator) coroutineSupport.\u003CDeathCatBigTransformIE\u003Eg__SpawnChainedFollower\u007C90_3(index, UnityEngine.Random.Range(0.0f, 1f)));
+          coroutineSupport.StartCoroutine(coroutineSupport.\u003CDeathCatBigTransformIE\u003Eg__SpawnChainedFollower\u007C90_3(index, UnityEngine.Random.Range(0.0f, 1f)));
       }
       yield return (object) new WaitForSeconds(5f);
       MMVibrate.StopRumble();
@@ -894,7 +888,7 @@ public class DeathCatController : BaseMonoBehaviour
     }
   }
 
-  public void DeathCatKilled() => this.StartCoroutine((IEnumerator) this.DeathCatKilledIE());
+  public void DeathCatKilled() => this.StartCoroutine(this.DeathCatKilledIE());
 
   public IEnumerator DeathCatKilledIE()
   {
@@ -977,9 +971,9 @@ public class DeathCatController : BaseMonoBehaviour
         yield return (object) null;
       deathCatController.followerSpawn.Spine.GetComponent<SimpleSpineAnimator>().enabled = false;
       if (convert)
-        yield return (object) deathCatController.StartCoroutine((IEnumerator) deathCatController.followerSpawn.ConvertFollower());
+        yield return (object) deathCatController.StartCoroutine(deathCatController.followerSpawn.ConvertFollower());
       else
-        yield return (object) deathCatController.StartCoroutine((IEnumerator) deathCatController.MurderDeathCat());
+        yield return (object) deathCatController.StartCoroutine(deathCatController.MurderDeathCat());
       Follower = (GameObject) null;
       g = (GameObject) null;
       choice = (ChoiceIndicator) null;
@@ -1005,7 +999,7 @@ public class DeathCatController : BaseMonoBehaviour
     yield return (object) new WaitForSeconds(2f);
     for (int i = 0; i < deathCatController.chainedFollowers.Count; ++i)
     {
-      deathCatController.StartCoroutine((IEnumerator) deathCatController.DropFollower(deathCatController.chainedFollowers[i].Follower, i));
+      deathCatController.StartCoroutine(deathCatController.DropFollower(deathCatController.chainedFollowers[i].Follower, i));
       yield return (object) new WaitForSeconds(0.1f);
     }
     yield return (object) new WaitForSeconds(2f);

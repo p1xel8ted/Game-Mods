@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DivineCrystal
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -45,7 +45,7 @@ public class Interaction_DivineCrystal : Interaction
   {
     base.OnEnableInteraction();
     Interaction_DivineCrystal.Instance = this;
-    this.StartCoroutine((IEnumerator) this.DelayDoTween());
+    this.StartCoroutine(this.DelayDoTween());
   }
 
   public IEnumerator DelayDoTween()
@@ -92,7 +92,7 @@ public class Interaction_DivineCrystal : Interaction
     this.gameObject.GetComponent<PickUp>().enabled = false;
     this.Image.gameObject.transform.DOKill();
     this.ps_PickUp.Play();
-    this.StartCoroutine((IEnumerator) this.PlayerPickUpBook());
+    this.StartCoroutine(this.PlayerPickUpBook());
     if (DungeonSandboxManager.Active)
       return;
     this.IncrementGodTears();

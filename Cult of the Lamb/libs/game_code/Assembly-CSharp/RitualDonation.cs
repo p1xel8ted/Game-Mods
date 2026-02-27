@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualDonation
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -22,7 +22,7 @@ public class RitualDonation : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -35,11 +35,11 @@ public class RitualDonation : Ritual
       PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
       PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     }));
-    yield return (object) ritualDonation.StartCoroutine((IEnumerator) ritualDonation.WaitFollowersFormCircle());
+    yield return (object) ritualDonation.StartCoroutine(ritualDonation.WaitFollowersFormCircle());
     if (DataManager.Instance.HasMidasHiding && !MidasBaseController.EncounteredMidasInTemple)
     {
       MidasBaseController.EncounteredMidasInTemple = true;
-      GameManager.GetInstance().StartCoroutine((IEnumerator) ritualDonation.MidasIE());
+      GameManager.GetInstance().StartCoroutine(ritualDonation.MidasIE());
       yield return (object) new WaitForSeconds(2.5f);
     }
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
@@ -65,7 +65,7 @@ public class RitualDonation : Ritual
       int coinPerFollower = 3 + num4;
       num2 += num4;
       num1 += coinPerFollower;
-      ritualDonation.StartCoroutine((IEnumerator) ritualDonation.GiveCoins(FollowerManager.FindFollowerByID(followerBrain.Info.ID), totalTime, delay, coinPerFollower, availableToAttendSermon.Count));
+      ritualDonation.StartCoroutine(ritualDonation.GiveCoins(FollowerManager.FindFollowerByID(followerBrain.Info.ID), totalTime, delay, coinPerFollower, availableToAttendSermon.Count));
       delay += 0.1f;
     }
     if (DataManager.Instance.HasMidasHiding)
@@ -105,7 +105,7 @@ public class RitualDonation : Ritual
         brain.AddThought(Thought.DonationRitual_Midas);
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num5 += Delay;
-      ritualDonation.StartCoroutine((IEnumerator) ritualDonation.DelayFollowerReaction(brain, Delay));
+      ritualDonation.StartCoroutine(ritualDonation.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1.5f);
     ritualDonation.CompleteRitual();

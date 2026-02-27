@@ -1,11 +1,9 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ShellTexture
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,23 +25,11 @@ public class ShellTexture : BaseMonoBehaviour
   public void GenerateShells()
   {
     List<GameObject> gameObjectList = new List<GameObject>();
-    IEnumerator enumerator = (IEnumerator) this.transform.GetEnumerator();
-    try
-    {
-      while (enumerator.MoveNext())
-      {
-        Transform current = (Transform) enumerator.Current;
-        gameObjectList.Add(current.gameObject);
-      }
-    }
-    finally
-    {
-      if (enumerator is IDisposable disposable)
-        disposable.Dispose();
-    }
-    foreach (UnityEngine.Object @object in gameObjectList)
-      UnityEngine.Object.DestroyImmediate(@object);
-    if ((UnityEngine.Object) this.shellSprite == (UnityEngine.Object) null || (UnityEngine.Object) this.shellMaterial == (UnityEngine.Object) null)
+    foreach (Transform transform in this.transform)
+      gameObjectList.Add(transform.gameObject);
+    foreach (Object @object in gameObjectList)
+      Object.DestroyImmediate(@object);
+    if ((Object) this.shellSprite == (Object) null || (Object) this.shellMaterial == (Object) null)
     {
       Debug.LogWarning((object) "Shell sprite or material is not assigned.");
     }

@@ -1,0 +1,38 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: UI.Keyboards.SteamDeckKeyboard
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using Lamb.UI;
+using Steamworks;
+using UnityEngine;
+
+#nullable disable
+namespace UI.Keyboards;
+
+public class SteamDeckKeyboard : KeyboardBase, IKeyboardDelegate
+{
+  private MMInputField _inputField;
+  private Callback<FloatingGamepadTextInputDismissed_t> _floatingTextInputDismissedCallback;
+
+  public SteamDeckKeyboard(IKeyboardDelegate keyboardDelegate, MMInputField inputField)
+  {
+    this._inputField = inputField;
+    this._keyboardDelegate = keyboardDelegate;
+    this._inputField.ActivateInputField();
+    SteamUtils.ShowFloatingGamepadTextInput(EFloatingGamepadTextInputMode.k_EFloatingGamepadTextInputModeModeSingleLine, 0, 0, Screen.width, Screen.height / 2);
+    this._floatingTextInputDismissedCallback = Callback<FloatingGamepadTextInputDismissed_t>.Create(new Callback<FloatingGamepadTextInputDismissed_t>.DispatchDelegate(this.OnFloatingTextInputDismissed));
+  }
+
+  public void KeyboardDismissed(string result) => this._keyboardDelegate.KeyboardDismissed(result);
+
+  private void OnFloatingTextInputDismissed(FloatingGamepadTextInputDismissed_t callback)
+  {
+    this._inputField.DeactivateInputField();
+    if (this._floatingTextInputDismissedCallback == null)
+      return;
+    this._floatingTextInputDismissedCallback.Dispose();
+    this._floatingTextInputDismissedCallback = (Callback<FloatingGamepadTextInputDismissed_t>) null;
+  }
+}

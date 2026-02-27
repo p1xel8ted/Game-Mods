@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FollowerDessentingChoice
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -79,7 +79,7 @@ public class Interaction_FollowerDessentingChoice : Interaction
   {
     base.OnInteract(state);
     this.Interactable = false;
-    this.StartCoroutine((IEnumerator) this.InteractIE());
+    this.StartCoroutine(this.InteractIE());
   }
 
   public IEnumerator InteractIE()
@@ -97,8 +97,8 @@ public class Interaction_FollowerDessentingChoice : Interaction
       new ConversationEntry(dessentingChoice.gameObject, question.Line2)
     }, new List<MMTools.Response>()
     {
-      new MMTools.Response(question.AnswerA, (System.Action) (() => this.StartCoroutine((IEnumerator) this.ResponseIE(true, question))), question.AnswerA),
-      new MMTools.Response(question.AnswerB, (System.Action) (() => this.StartCoroutine((IEnumerator) this.ResponseIE(false, question))), question.AnswerB)
+      new MMTools.Response(question.AnswerA, (System.Action) (() => this.StartCoroutine(this.ResponseIE(true, question))), question.AnswerA),
+      new MMTools.Response(question.AnswerB, (System.Action) (() => this.StartCoroutine(this.ResponseIE(false, question))), question.AnswerB)
     }, (System.Action) null), false);
     MMConversation.mmConversation.SpeechBubble.ScreenOffset = 200f;
   }
@@ -135,7 +135,7 @@ public class Interaction_FollowerDessentingChoice : Interaction
     if (responseWasA && question.CorrectAnswerIsA || !responseWasA && !question.CorrectAnswerIsA)
     {
       Debug.Log((object) "AAA");
-      dessentingChoice.StartCoroutine((IEnumerator) dessentingChoice.RecruitedFollower());
+      dessentingChoice.StartCoroutine(dessentingChoice.RecruitedFollower());
     }
     else
     {

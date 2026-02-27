@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualWorkHoliday
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -21,7 +21,7 @@ public class RitualWorkHoliday : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -35,7 +35,7 @@ public class RitualWorkHoliday : Ritual
       PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     }));
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualWorkHoliday.StartCoroutine((IEnumerator) ritualWorkHoliday.WaitFollowersFormCircle());
+    yield return (object) ritualWorkHoliday.StartCoroutine(ritualWorkHoliday.WaitFollowersFormCircle());
     AudioManager.Instance.SetFollowersDance(1f);
     yield return (object) new WaitForSeconds(1f);
     PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
@@ -59,7 +59,7 @@ public class RitualWorkHoliday : Ritual
       followerBrainList.Remove(followerBrain);
       Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
       if ((bool) (UnityEngine.Object) followerById)
-        ritualWorkHoliday.StartCoroutine((IEnumerator) ritualWorkHoliday.MoveFollower(followerById, index));
+        ritualWorkHoliday.StartCoroutine(ritualWorkHoliday.MoveFollower(followerById, index));
     }
     foreach (FollowerBrain followerBrain in followerBrainList)
     {
@@ -89,7 +89,7 @@ public class RitualWorkHoliday : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num += Delay;
-      ritualWorkHoliday.StartCoroutine((IEnumerator) ritualWorkHoliday.DelayFollowerReaction(brain, Delay));
+      ritualWorkHoliday.StartCoroutine(ritualWorkHoliday.DelayFollowerReaction(brain, Delay));
       brain.AddThought(Thought.Holiday);
     }
     yield return (object) new WaitForSeconds(1.5f);
@@ -115,7 +115,7 @@ public class RitualWorkHoliday : Ritual
     follower.HoodOff(onComplete: (System.Action) (() => waiting = false));
     while (waiting)
       yield return (object) null;
-    yield return (object) ritualWorkHoliday.StartCoroutine((IEnumerator) follower.GoToRoutine(PlayerFarming.Instance.transform.position + positions[index] * 0.75f));
+    yield return (object) ritualWorkHoliday.StartCoroutine(follower.GoToRoutine(PlayerFarming.Instance.transform.position + positions[index] * 0.75f));
     follower.State.facingAngle = Utils.GetAngle(follower.transform.position, PlayerFarming.Instance.transform.position);
     double num = (double) follower.SetBodyAnimation("dance", true);
     if (follower.Brain.Info.CursedState != Thought.OldAge)

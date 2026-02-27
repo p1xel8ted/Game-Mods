@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.QuestItemObjective
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -51,7 +51,7 @@ public class QuestItemObjective : MonoBehaviour
     this._timeContainer.SetActive(objectivesData.HasExpiry);
     if (objectivesData.HasExpiry)
       this._radialProgress.fillAmount = objectivesData.ExpiryTimeNormalized;
-    this.StartCoroutine((IEnumerator) this.DeferredStrikethroughUpdate());
+    this.StartCoroutine(this.DeferredStrikethroughUpdate());
   }
 
   public void Configure(ObjectivesDataFinalized objectivesData, bool failed = false)
@@ -63,7 +63,7 @@ public class QuestItemObjective : MonoBehaviour
     else
       this._tickBox.SetAnimation("on");
     this._timeContainer.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.DeferredStrikethroughUpdate());
+    this.StartCoroutine(this.DeferredStrikethroughUpdate());
   }
 
   public IEnumerator DeferredStrikethroughUpdate()

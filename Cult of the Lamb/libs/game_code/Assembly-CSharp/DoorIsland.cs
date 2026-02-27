@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DoorIsland
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using UnityEngine;
@@ -34,7 +34,7 @@ public class DoorIsland : BaseMonoBehaviour
 
   public void Init()
   {
-    Debug.Log((object) $"Init N: {((object) RoomManager.r.N_Link)?.ToString()}   E: {((object) RoomManager.r.E_Link)?.ToString()}  S:{((object) RoomManager.r.S_Link)?.ToString()}  W:{((object) RoomManager.r.W_Link)?.ToString()}");
+    Debug.Log((object) $"Init N: {RoomManager.r.N_Link?.ToString()}   E: {RoomManager.r.E_Link?.ToString()}  S:{RoomManager.r.S_Link?.ToString()}  W:{RoomManager.r.W_Link?.ToString()}");
     if (this.North && (Object) RoomManager.r.N_Link != (Object) null)
       this.gameObject.SetActive(true);
     else if (this.East && (Object) RoomManager.r.E_Link != (Object) null)

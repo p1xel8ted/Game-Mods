@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Ranchable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -573,7 +573,7 @@ public class Interaction_Ranchable : Interaction
       this.Die();
     }
     else if (this.isStarving && this.bubbleRoutine == null && PlayerFarming.Location == FollowerLocation.Base)
-      this.bubbleRoutine = this.StartCoroutine((IEnumerator) this.BubbleRoutine(WorshipperBubble.SPEECH_TYPE.STARVING));
+      this.bubbleRoutine = this.StartCoroutine(this.BubbleRoutine(WorshipperBubble.SPEECH_TYPE.STARVING));
     else if ((double) this.animal.Injured == 0.0)
     {
       this.animal.CauseOfDeath = Interaction_Ranchable.CauseOfDeath.DiedFromInjury;
@@ -746,9 +746,9 @@ public class Interaction_Ranchable : Interaction
     base.OnSecondaryInteract(state);
     this.playerFarming.state.CURRENT_STATE = StateMachine.State.CustomAction0;
     if (this.Animal.Ailment == Interaction_Ranchable.Ailment.Stinky)
-      this.StartCoroutine((IEnumerator) this.CleanIE());
+      this.StartCoroutine(this.CleanIE());
     else
-      this.StartCoroutine((IEnumerator) this.WorkIE());
+      this.StartCoroutine(this.WorkIE());
   }
 
   public override void GetThirdLabel()
@@ -761,7 +761,7 @@ public class Interaction_Ranchable : Interaction
   {
     base.OnThirdInteract(state);
     this.playerFarming.state.CURRENT_STATE = StateMachine.State.CustomAction0;
-    this.StartCoroutine((IEnumerator) this.MilkAnimalIE());
+    this.StartCoroutine(this.MilkAnimalIE());
   }
 
   public override void OnInteract(StateMachine state)
@@ -824,7 +824,7 @@ public class Interaction_Ranchable : Interaction
     }
     else if (this.CurrentState == Interaction_Ranchable.State.Dead)
     {
-      this.StartCoroutine((IEnumerator) this.RemoveDeadBodyIE());
+      this.StartCoroutine(this.RemoveDeadBodyIE());
     }
     else
     {
@@ -872,7 +872,7 @@ public class Interaction_Ranchable : Interaction
     this.StopCoroutine(this.postFeedRoutine);
   }
 
-  public void Close() => this.StartCoroutine((IEnumerator) this.CloseRoutine());
+  public void Close() => this.StartCoroutine(this.CloseRoutine());
 
   public IEnumerator CloseRoutine()
   {
@@ -895,24 +895,24 @@ public class Interaction_Ranchable : Interaction
         switch (followerCommands1)
         {
           case FollowerCommands.Ascend:
-            this.StartCoroutine((IEnumerator) this.AscendIE());
+            this.StartCoroutine(this.AscendIE());
             return;
           case FollowerCommands.Slaughter:
-            this.StartCoroutine((IEnumerator) this.SlaughterIE());
+            this.StartCoroutine(this.SlaughterIE());
             return;
           case FollowerCommands.Sacrifice:
-            this.StartCoroutine((IEnumerator) this.SacrificeIE());
+            this.StartCoroutine(this.SacrificeIE());
             return;
           default:
             return;
         }
       case FollowerCommands.Ascend:
-        this.StartCoroutine((IEnumerator) this.AscendIE());
+        this.StartCoroutine(this.AscendIE());
         return;
       case FollowerCommands.Harvest:
         if (!this.animal.WorkedToday && this.animal.WorkedReady)
         {
-          this.StartCoroutine((IEnumerator) this.WorkIE());
+          this.StartCoroutine(this.WorkIE());
           return;
         }
         break;
@@ -936,17 +936,17 @@ public class Interaction_Ranchable : Interaction
         }
         break;
       case FollowerCommands.Clean:
-        this.StartCoroutine((IEnumerator) this.CleanIE());
+        this.StartCoroutine(this.CleanIE());
         return;
       case FollowerCommands.PetAnimal:
         if (!this.animal.PetToday)
-          this.StartCoroutine((IEnumerator) this.PetIE());
+          this.StartCoroutine(this.PetIE());
         else
           this.ReservedByPlayer = false;
         GameManager.GetInstance().OnConversationEnd();
         return;
       case FollowerCommands.NameAnimal:
-        this.StartCoroutine((IEnumerator) this.NameAnimalIE());
+        this.StartCoroutine(this.NameAnimalIE());
         return;
       case FollowerCommands.FollowPlayer:
         this.StartFollowingPlayer();
@@ -1029,21 +1029,21 @@ public class Interaction_Ranchable : Interaction
       case FollowerCommands.Calm:
         if ((double) TimeManager.TotalElapsedGameTime > (double) this.animal.AilmentGameTime + 600.0)
         {
-          this.StartCoroutine((IEnumerator) this.CalmIE());
+          this.StartCoroutine(this.CalmIE());
           return;
         }
         break;
       case FollowerCommands.MilkAnimal:
         if (!this.animal.MilkedToday && this.animal.MilkedReady)
         {
-          this.StartCoroutine((IEnumerator) this.MilkAnimalIE());
+          this.StartCoroutine(this.MilkAnimalIE());
           return;
         }
         break;
       case FollowerCommands.Heal:
         if (Inventory.GetItemQuantity(this.FlowerType) >= 3)
         {
-          this.StartCoroutine((IEnumerator) this.HealIE());
+          this.StartCoroutine(this.HealIE());
           return;
         }
         break;
@@ -1756,7 +1756,7 @@ public class Interaction_Ranchable : Interaction
       this.spine.AnimationState.AddAnimation(0, this.idle_anim, true, 0.0f);
       AudioManager.Instance.PlayOneShot("event:/dlc/animal/shared/attack", this.transform.position);
       this.unitObject.state.facingAngle = Utils.GetAngle(this.transform.position, this.targetAnimal.transform.position);
-      this.StartCoroutine((IEnumerator) this.WaitForSeconds(0.266666681f, (System.Action) (() =>
+      this.StartCoroutine(this.WaitForSeconds(0.266666681f, (System.Action) (() =>
       {
         if (this.CurrentState == Interaction_Ranchable.State.Dead)
           return;
@@ -1768,7 +1768,7 @@ public class Interaction_Ranchable : Interaction
         }
         else
           Debug.Log((object) "Prevented");
-        this.StartCoroutine((IEnumerator) this.WaitForSeconds((float) AnimationDuration - 0.266666681f, (System.Action) (() => this.ResetAnimalState())));
+        this.StartCoroutine(this.WaitForSeconds((float) AnimationDuration - 0.266666681f, (System.Action) (() => this.ResetAnimalState())));
       })));
     }
     else
@@ -1893,7 +1893,7 @@ public class Interaction_Ranchable : Interaction
     this.animal.Ailment = Interaction_Ranchable.Ailment.None;
     Interaction_Ranchable.Ranchables.Remove(this);
     Interaction_Ranchable.DeadRanchables.Add(this);
-    this.StartCoroutine((IEnumerator) this.DieIE(showStinky));
+    this.StartCoroutine(this.DieIE(showStinky));
   }
 
   public void SetDead()
@@ -1920,7 +1920,7 @@ public class Interaction_Ranchable : Interaction
     this.targetAnimal = (Interaction_Ranchable) null;
     if ((double) this.animal.Injured < 0.0)
       this.animal.Injured = 15f;
-    this.StartCoroutine((IEnumerator) this.InjureIE());
+    this.StartCoroutine(this.InjureIE());
   }
 
   public IEnumerator InjureIE()
@@ -2060,7 +2060,7 @@ public class Interaction_Ranchable : Interaction
     interactionRanchable.isBeingFed = true;
     interactionRanchable.Interactable = false;
     interactionRanchable.HasChanged = true;
-    interactionRanchable.StartCoroutine((IEnumerator) interactionRanchable.RemoveAnimal());
+    interactionRanchable.StartCoroutine(interactionRanchable.RemoveAnimal());
   }
 
   public void Sacrifice()
@@ -2544,7 +2544,7 @@ public class Interaction_Ranchable : Interaction
   public void Poop()
   {
     this.moveTimer = Time.time + 5f;
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(1f, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForSeconds(1f, (System.Action) (() =>
     {
       if (!((UnityEngine.Object) this.ranch != (UnityEngine.Object) null) || this.ranch.Brain == null)
         return;
@@ -2574,7 +2574,7 @@ public class Interaction_Ranchable : Interaction
       this.spine.AnimationState.SetAnimation(0, "eat_poop", true);
     else
       this.spine.AnimationState.SetAnimation(0, "eat_grass", true);
-    this.postFeedRoutine = this.StartCoroutine((IEnumerator) this.WaitForSeconds(5f, (System.Action) (() =>
+    this.postFeedRoutine = this.StartCoroutine(this.WaitForSeconds(5f, (System.Action) (() =>
     {
       this.postFeedRoutine = (Coroutine) null;
       AudioManager.Instance.StopLoop(this.eatingLoopSFX);
@@ -2602,7 +2602,7 @@ public class Interaction_Ranchable : Interaction
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(this.gameObject, 5f);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(5f, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForSeconds(5f, (System.Action) (() =>
     {
       AudioManager.Instance.StopLoop(this.eatingLoopSFX);
       if (this.ReservedByPlayer)
@@ -3116,7 +3116,7 @@ label_6:
   public void SpawnWolfSequence(System.Action<Interaction_WolfBase> callback = null)
   {
     DataManager.Instance.TimeSinceLastWolf = TimeManager.TotalElapsedGameTime + UnityEngine.Random.Range(Interaction_Ranchable.TIME_BETWEEN_WOLVES.x, Interaction_Ranchable.TIME_BETWEEN_WOLVES.y);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.SpawnWolfIE(callback));
+    GameManager.GetInstance().StartCoroutine(this.SpawnWolfIE(callback));
   }
 
   public void SpawnWolf(float offset, bool givePath, System.Action<Interaction_WolfBase> callback = null)
@@ -3380,7 +3380,7 @@ label_6:
     if (this.animal.State == Interaction_Ranchable.State.Dead)
       return;
     this.animal.Adoration += amount;
-    this.StartCoroutine((IEnumerator) this.adorationUI.IncreaseAdorationIE());
+    this.StartCoroutine(this.adorationUI.IncreaseAdorationIE());
     if ((double) this.animal.Adoration < 100.0)
       return;
     ++this.animal.Level;

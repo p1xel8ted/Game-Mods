@@ -1,12 +1,11 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Waste
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -101,17 +100,8 @@ public class Waste : BaseMonoBehaviour
   {
     for (int index1 = 0; index1 < this.ShakeTransforms.Count; ++index1)
     {
-      IEnumerator enumerator = (IEnumerator) this.ShakeTransforms[index1].transform.GetEnumerator();
-      try
-      {
-        while (enumerator.MoveNext())
-          this.ShakeTransforms.Add((Transform) enumerator.Current);
-      }
-      finally
-      {
-        if (enumerator is IDisposable disposable)
-          disposable.Dispose();
-      }
+      foreach (Transform transform in this.ShakeTransforms[index1].transform)
+        this.ShakeTransforms.Add(transform);
       this.Shake = new Vector2[this.ShakeTransforms.Count];
       for (int index2 = 0; index2 < this.ShakeTransforms.Count; ++index2)
         this.Shake[index2] = (Vector2) this.ShakeTransforms[index2].transform.localPosition;

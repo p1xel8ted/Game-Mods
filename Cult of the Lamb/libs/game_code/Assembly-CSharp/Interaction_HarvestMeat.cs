@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_HarvestMeat
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -217,9 +217,9 @@ public class Interaction_HarvestMeat : Interaction
       {
         FollowerInfo infoById = FollowerInfo.GetInfoByID(this.DeadWorshipper.StructureInfo.FollowerID, true);
         if (infoById != null && infoById.FrozeToDeath)
-          this.StartCoroutine((IEnumerator) this.InteractRoutine());
+          this.StartCoroutine(this.InteractRoutine());
         else
-          this.StartCoroutine((IEnumerator) this.PrepareForBurial());
+          this.StartCoroutine(this.PrepareForBurial());
       }
       else
       {
@@ -227,7 +227,7 @@ public class Interaction_HarvestMeat : Interaction
         Debug.Log((object) ("PICKUP! DeadWorshipperTmp " + this.DeadWorshipperTmp.StructureInfo.FollowerID.ToString()));
         this.structure.enabled = false;
         this.DeadWorshipper.enabled = false;
-        this.StartCoroutine((IEnumerator) this.PickUpBody());
+        this.StartCoroutine(this.PickUpBody());
       }
       foreach (Structures_Prison structuresPrison in StructureManager.GetAllStructuresOfType<Structures_Prison>())
       {
@@ -372,7 +372,7 @@ public class Interaction_HarvestMeat : Interaction
           Debug.Log((object) message);
           if ((double) message < 1.5 && compostBinDeadBody.StructureBrain.CompostCount <= 0 && compostBinDeadBody.StructureBrain.PoopCount <= 0)
           {
-            Debug.Log((object) ("1 " + ((object) compostBinDeadBody)?.ToString()));
+            Debug.Log((object) ("1 " + compostBinDeadBody?.ToString()));
             if ((double) message < (double) this.ClosestPosition)
             {
               this.ClosestPosition = message;
@@ -612,7 +612,7 @@ public class Interaction_HarvestMeat : Interaction
     if (interactionHarvestMeat.DeadWorshipper.followerInfo.BurntToDeath)
       InventoryItem.Spawn(InventoryItem.ITEM_TYPE.CHARCOAL, UnityEngine.Random.Range(5, 11), interactionHarvestMeat.transform.position);
     else if (interactionHarvestMeat.DeadWorshipper.followerInfo.DiedFromRot && interactionHarvestMeat.canPickUpLegendaryAxe)
-      yield return (object) interactionHarvestMeat.StartCoroutine((IEnumerator) interactionHarvestMeat.PlayerPickUpWeapon());
+      yield return (object) interactionHarvestMeat.StartCoroutine(interactionHarvestMeat.PlayerPickUpWeapon());
     yield return (object) new WaitForSeconds(0.5f);
     GameManager.GetInstance().OnConversationEnd();
     interactionHarvestMeat.state.CURRENT_STATE = StateMachine.State.Idle;
@@ -639,14 +639,14 @@ public class Interaction_HarvestMeat : Interaction
     else if (!this.DeadWorshipper.StructureInfo.BodyWrapped)
     {
       base.OnSecondaryInteract(state);
-      this.StartCoroutine((IEnumerator) this.HarvestMeatIE());
+      this.StartCoroutine(this.HarvestMeatIE());
     }
     else
     {
       if (this.DeadWorshipper.followerInfo == null || this.DeadWorshipper.followerInfo.Necklace == InventoryItem.ITEM_TYPE.NONE)
         return;
       base.OnSecondaryInteract(state);
-      this.StartCoroutine((IEnumerator) this.LootBody());
+      this.StartCoroutine(this.LootBody());
     }
   }
 
@@ -693,7 +693,7 @@ public class Interaction_HarvestMeat : Interaction
       interactionHarvestMeat.DeadWorshipper.followerInfo.Necklace = InventoryItem.ITEM_TYPE.NONE;
       interactionHarvestMeat.state.CURRENT_STATE = StateMachine.State.InActive;
       if (interactionHarvestMeat.DeadWorshipper.followerInfo.DiedFromRot && interactionHarvestMeat.canPickUpLegendaryAxe)
-        yield return (object) interactionHarvestMeat.StartCoroutine((IEnumerator) interactionHarvestMeat.PlayerPickUpWeapon());
+        yield return (object) interactionHarvestMeat.StartCoroutine(interactionHarvestMeat.PlayerPickUpWeapon());
       yield return (object) new WaitForSeconds(0.5f);
       ++DataManager.Instance.TotalBodiesHarvested;
       if (DataManager.Instance.TotalBodiesHarvested >= 5 && !DataManager.Instance.PlayerFoundRelics.Contains(RelicType.SpawnCombatFollowerFromBodies) && DataManager.Instance.OnboardedRelics)

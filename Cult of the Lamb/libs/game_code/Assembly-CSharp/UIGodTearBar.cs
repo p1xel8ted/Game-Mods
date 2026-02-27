@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIGodTearBar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -33,7 +33,7 @@ public class UIGodTearBar : BaseMonoBehaviour
     if (this.Shown)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ShowRoutine(xp));
+    this.StartCoroutine(this.ShowRoutine(xp));
   }
 
   public void Hide()
@@ -41,7 +41,7 @@ public class UIGodTearBar : BaseMonoBehaviour
     if (!this.Shown)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.HideRoutine());
+    this.StartCoroutine(this.HideRoutine());
   }
 
   public IEnumerator ShowRoutine(float xp)
@@ -102,7 +102,7 @@ public class UIGodTearBar : BaseMonoBehaviour
       yield return (object) null;
     }
     uiGodTearBar.BarInstant.transform.localScale = new Vector3(Mathf.Min(1f, xp / uiGodTearBar.XPTarget), 1f);
-    uiGodTearBar.StartCoroutine((IEnumerator) uiGodTearBar.ShakeRoutine());
+    uiGodTearBar.StartCoroutine(uiGodTearBar.ShakeRoutine());
   }
 
   public IEnumerator UpdateSecondBar(float xp, float duration)

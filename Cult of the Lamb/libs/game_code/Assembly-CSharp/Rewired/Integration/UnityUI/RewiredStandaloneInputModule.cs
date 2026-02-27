@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Integration.UnityUI.RewiredStandaloneInputModule
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired.UI;
@@ -376,7 +376,7 @@ public sealed class RewiredStandaloneInputModule : RewiredPointerInputModule
   {
     base.Awake();
     this.isTouchSupported = this.defaultTouchInputSource.touchSupported;
-    ReInput.InitializedEvent += (Action) new Action(this.OnRewiredInitialized);
+    ReInput.InitializedEvent += new Action(this.OnRewiredInitialized);
     this.InitializeRewired();
   }
 
@@ -806,9 +806,9 @@ public sealed class RewiredStandaloneInputModule : RewiredPointerInputModule
   public override void OnDestroy()
   {
     base.OnDestroy();
-    ReInput.InitializedEvent -= (Action) new Action(this.OnRewiredInitialized);
-    ReInput.ShutDownEvent -= (Action) new Action(this.OnRewiredShutDown);
-    ReInput.EditorRecompileEvent -= (Action) new Action(this.OnEditorRecompile);
+    ReInput.InitializedEvent -= new Action(this.OnRewiredInitialized);
+    ReInput.ShutDownEvent -= new Action(this.OnRewiredShutDown);
+    ReInput.EditorRecompileEvent -= new Action(this.OnEditorRecompile);
   }
 
   public override bool IsDefaultPlayer(int playerId)
@@ -835,10 +835,10 @@ public sealed class RewiredStandaloneInputModule : RewiredPointerInputModule
     }
     else
     {
-      ReInput.ShutDownEvent -= (Action) new Action(this.OnRewiredShutDown);
-      ReInput.ShutDownEvent += (Action) new Action(this.OnRewiredShutDown);
-      ReInput.EditorRecompileEvent -= (Action) new Action(this.OnEditorRecompile);
-      ReInput.EditorRecompileEvent += (Action) new Action(this.OnEditorRecompile);
+      ReInput.ShutDownEvent -= new Action(this.OnRewiredShutDown);
+      ReInput.ShutDownEvent += new Action(this.OnRewiredShutDown);
+      ReInput.EditorRecompileEvent -= new Action(this.OnEditorRecompile);
+      ReInput.EditorRecompileEvent += new Action(this.OnEditorRecompile);
       this.SetupRewiredVars();
     }
   }
@@ -850,7 +850,7 @@ public sealed class RewiredStandaloneInputModule : RewiredPointerInputModule
     this.SetUpRewiredActions();
     if (this.useAllRewiredGamePlayers)
     {
-      IList<Player> playerList = this.useRewiredSystemPlayer ? (IList<Player>) ReInput.players.AllPlayers : (IList<Player>) ReInput.players.Players;
+      IList<Player> playerList = this.useRewiredSystemPlayer ? ReInput.players.AllPlayers : ReInput.players.Players;
       this.playerIds = new int[playerList.Count];
       for (int index = 0; index < playerList.Count; ++index)
         this.playerIds[index] = playerList[index].id;

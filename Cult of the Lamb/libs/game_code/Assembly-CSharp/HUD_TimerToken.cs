@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_TimerToken
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -26,7 +26,7 @@ public class HUD_TimerToken : BaseMonoBehaviour
       if (this.gameObject.activeSelf && this.FlashWhenActive)
       {
         if ((double) value < 1.0 && this.cWarningFlash == null)
-          this.cWarningFlash = this.StartCoroutine((IEnumerator) this.WarningFlash());
+          this.cWarningFlash = this.StartCoroutine(this.WarningFlash());
         if ((double) value >= 1.0 && this.cWarningFlash != null)
         {
           this.StopCoroutine(this.cWarningFlash);
@@ -59,7 +59,7 @@ public class HUD_TimerToken : BaseMonoBehaviour
   {
     HUD_Timer.OnPauseTimer += new HUD_Timer.PauseTimer(this.OnPauseTimer);
     HUD_Timer.OnUnPauseTimer += new HUD_Timer.UnPauseTimer(this.OnUnPauseTimer);
-    this.StartCoroutine((IEnumerator) this.DoScale());
+    this.StartCoroutine(this.DoScale());
     this.TimerPaused = HUD_Timer.TimerPaused;
   }
 

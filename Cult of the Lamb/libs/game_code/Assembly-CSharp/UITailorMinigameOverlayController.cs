@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UITailorMinigameOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -307,7 +307,7 @@ public class UITailorMinigameOverlayController : MonoBehaviour
         System.Action onCook = this.OnCook;
         if (onCook != null)
           onCook();
-        this.StartCoroutine((IEnumerator) this.InputPause());
+        this.StartCoroutine(this.InputPause());
       }
       this.ControlPromptUI.DOKill();
       this.ControlPromptUI.DOScale(0.75f, 0.33f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
@@ -337,7 +337,7 @@ public class UITailorMinigameOverlayController : MonoBehaviour
         onBurn();
       this.DidBurn = true;
       DOTweenModuleUI.DOFade(this.Flash, 0.0f, 0.5f);
-      this.StartCoroutine((IEnumerator) this.InputPause());
+      this.StartCoroutine(this.InputPause());
     }
   }
 

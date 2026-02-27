@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MortarBomb
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -38,7 +38,7 @@ public class MortarBomb : BaseMonoBehaviour, ISpellOwning
 
   public void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.ScaleCircle());
+    this.StartCoroutine(this.ScaleCircle());
     this.BombVisual.SetActive(false);
     this.BombShadow.SetActive(false);
   }
@@ -66,8 +66,8 @@ public class MortarBomb : BaseMonoBehaviour, ISpellOwning
     this.owner = owner;
     this.parentSpine = parentSpine;
     this.doHaptics = doHaptics;
-    this.StartCoroutine((IEnumerator) this.MoveRock(Position));
-    this.StartCoroutine((IEnumerator) this.FlashCircle());
+    this.StartCoroutine(this.MoveRock(Position));
+    this.StartCoroutine(this.FlashCircle());
     if (PlayDefaultSFX)
     {
       AudioManager.Instance.PlayOneShot("event:/enemy/fly_spawn", this.gameObject);

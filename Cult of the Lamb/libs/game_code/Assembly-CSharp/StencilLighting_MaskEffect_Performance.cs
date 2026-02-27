@@ -1,9 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: StencilLighting_MaskEffect_Performance
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
+using Lamb.UI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -95,6 +96,8 @@ public class StencilLighting_MaskEffect_Performance : MonoBehaviour
 
   public void Update()
   {
+    if (MonoSingleton<UIManager>.Instance.IsPaused)
+      return;
     this._maskEffect.UpdateRenderTexture();
     Camera main = Camera.main;
     if ((UnityEngine.Object) main == (UnityEngine.Object) null)

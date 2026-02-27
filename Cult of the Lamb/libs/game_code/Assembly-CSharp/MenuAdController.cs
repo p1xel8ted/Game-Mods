@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MenuAdController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -52,7 +52,7 @@ public class MenuAdController : MonoBehaviour
     this.buttonObj.OnSelected += new System.Action(this.OnButtonSelect);
     this.buttonObj.OnDeselected += new System.Action(this.OnButtonDeSelect);
     this.ads.Shuffle<MenuAdController.Ad>();
-    this.StartCoroutine((IEnumerator) this.LoadAdsFromWeb());
+    this.StartCoroutine(this.LoadAdsFromWeb());
   }
 
   public void OnButtonSelect()
@@ -153,7 +153,7 @@ public class MenuAdController : MonoBehaviour
 
   public void LoadAd(MenuAdController.AdData ad)
   {
-    this.StartCoroutine((IEnumerator) this.GetImageFromWeb(ad.ImageURL, (Action<Texture>) (texture => this.ads.Insert(this.index + 1, new MenuAdController.Ad()
+    this.StartCoroutine(this.GetImageFromWeb(ad.ImageURL, (Action<Texture>) (texture => this.ads.Insert(this.index + 1, new MenuAdController.Ad()
     {
       messageTerm = ad.Message,
       link = ad.Link,

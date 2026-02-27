@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SpiderBomb
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -65,8 +65,8 @@ public class SpiderBomb : EnemyBomb
           componentsInChild.AnimationState.AddAnimation(0, "idle", true, 0.0f);
         }
       }
-      enemy.StartCoroutine((IEnumerator) this.SpawnAnimIE(enemy));
-      enemy.StartCoroutine((IEnumerator) this.DelayedEnemyHealthEnable((UnitObject) enemy));
+      enemy.StartCoroutine(this.SpawnAnimIE(enemy));
+      enemy.StartCoroutine(this.DelayedEnemyHealthEnable((UnitObject) enemy));
     }
     if (!this.additionalObjectToSpawn.name.Contains("Trap Poison"))
       return;

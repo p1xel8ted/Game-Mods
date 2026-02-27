@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyFollower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -95,7 +95,7 @@ public class EnemyFollower : UnitObject
   public void Start()
   {
     BiomeGenerator.OnBiomeChangeRoom += new BiomeGenerator.BiomeAction(this.BiomeGenerator_OnBiomeChangeRoom);
-    this.artificialUpdate = GameManager.GetInstance().StartCoroutine((IEnumerator) this.ArtificialUpdate());
+    this.artificialUpdate = GameManager.GetInstance().StartCoroutine(this.ArtificialUpdate());
   }
 
   public override void OnDestroy()
@@ -147,7 +147,7 @@ public class EnemyFollower : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     RoomLockController.OnRoomCleared += new RoomLockController.RoomEvent(this.RoomLockController_OnRoomCleared);
     this.timeBetweenShooting = Time.time + UnityEngine.Random.Range(3f, 6f);
   }
@@ -166,7 +166,7 @@ public class EnemyFollower : UnitObject
       if ((UnityEngine.Object) this.spawnedEnemies[index] != (UnityEngine.Object) null && (UnityEngine.Object) this.spawnedEnemies[index] != (UnityEngine.Object) this.health)
       {
         this.spawnedEnemies[index].invincible = false;
-        this.spawnedEnemies[index].DealDamage(this.spawnedEnemies[index].HP, this.gameObject, this.spawnedEnemies[index].transform.position);
+        this.spawnedEnemies[index].DealDamage(this.spawnedEnemies[index].HP, this.gameObject, this.spawnedEnemies[index].transform.position, dealDamageImmediately: true);
       }
     }
   }
@@ -278,7 +278,7 @@ public class EnemyFollower : UnitObject
     {
       if ((UnityEngine.Object) enemyFollower.TargetObject == (UnityEngine.Object) null)
       {
-        enemyFollower.StartCoroutine((IEnumerator) enemyFollower.WaitForTarget());
+        enemyFollower.StartCoroutine(enemyFollower.WaitForTarget());
         yield return (object) null;
       }
       else
@@ -288,7 +288,7 @@ public class EnemyFollower : UnitObject
         yield return (object) null;
       }
     }
-    enemyFollower.StartCoroutine((IEnumerator) enemyFollower.ChasePlayer());
+    enemyFollower.StartCoroutine(enemyFollower.ChasePlayer());
   }
 
   public IEnumerator ChasePlayer()
@@ -343,7 +343,7 @@ public class EnemyFollower : UnitObject
               enemyFollower.health.invincible = false;
               enemyFollower.StopAllCoroutines();
               enemyFollower.DisableForces = false;
-              enemyFollower.StartCoroutine((IEnumerator) enemyFollower.FightPlayer());
+              enemyFollower.StartCoroutine(enemyFollower.FightPlayer());
             }
             else if (!enemyFollower.health.HasShield)
             {
@@ -369,7 +369,7 @@ public class EnemyFollower : UnitObject
   {
     base.BeAlarmed(TargetObject);
     this.TargetObject = TargetObject;
-    this.StartCoroutine((IEnumerator) this.ChasePlayer());
+    this.StartCoroutine(this.ChasePlayer());
   }
 
   public virtual bool CustomAttackLogic() => false;
@@ -469,7 +469,7 @@ public class EnemyFollower : UnitObject
       if ((UnityEngine.Object) enemyFollower.TargetObject == (UnityEngine.Object) null)
       {
         yield return (object) new WaitForSeconds(0.3f);
-        enemyFollower.StartCoroutine((IEnumerator) enemyFollower.WaitForTarget());
+        enemyFollower.StartCoroutine(enemyFollower.WaitForTarget());
         yield break;
       }
       if (enemyFollower.state.CURRENT_STATE == StateMachine.State.Idle)
@@ -492,7 +492,7 @@ public class EnemyFollower : UnitObject
             if (enemyFollower.CanShoot && (double) Time.time > (double) enemyFollower.timeBetweenShooting)
             {
               enemyFollower.timeBetweenShooting = Time.time + UnityEngine.Random.Range(3f, 6f);
-              enemyFollower.StartCoroutine((IEnumerator) enemyFollower.ShootArrowRoutine());
+              enemyFollower.StartCoroutine(enemyFollower.ShootArrowRoutine());
               yield break;
             }
             if ((double) (enemyFollower.RepathTimer += Time.deltaTime) > 0.20000000298023224)
@@ -536,7 +536,7 @@ public class EnemyFollower : UnitObject
             string animationName = enemyFollower.variant == 0 ? "attack-impact" : "attack-impact2";
             enemyFollower.Spine.AnimationState.SetAnimation(1, animationName, false);
             enemyFollower.canBeParried = true;
-            enemyFollower.StartCoroutine((IEnumerator) enemyFollower.EnableDamageCollider(0.0f));
+            enemyFollower.StartCoroutine(enemyFollower.EnableDamageCollider(0.0f));
             if (!string.IsNullOrEmpty(enemyFollower.attackSoundPath))
             {
               AudioManager.Instance.PlayOneShot(enemyFollower.attackSoundPath, enemyFollower.transform.position);
@@ -571,7 +571,7 @@ public class EnemyFollower : UnitObject
       }
       yield return (object) null;
     }
-    enemyFollower.StartCoroutine((IEnumerator) enemyFollower.ChasePlayer());
+    enemyFollower.StartCoroutine(enemyFollower.ChasePlayer());
   }
 
   public void BiomeGenerator_OnBiomeChangeRoom()
@@ -579,7 +579,7 @@ public class EnemyFollower : UnitObject
     if (!((UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null))
       return;
     this.ClearPaths();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlaceIE());
+    GameManager.GetInstance().StartCoroutine(this.PlaceIE());
   }
 
   public void RoomLockController_OnRoomCleared()
@@ -592,7 +592,7 @@ public class EnemyFollower : UnitObject
     this.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
     this.Spine.AnimationState.ClearTracks();
     this.Spine.AnimationState.SetAnimation(0, "spawn-out3", false);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.Delay(1.5f, (System.Action) (() => UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject))));
+    GameManager.GetInstance().StartCoroutine(this.Delay(1.5f, (System.Action) (() => UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject))));
   }
 
   public IEnumerator ShootArrowRoutine(float minDelay = 3f, float maxDelay = 4f)
@@ -659,7 +659,7 @@ public class EnemyFollower : UnitObject
       yield return (object) null;
     enemyFollower.MyState = EnemyFollower.State.WaitAndTaunt;
     enemyFollower.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemyFollower.StartCoroutine((IEnumerator) enemyFollower.WaitForTarget());
+    enemyFollower.StartCoroutine(enemyFollower.WaitForTarget());
   }
 
   public IEnumerator Delay(float delay, System.Action callback)

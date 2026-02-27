@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_BuyItem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -166,7 +166,7 @@ public class Interaction_BuyItem : Interaction
       PlayerFarming.SetStateForAllPlayers(StateMachine.State.InActive);
       if (this.itemForSale.TarotCard || this.itemForSale.Decoration)
         this.playerFarming.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
-      this.StartCoroutine((IEnumerator) this.DelayOnActivate());
+      this.StartCoroutine(this.DelayOnActivate());
       CameraManager.shakeCamera(0.3f, (float) UnityEngine.Random.Range(0, 360));
     }
     else

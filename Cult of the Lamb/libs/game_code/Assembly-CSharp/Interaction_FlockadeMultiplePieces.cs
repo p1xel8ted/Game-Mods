@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FlockadeMultiplePieces
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -57,7 +57,7 @@ public class Interaction_FlockadeMultiplePieces : Interaction
     this.DoPickUpRoutine();
   }
 
-  public void DoPickUpRoutine() => this.StartCoroutine((IEnumerator) this.PickUpRoutine());
+  public void DoPickUpRoutine() => this.StartCoroutine(this.PickUpRoutine());
 
   public IEnumerator PickUpRoutine()
   {
@@ -89,10 +89,7 @@ public class Interaction_FlockadeMultiplePieces : Interaction
     piecesMenuController.OnHide = piecesMenuController.OnHide + new System.Action(flockadeMultiplePieces.BackToIdle);
   }
 
-  public void BackToIdle()
-  {
-    this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(this.playerFarming));
-  }
+  public void BackToIdle() => this.StartCoroutine(this.BackToIdleRoutine(this.playerFarming));
 
   public IEnumerator BackToIdleRoutine(PlayerFarming playerFarming)
   {

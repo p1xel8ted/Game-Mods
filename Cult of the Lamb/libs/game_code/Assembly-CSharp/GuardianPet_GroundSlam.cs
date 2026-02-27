@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GuardianPet_GroundSlam
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -91,7 +91,7 @@ public class GuardianPet_GroundSlam : GuardianPet
     int index = -1;
     while (++index < this.WhirlWindChildren.Count)
       this.WhirlWindChildren[index].gameObject.SetActive(false);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
     this.indicator.transform.parent = this.transform;
   }
 
@@ -185,7 +185,7 @@ public class GuardianPet_GroundSlam : GuardianPet
   public void WhirlWindAttack()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.WhirlWindAttackRoutine());
+    this.StartCoroutine(this.WhirlWindAttackRoutine());
   }
 
   public IEnumerator WhirlWindAttackRoutine()
@@ -221,13 +221,13 @@ public class GuardianPet_GroundSlam : GuardianPet
     if (num2 >= Pet.NumberOfAttacks && !Pet.HostHasDied)
       Pet.ReturnToController();
     else
-      Pet.StartCoroutine((IEnumerator) Pet.ActiveRoutine());
+      Pet.StartCoroutine(Pet.ActiveRoutine());
   }
 
   public void GroundSmash()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.GroundSmashRoutine());
+    this.StartCoroutine(this.GroundSmashRoutine());
   }
 
   public override void OnDestroy()
@@ -289,13 +289,13 @@ public class GuardianPet_GroundSlam : GuardianPet
     time = 0.0f;
     while ((double) (time += Time.deltaTime * (PlayerRelic.TimeFrozen ? 0.0f : 1f)) < 0.5)
       yield return (object) null;
-    guardianPetGroundSlam.StartCoroutine((IEnumerator) guardianPetGroundSlam.ActiveRoutine());
+    guardianPetGroundSlam.StartCoroutine(guardianPetGroundSlam.ActiveRoutine());
   }
 
   public void ProjectileRings()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ProjectileRingsRoutine());
+    this.StartCoroutine(this.ProjectileRingsRoutine());
   }
 
   public IEnumerator ProjectileRingsRoutine()
@@ -332,7 +332,7 @@ public class GuardianPet_GroundSlam : GuardianPet
     if (num1 >= guardianPetGroundSlam1.NumberOfAttacks && !guardianPetGroundSlam1.HostHasDied)
       guardianPetGroundSlam1.ReturnToController();
     else
-      guardianPetGroundSlam1.StartCoroutine((IEnumerator) guardianPetGroundSlam1.ActiveRoutine());
+      guardianPetGroundSlam1.StartCoroutine(guardianPetGroundSlam1.ActiveRoutine());
   }
 
   [CompilerGenerated]

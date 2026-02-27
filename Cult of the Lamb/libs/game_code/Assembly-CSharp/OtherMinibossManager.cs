@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: OtherMinibossManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -46,14 +46,14 @@ public class OtherMinibossManager : BaseMonoBehaviour
     AudioManager.Instance.SetMusicRoomID(SoundConstants.RoomID.MainBossA);
     foreach (Health health in this.CurrentMiniBoss.EnemiesToTrack)
       health.OnDie += new Health.DieAction(this.H_OnDie);
-    this.StartCoroutine((IEnumerator) this.IntroRoutine());
+    this.StartCoroutine(this.IntroRoutine());
   }
 
   public void OnEnable()
   {
     if (this.introPlayed)
       return;
-    this.StartCoroutine((IEnumerator) this.IntroRoutine());
+    this.StartCoroutine(this.IntroRoutine());
   }
 
   public IEnumerator IntroRoutine()
@@ -63,7 +63,7 @@ public class OtherMinibossManager : BaseMonoBehaviour
     yield return (object) new WaitForEndOfFrame();
     while ((Object) PlayerFarming.Instance == (Object) null || PlayerFarming.Instance.GoToAndStopping)
       yield return (object) null;
-    otherMinibossManager.StartCoroutine((IEnumerator) otherMinibossManager.CurrentMiniBoss.IntroRoutine());
+    otherMinibossManager.StartCoroutine(otherMinibossManager.CurrentMiniBoss.IntroRoutine());
     RoomLockController.CloseAll();
   }
 
@@ -86,14 +86,14 @@ public class OtherMinibossManager : BaseMonoBehaviour
     if (!this.introPlayed || this.revealed || this.DeathCount < this.CurrentMiniBoss.EnemiesToTrack.Count)
       return;
     this.revealed = true;
-    this.StartCoroutine((IEnumerator) this.RevealRoutine());
+    this.StartCoroutine(this.RevealRoutine());
   }
 
   public IEnumerator RevealRoutine()
   {
     OtherMinibossManager otherMinibossManager = this;
     AudioManager.Instance.SetMusicRoomID(SoundConstants.RoomID.BossEntryAmbience);
-    yield return (object) otherMinibossManager.StartCoroutine((IEnumerator) otherMinibossManager.CurrentMiniBoss.OutroRoutine());
+    yield return (object) otherMinibossManager.StartCoroutine(otherMinibossManager.CurrentMiniBoss.OutroRoutine());
     yield return (object) new WaitForSeconds(0.5f);
     otherMinibossManager.Chest.RevealBossReward(InventoryItem.ITEM_TYPE.NONE);
   }

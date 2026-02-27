@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySpiderMonster
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -110,8 +110,8 @@ public class EnemySpiderMonster : UnitObject
     if (!GameManager.RoomActive || !this.active)
       return;
     this.health.enabled = true;
-    this.StartCoroutine((IEnumerator) this.Roar());
-    this.StartCoroutine((IEnumerator) this.DelayAddCamera());
+    this.StartCoroutine(this.Roar());
+    this.StartCoroutine(this.DelayAddCamera());
   }
 
   public IEnumerator DelayAddCamera()
@@ -201,7 +201,7 @@ public class EnemySpiderMonster : UnitObject
       case 1454297646:
         if (!(EventName == "grow shadow"))
           break;
-        this.StartCoroutine((IEnumerator) this.GrowShadow());
+        this.StartCoroutine(this.GrowShadow());
         break;
       case 1785338614:
         if (!(EventName == "turn off colliders"))
@@ -214,7 +214,7 @@ public class EnemySpiderMonster : UnitObject
       case 1844065948:
         if (!(EventName == "land") || !this.JumpAroundAttacking)
           break;
-        this.StartCoroutine((IEnumerator) this.LandProjectilePattern.ShootIE(0.0f, (GameObject) null, (Transform) null, false));
+        this.StartCoroutine(this.LandProjectilePattern.ShootIE(0.0f, (GameObject) null, (Transform) null, false));
         this.JumpAroundAttacking = false;
         break;
       case 2151091521:
@@ -223,7 +223,7 @@ public class EnemySpiderMonster : UnitObject
       case 2163513076:
         if (!(EventName == "shrink shadow"))
           break;
-        this.cShrinkShadow = this.StartCoroutine((IEnumerator) this.ShrinkShadow());
+        this.cShrinkShadow = this.StartCoroutine(this.ShrinkShadow());
         break;
       case 2704129201:
         if (!(EventName == "webshot"))
@@ -290,7 +290,7 @@ public class EnemySpiderMonster : UnitObject
   {
     if (this.damageColliderCoroutine != null)
       this.StopCoroutine(this.damageColliderCoroutine);
-    this.damageColliderCoroutine = this.StartCoroutine((IEnumerator) this.DoDamageAttackTimed(startDelay, 0.1f));
+    this.damageColliderCoroutine = this.StartCoroutine(this.DoDamageAttackTimed(startDelay, 0.1f));
   }
 
   public IEnumerator DoDamageAttackTimed(float startDelay, float dur)
@@ -377,19 +377,19 @@ public class EnemySpiderMonster : UnitObject
       }
       yield return (object) null;
     }
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.CloseRangeAttack());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.CloseRangeAttack());
     yield break;
 label_13:
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.FireWebs());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.FireWebs());
     yield break;
 label_15:
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.ZipAway());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.ZipAway());
     yield break;
 label_17:
     if (UnityEngine.Random.Range(0, 2) == 0)
-      enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.JumpAttack());
+      enemySpiderMonster.StartCoroutine(enemySpiderMonster.JumpAttack());
     else
-      enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.JumpAround());
+      enemySpiderMonster.StartCoroutine(enemySpiderMonster.JumpAround());
   }
 
   public IEnumerator FireWebs()
@@ -417,7 +417,7 @@ label_17:
     AudioManager.Instance.PlayOneShot("event:/boss/spider/bomb_end", enemySpiderMonster.gameObject);
     enemySpiderMonster.FireWebsDelay = 2f;
     enemySpiderMonster.CurrentBombType = (EnemySpiderMonster.BombType) UnityEngine.Random.Range(0, 2);
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.ChasePlayer());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.ChasePlayer());
   }
 
   public IEnumerator JumpAttack()
@@ -453,7 +453,7 @@ label_17:
       yield return (object) null;
     }
     enemySpiderMonster.ChargeDelay = 1f;
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.ChasePlayer());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.ChasePlayer());
   }
 
   public IEnumerator JumpAround()
@@ -489,7 +489,7 @@ label_17:
       yield return (object) null;
     }
     enemySpiderMonster.ChargeDelay = 1f;
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.ChasePlayer());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.ChasePlayer());
   }
 
   public IEnumerator ZipAway()
@@ -526,7 +526,7 @@ label_17:
     while ((double) (time += Time.deltaTime * enemySpiderMonster.simpleSpineAnimator.anim.timeScale) < 0.64999997615814209)
       yield return (object) null;
     enemySpiderMonster.ZipAwayDelay = 4f;
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.ChasePlayer());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.ChasePlayer());
   }
 
   public IEnumerator ShrinkShadow()
@@ -578,7 +578,7 @@ label_17:
       yield return (object) null;
     }
     enemySpiderMonster.CloseRangeAttackDelay = 1f;
-    enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.ChasePlayer());
+    enemySpiderMonster.StartCoroutine(enemySpiderMonster.ChasePlayer());
   }
 
   public void Play()
@@ -586,7 +586,7 @@ label_17:
     this.simpleSpineEventListener = this.GetComponent<SimpleSpineEventListener>();
     this.simpleSpineEventListener.OnSpineEvent += new SimpleSpineEventListener.SpineEvent(this.OnSpineEvent);
     this.simpleSpineEventListener.skeletonAnimation.ForceVisible = true;
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.SeperateObject = true;
     this.StartPosition = this.transform.position;
     this.ShadowSize = this.Shadow.transform.localScale;
@@ -597,7 +597,7 @@ label_17:
       this.damageColliderEvents.SetActive(false);
     }
     this.active = true;
-    this.StartCoroutine((IEnumerator) this.ChasePlayer());
+    this.StartCoroutine(this.ChasePlayer());
   }
 
   public override void OnHit(
@@ -617,7 +617,7 @@ label_17:
       this.DisableForces = false;
       if ((UnityEngine.Object) this.damageColliderEvents != (UnityEngine.Object) null)
         this.damageColliderEvents.SetActive(false);
-      this.StartCoroutine((IEnumerator) this.Roar());
+      this.StartCoroutine(this.Roar());
     }
     base.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
   }
@@ -653,7 +653,7 @@ label_17:
     this.ClearPaths();
     this.StopAllCoroutines();
     this.DisableForces = false;
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
   }
 
   public IEnumerator Roar()
@@ -691,9 +691,9 @@ label_17:
     enemySpiderMonster.DontPlayHurtAnimation = false;
     enemySpiderMonster.health.invincible = false;
     if (UnityEngine.Random.Range(0, 2) == 0)
-      enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.JumpAttack());
+      enemySpiderMonster.StartCoroutine(enemySpiderMonster.JumpAttack());
     else
-      enemySpiderMonster.StartCoroutine((IEnumerator) enemySpiderMonster.JumpAround());
+      enemySpiderMonster.StartCoroutine(enemySpiderMonster.JumpAround());
     yield return (object) null;
   }
 
@@ -794,7 +794,7 @@ label_17:
         Health.team2[index].untouchable = false;
         if ((UnityEngine.Object) Health.team2[index].GetComponent<SpawnEnemyOnDeath>() != (UnityEngine.Object) null)
           Health.team2[index].GetComponent<SpawnEnemyOnDeath>().SpawnEnemies = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }

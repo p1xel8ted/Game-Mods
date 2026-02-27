@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDogMageFlee
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -152,7 +152,7 @@ public class EnemyDogMageFlee : UnitObject
       this.DamageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.DamageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     base.OnEnable();
   }
 
@@ -186,7 +186,7 @@ public class EnemyDogMageFlee : UnitObject
     while ((double) PlayerFarming.GetClosestPlayerDist(enemyDogMageFlee.transform.position) > (double) enemyDogMageFlee.Range)
       yield return (object) null;
     enemyDogMageFlee.StopAllCoroutines();
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.ChasePlayer());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.ChasePlayer());
   }
 
   public override void OnHit(
@@ -209,7 +209,7 @@ public class EnemyDogMageFlee : UnitObject
         this.knockBackVY = -this.KnockbackSpeed * Mathf.Sin(Utils.GetAngle(this.transform.position, AttackLocation) * ((float) Math.PI / 180f));
         this.simpleSpineFlash.FlashFillRed();
         this.StopAllCoroutines();
-        this.StartCoroutine((IEnumerator) this.DoStunned());
+        this.StartCoroutine(this.DoStunned());
       }
       else
       {
@@ -262,7 +262,7 @@ public class EnemyDogMageFlee : UnitObject
       if ((double) minion.health.HP > 0.0)
       {
         minion.health.invincible = false;
-        minion.health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+        minion.health.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
       }
     }
   }
@@ -283,16 +283,16 @@ public class EnemyDogMageFlee : UnitObject
         if ((double) enemyDogMageFlee.fleeDelay < 0.0 && (double) num < (double) enemyDogMageFlee.FleeRadius)
           enemyDogMageFlee.ThrowDelay = UnityEngine.Random.Range(0.0f, 1f);
         enemyDogMageFlee.fleeDelay = enemyDogMageFlee.FleeDelay;
-        yield return (object) enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.DoFlee());
+        yield return (object) enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.DoFlee());
       }
       if (enemyDogMageFlee.Summon && (!enemyDogMageFlee.hasSummoned || enemyDogMageFlee.GetAliveMinions() <= 0) && (double) (enemyDogMageFlee.SummonDelay -= Time.deltaTime * enemyDogMageFlee.skeletonAnimation.timeScale) < 0.0)
       {
         enemyDogMageFlee.StopAllCoroutines();
-        yield return (object) enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.DoSummon());
+        yield return (object) enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.DoSummon());
       }
       if (enemyDogMageFlee.Melee && (double) (enemyDogMageFlee.CloseCombatCooldown -= Time.deltaTime * enemyDogMageFlee.skeletonAnimation.timeScale) < 0.0 && (double) Vector3.Distance(enemyDogMageFlee.transform.position, enemyDogMageFlee.TargetObject.transform.position) < (double) enemyDogMageFlee.distanceActivationAttackCircle)
       {
-        enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.DoCloseCombatAttack());
+        enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.DoCloseCombatAttack());
         break;
       }
       if (enemyDogMageFlee.Throw && enemyDogMageFlee.hasSummoned && (double) (enemyDogMageFlee.ThrowDelay -= Time.deltaTime * enemyDogMageFlee.skeletonAnimation.timeScale) < 0.0 && enemyDogMageFlee.GetAliveMinions() > 0)
@@ -301,10 +301,10 @@ public class EnemyDogMageFlee : UnitObject
         enemyDogMageFlee.ThrowDelay = UnityEngine.Random.Range(2f, 3f);
         if ((double) UnityEngine.Random.value < (double) enemyDogMageFlee.ChanceOfThrowAll)
         {
-          enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.DoThrowAllMinionsAttack());
+          enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.DoThrowAllMinionsAttack());
           break;
         }
-        enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.DoThrowSingleMinionAttack());
+        enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.DoThrowSingleMinionAttack());
         break;
       }
       yield return (object) null;
@@ -357,7 +357,7 @@ public class EnemyDogMageFlee : UnitObject
     enemyDogMageFlee.hasSummoned = true;
     enemyDogMageFlee.SummonDelay = 1f;
     enemyDogMageFlee.StopAllCoroutines();
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.ChasePlayer());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.ChasePlayer());
   }
 
   public void OnDamageTriggerEnter(Collider2D collider)
@@ -389,7 +389,7 @@ public class EnemyDogMageFlee : UnitObject
     enemyDogMageFlee.Stunned = false;
     enemyDogMageFlee.health.ArrowAttackVulnerability = 1f;
     enemyDogMageFlee.StopAllCoroutines();
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.ChasePlayer());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.ChasePlayer());
   }
 
   public IEnumerator DoThrowSingleMinionAttack()
@@ -398,21 +398,21 @@ public class EnemyDogMageFlee : UnitObject
     UnitObject minion = enemyDogMageFlee.GetRandomMinion();
     enemyDogMageFlee.isThrowing = true;
     enemyDogMageFlee.state.CURRENT_STATE = StateMachine.State.Attacking;
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.DoNecromancerRiseAnim());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.DoNecromancerRiseAnim());
     if ((UnityEngine.Object) minion != (UnityEngine.Object) null)
     {
       SkeletonAnimation componentInChildren = minion.GetComponentInChildren<SkeletonAnimation>(true);
       Health minionHealth = minion.GetComponent<Health>();
       enemyDogMageFlee.DisableMinionForThrowing(minion, minionHealth);
-      yield return (object) enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.RaiseMinionIntoAirForThrowing(minion, componentInChildren));
+      yield return (object) enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.RaiseMinionIntoAirForThrowing(minion, componentInChildren));
       yield return (object) new WaitForSeconds(enemyDogMageFlee.PauseBeforeThrow);
-      yield return (object) enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.MoveMinionTowardsTarget(minion, minionHealth));
+      yield return (object) enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.MoveMinionTowardsTarget(minion, minionHealth));
       minionHealth = (Health) null;
     }
     enemyDogMageFlee.simpleSpineFlash.FlashWhite(false);
     enemyDogMageFlee.isThrowing = false;
     enemyDogMageFlee.StopAllCoroutines();
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.ChasePlayer());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.ChasePlayer());
   }
 
   public IEnumerator DoFlee()
@@ -463,7 +463,7 @@ public class EnemyDogMageFlee : UnitObject
     enemyDogMageFlee.fleeDelay = enemyDogMageFlee.FleeDelay;
     enemyDogMageFlee.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyDogMageFlee.StopAllCoroutines();
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.ChasePlayer());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.ChasePlayer());
   }
 
   public IEnumerator DoCloseCombatAttack()
@@ -498,7 +498,7 @@ public class EnemyDogMageFlee : UnitObject
     enemyDogMageFlee.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyDogMageFlee.fleeDelay = 0.0f;
     enemyDogMageFlee.StopAllCoroutines();
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.ChasePlayer());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.ChasePlayer());
   }
 
   public IEnumerator DoThrowAllMinionsAttack()
@@ -507,7 +507,7 @@ public class EnemyDogMageFlee : UnitObject
     List<UnitObject> minions = enemyDogMageFlee.GetAllAvailableMinions();
     enemyDogMageFlee.isThrowing = true;
     enemyDogMageFlee.state.CURRENT_STATE = StateMachine.State.Attacking;
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.DoNecromancerRiseAnim());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.DoNecromancerRiseAnim());
     if (minions.Count > 0)
     {
       foreach (UnitObject minion in minions)
@@ -515,21 +515,21 @@ public class EnemyDogMageFlee : UnitObject
         SkeletonAnimation componentInChildren = minion.GetComponentInChildren<SkeletonAnimation>(true);
         Health component = minion.GetComponent<Health>();
         enemyDogMageFlee.DisableMinionForThrowing(minion, component);
-        enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.RaiseMinionIntoAirForThrowing(minion, componentInChildren));
+        enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.RaiseMinionIntoAirForThrowing(minion, componentInChildren));
       }
       yield return (object) new WaitForSeconds(enemyDogMageFlee.MinionRiseDuration);
       yield return (object) new WaitForSeconds(enemyDogMageFlee.PauseBeforeThrow);
       for (int i = 0; i < minions.Count; ++i)
       {
         Health component = minions[i].GetComponent<Health>();
-        yield return (object) enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.MoveMinionTowardsTarget(minions[i], component));
+        yield return (object) enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.MoveMinionTowardsTarget(minions[i], component));
         yield return (object) new WaitForSeconds(enemyDogMageFlee.DelayBetweenMinionThrow);
       }
     }
     enemyDogMageFlee.simpleSpineFlash.FlashWhite(false);
     enemyDogMageFlee.isThrowing = false;
     enemyDogMageFlee.StopAllCoroutines();
-    enemyDogMageFlee.StartCoroutine((IEnumerator) enemyDogMageFlee.ChasePlayer());
+    enemyDogMageFlee.StartCoroutine(enemyDogMageFlee.ChasePlayer());
   }
 
   public IEnumerator DoNecromancerRiseAnim()
@@ -554,7 +554,7 @@ public class EnemyDogMageFlee : UnitObject
     CameraManager.instance.ShakeCameraForDuration(1f, 1.5f, 0.5f);
     BiomeConstants.Instance.EmitHammerEffects(minion.transform.position);
     minionHealth.invincible = false;
-    minionHealth.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+    minionHealth.DealDamage(float.PositiveInfinity, PlayerFarming.Instance.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
   }
 
   public IEnumerator RaiseMinionIntoAirForThrowing(UnitObject minion, SkeletonAnimation minionSpine)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_SacrificeTable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -249,7 +249,7 @@ public class Interaction_SacrificeTable : Interaction
 
   public void SacrificeAnimal(Interaction_Ranchable animal)
   {
-    this.StartCoroutine((IEnumerator) this.SacrificeRanchableRoutine(animal, this.IsComplete));
+    this.StartCoroutine(this.SacrificeRanchableRoutine(animal, this.IsComplete));
   }
 
   public static IEnumerator FadeIn()
@@ -276,7 +276,7 @@ public class Interaction_SacrificeTable : Interaction
 
   public void PlaySacrificeRanchableSequence(bool complete)
   {
-    this.StartCoroutine((IEnumerator) this.SacrificeRanchableRoutine((Interaction_Ranchable) null, complete));
+    this.StartCoroutine(this.SacrificeRanchableRoutine((Interaction_Ranchable) null, complete));
   }
 
   public IEnumerator SacrificeRanchableRoutine(Interaction_Ranchable animal, bool isComplete)
@@ -320,7 +320,7 @@ public class Interaction_SacrificeTable : Interaction
     yield return (object) interactionSacrificeTable.icegoreController.Roar();
     yield return (object) interactionSacrificeTable.icegoreController.Pickup(animal?.gameObject);
     yield return (object) new WaitForSeconds(0.5f);
-    interactionSacrificeTable.StartCoroutine((IEnumerator) interactionSacrificeTable.icegoreController.WalkTo(interactionSacrificeTable.icegoreEndWaypoint.position, 1.5f));
+    interactionSacrificeTable.StartCoroutine(interactionSacrificeTable.icegoreController.WalkTo(interactionSacrificeTable.icegoreEndWaypoint.position, 1.5f));
     yield return (object) new WaitForSeconds(3f);
     animal.PlayDieIcegoreVO();
     interactionSacrificeTable.offeringReady.gameObject.SetActive(false);

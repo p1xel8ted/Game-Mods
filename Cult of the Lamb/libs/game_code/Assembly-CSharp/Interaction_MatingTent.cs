@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_MatingTent
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -150,7 +150,7 @@ public class Interaction_MatingTent : Interaction
     if (DataManager.Instance.PlayersShagged)
       return;
     this._playerFarming = state.GetComponent<PlayerFarming>();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlayersMatingIE());
+    GameManager.GetInstance().StartCoroutine(this.PlayersMatingIE());
   }
 
   public override void OnDestroy()
@@ -169,7 +169,7 @@ public class Interaction_MatingTent : Interaction
       return;
     base.OnInteract(state);
     if ((UnityEngine.Object) this.playerInside != (UnityEngine.Object) null)
-      this.StartCoroutine((IEnumerator) this.PlayersMatingIE());
+      this.StartCoroutine(this.PlayersMatingIE());
     else if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.PLEASURE_POINT) < 1)
     {
       this.playerFarming.indicator.PlayShake();
@@ -190,7 +190,7 @@ public class Interaction_MatingTent : Interaction
       this.follower1 = (Follower) null;
       this.follower2 = (Follower) null;
       this.isLoadingAssets = true;
-      this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadMatingMenuAssets(), (System.Action) (() =>
+      this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadMatingMenuAssets(), (System.Action) (() =>
       {
         this.isLoadingAssets = false;
         UIMatingMenuController matingMenuController = MonoSingleton<UIManager>.Instance.MatingMenuControllerTemplate.Instantiate<UIMatingMenuController>();
@@ -203,7 +203,7 @@ public class Interaction_MatingTent : Interaction
             CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, f1.ID);
           if (TimeManager.IsNight && (UnityEngine.Object) this.follower2 != (UnityEngine.Object) null && this.follower2.Brain.CurrentTask != null && this.follower2.Brain.CurrentTask.State == FollowerTaskState.Doing && (this.follower2.Brain.CurrentTaskType == FollowerTaskType.Sleep || this.follower2.Brain.CurrentTaskType == FollowerTaskType.SleepBedRest))
             CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, f2.ID);
-          this.StartCoroutine((IEnumerator) this.SexyTimeIE());
+          this.StartCoroutine(this.SexyTimeIE());
         });
         matingMenuController.OnHidden = matingMenuController.OnHidden + (System.Action) (() =>
         {
@@ -584,7 +584,7 @@ public class Interaction_MatingTent : Interaction
     GameManager.GetInstance().OnConversationNext(this.gameObject, 6f);
     if ((UnityEngine.Object) f1 != (UnityEngine.Object) null && (UnityEngine.Object) f2 != (UnityEngine.Object) null)
     {
-      this.StartCoroutine((IEnumerator) this.FollowersFinishedMatingIE(f1, f2));
+      this.StartCoroutine(this.FollowersFinishedMatingIE(f1, f2));
     }
     else
     {
@@ -604,9 +604,9 @@ public class Interaction_MatingTent : Interaction
   {
     Interaction_MatingTent interactionMatingTent = this;
     if (interactionMatingTent.structure.Brain.Data.MatingFailed)
-      yield return (object) interactionMatingTent.StartCoroutine((IEnumerator) interactionMatingTent.FailedMatingIE(follower1, follower2));
+      yield return (object) interactionMatingTent.StartCoroutine(interactionMatingTent.FailedMatingIE(follower1, follower2));
     else
-      yield return (object) interactionMatingTent.StartCoroutine((IEnumerator) interactionMatingTent.SuccessfulMatingIE(follower1, follower2));
+      yield return (object) interactionMatingTent.StartCoroutine(interactionMatingTent.SuccessfulMatingIE(follower1, follower2));
     FollowerBrain.SetFollowerCostume(follower1.Spine.Skeleton, follower1.Brain._directInfoAccess, forceUpdate: true);
     FollowerBrain.SetFollowerCostume(follower2.Spine.Skeleton, follower2.Brain._directInfoAccess, forceUpdate: true);
     SimulationManager.UnPause();
@@ -956,7 +956,7 @@ public class Interaction_MatingTent : Interaction
       interactionMatingTent1.playerFarming.GoToAndStop(interactionMatingTent1.pos1.transform.position, groupAction: true, forcedOtherPosition: new Vector3?(interactionMatingTent1.pos2.transform.position));
       yield return (object) new WaitForSeconds(0.5f);
       foreach (PlayerFarming player in PlayerFarming.players)
-        interactionMatingTent1.StartCoroutine((IEnumerator) interactionMatingTent1.Vomit(player));
+        interactionMatingTent1.StartCoroutine(interactionMatingTent1.Vomit(player));
       yield return (object) new WaitForSeconds(2f);
       DataManager.Instance.PlayersShagged = true;
       interactionMatingTent1.bothPlayersInside = false;
@@ -1075,7 +1075,7 @@ public class Interaction_MatingTent : Interaction
         CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, f1.ID);
       if (TimeManager.IsNight && (UnityEngine.Object) this.follower2 != (UnityEngine.Object) null && this.follower2.Brain.CurrentTask != null && this.follower2.Brain.CurrentTask.State == FollowerTaskState.Doing && (this.follower2.Brain.CurrentTaskType == FollowerTaskType.Sleep || this.follower2.Brain.CurrentTaskType == FollowerTaskType.SleepBedRest))
         CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, f2.ID);
-      this.StartCoroutine((IEnumerator) this.SexyTimeIE());
+      this.StartCoroutine(this.SexyTimeIE());
     });
     matingMenuController.OnHidden = matingMenuController.OnHidden + (System.Action) (() =>
     {
@@ -1095,7 +1095,7 @@ public class Interaction_MatingTent : Interaction
       CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, f1.ID);
     if (TimeManager.IsNight && (UnityEngine.Object) this.follower2 != (UnityEngine.Object) null && this.follower2.Brain.CurrentTask != null && this.follower2.Brain.CurrentTask.State == FollowerTaskState.Doing && (this.follower2.Brain.CurrentTaskType == FollowerTaskType.Sleep || this.follower2.Brain.CurrentTaskType == FollowerTaskType.SleepBedRest))
       CultFaithManager.AddThought(Thought.Cult_WokeUpFollower, f2.ID);
-    this.StartCoroutine((IEnumerator) this.SexyTimeIE());
+    this.StartCoroutine(this.SexyTimeIE());
   }
 
   [CompilerGenerated]

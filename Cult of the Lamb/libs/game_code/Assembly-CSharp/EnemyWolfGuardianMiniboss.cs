@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWolfGuardianMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -148,7 +148,7 @@ public class EnemyWolfGuardianMiniboss : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.health.OnAddCharm += new Health.StasisEvent(this.ReconsiderTarget);
     this.health.OnStasisCleared += new Health.StasisEvent(this.ReconsiderTarget);
     this.TargetPosition = this.transform.position;
@@ -192,7 +192,7 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     if (!this.IsReadyForNextBossPhase())
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.TransitionToNextPhase(EnemyWolfGuardianMiniboss.BossPhase.One));
+    this.StartCoroutine(this.TransitionToNextPhase(EnemyWolfGuardianMiniboss.BossPhase.One));
   }
 
   public void Preload()
@@ -223,14 +223,14 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     {
       if ((UnityEngine.Object) guardianMiniboss.TargetObject == (UnityEngine.Object) null)
       {
-        guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.WaitForTarget());
+        guardianMiniboss.StartCoroutine(guardianMiniboss.WaitForTarget());
         yield break;
       }
       if ((double) Vector3.Distance(guardianMiniboss.TargetObject.transform.position, guardianMiniboss.transform.position) <= (double) guardianMiniboss.VisionRange)
         InRange = true;
       yield return (object) null;
     }
-    guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.FightPlayer());
+    guardianMiniboss.StartCoroutine(guardianMiniboss.FightPlayer());
   }
 
   public void SetTargetObject()
@@ -333,8 +333,8 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     if ((double) guardianMiniboss.transform.position.z < 0.0)
       guardianMiniboss.transform.DOMoveZ(0.0f, guardianMiniboss.SwordSpecialTimeToGround * guardianMiniboss.Spine.timeScale).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack);
     yield return (object) new WaitForSeconds(animation.Duration * guardianMiniboss.Spine.timeScale);
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.SpawnEnemies());
-    guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.FightPlayer());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.SpawnEnemies());
+    guardianMiniboss.StartCoroutine(guardianMiniboss.FightPlayer());
   }
 
   public bool IsReadyForNextBossPhase()
@@ -351,13 +351,13 @@ public class EnemyWolfGuardianMiniboss : UnitObject
       switch (guardianMiniboss.currentPhase)
       {
         case EnemyWolfGuardianMiniboss.BossPhase.Zero:
-          yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoPhaseZero());
+          yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoPhaseZero());
           continue;
         case EnemyWolfGuardianMiniboss.BossPhase.One:
-          yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoPhaseOne());
+          yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoPhaseOne());
           continue;
         case EnemyWolfGuardianMiniboss.BossPhase.Two:
-          yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoPhaseTwo());
+          yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoPhaseTwo());
           continue;
         default:
           continue;
@@ -414,11 +414,11 @@ public class EnemyWolfGuardianMiniboss : UnitObject
       guardianMiniboss.LookAtTarget();
       guardianMiniboss.GetPath();
       yield return (object) guardianMiniboss.MoveTowardsClosestPlayer();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeAttack());
       yield return (object) guardianMiniboss.MoveTowardsClosestPlayer();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeAttack());
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoAxeRangedAttack());
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoAxeRangedAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoAxeRangedAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoAxeRangedAttack());
     }
   }
 
@@ -432,12 +432,12 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     {
       guardianMiniboss.LookAtTarget();
       guardianMiniboss.GetPath();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoSlashRangedAttack());
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoSlashRangedAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoSlashRangedAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoSlashRangedAttack());
       yield return (object) guardianMiniboss.MoveTowardsClosestPlayer();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeAttack());
       yield return (object) guardianMiniboss.MoveTowardsClosestPlayer();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeAttack());
     }
   }
 
@@ -451,11 +451,11 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     {
       guardianMiniboss.LookAtTarget();
       guardianMiniboss.GetPath();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoBeamSpecialAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoBeamSpecialAttack());
       yield return (object) guardianMiniboss.MoveTowardsClosestPlayer();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeAttack());
       yield return (object) guardianMiniboss.MoveTowardsClosestPlayer();
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeAttack());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeAttack());
     }
   }
 
@@ -479,9 +479,9 @@ public class EnemyWolfGuardianMiniboss : UnitObject
   public IEnumerator DoMeleeAttack()
   {
     EnemyWolfGuardianMiniboss guardianMiniboss = this;
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeSignpost());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeMainLogic());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoMeleeRecovery());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeSignpost());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeMainLogic());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoMeleeRecovery());
   }
 
   public IEnumerator DoMeleeSignpost()
@@ -559,10 +559,10 @@ public class EnemyWolfGuardianMiniboss : UnitObject
   public IEnumerator DoBeamRangedAttack()
   {
     EnemyWolfGuardianMiniboss guardianMiniboss = this;
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.JumpToEmptySpace());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoRangedAttackSignpost());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.BeamRangedAttackLogic());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.StaffRangedRecovery());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.JumpToEmptySpace());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoRangedAttackSignpost());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.BeamRangedAttackLogic());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.StaffRangedRecovery());
   }
 
   public IEnumerator DoRangedAttackSignpost()
@@ -599,7 +599,7 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     guardianMiniboss.damageColliderEvents.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(guardianMiniboss.OnDamageTriggerEnter);
     guardianMiniboss.Spine.AnimationState.SetAnimation(0, guardianMiniboss.RangedAttackAnimation, true);
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoBeamAttack(closestTarget, guardianMiniboss.StaffRangedAttackDuration));
+    this.\u003C\u003E2__current = (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoBeamAttack(closestTarget, guardianMiniboss.StaffRangedAttackDuration));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -613,9 +613,9 @@ public class EnemyWolfGuardianMiniboss : UnitObject
   public IEnumerator DoAxeRangedAttack()
   {
     EnemyWolfGuardianMiniboss guardianMiniboss = this;
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.JumpToEmptySpace());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoRangedAttackSignpost());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoAxeRangedLogic());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.JumpToEmptySpace());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoRangedAttackSignpost());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoAxeRangedLogic());
   }
 
   public IEnumerator DoAxeRangedLogic()
@@ -649,15 +649,15 @@ public class EnemyWolfGuardianMiniboss : UnitObject
   public IEnumerator DoSlashRangedAttack()
   {
     EnemyWolfGuardianMiniboss guardianMiniboss = this;
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.JumpToEmptySpace());
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoRangedAttackSignpost());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.JumpToEmptySpace());
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoRangedAttackSignpost());
     guardianMiniboss.GetClosestTarget();
     for (int i = 0; i < guardianMiniboss.SwordRangedProjectileCount; ++i)
     {
       guardianMiniboss.LookAtTarget();
       if (!string.IsNullOrEmpty(guardianMiniboss.SwordSlashSFX))
         AudioManager.Instance.PlayOneShot(guardianMiniboss.SwordSlashSFX, guardianMiniboss.transform.position);
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle));
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle));
     }
   }
 
@@ -674,7 +674,7 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     guardianMiniboss.transform.DOKill();
     guardianMiniboss.transform.DOMoveZ(guardianMiniboss.SpecialAttackFlyHeight, guardianMiniboss.SpecialAttackTimeToRise).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack);
     yield return (object) new WaitForSeconds(1.5f);
-    yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.DoBeamAttack(currentTarget, guardianMiniboss.StaffSpecialDuration));
+    yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.DoBeamAttack(currentTarget, guardianMiniboss.StaffSpecialDuration));
     guardianMiniboss.health.invincible = false;
     guardianMiniboss.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(guardianMiniboss.OnDamageTriggerEnter);
     guardianMiniboss.transform.DOMoveZ(0.0f, 0.5f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack);
@@ -750,7 +750,7 @@ public class EnemyWolfGuardianMiniboss : UnitObject
       if (!string.IsNullOrEmpty(guardianMiniboss.RiseUpSFX))
         AudioManager.Instance.PlayOneShot(guardianMiniboss.RiseUpSFX, guardianMiniboss.transform.position);
       yield return (object) new WaitForSeconds((guardianMiniboss.SpecialAttackTimeToRise - guardianMiniboss.groundSlamDelta) * guardianMiniboss.Spine.timeScale);
-      yield return (object) guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.GroundSlamLogic());
+      yield return (object) guardianMiniboss.StartCoroutine(guardianMiniboss.GroundSlamLogic());
       yield return (object) new WaitForSeconds(guardianMiniboss.GroundSlamTimeBetweenAttacks * guardianMiniboss.Spine.timeScale);
     }
     yield return (object) new WaitForSeconds(guardianMiniboss.SpecialAttackRecoveryTime * guardianMiniboss.Spine.timeScale);
@@ -773,7 +773,7 @@ public class EnemyWolfGuardianMiniboss : UnitObject
     if (!string.IsNullOrEmpty(guardianMiniboss.GroundSlamSFX))
       AudioManager.Instance.PlayOneShot(guardianMiniboss.SwordSlashSFX, guardianMiniboss.transform.position);
     BiomeConstants.Instance.EmitHammerEffects(guardianMiniboss.transform.position, 0.5f, 1f, 0.1f);
-    guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.TurnOnDamageColliderForDuration(guardianMiniboss.diveBombColliderDuration));
+    guardianMiniboss.StartCoroutine(guardianMiniboss.TurnOnDamageColliderForDuration(guardianMiniboss.diveBombColliderDuration));
     guardianMiniboss.damageColliderEvents.OnTriggerStayEvent += new ColliderEvents.TriggerEvent(guardianMiniboss.OnDamageTriggerEnter);
     CameraManager.instance.ShakeCameraForDuration(1f, 1.5f, 0.5f);
     if ((bool) (UnityEngine.Object) guardianMiniboss.AxeSpecialImpactParticles)
@@ -831,9 +831,9 @@ public class EnemyWolfGuardianMiniboss : UnitObject
       guardianMiniboss.LookAtTarget();
       if (!string.IsNullOrEmpty(guardianMiniboss.SwordSlashSFX))
         AudioManager.Instance.PlayOneShot(guardianMiniboss.SwordSlashSFX, guardianMiniboss.transform.position);
-      guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle - guardianMiniboss.SwordSpecialAngleSpread));
-      guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle));
-      guardianMiniboss.StartCoroutine((IEnumerator) guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle + guardianMiniboss.SwordSpecialAngleSpread));
+      guardianMiniboss.StartCoroutine(guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle - guardianMiniboss.SwordSpecialAngleSpread));
+      guardianMiniboss.StartCoroutine(guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle));
+      guardianMiniboss.StartCoroutine(guardianMiniboss.SlashProjectilRoutine(guardianMiniboss.state.LookAngle + guardianMiniboss.SwordSpecialAngleSpread));
       guardianMiniboss.health.invincible = false;
       yield return (object) new WaitForSeconds(guardianMiniboss.SwordSpecialTimeBetweenSlams);
     }

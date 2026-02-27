@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerOutfitCustomTarget
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -82,7 +82,7 @@ public class FollowerOutfitCustomTarget : MonoBehaviour
     overlayController.OnHidden = overlayController.OnHidden + new System.Action(this.BackToIdle);
   }
 
-  public void BackToIdle() => this.StartCoroutine((IEnumerator) this.BackToIdleRoutine());
+  public void BackToIdle() => this.StartCoroutine(this.BackToIdleRoutine());
 
   public IEnumerator BackToIdleRoutine()
   {
@@ -93,7 +93,7 @@ public class FollowerOutfitCustomTarget : MonoBehaviour
     outfitCustomTarget.state.CURRENT_STATE = StateMachine.State.Idle;
     yield return (object) null;
     outfitCustomTarget.StopAllCoroutines();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) outfitCustomTarget.DelayEffectsRoutine());
+    GameManager.GetInstance().StartCoroutine(outfitCustomTarget.DelayEffectsRoutine());
     System.Action callback = outfitCustomTarget.Callback;
     if (callback != null)
       callback();

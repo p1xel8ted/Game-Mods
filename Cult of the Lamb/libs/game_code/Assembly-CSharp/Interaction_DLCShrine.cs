@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -268,11 +268,11 @@ public class Interaction_DLCShrine : Interaction
         this.playerFarming.indicator.PlayShake();
       }
       else
-        this.StartCoroutine((IEnumerator) this.MutatedFollowersRitualIE());
+        this.StartCoroutine(this.MutatedFollowersRitualIE());
     }
     else if (DataManager.Instance.YngyaOffering >= 4 || Inventory.GetItemQuantity((InventoryItem.ITEM_TYPE) this.Offerings[DataManager.Instance.YngyaOffering].type) >= this.Offerings[DataManager.Instance.YngyaOffering].quantity)
     {
-      this.StartCoroutine((IEnumerator) this.GiveOfferingIE());
+      this.StartCoroutine(this.GiveOfferingIE());
     }
     else
     {
@@ -330,7 +330,7 @@ public class Interaction_DLCShrine : Interaction
       interactionDlcShrine.spine.state.AddAnimation(0, "ring-final-loop", true, 0.0f);
       PlayerFarming.Instance.simpleSpineAnimator.Animate("Yngya_Calls/yngya-calls", 0, false);
       PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("Yngya_Calls/yngya-calls-loop", 0, true, 0.0f);
-      interactionDlcShrine.StartCoroutine((IEnumerator) interactionDlcShrine.ShakeCameraWithRampUp());
+      interactionDlcShrine.StartCoroutine(interactionDlcShrine.ShakeCameraWithRampUp());
       yield return (object) new WaitForSeconds(2f);
       BiomeConstants.Instance.EmitDisplacementEffectScale(PlayerFarming.Instance.transform.position, 0.25f);
       yield return (object) new WaitForSeconds(1f);
@@ -339,7 +339,7 @@ public class Interaction_DLCShrine : Interaction
     {
       PlayerFarming.Instance.simpleSpineAnimator.Animate("collect-ghosts", 0, false);
       PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("collect-ghosts-loop", 0, true, 0.0f);
-      interactionDlcShrine.StartCoroutine((IEnumerator) interactionDlcShrine.ShakeCameraWithRampUp());
+      interactionDlcShrine.StartCoroutine(interactionDlcShrine.ShakeCameraWithRampUp());
       yield return (object) new WaitForSeconds(2f);
       yield return (object) new WaitForSeconds(1f);
     }
@@ -384,12 +384,12 @@ public class Interaction_DLCShrine : Interaction
       ++DataManager.Instance.YngyaOffering;
     }
     if (DataManager.Instance.YngyaOffering == 1)
-      yield return (object) interactionDlcShrine.StartCoroutine((IEnumerator) interactionDlcShrine.UnlockSnowIE());
+      yield return (object) interactionDlcShrine.StartCoroutine(interactionDlcShrine.UnlockSnowIE());
     else if (DataManager.Instance.YngyaOffering == 2)
-      yield return (object) interactionDlcShrine.StartCoroutine((IEnumerator) interactionDlcShrine.UnlockBaseExpansionIE());
+      yield return (object) interactionDlcShrine.StartCoroutine(interactionDlcShrine.UnlockBaseExpansionIE());
     else if (DataManager.Instance.YngyaOffering == 3)
     {
-      yield return (object) interactionDlcShrine.StartCoroutine((IEnumerator) interactionDlcShrine.UnlockRitualIE());
+      yield return (object) interactionDlcShrine.StartCoroutine(interactionDlcShrine.UnlockRitualIE());
     }
     else
     {
@@ -544,14 +544,14 @@ public class Interaction_DLCShrine : Interaction
     AudioManager.Instance.PlayOneShot("event:/dlc/env/gofernon/burrow_out", interactionDlcShrine.moleSpine.transform.position);
     yield return (object) new WaitForSeconds(1f);
     interactionDlcShrine.moleSpine.gameObject.SetActive(false);
-    yield return (object) interactionDlcShrine.StartCoroutine((IEnumerator) Onboarding.Instance.OnboardBaseExpansionIE());
+    yield return (object) interactionDlcShrine.StartCoroutine(Onboarding.Instance.OnboardBaseExpansionIE());
   }
 
   public IEnumerator UnlockSnowIE()
   {
     Interaction_DLCShrine interactionDlcShrine = this;
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = true;
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) Interaction_DLCShrine.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(Interaction_DLCShrine.FadeIn());
     GameManager.SetGlobalOcclusionActive(false);
     Vector3 a = TownCentre.Instance.Centre.position + Vector3.down * 2f;
     SimulationManager.Pause();
@@ -593,7 +593,7 @@ public class Interaction_DLCShrine : Interaction
       GameManager.GetInstance().CamFollowTarget.transform.localRotation = Quaternion.Euler(-45f, 0.0f, 0.0f);
     }
     yield return (object) new WaitForSecondsRealtime(0.5f);
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) Interaction_DLCShrine.FadeOut(true));
+    yield return (object) GameManager.GetInstance().StartCoroutine(Interaction_DLCShrine.FadeOut(true));
     foreach (Follower follower in avaiableFollowers)
     {
       if (!FollowerManager.FollowerLocked(follower.Brain.Info.ID))
@@ -616,7 +616,7 @@ public class Interaction_DLCShrine : Interaction
     WeatherSystemController.Instance.SetWeather(WeatherSystemController.WeatherType.Snowing, WeatherSystemController.WeatherStrength.Dusting);
     AudioManager.Instance.PlayOneShot("event:/dlc/env/yngya_shrine/base_building_giveoffering_first_frost", interactionDlcShrine.transform.position);
     yield return (object) new WaitForSeconds(3f);
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) Interaction_DLCShrine.FadeIn());
+    yield return (object) GameManager.GetInstance().StartCoroutine(Interaction_DLCShrine.FadeIn());
     BiomeConstants.Instance.DepthOfFieldTween(0.15f, 8.7f, 26f, 0.0f, 0.0f);
     GameManager.GetInstance().CamFollowTarget.ClearAllTargets();
     GameManager.GetInstance().CamFollowTarget.ForceSnapTo(fromPosition);
@@ -629,7 +629,7 @@ public class Interaction_DLCShrine : Interaction
       if (!FollowerManager.FollowerLocked(follower.Brain.Info.ID))
         follower.Brain.CompleteCurrentTask();
     }
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) Interaction_DLCShrine.FadeOut(true));
+    yield return (object) GameManager.GetInstance().StartCoroutine(Interaction_DLCShrine.FadeOut(true));
     GameManager.SetGlobalOcclusionActive(true);
     GameManager.GetInstance().OnConversationEnd(false);
     interactionDlcShrine.haroConvo.gameObject.SetActive(true);
@@ -703,7 +703,7 @@ public class Interaction_DLCShrine : Interaction
     CameraManager.instance.Stopshake();
   }
 
-  public void DebugReveal() => this.StartCoroutine((IEnumerator) this.RevealIE());
+  public void DebugReveal() => this.StartCoroutine(this.RevealIE());
 
   public IEnumerator RevealIE()
   {
@@ -779,7 +779,7 @@ public class Interaction_DLCShrine : Interaction
 
   public void SpawnSplatter(int amount, float duration)
   {
-    this.StartCoroutine((IEnumerator) this.SpawnSplatterIE(amount, duration));
+    this.StartCoroutine(this.SpawnSplatterIE(amount, duration));
   }
 
   public IEnumerator SpawnSplatterIE(int amount, float duration)
@@ -802,7 +802,7 @@ public class Interaction_DLCShrine : Interaction
     GameManager.GetInstance().OnConversationNext(interactionDlcShrine.gameObject, 7f);
     interactionDlcShrine.redLighting.gameObject.SetActive(true);
     AudioManager.Instance.PlayOneShot("event:/dlc/env/yngya_shrine/rottenfollower_pray_interact", interactionDlcShrine.transform.position);
-    yield return (object) interactionDlcShrine.StartCoroutine((IEnumerator) Interaction_DLCShrine.FadeIn());
+    yield return (object) interactionDlcShrine.StartCoroutine(Interaction_DLCShrine.FadeIn());
     PlayerFarming.Instance.GoToAndStop(interactionDlcShrine.transform.position + Vector3.down * 2f + Vector3.right * 3f, interactionDlcShrine.gameObject);
     AnimationCurve animationCurve = new AnimationCurve(new Keyframe[3]
     {
@@ -833,7 +833,7 @@ public class Interaction_DLCShrine : Interaction
       mutatedFollowers[index].transform.position = vector3;
     }
     SimulationManager.Pause();
-    yield return (object) interactionDlcShrine.StartCoroutine((IEnumerator) Interaction_DLCShrine.FadeOut(false));
+    yield return (object) interactionDlcShrine.StartCoroutine(Interaction_DLCShrine.FadeOut(false));
     AudioManager.Instance.PlayOneShot("event:/dlc/env/yngya_shrine/rottenfollower_pray_rise");
     foreach (Follower follower in mutatedFollowers)
     {
@@ -926,7 +926,7 @@ public class Interaction_DLCShrine : Interaction
   {
     if (DataManager.Instance.YngyaRotOfferingsReceived >= this.tarots.Count)
     {
-      this.StartCoroutine((IEnumerator) this.CompletedRotShrineIE());
+      this.StartCoroutine(this.CompletedRotShrineIE());
     }
     else
     {

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DealDamageOnCollision
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using UnityEngine;
@@ -23,7 +23,7 @@ public class DealDamageOnCollision : BaseMonoBehaviour
     if (!((Object) this.EnemyHealth != (Object) null) || this.NoDamageWhileDodging && this.EnemyHealth.state.CURRENT_STATE == StateMachine.State.Dodging)
       return;
     this.DamageDealt = true;
-    this.EnemyHealth.DealDamage((float) this.Damage, this.gameObject, this.transform.position);
+    this.EnemyHealth.DealDamage((float) this.Damage, this.gameObject, this.transform.position, dealDamageImmediately: this.EnemyHealth.team != Health.Team.PlayerTeam);
     CameraManager.shakeCamera(0.5f, Utils.GetAngle(this.transform.position, this.EnemyHealth.transform.position));
     if (this.EnemyHealth.team != Health.Team.PlayerTeam)
       return;

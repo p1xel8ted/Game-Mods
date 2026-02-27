@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyScout
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -26,7 +26,7 @@ public class EnemyScout : EnemySwordsman
     if (this.GetAvailableSpawnPositions().Count <= 0)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.SpawnEnemiesRoutine());
+    this.StartCoroutine(this.SpawnEnemiesRoutine());
   }
 
   public List<Vector3> GetAvailableSpawnPositions()
@@ -72,7 +72,7 @@ public class EnemyScout : EnemySwordsman
       ++enemyScout.SummonedCount;
     }
     yield return (object) new WaitForSeconds(1.26666665f);
-    enemyScout.StartCoroutine((IEnumerator) enemyScout.WaitForTarget());
+    enemyScout.StartCoroutine(enemyScout.WaitForTarget());
   }
 
   public void RemoveSpawned(

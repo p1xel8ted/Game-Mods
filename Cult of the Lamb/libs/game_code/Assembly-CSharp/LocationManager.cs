@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: LocationManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -181,7 +181,7 @@ public abstract class LocationManager : BaseMonoBehaviour
         Seed = UnityEngine.Random.Range(-2147483647 /*0x80000001*/, int.MaxValue)
       });
     this.Random = new System.Random(DataManager.Instance.LocationSeeds.FirstOrDefault<DataManager.LocationSeedsData>((Func<DataManager.LocationSeedsData, bool>) (x => x.Location == this.Location)).Seed);
-    this.StartCoroutine((IEnumerator) this.LoadLocationRoutine());
+    this.StartCoroutine(this.LoadLocationRoutine());
     if (FollowerBrainStats.IsBloodMoon && (UnityEngine.Object) this.bloodMoonLUT != (UnityEngine.Object) null)
     {
       this.EnableBloodMoon();
@@ -202,7 +202,7 @@ public abstract class LocationManager : BaseMonoBehaviour
     {
       locationManager.PrePlacingStructures();
       yield return (object) new WaitForEndOfFrame();
-      yield return (object) locationManager.StartCoroutine((IEnumerator) locationManager.PlaceStructures());
+      yield return (object) locationManager.StartCoroutine(locationManager.PlaceStructures());
       yield return (object) new WaitForEndOfFrame();
       locationManager.PostPlaceStructures();
     }
@@ -221,10 +221,7 @@ public abstract class LocationManager : BaseMonoBehaviour
     locationManager.isInitialized = true;
   }
 
-  public virtual void OnEnable()
-  {
-    this.StartCoroutine((IEnumerator) this.ActivateLocationRoutine());
-  }
+  public virtual void OnEnable() => this.StartCoroutine(this.ActivateLocationRoutine());
 
   public IEnumerator ActivateLocationRoutine()
   {
@@ -308,7 +305,7 @@ public abstract class LocationManager : BaseMonoBehaviour
       gameObject = UnityEngine.Object.Instantiate<GameObject>(this.PlayerPrefab, startPosition, Quaternion.identity, this.UnitLayer);
       PlayerFarming component = gameObject.GetComponent<PlayerFarming>();
       PlayerFarming.Instance = component;
-      Debug.Log((object) ("Player farming Instance? " + ((object) component)?.ToString()));
+      Debug.Log((object) ("Player farming Instance? " + component?.ToString()));
     }
     else
     {

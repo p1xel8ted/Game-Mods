@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJuicedMortarHopperMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -273,7 +273,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
       this.BigRotationShot();
   }
 
-  public void RageHop() => this.currentAttack = this.StartCoroutine((IEnumerator) this.RageHopIE());
+  public void RageHop() => this.currentAttack = this.StartCoroutine(this.RageHopIE());
 
   public IEnumerator RageHopIE()
   {
@@ -317,10 +317,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
     }
   }
 
-  public void CrossShoot()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.CrossShootIE());
-  }
+  public void CrossShoot() => this.currentAttack = this.StartCoroutine(this.CrossShootIE());
 
   public IEnumerator CrossShootIE()
   {
@@ -388,19 +385,19 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
 
   public void LineShootTargeted()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.LineShootTargetedIE());
+    this.currentAttack = this.StartCoroutine(this.LineShootTargetedIE());
   }
 
   public IEnumerator LineShootTargetedIE()
   {
     EnemyJuicedMortarHopperMiniboss mortarHopperMiniboss = this;
-    yield return (object) mortarHopperMiniboss.StartCoroutine((IEnumerator) mortarHopperMiniboss.LineShootIE(true, (UnityEngine.Object) mortarHopperMiniboss.GetClosestTarget() != (UnityEngine.Object) null ? Utils.GetAngle(mortarHopperMiniboss.transform.position, mortarHopperMiniboss.GetClosestTarget().transform.position) : UnityEngine.Random.Range(0.0f, 360f), mortarHopperMiniboss.shotsToFireLine));
+    yield return (object) mortarHopperMiniboss.StartCoroutine(mortarHopperMiniboss.LineShootIE(true, (UnityEngine.Object) mortarHopperMiniboss.GetClosestTarget() != (UnityEngine.Object) null ? Utils.GetAngle(mortarHopperMiniboss.transform.position, mortarHopperMiniboss.GetClosestTarget().transform.position) : UnityEngine.Random.Range(0.0f, 360f), mortarHopperMiniboss.shotsToFireLine));
     mortarHopperMiniboss.currentAttack = (Coroutine) null;
   }
 
   public void BigRotationShot()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.BigRotationShotIE());
+    this.currentAttack = this.StartCoroutine(this.BigRotationShotIE());
   }
 
   public IEnumerator BigRotationShotIE()
@@ -429,7 +426,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
       }
       for (int index = 0; index < 4; ++index)
       {
-        mortarHopperMiniboss.StartCoroutine((IEnumerator) mortarHopperMiniboss.LineShootIE(false, aimAngle, 5));
+        mortarHopperMiniboss.StartCoroutine(mortarHopperMiniboss.LineShootIE(false, aimAngle, 5));
         aimAngle = Utils.Repeat(aimAngle + 90f, 360f);
       }
       offset += 30f;
@@ -441,10 +438,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
     mortarHopperMiniboss.idleTime = UnityEngine.Random.Range(mortarHopperMiniboss.timeBetweenAttacks.x, mortarHopperMiniboss.timeBetweenAttacks.y);
   }
 
-  public void PoisonSplash()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.PoisonSplashIE());
-  }
+  public void PoisonSplash() => this.currentAttack = this.StartCoroutine(this.PoisonSplashIE());
 
   public IEnumerator PoisonSplashIE()
   {
@@ -474,7 +468,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
     mortarHopperMiniboss.idleTime = UnityEngine.Random.Range(mortarHopperMiniboss.timeBetweenAttacks.x, mortarHopperMiniboss.timeBetweenAttacks.y);
   }
 
-  public void MegaHop() => this.currentAttack = this.StartCoroutine((IEnumerator) this.MegaHopIE());
+  public void MegaHop() => this.currentAttack = this.StartCoroutine(this.MegaHopIE());
 
   public IEnumerator MegaHopIE()
   {
@@ -508,7 +502,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
     mortarHopperMiniboss.Spine.AnimationState.AddAnimation(0, mortarHopperMiniboss.idleAnimation, true, 0.0f);
     AudioManager.Instance.PlayOneShot(mortarHopperMiniboss.OnLandSoundPath, mortarHopperMiniboss.gameObject);
     AudioManager.Instance.PlayOneShot(mortarHopperMiniboss.attackVO, mortarHopperMiniboss.gameObject);
-    mortarHopperMiniboss.StartCoroutine((IEnumerator) mortarHopperMiniboss.TurnOnDamageColliderForDuration(0.1f));
+    mortarHopperMiniboss.StartCoroutine(mortarHopperMiniboss.TurnOnDamageColliderForDuration(0.1f));
     mortarHopperMiniboss.aoeParticles.Play();
     mortarHopperMiniboss.shadow.enabled = false;
     mortarHopperMiniboss.health.invincible = false;
@@ -535,7 +529,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
     this.state.CURRENT_STATE = StateMachine.State.Idle;
     AudioManager.Instance.PlayOneShot(this.OnLandSoundPath, this.gameObject);
     AudioManager.Instance.PlayOneShot(this.attackVO, this.gameObject);
-    this.StartCoroutine((IEnumerator) this.TurnOnDamageColliderForDuration(0.1f));
+    this.StartCoroutine(this.TurnOnDamageColliderForDuration(0.1f));
     this.aoeParticles.Play();
     BiomeConstants.Instance.EmitSmokeExplosionVFX(this.transform.position + Vector3.back * 0.5f);
     CameraManager.shakeCamera(1f);
@@ -666,7 +660,7 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
         Health.team2[index].untouchable = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }
@@ -681,6 +675,6 @@ public class EnemyJuicedMortarHopperMiniboss : UnitObject
   [CompilerGenerated]
   public void \u003CRageHopIE\u003Eb__72_0(List<Projectile> projectiles)
   {
-    this.StartCoroutine((IEnumerator) this.SetProjectilePulse(projectiles));
+    this.StartCoroutine(this.SetProjectilePulse(projectiles));
   }
 }

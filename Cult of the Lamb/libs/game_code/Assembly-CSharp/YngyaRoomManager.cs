@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: YngyaRoomManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Beffio.Dithering;
@@ -90,7 +90,7 @@ public class YngyaRoomManager : BaseMonoBehaviour
         YngyaRoomManager.Instance = UnityEngine.Object.FindObjectOfType<YngyaRoomManager>();
       Time.timeScale = 1f;
       YngyaRoomManager.Instance.gameObject.SetActive(true);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) YngyaRoomManager.Instance.PlayRoutine());
+      GameManager.GetInstance().StartCoroutine(YngyaRoomManager.Instance.PlayRoutine());
     }));
   }
 
@@ -192,7 +192,7 @@ public class YngyaRoomManager : BaseMonoBehaviour
               AudioManager.Instance.PlayOneShot("event:/dlc/music/cutscene_yngyaheart_b/flashforward_02");
               break;
           }
-          yield return (object) yngyaRoomManager.StartCoroutine((IEnumerator) yngyaRoomManager.Flicker());
+          yield return (object) yngyaRoomManager.StartCoroutine(yngyaRoomManager.Flicker());
         }
         else
         {
@@ -221,7 +221,7 @@ public class YngyaRoomManager : BaseMonoBehaviour
     if (DataManager.Instance.YngyaHeartRoomEncounters == 1)
       yield return (object) DLCMap.RevealHeartRoutine();
     AudioManager.Instance.StopLoop(yngyaRoomManager.loopingSfx);
-    yngyaRoomManager.StartCoroutine((IEnumerator) yngyaRoomManager.ConversationCompleted());
+    yngyaRoomManager.StartCoroutine(yngyaRoomManager.ConversationCompleted());
   }
 
   public void Update()

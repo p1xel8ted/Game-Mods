@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DeadWorshipper
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -175,7 +175,7 @@ public class DeadWorshipper : BaseMonoBehaviour
         this.RottenParticles.gameObject.SetActive(false);
       }
       if (this.followerInfo.DiedFromRot && !this.StructureInfo.BodyWrapped && PlayerFarming.Location == FollowerLocation.Base)
-        this.StartCoroutine((IEnumerator) this.RottedIE());
+        this.StartCoroutine(this.RottedIE());
       else
         this.ShowBody();
     }
@@ -245,7 +245,7 @@ public class DeadWorshipper : BaseMonoBehaviour
   public void OnNewDayStarted()
   {
     this.Spine.enabled = false;
-    this.StartCoroutine((IEnumerator) this.WaitRotten());
+    this.StartCoroutine(this.WaitRotten());
   }
 
   public IEnumerator WaitRotten()
@@ -289,7 +289,7 @@ public class DeadWorshipper : BaseMonoBehaviour
     this.StructureInfo.BodyWrapped = true;
     this.Spine.AnimationState.SetAnimation(0, "corpse", true);
     this.RottenParticles.gameObject.SetActive(false);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.DeactivateSpine());
+    GameManager.GetInstance().StartCoroutine(this.DeactivateSpine());
   }
 
   public void HideBody()
@@ -353,7 +353,7 @@ public class DeadWorshipper : BaseMonoBehaviour
     this.GetRandomTilesInDirection(tileAtWorldPosition.Position, Vector2Int.right, UnityEngine.Random.Range(3, 6), tiles);
     this.GetRandomTilesInDirection(tileAtWorldPosition.Position, Vector2Int.down, UnityEngine.Random.Range(3, 6), tiles);
     this.GetRandomTilesInDirection(tileAtWorldPosition.Position, Vector2Int.left, UnityEngine.Random.Range(3, 6), tiles);
-    this.StartCoroutine((IEnumerator) this.PlaceRotRubble(tiles));
+    this.StartCoroutine(this.PlaceRotRubble(tiles));
   }
 
   public IEnumerator PlaceRotPathing(List<PlacementRegion.TileGridTile> tiles)

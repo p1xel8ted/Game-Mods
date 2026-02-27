@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FinalBossIntroManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -37,7 +37,7 @@ public class FinalBossIntroManager : MonoBehaviour
     RoomLockController.OpenAll();
   }
 
-  public void OnEnable() => this.StartCoroutine((IEnumerator) this.Play());
+  public void OnEnable() => this.StartCoroutine(this.Play());
 
   public void Update()
   {
@@ -93,7 +93,7 @@ public class FinalBossIntroManager : MonoBehaviour
       GameManager.GetInstance().AddPlayerToCamera();
       RoomLockController.CloseAll(false);
       GameManager.InitialDungeonEnter = true;
-      bossIntroManager.StartCoroutine((IEnumerator) BiomeGenerator.Instance.DelayActivateRoom(!DungeonSandboxManager.Active));
+      bossIntroManager.StartCoroutine(BiomeGenerator.Instance.DelayActivateRoom(!DungeonSandboxManager.Active));
     }
   }
 

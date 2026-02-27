@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DLCIntroManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Beffio.Dithering;
@@ -95,7 +95,7 @@ public class DLCIntroManager : BaseMonoBehaviour
   {
     DLCIntroManager.Instance = this;
     BiomeGenerator.OnBiomeGenerated += new BiomeGenerator.BiomeAction(this.OnGenerated);
-    this.StartCoroutine((IEnumerator) this.WakeUpInBaseRoutine());
+    this.StartCoroutine(this.WakeUpInBaseRoutine());
   }
 
   public void OnDisable()
@@ -113,7 +113,7 @@ public class DLCIntroManager : BaseMonoBehaviour
     BiomeGenerator.OnBiomeGenerated -= new BiomeGenerator.BiomeAction(this.OnGenerated);
     GameManager.setDefaultGlobalShaders();
     HUD_Manager.Instance.Hide(true, 0);
-    this.StartCoroutine((IEnumerator) this.StopMusic());
+    this.StartCoroutine(this.StopMusic());
     WeatherSystemController.Instance.SetWeather(WeatherSystemController.WeatherType.Snowing, WeatherSystemController.WeatherStrength.Extreme);
     Shader.SetGlobalFloat("_Snow_Intensity", 1f);
     CameraTrackedFloorRT_Manager.Instance.EnableEffect();
@@ -160,7 +160,7 @@ public class DLCIntroManager : BaseMonoBehaviour
       dlcIntroManager.depthOfField.aperture.value = Mathf.SmoothStep(0.0f, 25f, Progress / 5f);
       yield return (object) null;
     }
-    dlcIntroManager.StartCoroutine((IEnumerator) dlcIntroManager.StartIntro());
+    dlcIntroManager.StartCoroutine(dlcIntroManager.StartIntro());
   }
 
   public IEnumerator StartIntro()

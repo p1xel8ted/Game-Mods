@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WolfMinibossIntro
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -115,14 +115,14 @@ public class WolfMinibossIntro : BossIntro
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(wolfMinibossIntro.leader, 12f);
       wolfMinibossIntro.RepositionPlayers();
-      wolfMinibossIntro.StartCoroutine((IEnumerator) wolfMinibossIntro.FollowerFaceSlowly(wolfMinibossIntro.leader.transform.position));
+      wolfMinibossIntro.StartCoroutine(wolfMinibossIntro.FollowerFaceSlowly(wolfMinibossIntro.leader.transform.position));
       yield return (object) wolfMinibossIntro.SpawnLeader();
       yield return (object) wolfMinibossIntro.PlayIntroConversation();
       yield return (object) wolfMinibossIntro.PlayIntroConversationFollower();
       yield return (object) wolfMinibossIntro.DespawnLeader();
-      wolfMinibossIntro.StartCoroutine((IEnumerator) wolfMinibossIntro.FollowerFaceSlowly(wolfMinibossIntro.playerPos));
+      wolfMinibossIntro.StartCoroutine(wolfMinibossIntro.FollowerFaceSlowly(wolfMinibossIntro.playerPos));
       yield return (object) wolfMinibossIntro.PlayMutationConversation();
-      wolfMinibossIntro.StartCoroutine((IEnumerator) wolfMinibossIntro.FollowerFaceSlowly(wolfMinibossIntro.cage.transform.position));
+      wolfMinibossIntro.StartCoroutine(wolfMinibossIntro.FollowerFaceSlowly(wolfMinibossIntro.cage.transform.position));
       yield return (object) wolfMinibossIntro.SpawnBoss();
     }
     GameManager.GetInstance().OnConversationEnd();
@@ -232,7 +232,7 @@ public class WolfMinibossIntro : BossIntro
     if (!(e.Data.Name == this.bossChompEvent) || !((UnityEngine.Object) this.follower != (UnityEngine.Object) null))
       return;
     this._followerHealth.untouchable = false;
-    this._followerHealth.DealDamage(999f, this.bossPrefab, this.bossPrefab.transform.position);
+    this._followerHealth.DealDamage(999f, this.bossPrefab, this.bossPrefab.transform.position, dealDamageImmediately: true);
   }
 
   public void RepositionPlayers()
@@ -281,7 +281,7 @@ public class WolfMinibossIntro : BossIntro
     this.\u003C\u003E1__state = -1;
     wolfMinibossIntro.followerMutationConversation.Play();
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) new WaitUntil((Func<bool>) new Func<bool>(wolfMinibossIntro.\u003CPlayMutationConversation\u003Eb__46_0));
+    this.\u003C\u003E2__current = (object) new WaitUntil(new Func<bool>(wolfMinibossIntro.\u003CPlayMutationConversation\u003Eb__46_0));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -304,7 +304,7 @@ public class WolfMinibossIntro : BossIntro
     this.\u003C\u003E1__state = -1;
     wolfMinibossIntro.introConversation.Play();
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) new WaitUntil((Func<bool>) new Func<bool>(wolfMinibossIntro.\u003CPlayIntroConversation\u003Eb__47_0));
+    this.\u003C\u003E2__current = (object) new WaitUntil(new Func<bool>(wolfMinibossIntro.\u003CPlayIntroConversation\u003Eb__47_0));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -327,7 +327,7 @@ public class WolfMinibossIntro : BossIntro
     this.\u003C\u003E1__state = -1;
     wolfMinibossIntro.introConversationFollower.Play();
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) new WaitUntil((Func<bool>) new Func<bool>(wolfMinibossIntro.\u003CPlayIntroConversationFollower\u003Eb__48_0));
+    this.\u003C\u003E2__current = (object) new WaitUntil(new Func<bool>(wolfMinibossIntro.\u003CPlayIntroConversationFollower\u003Eb__48_0));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;

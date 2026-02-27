@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Bouncer
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -65,14 +65,14 @@ public class Bouncer : MonoBehaviour
   public void bounceUnit(UnitObject unit, Vector3 dir, float power = 20f, float duration = 0.25f)
   {
     AudioManager.Instance.PlayOneShot("event:/material/mushroom_impact", this.gameObject);
-    this.StartCoroutine((IEnumerator) this.UpdateBounceUnit(unit, dir, power, duration));
+    this.StartCoroutine(this.UpdateBounceUnit(unit, dir, power, duration));
   }
 
   public IEnumerator UpdateBounceUnit(UnitObject unit, Vector3 dir, float power, float duration)
   {
     float elapsedTime = 0.0f;
     dir.Normalize();
-    Debug.Log((object) ("Spine on dropper " + ((object) this.Spine)?.ToString()));
+    Debug.Log((object) ("Spine on dropper " + this.Spine?.ToString()));
     if ((Object) this.Spine != (Object) null)
     {
       this.Spine.AnimationState.SetAnimation(0, this.bounceAnimation, false);

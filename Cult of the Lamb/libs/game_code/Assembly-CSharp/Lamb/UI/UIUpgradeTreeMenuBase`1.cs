@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIUpgradeTreeMenuBase`1
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -151,7 +151,7 @@ public abstract class UIUpgradeTreeMenuBase<T> : UIMenuBase where T : UIUpgradeU
       if (!treeNode.IsAvailable() && treeNode.RequiresUpgrade == this.revealType)
       {
         UpgradeSystem.UnlockAbility(this.revealType);
-        this.StartCoroutine((IEnumerator) this.DoRevealAnimation(this.revealType));
+        this.StartCoroutine(this.DoRevealAnimation(this.revealType));
         break;
       }
     }
@@ -192,7 +192,7 @@ public abstract class UIUpgradeTreeMenuBase<T> : UIMenuBase where T : UIUpgradeU
       return;
     if (this._focusCoroutine != null)
       this.StopCoroutine(this._focusCoroutine);
-    this._focusCoroutine = this.StartCoroutine((IEnumerator) this.DoFocusPosition(-component.RectTransform.anchoredPosition, 0.25f));
+    this._focusCoroutine = this.StartCoroutine(this.DoFocusPosition(-component.RectTransform.anchoredPosition, 0.25f));
   }
 
   public IEnumerator DoFocusPosition(Vector2 focalPoint, float time, float zoom = 1f)
@@ -291,7 +291,7 @@ public abstract class UIUpgradeTreeMenuBase<T> : UIMenuBase where T : UIUpgradeU
     Debug.Log((object) $"Unlock {node.Upgrade}!".Colour(Color.red));
     this.DoUnlock(node.Upgrade);
     this.UpdatePointsText();
-    this.StartCoroutine((IEnumerator) this.DoUnlockAnimation(node));
+    this.StartCoroutine(this.DoUnlockAnimation(node));
   }
 
   public virtual IEnumerator DoUnlockAnimation(UpgradeTreeNode targetNode)
@@ -524,7 +524,7 @@ public abstract class UIUpgradeTreeMenuBase<T> : UIMenuBase where T : UIUpgradeU
     foreach (UpgradeTreeNode upgradeTreeNode in changedNodes)
     {
       upgradeTreeNode.ShowNode(hideOnComplete);
-      upgradeTreeMenuBase.StartCoroutine((IEnumerator) upgradeTreeNode.DoUpdateStateAnimation());
+      upgradeTreeMenuBase.StartCoroutine(upgradeTreeNode.DoUpdateStateAnimation());
       foreach (NodeConnectionLine nodeConnection in upgradeTreeMenuBase._nodeConnections)
       {
         nodeConnection.ClearListeners();

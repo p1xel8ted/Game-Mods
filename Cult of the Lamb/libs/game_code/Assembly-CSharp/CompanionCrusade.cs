@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CompanionCrusade
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -128,7 +128,7 @@ public class CompanionCrusade : MonoBehaviour
     if ((bool) (UnityEngine.Object) enabler)
     {
       this.savedEnabler = enabler;
-      this.FollowPlayerRoutineRef = this.StartCoroutine((IEnumerator) this.FollowPlayerRoutine(enabler));
+      this.FollowPlayerRoutineRef = this.StartCoroutine(this.FollowPlayerRoutine(enabler));
     }
     this.isNowFollowing = true;
   }
@@ -186,7 +186,7 @@ public class CompanionCrusade : MonoBehaviour
   {
     if (this.FollowPlayerRoutineRef != null)
       this.StopCoroutine(this.FollowPlayerRoutineRef);
-    this.FollowPlayerRoutineRef = this.StartCoroutine((IEnumerator) this.FollowPlayerRoutine(enabler, playSpawnAnimation));
+    this.FollowPlayerRoutineRef = this.StartCoroutine(this.FollowPlayerRoutine(enabler, playSpawnAnimation));
     this.lastFollowTime = Time.time;
   }
 
@@ -239,7 +239,7 @@ public class CompanionCrusade : MonoBehaviour
         if (!CompanionCrusade.AllHide && companionCrusade.isHidden)
         {
           yield return (object) new WaitForSeconds(UnityEngine.Random.Range(companionCrusade.DigDelayRange.x, companionCrusade.DigDelayRange.y));
-          yield return (object) companionCrusade.StartCoroutine((IEnumerator) companionCrusade.PlayAnimationAndWait(companionCrusade.DigUpAnimation, companionCrusade.revealSFX));
+          yield return (object) companionCrusade.StartCoroutine(companionCrusade.PlayAnimationAndWait(companionCrusade.DigUpAnimation, companionCrusade.revealSFX));
           companionCrusade.isHidden = false;
           companionCrusade.lastAnimName = "";
         }
@@ -248,7 +248,7 @@ public class CompanionCrusade : MonoBehaviour
           float num1 = UnityEngine.Random.Range(companionCrusade.DigDelayRange.x, companionCrusade.DigDelayRange.y);
           double num2 = (double) companionCrusade.PlayAnimation(companionCrusade.IdleAnimation, true);
           yield return (object) new WaitForSeconds(num1 * 0.5f);
-          yield return (object) companionCrusade.StartCoroutine((IEnumerator) companionCrusade.PlayAnimationAndWait(companionCrusade.DigDownAnimation, companionCrusade.hideSFX));
+          yield return (object) companionCrusade.StartCoroutine(companionCrusade.PlayAnimationAndWait(companionCrusade.DigDownAnimation, companionCrusade.hideSFX));
           companionCrusade.isHidden = true;
           companionCrusade.lastAnimName = "";
         }

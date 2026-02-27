@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyScuttleCharger
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -91,7 +91,7 @@ public class EnemyScuttleCharger : EnemyScuttleSwiper
   {
     CameraManager.shakeCamera(0.2f, this.state.LookAngle);
     if (!this.IsStunned)
-      this.StartCoroutine((IEnumerator) this.StunnedRoutine());
+      this.StartCoroutine(this.StunnedRoutine());
     this.EndCharge();
   }
 
@@ -116,7 +116,7 @@ public class EnemyScuttleCharger : EnemyScuttleSwiper
   {
     EnemyScuttleCharger enemyScuttleCharger = this;
     enemyScuttleCharger.IsStunned = true;
-    enemyScuttleCharger.StartCoroutine((IEnumerator) enemyScuttleCharger.ApplyForceRoutine(enemyScuttleCharger.transform.position + new Vector3(Mathf.Cos(enemyScuttleCharger.state.facingAngle * ((float) Math.PI / 180f)), Mathf.Sin(enemyScuttleCharger.state.facingAngle) * ((float) Math.PI / 180f))));
+    enemyScuttleCharger.StartCoroutine(enemyScuttleCharger.ApplyForceRoutine(enemyScuttleCharger.transform.position + new Vector3(Mathf.Cos(enemyScuttleCharger.state.facingAngle * ((float) Math.PI / 180f)), Mathf.Sin(enemyScuttleCharger.state.facingAngle) * ((float) Math.PI / 180f))));
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyScuttleCharger.Spine.timeScale) < (double) enemyScuttleCharger.StunnedDuration)
       yield return (object) null;

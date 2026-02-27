@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CrownStatueController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -62,7 +62,7 @@ public class CrownStatueController : MonoBehaviour
 
   public void EndlessModeOnboarded(System.Action callback)
   {
-    this.StartCoroutine((IEnumerator) this.EndlessModeOnboardRoutine(callback));
+    this.StartCoroutine(this.EndlessModeOnboardRoutine(callback));
   }
 
   public IEnumerator EndlessModeOnboardRoutine(System.Action callback)
@@ -79,7 +79,7 @@ public class CrownStatueController : MonoBehaviour
     AudioManager.Instance.PlayOneShot("event:/boss/frog/transition_intro_zoom");
     statueController.LoopedSound = AudioManager.Instance.CreateLoop("event:/material/earthquake", statueController.gameObject);
     MMVibrate.RumbleContinuous(1f, 5f);
-    statueController.StartCoroutine((IEnumerator) statueController.ShakeCameraWithRampUp());
+    statueController.StartCoroutine(statueController.ShakeCameraWithRampUp());
     GameManager.GetInstance().OnConversationNext(statueController.CameraPosition, 5f);
     yield return (object) new WaitForSeconds(1f);
     AudioManager.Instance.StopLoop(statueController.LoopedSound);

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIComicMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Beffio.Dithering;
@@ -491,7 +491,7 @@ public class UIComicMenuController : UIMenuBase
       this.frontCover.gameObject.SetActive(true);
       this.frontCover.FlipToEnd();
       // ISSUE: reference to a compiler-generated method
-      this.StartCoroutine((IEnumerator) this.WaitFor(1f, new System.Action(displayClass1342.\u003COnCancelButtonInput\u003Eb__2)));
+      this.StartCoroutine(this.WaitFor(1f, new System.Action(displayClass1342.\u003COnCancelButtonInput\u003Eb__2)));
     }
     else
     {
@@ -594,7 +594,7 @@ public class UIComicMenuController : UIMenuBase
               ((RectTransform) this.frontCover.transform).DOAnchorPos((Vector2) Vector2Int.zero, 1f).SetEase<TweenerCore<Vector2, Vector2, VectorOptions>>(Ease.OutCirc);
               this.frontCover.transform.DOScale(new Vector3(1.72f, 1.26f, 0.5f), 1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutCirc).SetDelay<TweenerCore<Vector3, Vector3, VectorOptions>>(0.5f);
               this.frontCover.FlipRightPage();
-              this.StartCoroutine((IEnumerator) this.WaitFor(1.5f, (System.Action) (() =>
+              this.StartCoroutine(this.WaitFor(1.5f, (System.Action) (() =>
               {
                 this.frontCover.bookPages[1] = temp1;
                 this.frontCover.bookPages[2] = temp2;
@@ -654,7 +654,7 @@ public class UIComicMenuController : UIMenuBase
     if ((UnityEngine.Object) this.GetPage(this.pageIndex) != (UnityEngine.Object) null)
     {
       if (this.currentComicType == UIComicMenuController.ComicType.Default && this.pageIndex.x >= 50)
-        this.StartCoroutine((IEnumerator) this.ComicBookCompleted());
+        this.StartCoroutine(this.ComicBookCompleted());
       else
         this.ShowPage(this.pageIndex);
     }
@@ -1034,7 +1034,7 @@ public class UIComicMenuController : UIMenuBase
       ((RectTransform) this.frontCover.transform).DOAnchorPos((Vector2) Vector2Int.zero, 1f).SetEase<TweenerCore<Vector2, Vector2, VectorOptions>>(Ease.OutCirc);
       this.frontCover.transform.DOScale(new Vector3(1.72f, 1.26f, 0.5f), 1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutCirc).SetDelay<TweenerCore<Vector3, Vector3, VectorOptions>>(0.5f);
       this.frontCover.FlipRightPage();
-      this.StartCoroutine((IEnumerator) this.WaitFor(1.5f, (System.Action) (() =>
+      this.StartCoroutine(this.WaitFor(1.5f, (System.Action) (() =>
       {
         this.frontCover.bookPages[1] = temp1;
         this.frontCover.bookPages[2] = temp2;

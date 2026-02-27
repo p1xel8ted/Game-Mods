@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SinOnboardingMenu
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -144,7 +144,7 @@ public class SinOnboardingMenu : UIMenuBase
     float q = 0.0f;
     DOTween.To((DOGetter<float>) (() => q), (DOSetter<float>) (x => q = x), 1f, 1f).OnUpdate<TweenerCore<float, float, FloatOptions>>((TweenCallback) (() => GameManager.GetInstance().CamFollowTarget.SetOffset(Vector3.Lerp(Vector3.zero, Vector3.forward * 2.25f, q))));
     SettingsManager.Settings.Graphics.DepthOfField = depthOfField;
-    yield return (object) coroutineSupport.StartCoroutine((IEnumerator) coroutineSupport.SinOutroSequenceIE(new Vector3(0.15f, PlayerFarming.Instance.CrownBone.position.y, PlayerFarming.Instance.CrownBone.position.z - 0.05f)));
+    yield return (object) coroutineSupport.StartCoroutine(coroutineSupport.SinOutroSequenceIE(new Vector3(0.15f, PlayerFarming.Instance.CrownBone.position.y, PlayerFarming.Instance.CrownBone.position.z - 0.05f)));
     ChurchFollowerManager.Instance.DisableAllOverlays();
     coroutineSupport.Crown.gameObject.SetActive(false);
     PlayerFarming.Instance.state.LockStateChanges = false;

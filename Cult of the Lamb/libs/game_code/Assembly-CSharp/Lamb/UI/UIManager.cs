@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Flockade;
@@ -2843,7 +2843,7 @@ public class UIManager : MonoSingleton<UIManager>
     UIUpgradeTreeMenuController treeMenuController1 = upgradeTreeInstance;
     treeMenuController1.OnHidden = treeMenuController1.OnHidden + (System.Action) (() =>
     {
-      GameManager.GetInstance().StartCoroutine((IEnumerator) UpgradeSystem.ListOfUnlocksRoutine());
+      GameManager.GetInstance().StartCoroutine(UpgradeSystem.ListOfUnlocksRoutine());
       HUD_Manager.Instance.Show(0);
       System.Action action = closeCallback;
       if (action == null)
@@ -2870,7 +2870,7 @@ public class UIManager : MonoSingleton<UIManager>
       revealType = UpgradeSystem.Type.Major_DLC_Sermon_Packs;
     upgradeTreeInstance.Show(revealType);
     UIUpgradePlayerTreeMenuController treeMenuController1 = upgradeTreeInstance;
-    treeMenuController1.OnHidden = treeMenuController1.OnHidden + (System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) UpgradeSystem.ListOfUnlocksRoutine()));
+    treeMenuController1.OnHidden = treeMenuController1.OnHidden + (System.Action) (() => GameManager.GetInstance().StartCoroutine(UpgradeSystem.ListOfUnlocksRoutine()));
     UIUpgradePlayerTreeMenuController treeMenuController2 = upgradeTreeInstance;
     treeMenuController2.OnUpgradeUnlocked = treeMenuController2.OnUpgradeUnlocked + (Action<UpgradeSystem.Type>) (type => upgradeTreeInstance.Hide());
     this.SetMenuInstance((UIMenuBase) upgradeTreeInstance);
@@ -3014,7 +3014,7 @@ public class UIManager : MonoSingleton<UIManager>
     else
       menu.Show();
     UIPlayerUpgradesMenuController upgradesMenuController = menu;
-    upgradesMenuController.OnHidden = upgradesMenuController.OnHidden + (System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) UpgradeSystem.ListOfUnlocksRoutine()));
+    upgradesMenuController.OnHidden = upgradesMenuController.OnHidden + (System.Action) (() => GameManager.GetInstance().StartCoroutine(UpgradeSystem.ListOfUnlocksRoutine()));
     return this.SetMenuInstance((UIMenuBase) menu, 1f) as UIPlayerUpgradesMenuController;
   }
 

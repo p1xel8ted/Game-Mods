@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualAtone
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -26,7 +26,7 @@ public class RitualAtone : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -34,7 +34,7 @@ public class RitualAtone : Ritual
     RitualAtone ritualAtone = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualAtone.StartCoroutine((IEnumerator) ritualAtone.WaitFollowersFormCircle());
+    yield return (object) ritualAtone.StartCoroutine(ritualAtone.WaitFollowersFormCircle());
     yield return (object) new UnityEngine.WaitForSeconds(1f);
     UIFollowerSelectMenuController followerSelectInstance = MonoSingleton<UIManager>.Instance.FollowerSelectMenuTemplate.Instantiate<UIFollowerSelectMenuController>();
     followerSelectInstance.VotingType = TwitchVoting.VotingType.RITUAL_ATONE;
@@ -47,8 +47,8 @@ public class RitualAtone : Ritual
       this.loopedSound = AudioManager.Instance.CreateLoop("event:/sermon/preach_loop", PlayerFarming.Instance.gameObject, true, false);
       this.Task1 = new FollowerTask_ManualControl();
       this.contestant1.Brain.HardSwapToTask((FollowerTask) this.Task1);
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.ContinueRitual());
-      this.StartCoroutine((IEnumerator) this.SetUpCombatant1Routine());
+      GameManager.GetInstance().StartCoroutine(this.ContinueRitual());
+      this.StartCoroutine(this.SetUpCombatant1Routine());
     });
     int SinsToAdd = ritualAtone.GetSinsToAdd();
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
@@ -129,18 +129,18 @@ public class RitualAtone : Ritual
           f.AddBodyAnimation("pray", true, 0.0f);
           if (sin > 1)
             f.PleasureUI.Show();
-          ritualAtone1.StartCoroutine((IEnumerator) ritualAtone1.SpawnSouls(ritualAtone1.contestant1.gameObject, Mathf.Clamp(sin, 5, 25), f.transform.position, 1.33f));
+          ritualAtone1.StartCoroutine(ritualAtone1.SpawnSouls(ritualAtone1.contestant1.gameObject, Mathf.Clamp(sin, 5, 25), f.transform.position, 1.33f));
           ((FollowerTask_AttendRitual) f.Brain.CurrentTask).Pray();
-          ritualAtone1.StartCoroutine((IEnumerator) ritualAtone1.WaitForSeconds(0.85f, (System.Action) (() =>
+          ritualAtone1.StartCoroutine(ritualAtone1.WaitForSeconds(0.85f, (System.Action) (() =>
           {
             AudioManager.Instance.PlayOneShot("event:/enemy/impact_squishy", f.gameObject);
             if (sin <= 1)
               return;
             f.PleasureUI.BarController.ShrinkBarToEmpty(1f);
-            ritualAtone.StartCoroutine((IEnumerator) ritualAtone.WaitForSeconds(1f, (System.Action) (() =>
+            ritualAtone.StartCoroutine(ritualAtone.WaitForSeconds(1f, (System.Action) (() =>
             {
               f.PleasureUI.BarController.ShrinkBarToEmpty(1f);
-              ritualAtone.StartCoroutine((IEnumerator) ritualAtone.WaitForSeconds(1f, (System.Action) (() => f.PleasureUI.Hide())));
+              ritualAtone.StartCoroutine(ritualAtone.WaitForSeconds(1f, (System.Action) (() => f.PleasureUI.Hide())));
             })));
           })));
           yield return (object) new UnityEngine.WaitForSeconds(0.3f);
@@ -199,7 +199,7 @@ public class RitualAtone : Ritual
     foreach (FollowerBrain brain in Ritual.FollowerToAttendSermon)
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
-      ritualAtone1.StartCoroutine((IEnumerator) ritualAtone1.DelayFollowerReaction(brain, Delay));
+      ritualAtone1.StartCoroutine(ritualAtone1.DelayFollowerReaction(brain, Delay));
     }
     AudioManager.Instance.StopLoop(ritualAtone1.loopedSound);
     ChurchFollowerManager.Instance.Goop.gameObject.SetActive(false);

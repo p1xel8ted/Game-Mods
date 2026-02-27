@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyLavaSnail
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -142,10 +142,10 @@ public class EnemyLavaSnail : UnitObject
       this.health.invincible = false;
       foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
         simpleSpineFlash.FlashWhite(false);
-      this.StartCoroutine((IEnumerator) this.WanderingRoutine());
+      this.StartCoroutine(this.WanderingRoutine());
     }
     else
-      this.StartCoroutine((IEnumerator) this.WanderingRoutine());
+      this.StartCoroutine(this.WanderingRoutine());
   }
 
   public override void OnDisable()
@@ -190,7 +190,7 @@ public class EnemyLavaSnail : UnitObject
         if (enemyLavaSnail.ShouldMerge() && (double) UnityEngine.Random.value < 0.10000000149011612)
           enemyLavaSnail.StartMerge(true);
         else if (enemyLavaSnail.ShouldAttack())
-          enemyLavaSnail.StartCoroutine((IEnumerator) enemyLavaSnail.AttackRoutine());
+          enemyLavaSnail.StartCoroutine(enemyLavaSnail.AttackRoutine());
         yield return (object) null;
       }
       yield return (object) null;
@@ -241,7 +241,7 @@ public class EnemyLavaSnail : UnitObject
     this.StopAllCoroutines();
     if (initiatedMerge)
       this.mergeTarget.StartMerge(false);
-    this.StartCoroutine((IEnumerator) this.MergeRoutine(initiatedMerge));
+    this.StartCoroutine(this.MergeRoutine(initiatedMerge));
   }
 
   public IEnumerator MergeRoutine(bool initiatedMerge)
@@ -298,7 +298,7 @@ public class EnemyLavaSnail : UnitObject
       return;
     this.state.CURRENT_STATE = StateMachine.State.Idle;
     this.timeToNewTarget = 0.0f;
-    this.StartCoroutine((IEnumerator) this.WanderingRoutine());
+    this.StartCoroutine(this.WanderingRoutine());
   }
 
   public virtual bool ShouldAttack()
@@ -358,7 +358,7 @@ public class EnemyLavaSnail : UnitObject
       enemyLavaSnail.Spine.AnimationState.SetAnimation(0, enemyLavaSnail.AttackAnimation, false);
       enemyLavaSnail.Spine.AnimationState.AddAnimation(0, enemyLavaSnail.IdleAnimation, true, 0.0f);
       if ((double) enemyLavaSnail.DamageColliderDuration != -1.0)
-        enemyLavaSnail.StartCoroutine((IEnumerator) enemyLavaSnail.EnableCollider(enemyLavaSnail.DamageColliderDuration));
+        enemyLavaSnail.StartCoroutine(enemyLavaSnail.EnableCollider(enemyLavaSnail.DamageColliderDuration));
       time = 0.0f;
       while ((double) (time += Time.deltaTime * enemyLavaSnail.Spine.timeScale) < (double) enemyLavaSnail.AttackDuration * 0.699999988079071)
         yield return (object) null;
@@ -411,10 +411,10 @@ public class EnemyLavaSnail : UnitObject
     {
       this.StopAllCoroutines();
       this.DisableForces = false;
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && AttackType != Health.AttackTypes.NoReaction && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -459,9 +459,9 @@ public class EnemyLavaSnail : UnitObject
       yield return (object) null;
     enemyLavaSnail.DisableForces = false;
     enemyLavaSnail.timeToNewTarget = 1f;
-    enemyLavaSnail.StartCoroutine((IEnumerator) enemyLavaSnail.WanderingRoutine());
+    enemyLavaSnail.StartCoroutine(enemyLavaSnail.WanderingRoutine());
     if (enemyLavaSnail.CounterAttack)
-      enemyLavaSnail.StartCoroutine((IEnumerator) enemyLavaSnail.AttackRoutine());
+      enemyLavaSnail.StartCoroutine(enemyLavaSnail.AttackRoutine());
   }
 
   public void GetNewTargetPosition()

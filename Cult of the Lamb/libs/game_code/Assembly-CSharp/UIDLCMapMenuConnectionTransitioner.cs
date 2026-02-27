@@ -1,12 +1,11 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIDLCMapMenuConnectionTransitioner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Lamb.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -39,24 +38,15 @@ public class UIDLCMapMenuConnectionTransitioner : UIDLCMapSideTransitioner
     PooledObject<List<System.Threading.Tasks.Task>> pooledObject = CollectionPool<List<System.Threading.Tasks.Task>, System.Threading.Tasks.Task>.Get(out taskList);
     try
     {
-      IEnumerator enumerator = (IEnumerator) containerForSide.GetEnumerator();
-      try
+      foreach (Component component1 in (Transform) containerForSide)
       {
-        while (enumerator.MoveNext())
+        DLCMapConnection component2;
+        if (component1.TryGetComponent<DLCMapConnection>(out component2) && !component2.ShouldBeHidden)
         {
-          DLCMapConnection component;
-          if (((Component) enumerator.Current).TryGetComponent<DLCMapConnection>(out component) && !component.ShouldBeHidden)
-          {
-            float delay = UnityEngine.Random.Range(connectionTransitioner._minDelay, connectionTransitioner._maxDelay);
-            float duration = UnityEngine.Random.Range(connectionTransitioner._minDuration, connectionTransitioner._maxDuration);
-            taskList.Add(connectionTransitioner.TransitionConnectionInWithDelayAsync(component, delay, duration));
-          }
+          float delay = UnityEngine.Random.Range(connectionTransitioner._minDelay, connectionTransitioner._maxDelay);
+          float duration = UnityEngine.Random.Range(connectionTransitioner._minDuration, connectionTransitioner._maxDuration);
+          taskList.Add(connectionTransitioner.TransitionConnectionInWithDelayAsync(component2, delay, duration));
         }
-      }
-      finally
-      {
-        if (enumerator is IDisposable disposable)
-          disposable.Dispose();
       }
       await System.Threading.Tasks.Task.WhenAll((IEnumerable<System.Threading.Tasks.Task>) taskList);
     }
@@ -76,24 +66,15 @@ public class UIDLCMapMenuConnectionTransitioner : UIDLCMapSideTransitioner
     PooledObject<List<System.Threading.Tasks.Task>> pooledObject = CollectionPool<List<System.Threading.Tasks.Task>, System.Threading.Tasks.Task>.Get(out taskList);
     try
     {
-      IEnumerator enumerator = (IEnumerator) container.GetEnumerator();
-      try
+      foreach (Component component1 in (Transform) container)
       {
-        while (enumerator.MoveNext())
+        DLCMapConnection component2;
+        if (component1.TryGetComponent<DLCMapConnection>(out component2) && !component2.ShouldBeHidden)
         {
-          DLCMapConnection component;
-          if (((Component) enumerator.Current).TryGetComponent<DLCMapConnection>(out component) && !component.ShouldBeHidden)
-          {
-            float delay = UnityEngine.Random.Range(connectionTransitioner._minDelay, connectionTransitioner._maxDelay);
-            float duration = UnityEngine.Random.Range(connectionTransitioner._minDuration, connectionTransitioner._maxDuration);
-            taskList.Add(connectionTransitioner.TransitionConnectionOutWithDelayAsync(component, delay, duration));
-          }
+          float delay = UnityEngine.Random.Range(connectionTransitioner._minDelay, connectionTransitioner._maxDelay);
+          float duration = UnityEngine.Random.Range(connectionTransitioner._minDuration, connectionTransitioner._maxDuration);
+          taskList.Add(connectionTransitioner.TransitionConnectionOutWithDelayAsync(component2, delay, duration));
         }
-      }
-      finally
-      {
-        if (enumerator is IDisposable disposable)
-          disposable.Dispose();
       }
       await System.Threading.Tasks.Task.WhenAll((IEnumerable<System.Threading.Tasks.Task>) taskList);
     }

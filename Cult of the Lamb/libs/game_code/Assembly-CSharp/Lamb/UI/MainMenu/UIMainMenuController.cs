@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.MainMenu.UIMainMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -93,7 +93,7 @@ public class UIMainMenuController : UIMenuBase
 
   public void OnInfoCardShown(SaveInfoCard infoCard)
   {
-    this.StartCoroutine((IEnumerator) this.FrameWait((System.Action) (() =>
+    this.StartCoroutine(this.FrameWait((System.Action) (() =>
     {
       if ((UnityEngine.Object) MonoSingleton<UINavigatorNew>.Instance != (UnityEngine.Object) null && MonoSingleton<UINavigatorNew>.Instance.CurrentSelectable != null)
       {
@@ -172,7 +172,7 @@ public class UIMainMenuController : UIMenuBase
       this.ad.DOFade(1f, 0.25f).SetDelay<TweenerCore<float, float, FloatOptions>>(0.25f);
       this.SetActiveStateForMenu(this.ad.gameObject, true);
       this._controlPrompts.ShowAcceptButton();
-      this.StartCoroutine((IEnumerator) this.WaitForDLCCheck());
+      this.StartCoroutine(this.WaitForDLCCheck());
       this._menuController.ShowBlueTheme(1f, 0.0f);
     });
     this._loadMenu.OnDeleteButtonPressed += (System.Action) (() => this.PerformMenuTransition((UISubmenuBase) this._loadMenu, (UISubmenuBase) this._deleteMenu));
@@ -192,7 +192,7 @@ public class UIMainMenuController : UIMenuBase
       this._controlPrompts.ShowAcceptButton();
       this.ad.DOFade(1f, 0.25f).SetDelay<TweenerCore<float, float, FloatOptions>>(0.25f);
       this.SetActiveStateForMenu(this.ad.gameObject, true);
-      this.StartCoroutine((IEnumerator) this.WaitForDLCCheck());
+      this.StartCoroutine(this.WaitForDLCCheck());
     });
     this._discordButton.onClick.AddListener((UnityAction) (() => Application.OpenURL("https://discord.com/invite/massivemonster")));
     this._comicButton.onClick.AddListener((UnityAction) (() =>
@@ -218,7 +218,7 @@ public class UIMainMenuController : UIMenuBase
         this._keyArt.gameObject.SetActive(true);
       });
     }));
-    this.StartCoroutine((IEnumerator) this.WaitForDLCCheck());
+    this.StartCoroutine(this.WaitForDLCCheck());
   }
 
   public IEnumerator WaitForDLCCheck()
@@ -313,7 +313,7 @@ public class UIMainMenuController : UIMenuBase
     if (metaErrors.Count > 0)
       yield return (object) mainMenuController.RestoreFiles(metaErrors, metaDataPreloader, saveDataLoader);
     if (!backUpSaves)
-      yield return (object) mainMenuController.StartCoroutine((IEnumerator) mainMenuController.PreloadMetadata(true));
+      yield return (object) mainMenuController.StartCoroutine(mainMenuController.PreloadMetadata(true));
   }
 
   public IEnumerator RestoreFiles(
@@ -406,10 +406,7 @@ public class UIMainMenuController : UIMenuBase
 
   public void FocusOnComicButton() => this.FocusOnObject(this._comicButton);
 
-  public void FocusOnObject(MMButton target)
-  {
-    this.StartCoroutine((IEnumerator) this.FocusOnObjectIE(target));
-  }
+  public void FocusOnObject(MMButton target) => this.StartCoroutine(this.FocusOnObjectIE(target));
 
   public IEnumerator FocusOnObjectIE(MMButton target)
   {
@@ -504,7 +501,7 @@ public class UIMainMenuController : UIMenuBase
     this.ad.DOFade(1f, 0.25f).SetDelay<TweenerCore<float, float, FloatOptions>>(0.25f);
     this.SetActiveStateForMenu(this.ad.gameObject, true);
     this._controlPrompts.ShowAcceptButton();
-    this.StartCoroutine((IEnumerator) this.WaitForDLCCheck());
+    this.StartCoroutine(this.WaitForDLCCheck());
     this._menuController.ShowBlueTheme(1f, 0.0f);
   }
 
@@ -538,7 +535,7 @@ public class UIMainMenuController : UIMenuBase
     this._controlPrompts.ShowAcceptButton();
     this.ad.DOFade(1f, 0.25f).SetDelay<TweenerCore<float, float, FloatOptions>>(0.25f);
     this.SetActiveStateForMenu(this.ad.gameObject, true);
-    this.StartCoroutine((IEnumerator) this.WaitForDLCCheck());
+    this.StartCoroutine(this.WaitForDLCCheck());
   }
 
   [CompilerGenerated]

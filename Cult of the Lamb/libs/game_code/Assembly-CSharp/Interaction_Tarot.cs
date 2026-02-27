@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Tarot
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -115,7 +115,7 @@ public class Interaction_Tarot : Interaction
     this.Label = this.Activated ? "" : this.sSummonTrinket;
   }
 
-  public void FinishedConversation() => this.StartCoroutine((IEnumerator) this.GiveIntroTarots());
+  public void FinishedConversation() => this.StartCoroutine(this.GiveIntroTarots());
 
   public void FinishedWinterConversation()
   {
@@ -123,7 +123,7 @@ public class Interaction_Tarot : Interaction
     this.simpleBarkBeforeCard.enabled = DataManager.Instance.HasEncounteredTarot || DungeonSandboxManager.Active;
   }
 
-  public void TarotCardsGiven() => this.StartCoroutine((IEnumerator) this.GiveIntroTarotsDeck());
+  public void TarotCardsGiven() => this.StartCoroutine(this.GiveIntroTarotsDeck());
 
   public IEnumerator GiveIntroTarotsDeck()
   {
@@ -174,10 +174,7 @@ public class Interaction_Tarot : Interaction
     }
   }
 
-  public void DoRoutine()
-  {
-    this.giveTarotRoutine = this.StartCoroutine((IEnumerator) this.DoRoutineRoutine());
-  }
+  public void DoRoutine() => this.giveTarotRoutine = this.StartCoroutine(this.DoRoutineRoutine());
 
   public TarotCards.TarotCard GetCard(bool canBeCorrupted)
   {
@@ -233,7 +230,7 @@ public class Interaction_Tarot : Interaction
     interactionTarot.playerFarming.state.facingAngle = -90f;
     interactionTarot.c = CameraFollowTarget.Instance;
     interactionTarot.c.DisablePlayerLook = true;
-    interactionTarot.StartCoroutine((IEnumerator) interactionTarot.CentrePlayer());
+    interactionTarot.StartCoroutine(interactionTarot.CentrePlayer());
     AudioManager.Instance.PlayOneShot("event:/tarot/tarot_card_pull", interactionTarot.gameObject);
     interactionTarot.playerFarming.simpleSpineAnimator.Animate("cards/cards-start", 0, false);
     interactionTarot.playerFarming.simpleSpineAnimator.AddAnimate("cards/cards-loop", 0, true, 0.0f);
@@ -252,8 +249,8 @@ public class Interaction_Tarot : Interaction
         if (card == card1)
           card3 = card2;
         if (CoopManager.CoopActive)
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayEffectsRoutine(card3, 0.0f, this.playerFarming.isLamb ? PlayerFarming.players[1] : PlayerFarming.players[0]));
-        this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(card, 0.0f));
+          GameManager.GetInstance().StartCoroutine(this.DelayEffectsRoutine(card3, 0.0f, this.playerFarming.isLamb ? PlayerFarming.players[1] : PlayerFarming.players[0]));
+        this.StartCoroutine(this.BackToIdleRoutine(card, 0.0f));
       });
       UITarotChoiceOverlayController choiceOverlayInstance = interactionTarot.tarotChoiceOverlayInstance;
       choiceOverlayInstance.OnHidden = choiceOverlayInstance.OnHidden + (System.Action) (() => this.tarotChoiceOverlayInstance = (UITarotChoiceOverlayController) null);
@@ -261,9 +258,9 @@ public class Interaction_Tarot : Interaction
     else if (card1 != null || card2 != null)
     {
       if (card1 != null)
-        UITrinketCards.Play(card1, (System.Action) (() => this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(card1, 0.0f))));
+        UITrinketCards.Play(card1, (System.Action) (() => this.StartCoroutine(this.BackToIdleRoutine(card1, 0.0f))));
       else if (card2 != null)
-        UITrinketCards.Play(card2, (System.Action) (() => this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(card2, 0.0f))));
+        UITrinketCards.Play(card2, (System.Action) (() => this.StartCoroutine(this.BackToIdleRoutine(card2, 0.0f))));
     }
     else
     {
@@ -279,7 +276,7 @@ public class Interaction_Tarot : Interaction
         yield return (object) new WaitForSeconds(0.01f);
       }
       yield return (object) new WaitForSeconds(1f);
-      interactionTarot.StartCoroutine((IEnumerator) interactionTarot.BackToIdleRoutine((TarotCards.TarotCard) null, 0.0f));
+      interactionTarot.StartCoroutine(interactionTarot.BackToIdleRoutine((TarotCards.TarotCard) null, 0.0f));
     }
     if (!DataManager.Instance.HasEncounteredTarot)
       interactionTarot.introGiveDeck.enabled = true;
@@ -300,7 +297,7 @@ public class Interaction_Tarot : Interaction
       interactionTarot.playerFarming.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
       interactionTarot.simpleBarkAfterCard.enabled = true;
       interactionTarot.StopAllCoroutines();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) interactionTarot.DelayEffectsRoutine(card, delay, interactionTarot.playerFarming));
+      GameManager.GetInstance().StartCoroutine(interactionTarot.DelayEffectsRoutine(card, delay, interactionTarot.playerFarming));
       return false;
     }
     // ISSUE: reference to a compiler-generated field

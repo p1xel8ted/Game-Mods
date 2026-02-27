@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BlizzardMonster
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -30,7 +30,7 @@ public class BlizzardMonster : MonoBehaviour
 
   public void Configure(bool success, BlizzardMonster.Params info, System.Action callback)
   {
-    this.StartCoroutine((IEnumerator) this.PerformSequence(success, info, callback));
+    this.StartCoroutine(this.PerformSequence(success, info, callback));
   }
 
   public IEnumerator PerformSequence(bool success, BlizzardMonster.Params info, System.Action callback)
@@ -42,7 +42,7 @@ public class BlizzardMonster : MonoBehaviour
     blizzardMonster.spine.transform.localScale = new Vector3((double) dir.x > 0.0 ? 1f : -1f, 1f, 1f);
     blizzardMonster.spine.transform.localPosition = dir * 20f;
     blizzardMonster.spine.transform.localPosition += Vector3.forward * 7f;
-    yield return (object) blizzardMonster.StartCoroutine((IEnumerator) BlizzardMonster.FadeIn());
+    yield return (object) blizzardMonster.StartCoroutine(BlizzardMonster.FadeIn());
     AudioManager.Instance.StopCurrentMusic();
     AudioManager.Instance.PlayOneShot("event:/Stings/blizzard_monster_intro");
     Vector3 vector3 = pos - dir * 7.5f;
@@ -77,7 +77,7 @@ public class BlizzardMonster : MonoBehaviour
       double num = (double) follower.SetBodyAnimation("Sin/idle-ritual-sin" + UnityEngine.Random.Range(1, 4).ToString(), true);
       follower.Spine.AnimationState.GetCurrent(1).TrackTime = UnityEngine.Random.Range(0.0f, 1f);
     }
-    yield return (object) blizzardMonster.StartCoroutine((IEnumerator) BlizzardMonster.FadeOut());
+    yield return (object) blizzardMonster.StartCoroutine(BlizzardMonster.FadeOut());
     float duration = 11f;
     float time = 0.0f;
     Vector3 targetOffset = GameManager.GetInstance().CamFollowTarget.TargetOffset;
@@ -91,12 +91,12 @@ public class BlizzardMonster : MonoBehaviour
     if (DataManager.Instance.BlizzardSnowmenGiven >= 5)
     {
       blizzardMonster.spine.gameObject.SetActive(false);
-      blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.SecretIE(availableFollowers, blizzardMonster.spine.transform.position, callback));
-      blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.EnterMonsterSequence((int) duration, dir, false));
+      blizzardMonster.StartCoroutine(blizzardMonster.SecretIE(availableFollowers, blizzardMonster.spine.transform.position, callback));
+      blizzardMonster.StartCoroutine(blizzardMonster.EnterMonsterSequence((int) duration, dir, false));
     }
     else
     {
-      yield return (object) blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.EnterMonsterSequence((int) duration, dir, true));
+      yield return (object) blizzardMonster.StartCoroutine(blizzardMonster.EnterMonsterSequence((int) duration, dir, true));
       foreach (Follower follower in availableFollowers)
       {
         FollowerTask_RunAway.TimeSinceLastScream = 0.0f;
@@ -105,7 +105,7 @@ public class BlizzardMonster : MonoBehaviour
         follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_RunAway(new Vector3(follower.transform.position.x * -1f, (float) UnityEngine.Random.Range(-23, -3))));
       }
       yield return (object) new WaitForSeconds(2f);
-      yield return (object) blizzardMonster.StartCoroutine((IEnumerator) BlizzardMonster.FadeIn());
+      yield return (object) blizzardMonster.StartCoroutine(BlizzardMonster.FadeIn());
       GameManager.GetInstance().CamFollowTarget.TargetOffset = Vector3.zero;
       foreach (Follower follower in availableFollowers)
       {
@@ -181,7 +181,7 @@ public class BlizzardMonster : MonoBehaviour
             GameManager.GetInstance().CamFollowTarget.ForceSnapTo(structure1.transform.position - GameManager.GetInstance().CamFollowTarget.transform.forward * 5f - Vector3.forward / 2f);
             GameManager.GetInstance().CamFollowTarget.targetDistance = zoom;
             BiomeConstants.Instance.DepthOfFieldTween(1.5f, GameManager.GetInstance().CamFollowTarget.targetDistance + 1f, 10f, 1f, 145f);
-            yield return (object) blizzardMonster.StartCoroutine((IEnumerator) BlizzardMonster.FadeOut());
+            yield return (object) blizzardMonster.StartCoroutine(BlizzardMonster.FadeOut());
             yield return (object) new WaitForSeconds(0.5f);
             NotificationCentre.NotificationsEnabled = true;
             if ((double) UnityEngine.Random.value < 0.5)
@@ -194,7 +194,7 @@ public class BlizzardMonster : MonoBehaviour
               structureBrain.SnowedUnder();
             NotificationCentre.NotificationsEnabled = false;
             yield return (object) new WaitForSeconds(1.5f);
-            yield return (object) blizzardMonster.StartCoroutine((IEnumerator) BlizzardMonster.FadeIn());
+            yield return (object) blizzardMonster.StartCoroutine(BlizzardMonster.FadeIn());
             structureBrain = (StructureBrain) null;
           }
         }
@@ -245,8 +245,8 @@ public class BlizzardMonster : MonoBehaviour
       GameManager.GetInstance().CamFollowTarget.ClearAllTargets();
       GameManager.GetInstance().CamFollowTarget.ForceSnapTo(blizzardMonster.transform.position + Vector3.up * 2f - GameManager.GetInstance().CamFollowTarget.transform.forward * 9f);
       BiomeConstants.Instance.DepthOfFieldTween(1.5f, 10f, 10f, 1f, 145f);
-      yield return (object) blizzardMonster.StartCoroutine((IEnumerator) BlizzardMonster.FadeOut());
-      blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.ExitMonsterSequence(7f, new Vector3((double) dir.x > 0.0 ? -1f : 1f, 0.0f, 0.0f)));
+      yield return (object) blizzardMonster.StartCoroutine(BlizzardMonster.FadeOut());
+      blizzardMonster.StartCoroutine(blizzardMonster.ExitMonsterSequence(7f, new Vector3((double) dir.x > 0.0 ? -1f : 1f, 0.0f, 0.0f)));
       yield return (object) new WaitForSeconds(1f);
       foreach (FollowerBrain followerBrain in info.FollowersToKill)
       {
@@ -484,10 +484,10 @@ public class BlizzardMonster : MonoBehaviour
     revivedFollower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "run");
     yield return (object) new WaitForEndOfFrame();
     revivedFollower.FacePosition(revivedFollower.transform.position + new Vector3((double) revivedFollower.transform.position.x > 0.0 ? -1f : 1f, 0.0f));
-    blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.SpawnSnowmenIE(pos + new Vector3(0.45f, 1.5f), targetPos + new Vector3(0.45f, 1.5f), moveDuration));
-    blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.SpawnSnowmenIE(pos + new Vector3(0.35f, -1.2f), targetPos + new Vector3(0.35f, -1.2f), moveDuration));
-    blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.SpawnSnowmenIE(pos + new Vector3(-0.35f, -1.35f), targetPos + new Vector3(-0.35f, -1.35f), moveDuration));
-    blizzardMonster.StartCoroutine((IEnumerator) blizzardMonster.SpawnSnowmenIE(pos + new Vector3(-0.45f, 1.25f), targetPos + new Vector3(-0.45f, 1.25f), moveDuration));
+    blizzardMonster.StartCoroutine(blizzardMonster.SpawnSnowmenIE(pos + new Vector3(0.45f, 1.5f), targetPos + new Vector3(0.45f, 1.5f), moveDuration));
+    blizzardMonster.StartCoroutine(blizzardMonster.SpawnSnowmenIE(pos + new Vector3(0.35f, -1.2f), targetPos + new Vector3(0.35f, -1.2f), moveDuration));
+    blizzardMonster.StartCoroutine(blizzardMonster.SpawnSnowmenIE(pos + new Vector3(-0.35f, -1.35f), targetPos + new Vector3(-0.35f, -1.35f), moveDuration));
+    blizzardMonster.StartCoroutine(blizzardMonster.SpawnSnowmenIE(pos + new Vector3(-0.45f, 1.25f), targetPos + new Vector3(-0.45f, 1.25f), moveDuration));
     PlayerFarming.Instance.GoToAndStop(centerPoint);
     yield return (object) new WaitForSeconds(moveDuration);
     GameManager.GetInstance().CamFollowTarget.TargetOffset = Vector3.zero;
@@ -510,7 +510,7 @@ public class BlizzardMonster : MonoBehaviour
     revivedFollower.State.CURRENT_STATE = StateMachine.State.Idle;
     revivedFollower.SimpleAnimator.ResetAnimationsToDefaults();
     yield return (object) new WaitForSeconds(1f);
-    yield return (object) blizzardMonster.StartCoroutine((IEnumerator) revivedFollower.GetComponent<interaction_FollowerInteraction>().SimpleNewRecruitRoutine());
+    yield return (object) blizzardMonster.StartCoroutine(revivedFollower.GetComponent<interaction_FollowerInteraction>().SimpleNewRecruitRoutine());
     while (UIMenuBase.ActiveMenus.Count > 0)
       yield return (object) null;
     yield return (object) new WaitForSeconds(4.5f);

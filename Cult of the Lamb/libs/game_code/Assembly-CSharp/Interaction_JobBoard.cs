@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_JobBoard
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -194,7 +194,7 @@ public class Interaction_JobBoard : Interaction
   {
     base.OnInteract(state);
     this.CheckCompleteFleeceObjective();
-    this.StartCoroutine((IEnumerator) this.HandleInteraction());
+    this.StartCoroutine(this.HandleInteraction());
   }
 
   public IEnumerator HandleInteraction()
@@ -254,7 +254,7 @@ public class Interaction_JobBoard : Interaction
   {
     if (DataManager.Instance.GetVariable(this.activeVariable))
       return;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RevealIE());
+    GameManager.GetInstance().StartCoroutine(this.RevealIE());
   }
 
   public IEnumerator RevealIE()
@@ -309,7 +309,7 @@ public class Interaction_JobBoard : Interaction
     }
   }
 
-  public void PlayPlantGrowSequence() => this.StartCoroutine((IEnumerator) this.PlantGrowRoutine());
+  public void PlayPlantGrowSequence() => this.StartCoroutine(this.PlantGrowRoutine());
 
   public IEnumerator PlantGrowRoutine()
   {
@@ -325,7 +325,7 @@ public class Interaction_JobBoard : Interaction
 
   public void PlayBuildingSFXForDuration(float duration, float min = 0.1f, float max = 0.5f)
   {
-    this.StartCoroutine((IEnumerator) this.PlayBuildingSFXForDurationIE(duration, min, max));
+    this.StartCoroutine(this.PlayBuildingSFXForDurationIE(duration, min, max));
   }
 
   public IEnumerator PlayBuildingSFXForDurationIE(float duration, float min, float max)
@@ -338,7 +338,7 @@ public class Interaction_JobBoard : Interaction
     }
   }
 
-  public void Hide() => this.StartCoroutine((IEnumerator) this.HideIE());
+  public void Hide() => this.StartCoroutine(this.HideIE());
 
   public IEnumerator HideIE()
   {
@@ -352,7 +352,7 @@ public class Interaction_JobBoard : Interaction
     interactionJobBoard.container.transform.DOShakePosition(0.25f, 0.05f, 6);
     CameraManager.instance.ShakeCameraForDuration(0.005f, 0.05f, 0.25f);
     yield return (object) new WaitForSeconds(0.25f);
-    interactionJobBoard.StartCoroutine((IEnumerator) interactionJobBoard.PlantShrinkRoutine());
+    interactionJobBoard.StartCoroutine(interactionJobBoard.PlantShrinkRoutine());
     if ((UnityEngine.Object) interactionJobBoard.dirt != (UnityEngine.Object) null)
       interactionJobBoard.dirt.transform.DOScale(Vector3.zero, 1.6f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InSine);
     BiomeConstants.Instance.EmitSmokeInteractionVFXForDuration(2f, 0.5f, interactionJobBoard.transform.position, Vector3.one);
@@ -371,7 +371,7 @@ public class Interaction_JobBoard : Interaction
       yield return (object) null;
       yield return (object) new WaitWhile((Func<bool>) (() => WoolhavenYngyaStatue.Instance.UnlockingChain));
     }
-    interactionJobBoard.StartCoroutine((IEnumerator) interactionJobBoard.DeactivateJobBoardIE());
+    interactionJobBoard.StartCoroutine(interactionJobBoard.DeactivateJobBoardIE());
   }
 
   public IEnumerator DeactivateJobBoardIE()
@@ -393,7 +393,7 @@ public class Interaction_JobBoard : Interaction
     this.\u003C\u003E1__state = -1;
     Debug.Log((object) $"Waiting for Job Board Complete handlers to finish up before deactivating job board: lockcount: {interactionJobBoard._jobBoardHideLock}");
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) new WaitWhile((Func<bool>) new Func<bool>(interactionJobBoard.\u003CDeactivateJobBoardIE\u003Eb__56_0));
+    this.\u003C\u003E2__current = (object) new WaitWhile(new Func<bool>(interactionJobBoard.\u003CDeactivateJobBoardIE\u003Eb__56_0));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;

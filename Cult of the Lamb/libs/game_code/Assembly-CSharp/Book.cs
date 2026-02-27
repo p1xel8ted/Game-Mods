@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Book
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -255,7 +255,7 @@ public class Book : BaseMonoBehaviour
         if (!this.gameObject.activeSelf)
           return;
         this.delay = 0.75f;
-        this.currentCoroutine = this.StartCoroutine((IEnumerator) this.TweenTo(this.ebr, 0.15f, (System.Action) (() =>
+        this.currentCoroutine = this.StartCoroutine(this.TweenTo(this.ebr, 0.15f, (System.Action) (() =>
         {
           this.UpdateSprites();
           this.RightNext.transform.SetParent(this.BookPanel.transform);
@@ -287,7 +287,7 @@ public class Book : BaseMonoBehaviour
     if (!this.DoIntro)
       return;
     this.backgroundParent.GetComponent<CanvasGroup>().alpha = 0.0f;
-    this.StartCoroutine((IEnumerator) this.Intro());
+    this.StartCoroutine(this.Intro());
   }
 
   public IEnumerator Intro()
@@ -659,9 +659,9 @@ public class Book : BaseMonoBehaviour
       return;
     this.flippingPage = true;
     if (this.mode == FlipMode.RightToLeft)
-      this.currentCoroutine = this.StartCoroutine((IEnumerator) this.TweenTo(this.ebl, 0.15f, (System.Action) (() => this.Flip(callOnflip))));
+      this.currentCoroutine = this.StartCoroutine(this.TweenTo(this.ebl, 0.15f, (System.Action) (() => this.Flip(callOnflip))));
     else
-      this.currentCoroutine = this.StartCoroutine((IEnumerator) this.TweenTo(this.ebr, 0.15f, (System.Action) (() => this.Flip(callOnflip))));
+      this.currentCoroutine = this.StartCoroutine(this.TweenTo(this.ebr, 0.15f, (System.Action) (() => this.Flip(callOnflip))));
   }
 
   public void Flip(bool callOnflip = true)
@@ -742,7 +742,7 @@ public class Book : BaseMonoBehaviour
     if (!this.doneIntro)
       return;
     if (this.mode == FlipMode.RightToLeft)
-      this.currentCoroutine = this.StartCoroutine((IEnumerator) this.TweenTo(this.ebr, 0.15f, (System.Action) (() =>
+      this.currentCoroutine = this.StartCoroutine(this.TweenTo(this.ebr, 0.15f, (System.Action) (() =>
       {
         this.UpdateSprites();
         this.RightNext.transform.SetParent(this.BookPanel.transform);
@@ -752,7 +752,7 @@ public class Book : BaseMonoBehaviour
         this.pageDragging = false;
       })));
     else
-      this.currentCoroutine = this.StartCoroutine((IEnumerator) this.TweenTo(this.ebl, 0.15f, (System.Action) (() =>
+      this.currentCoroutine = this.StartCoroutine(this.TweenTo(this.ebl, 0.15f, (System.Action) (() =>
       {
         this.UpdateSprites();
         this.LeftNext.transform.SetParent(this.BookPanel.transform);
@@ -791,7 +791,7 @@ public class Book : BaseMonoBehaviour
     float xl = (float) (((double) this.EndBottomRight.x - (double) this.EndBottomLeft.x) / 2.0 * 0.89999997615814209);
     float h = Mathf.Abs(this.EndBottomRight.y) * 0.9f;
     float dx = (float) ((double) xl * 2.0 / 40.0);
-    this.StartCoroutine((IEnumerator) this.FlipRTL(xc, xl, h, frameTime, dx));
+    this.StartCoroutine(this.FlipRTL(xc, xl, h, frameTime, dx));
   }
 
   public IEnumerator FlipRTL(float xc, float xl, float h, float frameTime, float dx)
@@ -833,7 +833,7 @@ public class Book : BaseMonoBehaviour
 
   public void FlipToEnd(System.Action callback = null)
   {
-    this.StartCoroutine((IEnumerator) this.FlipToEndIE(callback));
+    this.StartCoroutine(this.FlipToEndIE(callback));
   }
 
   public IEnumerator FlipToEndIE(System.Action callback = null)
@@ -844,7 +844,7 @@ public class Book : BaseMonoBehaviour
     float xl = (float) (((double) book.EndBottomRight.x - (double) book.EndBottomLeft.x) / 2.0 * 0.89999997615814209);
     float h = Mathf.Abs(book.EndBottomRight.y) * 0.9f;
     float dx = (float) ((double) xl * 2.0 / 40.0);
-    book.StartCoroutine((IEnumerator) book.FlipLTR(xc, xl, h, frameTime, dx, true));
+    book.StartCoroutine(book.FlipLTR(xc, xl, h, frameTime, dx, true));
     ((RectTransform) book.transform).DOAnchorPos((Vector2) new Vector3(-280f, 0.0f, 0.0f), 1f);
     yield return (object) new WaitForSeconds(1f);
     System.Action action = callback;
@@ -859,7 +859,7 @@ public class Book : BaseMonoBehaviour
     if (!this.gameObject.activeSelf)
       return;
     this.delay = 0.75f;
-    this.currentCoroutine = this.StartCoroutine((IEnumerator) this.TweenTo(this.ebr, 0.15f, (System.Action) (() =>
+    this.currentCoroutine = this.StartCoroutine(this.TweenTo(this.ebr, 0.15f, (System.Action) (() =>
     {
       this.UpdateSprites();
       this.RightNext.transform.SetParent(this.BookPanel.transform);

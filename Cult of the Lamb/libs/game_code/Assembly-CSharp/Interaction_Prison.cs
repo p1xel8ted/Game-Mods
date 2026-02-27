@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Prison
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -235,7 +235,7 @@ public class Interaction_Prison : Interaction
         if (!((UnityEngine.Object) followerById != (UnityEngine.Object) null) || followerById.Brain.Stats.ReeducatedAction)
           return;
         this.prisonerMenu.Hide();
-        this.StartCoroutine((IEnumerator) this.ReEducate());
+        this.StartCoroutine(this.ReEducate());
       });
       UIPrisonerMenuController prisonerMenu1 = this.prisonerMenu;
       prisonerMenu1.OnHidden = prisonerMenu1.OnHidden + (System.Action) (() => Time.timeScale = 1f);
@@ -283,13 +283,13 @@ public class Interaction_Prison : Interaction
     this.StructureInfo.FollowerID = follower.Info.ID;
     this.StructureInfo.FollowerImprisonedTimestamp = TimeManager.TotalElapsedGameTime;
     this.StructureInfo.FollowerImprisonedFaith = follower.Stats.Reeducation;
-    this.StartCoroutine((IEnumerator) this.ImprisonFollowerIE(follower));
+    this.StartCoroutine(this.ImprisonFollowerIE(follower));
   }
 
   public void ReleaseFollower()
   {
     this.isReleasing = true;
-    this.StartCoroutine((IEnumerator) this.ReleaseFollowerIE());
+    this.StartCoroutine(this.ReleaseFollowerIE());
   }
 
   public IEnumerator ReleaseFollowerIE()
@@ -537,7 +537,7 @@ public class Interaction_Prison : Interaction
     if (!((UnityEngine.Object) followerById != (UnityEngine.Object) null) || followerById.Brain.Stats.ReeducatedAction)
       return;
     this.prisonerMenu.Hide();
-    this.StartCoroutine((IEnumerator) this.ReEducate());
+    this.StartCoroutine(this.ReEducate());
   }
 
   [CompilerGenerated]

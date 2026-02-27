@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.FollowerInteractionWheel.UIFollowerInteractionWheelOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -220,7 +220,7 @@ public class UIFollowerInteractionWheelOverlayController :
     overlayController.ConfigureItems(nextItems);
     overlayController._controlPrompts.ShowCancelButton();
     yield return (object) overlayController._animator.YieldForAnimation("NextCategory_In");
-    overlayController.StartCoroutine((IEnumerator) overlayController.DoWheelLoop());
+    overlayController.StartCoroutine(overlayController.DoWheelLoop());
   }
 
   public IEnumerator PrevCategory(List<CommandItem> prevItems)
@@ -229,7 +229,7 @@ public class UIFollowerInteractionWheelOverlayController :
     yield return (object) overlayController._animator.YieldForAnimation("PrevCategory_Out");
     overlayController.ConfigureItems(prevItems);
     yield return (object) overlayController._animator.YieldForAnimation("PrevCategory_In");
-    overlayController.StartCoroutine((IEnumerator) overlayController.DoWheelLoop());
+    overlayController.StartCoroutine(overlayController.DoWheelLoop());
   }
 
   public override void OnChoiceFinalized()
@@ -243,13 +243,13 @@ public class UIFollowerInteractionWheelOverlayController :
       this._commandStack.Push(this._rootCommandItems);
       this._commandHistory.Push(item.CommandItem.Command);
       this._rootCommandItems = item.CommandItem.SubCommands;
-      this.StartCoroutine((IEnumerator) this.NextCategory(this._rootCommandItems));
+      this.StartCoroutine(this.NextCategory(this._rootCommandItems));
     }
     else if (item.FollowerCommand == FollowerCommands.PrevPage)
     {
       this._rootCommandItems = this._commandStack.Pop();
       int num = (int) this._commandHistory.Pop();
-      this.StartCoroutine((IEnumerator) this.PrevCategory(this._rootCommandItems));
+      this.StartCoroutine(this.PrevCategory(this._rootCommandItems));
     }
     else if (item.FollowerCommand == FollowerCommands.AreYouSureNo)
     {
@@ -278,7 +278,7 @@ public class UIFollowerInteractionWheelOverlayController :
       int num = (int) this._commandHistory.Pop();
       this.StopAllCoroutines();
       this.CleanupWheelLoop();
-      this.StartCoroutine((IEnumerator) this.PrevCategory(this._rootCommandItems));
+      this.StartCoroutine(this.PrevCategory(this._rootCommandItems));
       if (this._commandStack.Count != 0 || this._cancellable)
         return;
       this._controlPrompts.HideCancelButton();

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Onboarding
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -153,7 +153,7 @@ public class Onboarding : BaseMonoBehaviour
       DataManager.Instance.SurvivalModeOnboarded = true;
       this.RatSurvivalMode.gameObject.SetActive(true);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForPlayerFarmingToExist((System.Action) (() =>
+    this.StartCoroutine(this.WaitForPlayerFarmingToExist((System.Action) (() =>
     {
       if (DataManager.Instance.CompletedObjectivesHistory.Count > 0 && !ObjectiveManager.GroupExists(DataManager.Instance.CompletedObjectivesHistory[0].GroupId) && !DataManager.Instance.OnboardingFinished)
         this.OnObjectiveComplete(DataManager.Instance.CompletedObjectivesHistory[0].GroupId);
@@ -163,7 +163,7 @@ public class Onboarding : BaseMonoBehaviour
       {
         if (!DataManager.Instance.MAJOR_DLC && DataManager.Instance.BossesCompleted.Count < 4)
           return;
-        this.StartCoroutine((IEnumerator) Interaction_DLCShrine.Instance.RevealIE());
+        this.StartCoroutine(Interaction_DLCShrine.Instance.RevealIE());
       }
       else
         DataManager.Instance.RevealedBaseYngyaShrine = true;
@@ -171,14 +171,14 @@ public class Onboarding : BaseMonoBehaviour
     if (DataManager.Instance.OnboardingFinished && TimeManager.PauseGameTime)
       TimeManager.PauseGameTime = false;
     if (SeasonsManager.Active)
-      this.StartCoroutine((IEnumerator) this.WaitForPlayerFarmingToExist((System.Action) (() =>
+      this.StartCoroutine(this.WaitForPlayerFarmingToExist((System.Action) (() =>
       {
         if (DataManager.Instance.OnboardedSeasons)
           return;
         DataManager.Instance.OnboardedSeasons = true;
         WeatherSystemController.Instance.SetWeather(WeatherSystemController.WeatherType.Snowing, WeatherSystemController.WeatherStrength.Dusting, 0.0f);
       })));
-    this.StartCoroutine((IEnumerator) this.WaitForPlayerFarmingToExist((System.Action) (() =>
+    this.StartCoroutine(this.WaitForPlayerFarmingToExist((System.Action) (() =>
     {
       if (DataManager.Instance.YngyaOffering != -1 || DataManager.Instance.OnboardedDLCEntrance)
         return;
@@ -293,12 +293,12 @@ public class Onboarding : BaseMonoBehaviour
           this.HideAll();
           GameManager.GetInstance().OnConversationNew();
           GameManager.GetInstance().OnConversationNext(PlayerFarming.Instance.gameObject);
-          this.StartCoroutine((IEnumerator) this.WaitForPlayerToStopMeditiating((System.Action) (() =>
+          this.StartCoroutine(this.WaitForPlayerToStopMeditiating((System.Action) (() =>
           {
             this.RatPreachSermon.SetActive(true);
             this.RatPreachSermon.GetComponent<Interaction_SimpleConversation>().Play();
             PlayerFarming.Instance.GoToAndStop(this.RatPreachSermon.transform.position + Vector3.right * 1.5f, this.RatPreachSermon, DisableCollider: true, groupAction: true);
-            this.StartCoroutine((IEnumerator) this.WaitForConversationToFinish((System.Action) (() =>
+            this.StartCoroutine(this.WaitForConversationToFinish((System.Action) (() =>
             {
               PlayerFarming.Instance.EndGoToAndStop();
               PlayerFarming.SetStateForAllPlayers();
@@ -350,7 +350,7 @@ public class Onboarding : BaseMonoBehaviour
             break;
           Onboarding.CurrentPhase = DataManager.OnboardingPhase.Shrine;
           DataManager.Instance.AllowBuilding = false;
-          this.StartCoroutine((IEnumerator) this.DelayedSetActive(this.Rat3Devotion));
+          this.StartCoroutine(this.DelayedSetActive(this.Rat3Devotion));
           break;
         case 1688499747:
           if (!(s == "Objectives/GroupTitles/Food") || ObjectiveManager.GroupExists("Objectives/GroupTitles/BuildCookingFire"))
@@ -391,7 +391,7 @@ public class Onboarding : BaseMonoBehaviour
         case 2781065261:
           if (!(s == "Objectives/GroupTitles/RecruitFollower") || ObjectiveManager.GroupExists("Objectives/GroupTitles/Food"))
             break;
-          this.StartCoroutine((IEnumerator) this.WaitForConversationToFinish((System.Action) (() =>
+          this.StartCoroutine(this.WaitForConversationToFinish((System.Action) (() =>
           {
             this.HideAll();
             this.Rat2Food.SetActive(true);
@@ -512,7 +512,7 @@ public class Onboarding : BaseMonoBehaviour
   {
   }
 
-  public void LoyaltyRoutine() => this.StartCoroutine((IEnumerator) this.LoyaltyRoutineIE());
+  public void LoyaltyRoutine() => this.StartCoroutine(this.LoyaltyRoutineIE());
 
   public IEnumerator LoyaltyRoutineIE()
   {
@@ -583,7 +583,7 @@ public class Onboarding : BaseMonoBehaviour
       component.Callback.AddListener((UnityAction) (() =>
       {
         ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/VisitRatau", Objectives.CustomQuestTypes.VisitRatau));
-        this.StartCoroutine((IEnumerator) this.ActivateTeleporterRoutine());
+        this.StartCoroutine(this.ActivateTeleporterRoutine());
       }));
       component.Play();
     })));
@@ -638,23 +638,23 @@ public class Onboarding : BaseMonoBehaviour
     }), UpgradeSystem.Type.WinterSystem);
   }
 
-  public void GiveSurvivalGold() => this.StartCoroutine((IEnumerator) this.GiveSurvivalGoldIE());
+  public void GiveSurvivalGold() => this.StartCoroutine(this.GiveSurvivalGoldIE());
 
   public IEnumerator GiveSurvivalGoldIE()
   {
     Onboarding onboarding = this;
-    yield return (object) onboarding.StartCoroutine((IEnumerator) onboarding.GiveGoldIE());
+    yield return (object) onboarding.StartCoroutine(onboarding.GiveGoldIE());
     onboarding.RatSurvivalMode.GetComponent<spineChangeAnimationSimple>().changeAnimation();
     GameManager.GetInstance().OnConversationEnd();
     yield return (object) new WaitForSeconds(1f);
-    yield return (object) onboarding.StartCoroutine((IEnumerator) onboarding.RevealSurvivalBars());
+    yield return (object) onboarding.StartCoroutine(onboarding.RevealSurvivalBars());
   }
 
   public IEnumerator RevealSurvivalBars()
   {
     Onboarding onboarding = this;
-    yield return (object) onboarding.StartCoroutine((IEnumerator) onboarding.playerHungerBar.RevealRoutine());
-    yield return (object) onboarding.StartCoroutine((IEnumerator) onboarding.playerSleepBar.RevealRoutine());
+    yield return (object) onboarding.StartCoroutine(onboarding.playerHungerBar.RevealRoutine());
+    yield return (object) onboarding.StartCoroutine(onboarding.playerSleepBar.RevealRoutine());
     yield return (object) new WaitForSeconds(0.5f);
     ObjectiveManager.Add((ObjectivesData) new Objectives_BuildStructure(ScriptLocalization.Objectives_GroupTitles.BuildCookingFire, StructureBrain.TYPES.COOKING_FIRE), true);
     ObjectiveManager.Add((ObjectivesData) new Objectives_Custom(ScriptLocalization.Objectives_GroupTitles.BuildCookingFire, Objectives.CustomQuestTypes.EatMeal), true);
@@ -663,7 +663,7 @@ public class Onboarding : BaseMonoBehaviour
     ObjectiveManager.Add((ObjectivesData) new Objectives_Custom(ScriptLocalization.Objectives_GroupTitles.BuildHouse, Objectives.CustomQuestTypes.ClaimBed), true);
   }
 
-  public void GiveGold() => this.StartCoroutine((IEnumerator) this.GiveGoldIE());
+  public void GiveGold() => this.StartCoroutine(this.GiveGoldIE());
 
   public IEnumerator GiveGoldIE()
   {
@@ -674,7 +674,7 @@ public class Onboarding : BaseMonoBehaviour
     }
   }
 
-  public void GiveLogStone() => this.StartCoroutine((IEnumerator) this.GiveLogStoneIE());
+  public void GiveLogStone() => this.StartCoroutine(this.GiveLogStoneIE());
 
   public IEnumerator GiveLogStoneIE()
   {
@@ -691,7 +691,7 @@ public class Onboarding : BaseMonoBehaviour
     }
   }
 
-  public void GiveRotstone() => this.StartCoroutine((IEnumerator) this.GiveRotstoneIE());
+  public void GiveRotstone() => this.StartCoroutine(this.GiveRotstoneIE());
 
   public IEnumerator GiveRotstoneIE()
   {
@@ -710,7 +710,7 @@ public class Onboarding : BaseMonoBehaviour
     ObjectiveManager.Add((ObjectivesData) objective, true, true);
     ObjectiveManager.Add((ObjectivesData) new Objectives_Custom("Objectives/GroupTitles/WarmCult", Objectives.CustomQuestTypes.LightFurnace), true, true);
     if (DataManager.Instance.SurvivalModeActive)
-      this.StartCoroutine((IEnumerator) this.RevealSurvivalBars());
+      this.StartCoroutine(this.RevealSurvivalBars());
     DataManager.Instance.OnboardingFinished = false;
     BaseGoopDoor.BlockGoopDoor(objective.Text);
     DataManager.Instance.UnlockBaseTeleporter = false;
@@ -749,7 +749,7 @@ public class Onboarding : BaseMonoBehaviour
     return true;
   }
 
-  public void CreateFollowers() => this.StartCoroutine((IEnumerator) this.CreateFollowersRoutine());
+  public void CreateFollowers() => this.StartCoroutine(this.CreateFollowersRoutine());
 
   public IEnumerator CreateFollowersRoutine()
   {
@@ -778,7 +778,7 @@ public class Onboarding : BaseMonoBehaviour
     UnityEngine.Object.Instantiate<GameObject>(this.UITutorialPrefab, GameObject.FindWithTag("Canvas").transform);
   }
 
-  public void ShowBaseFaith() => this.StartCoroutine((IEnumerator) this.ShowBaseFaithRoutine());
+  public void ShowBaseFaith() => this.StartCoroutine(this.ShowBaseFaithRoutine());
 
   public IEnumerator ShowBaseFaithRoutine()
   {
@@ -789,7 +789,7 @@ public class Onboarding : BaseMonoBehaviour
   public void ShowPausePrompt()
   {
     Debug.Log((object) "PAUSE PROMPT!");
-    this.StartCoroutine((IEnumerator) this.PausePromptRoutine());
+    this.StartCoroutine(this.PausePromptRoutine());
   }
 
   public IEnumerator PausePromptRoutine()
@@ -820,7 +820,7 @@ public class Onboarding : BaseMonoBehaviour
   public void ShowMeditatePrompt()
   {
     Debug.Log((object) "MEDITATE PROMPT!");
-    this.StartCoroutine((IEnumerator) this.ShowMeditatePromptRoutine());
+    this.StartCoroutine(this.ShowMeditatePromptRoutine());
   }
 
   public IEnumerator ShowMeditatePromptRoutine()
@@ -847,10 +847,7 @@ public class Onboarding : BaseMonoBehaviour
     this.HideAll();
   }
 
-  public void OnboardDLCEntrance()
-  {
-    this.StartCoroutine((IEnumerator) this.OnboardDLCEntranceIE());
-  }
+  public void OnboardDLCEntrance() => this.StartCoroutine(this.OnboardDLCEntranceIE());
 
   public IEnumerator OnboardDLCEntranceIE()
   {
@@ -862,11 +859,11 @@ public class Onboarding : BaseMonoBehaviour
     GameManager.GetInstance().OnConversationNext(onboarding.dlcBridgeCameraTarget);
     yield return (object) new WaitForSeconds(1f);
     onboarding.dlcFog.transform.DOMoveZ(3f, 2f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InSine);
-    onboarding.StartCoroutine((IEnumerator) onboarding.ShakeCameraWithRampUp());
+    onboarding.StartCoroutine(onboarding.ShakeCameraWithRampUp());
     AudioManager.Instance.PlayOneShot("event:/dlc/env/woolhaven/bridge_appear", onboarding.dlcBridge.transform.position);
     yield return (object) new WaitForSeconds(1.5f);
     onboarding.dlcBridge.transform.position = new Vector3(onboarding.dlcBridge.transform.position.x, onboarding.dlcBridge.transform.position.y, 1f);
-    onboarding.StartCoroutine((IEnumerator) onboarding.BridgeSmokeRoutine(2.5f));
+    onboarding.StartCoroutine(onboarding.BridgeSmokeRoutine(2.5f));
     yield return (object) new WaitForSeconds(0.5f);
     onboarding.dlcBridge.gameObject.SetActive(true);
     onboarding.dlcBridge.transform.DOMoveZ(-1.1f, 2f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutSine);
@@ -1223,10 +1220,18 @@ public class Onboarding : BaseMonoBehaviour
       DataManager.Instance.DrunkDay = TimeManager.CurrentDay;
       DataManager.Instance.CurrentOnboardingFollowerTerm = $"Conversation_NPC/DrunkConvo_{DataManager.Instance.DrunkIncrement}/0";
       DataManager.Instance.DrunkIncrement = (int) Utils.Repeat((float) (DataManager.Instance.DrunkIncrement + 1), 4f);
-      if (infoById.ID == 99991)
-        DataManager.Instance.CurrentOnboardingFollowerTerm = "Conversation_NPC/DrunkConvo_0/0/Heket";
-      else
-        DataManager.Instance.CurrentOnboardingFollowerTerm += "/Bishop";
+      switch (infoById.ID)
+      {
+        case 666:
+        case 99990:
+        case 99992:
+        case 99993:
+          DataManager.Instance.CurrentOnboardingFollowerTerm += "/Bishop";
+          break;
+        case 99991:
+          DataManager.Instance.CurrentOnboardingFollowerTerm = "Conversation_NPC/DrunkConvo_0/0/Heket";
+          break;
+      }
     }
     else if (this.CanGivePilgrimPart1Quest(infoById))
     {
@@ -1718,7 +1723,7 @@ public class Onboarding : BaseMonoBehaviour
     {
       if (!DataManager.Instance.MAJOR_DLC && DataManager.Instance.BossesCompleted.Count < 4)
         return;
-      this.StartCoroutine((IEnumerator) Interaction_DLCShrine.Instance.RevealIE());
+      this.StartCoroutine(Interaction_DLCShrine.Instance.RevealIE());
     }
     else
       DataManager.Instance.RevealedBaseYngyaShrine = true;

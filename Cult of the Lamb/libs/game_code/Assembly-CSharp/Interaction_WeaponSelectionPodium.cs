@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_WeaponSelectionPodium
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -251,7 +251,7 @@ public class Interaction_WeaponSelectionPodium : Interaction
 
   public void OnWeaponForceChange()
   {
-    this.StartCoroutine((IEnumerator) this.SetItem(ForceLevel: DataManager.Instance.CurrentRunWeaponLevel));
+    this.StartCoroutine(this.SetItem(ForceLevel: DataManager.Instance.CurrentRunWeaponLevel));
   }
 
   public void CheckWeaponLevel()
@@ -330,7 +330,7 @@ public class Interaction_WeaponSelectionPodium : Interaction
     {
       this.ActivateDistance = 2f;
       this.UpdateLocalisation();
-      this.StartCoroutine((IEnumerator) this.SetItem());
+      this.StartCoroutine(this.SetItem());
       this.podiumOff.SetActive(false);
     }
     if (GameManager.CurrentDungeonFloor > 1)
@@ -347,7 +347,7 @@ public class Interaction_WeaponSelectionPodium : Interaction
   {
     this.IconSpriteRenderer.enabled = true;
     this.WeaponTaken = false;
-    this.StartCoroutine((IEnumerator) this.SetItem(ForceShowGoop, ForceLevel));
+    this.StartCoroutine(this.SetItem(ForceShowGoop, ForceLevel));
   }
 
   public IEnumerator SetItem(bool ForceShowGoop = false, int ForceLevel = -1)
@@ -714,10 +714,10 @@ public class Interaction_WeaponSelectionPodium : Interaction
       switch (this.Type)
       {
         case Interaction_WeaponSelectionPodium.Types.Weapon:
-          this.StartCoroutine((IEnumerator) this.PlayerShowWeaponRoutine(component));
+          this.StartCoroutine(this.PlayerShowWeaponRoutine(component));
           break;
         case Interaction_WeaponSelectionPodium.Types.Curse:
-          this.StartCoroutine((IEnumerator) this.PlayerShowCurseRoutine(component));
+          this.StartCoroutine(this.PlayerShowCurseRoutine(component));
           break;
         case Interaction_WeaponSelectionPodium.Types.Relic:
           this.ps_relicsBlessed.GetComponent<ParticleSystem>().Stop();

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DooglerMageMiniBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -296,7 +296,7 @@ public class DooglerMageMiniBoss : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.health.OnDieEarly += new Health.DieAction(this.UnlockSkin);
   }
@@ -370,7 +370,7 @@ public class DooglerMageMiniBoss : UnitObject
       if ((UnityEngine.Object) this.spawnedEnemies[index] != (UnityEngine.Object) null)
       {
         this.spawnedEnemies[index].health.enabled = true;
-        this.spawnedEnemies[index].health.DealDamage(this.spawnedEnemies[index].health.totalHP, this.gameObject, this.spawnedEnemies[index].transform.position, AttackType: Health.AttackTypes.Heavy);
+        this.spawnedEnemies[index].health.DealDamage(this.spawnedEnemies[index].health.totalHP, this.gameObject, this.spawnedEnemies[index].transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }
@@ -472,7 +472,7 @@ public class DooglerMageMiniBoss : UnitObject
         dooglerMageMiniBoss.VisionRange = int.MaxValue;
         if (dooglerMageMiniBoss.CanSpawnBell)
         {
-          dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.CastOoglerBell());
+          dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.CastOoglerBell());
           yield break;
         }
       }
@@ -498,14 +498,14 @@ public class DooglerMageMiniBoss : UnitObject
     {
       dooglerMageMiniBoss.StopAllCoroutines();
       dooglerMageMiniBoss.speed = 0.0f;
-      dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.CastTeleportMechanicRoutine(dooglerMageMiniBoss.GetDistantRandomPoint()));
+      dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.CastTeleportMechanicRoutine(dooglerMageMiniBoss.GetDistantRandomPoint()));
     }
     bool InRange = false;
     while (!InRange)
     {
       if ((UnityEngine.Object) dooglerMageMiniBoss.TargetObject == (UnityEngine.Object) null)
       {
-        dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.WaitForTarget());
+        dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(dooglerMageMiniBoss.TargetObject.transform.position, dooglerMageMiniBoss.transform.position);
@@ -520,7 +520,7 @@ public class DooglerMageMiniBoss : UnitObject
     }
     if (dooglerMageMiniBoss.keepDistanceCoroutine != null)
       dooglerMageMiniBoss.StopCoroutine(dooglerMageMiniBoss.keepDistanceCoroutine);
-    dooglerMageMiniBoss.keepDistanceCoroutine = dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.KeepDistanceFromPlayer());
+    dooglerMageMiniBoss.keepDistanceCoroutine = dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.KeepDistanceFromPlayer());
   }
 
   public bool TargetHasBells(GameObject target) => BellMechanics.TargetHasOoglerBell(target);
@@ -540,7 +540,7 @@ public class DooglerMageMiniBoss : UnitObject
     DooglerMageMiniBoss caster = this;
     if ((UnityEngine.Object) caster.TargetObject == (UnityEngine.Object) null)
     {
-      caster.StartCoroutine((IEnumerator) caster.WaitForTarget());
+      caster.StartCoroutine(caster.WaitForTarget());
     }
     else
     {
@@ -550,7 +550,7 @@ public class DooglerMageMiniBoss : UnitObject
         yield return (object) null;
       caster.Spine.AnimationState.SetAnimation(0, caster.idleAnim, true);
       UnityEngine.Object.Instantiate<EnemyOoglerBell>(caster.ooglerBell, caster.TargetObject.transform.position, Quaternion.identity).Initialize((UnitObject) caster, caster.TargetObject);
-      caster.StartCoroutine((IEnumerator) caster.WaitForTarget());
+      caster.StartCoroutine(caster.WaitForTarget());
     }
   }
 
@@ -565,12 +565,12 @@ public class DooglerMageMiniBoss : UnitObject
     {
       if ((UnityEngine.Object) dooglerMageMiniBoss.TargetObject == (UnityEngine.Object) null)
       {
-        dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.WaitForTarget());
+        dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.WaitForTarget());
         break;
       }
       if (dooglerMageMiniBoss.CanSpawnBell)
       {
-        dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.CastOoglerBell());
+        dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.CastOoglerBell());
         break;
       }
       if ((UnityEngine.Object) dooglerMageMiniBoss.damageColliderEvents != (UnityEngine.Object) null)
@@ -598,13 +598,13 @@ public class DooglerMageMiniBoss : UnitObject
                   switch (dooglerMageMiniBoss.GetNextMeleeAttack())
                   {
                     case DooglerMageMiniBoss.MeleeAttacks.Swipe:
-                      yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.CloseRangeAttackPlayer());
+                      yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.CloseRangeAttackPlayer());
                       break;
                     case DooglerMageMiniBoss.MeleeAttacks.QuadLightning:
-                      yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.QuadLightningAttack());
+                      yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.QuadLightningAttack());
                       break;
                     case DooglerMageMiniBoss.MeleeAttacks.TeleportAway:
-                      yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.CastTeleportMechanicRoutine(dooglerMageMiniBoss.GetTeleportFleePosition()));
+                      yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.CastTeleportMechanicRoutine(dooglerMageMiniBoss.GetTeleportFleePosition()));
                       break;
                   }
                   dooglerMageMiniBoss.QueuedTeleport = true;
@@ -621,22 +621,22 @@ public class DooglerMageMiniBoss : UnitObject
                 switch (dooglerMageMiniBoss.GetNextRangedAttack())
                 {
                   case DooglerMageMiniBoss.RangedAttacks.ChasingLine:
-                    yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.ChasingLightningAttack());
+                    yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.ChasingLightningAttack());
                     break;
                   case DooglerMageMiniBoss.RangedAttacks.IndividualStrikes:
-                    yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.IndividualLightningStrikes());
+                    yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.IndividualLightningStrikes());
                     break;
                   case DooglerMageMiniBoss.RangedAttacks.RingLightning:
-                    yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.BigLightningAttack());
+                    yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.BigLightningAttack());
                     break;
                   case DooglerMageMiniBoss.RangedAttacks.Spiral:
-                    yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.SpiralAvalanchesAttack());
+                    yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.SpiralAvalanchesAttack());
                     break;
                 }
                 if (dooglerMageMiniBoss.Phase == 1)
-                  yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.Flash1Attack());
+                  yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.Flash1Attack());
                 else if (dooglerMageMiniBoss.Phase == 2)
-                  yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.Flash2Attack());
+                  yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.Flash2Attack());
                 dooglerMageMiniBoss.TargetObject = (GameObject) null;
                 ++dooglerMageMiniBoss.teleportAttackCount;
                 if (dooglerMageMiniBoss.teleportAttackCount >= UnityEngine.Random.Range(2, 4))
@@ -674,7 +674,7 @@ public class DooglerMageMiniBoss : UnitObject
     if ((double) a > (double) this.VisionRange)
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
       this.LookAtTarget();
   }
@@ -756,7 +756,7 @@ public class DooglerMageMiniBoss : UnitObject
     dooglerMageMiniBoss.teleportAttackCount = 0;
     dooglerMageMiniBoss.MyState = DooglerMageMiniBoss.State.WaitAndTaunt;
     dooglerMageMiniBoss.health.invincible = false;
-    dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.WaitForTarget());
+    dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.WaitForTarget());
   }
 
   public Vector3 GetTeleportFleePosition()
@@ -883,11 +883,11 @@ public class DooglerMageMiniBoss : UnitObject
             dooglerMageMiniBoss.TargetObject = (GameObject) null;
             if (dooglerMageMiniBoss.keepDistanceCoroutine != null)
               dooglerMageMiniBoss.StopCoroutine(dooglerMageMiniBoss.keepDistanceCoroutine);
-            dooglerMageMiniBoss.keepDistanceCoroutine = dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.KeepDistanceFromPlayer());
+            dooglerMageMiniBoss.keepDistanceCoroutine = dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.KeepDistanceFromPlayer());
             yield break;
           case StateMachine.State.Moving:
             dooglerMageMiniBoss.TargetObject = (GameObject) null;
-            dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.WaitForTarget());
+            dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.WaitForTarget());
             yield break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) dooglerMageMiniBoss.damageColliderEvents != (UnityEngine.Object) null)
@@ -905,7 +905,7 @@ public class DooglerMageMiniBoss : UnitObject
               dooglerMageMiniBoss.Spine.AnimationState.SetAnimation(0, dooglerMageMiniBoss.meleeImpactAnim, false);
               dooglerMageMiniBoss.Spine.AnimationState.AddAnimation(0, "idle", false, 0.0f);
               dooglerMageMiniBoss.canBeParried = true;
-              dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.EnableDamageCollider(0.0f));
+              dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.EnableDamageCollider(0.0f));
               if (!string.IsNullOrEmpty(dooglerMageMiniBoss.MeleeClawSwipeSFX))
                 AudioManager.Instance.PlayOneShot(dooglerMageMiniBoss.MeleeClawSwipeSFX, dooglerMageMiniBoss.transform.position);
               if (!string.IsNullOrEmpty(dooglerMageMiniBoss.AttackVO))
@@ -942,7 +942,7 @@ public class DooglerMageMiniBoss : UnitObject
       }
     }
     dooglerMageMiniBoss.TargetObject = (GameObject) null;
-    dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.WaitForTarget());
+    dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.WaitForTarget());
   }
 
   public void BiomeGenerator_OnBiomeChangeRoom()
@@ -995,7 +995,7 @@ public class DooglerMageMiniBoss : UnitObject
         if (dooglerMageMiniBoss.IsNG && SpawnCount >= dooglerMageMiniBoss.chasingAvalancheFlashAfter && !ngFlashPerformed)
         {
           dooglerMageMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
-          ngFlash = dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.Flash1Attack());
+          ngFlash = dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.Flash1Attack());
           ngFlashPerformed = true;
         }
       }
@@ -1095,7 +1095,7 @@ public class DooglerMageMiniBoss : UnitObject
     if (dooglerMageMiniBoss.IsNG)
     {
       dooglerMageMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
-      ngFlash = dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.Flash1Attack());
+      ngFlash = dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.Flash1Attack());
     }
     if (ngFlash != null)
       yield return (object) ngFlash;
@@ -1203,7 +1203,7 @@ public class DooglerMageMiniBoss : UnitObject
         if (dooglerMageMiniBoss.IsNG && SpawnCount >= dooglerMageMiniBoss.spiralAvalancheFlashAfter && !ngFlashPerformed)
         {
           dooglerMageMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
-          ngFlash = dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.Flash1Attack());
+          ngFlash = dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.Flash1Attack());
           ngFlashPerformed = true;
         }
       }
@@ -1255,7 +1255,7 @@ public class DooglerMageMiniBoss : UnitObject
             break;
           case StateMachine.State.Moving:
             dooglerMageMiniBoss.TargetObject = (GameObject) null;
-            dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.WaitForTarget());
+            dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.WaitForTarget());
             yield break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) dooglerMageMiniBoss.damageColliderEvents != (UnityEngine.Object) null)
@@ -1266,7 +1266,7 @@ public class DooglerMageMiniBoss : UnitObject
               dooglerMageMiniBoss.canBeParried = true;
             if ((double) dooglerMageMiniBoss.state.Timer >= (double) SignPostDelay)
             {
-              yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.CastFlashTeleportMechanicRoutine(dooglerMageMiniBoss.TargetObject.transform.position + Vector3.up * 0.5f));
+              yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.CastFlashTeleportMechanicRoutine(dooglerMageMiniBoss.TargetObject.transform.position + Vector3.up * 0.5f));
               dooglerMageMiniBoss.Spine.AnimationState.SetAnimation(0, "flash-1-appear", false);
               if (!string.IsNullOrEmpty(dooglerMageMiniBoss.MeleeClawTeleportStartSFX))
                 AudioManager.Instance.PlayOneShot(dooglerMageMiniBoss.MeleeClawWindupSFX);
@@ -1281,7 +1281,7 @@ public class DooglerMageMiniBoss : UnitObject
               dooglerMageMiniBoss.Spine.AnimationState.SetAnimation(0, "flash-1-impact", false);
               dooglerMageMiniBoss.Spine.AnimationState.AddAnimation(0, "flash-1-recover", false, 0.0f);
               dooglerMageMiniBoss.canBeParried = true;
-              dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.EnableDamageCollider(0.0f));
+              dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.EnableDamageCollider(0.0f));
               if (!string.IsNullOrEmpty(dooglerMageMiniBoss.MeleeClawSwipeSFX))
                 AudioManager.Instance.PlayOneShot(dooglerMageMiniBoss.MeleeClawSwipeSFX, dooglerMageMiniBoss.transform.position);
               if (!string.IsNullOrEmpty(dooglerMageMiniBoss.AttackVO))
@@ -1355,7 +1355,7 @@ public class DooglerMageMiniBoss : UnitObject
             break;
           case StateMachine.State.Moving:
             dooglerMageMiniBoss.TargetObject = (GameObject) null;
-            dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.WaitForTarget());
+            dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.WaitForTarget());
             yield break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) dooglerMageMiniBoss.damageColliderEvents != (UnityEngine.Object) null)
@@ -1366,7 +1366,7 @@ public class DooglerMageMiniBoss : UnitObject
               dooglerMageMiniBoss.canBeParried = true;
             if ((double) dooglerMageMiniBoss.state.Timer >= (double) SignPostDelay)
             {
-              yield return (object) dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.CastFlashTeleportMechanicRoutine(dooglerMageMiniBoss.TargetObject.transform.position + Vector3.up));
+              yield return (object) dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.CastFlashTeleportMechanicRoutine(dooglerMageMiniBoss.TargetObject.transform.position + Vector3.up));
               dooglerMageMiniBoss.Spine.AnimationState.SetAnimation(0, attackCount == 0 ? "flash-1-appear" : "flash-2-appear", false);
               string soundPath1 = attackCount == 0 ? dooglerMageMiniBoss.MeleeClawWindupSFX : dooglerMageMiniBoss.MeleeStaffWindupSFX;
               if (!string.IsNullOrEmpty(soundPath1))
@@ -1383,7 +1383,7 @@ public class DooglerMageMiniBoss : UnitObject
               if (attackCount == 0)
                 dooglerMageMiniBoss.Spine.AnimationState.AddAnimation(0, "flash-1-recover", false, 0.0f);
               dooglerMageMiniBoss.canBeParried = true;
-              dooglerMageMiniBoss.StartCoroutine((IEnumerator) dooglerMageMiniBoss.EnableDamageCollider(0.0f));
+              dooglerMageMiniBoss.StartCoroutine(dooglerMageMiniBoss.EnableDamageCollider(0.0f));
               string soundPath2 = attackCount == 0 ? dooglerMageMiniBoss.MeleeClawSwipeSFX : dooglerMageMiniBoss.MeleeStaffSwipeSFX;
               if (!string.IsNullOrEmpty(soundPath2))
                 AudioManager.Instance.PlayOneShot(soundPath2);

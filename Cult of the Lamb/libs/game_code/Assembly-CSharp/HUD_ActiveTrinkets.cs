@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_ActiveTrinkets
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -67,7 +67,7 @@ public class HUD_ActiveTrinkets : BaseMonoBehaviour
       return;
     this._cards.Remove(card1);
     this.OnTrinketsChanged(playerFarming);
-    this.StartCoroutine((IEnumerator) this.CardAnimateDestroy(card1));
+    this.StartCoroutine(this.CardAnimateDestroy(card1));
   }
 
   public void OnTrinketsChanged(PlayerFarming playerFarming = null)
@@ -81,7 +81,7 @@ public class HUD_ActiveTrinkets : BaseMonoBehaviour
       if (index >= this._cards.Count)
       {
         card = Object.Instantiate<HUD_TrinketCard>(this.CardPrefab, this.transform);
-        this.StartCoroutine((IEnumerator) this.CardAnimateIn(card));
+        this.StartCoroutine(this.CardAnimateIn(card));
         this._cards.Add(card);
       }
       else

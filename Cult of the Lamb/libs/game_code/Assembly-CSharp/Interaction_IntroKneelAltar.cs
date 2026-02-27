@@ -1,14 +1,13 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_IntroKneelAltar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
 using MMTools;
 using Spine;
 using Spine.Unity;
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -41,25 +40,16 @@ public class Interaction_IntroKneelAltar : Interaction
     GameObject gameObject = GameObject.Find("Intro Room 1(Clone)");
     if (!((UnityEngine.Object) gameObject != (UnityEngine.Object) null))
       return;
-    IEnumerator enumerator = (IEnumerator) gameObject.transform.GetEnumerator();
-    try
+    foreach (object obj in gameObject.transform)
     {
-      while (enumerator.MoveNext())
+      Transform transform = obj as Transform;
+      if ((UnityEngine.Object) transform != (UnityEngine.Object) null)
       {
-        Transform current = enumerator.Current as Transform;
-        if ((UnityEngine.Object) current != (UnityEngine.Object) null)
-        {
-          if (current.name == "StencilLighting_DecalSprite_Fill")
-            current.localScale = new Vector3(21.2f, 23.8f, 60f);
-          else if (current.name == "StencilLighting_DecalSprite_Fill (2)")
-            current.localScale = new Vector3(17.07f, 20.5f, 60f);
-        }
+        if (transform.name == "StencilLighting_DecalSprite_Fill")
+          transform.localScale = new Vector3(21.2f, 23.8f, 60f);
+        else if (transform.name == "StencilLighting_DecalSprite_Fill (2)")
+          transform.localScale = new Vector3(17.07f, 20.5f, 60f);
       }
-    }
-    finally
-    {
-      if (enumerator is IDisposable disposable)
-        disposable.Dispose();
     }
   }
 
@@ -78,7 +68,7 @@ public class Interaction_IntroKneelAltar : Interaction
     base.OnInteract(state);
     this.Activated = true;
     state.CURRENT_STATE = StateMachine.State.InActive;
-    this.StartCoroutine((IEnumerator) this.PanToLeader());
+    this.StartCoroutine(this.PanToLeader());
   }
 
   public IEnumerator PanToLeader()
@@ -94,7 +84,7 @@ public class Interaction_IntroKneelAltar : Interaction
   public void Play()
   {
     SimpleSetCamera.EnableAll();
-    this.StartCoroutine((IEnumerator) this.KneelRoutine());
+    this.StartCoroutine(this.KneelRoutine());
   }
 
   public IEnumerator KneelRoutine()
@@ -112,7 +102,7 @@ public class Interaction_IntroKneelAltar : Interaction
     interactionIntroKneelAltar.unitObject.EndOfPath += new System.Action(interactionIntroKneelAltar.EndOfPath);
   }
 
-  public void Continue() => this.StartCoroutine((IEnumerator) this.ContinueRoutine());
+  public void Continue() => this.StartCoroutine(this.ContinueRoutine());
 
   public IEnumerator ContinueRoutine()
   {

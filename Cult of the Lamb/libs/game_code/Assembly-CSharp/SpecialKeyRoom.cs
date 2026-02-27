@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SpecialKeyRoom
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -61,8 +61,8 @@ public class SpecialKeyRoom : Interaction
       string str2 = "Conversation_NPC/Ratoo/KeyRoom/AnswerB";
       List<MMTools.Response> Responses = new List<MMTools.Response>()
       {
-        new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine((IEnumerator) this.SacrificeFollowerIE())), str1),
-        new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine((IEnumerator) this.IgnoreIE())), str2)
+        new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine(this.SacrificeFollowerIE())), str1),
+        new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine(this.IgnoreIE())), str2)
       };
       Entries[0].CharacterName = this.characterName;
       Entries[1].CharacterName = this.characterName;
@@ -190,8 +190,8 @@ public class SpecialKeyRoom : Interaction
     string str2 = "Conversation_NPC/Ratoo/KeyRoom/AnswerB";
     List<MMTools.Response> Responses = new List<MMTools.Response>()
     {
-      new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine((IEnumerator) this.SacrificeFollowerIE())), str1),
-      new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine((IEnumerator) this.IgnoreIE())), str2)
+      new MMTools.Response(str1, (System.Action) (() => this.StartCoroutine(this.SacrificeFollowerIE())), str1),
+      new MMTools.Response(str2, (System.Action) (() => this.StartCoroutine(this.IgnoreIE())), str2)
     };
     Entries[0].CharacterName = this.characterName;
     Entries[1].CharacterName = this.characterName;
@@ -199,11 +199,8 @@ public class SpecialKeyRoom : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__8_1()
-  {
-    this.StartCoroutine((IEnumerator) this.SacrificeFollowerIE());
-  }
+  public void \u003COnInteract\u003Eb__8_1() => this.StartCoroutine(this.SacrificeFollowerIE());
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__8_2() => this.StartCoroutine((IEnumerator) this.IgnoreIE());
+  public void \u003COnInteract\u003Eb__8_2() => this.StartCoroutine(this.IgnoreIE());
 }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FeastTable
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -91,7 +91,7 @@ public class Interaction_FeastTable : Interaction
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(this.playerFarming.gameObject, 6f);
       GameManager.GetInstance().AddToCamera(this.gameObject);
-      this.StartCoroutine((IEnumerator) this.EatIE());
+      this.StartCoroutine(this.EatIE());
     }
     else
     {
@@ -121,7 +121,7 @@ public class Interaction_FeastTable : Interaction
     GameManager.GetInstance().RemoveFromCamera(this.gameObject);
     this.IsEating = false;
     if (!this.StructureInfo.GivenHealth)
-      this.StartCoroutine((IEnumerator) this.CancelEatIE());
+      this.StartCoroutine(this.CancelEatIE());
     this.StructureInfo.GivenHealth = true;
   }
 

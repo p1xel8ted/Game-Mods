@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CoopManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -86,7 +86,7 @@ public class CoopManager : MonoBehaviour
     RoomLockController.OnRoomCompleted += new RoomLockController.RoomEvent(this.WakeAllKnockedOutPlayers);
     BiomeGenerator.OnRoomActive += new BiomeGenerator.BiomeAction(this.WakeAllKnockedOutPlayers);
     Interaction_BaseTeleporter.OnPlayerTeleportedIn += new System.Action(this.RespawnInBase);
-    ReInput.ControllerConnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
+    ReInput.ControllerConnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
   }
 
   public void OnControllerConnected(ControllerStatusChangedEventArgs args)
@@ -103,7 +103,7 @@ public class CoopManager : MonoBehaviour
     RoomLockController.OnRoomCompleted -= new RoomLockController.RoomEvent(this.WakeAllKnockedOutPlayers);
     BiomeGenerator.OnRoomActive -= new BiomeGenerator.BiomeAction(this.WakeAllKnockedOutPlayers);
     Interaction_BaseTeleporter.OnPlayerTeleportedIn -= new System.Action(this.RespawnInBase);
-    ReInput.ControllerConnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
+    ReInput.ControllerConnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
   }
 
   public static void EnableCoopBlockers(bool enabled = true, bool force = false)
@@ -184,13 +184,13 @@ public class CoopManager : MonoBehaviour
       this.StopCoroutine(this.WakeAllPlayersRoutine);
       this.WakeAllPlayersRoutine = (Coroutine) null;
     }
-    this.WakeAllPlayersRoutine = this.StartCoroutine((IEnumerator) this.WakeAllKnockedOutPlayersRoutine(this.WakeUpKnockedOnRoomCompleteDelay));
+    this.WakeAllPlayersRoutine = this.StartCoroutine(this.WakeAllKnockedOutPlayersRoutine(this.WakeUpKnockedOnRoomCompleteDelay));
     if (this.WakeAllPlayersRoutineBackup != null)
     {
       this.StopCoroutine(this.WakeAllPlayersRoutineBackup);
       this.WakeAllPlayersRoutineBackup = (Coroutine) null;
     }
-    this.WakeAllPlayersRoutineBackup = this.StartCoroutine((IEnumerator) this.WakeAllKnockedOutPlayersRoutine(this.WakeUpKnockedOnRoomCompleteDelay + 3f));
+    this.WakeAllPlayersRoutineBackup = this.StartCoroutine(this.WakeAllKnockedOutPlayersRoutine(this.WakeUpKnockedOnRoomCompleteDelay + 3f));
   }
 
   public IEnumerator WakeAllKnockedOutPlayersRoutine(float timeBeforeWake)
@@ -341,7 +341,7 @@ public class CoopManager : MonoBehaviour
     }
     CoopManager.PreventRecycleInCurrentRoom = true;
     this._isSpawningPlayer = true;
-    this.StartCoroutine((IEnumerator) this.WaitTillPlayersRady((System.Action) (() =>
+    this.StartCoroutine(this.WaitTillPlayersRady((System.Action) (() =>
     {
       CoopManager.CoopActive = true;
       if (playEffects)
@@ -364,14 +364,14 @@ public class CoopManager : MonoBehaviour
       {
         if ((bool) (UnityEngine.Object) BiomeGenerator.Instance && !GameManager.InitialDungeonEnter && !playEffects)
         {
-          this.StartCoroutine((IEnumerator) BiomeGenerator.Instance.ApplyCurrentFleeceModifiersIE(playerFarming));
+          this.StartCoroutine(BiomeGenerator.Instance.ApplyCurrentFleeceModifiersIE(playerFarming));
           if (!DataManager.Instance.UnlockedCoopRelicsAndTarots)
-            this.StartCoroutine((IEnumerator) this.GiveCoopCards(playerFarming));
+            this.StartCoroutine(this.GiveCoopCards(playerFarming));
         }
         if (LocationManager._Instance.Location == FollowerLocation.IntroDungeon)
-          this.StartCoroutine((IEnumerator) this.WaitUntilPlayerIsInitialised(playerFarming, (System.Action) (() => this.StartCoroutine((IEnumerator) this.SpawnCoopWeapons(playerFarming)))));
+          this.StartCoroutine(this.WaitUntilPlayerIsInitialised(playerFarming, (System.Action) (() => this.StartCoroutine(this.SpawnCoopWeapons(playerFarming)))));
         else
-          this.StartCoroutine((IEnumerator) this.SpawnCoopWeapons(playerFarming));
+          this.StartCoroutine(this.SpawnCoopWeapons(playerFarming));
       }
       PlayerFarming.RefreshPlayersCount();
       for (int index = 0; index < PlayerFarming.playersCount; ++index)
@@ -380,7 +380,7 @@ public class CoopManager : MonoBehaviour
           playerFarming.health.GodMode = Health.CheatMode.Demigod;
       }
       if (!CoopManager.PreventWeaponSpawn && GameManager.IsDungeon(PlayerFarming.Location))
-        this.StartCoroutine((IEnumerator) this.WaitUntilPlayerIsInitialised(playerFarming, (System.Action) (() =>
+        this.StartCoroutine(this.WaitUntilPlayerIsInitialised(playerFarming, (System.Action) (() =>
         {
           for (int index = 0; index < PlayerFarming.playersCount; ++index)
           {
@@ -402,7 +402,7 @@ public class CoopManager : MonoBehaviour
       CoopManager.RefreshCoopPlayerRewired();
       UserHelper.OnPlayerUserChanged += new UserHelper.PlayerUserChangedDelegate(CoopManager.OnPlayerUserChanged);
       UserHelper.OnPlayerGamePadChanged += new UserHelper.PlayerGamePadChangedDelegate(CoopManager.OnPlayerGamePadChanged);
-      this.StartCoroutine((IEnumerator) this.WaitUntilPlayerIsInitialised(playerFarming, (System.Action) (() => this._isSpawningPlayer = false)));
+      this.StartCoroutine(this.WaitUntilPlayerIsInitialised(playerFarming, (System.Action) (() => this._isSpawningPlayer = false)));
       System.Action onPlayerJoined = this.OnPlayerJoined;
       if (onPlayerJoined != null)
         onPlayerJoined();
@@ -414,13 +414,13 @@ public class CoopManager : MonoBehaviour
   {
     CoopManager coopManager = this;
     if (LocationManager.LocationIsDungeon(PlayerFarming.Location) && (bool) (UnityEngine.Object) BiomeGenerator.Instance && !GameManager.InitialDungeonEnter)
-      yield return (object) coopManager.StartCoroutine((IEnumerator) BiomeGenerator.Instance.ApplyCurrentFleeceModifiersIE(playerFarming));
+      yield return (object) coopManager.StartCoroutine(BiomeGenerator.Instance.ApplyCurrentFleeceModifiersIE(playerFarming));
     System.Action action = animationCallback;
     if (action != null)
       action();
     if (!DataManager.Instance.UnlockedCoopRelics || !DataManager.Instance.UnlockedCoopTarots)
       DataManager.Instance.UnlockedCoopRelicsAndTarots = false;
-    yield return (object) coopManager.StartCoroutine((IEnumerator) coopManager.GiveCoopCards(playerFarming));
+    yield return (object) coopManager.StartCoroutine(coopManager.GiveCoopCards(playerFarming));
   }
 
   public IEnumerator GiveCoopCards(PlayerFarming playerFarming)
@@ -540,7 +540,7 @@ public class CoopManager : MonoBehaviour
           gameObject.transform.position = playerFarming.transform.position;
           UnityEngine.Object.Destroy((UnityEngine.Object) gameObject, 3f);
         }
-        GameManager.GetInstance().WaitForSeconds(2f, (System.Action) (() => this.StartCoroutine((IEnumerator) this.GiveTarotCardsSequance(playerFarming, (System.Action) (() =>
+        GameManager.GetInstance().WaitForSeconds(2f, (System.Action) (() => this.StartCoroutine(this.GiveTarotCardsSequance(playerFarming, (System.Action) (() =>
         {
           playerFarming.state.LockStateChanges = false;
           PlayerFarming.SetStateForAllPlayers();
@@ -620,7 +620,7 @@ public class CoopManager : MonoBehaviour
 
   public void CoopHideEffects(GameObject spawnedPlayerGameObject)
   {
-    this.StartCoroutine((IEnumerator) this.StaggerSoulCustomTargerSpawns(spawnedPlayerGameObject));
+    this.StartCoroutine(this.StaggerSoulCustomTargerSpawns(spawnedPlayerGameObject));
     GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(this.despawnAnimationFx, spawnedPlayerGameObject.transform.parent);
     gameObject.transform.position = spawnedPlayerGameObject.transform.position;
     UnityEngine.Object.Destroy((UnityEngine.Object) gameObject, 3f);
@@ -695,7 +695,7 @@ public class CoopManager : MonoBehaviour
     player.IsKnockedOut = false;
     player.GetComponent<Interaction_CoopRevive>().enabled = false;
     player.state.CURRENT_STATE = StateMachine.State.Idle;
-    player.health.DealDamage(9999f, player.gameObject, player.transform.position, false, Health.AttackTypes.Melee, false, (Health.AttackFlags) 0);
+    player.health.DealDamage(9999f, player.gameObject, player.transform.position, false, Health.AttackTypes.Melee, true, (Health.AttackFlags) 0);
     CoopManager.Instance.OnPlayerLeft -= new System.Action(CoopManager.CleanKnockedPlayer);
   }
 
@@ -758,7 +758,7 @@ public class CoopManager : MonoBehaviour
       onPlayerLeft();
     }
     else
-      this.StartCoroutine((IEnumerator) this.AnimateRemoveCoopPlayer(playerToRemove, disengagePlayer));
+      this.StartCoroutine(this.AnimateRemoveCoopPlayer(playerToRemove, disengagePlayer));
   }
 
   public static void RemoveCoopPlayerStatic(
@@ -831,7 +831,7 @@ public class CoopManager : MonoBehaviour
         if ((UnityEngine.Object) CoopManager.AllPlayerGameObjects[index] != (UnityEngine.Object) null && (double) Time.time < (double) CoopManager.AllPlayerGameObjects[index].GetComponent<PlayerFarming>().playerWasHidden + 2.0)
           return;
         Player player = RewiredInputManager.GetPlayer(index);
-        if (player != null && ((ICollection<Joystick>) player.controllers.Joysticks).Count > 0)
+        if (player != null && player.controllers.Joysticks.Count > 0)
         {
           if ((bool) (UnityEngine.Object) CoopManager.Instance)
             CoopManager.Instance.SpawnCoopPlayer(index);

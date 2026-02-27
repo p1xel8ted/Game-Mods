@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualHeartsOfTheFaithful
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -27,7 +27,7 @@ public class RitualHeartsOfTheFaithful : Ritual
   {
     this._heartsOfTheFaithfulMenuTemplate = heartsOfTheFaithfulMenuTemplate;
     this.Play();
-    this.StartCoroutine((IEnumerator) this.HeartsOfTheFaithfulRitual());
+    this.StartCoroutine(this.HeartsOfTheFaithfulRitual());
     PlayerFarming.Instance.Spine.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.HandleEvent);
   }
 
@@ -49,7 +49,7 @@ public class RitualHeartsOfTheFaithful : Ritual
       PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
       PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     }));
-    yield return (object) heartsOfTheFaithful.StartCoroutine((IEnumerator) heartsOfTheFaithful.WaitFollowersFormCircle());
+    yield return (object) heartsOfTheFaithful.StartCoroutine(heartsOfTheFaithful.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     UIHeartsOfTheFaithfulChoiceMenuController.Types chosenUpgrade = UIHeartsOfTheFaithfulChoiceMenuController.Types.Hearts;
     UIHeartsOfTheFaithfulChoiceMenuController heartsOfTheFaithfulMenuInstance = heartsOfTheFaithful._heartsOfTheFaithfulMenuTemplate.Instantiate<UIHeartsOfTheFaithfulChoiceMenuController>();
@@ -79,7 +79,7 @@ public class RitualHeartsOfTheFaithful : Ritual
         (followerBrain.CurrentTask as FollowerTask_AttendRitual).WorshipTentacle();
       Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
       if ((UnityEngine.Object) followerById != (UnityEngine.Object) null)
-        heartsOfTheFaithful.StartCoroutine((IEnumerator) heartsOfTheFaithful.SpawnSouls(followerById.transform.position));
+        heartsOfTheFaithful.StartCoroutine(heartsOfTheFaithful.SpawnSouls(followerById.transform.position));
       yield return (object) new WaitForSeconds(0.1f);
     }
     DOTween.To((DOGetter<float>) (() => GameManager.GetInstance().CamFollowTarget.targetDistance), (DOSetter<float>) (x => GameManager.GetInstance().CamFollowTarget.targetDistance = x), 6f, 5f).SetEase<TweenerCore<float, float, FloatOptions>>(Ease.InOutSine);
@@ -91,7 +91,7 @@ public class RitualHeartsOfTheFaithful : Ritual
       if (followerBrain.CurrentTask is FollowerTask_AttendRitual)
         (followerBrain.CurrentTask as FollowerTask_AttendRitual).Cheer();
     }
-    yield return (object) heartsOfTheFaithful.StartCoroutine((IEnumerator) heartsOfTheFaithful.EmitParticles(chosenUpgrade));
+    yield return (object) heartsOfTheFaithful.StartCoroutine(heartsOfTheFaithful.EmitParticles(chosenUpgrade));
     yield return (object) new WaitForSeconds(0.5f);
     BiomeConstants.Instance.ChromaticAbberationTween(1f, 1f, BiomeConstants.Instance.ChromaticAberrationDefaultValue);
     BiomeConstants.Instance.VignetteTween(1f, 0.7f, BiomeConstants.Instance.VignetteDefaultValue);
@@ -105,7 +105,7 @@ public class RitualHeartsOfTheFaithful : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num += Delay;
-      heartsOfTheFaithful.StartCoroutine((IEnumerator) heartsOfTheFaithful.DelayFollowerReaction(brain, Delay));
+      heartsOfTheFaithful.StartCoroutine(heartsOfTheFaithful.DelayFollowerReaction(brain, Delay));
     }
     ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.PerformRitual);
     yield return (object) new WaitForSeconds(2f);

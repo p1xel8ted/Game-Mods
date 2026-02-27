@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MMRoomGeneration.GenerateRoom
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -485,10 +485,10 @@ public class GenerateRoom : BaseMonoBehaviour
     GenerateRoom.Instance = this;
     this.InitSpriteShapes();
     if (this.regenerateNavOnEnable)
-      this.StartCoroutine((IEnumerator) this.SetAStar());
+      this.StartCoroutine(this.SetAStar());
     if (!this.generated)
       return;
-    this.StartCoroutine((IEnumerator) this.RegenerateDecorationsWithPool());
+    this.StartCoroutine(this.RegenerateDecorationsWithPool());
   }
 
   public IEnumerator RegenerateDecorationsWithPool()
@@ -497,7 +497,7 @@ public class GenerateRoom : BaseMonoBehaviour
     generateRoom.RoomTransform.geometryType = CompositeCollider2D.GeometryType.Polygons;
     generateRoom.RoomTransform.GenerateGeometry();
     Physics2D.SyncTransforms();
-    yield return (object) generateRoom.StartCoroutine((IEnumerator) generateRoom.SpawnDecorations(true));
+    yield return (object) generateRoom.StartCoroutine(generateRoom.SpawnDecorations(true));
     generateRoom.SetCollider();
     Debug.Log((object) ("OBJECT POOL GenerateRoom.OnEnable PoolCount: " + ObjectPool.CountAllPooled().ToString()));
     foreach (Door componentsInChild in generateRoom.transform.GetComponentsInChildren<Door>())
@@ -581,7 +581,7 @@ public class GenerateRoom : BaseMonoBehaviour
       return;
     this.PreviousSeeds.RemoveAt(this.PreviousSeeds.Count - 1);
     this.Seed = this.PreviousSeeds[this.PreviousSeeds.Count - 1];
-    this.StartCoroutine((IEnumerator) this.Generate());
+    this.StartCoroutine(this.Generate());
   }
 
   public void GenerateRandomSeedTest()
@@ -595,7 +595,7 @@ public class GenerateRoom : BaseMonoBehaviour
   {
     this.Seed = UnityEngine.Random.Range(0, int.MaxValue);
     this.PreviousSeeds.Add(this.Seed);
-    this.StartCoroutine((IEnumerator) this.Generate());
+    this.StartCoroutine(this.Generate());
   }
 
   public void Generate(
@@ -610,10 +610,10 @@ public class GenerateRoom : BaseMonoBehaviour
     this.East = East;
     this.South = South;
     this.West = West;
-    this.StartCoroutine((IEnumerator) this.Generate());
+    this.StartCoroutine(this.Generate());
   }
 
-  public void GenerateRoomFunc() => this.StartCoroutine((IEnumerator) this.Generate());
+  public void GenerateRoomFunc() => this.StartCoroutine(this.Generate());
 
   public IEnumerator Generate()
   {
@@ -631,9 +631,9 @@ public class GenerateRoom : BaseMonoBehaviour
     Physics2D.SyncTransforms();
     generateRoom.PlaceDecorations(false);
     generateRoom.CreateSpriteShape();
-    yield return (object) generateRoom.StartCoroutine((IEnumerator) generateRoom.DisableIslands());
+    yield return (object) generateRoom.StartCoroutine(generateRoom.DisableIslands());
     generateRoom.SetCollider();
-    yield return (object) generateRoom.StartCoroutine((IEnumerator) generateRoom.SpawnDecorations(true, true));
+    yield return (object) generateRoom.StartCoroutine(generateRoom.SpawnDecorations(true, true));
     generateRoom.SpawnSpecialContent();
     generateRoom.SetColliderAndUpdatePathfinding();
     generateRoom.CreateBackgroundSpriteShape();
@@ -657,7 +657,7 @@ public class GenerateRoom : BaseMonoBehaviour
 
   public void InitSpriteShapes()
   {
-    SpriteShapeRenderer[] objectsOfType = (SpriteShapeRenderer[]) UnityEngine.Object.FindObjectsOfType((System.Type) typeof (SpriteShapeRenderer));
+    SpriteShapeRenderer[] objectsOfType = (SpriteShapeRenderer[]) UnityEngine.Object.FindObjectsOfType(typeof (SpriteShapeRenderer));
     CommandBuffer buffer = new CommandBuffer();
     buffer.GetTemporaryRT(0, 256 /*0x0100*/, 256 /*0x0100*/, 0);
     buffer.SetRenderTarget((RenderTargetIdentifier) 0);
@@ -676,7 +676,7 @@ public class GenerateRoom : BaseMonoBehaviour
 
   public void RevealDoor(Door door, LoreTotem totem)
   {
-    this.StartCoroutine((IEnumerator) this.RevealDoorIE(door, totem));
+    this.StartCoroutine(this.RevealDoorIE(door, totem));
   }
 
   public IEnumerator RevealDoorIE(Door door, LoreTotem totem)
@@ -813,10 +813,10 @@ public class GenerateRoom : BaseMonoBehaviour
     }
     if (!Application.isPlaying || !(bool) (UnityEngine.Object) AstarPath.active)
       return;
-    this.StartCoroutine((IEnumerator) this.SetAStar());
+    this.StartCoroutine(this.SetAStar());
   }
 
-  public void UpdateAstar() => this.StartCoroutine((IEnumerator) this.SetAStar());
+  public void UpdateAstar() => this.StartCoroutine(this.SetAStar());
 
   public IEnumerator SetAStar()
   {
@@ -882,7 +882,7 @@ public class GenerateRoom : BaseMonoBehaviour
     GenerateRoom generateRoom = this;
     int completed = 0;
     foreach (IslandPiece piece in generateRoom.Pieces)
-      generateRoom.StartCoroutine((IEnumerator) piece.InitIsland(generateRoom.RandomSeed, generateRoom.DecorationList.SpriteShapeSecondary, (System.Action) (() => ++completed)));
+      generateRoom.StartCoroutine(piece.InitIsland(generateRoom.RandomSeed, generateRoom.DecorationList.SpriteShapeSecondary, (System.Action) (() => ++completed)));
     while (completed < generateRoom.Pieces.Count)
       yield return (object) null;
   }
@@ -903,24 +903,14 @@ public class GenerateRoom : BaseMonoBehaviour
     this.RoomTransform.GenerateGeometry();
     Physics2D.SyncTransforms();
     this.ClearPrefabs(false);
-    IEnumerator enumerator = (IEnumerator) this.RoomTransform.transform.GetEnumerator();
-    try
+    foreach (Transform transform in this.RoomTransform.transform)
     {
-      while (enumerator.MoveNext())
-      {
-        Transform current = (Transform) enumerator.Current;
-        if (current.name.Contains("Sprite shape"))
-          UnityEngine.Object.DestroyImmediate((UnityEngine.Object) current.gameObject);
-      }
-    }
-    finally
-    {
-      if (enumerator is IDisposable disposable)
-        disposable.Dispose();
+      if (transform.name.Contains("Sprite shape"))
+        UnityEngine.Object.DestroyImmediate((UnityEngine.Object) transform.gameObject);
     }
     this.PlaceDecorations(true);
     this.CreateSpriteShape();
-    this.StartCoroutine((IEnumerator) this.SpawnDecorations(true));
+    this.StartCoroutine(this.SpawnDecorations(true));
     this.CreateBackgroundSpriteShape();
     foreach (IslandPiece piece in this.Pieces)
       piece.HideSprites();

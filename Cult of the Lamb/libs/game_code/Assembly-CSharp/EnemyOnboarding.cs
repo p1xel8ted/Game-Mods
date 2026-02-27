@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyOnboarding
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -35,7 +35,7 @@ public class EnemyOnboarding : BaseMonoBehaviour
   {
     if (this.waitingRoutine != null)
       this.StopCoroutine(this.waitingRoutine);
-    this.waitingRoutine = this.StartCoroutine((IEnumerator) this.WaitForTileToLoad());
+    this.waitingRoutine = this.StartCoroutine(this.WaitForTileToLoad());
   }
 
   public IEnumerator WaitForTileToLoad()
@@ -65,7 +65,7 @@ public class EnemyOnboarding : BaseMonoBehaviour
       if ((UnityEngine.Object) MapManager.Instance != (UnityEngine.Object) null && MapManager.Instance.CurrentMap != null && MapManager.Instance.CurrentMap.GetFinalBossNode() == MapManager.Instance.CurrentNode)
         num2 = 1f;
       if (BiomeGenerator.Instance.PossessedEnemyEncounterCount < 3 && (double) UnityEngine.Random.value < (double) num2 && (UnityEngine.Object) Interaction_Chest.Instance != (UnityEngine.Object) null)
-        enemyOnboarding.StartCoroutine((IEnumerator) enemyOnboarding.SpawnPossessedFollower());
+        enemyOnboarding.StartCoroutine(enemyOnboarding.SpawnPossessedFollower());
     }
   }
 
@@ -96,13 +96,13 @@ public class EnemyOnboarding : BaseMonoBehaviour
     {
       Health component = raycastHit2D.collider.GetComponent<Health>();
       if ((UnityEngine.Object) component != (UnityEngine.Object) null && component.team != Health.Team.PlayerTeam && component.team != Health.Team.Team2 && (UnityEngine.Object) component != (UnityEngine.Object) unitObject.health)
-        component.DealDamage((float) int.MaxValue, this.gameObject, Vector3.Lerp(this.transform.position, component.transform.position, 0.7f));
+        component.DealDamage((float) int.MaxValue, this.gameObject, Vector3.Lerp(this.transform.position, component.transform.position, 0.7f), dealDamageImmediately: true);
     }
     BreakableSpiderNest[] componentsInChildren1 = this.GetComponentsInChildren<BreakableSpiderNest>();
     if (componentsInChildren1.Length != 0)
     {
       for (int index = componentsInChildren1.Length - 1; index >= 0; --index)
-        componentsInChildren1[index].GetComponent<Health>().DealDamage(float.MaxValue, this.gameObject, this.transform.position);
+        componentsInChildren1[index].GetComponent<Health>().DealDamage(float.MaxValue, this.gameObject, this.transform.position, dealDamageImmediately: true);
     }
     SpiderNest[] componentsInChildren2 = this.GetComponentsInChildren<SpiderNest>();
     if (componentsInChildren2.Length != 0)
@@ -177,7 +177,7 @@ public class EnemyOnboarding : BaseMonoBehaviour
   public IEnumerator SpawnAndTestIndoctrination()
   {
     EnemyOnboarding enemyOnboarding = this;
-    yield return (object) enemyOnboarding.StartCoroutine((IEnumerator) enemyOnboarding.SpawnPossessedFollower());
+    yield return (object) enemyOnboarding.StartCoroutine(enemyOnboarding.SpawnPossessedFollower());
     yield return (object) new WaitForSeconds(1f);
     EnemyFollowerPossessed[] objectsOfType = UnityEngine.Object.FindObjectsOfType<EnemyFollowerPossessed>();
     if (objectsOfType.Length != 0 && (UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null)
@@ -268,7 +268,7 @@ public class EnemyOnboarding : BaseMonoBehaviour
       for (int index = Health.team2.Count - 1; index >= 0; --index)
       {
         if ((double) Vector3.Distance(spawnedFollower.Follower.transform.position, Health.team2[index].transform.position) < 1.0)
-          Health.team2[index].DealDamage(Health.team2[index].HP, Health.team2[index].gameObject, Health.team2[index].transform.position);
+          Health.team2[index].DealDamage(Health.team2[index].HP, Health.team2[index].gameObject, Health.team2[index].transform.position, dealDamageImmediately: true);
       }
     }));
     while (waiting)
@@ -314,12 +314,12 @@ public class EnemyOnboarding : BaseMonoBehaviour
     {
       if (BiomeGenerator.Instance.PossessedEnemyEncounterCount >= 3)
       {
-        GameManager.GetInstance().StartCoroutine((IEnumerator) this.KilledPossessedEnemyIE(spawnedFollower));
+        GameManager.GetInstance().StartCoroutine(this.KilledPossessedEnemyIE(spawnedFollower));
       }
       else
       {
         DOTween.To((DOGetter<float>) (() => spawnedFollower.Follower.Spine.skeleton.A), (DOSetter<float>) (x => spawnedFollower.Follower.Spine.skeleton.A = x), 0.0f, 1f).SetEase<TweenerCore<float, float, FloatOptions>>(Ease.OutSine);
-        this.StartCoroutine((IEnumerator) EnemyOnboarding.\u003CSpawnPossessedFollower\u003Eg__SlowMo\u007C14_10());
+        this.StartCoroutine(EnemyOnboarding.\u003CSpawnPossessedFollower\u003Eg__SlowMo\u007C14_10());
         AudioManager.Instance.PlayOneShot("event:/dialogue/followers/possessed/defeated", spawnedFollower.Follower.gameObject);
         AudioManager.Instance.StopLoop(this.possessedLoop);
         enemy.enabled = false;
@@ -419,7 +419,7 @@ public class EnemyOnboarding : BaseMonoBehaviour
       {
         Health.team2[index].HasShield = false;
         Health.team2[index].invincible = false;
-        Health.team2[index].DealDamage(Health.team2[index].HP, enemyOnboarding.gameObject, Health.team2[index].transform.position);
+        Health.team2[index].DealDamage(Health.team2[index].HP, enemyOnboarding.gameObject, Health.team2[index].transform.position, dealDamageImmediately: true);
       }
     }
     DataManager.Instance.Followers_Possessed.Remove(spawnedFollower.FollowerBrain._directInfoAccess);

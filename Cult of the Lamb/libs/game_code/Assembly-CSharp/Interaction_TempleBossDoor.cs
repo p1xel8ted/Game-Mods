@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TempleBossDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -79,14 +79,14 @@ public class Interaction_TempleBossDoor : Interaction
       this.Unlocked = true;
       this.DoorToMove.transform.localPosition = this.OpenDoorPosition;
       this.DoorToMove.SetActive(false);
-      this.StartCoroutine((IEnumerator) this.SpawnHeartOnPreviousDeaths());
+      this.StartCoroutine(this.SpawnHeartOnPreviousDeaths());
       this.TeleportToBase.gameObject.SetActive(false);
     }
     else
     {
       this.DoorToMove.transform.localPosition = Vector3.zero;
       if ((UnityEngine.Object) this.SealSpine != (UnityEngine.Object) null)
-        this.sealCoroutine = this.StartCoroutine((IEnumerator) this.SealRoutine());
+        this.sealCoroutine = this.StartCoroutine(this.SealRoutine());
     }
     this.OpenDoor();
     BiomeGenerator.OnBiomeChangeRoom += new BiomeGenerator.BiomeAction(this.OnBiomeChangeRoom);
@@ -215,7 +215,7 @@ public class Interaction_TempleBossDoor : Interaction
   {
     base.OnInteract(state);
     this.SimpleSetCamera.Play();
-    this.StartCoroutine((IEnumerator) this.EnterTemple());
+    this.StartCoroutine(this.EnterTemple());
   }
 
   public IEnumerator EnterTemple()

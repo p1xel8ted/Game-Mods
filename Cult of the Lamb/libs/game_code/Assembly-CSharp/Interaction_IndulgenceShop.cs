@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_IndulgenceShop
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -78,7 +78,7 @@ public class Interaction_IndulgenceShop : Interaction
   {
     base.OnInteract(state);
     if (Inventory.GetItemQuantity(20) >= this.GetCost() || CheatConsole.BuildingsFree)
-      this.StartCoroutine((IEnumerator) this.Purchase());
+      this.StartCoroutine(this.Purchase());
     else
       this.ShopkeeperAnimationCantAfford();
   }
@@ -109,7 +109,7 @@ public class Interaction_IndulgenceShop : Interaction
     }
     interactionIndulgenceShop.currentIndulgenceDecoration.purchaseGameObjectToActivate.SetActive(true);
     interactionIndulgenceShop.BoughtIndulgenceCallback();
-    interactionIndulgenceShop.StartCoroutine((IEnumerator) interactionIndulgenceShop.BoughtIndulgence());
+    interactionIndulgenceShop.StartCoroutine(interactionIndulgenceShop.BoughtIndulgence());
     interactionIndulgenceShop.Activated = true;
     yield return (object) new WaitForSeconds(2f);
     Debug.Log((object) "TIME TO TRY AGAIN!!!!!");

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FaithAmmo
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -193,7 +193,7 @@ public class FaithAmmo : BaseMonoBehaviour
   {
     if (!this.CanAfford(Amount))
     {
-      this.StartCoroutine((IEnumerator) this.WhiteFlashRoutine());
+      this.StartCoroutine(this.WhiteFlashRoutine());
       this.DoShake();
       if (curseAttack)
       {
@@ -208,7 +208,7 @@ public class FaithAmmo : BaseMonoBehaviour
     return true;
   }
 
-  public void Flash() => this.StartCoroutine((IEnumerator) this.WhiteFlashRoutine());
+  public void Flash() => this.StartCoroutine(this.WhiteFlashRoutine());
 
   public void OnGetSoul(int DeltaValue, PlayerFarming playerFarming)
   {
@@ -217,12 +217,12 @@ public class FaithAmmo : BaseMonoBehaviour
     if ((double) this.Ammo < (double) this.Total)
     {
       this.Ammo += (float) (DeltaValue * 2);
-      this.StartCoroutine((IEnumerator) this.WhiteFlashRoutine());
+      this.StartCoroutine(this.WhiteFlashRoutine());
       this.IsOnTotalAmmoShakePerformed = false;
     }
     if ((double) this.Ammo < (double) this.Total || this.IsOnTotalAmmoShakePerformed)
       return;
-    this.StartCoroutine((IEnumerator) this.WhiteFlashRoutine());
+    this.StartCoroutine(this.WhiteFlashRoutine());
     this.DoShake();
     this.IsOnTotalAmmoShakePerformed = true;
   }
@@ -258,10 +258,7 @@ public class FaithAmmo : BaseMonoBehaviour
     }
   }
 
-  public void SetUnlimited(float duration)
-  {
-    this.StartCoroutine((IEnumerator) this.SetUnlimitedIE(duration));
-  }
+  public void SetUnlimited(float duration) => this.StartCoroutine(this.SetUnlimitedIE(duration));
 
   public IEnumerator SetUnlimitedIE(float duration)
   {

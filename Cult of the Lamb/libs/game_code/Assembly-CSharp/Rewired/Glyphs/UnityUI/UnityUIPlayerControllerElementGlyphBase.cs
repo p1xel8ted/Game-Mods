@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Glyphs.UnityUI.UnityUIPlayerControllerElementGlyphBase
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -178,7 +178,7 @@ public abstract class UnityUIPlayerControllerElementGlyphBase : UnityUIControlle
     if (bindings == null)
       return 0;
     object result1;
-    if (this.IsAllowed(ControllerElementGlyphBase.AllowedTypes.Glyphs) && ActionElementMap.TryGetCombinedElementIdentifierGlyph((IList<ActionElementMap>) bindings, out result1))
+    if (this.IsAllowed(ControllerElementGlyphBase.AllowedTypes.Glyphs) && ActionElementMap.TryGetCombinedElementIdentifierGlyph(bindings, out result1))
     {
       if (!this.CreateObjectsAsNeeded(parent, objects, 1))
         return 0;
@@ -186,7 +186,7 @@ public abstract class UnityUIPlayerControllerElementGlyphBase : UnityUIControlle
       return 1;
     }
     string result2;
-    if (!this.IsAllowed(ControllerElementGlyphBase.AllowedTypes.Text) || !ActionElementMap.TryGetCombinedElementIdentifierName((IList<ActionElementMap>) bindings, out result2) || !this.CreateObjectsAsNeeded(parent, objects, 1))
+    if (!this.IsAllowed(ControllerElementGlyphBase.AllowedTypes.Text) || !ActionElementMap.TryGetCombinedElementIdentifierName(bindings, out result2) || !this.CreateObjectsAsNeeded(parent, objects, 1))
       return 0;
     objects[0].ShowText(result2);
     return 1;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DoorRoomLocationManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -76,10 +76,7 @@ public class DoorRoomLocationManager : LocationManager
     return DoorRoomLocationManager.Instance.DoorPosition.position;
   }
 
-  public void DeathCatRelicSequence()
-  {
-    this.StartCoroutine((IEnumerator) this.DeathCatRelicSequenceIE());
-  }
+  public void DeathCatRelicSequence() => this.StartCoroutine(this.DeathCatRelicSequenceIE());
 
   public IEnumerator DeathCatRelicSequenceIE()
   {
@@ -177,7 +174,7 @@ public class DoorRoomLocationManager : LocationManager
     foreach (FollowerManager.SpawnedFollower spawnedFollower1 in otherBishops)
     {
       FollowerManager.SpawnedFollower spawnedFollower = spawnedFollower1;
-      roomLocationManager.StartCoroutine((IEnumerator) roomLocationManager.PlaySoundDelay(spawnedFollower.Follower.gameObject));
+      roomLocationManager.StartCoroutine(roomLocationManager.PlaySoundDelay(spawnedFollower.Follower.gameObject));
       spawnedFollower.Follower.TimedAnimation("spawn-out", 0.8666667f, (System.Action) (() => FollowerManager.CleanUpCopyFollower(spawnedFollower)));
       yield return (object) new WaitForSeconds(0.1f);
     }

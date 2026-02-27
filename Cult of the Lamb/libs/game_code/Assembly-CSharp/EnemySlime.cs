@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySlime
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -55,9 +55,9 @@ public class EnemySlime : UnitObject
     EnemySlime.Slimes.Add(this);
     Health.OnDieAny += new Health.DieAllAction(this.OnDieAny);
     if (!this.SleepingOnStart)
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
-      this.StartCoroutine((IEnumerator) this.GoToSleep());
+      this.StartCoroutine(this.GoToSleep());
   }
 
   public IEnumerator GoToSleep()
@@ -90,7 +90,7 @@ public class EnemySlime : UnitObject
     Health.OnDieAny -= new Health.DieAllAction(this.OnDieAny);
   }
 
-  public void ScreamToOthers() => this.StartCoroutine((IEnumerator) this.DoScremToOthers());
+  public void ScreamToOthers() => this.StartCoroutine(this.DoScremToOthers());
 
   public void WarnMe(Vector3 Position)
   {
@@ -113,7 +113,7 @@ public class EnemySlime : UnitObject
     }
     yield return (object) new WaitForSeconds(1.2f);
     enemySlime.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemySlime.ChasePlayerCoroutine = enemySlime.StartCoroutine((IEnumerator) enemySlime.ChasePlayer());
+    enemySlime.ChasePlayerCoroutine = enemySlime.StartCoroutine(enemySlime.ChasePlayer());
   }
 
   public IEnumerator WaitForTarget()
@@ -137,7 +137,7 @@ public class EnemySlime : UnitObject
     }
     while ((double) enemySlime.MagnitudeFindDistanceBetween(enemySlime.TargetObject.transform.position, enemySlime.transform.position) > (double) enemySlime.Range * (double) enemySlime.Range)
       yield return (object) null;
-    enemySlime.ChasePlayerCoroutine = enemySlime.StartCoroutine((IEnumerator) enemySlime.ChasePlayer());
+    enemySlime.ChasePlayerCoroutine = enemySlime.StartCoroutine(enemySlime.ChasePlayer());
   }
 
   public override void OnHit(
@@ -159,7 +159,7 @@ public class EnemySlime : UnitObject
       this.ClearPaths();
       if (this.ChasePlayerCoroutine != null)
         this.StopCoroutine(this.ChasePlayerCoroutine);
-      this.StartCoroutine((IEnumerator) this.AddForce());
+      this.StartCoroutine(this.AddForce());
     }
     BiomeConstants.Instance.EmitHitVFX(AttackLocation - Vector3.back * 0.5f, Quaternion.identity.z, "HitFX_Weak");
   }
@@ -175,7 +175,7 @@ public class EnemySlime : UnitObject
         return false;
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
-      enemySlime.ChasePlayerCoroutine = enemySlime.StartCoroutine((IEnumerator) enemySlime.ChasePlayer());
+      enemySlime.ChasePlayerCoroutine = enemySlime.StartCoroutine(enemySlime.ChasePlayer());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -213,7 +213,7 @@ public class EnemySlime : UnitObject
     CameraManager.shakeCamera(this.ExplodeOnDeath ? 0.5f : 0.2f, Utils.GetAngle(Attacker.transform.position, this.transform.position));
     this.ClearPaths();
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.ExplodeAndSpawn());
+    this.StartCoroutine(this.ExplodeAndSpawn());
   }
 
   public IEnumerator ExplodeAndSpawn()
@@ -258,7 +258,7 @@ public class EnemySlime : UnitObject
     {
       if ((UnityEngine.Object) enemySlime.TargetObject == (UnityEngine.Object) null)
       {
-        enemySlime.StartCoroutine((IEnumerator) enemySlime.WaitForTarget());
+        enemySlime.StartCoroutine(enemySlime.WaitForTarget());
         break;
       }
       if (enemySlime.state.CURRENT_STATE != StateMachine.State.RecoverFromAttack)
@@ -313,7 +313,7 @@ public class EnemySlime : UnitObject
             enemySlime.WhiteFade = Mathf.Lerp(1f, 0.0f, (float) (1.0 - (double) enemySlime.AttackSpeed / 0.75));
             enemySlime.simpleSpineAnimator.FillColor(Color.white, enemySlime.WhiteFade);
             enemySlime.collider2DList = new List<Collider2D>();
-            enemySlime.DamageCollider.GetContacts((List<Collider2D>) enemySlime.collider2DList);
+            enemySlime.DamageCollider.GetContacts(enemySlime.collider2DList);
             foreach (Collider2D collider2D in enemySlime.collider2DList)
             {
               enemySlime.EnemyHealth = collider2D.gameObject.GetComponent<Health>();

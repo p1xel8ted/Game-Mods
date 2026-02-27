@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_BloodSacrafice
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -37,7 +37,7 @@ public class Interaction_BloodSacrafice : Interaction
   {
     base.OnInteract(state);
     this.Interactable = false;
-    this.StartCoroutine((IEnumerator) this.InteractIE());
+    this.StartCoroutine(this.InteractIE());
   }
 
   public IEnumerator InteractIE()
@@ -68,7 +68,7 @@ public class Interaction_BloodSacrafice : Interaction
     interactionBloodSacrafice.playerFarming.simpleSpineAnimator.Animate("float-up-spin", 0, false);
     interactionBloodSacrafice.playerFarming.simpleSpineAnimator.AddAnimate("floating-land-spin", 0, false, 0.0f);
     interactionBloodSacrafice.playerFarming.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
-    interactionBloodSacrafice.StartCoroutine((IEnumerator) interactionBloodSacrafice.GiveReward());
+    interactionBloodSacrafice.StartCoroutine(interactionBloodSacrafice.GiveReward());
     AudioManager.Instance.PlayOneShot("event:/Stings/generic_positive", interactionBloodSacrafice.playerFarming.transform.position);
     yield return (object) new WaitForSeconds(3.2f);
     MMConversation.Play(new ConversationObject(new List<ConversationEntry>()

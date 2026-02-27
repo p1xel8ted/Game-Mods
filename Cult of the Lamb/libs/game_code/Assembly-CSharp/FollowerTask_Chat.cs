@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Chat
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -328,7 +328,7 @@ public class FollowerTask_Chat : FollowerTask
     if (!this._isLeader)
       return;
     Follower followerById = FollowerManager.FindFollowerByID(this._otherFollowerID);
-    this._greetCoroutine = follower.StartCoroutine((IEnumerator) this.WaitForGreetCoroutine(follower, followerById));
+    this._greetCoroutine = follower.StartCoroutine(this.WaitForGreetCoroutine(follower, followerById));
     IDAndRelationship relationship1 = this._brain.Info.GetOrCreateRelationship(this._otherFollowerID);
     IDAndRelationship relationship2 = followerById.Brain.Info.GetOrCreateRelationship(this._brain.Info.ID);
     follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, this.GetRelationshipAnimation(relationship1.Relationship));

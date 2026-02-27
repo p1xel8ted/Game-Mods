@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DungeonChallenge
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -40,7 +40,7 @@ public class Interaction_DungeonChallenge : Interaction
     if (this.giveReward && !flag)
       this.gameObject.SetActive(false);
     this.sLabel = ScriptLocalization.Interactions.DungeonChallenge;
-    this.StartCoroutine((IEnumerator) this.SetAnimation());
+    this.StartCoroutine(this.SetAnimation());
   }
 
   public IEnumerator SetAnimation()
@@ -57,9 +57,9 @@ public class Interaction_DungeonChallenge : Interaction
     base.OnInteract(state);
     this.Interactable = false;
     if (this.giveReward)
-      this.StartCoroutine((IEnumerator) this.GiveRewardIE());
+      this.StartCoroutine(this.GiveRewardIE());
     else
-      this.StartCoroutine((IEnumerator) this.GiveChallengeIE());
+      this.StartCoroutine(this.GiveChallengeIE());
   }
 
   public IEnumerator GiveRewardIE()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SimpleSpineDeactivateAfterPlay
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -20,6 +20,7 @@ public class SimpleSpineDeactivateAfterPlay : BaseMonoBehaviour
   public SkeletonAnimation Spine;
   [SpineAnimation("", "", true, false, dataField = "Spine")]
   public string Animation;
+  public bool RecycleOnComplete;
   [CompilerGenerated]
   public bool \u003CInit\u003Ek__BackingField;
   public static AsyncOperationHandle<Material> addrHandle;
@@ -117,7 +118,13 @@ public class SimpleSpineDeactivateAfterPlay : BaseMonoBehaviour
     this.Spine.AnimationState.Complete -= new Spine.AnimationState.TrackEntryDelegate(this.AnimationState_Complete);
   }
 
-  public void AnimationState_Complete(TrackEntry trackEntry) => this.gameObject.SetActive(false);
+  public void AnimationState_Complete(TrackEntry trackEntry)
+  {
+    if (this.RecycleOnComplete)
+      this.gameObject.Recycle();
+    else
+      this.gameObject.SetActive(false);
+  }
 
   public void HandleFrozenTime()
   {

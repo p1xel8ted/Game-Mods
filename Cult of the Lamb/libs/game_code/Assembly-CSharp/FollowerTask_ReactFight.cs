@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_ReactFight
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -35,7 +35,7 @@ public class FollowerTask_ReactFight : FollowerTask
   public override void Setup(Follower follower)
   {
     base.Setup(follower);
-    this._dissentBubbleCoroutine = follower.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(follower));
+    this._dissentBubbleCoroutine = follower.StartCoroutine(this.DissentBubbleRoutine(follower));
     this.follower = follower;
   }
 
@@ -45,7 +45,7 @@ public class FollowerTask_ReactFight : FollowerTask
       this.End();
     if (this._dissentBubbleCoroutine != null || !((UnityEngine.Object) this.follower != (UnityEngine.Object) null) || !this.showSpeechBubble || this.State != FollowerTaskState.Doing || this.targetFollower.CurrentTask.State != FollowerTaskState.Doing)
       return;
-    this._dissentBubbleCoroutine = this.follower.WorshipperBubble.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(this.follower));
+    this._dissentBubbleCoroutine = this.follower.WorshipperBubble.StartCoroutine(this.DissentBubbleRoutine(this.follower));
   }
 
   public override void OnFinaliseBegin(Follower follower)

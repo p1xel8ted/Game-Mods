@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MegaSlash
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -56,9 +56,9 @@ public class MegaSlash : BaseMonoBehaviour, ISpellOwning
 
   public void OnEnable()
   {
-    if (this.slashRoutine == null)
-      return;
-    Object.Destroy((Object) this.gameObject);
+    if (this.slashRoutine != null)
+      Object.Destroy((Object) this.gameObject);
+    this.damageCollider = this.collider.GetComponent<DamageCollider>();
   }
 
   public void DefaultSizedButton() => this.Play(1f);
@@ -68,7 +68,6 @@ public class MegaSlash : BaseMonoBehaviour, ISpellOwning
     if ((Object) this.fireWallRenderer == (Object) null || (Object) this.groundScorchRenderer == (Object) null)
       return;
     PlayerFarming farmingComponent = PlayerFarming.GetPlayerFarmingComponent(this.owner);
-    this.damageCollider = this.collider.GetComponent<DamageCollider>();
     this.damageCollider.Damage = EquipmentManager.GetCurseData(farmingComponent.currentCurse).Damage * PlayerSpells.GetCurseDamageMultiplier(farmingComponent) * this.damageMultiplier;
     this.damageCollider.DestroyBullets = true;
     this.damageCollider.IgnorePlayer = ignorePlayer;
@@ -79,7 +78,7 @@ public class MegaSlash : BaseMonoBehaviour, ISpellOwning
     else if (farmingComponent.currentCurse == EquipmentType.MegaSlash_Flame)
       this.damageCollider.AttackFlags = Health.AttackFlags.Burn;
     this.StopAllCoroutines();
-    this.slashRoutine = this.StartCoroutine((IEnumerator) this.SlashRoutine(norm));
+    this.slashRoutine = this.StartCoroutine(this.SlashRoutine(norm));
     Debug.Log((object) ("Size: " + norm.ToString()));
   }
 

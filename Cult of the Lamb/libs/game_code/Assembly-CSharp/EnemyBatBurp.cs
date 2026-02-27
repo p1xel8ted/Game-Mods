@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBatBurp
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -169,22 +169,22 @@ public class EnemyBatBurp : EnemyBat
       enemyBatBurp.state.facingAngle = enemyBatBurp.Angle;
       yield return (object) null;
     }
-    enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.ChargingRoutine());
+    enemyBatBurp.StartCoroutine(enemyBatBurp.ChargingRoutine());
     yield break;
 label_16:
-    enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.ProjectileTrailRoutine());
+    enemyBatBurp.StartCoroutine(enemyBatBurp.ProjectileTrailRoutine());
     yield break;
 label_18:
     enemyBatBurp.CurrentAttackNum = 0;
-    enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.AttackRoutine());
+    enemyBatBurp.StartCoroutine(enemyBatBurp.AttackRoutine());
     yield break;
 label_20:
     enemyBatBurp.CurrentAttackNum = 0;
-    enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.SpawnEnemuesIE());
+    enemyBatBurp.StartCoroutine(enemyBatBurp.SpawnEnemuesIE());
     yield break;
 label_22:
     enemyBatBurp.CurrentAttackNum = 0;
-    enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.FlyAcrossScreenAttackIE());
+    enemyBatBurp.StartCoroutine(enemyBatBurp.FlyAcrossScreenAttackIE());
   }
 
   public override IEnumerator ChargingRoutine()
@@ -212,9 +212,9 @@ label_22:
         enemyBatBurp.Spine.AnimationState.SetAnimation(0, "burp", true);
         enemyBatBurp.Spine.AnimationState.AddAnimation(0, enemyBatBurp.IdleAnimation, true, 0.0f);
       }
-      yield return (object) enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.ShootProjectileRoutine());
+      yield return (object) enemyBatBurp.StartCoroutine(enemyBatBurp.ShootProjectileRoutine());
       enemyBatBurp.AttackCoolDown = UnityEngine.Random.Range(enemyBatBurp.AttackCoolDownDuration.x, enemyBatBurp.AttackCoolDownDuration.y);
-      enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.ActiveRoutine());
+      enemyBatBurp.StartCoroutine(enemyBatBurp.ActiveRoutine());
     }
   }
 
@@ -319,7 +319,7 @@ label_22:
     enemyBatBurp.KnockbackForceModifier = 1f;
     enemyBatBurp.Attacking = false;
     enemyBatBurp.AttackCoolDown = UnityEngine.Random.Range(enemyBatBurp.AttackCoolDownDuration.x, enemyBatBurp.AttackCoolDownDuration.y);
-    enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.ActiveRoutine());
+    enemyBatBurp.StartCoroutine(enemyBatBurp.ActiveRoutine());
   }
 
   public bool ShouldSpawnEnemiess()
@@ -327,7 +327,7 @@ label_22:
     return (double) GameManager.GetInstance().TimeSince(this.lastSurroundingFliesTime) >= (double) this.timeBetweenSpawning && this.spawning && Health.team2.Count - 1 < this.maxEnemies;
   }
 
-  public void SpawnEnemies() => this.StartCoroutine((IEnumerator) this.SpawnEnemuesIE());
+  public void SpawnEnemies() => this.StartCoroutine(this.SpawnEnemuesIE());
 
   public IEnumerator SpawnEnemuesIE()
   {
@@ -366,7 +366,7 @@ label_22:
       }
       yield return (object) new WaitForSeconds(1f);
       enemyBatBurp.AttackCoolDown = UnityEngine.Random.Range(enemyBatBurp.AttackCoolDownDuration.x, enemyBatBurp.AttackCoolDownDuration.y);
-      enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.ActiveRoutine());
+      enemyBatBurp.StartCoroutine(enemyBatBurp.ActiveRoutine());
     }
   }
 
@@ -375,10 +375,7 @@ label_22:
     return (double) GameManager.GetInstance().TimeSince(this.lastFlyAcrossScreenTime) >= (double) this.timeBetweenFlyAcrossScreenAmount && this.flyAcrossScreen;
   }
 
-  public void FlyAcrossScreenAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.FlyAcrossScreenAttackIE());
-  }
+  public void FlyAcrossScreenAttack() => this.StartCoroutine(this.FlyAcrossScreenAttackIE());
 
   public IEnumerator FlyAcrossScreenAttackIE()
   {
@@ -473,7 +470,7 @@ label_22:
       yield return (object) null;
     }
     enemyBatBurp.maxSpeed = enemyBatBurp.IdleSpeed * enemyBatBurp.SpeedMultiplier;
-    enemyBatBurp.StartCoroutine((IEnumerator) enemyBatBurp.ActiveRoutine());
+    enemyBatBurp.StartCoroutine(enemyBatBurp.ActiveRoutine());
   }
 
   public Vector3 GetPositionAwayFromPlayer()

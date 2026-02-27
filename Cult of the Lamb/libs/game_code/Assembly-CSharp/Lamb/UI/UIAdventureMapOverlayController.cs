@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UIAdventureMapOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -134,7 +134,7 @@ public class UIAdventureMapOverlayController : UIMenuBase
   {
     if (!InputManager.UI.GetCookButtonDown() || !MapManager.Instance.CanShuffle || !((UnityEngine.Object) this._selectedNode != (UnityEngine.Object) null) || this._selectedNode.State != NodeStates.Attainable)
       return;
-    this.StartCoroutine((IEnumerator) this.Shuffle());
+    this.StartCoroutine(this.Shuffle());
   }
 
   public void Show(Map.Map map, bool disableInput = false, bool instant = false)
@@ -592,7 +592,7 @@ public class UIAdventureMapOverlayController : UIMenuBase
     {
       if (this._scrollCoroutine != null)
         this.StopCoroutine(this._scrollCoroutine);
-      this._scrollCoroutine = this.StartCoroutine((IEnumerator) this.ScrollTo(node.RectTransform, 0.5f));
+      this._scrollCoroutine = this.StartCoroutine(this.ScrollTo(node.RectTransform, 0.5f));
     }
     if (node.NodeBlueprint.HasCost)
     {

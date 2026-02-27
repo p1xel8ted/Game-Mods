@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.MainMenu.MainMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Beffio.Dithering;
@@ -85,7 +85,7 @@ public class MainMenuController : MonoBehaviour
     if (this.cIntroSequence != null)
       this.StopCoroutine(this.cIntroSequence);
     if (!CheatConsole.ForceAutoAttractMode)
-      this.cIntroSequence = this.StartCoroutine((IEnumerator) this.DoIntroSequence());
+      this.cIntroSequence = this.StartCoroutine(this.DoIntroSequence());
     if (CheatConsole.IN_DEMO)
     {
       CheatConsole.DemoBeginTime = 0.0f;
@@ -126,13 +126,13 @@ public class MainMenuController : MonoBehaviour
     }
   }
 
-  public void DoIntro() => this.StartCoroutine((IEnumerator) this.DoIntroSequence());
+  public void DoIntro() => this.StartCoroutine(this.DoIntroSequence());
 
   public void AttractMode()
   {
     if (this.cAttractMode != null)
       this.StopCoroutine(this.cAttractMode);
-    this.cAttractMode = this.StartCoroutine((IEnumerator) this.DoAttactMode());
+    this.cAttractMode = this.StartCoroutine(this.DoAttactMode());
   }
 
   public IEnumerator DoAttactMode()
@@ -256,7 +256,7 @@ public class MainMenuController : MonoBehaviour
       yield return (object) new WaitForSeconds(0.5f);
       instance = new EventInstance();
     }
-    coroutineSupport.StartCoroutine((IEnumerator) coroutineSupport._uiMainMenu.PreloadMetadata());
+    coroutineSupport.StartCoroutine(coroutineSupport._uiMainMenu.PreloadMetadata());
     MonoSingleton<UINavigatorNew>.Instance.LockInput = MonoSingleton<UINavigatorNew>.Instance.LockNavigation = true;
     if (GameManager.AuthenticateMajorDLC())
     {
@@ -274,7 +274,7 @@ public class MainMenuController : MonoBehaviour
     }
     if (GameManager.AuthenticatePilgrimDLC())
     {
-      coroutineSupport.StartCoroutine((IEnumerator) coroutineSupport._uiMainMenu.WaitForDLCCheck());
+      coroutineSupport.StartCoroutine(coroutineSupport._uiMainMenu.WaitForDLCCheck());
       if (!PersistenceManager.PersistentData.RevealedComic)
       {
         coroutineSupport._uiMainMenu.FocusOnComicButton();
@@ -292,7 +292,7 @@ public class MainMenuController : MonoBehaviour
     Debug.Log((object) "Check DLC");
     if (!GameManager.AuthenticatePilgrimDLC())
       return;
-    this.StartCoroutine((IEnumerator) this._uiMainMenu.WaitForDLCCheck());
+    this.StartCoroutine(this._uiMainMenu.WaitForDLCCheck());
     if (PersistenceManager.PersistentData.RevealedComic)
       return;
     this._uiMainMenu.FocusOnComicButton();

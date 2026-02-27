@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyHopper
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -223,9 +223,9 @@ public class EnemyHopper : UnitObject
   {
     AudioManager.Instance.PlayOneShot(this.AttackVO, this.gameObject);
     if (this.damageColliderRoutine != null)
-      this.StopCoroutine((IEnumerator) this.damageColliderRoutine);
+      this.StopCoroutine(this.damageColliderRoutine);
     this.damageColliderRoutine = this.TurnOnDamageColliderForDuration(this.attackingDur);
-    this.StartCoroutine((IEnumerator) this.damageColliderRoutine);
+    this.StartCoroutine(this.damageColliderRoutine);
   }
 
   public IEnumerator TurnOnDamageColliderForDuration(float duration)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapRockFall
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -121,7 +121,7 @@ public class TrapRockFall : BaseMonoBehaviour
   public virtual void Drop(bool showDebris = true)
   {
     this.showDebris = showDebris;
-    this.StartCoroutine((IEnumerator) this.DropIE());
+    this.StartCoroutine(this.DropIE());
   }
 
   public IEnumerator DropIE()
@@ -165,7 +165,7 @@ public class TrapRockFall : BaseMonoBehaviour
       Health component = collider2D.GetComponent<Health>();
       PlayerFarming farmingComponent = PlayerFarming.GetPlayerFarmingComponent(collider2D.gameObject);
       if ((bool) (Object) component && (component.team != Health.Team.PlayerTeam || !TrinketManager.HasTrinket(TarotCards.Card.ImmuneToTraps, farmingComponent)) && !component.ImmuneToTraps)
-        component.DealDamage(component.team == Health.Team.PlayerTeam ? this.playerDamage : this.enemyDamage, this.gameObject, this.transform.position);
+        component.DealDamage(component.team == Health.Team.PlayerTeam ? this.playerDamage : this.enemyDamage, this.gameObject, this.transform.position, dealDamageImmediately: component.team != Health.Team.PlayerTeam);
     }
     AudioManager.Instance.PlayOneShot("event:/material/stone_break", this.transform.position);
     AudioManager.Instance.PlayOneShot("event:/enemy/land_large", this.transform.position);
@@ -195,6 +195,6 @@ public class TrapRockFall : BaseMonoBehaviour
   {
     if (this.dropped || !other.gameObject.CompareTag("Player") && !((Object) other.GetComponent<FriendlyEnemy>() != (Object) null))
       return;
-    this.StartCoroutine((IEnumerator) this.DropIE());
+    this.StartCoroutine(this.DropIE());
   }
 }

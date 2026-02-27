@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Daycare
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -122,7 +122,7 @@ public class Interaction_Daycare : Interaction
       {
         nurturing = true;
         Time.timeScale = 1f;
-        this.StartCoroutine((IEnumerator) this.NurtureIE());
+        this.StartCoroutine(this.NurtureIE());
       });
       uiDaycareMenu.OnHidden = uiDaycareMenu.OnHidden + (System.Action) (() =>
       {
@@ -196,7 +196,7 @@ public class Interaction_Daycare : Interaction
       if (follower.Brain.CanLevelUp())
       {
         follower.FacePosition(interactionDaycare1.playerFarming.transform.position);
-        interactionDaycare1.StartCoroutine((IEnumerator) follower.Interaction_FollowerInteraction.LevelUpRoutineTemple(interactionDaycare1._playerFarming));
+        interactionDaycare1.StartCoroutine(follower.Interaction_FollowerInteraction.LevelUpRoutineTemple(interactionDaycare1._playerFarming));
       }
     }
     yield return (object) new WaitForSeconds(3f);

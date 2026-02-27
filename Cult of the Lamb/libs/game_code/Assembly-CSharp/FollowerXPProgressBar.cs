@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerXPProgressBar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -27,7 +27,7 @@ public class FollowerXPProgressBar : BaseMonoBehaviour
     transform2.localScale = vector3_2;
     Vector3 vector3_3 = vector3_1;
     transform1.localScale = vector3_3;
-    this.StartCoroutine((IEnumerator) this.WaitForBrain());
+    this.StartCoroutine(this.WaitForBrain());
   }
 
   public IEnumerator WaitForBrain()
@@ -52,7 +52,7 @@ public class FollowerXPProgressBar : BaseMonoBehaviour
     this.SetVisibility();
     if (this.cUpdateBar != null)
       this.StopCoroutine(this.cUpdateBar);
-    this.cUpdateBar = this.StartCoroutine((IEnumerator) this.UpdateBar());
+    this.cUpdateBar = this.StartCoroutine(this.UpdateBar());
   }
 
   public void SetVisibility()

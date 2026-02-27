@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Morgue
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -131,7 +131,7 @@ public class Interaction_Morgue : Interaction
     }
     UIDeadFollowerSelectMenu followerSelectMenu = MonoSingleton<UIManager>.Instance.DeadFollowerSelectMenuTemplate.Instantiate<UIDeadFollowerSelectMenu>();
     followerSelectMenu.Show(followerSelectEntries.Count, this._StructureInfo.DEAD_BODY_SLOTS, followerSelectEntries);
-    followerSelectMenu.OnFollowerSelected = followerSelectMenu.OnFollowerSelected + (System.Action<FollowerInfo>) (followerInfo => this.StartCoroutine((IEnumerator) this.SpawnQueue(followerInfo)));
+    followerSelectMenu.OnFollowerSelected = followerSelectMenu.OnFollowerSelected + (System.Action<FollowerInfo>) (followerInfo => this.StartCoroutine(this.SpawnQueue(followerInfo)));
     followerSelectMenu.OnCancel = followerSelectMenu.OnCancel + (System.Action) (() => GameManager.GetInstance().WaitForSecondsRealtime(0.1f, (System.Action) (() =>
     {
       this.OnHidden();
@@ -185,7 +185,7 @@ public class Interaction_Morgue : Interaction
   [CompilerGenerated]
   public void \u003COnInteract\u003Eb__23_0(FollowerInfo followerInfo)
   {
-    this.StartCoroutine((IEnumerator) this.SpawnQueue(followerInfo));
+    this.StartCoroutine(this.SpawnQueue(followerInfo));
   }
 
   [CompilerGenerated]

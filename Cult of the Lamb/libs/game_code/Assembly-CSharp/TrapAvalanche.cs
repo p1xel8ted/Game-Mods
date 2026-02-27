@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapAvalanche
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -79,7 +79,7 @@ public class TrapAvalanche : TrapRockFall
       PlayerFarming farmingComponent = PlayerFarming.GetPlayerFarmingComponent(collider2D.gameObject);
       TrapBellAvalanche component2 = collider2D.GetComponent<TrapBellAvalanche>();
       if ((bool) (Object) component1 && component1.team == Health.Team.PlayerTeam && !TrinketManager.HasTrinket(TarotCards.Card.ImmuneToTraps, farmingComponent) && !component1.ImmuneToTraps || (bool) (Object) component1 && (bool) (Object) component2)
-        component1.DealDamage(1f, this.gameObject, this.transform.position);
+        component1.DealDamage(1f, this.gameObject, this.transform.position, dealDamageImmediately: component1.team != Health.Team.PlayerTeam);
     }
     AudioManager.Instance.PlayOneShot("event:/material/stone_break", this.transform.position);
     AudioManager.Instance.PlayOneShot("event:/enemy/land_large", this.transform.position);

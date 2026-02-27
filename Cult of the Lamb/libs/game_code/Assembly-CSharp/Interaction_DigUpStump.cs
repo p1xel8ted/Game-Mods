@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DigUpStump
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -149,7 +149,7 @@ public class Interaction_DigUpStump : Interaction
     this.Activated = true;
     this.interactorSkeletonAnimation.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.HandleEvent);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoDigStump());
+    this.StartCoroutine(this.DoDigStump());
   }
 
   public override void Update()
@@ -163,9 +163,9 @@ public class Interaction_DigUpStump : Interaction
   public void DigStump()
   {
     if ((double) this.playerFarming.gameObject.transform.position.x < (double) this.transform.position.x)
-      this.playerFarming.GoToAndStop(this.PlayerPositionLeft, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoDigStump())));
+      this.playerFarming.GoToAndStop(this.PlayerPositionLeft, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoDigStump())));
     else
-      this.playerFarming.GoToAndStop(this.PlayerPositionRight, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.DoDigStump())));
+      this.playerFarming.GoToAndStop(this.PlayerPositionRight, this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.DoDigStump())));
   }
 
   public IEnumerator DoDigStump()
@@ -233,8 +233,8 @@ public class Interaction_DigUpStump : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003CDigStump\u003Eb__37_0() => this.StartCoroutine((IEnumerator) this.DoDigStump());
+  public void \u003CDigStump\u003Eb__37_0() => this.StartCoroutine(this.DoDigStump());
 
   [CompilerGenerated]
-  public void \u003CDigStump\u003Eb__37_1() => this.StartCoroutine((IEnumerator) this.DoDigStump());
+  public void \u003CDigStump\u003Eb__37_1() => this.StartCoroutine(this.DoDigStump());
 }

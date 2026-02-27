@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WolfArmPiece
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -34,6 +34,9 @@ public class WolfArmPiece : MonoBehaviour
   public Health health;
   public static Dictionary<int, WolfArmPiece> Lookup = new Dictionary<int, WolfArmPiece>();
   public int _id;
+  public Transform lookAtTarget;
+  public GameObject AttackerCache;
+  public bool AttackerHasEnemyWolfBoss;
   public Renderer handAttachmentRenderer;
   public int nextAllowedFlashFrame = -1;
   public Coroutine handFlashCo;
@@ -60,9 +63,14 @@ public class WolfArmPiece : MonoBehaviour
   {
     this._id = this.gameObject.GetInstanceID();
     WolfArmPiece.Lookup[this._id] = this;
+    this.rigidbody.WakeUp();
   }
 
-  public void OnDisable() => WolfArmPiece.Lookup.Remove(this._id);
+  public void OnDisable()
+  {
+    WolfArmPiece.Lookup.Remove(this._id);
+    this.rigidbody.Sleep();
+  }
 
   public void Awake()
   {
@@ -71,10 +79,10 @@ public class WolfArmPiece : MonoBehaviour
     this.health = this.GetComponentInChildren<Health>();
     this.health.OnHit += new Health.HitAction(this.Health_OnHit);
     this.handAttachmentRenderer = this.spine.gameObject.GetComponent<Renderer>();
-    this.StartCoroutine((IEnumerator) this.WaitForResting());
-    if (!this.isHand)
-      return;
-    this.SetHandAttachmentColor(new Color(1f, 1f, 1f, 0.0f));
+    this.StartCoroutine(this.WaitForResting());
+    if (this.isHand)
+      this.SetHandAttachmentColor(new Color(1f, 1f, 1f, 0.0f));
+    this.lookAtTarget = GameManager.GetInstance().CamFollowTarget.transform;
   }
 
   public void OnDestroy() => this.health.OnHit -= new Health.HitAction(this.Health_OnHit);
@@ -91,7 +99,7 @@ public class WolfArmPiece : MonoBehaviour
   {
     if (!this.lookAtCamera)
       return;
-    this.spine.transform.LookAt(GameManager.GetInstance().CamFollowTarget.transform);
+    this.spine.transform.LookAt(this.lookAtTarget);
     this.spine.transform.eulerAngles += this.rotationOffset;
   }
 
@@ -131,11 +139,13 @@ public class WolfArmPiece : MonoBehaviour
     Health.AttackTypes AttackType,
     bool FromBehind = false)
   {
-    if ((bool) (Object) Attacker.GetComponentInParent<EnemyWolfBoss>())
+    if ((Object) this.AttackerCache != (Object) Attacker)
+      this.AttackerHasEnemyWolfBoss = (bool) (Object) Attacker.GetComponentInParent<EnemyWolfBoss>();
+    if (this.AttackerHasEnemyWolfBoss)
       return;
     float Damage = (this.health.totalHP - this.health.HP) * 0.1f;
     this.health.HP = this.health.totalHP;
-    EnemyWolfBoss.Instance.health.DealDamage(Damage, this.gameObject, AttackLocation, AttackType: Health.AttackTypes.NoHitStop);
+    EnemyWolfBoss.Instance.health.DealDamage(Damage, this.gameObject, AttackLocation, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: true);
     this.FlashFillRed();
   }
 
@@ -160,7 +170,7 @@ public class WolfArmPiece : MonoBehaviour
       this.StopCoroutine(this.handFlashCo);
       this.handFlashCo = (Coroutine) null;
     }
-    this.handFlashCo = this.StartCoroutine((IEnumerator) this.FlashHandAttachmentRed(0.5f));
+    this.handFlashCo = this.StartCoroutine(this.FlashHandAttachmentRed(0.5f));
   }
 
   public IEnumerator FlashHandAttachmentRed(float opacity)

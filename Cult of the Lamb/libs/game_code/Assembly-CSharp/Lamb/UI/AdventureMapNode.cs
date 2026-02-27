@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.AdventureMapNode
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -370,7 +370,7 @@ public class AdventureMapNode :
 
   public void BreakNode(float duration, float strength, float delay, AnimationCurve curve)
   {
-    this.StartCoroutine((IEnumerator) this.BreakNodeIE(duration, strength, delay, curve));
+    this.StartCoroutine(this.BreakNodeIE(duration, strength, delay, curve));
   }
 
   public IEnumerator BreakNodeIE(
@@ -396,7 +396,7 @@ public class AdventureMapNode :
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = -1;
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) adventureMapNode.StartCoroutine((IEnumerator) adventureMapNode.ShakeNodeIE(duration, strength, delay, curve));
+    this.\u003C\u003E2__current = (object) adventureMapNode.StartCoroutine(adventureMapNode.ShakeNodeIE(duration, strength, delay, curve));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -404,7 +404,7 @@ public class AdventureMapNode :
 
   public void ShakeNode(float duration, float strength, float delay, AnimationCurve curve)
   {
-    this.StartCoroutine((IEnumerator) this.ShakeNodeIE(duration, strength, delay, curve));
+    this.StartCoroutine(this.ShakeNodeIE(duration, strength, delay, curve));
   }
 
   public IEnumerator ShakeNodeIE(

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWormTurret
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -36,7 +36,7 @@ public class EnemyWormTurret : UnitObject
   [SerializeField]
   public GameObject lighting;
   public GameObject TrailPrefab;
-  public List<GameObject> Trails = new List<GameObject>();
+  public List<EnemyBurrowingTrail> Trails = new List<EnemyBurrowingTrail>();
   public float DelayBetweenTrails = 0.2f;
   public float TrailsTimer;
   [SerializeField]
@@ -83,7 +83,7 @@ public class EnemyWormTurret : UnitObject
   public bool targeted;
   public bool active;
   public List<UnitObject> spawnedEnemies = new List<UnitObject>();
-  public List<GameObject> spawnedSpikes = new List<GameObject>();
+  public List<EnemyBurrowingTrail> spawnedSpikes = new List<EnemyBurrowingTrail>();
   public Coroutine currentRoutine;
   public float initialDelay;
   public GameObject t;
@@ -146,12 +146,12 @@ public class EnemyWormTurret : UnitObject
     base.OnEnable();
     this.DisableForces = true;
     this.ShowHPBar = this.GetComponent<ShowHPBar>();
-    this.StartCoroutine((IEnumerator) this.CreateSpineEventListener());
+    this.StartCoroutine(this.CreateSpineEventListener());
     if (this.active)
     {
       if (this.currentRoutine != null)
         this.StopCoroutine(this.currentRoutine);
-      this.currentRoutine = this.StartCoroutine((IEnumerator) this.MoveRoutine());
+      this.currentRoutine = this.StartCoroutine(this.MoveRoutine());
     }
     this.active = true;
   }
@@ -185,7 +185,7 @@ public class EnemyWormTurret : UnitObject
       return;
     if (this.currentRoutine != null)
       this.StopCoroutine(this.currentRoutine);
-    this.currentRoutine = this.StartCoroutine((IEnumerator) this.ShootRoutine());
+    this.currentRoutine = this.StartCoroutine(this.ShootRoutine());
   }
 
   public void SpawnTrails()
@@ -193,29 +193,32 @@ public class EnemyWormTurret : UnitObject
     if ((double) (this.TrailsTimer += Time.deltaTime) <= (double) this.DelayBetweenTrails || (double) Vector3.Distance(this.transform.position, this.previousSpawnPosition) <= 0.10000000149011612)
       return;
     this.TrailsTimer = 0.0f;
-    this.t = (GameObject) null;
-    if (this.Trails.Count > 0)
+    GameObject gameObject = this.TrailPrefab.Spawn(this.transform.parent, this.transform.position, Quaternion.identity);
+    EnemyBurrowingTrail component1 = gameObject.GetComponent<EnemyBurrowingTrail>();
+    SimpleSpineDeactivateAfterPlay component2 = gameObject.GetComponent<SimpleSpineDeactivateAfterPlay>();
+    if ((bool) (UnityEngine.Object) component2)
+      component2.RecycleOnComplete = true;
+    this.Trails.Add(component1);
+    if ((bool) (UnityEngine.Object) component1)
+      component1.OnDeactivate += new System.Action<EnemyBurrowingTrail>(this.OnDecativateTrail);
+    if ((bool) (UnityEngine.Object) component1.ColliderEvents)
     {
-      foreach (GameObject trail in this.Trails)
-      {
-        if (!trail.activeSelf)
-        {
-          this.t = trail;
-          this.t.transform.position = this.transform.position;
-          this.t.SetActive(true);
-          break;
-        }
-      }
+      component1.ColliderEvents.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
+      component1.ColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
     }
-    if ((UnityEngine.Object) this.t == (UnityEngine.Object) null)
-    {
-      this.t = UnityEngine.Object.Instantiate<GameObject>(this.TrailPrefab, this.transform.position, Quaternion.identity, this.transform.parent);
-      this.Trails.Add(this.t);
-      ColliderEvents componentInChildren = this.t.GetComponentInChildren<ColliderEvents>();
-      if ((bool) (UnityEngine.Object) componentInChildren)
-        componentInChildren.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
-    }
-    this.previousSpawnPosition = this.t.transform.position;
+    this.previousSpawnPosition = gameObject.transform.position;
+  }
+
+  public void OnDecativateTrail(EnemyBurrowingTrail trail)
+  {
+    trail.OnDeactivate -= new System.Action<EnemyBurrowingTrail>(this.OnDecativateTrail);
+    if (this.Trails.Contains(trail))
+      this.Trails.Remove(trail);
+    if (this.spawnedSpikes.Contains(trail))
+      this.spawnedSpikes.Remove(trail);
+    if (!(bool) (UnityEngine.Object) trail.ColliderEvents)
+      return;
+    trail.ColliderEvents.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
   }
 
   public virtual void OnDamageTriggerEnter(Collider2D collider)
@@ -229,16 +232,18 @@ public class EnemyWormTurret : UnitObject
   public override void OnDestroy()
   {
     AudioManager.Instance.StopLoop(this.loopingSoundInstance);
-    foreach (GameObject trail in this.Trails)
-    {
-      if ((UnityEngine.Object) trail != (UnityEngine.Object) null)
-      {
-        ColliderEvents componentInChildren = trail.GetComponentInChildren<ColliderEvents>();
-        if ((bool) (UnityEngine.Object) componentInChildren)
-          componentInChildren.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
-      }
-    }
+    this.ClearTrails(this.Trails);
+    this.ClearTrails(this.spawnedSpikes);
     base.OnDestroy();
+  }
+
+  public void ClearTrails(List<EnemyBurrowingTrail> trails)
+  {
+    for (int index = trails.Count - 1; index >= 0; --index)
+    {
+      if ((UnityEngine.Object) trails[index] != (UnityEngine.Object) null)
+        this.OnDecativateTrail(trails[index]);
+    }
   }
 
   public IEnumerator SpawnSpikesInDirectionsIE(
@@ -273,7 +278,7 @@ public class EnemyWormTurret : UnitObject
     for (int index = 0; index < amount; ++index)
     {
       Vector3 direction = new Vector3(Mathf.Cos((float) num * ((float) Math.PI / 180f)), Mathf.Sin((float) num * ((float) Math.PI / 180f)), 0.0f);
-      enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.ShootSpikesInDirectionIE(direction, delayBetweenSpikes, distanceBetweenSpikes));
+      enemyWormTurret.StartCoroutine(enemyWormTurret.ShootSpikesInDirectionIE(direction, delayBetweenSpikes, distanceBetweenSpikes));
       num = (int) Utils.Repeat((float) (num + 360 / amount), 360f);
     }
     time = 0.0f;
@@ -301,15 +306,7 @@ public class EnemyWormTurret : UnitObject
 
   public void CreatePool(int count)
   {
-    for (int index = 0; index < count; ++index)
-    {
-      this.t = UnityEngine.Object.Instantiate<GameObject>(this.TrailPrefab, this.transform.position, Quaternion.identity, this.transform.parent);
-      this.t.gameObject.SetActive(false);
-      this.spawnedSpikes.Add(this.t);
-      ColliderEvents componentInChildren = this.t.GetComponentInChildren<ColliderEvents>();
-      if ((bool) (UnityEngine.Object) componentInChildren)
-        componentInChildren.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
-    }
+    this.TrailPrefab.CreatePool(count, true);
     if (!((UnityEngine.Object) this.spawnable != (UnityEngine.Object) null) || !((UnityEngine.Object) this.spawnable.gameObject != (UnityEngine.Object) null))
       return;
     this.spawnable.CreatePool<UnitObject>(this.maxActiveSpawns);
@@ -317,28 +314,15 @@ public class EnemyWormTurret : UnitObject
 
   public GameObject GetSpawnSpike()
   {
-    GameObject spawnSpike = (GameObject) null;
-    if (this.spawnedSpikes.Count > 0)
-    {
-      foreach (GameObject spawnedSpike in this.spawnedSpikes)
-      {
-        if (!spawnedSpike.activeSelf)
-        {
-          spawnSpike = spawnedSpike;
-          spawnSpike.transform.position = this.transform.position;
-          spawnSpike.SetActive(true);
-          break;
-        }
-      }
-    }
-    if ((UnityEngine.Object) spawnSpike == (UnityEngine.Object) null)
-    {
-      spawnSpike = UnityEngine.Object.Instantiate<GameObject>(this.TrailPrefab, this.transform.position, Quaternion.identity, this.transform.parent);
-      this.spawnedSpikes.Add(spawnSpike);
-      ColliderEvents componentInChildren = spawnSpike.GetComponentInChildren<ColliderEvents>();
-      if ((bool) (UnityEngine.Object) componentInChildren)
-        componentInChildren.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
-    }
+    GameObject spawnSpike = this.TrailPrefab.Spawn(this.transform.parent, this.transform.position, Quaternion.identity);
+    EnemyBurrowingTrail component = spawnSpike.GetComponent<EnemyBurrowingTrail>();
+    this.spawnedSpikes.Add(component);
+    if ((bool) (UnityEngine.Object) component)
+      component.OnDeactivate += new System.Action<EnemyBurrowingTrail>(this.OnDecativateTrail);
+    if (!(bool) (UnityEngine.Object) component.ColliderEvents)
+      return spawnSpike;
+    component.ColliderEvents.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
+    component.ColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
     return spawnSpike;
   }
 
@@ -389,9 +373,9 @@ public class EnemyWormTurret : UnitObject
       this.StopAllCoroutines();
       if (this.currentRoutine != null)
         this.StopCoroutine(this.currentRoutine);
-      this.currentRoutine = this.StartCoroutine((IEnumerator) this.MoveRoutine());
+      this.currentRoutine = this.StartCoroutine(this.MoveRoutine());
     }
-    this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+    this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     if ((UnityEngine.Object) this.SimpleSpineFlash != (UnityEngine.Object) null)
       this.SimpleSpineFlash.FlashFillRed();
     AudioManager.Instance.StopLoop(this.loopingSoundInstance);
@@ -418,7 +402,7 @@ public class EnemyWormTurret : UnitObject
       yield return (object) null;
     if (enemyWormTurret.currentRoutine != null)
       enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.DiveAboveGround ? (IEnumerator) enemyWormTurret.DiveMoveRoutine() : (IEnumerator) enemyWormTurret.MoveRoutine());
+    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.DiveAboveGround ? enemyWormTurret.DiveMoveRoutine() : enemyWormTurret.MoveRoutine());
   }
 
   public IEnumerator DiveMoveRoutine()
@@ -442,7 +426,7 @@ public class EnemyWormTurret : UnitObject
     enemyWormTurret.state.CURRENT_STATE = StateMachine.State.Idle;
     if (enemyWormTurret.currentRoutine != null)
       enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.ActiveRoutine());
+    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.ActiveRoutine());
   }
 
   public IEnumerator MoveRoutine()
@@ -505,7 +489,7 @@ public class EnemyWormTurret : UnitObject
     {
       if (enemyWormTurret.canSpikeCircle && (double) UnityEngine.Random.Range(0.0f, 1f) < 0.5)
       {
-        yield return (object) enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.SpawnSpikesInDirectionsIE(enemyWormTurret.circleSpikeAmount, enemyWormTurret.circleDelayBetweenSpikes, enemyWormTurret.circleDistanceBetweenSpikes));
+        yield return (object) enemyWormTurret.StartCoroutine(enemyWormTurret.SpawnSpikesInDirectionsIE(enemyWormTurret.circleSpikeAmount, enemyWormTurret.circleDelayBetweenSpikes, enemyWormTurret.circleDistanceBetweenSpikes));
         time = 0.0f;
         while ((double) (time += Time.deltaTime * enemyWormTurret.Spine.timeScale) < (double) enemyWormTurret.MoveDelay)
           yield return (object) null;
@@ -513,22 +497,22 @@ public class EnemyWormTurret : UnitObject
         {
           if (enemyWormTurret.currentRoutine != null)
             enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-          enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.MoveRoutine());
+          enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.MoveRoutine());
         }
         else
         {
           if (enemyWormTurret.currentRoutine != null)
             enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-          enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.ActiveRoutine());
+          enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.ActiveRoutine());
         }
       }
       else
-        enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.ShootAtPlayerRoutine());
+        enemyWormTurret.StartCoroutine(enemyWormTurret.ShootAtPlayerRoutine());
     }
     else
     {
       if (enemyWormTurret.canSpikeCircle)
-        yield return (object) enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.SpawnSpikesInDirectionsIE(enemyWormTurret.circleSpikeAmount, enemyWormTurret.circleDelayBetweenSpikes, enemyWormTurret.circleDistanceBetweenSpikes));
+        yield return (object) enemyWormTurret.StartCoroutine(enemyWormTurret.SpawnSpikesInDirectionsIE(enemyWormTurret.circleSpikeAmount, enemyWormTurret.circleDelayBetweenSpikes, enemyWormTurret.circleDistanceBetweenSpikes));
       time = 0.0f;
       while ((double) (time += Time.deltaTime * enemyWormTurret.Spine.timeScale) < (double) enemyWormTurret.MoveDelay)
         yield return (object) null;
@@ -536,13 +520,13 @@ public class EnemyWormTurret : UnitObject
       {
         if (enemyWormTurret.currentRoutine != null)
           enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-        enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.MoveRoutine());
+        enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.MoveRoutine());
       }
       else
       {
         if (enemyWormTurret.currentRoutine != null)
           enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-        enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.ActiveRoutine());
+        enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.ActiveRoutine());
       }
     }
   }
@@ -557,7 +541,7 @@ public class EnemyWormTurret : UnitObject
       this.targeted = true;
       if (this.currentRoutine != null)
         this.StopCoroutine(this.currentRoutine);
-      this.currentRoutine = this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+      this.currentRoutine = this.StartCoroutine(this.ActiveRoutine());
     }
     if (this.anticipating)
     {
@@ -625,13 +609,13 @@ public class EnemyWormTurret : UnitObject
       if ((UnityEngine.Object) spawnedEnemy != (UnityEngine.Object) null)
       {
         spawnedEnemy.health.enabled = true;
-        spawnedEnemy.health.DealDamage(spawnedEnemy.health.totalHP, this.gameObject, spawnedEnemy.transform.position, AttackType: Health.AttackTypes.Heavy);
+        spawnedEnemy.health.DealDamage(spawnedEnemy.health.totalHP, this.gameObject, spawnedEnemy.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
     AudioManager.Instance.StopLoop(this.loopingSoundInstance);
     if (this.health.DestroyOnDeath)
       return;
-    this.StartCoroutine((IEnumerator) this.DelayedDestroy());
+    this.StartCoroutine(this.DelayedDestroy());
     this.gameObject.SetActive(false);
   }
 
@@ -688,14 +672,14 @@ public class EnemyWormTurret : UnitObject
     enemyWormTurret.SimpleSpineFlash.FlashWhite(false);
     if (enemyWormTurret.currentRoutine != null)
       enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.ShootRoutine());
+    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.ShootRoutine());
     time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyWormTurret.Spine.timeScale) < (double) enemyWormTurret.shootCooldown)
       yield return (object) null;
     enemyWormTurret.state.CURRENT_STATE = StateMachine.State.Idle;
     if (enemyWormTurret.currentRoutine != null)
       enemyWormTurret.StopCoroutine(enemyWormTurret.currentRoutine);
-    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine((IEnumerator) enemyWormTurret.ActiveRoutine());
+    enemyWormTurret.currentRoutine = enemyWormTurret.StartCoroutine(enemyWormTurret.ActiveRoutine());
   }
 
   public bool GetNewTargetPosition()

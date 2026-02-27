@@ -1,0 +1,109 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: UIStructureEffectTile
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+#nullable disable
+public class UIStructureEffectTile : 
+  BaseMonoBehaviour,
+  ISelectHandler,
+  IEventSystemHandler,
+  IDeselectHandler
+{
+  public StructureEffectManager.EffectType Type;
+  public TextMeshProUGUI Text;
+  public TextMeshProUGUI AvailabilityText;
+  public Selectable Selectable;
+  public RectTransform Container;
+  public StructureEffectManager.State State;
+  public Image CoolDownProgressIcon;
+  private Canvas canvas;
+  private Coroutine cShakeRoutine;
+
+  public void Init(StructureEffectManager.EffectType Type, int ID)
+  {
+    this.canvas = this.GetComponentInParent<Canvas>();
+    this.Type = Type;
+    this.Text.text = Type.ToString();
+    this.CoolDownProgressIcon.gameObject.SetActive(false);
+    switch (this.State = StructureEffectManager.GetEffectAvailability(ID, Type))
+    {
+      case StructureEffectManager.State.DoesntExist:
+        this.AvailabilityText.text = "Available";
+        break;
+      case StructureEffectManager.State.Active:
+        this.AvailabilityText.text = "Currently Active";
+        break;
+      case StructureEffectManager.State.Cooldown:
+        this.AvailabilityText.text = "Cooling Down...";
+        this.CoolDownProgressIcon.gameObject.SetActive(true);
+        this.CoolDownProgressIcon.fillAmount = 1f - StructureEffectManager.GetEffectCoolDownProgress(ID, Type);
+        break;
+    }
+  }
+
+  public void Shake()
+  {
+    if (this.cShakeRoutine != null)
+      this.StopCoroutine(this.cShakeRoutine);
+    this.cShakeRoutine = this.StartCoroutine((IEnumerator) this.ShakeRoutine());
+  }
+
+  private IEnumerator ShakeRoutine()
+  {
+    float Progress = 0.0f;
+    float Duration = 2f;
+    float Speed = 100f * this.canvas.scaleFactor;
+    while ((double) (Progress += Time.unscaledDeltaTime) < (double) Duration)
+    {
+      this.Container.localPosition = Vector3.right * Utils.BounceLerpUnscaledDeltaTime(0.0f, this.Container.localPosition.x, ref Speed);
+      yield return (object) null;
+    }
+    this.Container.localPosition = Vector3.zero;
+  }
+
+  public void OnSelect(BaseEventData eventData)
+  {
+    this.StopAllCoroutines();
+    this.StartCoroutine((IEnumerator) this.Selected(this.Container.localScale.x, 1.3f));
+  }
+
+  public void OnDeselect(BaseEventData eventData)
+  {
+    this.StopAllCoroutines();
+    this.StartCoroutine((IEnumerator) this.DeSelected());
+  }
+
+  private IEnumerator Selected(float Starting, float Target)
+  {
+    float Progress = 0.0f;
+    float Duration = 0.2f;
+    while ((double) (Progress += Time.unscaledDeltaTime) < (double) Duration)
+    {
+      this.Container.localScale = Vector3.one * Mathf.SmoothStep(Starting, Target, Progress / Duration);
+      yield return (object) null;
+    }
+    this.Container.localScale = Vector3.one * Target;
+  }
+
+  private IEnumerator DeSelected()
+  {
+    float Progress = 0.0f;
+    float Duration = 0.3f;
+    float StartingScale = this.Container.localScale.x;
+    float TargetScale = 1f;
+    while ((double) (Progress += Time.unscaledDeltaTime) < (double) Duration)
+    {
+      this.Container.localScale = Vector3.one * Mathf.SmoothStep(StartingScale, TargetScale, Progress / Duration);
+      yield return (object) null;
+    }
+    this.Container.localScale = Vector3.one * TargetScale;
+  }
+}

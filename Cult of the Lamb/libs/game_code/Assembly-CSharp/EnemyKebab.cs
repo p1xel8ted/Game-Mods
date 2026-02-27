@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyKebab
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -167,7 +167,7 @@ public class EnemyKebab : UnitObject
       this.chargeDamageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.chargeDamageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.rb.simulated = true;
     this.SlashAttackDelay = UnityEngine.Random.Range(this.SlashAttackDelayRandomRange.x, this.SlashAttackDelayRandomRange.y);
@@ -333,7 +333,7 @@ public class EnemyKebab : UnitObject
     {
       if ((UnityEngine.Object) enemyKebab.TargetObject == (UnityEngine.Object) null)
       {
-        enemyKebab.StartCoroutine((IEnumerator) enemyKebab.WaitForTarget());
+        enemyKebab.StartCoroutine(enemyKebab.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(enemyKebab.TargetObject.transform.position, enemyKebab.transform.position);
@@ -346,7 +346,7 @@ public class EnemyKebab : UnitObject
       }
       yield return (object) null;
     }
-    enemyKebab.StartCoroutine((IEnumerator) enemyKebab.ChasePlayer());
+    enemyKebab.StartCoroutine(enemyKebab.ChasePlayer());
   }
 
   public void LookAtTarget()
@@ -366,7 +366,7 @@ public class EnemyKebab : UnitObject
     {
       if ((UnityEngine.Object) enemyKebab.TargetObject == (UnityEngine.Object) null)
       {
-        enemyKebab.StartCoroutine((IEnumerator) enemyKebab.WaitForTarget());
+        enemyKebab.StartCoroutine(enemyKebab.WaitForTarget());
         break;
       }
       if ((UnityEngine.Object) enemyKebab.slashDamageColliderEvents != (UnityEngine.Object) null)
@@ -403,7 +403,7 @@ public class EnemyKebab : UnitObject
               {
                 enemyKebab.health.invincible = false;
                 enemyKebab.StopAllCoroutines();
-                enemyKebab.StartCoroutine((IEnumerator) enemyKebab.TryChargeAttack());
+                enemyKebab.StartCoroutine(enemyKebab.TryChargeAttack());
               }
             }
             else if ((double) enemyKebab.MaxSlashAttackDelay <= 0.0 || (double) Vector3.Distance(enemyKebab.transform.position, enemyKebab.TargetObject.transform.position) < (double) enemyKebab.ShortRangeAttackMaxRange)
@@ -442,7 +442,7 @@ public class EnemyKebab : UnitObject
         return;
       this.health.invincible = false;
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.TrySlashAttack());
+      this.StartCoroutine(this.TrySlashAttack());
     }
   }
 
@@ -456,7 +456,7 @@ public class EnemyKebab : UnitObject
     if ((double) a > (double) this.VisionRange)
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
       this.LookAtTarget();
   }
@@ -518,7 +518,7 @@ public class EnemyKebab : UnitObject
         this.Points.Add(new Vector3(raycastHit2D.centroid.x, raycastHit2D.centroid.y) + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset);
         this.PointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine((Vector3) raycastHit2D.centroid));
+      this.StartCoroutine(this.TeleportRoutine((Vector3) raycastHit2D.centroid));
     }
     else
     {
@@ -527,7 +527,7 @@ public class EnemyKebab : UnitObject
         this.EndPoints.Add(new Vector3(Position.x, Position.y));
         this.EndPointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine(Position));
+      this.StartCoroutine(this.TeleportRoutine(Position));
     }
   }
 
@@ -619,7 +619,7 @@ public class EnemyKebab : UnitObject
             break;
           case StateMachine.State.SignPostAttack:
             if ((UnityEngine.Object) enemyKebab.TargetObject == (UnityEngine.Object) null)
-              enemyKebab.StartCoroutine((IEnumerator) enemyKebab.WaitForTarget());
+              enemyKebab.StartCoroutine(enemyKebab.WaitForTarget());
             enemyKebab.state.Timer += Time.deltaTime * enemyKebab.Spine.timeScale;
             targetPos = Vector3.MoveTowards(enemyKebab.currentTargetReticule.transform.position, enemyKebab.TargetObject.transform.position, 5f * Time.deltaTime * enemyKebab.Spine.timeScale);
             enemyKebab.SetTargetReticulePosition(targetPos);
@@ -661,7 +661,7 @@ public class EnemyKebab : UnitObject
             }
             break;
           case StateMachine.State.RecoverFromAttack:
-            enemyKebab.StartCoroutine((IEnumerator) enemyKebab.EnableChargeDamageCollider(0.0f));
+            enemyKebab.StartCoroutine(enemyKebab.EnableChargeDamageCollider(0.0f));
             enemyKebab.isImmuneToKnockback = false;
             enemyKebab.ChargeAttackDelay = UnityEngine.Random.Range(enemyKebab.ChargeAttackDelayRandomRange.x, enemyKebab.ChargeAttackDelayRandomRange.y);
             enemyKebab.MaxChargeAttackDelay = UnityEngine.Random.Range(enemyKebab.MaxChargeAttackDelayRandomRange.x, enemyKebab.MaxChargeAttackDelayRandomRange.y);
@@ -677,7 +677,7 @@ public class EnemyKebab : UnitObject
             break;
           default:
             enemyKebab.TargetObject = (GameObject) null;
-            enemyKebab.StartCoroutine((IEnumerator) enemyKebab.WaitForTarget());
+            enemyKebab.StartCoroutine(enemyKebab.WaitForTarget());
             yield break;
         }
         targetPos = new Vector3();
@@ -685,7 +685,7 @@ public class EnemyKebab : UnitObject
       }
     }
     enemyKebab.TargetObject = (GameObject) null;
-    enemyKebab.StartCoroutine((IEnumerator) enemyKebab.WaitForTarget());
+    enemyKebab.StartCoroutine(enemyKebab.WaitForTarget());
   }
 
   public void ActivateTargetReticule(Vector3 targetPosition)
@@ -738,7 +738,7 @@ public class EnemyKebab : UnitObject
         {
           case StateMachine.State.Idle:
             enemyKebab.TargetObject = (GameObject) null;
-            enemyKebab.StartCoroutine((IEnumerator) enemyKebab.WaitForTarget());
+            enemyKebab.StartCoroutine(enemyKebab.WaitForTarget());
             yield break;
           case StateMachine.State.Moving:
             if ((bool) (UnityEngine.Object) enemyKebab.TargetObject)
@@ -762,7 +762,7 @@ public class EnemyKebab : UnitObject
               CameraManager.shakeCamera(0.4f, enemyKebab.state.LookAngle);
               enemyKebab.state.CURRENT_STATE = StateMachine.State.RecoverFromAttack;
               enemyKebab.Spine.AnimationState.SetAnimation(0, "attack-melee-impact", false);
-              enemyKebab.StartCoroutine((IEnumerator) enemyKebab.EnableSlashDamageCollider(0.0f));
+              enemyKebab.StartCoroutine(enemyKebab.EnableSlashDamageCollider(0.0f));
               if (!string.IsNullOrEmpty(enemyKebab.AttackVOX))
               {
                 AudioManager.Instance.PlayOneShot(enemyKebab.AttackVOX, enemyKebab.transform.position);
@@ -796,7 +796,7 @@ public class EnemyKebab : UnitObject
       }
     }
     enemyKebab.TargetObject = (GameObject) null;
-    enemyKebab.StartCoroutine((IEnumerator) enemyKebab.WaitForTarget());
+    enemyKebab.StartCoroutine(enemyKebab.WaitForTarget());
   }
 
   public void BiomeGenerator_OnBiomeChangeRoom()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_MarkOfYngya
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -70,7 +70,7 @@ public class Interaction_MarkOfYngya : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.ActivateYngyaMarkRoutine());
+    GameManager.GetInstance().StartCoroutine(this.ActivateYngyaMarkRoutine());
     PlayerReturnToBase.Disabled = true;
   }
 
@@ -95,7 +95,7 @@ public class Interaction_MarkOfYngya : Interaction
       interactionMarkOfYngya.EyeParticles.Play();
     PlayerFarming.Instance.simpleSpineAnimator.Animate("collect-ghosts", 0, false);
     PlayerFarming.Instance.simpleSpineAnimator.AddAnimate("collect-ghosts-loop", 0, true, 0.0f);
-    interactionMarkOfYngya.StartCoroutine((IEnumerator) interactionMarkOfYngya.ShakeCameraWithRampUp(0.7f));
+    interactionMarkOfYngya.StartCoroutine(interactionMarkOfYngya.ShakeCameraWithRampUp(0.7f));
     yield return (object) new WaitForSeconds(0.2f);
     if ((UnityEngine.Object) interactionMarkOfYngya.YngyaSilhouette != (UnityEngine.Object) null)
     {

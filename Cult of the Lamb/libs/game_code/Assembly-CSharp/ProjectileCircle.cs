@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ProjectileCircle
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using CotL.Projectiles;
@@ -58,7 +58,7 @@ public class ProjectileCircle : ProjectileCircleBase
       this.projectiles[index].Owner = this.projectile.Owner;
       degree += num;
     }
-    this.StartCoroutine((IEnumerator) this.EnableProjectiles(target, shootDelay, onShoot));
+    this.StartCoroutine(this.EnableProjectiles(target, shootDelay, onShoot));
   }
 
   public IEnumerator EnableProjectiles(GameObject target, float delay, System.Action onShoot)

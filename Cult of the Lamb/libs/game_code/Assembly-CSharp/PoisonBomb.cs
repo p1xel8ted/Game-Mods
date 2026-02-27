@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PoisonBomb
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -97,7 +97,7 @@ public class PoisonBomb : EnemyBomb
     }
     PlayerFarming component1 = (Object) this.GetOwner() != (Object) null ? this.GetOwner().GetComponent<PlayerFarming>() : (PlayerFarming) null;
     if ((Object) component1 != (Object) null && component1.currentCurse == EquipmentType.ProjectileAOE_ExplosiveImpact)
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.CreateExplosions(this.transform.position, Random.Range(3, 6), 1.5f));
+      GameManager.GetInstance().StartCoroutine(this.CreateExplosions(this.transform.position, Random.Range(3, 6), 1.5f));
     if ((double) this.impactDamageRadius <= 0.0)
       return;
     foreach (Component component2 in Physics2D.OverlapCircleAll((Vector2) this.transform.position, this.impactDamageRadius))
@@ -108,18 +108,18 @@ public class PoisonBomb : EnemyBomb
         if (component3.team == Health.Team.Team2 || component3.IsCharmedEnemy)
         {
           if ((Object) component1 != (Object) null && component1.currentCurse == EquipmentType.ProjectileAOE_ExplosiveImpact)
-            component3.DealDamage(0.0f, this.gameObject, this.transform.position);
+            component3.DealDamage(0.0f, this.gameObject, this.transform.position, dealDamageImmediately: true);
           else if ((double) this.impactDamage > 0.0)
-            component3.DealDamage(this.impactDamage, this.gameObject, this.transform.position);
+            component3.DealDamage(this.impactDamage, this.gameObject, this.transform.position, dealDamageImmediately: true);
           if ((Object) component1 != (Object) null && component1.currentCurse == EquipmentType.ProjectileAOE_Charm && (double) Random.value <= (double) EquipmentManager.GetCurseData(EquipmentType.ProjectileAOE_Charm).Chance)
             component3.AddCharm();
         }
         else if (component3.team == Health.Team.Neutral)
         {
           if ((Object) component1 != (Object) null && component1.currentCurse == EquipmentType.ProjectileAOE_ExplosiveImpact)
-            component3.DealDamage(0.0f, this.gameObject, this.transform.position);
+            component3.DealDamage(0.0f, this.gameObject, this.transform.position, dealDamageImmediately: true);
           else if ((double) this.impactDamage > 0.0)
-            component3.DealDamage(this.impactDamage, this.gameObject, this.transform.position);
+            component3.DealDamage(this.impactDamage, this.gameObject, this.transform.position, dealDamageImmediately: true);
         }
       }
     }

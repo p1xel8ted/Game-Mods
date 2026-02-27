@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_Winter
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -124,7 +124,7 @@ public class HUD_Winter : MonoBehaviour
     SeasonsManager.OnSeasonChanged -= new SeasonsManager.SeasonEvent(this.SeasonsManager_OnSeasonChanged);
   }
 
-  public void Reveal() => this.StartCoroutine((IEnumerator) this.RevealIE());
+  public void Reveal() => this.StartCoroutine(this.RevealIE());
 
   public IEnumerator RevealIE()
   {
@@ -409,6 +409,8 @@ public class HUD_Winter : MonoBehaviour
 
   public void Update()
   {
+    if (MonoSingleton<UIManager>.Instance.IsPaused)
+      return;
     if (DataManager.Instance.HasWeatherVaneUI)
     {
       this.UpdateRing();

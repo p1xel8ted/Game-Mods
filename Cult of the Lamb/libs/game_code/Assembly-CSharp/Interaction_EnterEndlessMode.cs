@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_EnterEndlessMode
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -70,10 +70,7 @@ public class Interaction_EnterEndlessMode : Interaction
     TimeManager.OnNewDayStarted -= new System.Action(this.CheckStateDelayed);
   }
 
-  public void CheckStateDelayed()
-  {
-    this.StartCoroutine((IEnumerator) this.CheckStateDelayedRoutine());
-  }
+  public void CheckStateDelayed() => this.StartCoroutine(this.CheckStateDelayedRoutine());
 
   public IEnumerator CheckStateDelayedRoutine()
   {
@@ -152,7 +149,7 @@ public class Interaction_EnterEndlessMode : Interaction
       }
       else
       {
-        this.StartCoroutine((IEnumerator) this.ReopenPurgatoryRoutine());
+        this.StartCoroutine(this.ReopenPurgatoryRoutine());
         this.playerFarming.indicator.HideTopInfo();
       }
     }
@@ -161,7 +158,7 @@ public class Interaction_EnterEndlessMode : Interaction
       if (DataManager.Instance.EndlessModeOnCooldown)
         return;
       this._Interactable = false;
-      this.StartCoroutine((IEnumerator) this.EnterEndlessModeIE());
+      this.StartCoroutine(this.EnterEndlessModeIE());
     }
   }
 
@@ -252,7 +249,7 @@ public class Interaction_EnterEndlessMode : Interaction
       this._Interactable = true;
       if (enteredEndlessMode)
         return;
-      this.StartCoroutine((IEnumerator) this.ExitEndlessModeIE());
+      this.StartCoroutine(this.ExitEndlessModeIE());
     });
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIJellyFishBank
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -115,7 +115,7 @@ public class UIJellyFishBank : BaseMonoBehaviour
     this.NewInvestmentTxt.text = this.InvestmentAdd.ToString();
     this.resourceIndicator.GetComponent<CanvasGroup>().alpha = 1f;
     this.resourceIndicator.Init(InventoryItem.ITEM_TYPE.BLACK_GOLD, Inventory.GetItemQuantity(20));
-    this.StartCoroutine((IEnumerator) this.WithdrawlRoutine(true));
+    this.StartCoroutine(this.WithdrawlRoutine(true));
   }
 
   public IEnumerator WithdrawlRoutine(bool Withdrawl)
@@ -277,7 +277,7 @@ public class UIJellyFishBank : BaseMonoBehaviour
           yield return (object) new WaitForSeconds(0.3f);
           uiJellyFishBank.confirmWithdrawl = false;
           uiJellyFishBank.MenuMoneyInvestmentAmount.alpha = 1f;
-          uiJellyFishBank.StartCoroutine((IEnumerator) uiJellyFishBank.ExitMenu());
+          uiJellyFishBank.StartCoroutine(uiJellyFishBank.ExitMenu());
           yield break;
         }
         AudioManager.Instance.PlayOneShot("event:/ui/negative_feedback", uiJellyFishBank.gameObject);
@@ -286,7 +286,7 @@ public class UIJellyFishBank : BaseMonoBehaviour
       }
       yield return (object) null;
     }
-    uiJellyFishBank.StartCoroutine((IEnumerator) uiJellyFishBank.ExitMenu());
+    uiJellyFishBank.StartCoroutine(uiJellyFishBank.ExitMenu());
   }
 
   public void Deposit()
@@ -299,7 +299,7 @@ public class UIJellyFishBank : BaseMonoBehaviour
     this.NewInvestmentTxt.text = this.InvestmentAdd.ToString();
     this.resourceIndicator.GetComponent<CanvasGroup>().alpha = 1f;
     this.resourceIndicator.Init(InventoryItem.ITEM_TYPE.BLACK_GOLD, Inventory.GetItemQuantity(20));
-    this.StartCoroutine((IEnumerator) this.WithdrawlRoutine(false));
+    this.StartCoroutine(this.WithdrawlRoutine(false));
   }
 
   public IEnumerator ExitMenu()
@@ -339,8 +339,8 @@ public class UIJellyFishBank : BaseMonoBehaviour
     this.MenuMoney.alpha = 1f;
     this.MenuMoney.interactable = true;
     this.MenuConfirm.interactable = false;
-    this.StopCoroutine((IEnumerator) this.WithdrawlRoutine(false));
-    this.StartCoroutine((IEnumerator) this.WithdrawlRoutine(this.withdrawl));
+    this.StopCoroutine(this.WithdrawlRoutine(false));
+    this.StartCoroutine(this.WithdrawlRoutine(this.withdrawl));
   }
 
   public void SetCofirmationText(bool _Withdrawl)

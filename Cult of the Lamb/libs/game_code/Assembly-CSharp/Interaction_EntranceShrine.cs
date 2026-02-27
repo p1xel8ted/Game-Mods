@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_EntranceShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -35,7 +35,7 @@ public class Interaction_EntranceShrine : Interaction
   {
     if (DungeonSandboxManager.Active)
     {
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.TimedDelay(0.5f, (System.Action) (() => RoomLockController.RoomCompleted())));
+      GameManager.GetInstance().StartCoroutine(this.TimedDelay(0.5f, (System.Action) (() => RoomLockController.RoomCompleted())));
       UnityEngine.Object.Destroy((UnityEngine.Object) this.XPBar.gameObject);
       UnityEngine.Object.Destroy((UnityEngine.Object) this);
     }
@@ -75,7 +75,7 @@ public class Interaction_EntranceShrine : Interaction
   public override void OnEnable()
   {
     base.OnEnable();
-    this.StartCoroutine((IEnumerator) this.ReloadStatue());
+    this.StartCoroutine(this.ReloadStatue());
   }
 
   public IEnumerator ReloadStatue()

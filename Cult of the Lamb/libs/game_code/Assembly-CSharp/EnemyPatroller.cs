@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyPatroller
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -118,10 +118,10 @@ public class EnemyPatroller : UnitObject
         AudioManager.Instance.PlayOneShot("event:/enemy/vocals/worm/warning", enemyPatroller1.transform.position);
       enemyPatroller1.warningIcon.AnimationState.SetAnimation(0, "warn-start", false);
       enemyPatroller1.warningIcon.AnimationState.AddAnimation(0, "warn-stop", false, 2f);
-      enemyPatroller1.StartCoroutine((IEnumerator) enemyPatroller1.DelayDiveRoutine());
+      enemyPatroller1.StartCoroutine(enemyPatroller1.DelayDiveRoutine());
     }
     else
-      enemyPatroller1.StartCoroutine((IEnumerator) enemyPatroller1.DiveMoveRoutine());
+      enemyPatroller1.StartCoroutine(enemyPatroller1.DiveMoveRoutine());
     enemyPatroller1.NoticedPlayer = true;
   }
 
@@ -136,13 +136,13 @@ public class EnemyPatroller : UnitObject
     {
       this.StopAllCoroutines();
       this.DisableForces = false;
-      this.StartCoroutine((IEnumerator) this.DelayDiveRoutine());
+      this.StartCoroutine(this.DelayDiveRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && !this.ApplyingForce)
     {
       if (!this.JumpOnHit)
         this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     }
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
@@ -162,7 +162,7 @@ public class EnemyPatroller : UnitObject
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyPatroller.Spine.timeScale) < 0.30000001192092896)
       yield return (object) null;
-    enemyPatroller.StartCoroutine((IEnumerator) enemyPatroller.DiveMoveRoutine());
+    enemyPatroller.StartCoroutine(enemyPatroller.DiveMoveRoutine());
   }
 
   public IEnumerator ApplyForceRoutine(GameObject Attacker)
@@ -186,7 +186,7 @@ public class EnemyPatroller : UnitObject
     {
       enemyPatroller.ApplyingForce = false;
       enemyPatroller.Spine.AnimationState.SetAnimation(0, "animation", true);
-      enemyPatroller.StartCoroutine((IEnumerator) enemyPatroller.ActiveRoutine());
+      enemyPatroller.StartCoroutine(enemyPatroller.ActiveRoutine());
     }
   }
 
@@ -328,7 +328,7 @@ public class EnemyPatroller : UnitObject
     }
     enemyPatroller.DiveDelayTimer = enemyPatroller.DiveDelay;
     enemyPatroller.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemyPatroller.StartCoroutine((IEnumerator) enemyPatroller.ActiveRoutine());
+    enemyPatroller.StartCoroutine(enemyPatroller.ActiveRoutine());
   }
 
   public void GetTailPieces()
@@ -351,7 +351,7 @@ public class EnemyPatroller : UnitObject
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDisable()

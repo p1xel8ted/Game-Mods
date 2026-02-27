@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJellyCharger
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -179,7 +179,7 @@ public class EnemyJellyCharger : EnemyExploder
     {
       AudioManager.Instance.PlayOneShot("event:/enemy/chaser/chaser_charge", this.gameObject);
       AudioManager.Instance.PlayOneShot("event:/enemy/vocals/jellyfish/warning", this.gameObject);
-      this.StartCoroutine((IEnumerator) this.ShowWarning());
+      this.StartCoroutine(this.ShowWarning());
     }
     this.warmingTimer = 0.0f;
     this.warming = true;
@@ -210,7 +210,7 @@ public class EnemyJellyCharger : EnemyExploder
     this.chargeAttacking = true;
     this.UsePathing = false;
     this.state.CURRENT_STATE = StateMachine.State.Charging;
-    this.StartCoroutine((IEnumerator) this.FlashDelay());
+    this.StartCoroutine(this.FlashDelay());
     string animationName = this.chargeAttackAnimation;
     if ((double) angle <= 135.0)
     {

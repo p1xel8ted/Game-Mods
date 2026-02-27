@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_ExhumeSpiritShrine
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -66,7 +66,7 @@ public class Interaction_ExhumeSpiritShrine : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine());
+    this.StartCoroutine(this.SacrificeFollowerRoutine());
   }
 
   public IEnumerator SacrificeFollowerRoutine()
@@ -95,7 +95,7 @@ public class Interaction_ExhumeSpiritShrine : Interaction
     followerSelectInstance.OnFollowersChosen += (System.Action<List<FollowerInfo>>) (followerInfos =>
     {
       AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/select_follower");
-      this.exhumeRoutine = this.StartCoroutine((IEnumerator) this.ExhumeSpiritIE(followerInfos));
+      this.exhumeRoutine = this.StartCoroutine(this.ExhumeSpiritIE(followerInfos));
     });
     UIExhumeSpiritsMenuController spiritsMenuController1 = followerSelectInstance;
     spiritsMenuController1.OnHidden = spiritsMenuController1.OnHidden + (System.Action) (() => followerSelectInstance = (UIExhumeSpiritsMenuController) null);
@@ -113,7 +113,7 @@ public class Interaction_ExhumeSpiritShrine : Interaction
     exhumeSpiritShrine.targetFollowers.Clear();
     exhumeSpiritShrine.targetFollowers.AddRange((IEnumerable<FollowerInfo>) infos);
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = true;
-    exhumeSpiritShrine.skipRoutine = exhumeSpiritShrine.StartCoroutine((IEnumerator) exhumeSpiritShrine.WaitForSkip());
+    exhumeSpiritShrine.skipRoutine = exhumeSpiritShrine.StartCoroutine(exhumeSpiritShrine.WaitForSkip());
     yield return (object) new WaitForSeconds(0.5f);
     List<Structures_Crypt> crypts = StructureManager.GetAllStructuresOfType<Structures_Crypt>();
     List<Structures_Morgue> morgues = StructureManager.GetAllStructuresOfType<Structures_Morgue>();
@@ -147,7 +147,7 @@ public class Interaction_ExhumeSpiritShrine : Interaction
       exhumeSpiritShrine.spine.AnimationState.SetAnimation(0, "fox-sacrifice-shrine", false);
       yield return (object) new WaitForSeconds(2.56f);
       exhumeSpiritShrine.spine.gameObject.SetActive(false);
-      yield return (object) exhumeSpiritShrine.StartCoroutine((IEnumerator) exhumeSpiritShrine.GiveLootIE(false));
+      yield return (object) exhumeSpiritShrine.StartCoroutine(exhumeSpiritShrine.GiveLootIE(false));
       exhumeSpiritShrine.targetFollowers.Remove(info);
       exhumeSpiritShrine.redEyes.SetActive(false);
     }
@@ -166,29 +166,27 @@ public class Interaction_ExhumeSpiritShrine : Interaction
     {
       if ((double) UnityEngine.Random.value > 0.20000000298023224)
       {
-        InventoryItem inventoryItem = exhumeSpiritShrine.commonLoot[UnityEngine.Random.Range(0, exhumeSpiritShrine.commonLoot.Count)];
-        for (int index = 0; index < inventoryItem.quantity; ++index)
-          InventoryItem.Spawn((InventoryItem.ITEM_TYPE) inventoryItem.type, 1, exhumeSpiritShrine.lootPosition.position);
+        InventoryItem loot = exhumeSpiritShrine.commonLoot[UnityEngine.Random.Range(0, exhumeSpiritShrine.commonLoot.Count)];
+        exhumeSpiritShrine.SpawnLoot(loot);
       }
       else
       {
-        InventoryItem inventoryItem;
+        InventoryItem loot;
         InventoryItem.ITEM_TYPE type;
         do
         {
-          inventoryItem = exhumeSpiritShrine.rareLoot[UnityEngine.Random.Range(0, exhumeSpiritShrine.rareLoot.Count)];
-          type = (InventoryItem.ITEM_TYPE) inventoryItem.type;
+          loot = exhumeSpiritShrine.rareLoot[UnityEngine.Random.Range(0, exhumeSpiritShrine.rareLoot.Count)];
+          type = (InventoryItem.ITEM_TYPE) loot.type;
         }
         while (type == InventoryItem.ITEM_TYPE.GOD_TEAR && !DataManager.Instance.OnboardedGodTear || type == InventoryItem.ITEM_TYPE.PLEASURE_POINT && !DataManager.Instance.PleasureEnabled);
         if (!DataManager.Instance.OnboardedRefinery)
         {
-          inventoryItem.type = 44;
-          inventoryItem.quantity = 1;
+          loot.type = 44;
+          loot.quantity = 1;
         }
         if (type != InventoryItem.ITEM_TYPE.GOD_TEAR && type != InventoryItem.ITEM_TYPE.PLEASURE_POINT)
         {
-          for (int index = 0; index < inventoryItem.quantity; ++index)
-            InventoryItem.Spawn((InventoryItem.ITEM_TYPE) inventoryItem.type, 1, exhumeSpiritShrine.lootPosition.position);
+          exhumeSpiritShrine.SpawnLoot(loot);
         }
         else
         {
@@ -198,16 +196,26 @@ public class Interaction_ExhumeSpiritShrine : Interaction
           switch (type)
           {
             case InventoryItem.ITEM_TYPE.GOD_TEAR:
-              yield return (object) exhumeSpiritShrine.StartCoroutine((IEnumerator) exhumeSpiritShrine.GiveGodTearIE());
+              yield return (object) exhumeSpiritShrine.StartCoroutine(exhumeSpiritShrine.GiveGodTearIE());
               break;
             case InventoryItem.ITEM_TYPE.PLEASURE_POINT:
-              yield return (object) exhumeSpiritShrine.StartCoroutine((IEnumerator) exhumeSpiritShrine.GiveSinIE());
+              yield return (object) exhumeSpiritShrine.StartCoroutine(exhumeSpiritShrine.GiveSinIE());
               break;
           }
           if (!wasSkipped)
-            exhumeSpiritShrine.skipRoutine = exhumeSpiritShrine.StartCoroutine((IEnumerator) exhumeSpiritShrine.WaitForSkip());
+            exhumeSpiritShrine.skipRoutine = exhumeSpiritShrine.StartCoroutine(exhumeSpiritShrine.WaitForSkip());
         }
       }
+    }
+  }
+
+  public void SpawnLoot(InventoryItem loot)
+  {
+    for (int index = 0; index < loot.quantity; ++index)
+    {
+      PickUp pickUp = InventoryItem.Spawn((InventoryItem.ITEM_TYPE) loot.type, 1, this.lootPosition.position);
+      if ((UnityEngine.Object) pickUp != (UnityEngine.Object) null && !pickUp.MagnetToPlayer)
+        pickUp.DisableSeperation = true;
     }
   }
 
@@ -241,7 +249,7 @@ public class Interaction_ExhumeSpiritShrine : Interaction
         if (morgues[index].Data.MultipleFollowerIDs.Contains(exhumeSpiritShrine.targetFollowers[i].ID))
           morgues[index].Data.MultipleFollowerIDs.Remove(exhumeSpiritShrine.targetFollowers[i].ID);
       }
-      yield return (object) exhumeSpiritShrine.StartCoroutine((IEnumerator) exhumeSpiritShrine.GiveLootIE(true));
+      yield return (object) exhumeSpiritShrine.StartCoroutine(exhumeSpiritShrine.GiveLootIE(true));
     }
     GameManager.GetInstance().OnConversationEnd(false);
     MonoSingleton<UIManager>.Instance.ForceBlockMenus = false;

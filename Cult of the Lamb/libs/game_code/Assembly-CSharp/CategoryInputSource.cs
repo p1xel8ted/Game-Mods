@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CategoryInputSource
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired;
@@ -134,7 +134,7 @@ public abstract class CategoryInputSource : InputSource
 
   public IList<ControllerMap> GetControllerMaps(Controller controller)
   {
-    return this._rewiredPlayer == null ? (IList<ControllerMap>) null : (IList<ControllerMap>) this._rewiredPlayer.controllers.maps.GetMaps(controller);
+    return this._rewiredPlayer == null ? (IList<ControllerMap>) null : this._rewiredPlayer.controllers.maps.GetMaps(controller);
   }
 
   public void ApplyBindings()
@@ -176,7 +176,7 @@ public abstract class CategoryInputSource : InputSource
       PlayerFarming playerFarming = MonoSingleton<UINavigatorNew>.Instance.AllowInputOnlyFromPlayer;
       foreach (PlayerFarming player in PlayerFarming.players)
       {
-        if (player.rewiredPlayer != null && ((IEnumerable<Controller>) player.rewiredPlayer.controllers.Controllers).Contains<Controller>(controller) && !player.isLamb)
+        if (player.rewiredPlayer != null && player.rewiredPlayer.controllers.Controllers.Contains<Controller>(controller) && !player.isLamb)
         {
           Debug.Log((object) "LoadAndBind - Controller player 2");
           playerFarming = player;

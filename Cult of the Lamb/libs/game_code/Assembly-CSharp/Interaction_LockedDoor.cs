@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_LockedDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -57,7 +57,7 @@ public class Interaction_LockedDoor : Interaction
     CameraManager.shakeCamera(0.3f, Utils.GetAngle(this.transform.position, state.transform.position));
     this.StopAllCoroutines();
     if (!BiomeGenerator.Instance.HasKey)
-      this.StartCoroutine((IEnumerator) this.DoShake());
+      this.StartCoroutine(this.DoShake());
     else
       Interaction_LockedDoor.OpenAll();
   }
@@ -72,7 +72,7 @@ public class Interaction_LockedDoor : Interaction
   {
     this.Activated = true;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.OpenRoutine());
+    this.StartCoroutine(this.OpenRoutine());
   }
 
   public IEnumerator OpenRoutine()

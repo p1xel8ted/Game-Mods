@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_FirstFreeFollower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -219,7 +219,7 @@ public class Interaction_FirstFreeFollower : Interaction_FollowerSpawn
       MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() => this.\u003C\u003En__0(state))), false);
     }
     else
-      this.StartCoroutine((IEnumerator) this.Delay((System.Action) (() => this.\u003C\u003En__0(state))));
+      this.StartCoroutine(this.Delay((System.Action) (() => this.\u003C\u003En__0(state))));
   }
 
   public IEnumerator Delay(System.Action callback)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_SacrificeFollowerToGold
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -110,7 +110,7 @@ public class Interaction_SacrificeFollowerToGold : Interaction
       Objectives_LegendarySwordReturn objective = new Objectives_LegendarySwordReturn("Objectives/GroupTitles/Quest", FollowerInfo.GetInfoByID(100000).Name);
       objective.FailLocked = true;
       ObjectiveManager.Add((ObjectivesData) objective, true, true);
-      this.StartCoroutine((IEnumerator) this.SpawnChosenChild());
+      this.StartCoroutine(this.SpawnChosenChild());
     }
     else if (this.canBringBackChild)
     {
@@ -120,7 +120,7 @@ public class Interaction_SacrificeFollowerToGold : Interaction
     else if (FollowerBrain.AllBrains.Count > 0)
     {
       base.OnInteract(state);
-      this.playerFarming.GoToAndStop(this.transform.position + new Vector3(-1f, -2.5f), this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine())));
+      this.playerFarming.GoToAndStop(this.transform.position + new Vector3(-1f, -2.5f), this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.SacrificeFollowerRoutine())));
     }
     else
       this.playerFarming.indicator.PlayShake();
@@ -142,7 +142,7 @@ public class Interaction_SacrificeFollowerToGold : Interaction
     selectMenuController1.OnFollowerSelected = selectMenuController1.OnFollowerSelected + (System.Action<FollowerInfo>) (followerInfo =>
     {
       AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/select_follower", this.playerFarming.gameObject);
-      this.StartCoroutine((IEnumerator) this.SpawnFollower(followerInfo.ID));
+      this.StartCoroutine(this.SpawnFollower(followerInfo.ID));
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnHidden = selectMenuController2.OnHidden + (System.Action) (() => followerSelectInstance = (UIFollowerSelectMenuController) null);
@@ -216,7 +216,7 @@ public class Interaction_SacrificeFollowerToGold : Interaction
       this.HasChanged = true;
       ++DataManager.Instance.MidasFollowerStatueCount;
       this.enabled = true;
-      this.StartCoroutine((IEnumerator) this.GiveKeyPieceRoutine());
+      this.StartCoroutine(this.GiveKeyPieceRoutine());
     }));
     sacrificeFollowerToGold.enabled = false;
     yield return (object) new WaitForEndOfFrame();
@@ -305,7 +305,7 @@ public class Interaction_SacrificeFollowerToGold : Interaction
     }
     MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) null), false, SetPlayerIdleOnComplete: false);
     DataManager.Instance.ChosenChildLeftInTheMidasCave = false;
-    this.StartCoroutine((IEnumerator) this.GiveLegendaryFragmentSequence());
+    this.StartCoroutine(this.GiveLegendaryFragmentSequence());
   }
 
   public IEnumerator GiveLegendaryFragmentSequence()
@@ -327,7 +327,7 @@ public class Interaction_SacrificeFollowerToGold : Interaction
     PlayerFarming.Instance.state.CURRENT_STATE = StateMachine.State.InActive;
     yield return (object) new WaitForSeconds(1f);
     ObjectiveManager.CompleteLegendarySwordReturnObjective();
-    sacrificeFollowerToGold.StartCoroutine((IEnumerator) sacrificeFollowerToGold.TeleportOutSequence());
+    sacrificeFollowerToGold.StartCoroutine(sacrificeFollowerToGold.TeleportOutSequence());
   }
 
   public IEnumerator TeleportOutSequence()
@@ -373,6 +373,6 @@ public class Interaction_SacrificeFollowerToGold : Interaction
   [CompilerGenerated]
   public void \u003COnInteract\u003Eb__17_0()
   {
-    this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine());
+    this.StartCoroutine(this.SacrificeFollowerRoutine());
   }
 }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyStealth
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -89,7 +89,7 @@ public class EnemyStealth : BaseMonoBehaviour
       case EnemyStealth.Activity.Patrol:
         if (this.cPatrolRoutine != null)
           this.StopCoroutine(this.cPatrolRoutine);
-        this.cPatrolRoutine = this.StartCoroutine((IEnumerator) this.PatrolRoutine());
+        this.cPatrolRoutine = this.StartCoroutine(this.PatrolRoutine());
         break;
       case EnemyStealth.Activity.Sleep:
         this.Spine.AnimationState.SetAnimation(0, this.SleepingAnimation, true);
@@ -108,9 +108,9 @@ public class EnemyStealth : BaseMonoBehaviour
       return;
     this.ClearPatrol();
     if (Health.team2.Count > 1)
-      this.StartCoroutine((IEnumerator) this.RaiseAlarmRoutine(this.EnemyHealth));
+      this.StartCoroutine(this.RaiseAlarmRoutine(this.EnemyHealth));
     else
-      this.StartCoroutine((IEnumerator) this.BeWarnedRoutine(this.EnemyHealth, 0.0f));
+      this.StartCoroutine(this.BeWarnedRoutine(this.EnemyHealth, 0.0f));
   }
 
   public void OnEnable() => EnemyStealth.EnemyStealths.Add(this);
@@ -257,7 +257,7 @@ public class EnemyStealth : BaseMonoBehaviour
 
   public void BeWarned(Health TargetObject, float Delay)
   {
-    this.StartCoroutine((IEnumerator) this.BeWarnedRoutine(TargetObject, Delay));
+    this.StartCoroutine(this.BeWarnedRoutine(TargetObject, Delay));
   }
 
   public IEnumerator BeWarnedRoutine(Health TargetObject, float Delay)

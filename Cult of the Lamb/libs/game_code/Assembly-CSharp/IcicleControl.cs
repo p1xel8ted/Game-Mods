@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: IcicleControl
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -70,7 +70,7 @@ public class IcicleControl : MonoBehaviour
     this.IcicleTransform.gameObject.SetActive(true);
     this.IndicatorIcon.gameObject.SetActive(true);
     this.IcicleTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.startHeight);
-    this.StartCoroutine((IEnumerator) this.DoDrop(delay, fallSpeed));
+    this.StartCoroutine(this.DoDrop(delay, fallSpeed));
   }
 
   public IEnumerator DoDrop(float delay, float fallSpeed)

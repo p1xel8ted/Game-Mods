@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyDogMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -222,7 +222,7 @@ public class EnemyDogMiniboss : UnitObject
     {
       if (this.currentRoutine != null)
         this.StopCoroutine(this.currentRoutine);
-      this.StartCoroutine((IEnumerator) this.RunBehaviour());
+      this.StartCoroutine(this.RunBehaviour());
     }
     if ((UnityEngine.Object) this.damageColliderEvents != (UnityEngine.Object) null)
     {
@@ -275,13 +275,13 @@ public class EnemyDogMiniboss : UnitObject
         num += 0.25f;
       enemyDogMiniboss.ClearPaths();
       if ((double) num < 0.25)
-        yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoSpawnEnemies(EnemyDogMiniboss.SpawnableType.Burrow, EnemyDogMiniboss.SpawnableType.Charger, EnemyDogMiniboss.SpawnableType.DiveBomb));
+        yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoSpawnEnemies(EnemyDogMiniboss.SpawnableType.Burrow, EnemyDogMiniboss.SpawnableType.Charger, EnemyDogMiniboss.SpawnableType.DiveBomb));
       else if ((double) num < 0.5)
-        yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoDiveBombAttack(UnityEngine.Random.Range(3, 6)));
+        yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoDiveBombAttack(UnityEngine.Random.Range(3, 6)));
       else if ((double) num < 0.75)
-        yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoVomitAttack());
+        yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoVomitAttack());
       else
-        yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoBurrowAttack());
+        yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoBurrowAttack());
       yield return (object) new WaitForSeconds(1f);
       float timeBetweenAttacks = UnityEngine.Random.Range(enemyDogMiniboss.delaysBetweenAttacks.x, enemyDogMiniboss.delaysBetweenAttacks.y);
       float time = 0.0f;
@@ -308,10 +308,10 @@ public class EnemyDogMiniboss : UnitObject
 
   public void SpawnEnemies()
   {
-    this.StartCoroutine((IEnumerator) this.DoSpawnEnemies(EnemyDogMiniboss.SpawnableType.Burrow, EnemyDogMiniboss.SpawnableType.Charger, EnemyDogMiniboss.SpawnableType.DiveBomb));
+    this.StartCoroutine(this.DoSpawnEnemies(EnemyDogMiniboss.SpawnableType.Burrow, EnemyDogMiniboss.SpawnableType.Charger, EnemyDogMiniboss.SpawnableType.DiveBomb));
   }
 
-  public void BurrowAttack() => this.StartCoroutine((IEnumerator) this.DoBurrowAttack());
+  public void BurrowAttack() => this.StartCoroutine(this.DoBurrowAttack());
 
   public IEnumerator DoChargeAttack(int totalAttacks = 1)
   {
@@ -322,20 +322,20 @@ public class EnemyDogMiniboss : UnitObject
     {
       ++attackCount;
       enemyDogMiniboss.LookAtClosestPlayer();
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoChargeAttackSignPost());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoChargeAttackSignPost());
       enemyDogMiniboss.LookAtClosestPlayer();
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoChargeAttackMovement());
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoChargeAttackWallCollision());
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoChargeAttackReposition());
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoChargeAttackCooldown());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoChargeAttackMovement());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoChargeAttackWallCollision());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoChargeAttackReposition());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoChargeAttackCooldown());
     }
   }
 
   public IEnumerator DoVomitAttack()
   {
     EnemyDogMiniboss enemyDogMiniboss = this;
-    yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoVomitAnticipation());
-    yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoVomitBombs());
+    yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoVomitAnticipation());
+    yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoVomitBombs());
     yield return (object) new WaitForSeconds(enemyDogMiniboss.VomitAttackCooldown);
   }
 
@@ -587,7 +587,7 @@ public class EnemyDogMiniboss : UnitObject
     }
   }
 
-  public void BombAttack() => this.StartCoroutine((IEnumerator) this.DoVomitAttack());
+  public void BombAttack() => this.StartCoroutine(this.DoVomitAttack());
 
   public IEnumerator DoDiveBombAttack(int totalAttacks)
   {
@@ -595,9 +595,9 @@ public class EnemyDogMiniboss : UnitObject
     for (int i = 0; i < totalAttacks; ++i)
     {
       enemyDogMiniboss.inFinalAttack = i >= totalAttacks - 1;
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoSignpostDiveBombAttack());
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoDiveBombMovement());
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoDiveBombLanding());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoSignpostDiveBombAttack());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoDiveBombMovement());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoDiveBombLanding());
     }
     enemyDogMiniboss.inFinalAttack = false;
   }
@@ -669,7 +669,7 @@ public class EnemyDogMiniboss : UnitObject
     CameraManager.instance.ShakeCameraForDuration(0.4f, 0.5f, 0.3f);
     if ((UnityEngine.Object) enemyDogMiniboss.currentSlamIndicator != (UnityEngine.Object) null)
       ObjectPool.Recycle(enemyDogMiniboss.currentSlamIndicator);
-    enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.TurnOnDamageColliderForDuration(enemyDogMiniboss.diveBombColliderDuration));
+    enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.TurnOnDamageColliderForDuration(enemyDogMiniboss.diveBombColliderDuration));
     BiomeConstants.Instance.EmitSmokeExplosionVFX(enemyDogMiniboss.transform.position + Vector3.back * 0.5f);
     MMVibrate.Haptic(MMVibrate.HapticTypes.HeavyImpact);
     if ((bool) (UnityEngine.Object) enemyDogMiniboss.DiveBombImpactParticles)
@@ -701,10 +701,10 @@ public class EnemyDogMiniboss : UnitObject
   {
     EnemyDogMiniboss enemyDogMiniboss = this;
     if (enemyDogMiniboss.state.CURRENT_STATE != StateMachine.State.Burrowing)
-      yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoBurrowDiveIntoGround());
-    yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoBurrowChase());
-    yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoBurrowPauseBeforeEmerge());
-    yield return (object) enemyDogMiniboss.StartCoroutine((IEnumerator) enemyDogMiniboss.DoBurrowEmergeAttack());
+      yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoBurrowDiveIntoGround());
+    yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoBurrowChase());
+    yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoBurrowPauseBeforeEmerge());
+    yield return (object) enemyDogMiniboss.StartCoroutine(enemyDogMiniboss.DoBurrowEmergeAttack());
   }
 
   public IEnumerator DoBurrowDiveIntoGround()
@@ -960,10 +960,7 @@ public class EnemyDogMiniboss : UnitObject
     ObjectPool.Recycle(this.currentSlamIndicator);
   }
 
-  public void DiveBombAttack()
-  {
-    this.StartCoroutine((IEnumerator) this.DoDiveBombAttack(UnityEngine.Random.Range(3, 6)));
-  }
+  public void DiveBombAttack() => this.StartCoroutine(this.DoDiveBombAttack(UnityEngine.Random.Range(3, 6)));
 
   public void DoVomitShootVolley()
   {
@@ -1037,13 +1034,13 @@ public class EnemyDogMiniboss : UnitObject
       if ((UnityEngine.Object) this.spawnedEnemies[index] != (UnityEngine.Object) null)
       {
         this.spawnedEnemies[index].health.enabled = true;
-        this.spawnedEnemies[index].health.DealDamage(this.spawnedEnemies[index].health.totalHP, this.gameObject, this.spawnedEnemies[index].transform.position, AttackType: Health.AttackTypes.Heavy);
+        this.spawnedEnemies[index].health.DealDamage(this.spawnedEnemies[index].health.totalHP, this.gameObject, this.spawnedEnemies[index].transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
     this.StopEventInstances();
     if (this.health.DestroyOnDeath)
       return;
-    this.StartCoroutine((IEnumerator) this.DelayedDestroy());
+    this.StartCoroutine(this.DelayedDestroy());
     this.gameObject.SetActive(false);
   }
 

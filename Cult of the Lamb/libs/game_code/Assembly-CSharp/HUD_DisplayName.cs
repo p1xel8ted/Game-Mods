@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_DisplayName
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using BlendModes;
@@ -142,7 +142,7 @@ public class HUD_DisplayName : BaseMonoBehaviour
   {
     if ((UnityEngine.Object) HUD_DisplayName.Instance == (UnityEngine.Object) null)
       HUD_DisplayName.Instance = UnityEngine.Object.FindObjectOfType<HUD_DisplayName>();
-    HUD_DisplayName.Instance.StartCoroutine((IEnumerator) HUD_DisplayName.Instance.YieldForText((System.Action) (() =>
+    HUD_DisplayName.Instance.StartCoroutine(HUD_DisplayName.Instance.YieldForText((System.Action) (() =>
     {
       TextMeshProUGUI textLanguage = HUD_DisplayName.Instance.GetTextLanguage();
       if ((UnityEngine.Object) textLanguage == (UnityEngine.Object) null)
@@ -244,7 +244,7 @@ public class HUD_DisplayName : BaseMonoBehaviour
 
   public void Show(string Name, float Delay, HUD_DisplayName.Positions Position = HUD_DisplayName.Positions.BottomRight, bool waitForUI = false)
   {
-    HUD_DisplayName.Instance.StartCoroutine((IEnumerator) HUD_DisplayName.Instance.YieldForText((System.Action) (() =>
+    HUD_DisplayName.Instance.StartCoroutine(HUD_DisplayName.Instance.YieldForText((System.Action) (() =>
     {
       TextMeshProUGUI textLanguage = this.GetTextLanguage();
       if ((UnityEngine.Object) textLanguage == (UnityEngine.Object) null)
@@ -264,7 +264,7 @@ public class HUD_DisplayName : BaseMonoBehaviour
       }
       textLanguage.text = "<uppercase>" + Name;
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.ShowText(Delay, waitForUI));
+      this.StartCoroutine(this.ShowText(Delay, waitForUI));
     })));
   }
 

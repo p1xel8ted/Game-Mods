@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapGrabber
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -39,12 +39,12 @@ public class TrapGrabber : BaseMonoBehaviour
         switch (this._CurrentState)
         {
           case TrapGrabber.State.Idle:
-            this.ReturnToCenter = this.StartCoroutine((IEnumerator) this.DoReturnToCenter());
+            this.ReturnToCenter = this.StartCoroutine(this.DoReturnToCenter());
             this.Spine.AnimationState.SetAnimation(0, "hidden", true);
             break;
           case TrapGrabber.State.Grabbing:
             if (this.ReturnToCenter != null)
-              this.StopCoroutine((IEnumerator) this.DoReturnToCenter());
+              this.StopCoroutine(this.DoReturnToCenter());
             this.Spine.AnimationState.SetAnimation(0, "grab", false);
             this.Spine.AnimationState.AddAnimation(0, "grabbed", true, 0.0f);
             this.playerFarming.simpleSpineAnimator.Animate("grabber-grab", 0, false);
@@ -117,8 +117,8 @@ public class TrapGrabber : BaseMonoBehaviour
     trapGrabber.EnemyHealth.transform.parent = trapGrabber.SortingGroup;
     trapGrabber.playerFarming = trapGrabber.EnemyHealth.GetComponent<PlayerFarming>();
     trapGrabber.playerFarming.state.CURRENT_STATE = StateMachine.State.Grabbed;
-    trapGrabber.StartCoroutine((IEnumerator) trapGrabber.DoGrabbing());
-    trapGrabber.StartCoroutine((IEnumerator) trapGrabber.DamagePlayer(trapGrabber.EnemyHealth));
+    trapGrabber.StartCoroutine(trapGrabber.DoGrabbing());
+    trapGrabber.StartCoroutine(trapGrabber.DamagePlayer(trapGrabber.EnemyHealth));
     trapGrabber.Teeth.SetActive(false);
   }
 
@@ -147,7 +147,7 @@ public class TrapGrabber : BaseMonoBehaviour
       trapGrabber.playerFarming.transform.position = Vector3.Lerp(trapGrabber.playerFarming.transform.position, trapGrabber.Spine.transform.position, Timer / 0.5f);
       yield return (object) null;
     }
-    trapGrabber.StartCoroutine((IEnumerator) trapGrabber.DoGrabbed());
+    trapGrabber.StartCoroutine(trapGrabber.DoGrabbed());
   }
 
   public IEnumerator DoGrabbed()
@@ -162,9 +162,9 @@ public class TrapGrabber : BaseMonoBehaviour
     int num2 = num1;
     trapGrabber2.HP = num2;
     if (num1 > 0)
-      trapGrabber1.StartCoroutine((IEnumerator) trapGrabber1.DoHit());
+      trapGrabber1.StartCoroutine(trapGrabber1.DoHit());
     else
-      trapGrabber1.StartCoroutine((IEnumerator) trapGrabber1.DoKill());
+      trapGrabber1.StartCoroutine(trapGrabber1.DoKill());
   }
 
   public IEnumerator DoHit()
@@ -176,7 +176,7 @@ public class TrapGrabber : BaseMonoBehaviour
     float Timer = 0.0f;
     while ((double) (Timer += Time.deltaTime) < 0.20000000298023224)
       yield return (object) null;
-    trapGrabber.StartCoroutine((IEnumerator) trapGrabber.DoGrabbed());
+    trapGrabber.StartCoroutine(trapGrabber.DoGrabbed());
   }
 
   public IEnumerator DoKill()
@@ -200,13 +200,13 @@ public class TrapGrabber : BaseMonoBehaviour
     this.EnemyHealth = collision.gameObject.GetComponent<Health>();
     if (this.CurrentState != TrapGrabber.State.Idle || !((UnityEngine.Object) this.EnemyHealth != (UnityEngine.Object) null) || !this.EnemyHealth.isPlayer)
       return;
-    this.StartCoroutine((IEnumerator) this.DoAttack());
+    this.StartCoroutine(this.DoAttack());
   }
 
   public void FlashRed()
   {
-    this.StopCoroutine((IEnumerator) this.DoFlashRed());
-    this.StartCoroutine((IEnumerator) this.DoFlashRed());
+    this.StopCoroutine(this.DoFlashRed());
+    this.StartCoroutine(this.DoFlashRed());
   }
 
   public IEnumerator DoFlashRed()

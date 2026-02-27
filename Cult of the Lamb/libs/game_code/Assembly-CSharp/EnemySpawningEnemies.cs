@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySpawningEnemies
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -104,7 +104,7 @@ public class EnemySpawningEnemies : BaseMonoBehaviour
   {
     if (this.ChildrenList.Count >= this.Limit || !((UnityEngine.Object) PlayerFarming.Instance != (UnityEngine.Object) null) || (double) Vector3.Distance(this.transform.position, PlayerFarming.Instance.transform.position) <= (double) this.DistanceFromPlayerToSpawn)
       return;
-    this.StartCoroutine((IEnumerator) this.SpawnRoutine());
+    this.StartCoroutine(this.SpawnRoutine());
   }
 
   public IEnumerator SpawnRoutine()
@@ -129,9 +129,9 @@ public class EnemySpawningEnemies : BaseMonoBehaviour
     component4.OnDie += new Health.DieAction(enemySpawningEnemies.OnSpawnedDie);
     enemySpawningEnemies.ChildrenList.Add(component4);
     if (enemySpawningEnemies.DoScaleUp)
-      component4.StartCoroutine((IEnumerator) enemySpawningEnemies.ScaleUp(enemySpawningEnemies.g.transform));
+      component4.StartCoroutine(enemySpawningEnemies.ScaleUp(enemySpawningEnemies.g.transform));
     if (enemySpawningEnemies.DoTweenMove)
-      component4.StartCoroutine((IEnumerator) enemySpawningEnemies.MoveTweenRoutine(enemySpawningEnemies.g.transform));
+      component4.StartCoroutine(enemySpawningEnemies.MoveTweenRoutine(enemySpawningEnemies.g.transform));
     if (enemySpawningEnemies.PlayAnimations)
       enemySpawningEnemies.TrackEntry = enemySpawningEnemies.Spine.AnimationState.SetAnimation(0, enemySpawningEnemies.SpawnAnimation, false);
     yield return (object) new WaitForSeconds(enemySpawningEnemies.SpawnDelay + (enemySpawningEnemies.PlayAnimations ? 1.25f : 0.0f));

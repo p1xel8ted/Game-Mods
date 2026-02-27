@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PuzzleController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -52,7 +52,7 @@ public class PuzzleController : BaseMonoBehaviour
 
   public void OnEnable()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForPlayer());
+    this.StartCoroutine(this.WaitForPlayer());
     AudioManager.Instance.AdjustAtmosParameter(this.insideAtmosParam, 1f);
   }
 
@@ -120,7 +120,7 @@ public class PuzzleController : BaseMonoBehaviour
     AudioManager.Instance.SetMusicRoomID(SoundConstants.RoomID.StandardAmbience);
     ++DataManager.Instance.PuzzleRoomsCompleted;
     this.onComplete?.Invoke();
-    this.StartCoroutine((IEnumerator) this.CompletedSequenceIE());
+    this.StartCoroutine(this.CompletedSequenceIE());
   }
 
   public void RevealRewardPodiums()
@@ -133,7 +133,7 @@ public class PuzzleController : BaseMonoBehaviour
     foreach (SingleChoiceRewardOption choiceRewardOption in this.singleChoiceRewardOptions)
     {
       choiceRewardOption.Reveal();
-      choiceRewardOption.Callback.AddListener((UnityAction) (() => this.StartCoroutine((IEnumerator) this.WaitForUIToFinish())));
+      choiceRewardOption.Callback.AddListener((UnityAction) (() => this.StartCoroutine(this.WaitForUIToFinish())));
     }
   }
 
@@ -143,7 +143,7 @@ public class PuzzleController : BaseMonoBehaviour
     yield return (object) null;
     while (FoundItemPickUp.FoundItemPickUps.Count > 0)
       yield return (object) null;
-    puzzleController.StartCoroutine((IEnumerator) puzzleController.RevealTeleportSequence());
+    puzzleController.StartCoroutine(puzzleController.RevealTeleportSequence());
   }
 
   public void Update()
@@ -157,7 +157,7 @@ public class PuzzleController : BaseMonoBehaviour
     GameManager.GetInstance().OnConversationNext(puzzleController.cameraTarget, 12f);
     AudioManager.Instance.PlayOneShot("event:/dlc/env/puzzle_room/complete", puzzleController.transform.position);
     AudioManager.Instance.PlayOneShot("event:/dlc/music/puzzle_room/stinger_complete");
-    puzzleController.StartCoroutine((IEnumerator) puzzleController.ShakeCameraWithRampUp(1.5f));
+    puzzleController.StartCoroutine(puzzleController.ShakeCameraWithRampUp(1.5f));
     yield return (object) new WaitForSeconds(1.5f);
     GameManager.GetInstance().OnConversationNext(puzzleController.cameraTarget, 16f);
     BiomeConstants.Instance.ImpactFrameForDuration(0.1f);
@@ -221,6 +221,6 @@ public class PuzzleController : BaseMonoBehaviour
   [CompilerGenerated]
   public void \u003CRevealRewardPodiums\u003Eb__24_0()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForUIToFinish());
+    this.StartCoroutine(this.WaitForUIToFinish());
   }
 }

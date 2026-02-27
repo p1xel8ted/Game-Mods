@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.UI.ControlMapper.ControlMapper
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired.Glyphs;
@@ -937,9 +937,9 @@ public class ControlMapper : MonoBehaviour
 
   public void OnDestroy()
   {
-    ReInput.ControllerConnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnJoystickConnected);
-    ReInput.ControllerDisconnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnJoystickDisconnected);
-    ReInput.ControllerPreDisconnectEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnJoystickPreDisconnect);
+    ReInput.ControllerConnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnJoystickConnected);
+    ReInput.ControllerDisconnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnJoystickDisconnected);
+    ReInput.ControllerPreDisconnectEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnJoystickPreDisconnect);
     this.UnsubscribeMenuControlInputEvents();
   }
 
@@ -1020,9 +1020,9 @@ public class ControlMapper : MonoBehaviour
             this._language.Initialize();
             this.inputFieldActivatedDelegate = new Action<InputFieldInfo>(this.OnInputFieldActivated);
             this.inputFieldInvertToggleStateChangedDelegate = new Action<ToggleInfo, bool>(this.OnInputFieldInvertToggleStateChanged);
-            ReInput.ControllerConnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnJoystickConnected);
-            ReInput.ControllerDisconnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnJoystickDisconnected);
-            ReInput.ControllerPreDisconnectEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnJoystickPreDisconnect);
+            ReInput.ControllerConnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnJoystickConnected);
+            ReInput.ControllerDisconnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnJoystickDisconnected);
+            ReInput.ControllerPreDisconnectEvent += new Action<ControllerStatusChangedEventArgs>(this.OnJoystickPreDisconnect);
             this.playerCount = ReInput.players.playerCount;
             this.canvas = this.references.canvas.gameObject;
             this.windowManager = new Rewired.UI.ControlMapper.ControlMapper.WindowManager(this.prefabs.window, this.prefabs.fader, this.references.canvas.transform);
@@ -1292,7 +1292,7 @@ public class ControlMapper : MonoBehaviour
   {
     if (windowId < 0 || player == null)
       return;
-    IList<Player> players = (IList<Player>) ReInput.players.Players;
+    IList<Player> players = ReInput.players.Players;
     for (int index = 0; index < players.Count; ++index)
     {
       if (players[index] != player)
@@ -1329,7 +1329,7 @@ public class ControlMapper : MonoBehaviour
         actionElementMap2 = new ActionElementMap(mapping.aem);
         actionElementMap1 = new ActionElementMap(conflict.elementMap);
       }
-      IList<Player> allPlayers = (IList<Player>) ReInput.players.AllPlayers;
+      IList<Player> allPlayers = ReInput.players.AllPlayers;
       for (int index = 0; index < allPlayers.Count; ++index)
       {
         Player player = allPlayers[index];
@@ -1362,7 +1362,7 @@ public class ControlMapper : MonoBehaviour
         if (elementType != ControllerElementType.Axis || axisRange != AxisRange.Full)
           invert = false;
         int num = 0;
-        foreach (ActionElementMap actionElementMap3 in (IEnumerable<ActionElementMap>) conflict.controllerMap.ElementMapsWithAction(actionId))
+        foreach (ActionElementMap actionElementMap3 in conflict.controllerMap.ElementMapsWithAction(actionId))
         {
           if (this.SwapIsSameInputRange(elementType, axisRange, axisContribution, actionElementMap3.elementType, actionElementMap3.axisRange, actionElementMap3.axisContribution))
             ++num;
@@ -1389,7 +1389,7 @@ public class ControlMapper : MonoBehaviour
   {
     if (this._restoreDefaultsDelegate == null)
     {
-      IList<Player> players = (IList<Player>) ReInput.players.Players;
+      IList<Player> players = ReInput.players.Players;
       for (int index = 0; index < players.Count; ++index)
       {
         Player player = players[index];
@@ -1565,7 +1565,7 @@ public class ControlMapper : MonoBehaviour
       if (this._ignoreMouseXAxisAssignment || this._ignoreMouseYAxisAssignment)
       {
         pollingInfo = new ControllerPollingInfo();
-        foreach (ControllerPollingInfo controllerPollingInfo in (IEnumerable<ControllerPollingInfo>) ReInput.controllers.polling.PollControllerForAllElementsDown(ControllerType.Mouse, 0))
+        foreach (ControllerPollingInfo controllerPollingInfo in ReInput.controllers.polling.PollControllerForAllElementsDown(ControllerType.Mouse, 0))
         {
           if (controllerPollingInfo.elementType != ControllerElementType.Axis || (!this._ignoreMouseXAxisAssignment || controllerPollingInfo.elementIndex != 0) && (!this._ignoreMouseYAxisAssignment || controllerPollingInfo.elementIndex != 1))
           {
@@ -1654,7 +1654,7 @@ public class ControlMapper : MonoBehaviour
     if ((UnityEngine.Object) window == (UnityEngine.Object) null)
       return;
     string otherPlayerName = string.Empty;
-    IList<Player> players = (IList<Player>) ReInput.players.Players;
+    IList<Player> players = ReInput.players.Players;
     for (int index = 0; index < players.Count; ++index)
     {
       if (players[index] != this.currentPlayer && players[index].controllers.ContainsController(ControllerType.Joystick, controllerId))
@@ -1836,7 +1836,7 @@ public class ControlMapper : MonoBehaviour
     if ((UnityEngine.Object) window == (UnityEngine.Object) null)
       return;
     string otherPlayerName = string.Empty;
-    IList<Player> players = (IList<Player>) ReInput.players.Players;
+    IList<Player> players = ReInput.players.Players;
     for (int index = 0; index < players.Count; ++index)
     {
       if (players[index] != this.currentPlayer && players[index].controllers.hasMouse)
@@ -1884,7 +1884,7 @@ public class ControlMapper : MonoBehaviour
     if (axisIndex < 0 || axisIndex >= joystick.axisCount)
       return;
     window.CreateTitleText(this.prefabs.windowTitleText, Vector2.zero, this._language.calibrateAxisStep1WindowTitle);
-    window.AddContentText(this.prefabs.windowContentText, UIPivot.TopCenter, UIAnchor.TopHStretch, new Vector2(0.0f, -100f), this._language.GetCalibrateAxisStep1WindowMessage(this._language.GetElementIdentifierName((Controller) joystick, ((IList<ControllerElementIdentifier>) joystick.AxisElementIdentifiers)[axisIndex].id, AxisRange.Full)));
+    window.AddContentText(this.prefabs.windowContentText, UIPivot.TopCenter, UIAnchor.TopHStretch, new Vector2(0.0f, -100f), this._language.GetCalibrateAxisStep1WindowMessage(this._language.GetElementIdentifierName((Controller) joystick, joystick.AxisElementIdentifiers[axisIndex].id, AxisRange.Full)));
     if ((UnityEngine.Object) this.prefabs.centerStickGraphic != (UnityEngine.Object) null)
       window.AddContentImage(this.prefabs.centerStickGraphic, UIPivot.BottomCenter, UIAnchor.BottomCenter, new Vector2(0.0f, 40f));
     window.AddContentText(this.prefabs.windowContentText, UIPivot.BottomCenter, UIAnchor.BottomHStretch, Vector2.zero, "");
@@ -1907,7 +1907,7 @@ public class ControlMapper : MonoBehaviour
     if (axisIndex < 0 || axisIndex >= joystick.axisCount)
       return;
     window.CreateTitleText(this.prefabs.windowTitleText, Vector2.zero, this._language.calibrateAxisStep2WindowTitle);
-    window.AddContentText(this.prefabs.windowContentText, UIPivot.TopCenter, UIAnchor.TopHStretch, new Vector2(0.0f, -100f), this._language.GetCalibrateAxisStep2WindowMessage(this._language.GetElementIdentifierName((Controller) joystick, ((IList<ControllerElementIdentifier>) joystick.AxisElementIdentifiers)[axisIndex].id, AxisRange.Full)));
+    window.AddContentText(this.prefabs.windowContentText, UIPivot.TopCenter, UIAnchor.TopHStretch, new Vector2(0.0f, -100f), this._language.GetCalibrateAxisStep2WindowMessage(this._language.GetElementIdentifierName((Controller) joystick, joystick.AxisElementIdentifiers[axisIndex].id, AxisRange.Full)));
     if ((UnityEngine.Object) this.prefabs.moveStickGraphic != (UnityEngine.Object) null)
       window.AddContentImage(this.prefabs.moveStickGraphic, UIPivot.BottomCenter, UIAnchor.BottomCenter, new Vector2(0.0f, 40f));
     window.AddContentText(this.prefabs.windowContentText, UIPivot.BottomCenter, UIAnchor.BottomHStretch, Vector2.zero, "");
@@ -1976,7 +1976,7 @@ public class ControlMapper : MonoBehaviour
               if (actionCategory != null && actionCategory.userAssignable)
               {
                 this.inputGrid.AddActionCategory(mappingSet.mapCategoryId, num);
-                foreach (InputAction action in (IEnumerable<InputAction>) ReInput.mapping.UserAssignableActionsInCategory(num))
+                foreach (InputAction action in ReInput.mapping.UserAssignableActionsInCategory(num))
                 {
                   if (action.type == InputActionType.Axis)
                   {
@@ -2120,7 +2120,7 @@ public class ControlMapper : MonoBehaviour
           for (int index2 = 0; index2 < actionCategoryIds.Count; ++index2)
           {
             InputCategory actionCategory = ReInput.mapping.GetActionCategory(actionCategoryIds[index2]);
-            if (actionCategory != null && actionCategory.userAssignable && this.CountIEnumerable<InputAction>((IEnumerable<InputAction>) ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id)) != 0)
+            if (actionCategory != null && actionCategory.userAssignable && this.CountIEnumerable<InputAction>(ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id)) != 0)
             {
               if (this._showActionCategoryLabels)
               {
@@ -2132,7 +2132,7 @@ public class ControlMapper : MonoBehaviour
                 this.inputGrid.AddActionCategoryLabel(mappingSet.mapCategoryId, actionCategory.id, label);
                 y1 -= this._inputRowHeight;
               }
-              foreach (InputAction inputAction in (IEnumerable<InputAction>) ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id, true))
+              foreach (InputAction inputAction in ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id, true))
               {
                 if (inputAction.type == InputActionType.Axis)
                 {
@@ -2247,11 +2247,11 @@ public class ControlMapper : MonoBehaviour
           for (int index2 = 0; index2 < actionCategoryIds.Count; ++index2)
           {
             InputCategory actionCategory = ReInput.mapping.GetActionCategory(actionCategoryIds[index2]);
-            if (actionCategory != null && actionCategory.userAssignable && this.CountIEnumerable<InputAction>((IEnumerable<InputAction>) ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id)) != 0)
+            if (actionCategory != null && actionCategory.userAssignable && this.CountIEnumerable<InputAction>(ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id)) != 0)
             {
               if (this._showActionCategoryLabels)
                 yPos -= num > 0 ? this._inputRowHeight + this._inputRowCategorySpacing : this._inputRowHeight;
-              foreach (InputAction action in (IEnumerable<InputAction>) ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id, true))
+              foreach (InputAction action in ReInput.mapping.UserAssignableActionsInCategory(actionCategory.id, true))
               {
                 if (action.type == InputActionType.Axis)
                 {
@@ -2397,7 +2397,7 @@ public class ControlMapper : MonoBehaviour
       return;
     int index = 0;
     this.inputGrid.SetFixedFieldData(this.currentMapCategoryId, actionSet.actionId, actionSet.axisRange, controllerType, controllerId);
-    foreach (ActionElementMap actionElementMap in (IEnumerable<ActionElementMap>) controllerMap.ElementMapsWithAction(actionSet.actionId))
+    foreach (ActionElementMap actionElementMap in controllerMap.ElementMapsWithAction(actionSet.actionId))
     {
       if (actionElementMap.elementType == ControllerElementType.Button)
       {
@@ -2628,7 +2628,7 @@ public class ControlMapper : MonoBehaviour
       }
       if (player.controllers.joystickCount > 0 && !this.isJoystickSelected)
       {
-        this.currentJoystickId = ((IList<Joystick>) player.controllers.Joysticks)[0].id;
+        this.currentJoystickId = player.controllers.Joysticks[0].id;
         this.assignedControllerButtons[0].SetInteractible(false, false);
       }
       if (num >= 0)
@@ -2644,7 +2644,7 @@ public class ControlMapper : MonoBehaviour
       }
     }
     else if (player.controllers.joystickCount > 0 && !this.isJoystickSelected)
-      this.currentJoystickId = ((IList<Joystick>) player.controllers.Joysticks)[0].id;
+      this.currentJoystickId = player.controllers.Joysticks[0].id;
     if (this.isJoystickSelected && player.controllers.joystickCount > 0)
     {
       this.references.removeControllerButton.interactable = true;
@@ -2966,12 +2966,12 @@ public class ControlMapper : MonoBehaviour
       return false;
     if (skipOtherPlayers)
     {
-      foreach (ElementAssignmentConflictInfo assignmentConflict in (IEnumerable<ElementAssignmentConflictInfo>) ReInput.players.SystemPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
+      foreach (ElementAssignmentConflictInfo assignmentConflict in ReInput.players.SystemPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
       {
         if (!assignmentConflict.isUserAssignable)
           return true;
       }
-      foreach (ElementAssignmentConflictInfo assignmentConflict in (IEnumerable<ElementAssignmentConflictInfo>) this.currentPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
+      foreach (ElementAssignmentConflictInfo assignmentConflict in this.currentPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
       {
         if (!assignmentConflict.isUserAssignable)
           return true;
@@ -2979,7 +2979,7 @@ public class ControlMapper : MonoBehaviour
     }
     else
     {
-      foreach (ElementAssignmentConflictInfo assignmentConflict in (IEnumerable<ElementAssignmentConflictInfo>) ReInput.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
+      foreach (ElementAssignmentConflictInfo assignmentConflict in ReInput.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
       {
         if (!assignmentConflict.isUserAssignable)
           return true;
@@ -2999,12 +2999,12 @@ public class ControlMapper : MonoBehaviour
     {
       if (skipOtherPlayers)
       {
-        foreach (ElementAssignmentConflictInfo assignmentConflict in (IEnumerable<ElementAssignmentConflictInfo>) ReInput.players.SystemPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
+        foreach (ElementAssignmentConflictInfo assignmentConflict in ReInput.players.SystemPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
         {
           if (!assignmentConflict.isUserAssignable)
             yield return assignmentConflict;
         }
-        foreach (ElementAssignmentConflictInfo assignmentConflict in (IEnumerable<ElementAssignmentConflictInfo>) player.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
+        foreach (ElementAssignmentConflictInfo assignmentConflict in player.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
         {
           if (!assignmentConflict.isUserAssignable)
             yield return assignmentConflict;
@@ -3012,7 +3012,7 @@ public class ControlMapper : MonoBehaviour
       }
       else
       {
-        foreach (ElementAssignmentConflictInfo assignmentConflict in (IEnumerable<ElementAssignmentConflictInfo>) ReInput.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
+        foreach (ElementAssignmentConflictInfo assignmentConflict in ReInput.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck))
         {
           if (!assignmentConflict.isUserAssignable)
             yield return assignmentConflict;
@@ -3056,7 +3056,7 @@ public class ControlMapper : MonoBehaviour
     ControllerPollingInfo controllerPollingInfo1 = new ControllerPollingInfo();
     ControllerPollingInfo controllerPollingInfo2 = new ControllerPollingInfo();
     ModifierKeyFlags flags = ModifierKeyFlags.None;
-    foreach (ControllerPollingInfo pollForAllKey in (IEnumerable<ControllerPollingInfo>) ReInput.controllers.Keyboard.PollForAllKeys())
+    foreach (ControllerPollingInfo pollForAllKey in ReInput.controllers.Keyboard.PollForAllKeys())
     {
       KeyCode keyboardKey = pollForAllKey.keyboardKey;
       if (keyboardKey != KeyCode.AltGr)
@@ -3112,7 +3112,7 @@ public class ControlMapper : MonoBehaviour
       return true;
     if (!skipOtherPlayers)
     {
-      IList<Player> players = (IList<Player>) ReInput.players.Players;
+      IList<Player> players = ReInput.players.Players;
       for (int index = 0; index < players.Count; ++index)
       {
         Player player = players[index];
@@ -3128,7 +3128,7 @@ public class ControlMapper : MonoBehaviour
     ElementAssignmentConflictCheck conflictCheck,
     out ElementAssignmentConflictInfo conflict)
   {
-    using (IEnumerator<ElementAssignmentConflictInfo> enumerator = ((IEnumerable<ElementAssignmentConflictInfo>) player.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck)).GetEnumerator())
+    using (IEnumerator<ElementAssignmentConflictInfo> enumerator = player.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck).GetEnumerator())
     {
       if (enumerator.MoveNext())
       {
@@ -3471,7 +3471,7 @@ public class ControlMapper : MonoBehaviour
     else
     {
       foreach (Player allPlayer in (IEnumerable<Player>) ReInput.players.AllPlayers)
-        allPlayer.AddInputEventDelegate((Action<InputActionEventData>) callback, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, actionId);
+        allPlayer.AddInputEventDelegate(callback, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, actionId);
     }
   }
 
@@ -3488,7 +3488,7 @@ public class ControlMapper : MonoBehaviour
     else
     {
       foreach (Player allPlayer in (IEnumerable<Player>) ReInput.players.AllPlayers)
-        allPlayer.RemoveInputEventDelegate((Action<InputActionEventData>) callback, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, actionId);
+        allPlayer.RemoveInputEventDelegate(callback, UpdateLoopType.Update, InputActionEventType.ButtonJustPressed, actionId);
     }
   }
 
@@ -3533,7 +3533,7 @@ public class ControlMapper : MonoBehaviour
   {
     if (player == null)
       return;
-    IList<Joystick> joysticks = (IList<Joystick>) player.controllers.Joysticks;
+    IList<Joystick> joysticks = player.controllers.Joysticks;
     for (int index = joysticks.Count - 1; index >= 0; --index)
       this.RemoveController(player, joysticks[index].id);
   }
@@ -3610,8 +3610,8 @@ public class ControlMapper : MonoBehaviour
       return false;
     }
     List<ElementAssignmentConflictInfo> assignmentConflictInfoList = new List<ElementAssignmentConflictInfo>();
-    assignmentConflictInfoList.AddRange((IEnumerable<ElementAssignmentConflictInfo>) this.currentPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck));
-    assignmentConflictInfoList.AddRange((IEnumerable<ElementAssignmentConflictInfo>) ReInput.players.SystemPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck));
+    assignmentConflictInfoList.AddRange(this.currentPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck));
+    assignmentConflictInfoList.AddRange(ReInput.players.SystemPlayer.controllers.conflictChecking.ElementAssignmentConflicts(conflictCheck));
     if (assignmentConflictInfoList.Count == 0)
       return false;
     ActionElementMap aem1 = mapping.aem;
@@ -3639,7 +3639,7 @@ public class ControlMapper : MonoBehaviour
       if (this.SwapIsSameInputRange(elementType, origAxisRange, axisContribution, controller.GetElementById(assignment.elementIdentifierId).type, assignment.axisRange, assignment.axisContribution))
         ++num;
     }
-    foreach (ActionElementMap actionElementMap in (IEnumerable<ActionElementMap>) assignmentConflictInfo.controllerMap.ElementMapsWithAction(actionId))
+    foreach (ActionElementMap actionElementMap in assignmentConflictInfo.controllerMap.ElementMapsWithAction(actionId))
     {
       ActionElementMap aem = actionElementMap;
       if (aem.id != aem1.id && assignmentConflictInfoList.FindIndex((Predicate<ElementAssignmentConflictInfo>) (x => x.elementMapId == aem.id)) < 0 && this.SwapIsSameInputRange(elementType, origAxisRange, axisContribution, aem.elementType, aem.axisRange, aem.axisContribution))
@@ -4795,7 +4795,7 @@ public class ControlMapper : MonoBehaviour
       this.axisIndex = axisIndex;
       if (joystick != null && axisIndex >= 0 && joystick.axisCount > axisIndex)
       {
-        this.axis = ((IList<Controller.Axis>) joystick.Axes)[axisIndex];
+        this.axis = joystick.Axes[axisIndex];
         this.data = joystick.calibrationMap.GetAxis(axisIndex).GetData();
       }
       this.firstRun = true;

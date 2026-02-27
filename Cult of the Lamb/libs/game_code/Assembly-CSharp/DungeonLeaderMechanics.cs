@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DungeonLeaderMechanics
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -190,7 +190,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     if (componentsInChildren1.Length != 0)
     {
       for (int index = componentsInChildren1.Length - 1; index >= 0; --index)
-        componentsInChildren1[index].GetComponent<Health>().DealDamage(float.MaxValue, this.gameObject, this.transform.position);
+        componentsInChildren1[index].GetComponent<Health>().DealDamage(float.MaxValue, this.gameObject, this.transform.position, dealDamageImmediately: true);
     }
     SpiderNest[] componentsInChildren2 = transform.GetComponentsInChildren<SpiderNest>();
     if (componentsInChildren2.Length != 0)
@@ -242,13 +242,13 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     {
       if (this.music != null)
         this.StopCoroutine(this.music);
-      this.music = this.StartCoroutine((IEnumerator) this.PlayMusicDelayed());
+      this.music = this.StartCoroutine(this.PlayMusicDelayed());
     }
     AudioManager.Instance.AdjustAtmosParameter(this.insideAtmosParam, 1f);
     if (this.podiumIntroRoutine == null || this.introStarted)
       return;
     this.StopCoroutine(this.podiumIntroRoutine);
-    this.podiumIntroRoutine = this.StartCoroutine((IEnumerator) this.PodiumIntroIE());
+    this.podiumIntroRoutine = this.StartCoroutine(this.PodiumIntroIE());
   }
 
   public IEnumerator PlayMusicDelayed()
@@ -305,7 +305,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
   {
     this.startedInteraction = true;
     foreach (PlayerFarming player in PlayerFarming.players)
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.SetPlayerAnimations(player));
+      GameManager.GetInstance().StartCoroutine(this.SetPlayerAnimations(player));
     this.playerAnimsPlayed = true;
   }
 
@@ -338,7 +338,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
       {
         player.IdleOnEnd = true;
         player.EndGoToAndStop();
-        this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+        this.StartCoroutine(this.FrameDelay((System.Action) (() =>
         {
           player.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
           player.Spine.AnimationState.SetAnimation(0, "floating-boss-loop", true);
@@ -403,7 +403,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         if (Health.team2.Count <= 0 || Health.team2.Count == 1 && (UnityEngine.Object) Health.team2[0] == (UnityEngine.Object) null)
         {
           this.introStarted = false;
-          this.StartCoroutine((IEnumerator) this.DrawnOutIntroIE());
+          this.StartCoroutine(this.DrawnOutIntroIE());
         }
         else
         {
@@ -422,7 +422,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         else if ((double) this.midCombatTimestamp != -1.0 && (double) Time.time > (double) this.midCombatTimestamp)
         {
           this.introStarted = false;
-          this.StartCoroutine((IEnumerator) this.InstantSpawnIntroIE());
+          this.StartCoroutine(this.InstantSpawnIntroIE());
         }
       }
       else if (this.introType == DungeonLeaderMechanics.IntroType.None)
@@ -499,7 +499,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         health.ImpactOnHit = false;
         health.ScreenshakeOnDie = false;
         health.ScreenshakeOnHit = false;
-        health.DealDamage(health.totalHP, health.gameObject, dungeonLeaderMechanics.transform.position);
+        health.DealDamage(health.totalHP, health.gameObject, dungeonLeaderMechanics.transform.position, dealDamageImmediately: true);
         lastBreakTime = t + UnityEngine.Random.Range(0.0f, 1f);
       }
       t += Time.deltaTime;
@@ -562,7 +562,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
   {
     if (this.introStarted)
       return;
-    this.podiumIntroRoutine = this.StartCoroutine((IEnumerator) this.PodiumIntroIE());
+    this.podiumIntroRoutine = this.StartCoroutine(this.PodiumIntroIE());
     this.middleCollider.OnTriggerEnterEvent -= new ColliderEvents.TriggerEvent(this.PodiumIntro);
   }
 
@@ -610,7 +610,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     if ((UnityEngine.Object) dungeonLeaderMechanics.middleCollider != (UnityEngine.Object) null && (PlayerFarming.Instance.Spine.AnimationState.GetCurrent(0).Animation.Name != "floating-boss-start" || PlayerFarming.Instance.Spine.AnimationState.GetCurrent(0).Animation.Name != "floating-boss-loop"))
       dungeonLeaderMechanics.GoToAndStopBegin(dungeonLeaderMechanics.middleCollider.transform.position);
     foreach (PlayerFarming player in PlayerFarming.players)
-      GameManager.GetInstance().StartCoroutine((IEnumerator) dungeonLeaderMechanics.SetPlayerAnimations(player));
+      GameManager.GetInstance().StartCoroutine(dungeonLeaderMechanics.SetPlayerAnimations(player));
     dungeonLeaderMechanics.playerAnimsPlayed = true;
     if ((bool) (UnityEngine.Object) dungeonLeaderMechanics.conversation)
     {
@@ -636,12 +636,12 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     component.ScreenshakeOnHit = false;
     component.invincible = false;
     component.untouchable = false;
-    component.DealDamage(component.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Poison);
+    component.DealDamage(component.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Poison, dealDamageImmediately: true);
   }
 
   public void SpawnOtherLeader(int index)
   {
-    this.otherLeaders[index].StartCoroutine((IEnumerator) this.otherLeaders[index].InstantSpawnIntroIE());
+    this.otherLeaders[index].StartCoroutine(this.otherLeaders[index].InstantSpawnIntroIE());
   }
 
   public void ShowGoop()
@@ -654,7 +654,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
       AudioManager.Instance.PlayOneShot("event:/enemy/summoned", this.transform.position);
     }
     else
-      this.StartCoroutine((IEnumerator) this.HideGoopDelayIE());
+      this.StartCoroutine(this.HideGoopDelayIE());
   }
 
   public IEnumerator HideGoopDelayIE()
@@ -738,10 +738,10 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         if ((bool) (UnityEngine.Object) component)
           component.Amount = 0;
         EnemySpider.EnemySpiders[index].health.enabled = true;
-        EnemySpider.EnemySpiders[index].health.DealDamage(EnemySpider.EnemySpiders[index].health.totalHP, this.gameObject, EnemySpider.EnemySpiders[index].transform.position);
+        EnemySpider.EnemySpiders[index].health.DealDamage(EnemySpider.EnemySpiders[index].health.totalHP, this.gameObject, EnemySpider.EnemySpiders[index].transform.position, dealDamageImmediately: true);
       }
     }
-    this.StartCoroutine((IEnumerator) this.KillAll());
+    this.StartCoroutine(this.KillAll());
   }
 
   public IEnumerator KillAll()
@@ -753,13 +753,13 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
       {
         health.invincible = false;
         health.enabled = true;
-        health.DealDamage(float.PositiveInfinity, health.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile);
+        health.DealDamage(float.PositiveInfinity, health.gameObject, Vector3.zero, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
         yield return (object) new WaitForSeconds(0.05f);
       }
     }
   }
 
-  public void BeginEnemyRounds() => this.StartCoroutine((IEnumerator) this.BeginEnemyRoundsIE());
+  public void BeginEnemyRounds() => this.StartCoroutine(this.BeginEnemyRoundsIE());
 
   public IEnumerator BeginEnemyRoundsIE()
   {
@@ -780,7 +780,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     dungeonLeaderMechanics.enemyRounds.OnEnemySpawned += new EnemyRoundsBase.EnemyEvent(dungeonLeaderMechanics.\u003CBeginEnemyRoundsIE\u003Eb__92_1);
   }
 
-  public void Bow() => this.StartCoroutine((IEnumerator) this.BowIE());
+  public void Bow() => this.StartCoroutine(this.BowIE());
 
   public IEnumerator BowIE()
   {
@@ -799,7 +799,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     this.waiting = false;
   }
 
-  public void GiveRotstone() => this.StartCoroutine((IEnumerator) this.GiveRotstoneIE());
+  public void GiveRotstone() => this.StartCoroutine(this.GiveRotstoneIE());
 
   public IEnumerator GiveRotstoneIE()
   {
@@ -823,7 +823,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     dungeonLeaderMechanics.FadeRedAway();
   }
 
-  public void GiveFood() => this.StartCoroutine((IEnumerator) this.GiveFoodIE());
+  public void GiveFood() => this.StartCoroutine(this.GiveFoodIE());
 
   public IEnumerator GiveFoodIE()
   {
@@ -852,7 +852,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
 
   public void GiveFoodAndPermanentHealth()
   {
-    this.StartCoroutine((IEnumerator) this.GiveFoodAndPermanentHealthIE());
+    this.StartCoroutine(this.GiveFoodAndPermanentHealthIE());
   }
 
   public void GiveFoodPrecentage()
@@ -860,7 +860,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     int daysOfFood = 5;
     if (CookingData.GetDaysOfFood(DataManager.Instance.items, DataManager.Instance.Followers.Count) <= 5)
       daysOfFood = 0;
-    this.StartCoroutine((IEnumerator) this.GiveFoodPrecentageIE(daysOfFood));
+    this.StartCoroutine(this.GiveFoodPrecentageIE(daysOfFood));
   }
 
   public IEnumerator GiveFoodAndPermanentHealthIE()
@@ -977,7 +977,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     this.FadeRedAway();
   }
 
-  public void GiveHealth() => this.StartCoroutine((IEnumerator) this.GiveHealthIE());
+  public void GiveHealth() => this.StartCoroutine(this.GiveHealthIE());
 
   public IEnumerator GiveHealthIE()
   {
@@ -1026,7 +1026,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         return;
       }
     }
-    this.StartCoroutine((IEnumerator) this.AskQuestionIE());
+    this.StartCoroutine(this.AskQuestionIE());
   }
 
   public void LightningStrikePlayer()
@@ -1066,9 +1066,9 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     DungeonLeaderMechanics dungeonLeaderMechanics = this;
     yield return (object) null;
     if (responseWasA)
-      yield return (object) dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.ACallbackIE());
+      yield return (object) dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.ACallbackIE());
     else
-      yield return (object) dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.BCallbackIE());
+      yield return (object) dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.BCallbackIE());
     List<ConversationEntry> Entries = new List<ConversationEntry>()
     {
       new ConversationEntry(dungeonLeaderMechanics.gameObject, responseWasA ? question.ResultA : question.ResultB)
@@ -1118,10 +1118,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     unityEventArray = (UnityEvent[]) null;
   }
 
-  public void ConvertAllMapNodes()
-  {
-    this.StartCoroutine((IEnumerator) this.ConvertAllMapNodesIE());
-  }
+  public void ConvertAllMapNodes() => this.StartCoroutine(this.ConvertAllMapNodesIE());
 
   public IEnumerator ConvertAllMapNodesIE()
   {
@@ -1146,7 +1143,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
 
   public void ConvertMiniBossNodeToBossNode()
   {
-    this.StartCoroutine((IEnumerator) this.ConvertMiniBossNodeToBossNodeIE());
+    this.StartCoroutine(this.ConvertMiniBossNodeToBossNodeIE());
   }
 
   public IEnumerator ConvertMiniBossNodeToBossNodeIE()
@@ -1168,10 +1165,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     this.SpawnInCombatFollower();
   }
 
-  public void SpawnInCombatFollower()
-  {
-    this.StartCoroutine((IEnumerator) this.SpawnInCombatFollowerIE());
-  }
+  public void SpawnInCombatFollower() => this.StartCoroutine(this.SpawnInCombatFollowerIE());
 
   public IEnumerator SpawnInCombatFollowerIE()
   {
@@ -1293,10 +1287,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     this.FadeRedAway();
   }
 
-  public void MakeRandomFollowerIll()
-  {
-    this.StartCoroutine((IEnumerator) this.MakeRandomFollowerIllIE());
-  }
+  public void MakeRandomFollowerIll() => this.StartCoroutine(this.MakeRandomFollowerIllIE());
 
   public IEnumerator MakeRandomFollowerIllIE()
   {
@@ -1321,7 +1312,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
       }, (List<MMTools.Response>) null, (System.Action) null), false);
       while (MMConversation.isPlaying)
         yield return (object) null;
-      yield return (object) dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.MakeFollowerIll(spawnedFollower, 0.9f));
+      yield return (object) dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.MakeFollowerIll(spawnedFollower, 0.9f));
       GameManager.GetInstance().OnConversationEnd();
       dungeonLeaderMechanics.callback?.Invoke();
       dungeonLeaderMechanics.completed = true;
@@ -1377,10 +1368,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     dungeonLeaderMechanics.waiting = false;
   }
 
-  public void MakeAllFollowersIll()
-  {
-    this.StartCoroutine((IEnumerator) this.MakeAllFollowersIllIE());
-  }
+  public void MakeAllFollowersIll() => this.StartCoroutine(this.MakeAllFollowersIllIE());
 
   public IEnumerator MakeAllFollowersIllIE()
   {
@@ -1408,7 +1396,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         Vector3 fromPosition = dungeonLeaderMechanics.transform.position + (Vector3) Utils.DegreeToVector2(startingAngle) * 3.5f;
         spawnedFollower.Follower.transform.position = fromPosition;
         spawnedFollower.Follower.State.LookAngle = spawnedFollower.Follower.State.facingAngle = Utils.GetAngle(fromPosition, dungeonLeaderMechanics.transform.position);
-        dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.MakeFollowerIll(spawnedFollower, (float) (1.0 - (double) delay * (double) (i + 1) + 0.5)));
+        dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.MakeFollowerIll(spawnedFollower, (float) (1.0 - (double) delay * (double) (i + 1) + 0.5)));
         startingAngle = Utils.Repeat(startingAngle + angleBetween, 360f);
         yield return (object) new WaitForSeconds(delay);
       }
@@ -1427,7 +1415,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
 
   public void MakeRandomFollowerStarving()
   {
-    this.StartCoroutine((IEnumerator) this.MakeRandomFollowerStarvingIE());
+    this.StartCoroutine(this.MakeRandomFollowerStarvingIE());
   }
 
   public IEnumerator MakeRandomFollowerStarvingIE()
@@ -1453,7 +1441,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
       }, (List<MMTools.Response>) null, (System.Action) null), false);
       while (MMConversation.isPlaying)
         yield return (object) null;
-      yield return (object) dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.MakeFollowerStarving(spawnedFollower, 0.9f));
+      yield return (object) dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.MakeFollowerStarving(spawnedFollower, 0.9f));
       GameManager.GetInstance().OnConversationEnd();
       dungeonLeaderMechanics.callback?.Invoke();
       dungeonLeaderMechanics.completed = true;
@@ -1511,10 +1499,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     dungeonLeaderMechanics.waiting = false;
   }
 
-  public void MakeAllFollowersStarving()
-  {
-    this.StartCoroutine((IEnumerator) this.MakeAllFollowersStarvingIE());
-  }
+  public void MakeAllFollowersStarving() => this.StartCoroutine(this.MakeAllFollowersStarvingIE());
 
   public IEnumerator MakeAllFollowersStarvingIE()
   {
@@ -1543,7 +1528,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         --fromPosition.y;
         spawnedFollower.Follower.transform.position = fromPosition;
         spawnedFollower.Follower.State.LookAngle = spawnedFollower.Follower.State.facingAngle = Utils.GetAngle(fromPosition, dungeonLeaderMechanics.transform.position);
-        dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.MakeFollowerStarving(spawnedFollower, (float) (1.0 - (double) delay * (double) (i + 1) + 0.5)));
+        dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.MakeFollowerStarving(spawnedFollower, (float) (1.0 - (double) delay * (double) (i + 1) + 0.5)));
         startingAngle = Utils.Repeat(startingAngle + angleBetween, 360f);
         yield return (object) new WaitForSeconds(delay);
       }
@@ -1562,7 +1547,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
 
   public void MakeRandomFollowerMutated()
   {
-    this.StartCoroutine((IEnumerator) this.MakeRandomFollowerMutatedIE());
+    this.StartCoroutine(this.MakeRandomFollowerMutatedIE());
   }
 
   public IEnumerator MakeRandomFollowerMutatedIE()
@@ -1581,7 +1566,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
       FollowerManager.SpawnedFollower spawnedFollower = dungeonLeaderMechanics.SpawnFollower(possibleFollowers[UnityEngine.Random.Range(0, possibleFollowers.Count)], dungeonLeaderMechanics.transform.position + Vector3.up * -1f);
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(spawnedFollower.Follower.gameObject, 12f);
-      yield return (object) dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.MakeFollowerMutated(spawnedFollower, 0.9f));
+      yield return (object) dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.MakeFollowerMutated(spawnedFollower, 0.9f));
       GameManager.GetInstance().OnConversationEnd();
       dungeonLeaderMechanics.callback?.Invoke();
       dungeonLeaderMechanics.completed = true;
@@ -1626,7 +1611,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
 
   public void MakeFollowerMutatedAndBeginCombat()
   {
-    this.StartCoroutine((IEnumerator) this.Make3FollowersMutatedIE((System.Action) (() => { })));
+    this.StartCoroutine(this.Make3FollowersMutatedIE((System.Action) (() => { })));
   }
 
   public IEnumerator Make3FollowersMutatedIE(System.Action callback = null)
@@ -1654,7 +1639,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
         Vector3 fromPosition = dungeonLeaderMechanics.transform.position + (Vector3) Utils.DegreeToVector2(startingAngle) * 3.5f + Vector3.down;
         spawnedFollower.Follower.transform.position = fromPosition;
         spawnedFollower.Follower.State.LookAngle = spawnedFollower.Follower.State.facingAngle = Utils.GetAngle(fromPosition, dungeonLeaderMechanics.transform.position);
-        dungeonLeaderMechanics.StartCoroutine((IEnumerator) dungeonLeaderMechanics.MakeFollowerMutated(spawnedFollower, (float) (1.0 - (double) delay * (double) (i + 1) + 0.5)));
+        dungeonLeaderMechanics.StartCoroutine(dungeonLeaderMechanics.MakeFollowerMutated(spawnedFollower, (float) (1.0 - (double) delay * (double) (i + 1) + 0.5)));
         startingAngle = Utils.Repeat(startingAngle + angleBetween, 360f);
         yield return (object) new WaitForSeconds(delay);
       }
@@ -1681,7 +1666,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     return (double) follower.Illness <= 0.0 && follower.CursedState == Thought.None && !FollowerManager.FollowerLocked(in follower.ID) && !follower.Traits.Contains(FollowerTrait.TraitType.Mutated) && !follower.Traits.Contains(FollowerTrait.TraitType.MutatedVisual) && !follower.Traits.Contains(FollowerTrait.TraitType.MutatedImmune);
   }
 
-  public void SetTraps() => this.StartCoroutine((IEnumerator) this.SetTrapsIE());
+  public void SetTraps() => this.StartCoroutine(this.SetTrapsIE());
 
   public IEnumerator SetTrapsIE()
   {
@@ -1711,7 +1696,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
     return spawnedFollower;
   }
 
-  public void ExecutionerOutro() => this.StartCoroutine((IEnumerator) this.ExecutionerOutroIE());
+  public void ExecutionerOutro() => this.StartCoroutine(this.ExecutionerOutroIE());
 
   public IEnumerator ExecutionerOutroIE()
   {
@@ -1975,7 +1960,7 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
       if ((UnityEngine.Object) Health.team2[index] != (UnityEngine.Object) null)
       {
         Health.team2[index].invincible = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, dealDamageImmediately: true);
       }
     }
   }
@@ -2010,13 +1995,13 @@ public class DungeonLeaderMechanics : BaseMonoBehaviour
   [CompilerGenerated]
   public void \u003CAskQuestionIE\u003Eb__109_0()
   {
-    this.StartCoroutine((IEnumerator) this.ResponseIE(true, this.question));
+    this.StartCoroutine(this.ResponseIE(true, this.question));
   }
 
   [CompilerGenerated]
   public void \u003CAskQuestionIE\u003Eb__109_1()
   {
-    this.StartCoroutine((IEnumerator) this.ResponseIE(false, this.question));
+    this.StartCoroutine(this.ResponseIE(false, this.question));
   }
 
   [Serializable]

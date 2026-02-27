@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySummonerLightning
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -196,7 +196,7 @@ public class EnemySummonerLightning : UnitObject
     this.aimingIcon?.gameObject.SetActive(false);
     this.LightningDelay = UnityEngine.Random.Range(this.LightningDelayMin, this.LightningDelayMax);
     this.ResetMeleeAttacks();
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     base.OnEnable();
     if (!((UnityEngine.Object) this.damageColliderEvents != (UnityEngine.Object) null))
       return;
@@ -261,7 +261,7 @@ public class EnemySummonerLightning : UnitObject
     while ((double) PlayerFarming.GetClosestPlayerDist(summonerLightning.transform.position) > (double) summonerLightning.Range)
       yield return (object) null;
     summonerLightning.StopAndClearCoroutines();
-    summonerLightning.StartCoroutine((IEnumerator) summonerLightning.ChaseTarget());
+    summonerLightning.StartCoroutine(summonerLightning.ChaseTarget());
   }
 
   public override void OnHit(
@@ -284,7 +284,7 @@ public class EnemySummonerLightning : UnitObject
         this.knockBackVY = -this.KnockbackSpeed * Mathf.Sin(Utils.GetAngle(this.transform.position, AttackLocation) * ((float) Math.PI / 180f));
         this.simpleSpineFlash.FlashFillRed();
         this.StopAndClearCoroutines(true);
-        this.StartCoroutine((IEnumerator) this.DoStunned());
+        this.StartCoroutine(this.DoStunned());
       }
       else
       {
@@ -307,7 +307,7 @@ public class EnemySummonerLightning : UnitObject
       if (this.LightningRoutine != null)
         return;
       this.StopAndClearCoroutines();
-      this.TeleportRoutine = this.StartCoroutine((IEnumerator) this.DoTeleport());
+      this.TeleportRoutine = this.StartCoroutine(this.DoTeleport());
     }
   }
 
@@ -355,7 +355,7 @@ public class EnemySummonerLightning : UnitObject
         if (summonerLightning.Melee && (double) summonerLightning.MeleeCooldownCounter <= 0.0 && (double) summonerLightning.currentMeleeAttacks > 0.0 && (double) distanceToTarget < (double) summonerLightning.MeleeRadius)
         {
           --summonerLightning.currentMeleeAttacks;
-          yield return (object) (summonerLightning.MeleeRoutine = summonerLightning.StartCoroutine((IEnumerator) summonerLightning.DoCloseCombatAttack()));
+          yield return (object) (summonerLightning.MeleeRoutine = summonerLightning.StartCoroutine(summonerLightning.DoCloseCombatAttack()));
           summonerLightning.MeleeRoutine = (Coroutine) null;
           summonerLightning.MeleeCooldownCounter = summonerLightning.meleeCooldown;
           summonerLightning.FleeDelay = 0.0f;
@@ -368,7 +368,7 @@ public class EnemySummonerLightning : UnitObject
             summonerLightning.TeleportDelay = UnityEngine.Random.Range(summonerLightning.TeleportDelayMin, summonerLightning.TeleportDelayMax);
             summonerLightning.ResetMeleeAttacks();
             summonerLightning.LightningDelay = 0.5f;
-            yield return (object) (summonerLightning.TeleportRoutine = summonerLightning.StartCoroutine((IEnumerator) summonerLightning.DoTeleport()));
+            yield return (object) (summonerLightning.TeleportRoutine = summonerLightning.StartCoroutine(summonerLightning.DoTeleport()));
             summonerLightning.TeleportRoutine = (Coroutine) null;
           }
           if (!((UnityEngine.Object) closestTarget == (UnityEngine.Object) null))
@@ -377,7 +377,7 @@ public class EnemySummonerLightning : UnitObject
             {
               summonerLightning.StopAndClearCoroutines();
               summonerLightning.LightningDelay = UnityEngine.Random.Range(summonerLightning.LightningDelayMin, summonerLightning.LightningDelayMax);
-              summonerLightning.LightningRoutine = summonerLightning.StartCoroutine((IEnumerator) summonerLightning.DoLightningStrike());
+              summonerLightning.LightningRoutine = summonerLightning.StartCoroutine(summonerLightning.DoLightningStrike());
               break;
             }
             yield return (object) null;
@@ -403,7 +403,7 @@ public class EnemySummonerLightning : UnitObject
     summonerLightning.health.ArrowAttackVulnerability = 1f;
     summonerLightning.health.MeleeAttackVulnerability = 0.1f;
     summonerLightning.StopAndClearCoroutines();
-    summonerLightning.StartCoroutine((IEnumerator) summonerLightning.DoTeleport());
+    summonerLightning.StartCoroutine(summonerLightning.DoTeleport());
   }
 
   public void SpineEventWeaponSwing()
@@ -493,7 +493,7 @@ public class EnemySummonerLightning : UnitObject
     while ((double) (time += Time.deltaTime * summonerLightning.skeletonAnimation.timeScale) < 0.800000011920929)
       yield return (object) null;
     summonerLightning.StopAndClearCoroutines();
-    summonerLightning.StartCoroutine((IEnumerator) summonerLightning.ChaseTarget());
+    summonerLightning.StartCoroutine(summonerLightning.ChaseTarget());
   }
 
   public void Teleport()
@@ -596,7 +596,7 @@ public class EnemySummonerLightning : UnitObject
     float switchBuffer = 1f;
     if ((UnityEngine.Object) summonerLightning.TargetObject == (UnityEngine.Object) null)
     {
-      summonerLightning.StartCoroutine((IEnumerator) summonerLightning.ChaseTarget());
+      summonerLightning.StartCoroutine(summonerLightning.ChaseTarget());
     }
     else
     {
@@ -613,7 +613,7 @@ public class EnemySummonerLightning : UnitObject
           summonerLightning.SimpleSpineFlash?.FlashWhite(false);
           summonerLightning.aimingIcon.gameObject.SetActive(false);
           AudioManager.Instance.StopOneShotInstanceEarly(summonerLightning.lightningRingStartInstance, FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-          summonerLightning.StartCoroutine((IEnumerator) summonerLightning.ChaseTarget());
+          summonerLightning.StartCoroutine(summonerLightning.ChaseTarget());
           yield break;
         }
         Timer += Time.deltaTime * summonerLightning.skeletonAnimation.timeScale;
@@ -656,7 +656,7 @@ public class EnemySummonerLightning : UnitObject
         }
         else
         {
-          summonerLightning.StartCoroutine((IEnumerator) summonerLightning.ChaseTarget());
+          summonerLightning.StartCoroutine(summonerLightning.ChaseTarget());
           yield break;
         }
       }
@@ -677,7 +677,7 @@ public class EnemySummonerLightning : UnitObject
       Explosion.CreateExplosion(summonerLightning.aimingIcon.transform.position, summonerLightning.health.team, summonerLightning.health, summonerLightning.LightingRadius, summonerLightning.LightingPlayerDamage, summonerLightning.LightingEnemyDamage, includeOwner: true);
       LightningRingExplosion.CreateExplosion(summonerLightning.aimingIcon.transform.position, summonerLightning.health.team, summonerLightning.health, summonerLightning.LightningExpansionSpeed, summonerLightning.LIGHTNING_DAMAGE_PLAYER, summonerLightning.LightningEnemyDamage);
       summonerLightning.StopAndClearCoroutines();
-      summonerLightning.StartCoroutine((IEnumerator) summonerLightning.ChaseTarget());
+      summonerLightning.StartCoroutine(summonerLightning.ChaseTarget());
     }
   }
 

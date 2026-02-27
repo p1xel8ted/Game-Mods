@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SpriteAtlasLoader
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -29,12 +29,12 @@ public class SpriteAtlasLoader : MonoBehaviour
 
   public void OnEnable()
   {
-    SpriteAtlasManager.atlasRequested += (Action<string, Action<SpriteAtlas>>) new Action<string, Action<SpriteAtlas>>(this.OnAtlasRequested);
+    SpriteAtlasManager.atlasRequested += new Action<string, Action<SpriteAtlas>>(this.OnAtlasRequested);
   }
 
   public void OnDestroy()
   {
-    SpriteAtlasManager.atlasRequested -= (Action<string, Action<SpriteAtlas>>) new Action<string, Action<SpriteAtlas>>(this.OnAtlasRequested);
+    SpriteAtlasManager.atlasRequested -= new Action<string, Action<SpriteAtlas>>(this.OnAtlasRequested);
     SpriteAtlasLoader.ReleaseAtlases();
   }
 

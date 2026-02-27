@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RatauGiveSpells
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -46,7 +46,7 @@ public class RatauGiveSpells : BaseMonoBehaviour
   {
     DataManager.Instance.EnabledSpells = true;
     HUD_Manager.Instance.Show(0);
-    this.StartCoroutine((IEnumerator) this.WaitForShooting());
+    this.StartCoroutine(this.WaitForShooting());
   }
 
   public void OnObjectiveComplete(string GroupID)
@@ -55,7 +55,7 @@ public class RatauGiveSpells : BaseMonoBehaviour
     if (!(GroupID == "Objectives/GroupTitles/RatauGiveCurse"))
       return;
     ObjectiveManager.OnObjectiveGroupCompleted -= new Action<string>(this.OnObjectiveComplete);
-    this.StartCoroutine((IEnumerator) this.EndSequenceRoutine());
+    this.StartCoroutine(this.EndSequenceRoutine());
   }
 
   public IEnumerator WaitForShooting()
@@ -162,7 +162,7 @@ public class RatauGiveSpells : BaseMonoBehaviour
 
   public void OnCastSpell()
   {
-    this.StartCoroutine((IEnumerator) this.DelayReload());
+    this.StartCoroutine(this.DelayReload());
     this.RatauSpine.AnimationState.SetAnimation(0, "warning", false);
     this.RatauSpine.AnimationState.AddAnimation(0, "idle", true, 0.0f);
   }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TempleDecorationsManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -94,9 +94,8 @@ public class TempleDecorationsManager : MonoBehaviour
     this.lightingManager.LightingSettings = this.lightingSettings[style];
     this.lightingManager.gameObject.SetActive(false);
     this.lightingManager.gameObject.SetActive(true);
-    if (style > 1)
+    if (this.DECORATION_LEVEL > 1)
     {
-      Debug.Log((object) ("DECORATION LEVEL: " + style.ToString()));
       this.StainedGlassSpotlight.cookie = this.StainedGlassCookies[style];
       if (style > 1)
       {
@@ -112,6 +111,11 @@ public class TempleDecorationsManager : MonoBehaviour
       this.StandardGlassLight.gameObject.SetActive(false);
       this.StainedGlassSpotlight.gameObject.SetActive(false);
       this.StainedGlassSpotlight.gameObject.SetActive(true);
+    }
+    else
+    {
+      this.StandardGlassLight.gameObject.SetActive(true);
+      this.StainedGlassSpotlight.gameObject.SetActive(false);
     }
     Interaction_TempleAltar.Instance.SetAltarStyle(style);
     int loadedCount = 0;
@@ -160,7 +164,7 @@ public class TempleDecorationsManager : MonoBehaviour
     this.RecursivelyFindChildDecorationParts(resultToAnimate, 2);
     if (this.AnimateIndividualDecorationsCoroutine != null)
       this.StopCoroutine(this.AnimateIndividualDecorationsCoroutine);
-    this.AnimateIndividualDecorationsCoroutine = this.StartCoroutine((IEnumerator) this.AnimateIndividualDecorations());
+    this.AnimateIndividualDecorationsCoroutine = this.StartCoroutine(this.AnimateIndividualDecorations());
   }
 
   public void RecursivelyFindChildDecorationParts(GameObject decoration, int maxDepth, int depth = 0)

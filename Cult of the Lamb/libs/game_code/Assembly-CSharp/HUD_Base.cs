@@ -1,10 +1,11 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_Base
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
+using Lamb.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -64,7 +65,7 @@ public class HUD_Base : BaseMonoBehaviour
   public void Start()
   {
     this._offscreen = DataManager.Instance.Followers.Count <= 0;
-    this.StartCoroutine((IEnumerator) this.ShakeIcon());
+    this.StartCoroutine(this.ShakeIcon());
   }
 
   public void OnEnable()
@@ -121,7 +122,7 @@ public class HUD_Base : BaseMonoBehaviour
     this.FaithProgress = num1 / (100f * num3);
     if (this.cLerpBarRoutine != null)
       this.StopCoroutine(this.cLerpBarRoutine);
-    this.cLerpBarRoutine = this.StartCoroutine((IEnumerator) this.LerpBarRoutine());
+    this.cLerpBarRoutine = this.StartCoroutine(this.LerpBarRoutine());
     this.FaithRedGlow.color = new Color(1f, 0.0f, 0.0f, (float) ((double) this.FaithProgress * -1.0 + 0.5));
   }
 
@@ -131,7 +132,7 @@ public class HUD_Base : BaseMonoBehaviour
     this.HappinessBar.SetActive(false);
   }
 
-  public void ShowHappiness() => this.StartCoroutine((IEnumerator) this.ShowHappinessRoutine());
+  public void ShowHappiness() => this.StartCoroutine(this.ShowHappinessRoutine());
 
   public IEnumerator ShowHappinessRoutine()
   {
@@ -152,7 +153,7 @@ public class HUD_Base : BaseMonoBehaviour
     this.HappinessBar.SetActive(false);
   }
 
-  public void ShowHunger() => this.StartCoroutine((IEnumerator) this.ShowHungerRoutine());
+  public void ShowHunger() => this.StartCoroutine(this.ShowHungerRoutine());
 
   public IEnumerator ShowHungerRoutine()
   {
@@ -213,6 +214,8 @@ public class HUD_Base : BaseMonoBehaviour
 
   public void Update()
   {
+    if (MonoSingleton<UIManager>.Instance.IsPaused)
+      return;
     if (this.showing && (SeasonsManager.CurrentSeason != SeasonsManager.Season.Winter || DataManager.Instance.Followers.Count < 1) && (!DataManager.Instance.HasWeatherVane || (double) SeasonsManager.SEASON_NORMALISED_PROGRESS < 0.89999997615814209))
     {
       this.showing = false;

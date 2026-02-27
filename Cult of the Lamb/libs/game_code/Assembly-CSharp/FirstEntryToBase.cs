@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FirstEntryToBase
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -40,7 +40,7 @@ public class FirstEntryToBase : BaseMonoBehaviour
     if (DataManager.Instance.Tutorial_ReturnToDungeon || structure.Type != StructureBrain.TYPES.BUILD_SITE || structure.ToBuildType != StructureBrain.TYPES.TEMPLE)
       return;
     this.HideAll();
-    Debug.Log((object) ("Rat2BackToDungeon " + ((object) this.Rat2BackToDungeon)?.ToString()));
+    Debug.Log((object) ("Rat2BackToDungeon " + this.Rat2BackToDungeon?.ToString()));
     if ((Object) this.Rat2BackToDungeon != (Object) null)
       this.Rat2BackToDungeon.SetActive(true);
     DataManager.Instance.Tutorial_ReturnToDungeon = true;
@@ -109,7 +109,7 @@ public class FirstEntryToBase : BaseMonoBehaviour
     this.UIShrineTutorial = Object.Instantiate<GameObject>(this.UITutorialPrefab, GameObject.FindWithTag("Canvas").transform).GetComponent<UIShrineTutorial>();
   }
 
-  public void ShowXPBar() => this.StartCoroutine((IEnumerator) this.ShowXPBarRoutine());
+  public void ShowXPBar() => this.StartCoroutine(this.ShowXPBarRoutine());
 
   public IEnumerator ShowXPBarRoutine()
   {

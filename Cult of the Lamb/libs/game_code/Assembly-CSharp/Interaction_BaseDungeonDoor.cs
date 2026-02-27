@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_BaseDungeonDoor
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -287,7 +287,7 @@ public class Interaction_BaseDungeonDoor : Interaction
       if (FollowerBrain.AllBrains.Count > 0)
       {
         base.OnInteract(state);
-        this.playerFarming.GoToAndStop(this.transform.position + new Vector3(-1f, -2.5f), this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine())));
+        this.playerFarming.GoToAndStop(this.transform.position + new Vector3(-1f, -2.5f), this.gameObject, GoToCallback: (System.Action) (() => this.StartCoroutine(this.SacrificeFollowerRoutine())));
       }
       else
       {
@@ -298,7 +298,7 @@ public class Interaction_BaseDungeonDoor : Interaction
     }
     else if (this.HaveFollowers)
     {
-      this.StartCoroutine((IEnumerator) this.DoRitualRoutine());
+      this.StartCoroutine(this.DoRitualRoutine());
     }
     else
     {
@@ -329,7 +329,7 @@ public class Interaction_BaseDungeonDoor : Interaction
     selectMenuController1.OnFollowerSelected = selectMenuController1.OnFollowerSelected + (System.Action<FollowerInfo>) (followerInfo =>
     {
       AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/select_follower");
-      this.StartCoroutine((IEnumerator) this.SpawnFollower(followerInfo.ID));
+      this.StartCoroutine(this.SpawnFollower(followerInfo.ID));
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnHidden = selectMenuController2.OnHidden + (System.Action) (() => followerSelectInstance = (UIFollowerSelectMenuController) null);
@@ -372,7 +372,7 @@ public class Interaction_BaseDungeonDoor : Interaction
     spawnedFollower.Follower.Spine.AnimationState.Event -= new Spine.AnimationState.TrackEntryEventDelegate(interactionBaseDungeonDoor.HandleAnimationStateEvent);
     FollowerManager.CleanUpCopyFollower(spawnedFollower);
     interactionBaseDungeonDoor.SimpleSetCamera.Play();
-    yield return (object) interactionBaseDungeonDoor.StartCoroutine((IEnumerator) interactionBaseDungeonDoor.OpenDoorRoutine());
+    yield return (object) interactionBaseDungeonDoor.StartCoroutine(interactionBaseDungeonDoor.OpenDoorRoutine());
     GameManager.GetInstance().OnConversationEnd();
   }
 
@@ -391,7 +391,7 @@ public class Interaction_BaseDungeonDoor : Interaction
       FollowerManager.CleanUpCopyFollower(this.spawnedFollowers[index]);
   }
 
-  public void Play() => this.StartCoroutine((IEnumerator) this.OpenDoorRoutine());
+  public void Play() => this.StartCoroutine(this.OpenDoorRoutine());
 
   public void Block()
   {
@@ -474,7 +474,7 @@ public class Interaction_BaseDungeonDoor : Interaction
       ++interactionBaseDungeonDoor.NumGivingDevotion;
       spawnedFollower.Follower.State.CURRENT_STATE = StateMachine.State.CustomAnimation;
       double num = (double) spawnedFollower.Follower.SetBodyAnimation("worship", true);
-      interactionBaseDungeonDoor.StartCoroutine((IEnumerator) interactionBaseDungeonDoor.SpawnSouls(spawnedFollower.Follower.Spine.transform.position));
+      interactionBaseDungeonDoor.StartCoroutine(interactionBaseDungeonDoor.SpawnSouls(spawnedFollower.Follower.Spine.transform.position));
       yield return (object) new WaitForSeconds(0.1f);
     }
     while (interactionBaseDungeonDoor.NumGivingDevotion > 0)
@@ -486,12 +486,12 @@ public class Interaction_BaseDungeonDoor : Interaction
     interactionBaseDungeonDoor.RitualLighting.SetActive(false);
     BiomeConstants.Instance.ChromaticAbberationTween(1f, 1f, BiomeConstants.Instance.ChromaticAberrationDefaultValue);
     AudioManager.Instance.StopLoop(interactionBaseDungeonDoor.LoopedSound);
-    yield return (object) interactionBaseDungeonDoor.StartCoroutine((IEnumerator) interactionBaseDungeonDoor.OpenDoorRoutine());
+    yield return (object) interactionBaseDungeonDoor.StartCoroutine(interactionBaseDungeonDoor.OpenDoorRoutine());
     yield return (object) new WaitForSeconds(1f);
     foreach (FollowerManager.SpawnedFollower spawnedFollower1 in interactionBaseDungeonDoor.spawnedFollowers)
     {
       FollowerManager.SpawnedFollower spawnedFollower = spawnedFollower1;
-      interactionBaseDungeonDoor.StartCoroutine((IEnumerator) interactionBaseDungeonDoor.PlaySoundDelay(spawnedFollower.Follower.gameObject));
+      interactionBaseDungeonDoor.StartCoroutine(interactionBaseDungeonDoor.PlaySoundDelay(spawnedFollower.Follower.gameObject));
       spawnedFollower.Follower.TimedAnimation("spawn-out", 0.8666667f, (System.Action) (() => FollowerManager.CleanUpCopyFollower(spawnedFollower)), false);
       yield return (object) new WaitForSeconds(0.1f);
     }
@@ -664,6 +664,6 @@ public class Interaction_BaseDungeonDoor : Interaction
   [CompilerGenerated]
   public void \u003COnInteract\u003Eb__45_0()
   {
-    this.StartCoroutine((IEnumerator) this.SacrificeFollowerRoutine());
+    this.StartCoroutine(this.SacrificeFollowerRoutine());
   }
 }

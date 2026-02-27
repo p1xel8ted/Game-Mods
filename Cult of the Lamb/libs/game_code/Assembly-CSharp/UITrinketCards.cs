@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UITrinketCards
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -117,10 +117,7 @@ public class UITrinketCards :
     onSelected();
   }
 
-  public override void StartUIInventoryController()
-  {
-    this.StartCoroutine((IEnumerator) this.DealCards());
-  }
+  public override void StartUIInventoryController() => this.StartCoroutine(this.DealCards());
 
   public void OnEnable()
   {
@@ -134,7 +131,7 @@ public class UITrinketCards :
   {
     UITrinketCards uiTrinketCards = this;
     yield return (object) new WaitForEndOfFrame();
-    yield return (object) uiTrinketCards.StartCoroutine((IEnumerator) uiTrinketCards.TrinketCard.Play(uiTrinketCards._drawnCard, Vector3.zero));
+    yield return (object) uiTrinketCards.StartCoroutine(uiTrinketCards.TrinketCard.Play(uiTrinketCards._drawnCard, Vector3.zero));
     if (!uiTrinketCards.CameFromPauseScreen && (double) Time.timeScale != 0.0)
       yield return (object) new WaitForSeconds(1.5f);
     if (uiTrinketCards._requiresCallbacks)

@@ -1,0 +1,28 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: TrailRendererExtensions
+// Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: D4FAC018-F15B-4650-BC23-66B6B15D1655
+// Assembly location: G:\CultOfTheLambPreRitualNerf\depots\1313141\21912051\Cult Of The Lamb_Data\Managed\Assembly-CSharp.dll
+
+using UnityEngine;
+
+#nullable disable
+public static class TrailRendererExtensions
+{
+  public static float GetTrailLength(this TrailRenderer trailRenderer)
+  {
+    Vector3[] positions1 = new Vector3[trailRenderer.positionCount];
+    int positions2 = trailRenderer.GetPositions(positions1);
+    if (positions2 < 2)
+      return 0.0f;
+    float trailLength = 0.0f;
+    Vector3 a = positions1[0];
+    for (int index = 1; index < positions2; ++index)
+    {
+      Vector3 b = positions1[index];
+      trailLength += Vector3.Distance(a, b);
+      a = b;
+    }
+    return trailLength;
+  }
+}

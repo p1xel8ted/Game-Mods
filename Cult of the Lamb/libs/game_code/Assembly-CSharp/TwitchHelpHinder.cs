@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TwitchHelpHinder
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -65,7 +65,7 @@ public static class TwitchHelpHinder
   {
     if (TwitchHelpHinder.Deactivated || !DataManager.Instance.TwitchSettings.HelpHinderEnabled || !TwitchAuthentication.IsAuthenticated)
       return;
-    GameManager.GetInstance().StartCoroutine((IEnumerator) TwitchHelpHinder.HHEventIE());
+    GameManager.GetInstance().StartCoroutine(TwitchHelpHinder.HHEventIE());
   }
 
   public static IEnumerator HHEventIE()
@@ -226,7 +226,7 @@ public static class TwitchHelpHinder
     }
     if (TwitchHelpHinder.Available && !TwitchHelpHinder.Active && location == FollowerLocation.Base)
     {
-      TwitchHelpHinder.underDoorsCoroutine = MonoSingleton<TwitchManager>.Instance.StartCoroutine((IEnumerator) TwitchHelpHinder.WaitUntilUnderDoors(new System.Action(TwitchHelpHinder.TriggerEvent)));
+      TwitchHelpHinder.underDoorsCoroutine = MonoSingleton<TwitchManager>.Instance.StartCoroutine(TwitchHelpHinder.WaitUntilUnderDoors(new System.Action(TwitchHelpHinder.TriggerEvent)));
       BiomeGenerator.OnBiomeChangeRoom -= new BiomeGenerator.BiomeAction(TwitchHelpHinder.OnChangedRoom);
     }
     if (GameManager.IsDungeon(location))

@@ -1,9 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SkeletonAnimationLODGlobalManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
+using Lamb.UI;
 using Spine.Unity;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ public class SkeletonAnimationLODGlobalManager : MonoBehaviour
 
   public void Update()
   {
-    if ((double) (this.timer -= Time.deltaTime) > 0.0)
+    if (MonoSingleton<UIManager>.Instance.IsPaused || (double) (this.timer -= Time.deltaTime) > 0.0)
       return;
     this.timer = 0.0f;
     if ((UnityEngine.Object) this.mainCamera == (UnityEngine.Object) null || !this.mainCamera.gameObject.activeInHierarchy)
@@ -144,7 +145,7 @@ public class SkeletonAnimationLODGlobalManager : MonoBehaviour
     if ((UnityEngine.Object) animationLodManager != (UnityEngine.Object) null)
       animationLodManager.IgnoreCulling = true;
     else
-      Debug.LogWarning((object) ("No LOD was found! " + ((object) spine.gameObject)?.ToString()));
+      Debug.LogWarning((object) ("No LOD was found! " + spine.gameObject?.ToString()));
   }
 
   public void RemoveLOD(Transform parent)

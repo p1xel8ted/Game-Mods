@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_DLCFurnace
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -185,7 +185,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
     }
     if (DataManager.Instance.ShowCultWarmth || SeasonsManager.CurrentSeason != SeasonsManager.Season.Winter)
       return;
-    this.StartCoroutine((IEnumerator) this.OnboardWarmthBar());
+    this.StartCoroutine(this.OnboardWarmthBar());
   }
 
   public IEnumerator OnboardWarmthBar()
@@ -339,7 +339,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
         this.AddFuel(InventoryItem.ITEM_TYPE.MAGMA_STONE, false, (System.Action) null, true);
       this.HasChanged = true;
       this.AddSacrificeFuelThoughtUpdate(Thought.FurnaceAnimal);
-      this.StartCoroutine((IEnumerator) interactionRanchable.RemoveAnimal(false));
+      this.StartCoroutine(interactionRanchable.RemoveAnimal(false));
       this.Animate();
       interactionRanchable.PlayDieVO();
       AudioManager.Instance.PlayOneShot(this.insertFollowerSFX);
@@ -374,7 +374,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
   {
     base.OnSecondaryInteract(state);
     if (Inventory.GetItemQuantity(InventoryItem.ITEM_TYPE.MAGMA_STONE) >= 60)
-      this.StartCoroutine((IEnumerator) this.ClearBlizzardIE());
+      this.StartCoroutine(this.ClearBlizzardIE());
     else
       state.GetComponent<PlayerFarming>().indicator.PlayShake();
   }
@@ -495,7 +495,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
       {
         this.activating = false;
         if (this.animateRoutine == null)
-          this.animateRoutine = this.StartCoroutine((IEnumerator) this.AnimateResourcesRoutine((float) this.cachedAmount));
+          this.animateRoutine = this.StartCoroutine(this.AnimateResourcesRoutine((float) this.cachedAmount));
       }
     }
     this.UpdateRangeVisuals();
@@ -551,7 +551,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
 
   public void AnimateRoutine(float spawnAmount)
   {
-    this.StartCoroutine((IEnumerator) this.AnimateResourcesRoutine(spawnAmount));
+    this.StartCoroutine(this.AnimateResourcesRoutine(spawnAmount));
   }
 
   public IEnumerator AnimateResourcesRoutine(float spawnAmount)
@@ -647,7 +647,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
     if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter && !activeSelf)
     {
       if (this.structure.Brain != null && this.structure.Brain.Data.Fuel > 0)
-        this.StartCoroutine((IEnumerator) this.PlayTurnOnSFX());
+        this.StartCoroutine(this.PlayTurnOnSFX());
       this.DoBounce(this.BuildingON.transform);
     }
     this.BuildingON.SetActive(SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter);
@@ -678,7 +678,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
       }
       else if (this.previousCount > 0 && this.structure.Brain.Data.Fuel <= 0)
       {
-        this.StartCoroutine((IEnumerator) this.DoOutOfFuelEffectsRoutine());
+        this.StartCoroutine(this.DoOutOfFuelEffectsRoutine());
         num = 0;
         Interaction_DLCFurnace.FurnaceEvent onFurnaceTurnOff = Interaction_DLCFurnace.OnFurnaceTurnOff;
         if (onFurnaceTurnOff != null)
@@ -690,7 +690,7 @@ public class Interaction_DLCFurnace : Interaction_AddFuel
         bool flag = num - 1 == index;
         this.litStates[index].gameObject.SetActive(flag);
         if (flag && this.previousCount == 0)
-          this.StartCoroutine((IEnumerator) this.PlayTurnOnSFX());
+          this.StartCoroutine(this.PlayTurnOnSFX());
       }
       this.UpdateGauage();
       this.previousCount = this.structure.Brain.Data.Fuel;

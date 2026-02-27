@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BreakableSpiderNest
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -61,7 +61,7 @@ public class BreakableSpiderNest : BaseMonoBehaviour
     this.health.OnDie += new Health.DieAction(this.OnDie);
     this.originalColor = this.renderer.material.color;
     RoomLockController.OnRoomCleared += new RoomLockController.RoomEvent(this.OnRoomCleared);
-    this.StartCoroutine((IEnumerator) this.Sub());
+    this.StartCoroutine(this.Sub());
   }
 
   public IEnumerator Sub()
@@ -93,7 +93,7 @@ public class BreakableSpiderNest : BaseMonoBehaviour
     Health.AttackTypes AttackType,
     bool FromBehind = false)
   {
-    this.StartCoroutine((IEnumerator) this.HitIE());
+    this.StartCoroutine(this.HitIE());
   }
 
   public IEnumerator HitIE()
@@ -137,7 +137,7 @@ public class BreakableSpiderNest : BaseMonoBehaviour
   public void OnRoomCleared()
   {
     this.StopAllCoroutines();
-    this.health.DealDamage(999f, this.gameObject, this.transform.position);
+    this.health.DealDamage(999f, this.gameObject, this.transform.position, dealDamageImmediately: true);
   }
 
   public void SpawnEnemies()
@@ -179,8 +179,8 @@ public class BreakableSpiderNest : BaseMonoBehaviour
               componentsInChild.AnimationState.AddAnimation(0, "idle", true, 0.0f);
             }
           }
-          component.StartCoroutine((IEnumerator) this.SpawnAnimIE(component));
-          component.StartCoroutine((IEnumerator) this.DelayedEnemyHealthEnable((UnitObject) component));
+          component.StartCoroutine(this.SpawnAnimIE(component));
+          component.StartCoroutine(this.DelayedEnemyHealthEnable((UnitObject) component));
           UnityEngine.Object.Instantiate<GameObject>(this.spawnParticle, pos, Quaternion.identity);
           if (!(bool) (UnityEngine.Object) this.hpBar)
             return;
@@ -189,7 +189,7 @@ public class BreakableSpiderNest : BaseMonoBehaviour
       }));
     if (!(bool) (UnityEngine.Object) this.health)
       return;
-    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position);
+    this.health.DealDamage(this.health.totalHP, this.gameObject, this.transform.position, dealDamageImmediately: true);
   }
 
   public void OnDie(
@@ -245,7 +245,7 @@ public class BreakableSpiderNest : BaseMonoBehaviour
     {
       Health component = collider2D.GetComponent<Health>();
       if ((UnityEngine.Object) component != (UnityEngine.Object) null && component.team == Health.Team.Neutral)
-        collider2D.GetComponent<Health>().DealDamage((float) int.MaxValue, enemy.gameObject, Vector3.Lerp(component.transform.position, enemy.transform.position, 0.7f));
+        collider2D.GetComponent<Health>().DealDamage((float) int.MaxValue, enemy.gameObject, Vector3.Lerp(component.transform.position, enemy.transform.position, 0.7f), dealDamageImmediately: true);
     }
   }
 

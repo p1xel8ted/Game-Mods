@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapFleshBall
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -192,7 +192,7 @@ public class TrapFleshBall : UnitObject
     Health component = collider.GetComponent<Health>();
     if (!((UnityEngine.Object) component != (UnityEngine.Object) null) || !((UnityEngine.Object) collider.gameObject != (UnityEngine.Object) this.gameObject) || component.team == this.health.team || component.team == Health.Team.Neutral || this.dropped)
       return;
-    this.StartCoroutine((IEnumerator) this.DoDropImmediate());
+    this.StartCoroutine(this.DoDropImmediate());
   }
 
   public new void OnDie(
@@ -235,7 +235,7 @@ public class TrapFleshBall : UnitObject
       if ((double) this.dropTimer >= (double) this.dropTime)
       {
         this.spine.transform.DOKill();
-        this.StartCoroutine((IEnumerator) this.DoDropImmediate());
+        this.StartCoroutine(this.DoDropImmediate());
       }
       else if ((double) this.shakeTimer >= (double) this.currentShakeDelay)
       {
@@ -440,7 +440,7 @@ public class TrapFleshBall : UnitObject
 
   public void Explode(bool canThrowEggs)
   {
-    this.StartCoroutine((IEnumerator) this.ExplodeCoroutine(canThrowEggs));
+    this.StartCoroutine(this.ExplodeCoroutine(canThrowEggs));
   }
 
   public void ThrowEgg()

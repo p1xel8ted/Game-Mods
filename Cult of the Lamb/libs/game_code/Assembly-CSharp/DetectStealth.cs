@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: DetectStealth
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -115,7 +115,7 @@ public class DetectStealth : BaseMonoBehaviour
             if ((double) Mathf.Abs(Utils.GetAngle(this.transform.position, health.transform.position) - this.LookingAngle) <= (double) this.CloseConeAngle / 2.0 || (double) Mathf.Abs(Utils.GetAngle(this.transform.position, health.transform.position) - this.LookingAngle) >= 360.0 - (double) this.CloseConeAngle / 2.0)
             {
               this.Results = new List<RaycastHit2D>();
-              Physics2D.Raycast((Vector2) this.transform.position, (Vector2) (health.transform.position - this.transform.position), this.c, (List<RaycastHit2D>) this.Results, this.VisionRage);
+              Physics2D.Raycast((Vector2) this.transform.position, (Vector2) (health.transform.position - this.transform.position), this.c, this.Results, this.VisionRage);
               if ((UnityEngine.Object) this.Results[0].collider.gameObject == (UnityEngine.Object) health.gameObject)
               {
                 ++this.VisibleEnemies;
@@ -127,7 +127,7 @@ public class DetectStealth : BaseMonoBehaviour
           else if ((double) Mathf.Abs(Utils.GetAngle(this.transform.position, health.transform.position) - this.LookingAngle) <= (double) this.VisionConeAngle / 2.0 || (double) Mathf.Abs(Utils.GetAngle(this.transform.position, health.transform.position) - this.LookingAngle) >= 360.0 - (double) this.VisionConeAngle / 2.0)
           {
             this.Results = new List<RaycastHit2D>();
-            Physics2D.Raycast((Vector2) this.transform.position, (Vector2) (health.transform.position - this.transform.position), this.c, (List<RaycastHit2D>) this.Results, this.VisionRage);
+            Physics2D.Raycast((Vector2) this.transform.position, (Vector2) (health.transform.position - this.transform.position), this.c, this.Results, this.VisionRage);
             if ((UnityEngine.Object) this.Results[0].collider.gameObject == (UnityEngine.Object) health.gameObject)
             {
               ++this.VisibleEnemies;

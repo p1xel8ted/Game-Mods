@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TempleEmblem
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -69,7 +69,7 @@ public class TempleEmblem : MonoBehaviour
       this.Border.sprite = this.iconMapping.GetImage((CultUpgradeData.TYPE) Mathf.Max(DataManager.Instance.TempleBorder, 1));
     if (!(animateEmblemIntro | animateBorderIntro))
       return;
-    this.AnimateDecorations = this.StartCoroutine((IEnumerator) this.AnimateIndividualDecorations(animateEmblemIntro, animateBorderIntro));
+    this.AnimateDecorations = this.StartCoroutine(this.AnimateIndividualDecorations(animateEmblemIntro, animateBorderIntro));
   }
 
   public IEnumerator AnimateIndividualDecorations(bool animateEmblemIntro, bool animateBorderIntro)

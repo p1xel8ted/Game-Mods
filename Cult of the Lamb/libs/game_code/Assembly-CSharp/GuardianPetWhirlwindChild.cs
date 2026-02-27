@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GuardianPetWhirlwindChild
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -37,7 +37,7 @@ public class GuardianPetWhirlwindChild : MonoBehaviour
     this.Angle = (float) (Index * (360 / Total)) * ((float) Math.PI / 180f);
     this.transform.DOKill();
     this.transform.localPosition = Vector3.zero;
-    this.transform.DOLocalMove(new Vector3(this.Distance * Mathf.Cos(this.Angle), this.Distance * Mathf.Sin(this.Angle)), 0.5f).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() => this.StartCoroutine((IEnumerator) this.LoopRoutine())));
+    this.transform.DOLocalMove(new Vector3(this.Distance * Mathf.Cos(this.Angle), this.Distance * Mathf.Sin(this.Angle)), 0.5f).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() => this.StartCoroutine(this.LoopRoutine())));
   }
 
   public IEnumerator LoopRoutine()
@@ -81,7 +81,7 @@ public class GuardianPetWhirlwindChild : MonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CPlay\u003Eb__9_0() => this.StartCoroutine((IEnumerator) this.LoopRoutine());
+  public void \u003CPlay\u003Eb__9_0() => this.StartCoroutine(this.LoopRoutine());
 
   [CompilerGenerated]
   public float \u003CLoopRoutine\u003Eb__10_0() => this.RotationSpeed;

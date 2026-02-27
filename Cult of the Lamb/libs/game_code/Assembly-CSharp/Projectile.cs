@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Projectile
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Ara;
@@ -380,7 +380,7 @@ public class Projectile : BaseMonoBehaviour, ISpellOwning
       this.hitParticleObj.Recycle();
     if (!this.initialized || this.destroyed || !((UnityEngine.Object) this.transform.parent == (UnityEngine.Object) null) && (!((UnityEngine.Object) this.transform.parent.GetComponent<Projectile>() == (UnityEngine.Object) null) || !((UnityEngine.Object) this.transform.parent.GetComponent<ObjectPool>() == (UnityEngine.Object) null)))
       return;
-    GameManager.GetInstance()?.StartCoroutine((IEnumerator) this.RecycleIE(1f));
+    GameManager.GetInstance()?.StartCoroutine(this.RecycleIE(1f));
   }
 
   public virtual void OnEnable()
@@ -841,7 +841,7 @@ public class Projectile : BaseMonoBehaviour, ISpellOwning
     {
       if ((cachedComponent2.team == Health.Team.Neutral || !((UnityEngine.Object) this.ArrowImage == (UnityEngine.Object) null) && !this.ArrowImage.gameObject.activeSelf || cachedComponent2.invincible || cachedComponent2.CompareTag("ProjectileIgnore")) && (cachedComponent2.team != Health.Team.Neutral || (double) this.DamageToNeutral <= 0.0 || cachedComponent2.CompareTag("BreakableDecoration")) || (UnityEngine.Object) cachedComponent2 == (UnityEngine.Object) this.Owner && cachedComponent2.IsCharmed || cachedComponent2.isPlayer && TrinketManager.HasTrinket(TarotCards.Card.ImmuneToTraps, PlayerFarming.GetPlayerFarmingComponent(cachedComponent2.gameObject)) && this.IsAttachedToProjectileTrap())
         return;
-      bool flag = cachedComponent2.DealDamage(cachedComponent2.team == Health.Team.Neutral ? this.DamageToNeutral : this.Damage, this.gameObject, this.transform.position, AttackType: this.NoKnockback ? Health.AttackTypes.NoKnockBack : Health.AttackTypes.Projectile, AttackFlags: this.AttackFlags);
+      bool flag = cachedComponent2.DealDamage(cachedComponent2.team == Health.Team.Neutral ? this.DamageToNeutral : this.Damage, this.gameObject, this.transform.position, AttackType: this.NoKnockback ? Health.AttackTypes.NoKnockBack : Health.AttackTypes.Projectile, dealDamageImmediately: cachedComponent2.team != Health.Team.PlayerTeam, AttackFlags: this.AttackFlags);
       if (cachedComponent2.isPlayer)
       {
         this.OnCollisionWithPlayer(cachedComponent2);
@@ -867,7 +867,7 @@ public class Projectile : BaseMonoBehaviour, ISpellOwning
           {
             Health component2 = component1.GetComponent<Health>();
             if ((bool) (UnityEngine.Object) component2 && component2.team == Health.Team.Neutral)
-              component2.DealDamage(this.DamageToNeutral, this.gameObject, this.transform.position, AttackType: this.NoKnockback ? Health.AttackTypes.NoKnockBack : Health.AttackTypes.Projectile, AttackFlags: this.AttackFlags);
+              component2.DealDamage(this.DamageToNeutral, this.gameObject, this.transform.position, AttackType: this.NoKnockback ? Health.AttackTypes.NoKnockBack : Health.AttackTypes.Projectile, dealDamageImmediately: cachedComponent2.team != Health.Team.PlayerTeam, AttackFlags: this.AttackFlags);
           }
         }
         if (this.KnockedBack)
@@ -979,7 +979,7 @@ public class Projectile : BaseMonoBehaviour, ISpellOwning
     }
     if ((bool) (UnityEngine.Object) this.collider)
       this.collider.enabled = false;
-    this.recycleRoutine = !(bool) (UnityEngine.Object) this.ArrowImage ? this.StartCoroutine((IEnumerator) this.RecycleIE(delay)) : this.StartCoroutine((IEnumerator) this.RecycleIE(0.0f));
+    this.recycleRoutine = !(bool) (UnityEngine.Object) this.ArrowImage ? this.StartCoroutine(this.RecycleIE(delay)) : this.StartCoroutine(this.RecycleIE(0.0f));
     this.OnDestroyProjectile.Invoke();
   }
 

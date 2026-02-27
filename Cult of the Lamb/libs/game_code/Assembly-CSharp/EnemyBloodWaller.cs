@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyBloodWaller
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -188,7 +188,7 @@ public class EnemyBloodWaller : UnitObject
     base.OnEnable();
     this.health.OnHitEarly += new Health.HitAction(((UnitObject) this).OnHitEarly);
     this.InitDamageColliders();
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
     this.onStateChange += new EnemyBloodWaller.DorryStateChange(this.OnStateChange);
   }
@@ -250,7 +250,7 @@ public class EnemyBloodWaller : UnitObject
     {
       Health currentWall = this.currentWalls[0];
       if ((bool) (UnityEngine.Object) currentWall)
-        currentWall.DealDamage(999f, this.gameObject, this.transform.position);
+        currentWall.DealDamage(999f, this.gameObject, this.transform.position, dealDamageImmediately: true);
       else
         this.currentWalls.Remove(currentWall);
     }
@@ -487,7 +487,7 @@ public class EnemyBloodWaller : UnitObject
         this.Spine.AnimationState.SetAnimation(0, "idle", true);
         if (this.idleRoutine != null)
           this.StopCoroutine(this.idleRoutine);
-        this.idleRoutine = this.StartCoroutine((IEnumerator) this.IdleState());
+        this.idleRoutine = this.StartCoroutine(this.IdleState());
         break;
       case EnemyBloodWaller.BloodWallerState.KeepDistance:
         this.repathTimer = 1f;
@@ -495,7 +495,7 @@ public class EnemyBloodWaller : UnitObject
         this.Spine.AnimationState.SetAnimation(0, "walk", true);
         if (this.moveRoutine != null)
           this.StopCoroutine(this.moveRoutine);
-        this.moveRoutine = this.StartCoroutine((IEnumerator) this.KeepDistanceState());
+        this.moveRoutine = this.StartCoroutine(this.KeepDistanceState());
         break;
       case EnemyBloodWaller.BloodWallerState.CreateWall:
         this.Spine.AnimationState.SetAnimation(0, "bite", false);
@@ -504,7 +504,7 @@ public class EnemyBloodWaller : UnitObject
           AudioManager.Instance.PlayOneShot(this.AttackSpikeRingStartSFX);
         if (this.createWallRoutine != null)
           this.StopCoroutine(this.createWallRoutine);
-        this.createWallRoutine = this.StartCoroutine((IEnumerator) this.CreateWallState());
+        this.createWallRoutine = this.StartCoroutine(this.CreateWallState());
         break;
       case EnemyBloodWaller.BloodWallerState.CreateBigWall:
         this.ClearPaths();
@@ -516,7 +516,7 @@ public class EnemyBloodWaller : UnitObject
           this.StopCoroutine(this.moveRoutine);
         if (this.createBigWallRoutine != null)
           this.StopCoroutine(this.createBigWallRoutine);
-        this.createBigWallRoutine = this.StartCoroutine((IEnumerator) this.BigSpikeAttack());
+        this.createBigWallRoutine = this.StartCoroutine(this.BigSpikeAttack());
         break;
       case EnemyBloodWaller.BloodWallerState.CreateWallLine:
         this.ClearPaths();
@@ -526,7 +526,7 @@ public class EnemyBloodWaller : UnitObject
           AudioManager.Instance.PlayOneShot(this.AttackLargeSpikeStartSFX);
         if (this.moveRoutine != null)
           this.StopCoroutine(this.moveRoutine);
-        this.createWallInLineRoutine = this.StartCoroutine((IEnumerator) this.CreateWallsInDirection());
+        this.createWallInLineRoutine = this.StartCoroutine(this.CreateWallsInDirection());
         break;
       case EnemyBloodWaller.BloodWallerState.CreateCloseRangeWall:
         this.ClearPaths();
@@ -536,7 +536,7 @@ public class EnemyBloodWaller : UnitObject
           AudioManager.Instance.PlayOneShot(this.AttackLargeSpikeStartSFX);
         if (this.moveRoutine != null)
           this.StopCoroutine(this.moveRoutine);
-        this.createCloseRangeWallRoutine = this.StartCoroutine((IEnumerator) this.CreateCloseRangeWall());
+        this.createCloseRangeWallRoutine = this.StartCoroutine(this.CreateCloseRangeWall());
         break;
     }
   }
@@ -672,9 +672,9 @@ public class EnemyBloodWaller : UnitObject
     {
       componentInChildren2.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       if (this.wallsDamageAlways)
-        this.StartCoroutine((IEnumerator) this.EnableDamageCollider(componentInChildren2, 0.0f));
+        this.StartCoroutine(this.EnableDamageCollider(componentInChildren2, 0.0f));
       else
-        this.StartCoroutine((IEnumerator) this.EnableDamageColliderTime(componentInChildren2, 0.0f));
+        this.StartCoroutine(this.EnableDamageColliderTime(componentInChildren2, 0.0f));
     }
     wall.transform.DOScale(Vector3.one, 0.2f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBounce);
     wall.transform.parent = BiomeGenerator.Instance.CurrentRoom.generateRoom.transform;
@@ -703,7 +703,7 @@ public class EnemyBloodWaller : UnitObject
     {
       Vector2 vector2 = new Vector2(Mathf.Cos(angle * ((float) Math.PI / 180f)), Mathf.Sin(angle * ((float) Math.PI / 180f))) * enemyBloodWaller.closeRangeWallRadius;
       Vector3 startPosition = (Vector3) (position + vector2);
-      enemyBloodWaller.StartCoroutine((IEnumerator) enemyBloodWaller.SpawnWallsInDirection(enemyBloodWaller.closeRangeWall, startPosition, angle, 1, 0.0f, MMVibrate.HapticTypes.HeavyImpact));
+      enemyBloodWaller.StartCoroutine(enemyBloodWaller.SpawnWallsInDirection(enemyBloodWaller.closeRangeWall, startPosition, angle, 1, 0.0f, MMVibrate.HapticTypes.HeavyImpact));
       angle += num;
     }
     yield return (object) CoroutineStatics.WaitForScaledSeconds(enemyBloodWaller.closeRangeWallRecoverTime, enemyBloodWaller.Spine);
@@ -731,7 +731,7 @@ public class EnemyBloodWaller : UnitObject
     enemyBloodWaller.FacePosition(enemyBloodWaller.GetClosestTarget().transform.position);
     float angle = Utils.GetAngle(enemyBloodWaller.transform.position, enemyBloodWaller.GetClosestTarget().transform.position);
     Vector3 vector3 = new Vector3(Mathf.Cos(angle * ((float) Math.PI / 180f)), Mathf.Sin(angle * ((float) Math.PI / 180f))) * enemyBloodWaller.directionalWallStartSpawnOffset;
-    enemyBloodWaller.StartCoroutine((IEnumerator) enemyBloodWaller.SpawnWallsInDirection(enemyBloodWaller.directionalWall, enemyBloodWaller.transform.position + vector3, angle, enemyBloodWaller.directionalWallCount, enemyBloodWaller.directionalWallOffset, MMVibrate.HapticTypes.MediumImpact));
+    enemyBloodWaller.StartCoroutine(enemyBloodWaller.SpawnWallsInDirection(enemyBloodWaller.directionalWall, enemyBloodWaller.transform.position + vector3, angle, enemyBloodWaller.directionalWallCount, enemyBloodWaller.directionalWallOffset, MMVibrate.HapticTypes.MediumImpact));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E2__current = (object) CoroutineStatics.WaitForScaledSeconds(enemyBloodWaller.closeRangeWallRecoverTime, enemyBloodWaller.Spine);
     // ISSUE: reference to a compiler-generated field

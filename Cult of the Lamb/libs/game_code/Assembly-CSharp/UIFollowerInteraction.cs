@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIFollowerInteraction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -71,7 +71,7 @@ public class UIFollowerInteraction : BaseMonoBehaviour
     this.canvas = this.GetComponentInParent<Canvas>();
     this.StopAllCoroutines();
     GameManager.GetInstance().CameraSetOffset(new Vector3(-1.4f, 0.0f, 0.0f));
-    this.StartCoroutine((IEnumerator) this.FadeIn());
+    this.StartCoroutine(this.FadeIn());
   }
 
   public IEnumerator FadeIn()
@@ -103,7 +103,7 @@ public class UIFollowerInteraction : BaseMonoBehaviour
     Time.timeScale = 1f;
     GameManager.GetInstance().CameraSetOffset(Vector3.zero);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.FadeOut());
+    this.StartCoroutine(this.FadeOut());
   }
 
   public IEnumerator FadeOut()

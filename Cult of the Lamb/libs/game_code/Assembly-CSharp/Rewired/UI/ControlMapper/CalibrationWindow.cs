@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.UI.ControlMapper.CalibrationWindow
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired.Glyphs;
@@ -141,13 +141,13 @@ public class CalibrationWindow : Window
         if ((UnityEngine.Object) inSelfOrChildren1 != (UnityEngine.Object) null)
         {
           inSelfOrChildren1.allowedTypes = Rewired.UI.ControlMapper.ControlMapper.current.showGlyphs ? ControllerElementGlyphBase.AllowedTypes.All : ControllerElementGlyphBase.AllowedTypes.Text;
-          inSelfOrChildren1.controllerElementIdentifier = ((IList<ControllerElementIdentifier>) joystick.AxisElementIdentifiers)[index1];
+          inSelfOrChildren1.controllerElementIdentifier = joystick.AxisElementIdentifiers[index1];
         }
         else
         {
           TMP_Text inSelfOrChildren2 = UnityTools.GetComponentInSelfOrChildren<TMP_Text>(gameObject);
           if ((UnityEngine.Object) inSelfOrChildren2 != (UnityEngine.Object) null)
-            inSelfOrChildren2.text = Rewired.UI.ControlMapper.ControlMapper.GetLanguage().GetElementIdentifierName((Controller) joystick, ((IList<ControllerElementIdentifier>) joystick.AxisElementIdentifiers)[index1].id, AxisRange.Full);
+            inSelfOrChildren2.text = Rewired.UI.ControlMapper.ControlMapper.GetLanguage().GetElementIdentifierName((Controller) joystick, joystick.AxisElementIdentifiers[index1].id, AxisRange.Full);
         }
         if ((double) num == 0.0)
           num = UnityTools.GetComponentInSelfOrChildren<LayoutElement>(gameObject).minHeight;
@@ -413,17 +413,17 @@ public class CalibrationWindow : Window
   {
     if ((UnityEngine.Object) this.rewiredStandaloneInputModule == (UnityEngine.Object) null)
       return false;
-    IList<Player> allPlayers = (IList<Player>) ReInput.players.AllPlayers;
+    IList<Player> allPlayers = ReInput.players.AllPlayers;
     int count1 = allPlayers.Count;
     for (int index1 = 0; index1 < count1; ++index1)
     {
-      IList<JoystickMap> maps = (IList<JoystickMap>) allPlayers[index1].controllers.maps.GetMaps<JoystickMap>(this.joystick.id);
+      IList<JoystickMap> maps = allPlayers[index1].controllers.maps.GetMaps<JoystickMap>(this.joystick.id);
       if (maps != null)
       {
         int count2 = maps.Count;
         for (int index2 = 0; index2 < count2; ++index2)
         {
-          IList<ActionElementMap> axisMaps = (IList<ActionElementMap>) maps[index2].AxisMaps;
+          IList<ActionElementMap> axisMaps = maps[index2].AxisMaps;
           if (axisMaps != null)
           {
             int count3 = axisMaps.Count;

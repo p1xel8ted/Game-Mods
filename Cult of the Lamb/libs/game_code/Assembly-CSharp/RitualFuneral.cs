@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualFuneral
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -24,7 +24,7 @@ public class RitualFuneral : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -32,7 +32,7 @@ public class RitualFuneral : Ritual
     RitualFuneral ritualFuneral = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualFuneral.StartCoroutine((IEnumerator) ritualFuneral.WaitFollowersFormCircle());
+    yield return (object) ritualFuneral.StartCoroutine(ritualFuneral.WaitFollowersFormCircle());
     yield return (object) new WaitForSeconds(1f);
     FollowerLocation location = FollowerLocation.Base;
     List<Structures_Grave> graves = StructureManager.GetAllStructuresOfType<Structures_Grave>(in location);
@@ -102,7 +102,7 @@ public class RitualFuneral : Ritual
           }
         }
       }
-      GameManager.GetInstance().StartCoroutine((IEnumerator) this.ContinueRitual(followerInfo, grave));
+      GameManager.GetInstance().StartCoroutine(this.ContinueRitual(followerInfo, grave));
     });
     UIFollowerSelectMenuController selectMenuController2 = followerSelectInstance;
     selectMenuController2.OnCancel = selectMenuController2.OnCancel + (System.Action) (() =>
@@ -129,7 +129,7 @@ public class RitualFuneral : Ritual
     foreach (FollowerBrain followerBrain in Ritual.GetFollowersAvailableToAttendSermon())
     {
       Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
-      ritualFuneral.StartCoroutine((IEnumerator) ritualFuneral.FollowerMoveRoutine(followerById));
+      ritualFuneral.StartCoroutine(ritualFuneral.FollowerMoveRoutine(followerById));
     }
     Interaction_TempleAltar.Instance.RitualLighting.gameObject.SetActive(true);
     ChurchFollowerManager.Instance.StartRitualOverlay();
@@ -320,7 +320,7 @@ public class RitualFuneral : Ritual
     {
       Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
       if ((bool) (UnityEngine.Object) followerById)
-        ritualFuneral.StartCoroutine((IEnumerator) ritualFuneral.FollowerMoveRoutine(followerById));
+        ritualFuneral.StartCoroutine(ritualFuneral.FollowerMoveRoutine(followerById));
     }
     AudioManager.Instance.PlayOneShot("event:/player/body_wrap");
     yield return (object) new WaitForSeconds(1f);
@@ -340,7 +340,7 @@ public class RitualFuneral : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       EndingDelay += Delay;
-      ritualFuneral.StartCoroutine((IEnumerator) ritualFuneral.DelayFollowerReaction(brain, Delay));
+      ritualFuneral.StartCoroutine(ritualFuneral.DelayFollowerReaction(brain, Delay));
       IDAndRelationship relationship = brain.Info.GetOrCreateRelationship(deadFollower.Info.ID);
       if (relationship.CurrentRelationshipState == IDAndRelationship.RelationshipState.Enemies)
         brain.AddThought(Thought.AttendedEnemyFuneral);

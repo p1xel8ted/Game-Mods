@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Familiar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -137,7 +137,7 @@ public class Familiar : MonoBehaviour
       return;
     this.timestamp = Time.time + this.timeBetween;
     this.sprite.material.DOFloat(1f, "_FillAlpha", 0.5f);
-    this.StartCoroutine((IEnumerator) this.Delay(0.5f, (System.Action) (() =>
+    this.StartCoroutine(this.Delay(0.5f, (System.Action) (() =>
     {
       float damageMultiplier = TrinketManager.GetRelicDamageMultiplier(PlayerFarming.GetPlayerFarmingComponent(this.master.gameObject));
       this.sprite.material.DOFloat(0.0f, "_FillAlpha", 0.0f);
@@ -396,31 +396,31 @@ public class Familiar : MonoBehaviour
     if (!component.IsHidden && this.combatType == Familiar.CombatType.DamageOnTouch)
     {
       float Damage = (this.team == Health.Team.PlayerTeam ? PlayerWeapon.GetDamage(this.baseVariable, farmingComponent.currentWeaponLevel, farmingComponent) : 1f) * TrinketManager.GetRelicDamageMultiplier(farmingComponent) * this.DamageMultiplier;
-      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop);
+      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: this.team == Health.Team.PlayerTeam);
     }
     else if (component.CanBePoisoned && !component.IsHidden && this.combatType == Familiar.CombatType.PoisonOnTouch)
     {
       float Damage = (this.team == Health.Team.PlayerTeam ? PlayerWeapon.GetDamage(0.1f, farmingComponent.currentWeaponLevel, farmingComponent) : 1f) * TrinketManager.GetRelicDamageMultiplier(farmingComponent);
-      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop);
+      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: this.team == Health.Team.PlayerTeam);
       component.AddPoison(this.gameObject, this.baseVariable);
     }
     else if (component.CanBeIced && !component.IsHidden && this.combatType == Familiar.CombatType.FreezeOnTouch)
     {
       float Damage = (this.team == Health.Team.PlayerTeam ? PlayerWeapon.GetDamage(0.1f, farmingComponent.currentWeaponLevel, farmingComponent) : 1f) * TrinketManager.GetRelicDamageMultiplier(farmingComponent);
-      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop);
+      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: this.team == Health.Team.PlayerTeam);
       component.AddIce(this.baseVariable);
     }
     else if (this.combatType == Familiar.CombatType.IgniteOnTouch)
     {
       float Damage = (this.team == Health.Team.PlayerTeam ? PlayerWeapon.GetDamage(0.1f, farmingComponent.currentWeaponLevel, farmingComponent) : 1f) * TrinketManager.GetRelicDamageMultiplier(farmingComponent);
-      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop);
+      flag = component.DealDamage(Damage, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.NoHitStop, dealDamageImmediately: this.team == Health.Team.PlayerTeam);
       component.AddBurn(farmingComponent.gameObject, this.baseVariable);
     }
     if (!flag)
       return;
     if (this.hitEffectsRoutine != null)
       this.StopCoroutine(this.hitEffectsRoutine);
-    this.hitEffectsRoutine = this.StartCoroutine((IEnumerator) this.DoHitVisualEffects());
+    this.hitEffectsRoutine = this.StartCoroutine(this.DoHitVisualEffects());
   }
 
   public IEnumerator DoHitVisualEffects()

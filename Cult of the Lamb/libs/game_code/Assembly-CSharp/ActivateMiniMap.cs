@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ActivateMiniMap
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -64,7 +64,7 @@ public class ActivateMiniMap : BaseMonoBehaviour
   {
     this.playerState = state;
     this.playerState.CURRENT_STATE = StateMachine.State.Map;
-    this.StartCoroutine((IEnumerator) this.MoveMap());
+    this.StartCoroutine(this.MoveMap());
     ActivateMiniMap.IsPlaying = true;
   }
 
@@ -85,7 +85,7 @@ public class ActivateMiniMap : BaseMonoBehaviour
       yield return (object) null;
     }
     activateMiniMap.miniMapRT.localPosition = Vector3.zero;
-    activateMiniMap.StartCoroutine((IEnumerator) activateMiniMap.ScaleMap());
+    activateMiniMap.StartCoroutine(activateMiniMap.ScaleMap());
   }
 
   public IEnumerator ScaleMap()
@@ -98,13 +98,13 @@ public class ActivateMiniMap : BaseMonoBehaviour
       activateMiniMap.miniMapRT.sizeDelta = (Vector2) Vector3.SmoothDamp((Vector3) activateMiniMap.miniMapRT.sizeDelta, (Vector3) activateMiniMap.TargetSize, ref Velocity, 0.1f);
       yield return (object) null;
     }
-    activateMiniMap.StartCoroutine((IEnumerator) activateMiniMap.Close());
+    activateMiniMap.StartCoroutine(activateMiniMap.Close());
   }
 
   public IEnumerator Close()
   {
     ActivateMiniMap activateMiniMap = this;
-    Coroutine navigateMap = activateMiniMap.StartCoroutine((IEnumerator) activateMiniMap.NavigateMap());
+    Coroutine navigateMap = activateMiniMap.StartCoroutine(activateMiniMap.NavigateMap());
     activateMiniMap.playerState.GetComponent<PlayerFarming>();
     while (!InputManager.UI.GetCancelButtonUp())
     {
@@ -118,15 +118,15 @@ public class ActivateMiniMap : BaseMonoBehaviour
       if (InputManager.UI.GetAcceptButtonUp() && (UnityEngine.Object) activateMiniMap.Closest != (UnityEngine.Object) activateMiniMap.miniMap.CurrentIcon && !ActivateMiniMap.DisableTeleporting)
       {
         activateMiniMap.StopAllCoroutines();
-        activateMiniMap.StartCoroutine((IEnumerator) activateMiniMap.ReturnToStartingPositionAndSize());
-        activateMiniMap.StartCoroutine((IEnumerator) activateMiniMap.DoChangeRoom());
+        activateMiniMap.StartCoroutine(activateMiniMap.ReturnToStartingPositionAndSize());
+        activateMiniMap.StartCoroutine(activateMiniMap.DoChangeRoom());
         activateMiniMap.Marker.position = Vector3.one * -999f;
       }
       yield return (object) null;
     }
     activateMiniMap.playerState.CURRENT_STATE = StateMachine.State.Idle;
     activateMiniMap.StopCoroutine(navigateMap);
-    activateMiniMap.StartCoroutine((IEnumerator) activateMiniMap.ReturnToStartingPositionAndSize());
+    activateMiniMap.StartCoroutine(activateMiniMap.ReturnToStartingPositionAndSize());
   }
 
   public IEnumerator DoChangeRoom()
@@ -200,7 +200,7 @@ public class ActivateMiniMap : BaseMonoBehaviour
     float Timer = 0.0f;
     Vector3 VelocitySize = Vector3.zero;
     Vector3 VelocityScale = Vector3.zero;
-    this.miniMap.StartCoroutine((IEnumerator) this.miniMap.MoveMiniMap(0.0f));
+    this.miniMap.StartCoroutine(this.miniMap.MoveMiniMap(0.0f));
     this.TeleportPrompt.SetActive(false);
     while ((double) (Timer += Time.deltaTime) < 0.40000000596046448)
     {

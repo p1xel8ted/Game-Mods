@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIWeaponCardSoul
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -53,7 +53,7 @@ public class UIWeaponCardSoul : BaseMonoBehaviour
     this.rectTransform = this.GetComponent<RectTransform>();
     this.Speed = -this.StartSpeed;
     this.Angle = (float) (((double) Utils.GetAngle(this.TargetPosition, this.rectTransform.position) + (double) UnityEngine.Random.Range(-180, 180)) * (Math.PI / 180.0));
-    this.cMoveRoutine = this.StartCoroutine((IEnumerator) this.MoveRoutine());
+    this.cMoveRoutine = this.StartCoroutine(this.MoveRoutine());
   }
 
   public void Stop()

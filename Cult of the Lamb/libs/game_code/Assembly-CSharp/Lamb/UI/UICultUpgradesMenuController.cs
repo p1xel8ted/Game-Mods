@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UICultUpgradesMenuController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -117,7 +117,7 @@ public class UICultUpgradesMenuController : UIMenuBase
     base.OnShowCompleted();
     if (this.Revealing == CultUpgradeData.TYPE.None)
       return;
-    this.StartCoroutine((IEnumerator) this.RevealSequenceIE());
+    this.StartCoroutine(this.RevealSequenceIE());
   }
 
   public IEnumerator RevealSequenceIE()
@@ -131,9 +131,9 @@ public class UICultUpgradesMenuController : UIMenuBase
         item = dlcUpgradeShopItem;
     }
     upgradesMenuController._controlPrompts.gameObject.SetActive(false);
-    yield return (object) upgradesMenuController.StartCoroutine((IEnumerator) upgradesMenuController.scrollRect.DoScrollTo(item.transform as RectTransform));
+    yield return (object) upgradesMenuController.StartCoroutine(upgradesMenuController.scrollRect.DoScrollTo(item.transform as RectTransform));
     yield return (object) new WaitForSecondsRealtime(1f);
-    yield return (object) upgradesMenuController.StartCoroutine((IEnumerator) item.DoUnlock(upgradesMenuController.Revealing, 0.0f));
+    yield return (object) upgradesMenuController.StartCoroutine(item.DoUnlock(upgradesMenuController.Revealing, 0.0f));
     if (upgradesMenuController.Revealing == CultUpgradeData.TYPE.Border5)
       DataManager.Instance.TempleUnlockedBorder5 = true;
     else if (upgradesMenuController.Revealing == CultUpgradeData.TYPE.Border6)
@@ -166,10 +166,10 @@ public class UICultUpgradesMenuController : UIMenuBase
 
   public void CultUpgradeMainPurchaseSelected(CultUpgradeData.TYPE type)
   {
-    this.StartCoroutine((IEnumerator) this.FocusCard(this._cultUpgradeInfoCardController.CurrentCard.RectTransform, this._cultUpgradeInfoCardController.CurrentCard._redOutline, (System.Action) (() =>
+    this.StartCoroutine(this.FocusCard(this._cultUpgradeInfoCardController.CurrentCard.RectTransform, this._cultUpgradeInfoCardController.CurrentCard._redOutline, (System.Action) (() =>
     {
       DataManager.Instance.TempleLevel = (int) type;
-      this._cultUpgradeItem.StartCoroutine((IEnumerator) this._cultUpgradeItem.DoUnlock((CultUpgradeData.TYPE) (1 + Mathf.Max(0, DataManager.Instance.TempleLevel))));
+      this._cultUpgradeItem.StartCoroutine(this._cultUpgradeItem.DoUnlock((CultUpgradeData.TYPE) (1 + Mathf.Max(0, DataManager.Instance.TempleLevel))));
       UIManager.PlayAudio("event:/ui/level_node_beat_level");
       foreach (StructuresData.ItemCost itemCost in CultUpgradeData.GetCost(type))
         Inventory.ChangeItemQuantity(itemCost.CostItem, -itemCost.CostValue);
@@ -177,17 +177,17 @@ public class UICultUpgradesMenuController : UIMenuBase
       switch (DataManager.Instance.TempleLevel)
       {
         case 1:
-          this._upgradeShopItems[0].StartCoroutine((IEnumerator) this._upgradeShopItems[0].DoUnlock(this._upgradeShopItems[0].CultUpgradeType));
+          this._upgradeShopItems[0].StartCoroutine(this._upgradeShopItems[0].DoUnlock(this._upgradeShopItems[0].CultUpgradeType));
           DataManager.Instance.TempleBorder = 100;
           break;
         case 3:
-          this._upgradeShopItems[1].StartCoroutine((IEnumerator) this._upgradeShopItems[1].DoUnlock(this._upgradeShopItems[1].CultUpgradeType));
+          this._upgradeShopItems[1].StartCoroutine(this._upgradeShopItems[1].DoUnlock(this._upgradeShopItems[1].CultUpgradeType));
           break;
         case 6:
-          this._upgradeShopItems[2].StartCoroutine((IEnumerator) this._upgradeShopItems[2].DoUnlock(this._upgradeShopItems[2].CultUpgradeType));
+          this._upgradeShopItems[2].StartCoroutine(this._upgradeShopItems[2].DoUnlock(this._upgradeShopItems[2].CultUpgradeType));
           break;
         case 9:
-          this._upgradeShopItems[3].StartCoroutine((IEnumerator) this._upgradeShopItems[3].DoUnlock(this._upgradeShopItems[3].CultUpgradeType));
+          this._upgradeShopItems[3].StartCoroutine(this._upgradeShopItems[3].DoUnlock(this._upgradeShopItems[3].CultUpgradeType));
           break;
       }
       ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.SpendSinInTemple);
@@ -195,7 +195,7 @@ public class UICultUpgradesMenuController : UIMenuBase
       System.Action onCultUpgraded = UICultUpgradesMenuController.OnCultUpgraded;
       if (onCultUpgraded != null)
         onCultUpgraded();
-      this.StartCoroutine((IEnumerator) this.HideAndRevealInfoCard());
+      this.StartCoroutine(this.HideAndRevealInfoCard());
       if (!CultUpgradeData.IsUpgradeMaxed())
         return;
       AchievementsWrapper.UnlockAchievement(Achievements.Instance.Lookup("FULLY_UPGRADE_RANKING"));
@@ -242,7 +242,7 @@ public class UICultUpgradesMenuController : UIMenuBase
     System.Action onCultUpgraded = UICultUpgradesMenuController.OnCultUpgraded;
     if (onCultUpgraded != null)
       onCultUpgraded();
-    this._cultUpgradeItem.StartCoroutine((IEnumerator) this._cultUpgradeItem.DoUnlock((CultUpgradeData.TYPE) (1 + Mathf.Max(0, DataManager.Instance.TempleLevel)), 0.01f));
+    this._cultUpgradeItem.StartCoroutine(this._cultUpgradeItem.DoUnlock((CultUpgradeData.TYPE) (1 + Mathf.Max(0, DataManager.Instance.TempleLevel)), 0.01f));
     this._cultUpgradeInfoCardController.CurrentCard.Show(true);
     this.Init();
   }

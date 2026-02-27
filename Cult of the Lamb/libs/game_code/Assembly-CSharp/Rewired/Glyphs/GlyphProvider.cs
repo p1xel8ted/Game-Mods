@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Glyphs.GlyphProvider
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired.Interfaces;
@@ -62,7 +62,7 @@ public class GlyphProvider : MonoBehaviour, IGlyphProvider
   {
     if (ReInput.isReady && ReInput.glyphs.glyphProvider == this)
       ReInput.glyphs.glyphProvider = (IGlyphProvider) null;
-    ReInput.InitializedEvent -= (Action) new Action(this.TrySetGlyphProvider);
+    ReInput.InitializedEvent -= new Action(this.TrySetGlyphProvider);
   }
 
   public virtual void Update()
@@ -71,8 +71,8 @@ public class GlyphProvider : MonoBehaviour, IGlyphProvider
 
   public virtual void TrySetGlyphProvider()
   {
-    ReInput.InitializedEvent -= (Action) new Action(this.TrySetGlyphProvider);
-    ReInput.InitializedEvent += (Action) new Action(this.TrySetGlyphProvider);
+    ReInput.InitializedEvent -= new Action(this.TrySetGlyphProvider);
+    ReInput.InitializedEvent += new Action(this.TrySetGlyphProvider);
     if (!ReInput.isReady)
       return;
     if (!UnityTools.IsNullOrDestroyed<IGlyphProvider>(ReInput.glyphs.glyphProvider))

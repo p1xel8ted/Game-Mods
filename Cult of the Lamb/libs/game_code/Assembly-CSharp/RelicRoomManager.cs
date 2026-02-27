@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RelicRoomManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -239,7 +239,7 @@ public class RelicRoomManager : MonoBehaviour
     PlayerFarming.Instance.health.untouchable = true;
     this.relicBook.Interactable = false;
     this.relicBook.SecondaryInteractable = false;
-    this.StartCoroutine((IEnumerator) this.SpawnEnemyIE());
+    this.StartCoroutine(this.SpawnEnemyIE());
     for (int index = 0; index < PlayerFarming.playersCount; ++index)
     {
       PlayerFarming player = PlayerFarming.players[index];
@@ -282,7 +282,7 @@ public class RelicRoomManager : MonoBehaviour
     if (this.RelicUsedCount < this.RelicTargetCount)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.CompletedIE(PlayerFarming.Instance));
+    this.StartCoroutine(this.CompletedIE(PlayerFarming.Instance));
   }
 
   public void ShowControlsIE(PlayerFarming player)
@@ -337,7 +337,7 @@ public class RelicRoomManager : MonoBehaviour
     for (int index = Health.team2.Count - 1; index >= 0; --index)
     {
       if ((UnityEngine.Object) Health.team2[index] != (UnityEngine.Object) null)
-        Health.team2[index].DealDamage(Health.team2[index].HP, relicRoomManager.gameObject, relicRoomManager.transform.position);
+        Health.team2[index].DealDamage(Health.team2[index].HP, relicRoomManager.gameObject, relicRoomManager.transform.position, dealDamageImmediately: true);
     }
     yield return (object) new WaitForSeconds(0.25f);
     foreach (PlayerFarming player in PlayerFarming.players)

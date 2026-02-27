@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ChurchFollower
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -38,7 +38,7 @@ public class ChurchFollower : BaseMonoBehaviour
       this.Spine.AnimationState.SetAnimation(0, Animation, true);
     }
     else
-      this.StartCoroutine((IEnumerator) this.PutHoodOn(Animation));
+      this.StartCoroutine(this.PutHoodOn(Animation));
   }
 
   public IEnumerator PutHoodOn(string Animation)
@@ -76,13 +76,10 @@ public class ChurchFollower : BaseMonoBehaviour
 
   public void AnimateWhenPlayerNear(string Animation, string AnimationNear)
   {
-    this.StartCoroutine((IEnumerator) this.AnimateWhenPlayerNearRouitine(Animation, AnimationNear));
+    this.StartCoroutine(this.AnimateWhenPlayerNearRouitine(Animation, AnimationNear));
   }
 
-  public void ArriveAtDevotionCircle()
-  {
-    this.StartCoroutine((IEnumerator) this.ArriveAtDevotionCircleRoutine());
-  }
+  public void ArriveAtDevotionCircle() => this.StartCoroutine(this.ArriveAtDevotionCircleRoutine());
 
   public IEnumerator ArriveAtDevotionCircleRoutine()
   {
@@ -102,16 +99,13 @@ public class ChurchFollower : BaseMonoBehaviour
     this.\u003C\u003E1__state = -1;
     churchFollower.FacePosition(ChurchFollowerManager.Instance.RitualCenterPosition.position);
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) churchFollower.StartCoroutine((IEnumerator) churchFollower.PutHoodOn("devotion/devotion-waiting"));
+    this.\u003C\u003E2__current = (object) churchFollower.StartCoroutine(churchFollower.PutHoodOn("devotion/devotion-waiting"));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
   }
 
-  public void ArriveAtRitualCircle()
-  {
-    this.StartCoroutine((IEnumerator) this.ArriveAtRitualCircleRoutine());
-  }
+  public void ArriveAtRitualCircle() => this.StartCoroutine(this.ArriveAtRitualCircleRoutine());
 
   public IEnumerator ArriveAtRitualCircleRoutine()
   {
@@ -130,16 +124,13 @@ public class ChurchFollower : BaseMonoBehaviour
     this.\u003C\u003E1__state = -1;
     churchFollower.FacePosition(ChurchFollowerManager.Instance.RitualCenterPosition.position);
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) churchFollower.StartCoroutine((IEnumerator) churchFollower.PutHoodOn("ritual1"));
+    this.\u003C\u003E2__current = (object) churchFollower.StartCoroutine(churchFollower.PutHoodOn("ritual1"));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
   }
 
-  public void ArriveAtSermonAudience()
-  {
-    this.StartCoroutine((IEnumerator) this.ArriveAtSermonAudienceRoutine());
-  }
+  public void ArriveAtSermonAudience() => this.StartCoroutine(this.ArriveAtSermonAudienceRoutine());
 
   public IEnumerator ArriveAtSermonAudienceRoutine()
   {
@@ -174,7 +165,7 @@ public class ChurchFollower : BaseMonoBehaviour
   {
     if (!this.wim.IsHooded)
       return;
-    this.StartCoroutine((IEnumerator) this.TakeHoodOff(Animation));
+    this.StartCoroutine(this.TakeHoodOff(Animation));
   }
 
   public IEnumerator TakeHoodOff(string Animation = "idle")
@@ -188,7 +179,7 @@ public class ChurchFollower : BaseMonoBehaviour
 
   public void TakeHoodOffAndGo(Vector3 Destination, System.Action Callback)
   {
-    this.StartCoroutine((IEnumerator) this.TakeHoodOffAndGoRoutine(Destination, Callback));
+    this.StartCoroutine(this.TakeHoodOffAndGoRoutine(Destination, Callback));
   }
 
   public IEnumerator TakeHoodOffAndGoRoutine(Vector3 Destination, System.Action Callback)
@@ -208,7 +199,7 @@ public class ChurchFollower : BaseMonoBehaviour
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = -1;
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) churchFollower.StartCoroutine((IEnumerator) churchFollower.TakeHoodOff());
+    this.\u003C\u003E2__current = (object) churchFollower.StartCoroutine(churchFollower.TakeHoodOff());
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -216,7 +207,7 @@ public class ChurchFollower : BaseMonoBehaviour
 
   public void ApplySermonEffect(string Anim, Action<ChurchFollower> EffectCallback)
   {
-    this.StartCoroutine((IEnumerator) this.ApplySermonEffectRoutine(Anim, EffectCallback));
+    this.StartCoroutine(this.ApplySermonEffectRoutine(Anim, EffectCallback));
   }
 
   public IEnumerator ApplySermonEffectRoutine(string Anim, Action<ChurchFollower> EffectCallback)
@@ -247,7 +238,7 @@ public class ChurchFollower : BaseMonoBehaviour
   public void GoTo(Vector3 Destination, System.Action Callback)
   {
     this.Callback = Callback;
-    this.StartCoroutine((IEnumerator) this.GoToRoutine(Destination));
+    this.StartCoroutine(this.GoToRoutine(Destination));
   }
 
   public IEnumerator GoToRoutine(Vector3 Destination)

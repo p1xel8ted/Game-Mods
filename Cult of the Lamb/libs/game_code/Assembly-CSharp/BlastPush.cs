@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BlastPush
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -27,7 +27,7 @@ public class BlastPush : BaseMonoBehaviour, ISpellOwning
   {
     if (!this.dealDamage)
       return;
-    this.StartCoroutine((IEnumerator) this.PushEnemies());
+    this.StartCoroutine(this.PushEnemies());
   }
 
   public void OnDisable() => Object.Destroy((Object) this.gameObject);
@@ -47,10 +47,10 @@ public class BlastPush : BaseMonoBehaviour, ISpellOwning
         if (blastPush.IsDeflectingProjectilesPush())
         {
           if (!(component1 is EnemyOogler enemyOogler) || !enemyOogler.IsClone)
-            component1.health.DealDamage(EquipmentManager.GetCurseData(farmingComponent.currentCurse).Damage * PlayerSpells.GetCurseDamageMultiplier(farmingComponent) * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, AttackFlags: blastPush.attackFlags);
+            component1.health.DealDamage(EquipmentManager.GetCurseData(farmingComponent.currentCurse).Damage * PlayerSpells.GetCurseDamageMultiplier(farmingComponent) * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: blastPush.attackFlags);
         }
         else
-          component1.health.DealDamage(EquipmentManager.GetCurseData(farmingComponent.currentCurse).Damage * PlayerSpells.GetCurseDamageMultiplier(farmingComponent) * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, AttackFlags: blastPush.attackFlags);
+          component1.health.DealDamage(EquipmentManager.GetCurseData(farmingComponent.currentCurse).Damage * PlayerSpells.GetCurseDamageMultiplier(farmingComponent) * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: blastPush.attackFlags);
         if (blastPush.IsPoisonPush())
           component1.health.AddPoison(PlayerFarming.Instance.gameObject);
         else if (blastPush.IsIcePush())
@@ -66,16 +66,16 @@ public class BlastPush : BaseMonoBehaviour, ISpellOwning
           if (component2.team == Health.Team.Team2)
           {
             if (blastPush.IsPoisonPush())
-              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.Poison);
+              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.Poison);
             else if (blastPush.IsIcePush())
-              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.Ice);
+              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.Ice);
             else if (blastPush.IsFlamePush())
-              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, AttackFlags: Health.AttackFlags.Burn);
+              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true, AttackFlags: Health.AttackFlags.Burn);
             else
-              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile);
+              component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
           }
           else if (component2.team != Health.Team.PlayerTeam)
-            component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile);
+            component2.DealDamage(10f * blastPush.damageMultiplier, blastPush.gameObject, blastPush.transform.position, AttackType: Health.AttackTypes.Projectile, dealDamageImmediately: true);
         }
       }
     }

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIKitchenMealMenuIcon
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -69,7 +69,7 @@ public class UIKitchenMealMenuIcon :
     this.FlashIcon.gameObject.SetActive(false);
     this.canvasGroup = this.GetComponent<CanvasGroup>();
     if (fadeIn)
-      this.StartCoroutine((IEnumerator) this.FadeIn(Delay));
+      this.StartCoroutine(this.FadeIn(Delay));
     else
       this.canvasGroup.alpha = 1f;
     bool flag1 = queuedIndex == 0 & queued;
@@ -111,7 +111,7 @@ public class UIKitchenMealMenuIcon :
     kitchenMealMenuIcon.canvasGroup = kitchenMealMenuIcon.GetComponent<CanvasGroup>();
     kitchenMealMenuIcon.canvasGroup.alpha = 0.0f;
     yield return (object) new WaitForSecondsRealtime(Delay * 2f);
-    kitchenMealMenuIcon.StartCoroutine((IEnumerator) kitchenMealMenuIcon.ShakeNewIcon());
+    kitchenMealMenuIcon.StartCoroutine(kitchenMealMenuIcon.ShakeNewIcon());
     float Progress = 0.0f;
     float Duration = 0.3f;
     while ((double) (Progress += Time.unscaledDeltaTime) < (double) Duration)
@@ -164,7 +164,7 @@ public class UIKitchenMealMenuIcon :
   {
     if (this.cShake != null)
       this.StopCoroutine(this.cShake);
-    this.cShake = this.StartCoroutine((IEnumerator) this.ShakeRoutine());
+    this.cShake = this.StartCoroutine(this.ShakeRoutine());
   }
 
   public IEnumerator ShakeRoutine()
@@ -189,7 +189,7 @@ public class UIKitchenMealMenuIcon :
     this.NewIcon.SetActive(false);
     if (this.cSelectionRoutine != null)
       this.StopCoroutine(this.cSelectionRoutine);
-    this.cSelectionRoutine = this.StartCoroutine((IEnumerator) this.Selected(this.transform.localScale.x, 1.2f));
+    this.cSelectionRoutine = this.StartCoroutine(this.Selected(this.transform.localScale.x, 1.2f));
   }
 
   public void OnDeselect(BaseEventData eventData)
@@ -197,7 +197,7 @@ public class UIKitchenMealMenuIcon :
     this.IconSelected.enabled = false;
     if (this.cSelectionRoutine != null)
       this.StopCoroutine(this.cSelectionRoutine);
-    this.cSelectionRoutine = this.StartCoroutine((IEnumerator) this.DeSelected());
+    this.cSelectionRoutine = this.StartCoroutine(this.DeSelected());
   }
 
   public IEnumerator Selected(float Starting, float Target)

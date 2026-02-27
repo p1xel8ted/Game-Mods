@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TarotCustomTarget
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -58,7 +58,7 @@ public class TarotCustomTarget : MonoBehaviour
     sequence.Append((Tween) this.transform.DOMove(EndPosition + Vector3.back * 0.5f, Duration).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InBack).OnComplete<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
     {
       this.SpriteRenderer.enabled = false;
-      this.StartCoroutine((IEnumerator) this.DoRoutineRoutine(playerFarming));
+      this.StartCoroutine(this.DoRoutineRoutine(playerFarming));
     })));
     sequence.Play<DG.Tweening.Sequence>();
   }
@@ -114,7 +114,7 @@ public class TarotCustomTarget : MonoBehaviour
 
   public void BackToIdle(PlayerFarming playerFarming)
   {
-    this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(playerFarming));
+    this.StartCoroutine(this.BackToIdleRoutine(playerFarming));
   }
 
   public IEnumerator BackToIdleRoutine(PlayerFarming playerFarming)
@@ -133,7 +133,7 @@ public class TarotCustomTarget : MonoBehaviour
     yield return (object) new WaitForSeconds(1.83333337f);
     tarotCustomTarget.StopAllCoroutines();
     PlayerFarming.SetStateForAllPlayers();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) tarotCustomTarget.DelayEffectsRoutine(playerFarming));
+    GameManager.GetInstance().StartCoroutine(tarotCustomTarget.DelayEffectsRoutine(playerFarming));
     System.Action callback = tarotCustomTarget.Callback;
     if (callback != null)
       callback();

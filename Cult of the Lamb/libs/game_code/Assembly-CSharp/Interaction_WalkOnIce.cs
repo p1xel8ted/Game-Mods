@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_WalkOnIce
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -93,13 +93,13 @@ public class Interaction_WalkOnIce : Interaction
             player.transform.DOMove(player.transform.position + Vector3.down * 3f + Vector3.forward * 0.8f, 0.4f);
           }));
       }
-      this.StartCoroutine((IEnumerator) this.WaitForSeconds(3f, (System.Action) (() =>
+      this.StartCoroutine(this.WaitForSeconds(3f, (System.Action) (() =>
       {
         if (SeasonsManager.CurrentWeatherEvent != SeasonsManager.WeatherEvent.Blizzard)
           WeatherSystemController.Instance.SetWeather(WeatherSystemController.WeatherType.Snowing, WeatherSystemController.WeatherStrength.Extreme, 7f);
         foreach (PlayerFarming player in PlayerFarming.players)
           player.playerController.SetSpecialMovingAnimations("blizzard/idle", "blizzard/run-up", "blizzard/run-down", "blizzard/run", "blizzard/run-up-diagonal", "blizzard/run-horizontal", StateMachine.State.Idle_Winter);
-        this.StartCoroutine((IEnumerator) this.WaitForSeconds(5f, (System.Action) (() =>
+        this.StartCoroutine(this.WaitForSeconds(5f, (System.Action) (() =>
         {
           foreach (PlayerFarming player in PlayerFarming.players)
             player.state.CURRENT_STATE = player.state.CURRENT_STATE != StateMachine.State.Moving ? StateMachine.State.Idle_Winter : StateMachine.State.Moving_Winter;
@@ -146,7 +146,7 @@ public class Interaction_WalkOnIce : Interaction
       WeatherSystemController.Instance.SetWeather(WeatherSystemController.WeatherType.Snowing, WeatherSystemController.WeatherStrength.Extreme, 7f);
     foreach (PlayerFarming player in PlayerFarming.players)
       player.playerController.SetSpecialMovingAnimations("blizzard/idle", "blizzard/run-up", "blizzard/run-down", "blizzard/run", "blizzard/run-up-diagonal", "blizzard/run-horizontal", StateMachine.State.Idle_Winter);
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(5f, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForSeconds(5f, (System.Action) (() =>
     {
       foreach (PlayerFarming player in PlayerFarming.players)
         player.state.CURRENT_STATE = player.state.CURRENT_STATE != StateMachine.State.Moving ? StateMachine.State.Idle_Winter : StateMachine.State.Moving_Winter;

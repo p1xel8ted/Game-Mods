@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SimpleMaterialFlash
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -35,7 +35,7 @@ public class SimpleMaterialFlash : MonoBehaviour
       return;
     if (this.flashRoutine != null)
       this.StopCoroutine(this.flashRoutine);
-    this.flashRoutine = this.StartCoroutine((IEnumerator) this.FlashRoutine(color, duration));
+    this.flashRoutine = this.StartCoroutine(this.FlashRoutine(color, duration));
   }
 
   public IEnumerator FlashRoutine(Color color, float duration)
@@ -94,7 +94,7 @@ public class SimpleMaterialFlash : MonoBehaviour
     if (!SettingsManager.Settings.Accessibility.FlashingLights || (Object) this.material == (Object) null)
       return;
     this.flashingRed = true;
-    this.StartCoroutine((IEnumerator) this.FlashFillSequence(opacity));
+    this.StartCoroutine(this.FlashFillSequence(opacity));
   }
 
   public IEnumerator FlashFillSequence(float opacity)
@@ -127,7 +127,7 @@ public class SimpleMaterialFlash : MonoBehaviour
   {
     if (!SettingsManager.Settings.Accessibility.FlashingLights || (Object) this.material == (Object) null)
       return;
-    this.StartCoroutine((IEnumerator) this.DoTimedFade(color, duration));
+    this.StartCoroutine(this.DoTimedFade(color, duration));
   }
 
   public IEnumerator DoTimedFade(Color color, float duration)
@@ -149,7 +149,7 @@ public class SimpleMaterialFlash : MonoBehaviour
       return;
     if (this.fadeRoutine != null)
       this.StopCoroutine(this.fadeRoutine);
-    this.fadeRoutine = this.StartCoroutine((IEnumerator) this.FadeTint(color));
+    this.fadeRoutine = this.StartCoroutine(this.FadeTint(color));
   }
 
   public IEnumerator FadeTint(Color targetColor)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BiomeBaseManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -223,7 +223,7 @@ public class BiomeBaseManager : MonoBehaviour
     if (DataManager.Instance.YngyaOffering >= 2 && !SeasonsManager.Active)
       WeatherSystemController.Instance.SetWeather(WeatherSystemController.WeatherType.Snowing, WeatherSystemController.WeatherStrength.Dusting, 0.0f);
     SimulationManager.Pause();
-    this.StartCoroutine((IEnumerator) this.StartSetup());
+    this.StartCoroutine(this.StartSetup());
     if (DataManager.Instance.LandPurchased != -1 && GameManager.AuthenticateMajorDLC())
       DLCLandController.Instance.ShowSlot(DataManager.Instance.LandPurchased);
     if (!LoreSystem.LoreAvailable(16 /*0x10*/))
@@ -340,11 +340,11 @@ public class BiomeBaseManager : MonoBehaviour
     MMTransition.CanResume = true;
     MMTransition.ResumePlay();
     if (DataManager.Instance.LastRunResults == UIDeathScreenOverlayController.Results.BeatenBoss || DataManager.Instance.LastRunResults == UIDeathScreenOverlayController.Results.BeatenBossNoDamage)
-      biomeBaseManager.StartCoroutine((IEnumerator) biomeBaseManager.BeatenLeaderIE());
+      biomeBaseManager.StartCoroutine(biomeBaseManager.BeatenLeaderIE());
     else
       SimulationManager.UnPause();
     if (DataManager.Instance.BeatenExecutioner && !CultUpgradeData.IsUnlocked(CultUpgradeData.TYPE.Border6))
-      biomeBaseManager.StartCoroutine((IEnumerator) biomeBaseManager.WaitForPlayerToBeReady((System.Action) (() =>
+      biomeBaseManager.StartCoroutine(biomeBaseManager.WaitForPlayerToBeReady((System.Action) (() =>
       {
         GameManager.GetInstance().OnConversationNew();
         UICultUpgradesMenuController upgradesMenuController = MonoSingleton<UIManager>.Instance.ShowCultUpgradesMenu();
@@ -353,7 +353,7 @@ public class BiomeBaseManager : MonoBehaviour
         upgradesMenuController.OnHide += (System.Action) (() => GameManager.GetInstance().OnConversationEnd());
       })));
     else if (DataManager.Instance.BeatenWolf && !CultUpgradeData.IsUnlocked(CultUpgradeData.TYPE.Border5))
-      biomeBaseManager.StartCoroutine((IEnumerator) biomeBaseManager.WaitForPlayerToBeReady((System.Action) (() =>
+      biomeBaseManager.StartCoroutine(biomeBaseManager.WaitForPlayerToBeReady((System.Action) (() =>
       {
         GameManager.GetInstance().OnConversationNew();
         UICultUpgradesMenuController upgradesMenuController = MonoSingleton<UIManager>.Instance.ShowCultUpgradesMenu();
@@ -471,12 +471,12 @@ public class BiomeBaseManager : MonoBehaviour
   public void PlacePlayer()
   {
     if (PlayerFarming.LastLocation == FollowerLocation.Boss_5 && !DataManager.Instance.CameFromDeathCatFight)
-      this.StartCoroutine((IEnumerator) this.SpawnFromChainDoor());
+      this.StartCoroutine(this.SpawnFromChainDoor());
     else if (PlayerFarming.LastLocation == FollowerLocation.Endless)
     {
       PlayerFarming.LastLocation = PlayerFarming.Location;
       LocationManager.DeactivateLocation(FollowerLocation.Dungeon1_1);
-      this.StartCoroutine((IEnumerator) this.SpawnFromEndlessPortal());
+      this.StartCoroutine(this.SpawnFromEndlessPortal());
     }
     else if (DataManager.Instance.SurvivalModeActive && DataManager.Instance.SurvivalModeFirstSpawn)
     {
@@ -664,7 +664,7 @@ public class BiomeBaseManager : MonoBehaviour
     if (TimeManager.CurrentPhase == DayPhase.Night)
       AudioManager.Instance.ToggleFilter(SoundParams.Night, true);
     AudioManager.Instance.PlayMusic("event:/music/base/base_main");
-    this.StartCoroutine((IEnumerator) this.CheckMusic());
+    this.StartCoroutine(this.CheckMusic());
   }
 
   public void PlayMusic()
@@ -722,7 +722,7 @@ public class BiomeBaseManager : MonoBehaviour
   {
     if (upgradeType != UpgradeSystem.Type.Building_Temple2 && upgradeType != UpgradeSystem.Type.Temple_III && upgradeType != UpgradeSystem.Type.Temple_IV)
       return;
-    this.StartCoroutine((IEnumerator) this.UpgradeBaseRoutine(upgradeType));
+    this.StartCoroutine(this.UpgradeBaseRoutine(upgradeType));
   }
 
   public IEnumerator UpgradeBaseRoutine(UpgradeSystem.Type upgradeType)
@@ -871,7 +871,7 @@ public class BiomeBaseManager : MonoBehaviour
     CultFaithManager.AddThought(Thought.Cult_BaseUpgraded);
   }
 
-  public void BeatenLeaderRoutine() => this.StartCoroutine((IEnumerator) this.BeatenLeaderIE());
+  public void BeatenLeaderRoutine() => this.StartCoroutine(this.BeatenLeaderIE());
 
   public IEnumerator BeatenLeaderIE()
   {
@@ -1090,7 +1090,7 @@ public class BiomeBaseManager : MonoBehaviour
     this.Room.SetColliderAndUpdatePathfinding();
   }
 
-  public void OnWolvesSucceeded() => this.StartCoroutine((IEnumerator) this.WolvesSucceededIE());
+  public void OnWolvesSucceeded() => this.StartCoroutine(this.WolvesSucceededIE());
 
   public IEnumerator WolvesSucceededIE()
   {

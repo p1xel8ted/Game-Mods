@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyHopperMortarMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -143,11 +143,11 @@ public class EnemyHopperMortarMiniboss : EnemyHopperMortar
   public new void DoAttack()
   {
     if (this.damageColliderRoutine != null)
-      this.StopCoroutine((IEnumerator) this.damageColliderRoutine);
+      this.StopCoroutine(this.damageColliderRoutine);
     AudioManager.Instance.PlayOneShot(this.OnLandSoundPath, this.gameObject);
     AudioManager.Instance.PlayOneShot(this.AttackVO, this.gameObject);
     this.damageColliderRoutine = this.TurnOnDamageColliderForDuration(this.attackingDur);
-    this.StartCoroutine((IEnumerator) this.damageColliderRoutine);
+    this.StartCoroutine(this.damageColliderRoutine);
     if ((Object) this.aoeParticles != (Object) null)
       this.aoeParticles.Play();
     BiomeConstants.Instance.EmitSmokeExplosionVFX(this.transform.position + Vector3.back * 0.5f);
@@ -182,13 +182,13 @@ public class EnemyHopperMortarMiniboss : EnemyHopperMortar
   {
     EnemyHopperMortarMiniboss hopperMortarMiniboss = this;
     if (hopperMortarMiniboss.burpPattern[hopperMortarMiniboss.burpPatternIndex] == EnemyHopperMortarMiniboss.BurpType.RandomAroundTarget && (double) Random.Range(0.0f, 1f) > 0.33000001311302185)
-      yield return (object) hopperMortarMiniboss.StartCoroutine((IEnumerator) hopperMortarMiniboss.\u003C\u003En__0());
+      yield return (object) hopperMortarMiniboss.StartCoroutine(hopperMortarMiniboss.\u003C\u003En__0());
     else if ((double) Vector3.Distance(hopperMortarMiniboss.transform.position, Vector3.zero) < 2.0 && (double) Random.Range(0.0f, 1f) < 0.6)
-      yield return (object) hopperMortarMiniboss.StartCoroutine((IEnumerator) hopperMortarMiniboss.CrossShoot());
+      yield return (object) hopperMortarMiniboss.StartCoroutine(hopperMortarMiniboss.CrossShoot());
     else if (Random.Range(0, 2) == 0)
-      yield return (object) hopperMortarMiniboss.StartCoroutine((IEnumerator) hopperMortarMiniboss.CircleShoot());
+      yield return (object) hopperMortarMiniboss.StartCoroutine(hopperMortarMiniboss.CircleShoot());
     else
-      yield return (object) hopperMortarMiniboss.StartCoroutine((IEnumerator) hopperMortarMiniboss.LineShoot());
+      yield return (object) hopperMortarMiniboss.StartCoroutine(hopperMortarMiniboss.LineShoot());
     hopperMortarMiniboss.burpPatternIndex = (hopperMortarMiniboss.burpPatternIndex + 1) % hopperMortarMiniboss.burpPattern.Length;
   }
 

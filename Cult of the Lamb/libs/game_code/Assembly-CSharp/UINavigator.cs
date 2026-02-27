@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UINavigator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Rewired;
@@ -105,7 +105,7 @@ public class UINavigator : BaseMonoBehaviour
     }
     else
       this.list = this.Buttons;
-    this.StartCoroutine((IEnumerator) this.ScrollToTop());
+    this.StartCoroutine(this.ScrollToTop());
   }
 
   public void checkScrollBar()
@@ -183,7 +183,7 @@ public class UINavigator : BaseMonoBehaviour
     if (!this.MoveAButton)
       return;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.MoveButtonRoutine());
+    this.StartCoroutine(this.MoveButtonRoutine());
   }
 
   public IEnumerator MoveButtonRoutine()
@@ -276,7 +276,7 @@ public class UINavigator : BaseMonoBehaviour
   public void updateScrollBar()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.MoveScrollBar());
+    this.StartCoroutine(this.MoveScrollBar());
   }
 
   public IEnumerator MoveScrollBar()
@@ -298,7 +298,7 @@ public class UINavigator : BaseMonoBehaviour
   public void updateScrollBarHorizontal()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.MoveScrollBarHorizontal());
+    this.StartCoroutine(this.MoveScrollBarHorizontal());
   }
 
   public IEnumerator MoveScrollBarHorizontal()

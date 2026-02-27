@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyLightningMiniboss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -151,7 +151,7 @@ public class EnemyLightningMiniboss : UnitObject
   {
     base.OnEnable();
     if (this.secondPhase)
-      this.StartCoroutine((IEnumerator) this.TriggerSecondPhase());
+      this.StartCoroutine(this.TriggerSecondPhase());
     this.health.OnDieEarly += new Health.DieAction(this.UnlockSkin);
     this.ShuffleAttackOrder();
   }
@@ -257,7 +257,7 @@ public class EnemyLightningMiniboss : UnitObject
       this.CleanupEventInstances();
       MMVibrate.StopRumble();
       this.ClearPaths();
-      this.StartCoroutine((IEnumerator) this.TriggerSecondPhase());
+      this.StartCoroutine(this.TriggerSecondPhase());
     }
     else if ((double) this.attackTimer <= 0.0)
       this.DoNextAttack();
@@ -312,7 +312,7 @@ public class EnemyLightningMiniboss : UnitObject
     if (!this.secondPhase)
     {
       if ((double) Vector3.Distance(this.transform.position, Vector3.zero) > 2.0)
-        this.StartCoroutine((IEnumerator) this.TeleportIE(Vector3.zero, (System.Action) (() => this.SpinnerLargePingPongAttack())));
+        this.StartCoroutine(this.TeleportIE(Vector3.zero, (System.Action) (() => this.SpinnerLargePingPongAttack())));
       else
         this.SpinnerLargePingPongAttack();
     }
@@ -320,12 +320,12 @@ public class EnemyLightningMiniboss : UnitObject
     {
       if ((double) Vector3.Distance(this.transform.position, Vector3.zero) <= 2.0)
         return;
-      this.StartCoroutine((IEnumerator) this.TeleportIE(Vector3.zero, (System.Action) (() =>
+      this.StartCoroutine(this.TeleportIE(Vector3.zero, (System.Action) (() =>
       {
         if ((double) UnityEngine.Random.value < 0.5)
-          this.StartCoroutine((IEnumerator) this.SpinnerAttackIE(this.spinnerHuge, false, allowedSecondaryAttack: true));
+          this.StartCoroutine(this.SpinnerAttackIE(this.spinnerHuge, false, allowedSecondaryAttack: true));
         else
-          this.StartCoroutine((IEnumerator) this.SpinnerAttackIE(this.spinnerHugePingPong, false, allowedSecondaryAttack: true));
+          this.StartCoroutine(this.SpinnerAttackIE(this.spinnerHugePingPong, false, allowedSecondaryAttack: true));
       })));
     }
   }
@@ -363,17 +363,17 @@ public class EnemyLightningMiniboss : UnitObject
 
   public void SpinnerSmallAttack()
   {
-    this.StartCoroutine((IEnumerator) this.SpinnerAttackIE(this.spinnerSmall, true, true));
+    this.StartCoroutine(this.SpinnerAttackIE(this.spinnerSmall, true, true));
   }
 
   public void SpinnerLargeAttack()
   {
-    this.StartCoroutine((IEnumerator) this.SpinnerAttackIE(this.spinnerLarge, false));
+    this.StartCoroutine(this.SpinnerAttackIE(this.spinnerLarge, false));
   }
 
   public void SpinnerLargePingPongAttack()
   {
-    this.StartCoroutine((IEnumerator) this.SpinnerAttackIE(this.spinnerLargePingPong, false));
+    this.StartCoroutine(this.SpinnerAttackIE(this.spinnerLargePingPong, false));
   }
 
   public void flinchFromOrbHit()
@@ -471,17 +471,17 @@ public class EnemyLightningMiniboss : UnitObject
     if (allowedSecondaryAttack)
     {
       if ((double) Vector3.Distance(lightningMiniboss.transform.position, Vector3.zero) > 1.0)
-        yield return (object) lightningMiniboss.StartCoroutine((IEnumerator) lightningMiniboss.TeleportIE(Vector3.zero, (System.Action) null));
+        yield return (object) lightningMiniboss.StartCoroutine(lightningMiniboss.TeleportIE(Vector3.zero, (System.Action) null));
       if ((double) UnityEngine.Random.value < 0.5)
-        lightningMiniboss.StartCoroutine((IEnumerator) lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHuge, false));
+        lightningMiniboss.StartCoroutine(lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHuge, false));
       else
-        lightningMiniboss.StartCoroutine((IEnumerator) lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHugePingPong, false));
+        lightningMiniboss.StartCoroutine(lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHugePingPong, false));
     }
   }
 
   public void Teleport()
   {
-    this.attackRoutine = this.StartCoroutine((IEnumerator) this.TeleportIE(Vector3.zero, (System.Action) null));
+    this.attackRoutine = this.StartCoroutine(this.TeleportIE(Vector3.zero, (System.Action) null));
   }
 
   public void UpdateDeadOrbParam(int count)
@@ -533,7 +533,7 @@ public class EnemyLightningMiniboss : UnitObject
 
   public void LightningSlamAttack()
   {
-    this.attackRoutine = this.StartCoroutine((IEnumerator) this.LightningSlamAttackIE(Vector3.zero, (System.Action) null));
+    this.attackRoutine = this.StartCoroutine(this.LightningSlamAttackIE(Vector3.zero, (System.Action) null));
   }
 
   public IEnumerator LightningSlamAttackIE(Vector3 destination, System.Action callback)
@@ -576,7 +576,7 @@ public class EnemyLightningMiniboss : UnitObject
 
   public void LightningBeamAttack()
   {
-    this.attackRoutine = this.StartCoroutine((IEnumerator) this.LightningBeamAttackIE());
+    this.attackRoutine = this.StartCoroutine(this.LightningBeamAttackIE());
   }
 
   public IEnumerator LightningBeamAttackIE()
@@ -663,10 +663,7 @@ public class EnemyLightningMiniboss : UnitObject
     impactEffect.transform.position = new Vector3(this.lerpTarget.x, this.lerpTarget.y, 0.0f);
   }
 
-  public void BombShower()
-  {
-    this.attackRoutine = this.StartCoroutine((IEnumerator) this.BombShowerIE());
-  }
+  public void BombShower() => this.attackRoutine = this.StartCoroutine(this.BombShowerIE());
 
   public IEnumerator BombShowerIE()
   {
@@ -728,11 +725,11 @@ public class EnemyLightningMiniboss : UnitObject
     lightningMiniboss.secondPhase = true;
     lightningMiniboss.attacking = true;
     if ((double) Vector3.Distance(lightningMiniboss.transform.position, Vector3.zero) > 1.0)
-      yield return (object) lightningMiniboss.StartCoroutine((IEnumerator) lightningMiniboss.TeleportIE(Vector3.zero, (System.Action) null));
+      yield return (object) lightningMiniboss.StartCoroutine(lightningMiniboss.TeleportIE(Vector3.zero, (System.Action) null));
     if ((double) UnityEngine.Random.value < 0.5)
-      lightningMiniboss.StartCoroutine((IEnumerator) lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHuge, false, allowedSecondaryAttack: true));
+      lightningMiniboss.StartCoroutine(lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHuge, false, allowedSecondaryAttack: true));
     else
-      lightningMiniboss.StartCoroutine((IEnumerator) lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHugePingPong, false, allowedSecondaryAttack: true));
+      lightningMiniboss.StartCoroutine(lightningMiniboss.SpinnerAttackIE(lightningMiniboss.spinnerHugePingPong, false, allowedSecondaryAttack: true));
     lightningMiniboss.attackTimer = 1.5f;
   }
 
@@ -826,9 +823,9 @@ public class EnemyLightningMiniboss : UnitObject
   public void \u003CDoLargeSpinnerAttackDecision\u003Eb__89_1()
   {
     if ((double) UnityEngine.Random.value < 0.5)
-      this.StartCoroutine((IEnumerator) this.SpinnerAttackIE(this.spinnerHuge, false, allowedSecondaryAttack: true));
+      this.StartCoroutine(this.SpinnerAttackIE(this.spinnerHuge, false, allowedSecondaryAttack: true));
     else
-      this.StartCoroutine((IEnumerator) this.SpinnerAttackIE(this.spinnerHugePingPong, false, allowedSecondaryAttack: true));
+      this.StartCoroutine(this.SpinnerAttackIE(this.spinnerHugePingPong, false, allowedSecondaryAttack: true));
   }
 
   [CompilerGenerated]

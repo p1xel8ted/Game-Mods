@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJuicedBurrowingMiniBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -197,27 +197,27 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
     this.currentRoutine = (Coroutine) null;
     if (this.phase2)
       return;
-    this.currentRoutine = this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.currentRoutine = this.StartCoroutine(this.ActiveRoutine());
   }
 
   public void ShootCross()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.ShootCrossIE(4, 0.0f, false));
+    this.currentAttack = this.StartCoroutine(this.ShootCrossIE(4, 0.0f, false));
   }
 
   public void ShootCrossAngled()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.ShootCrossIE(4, 45f, false));
+    this.currentAttack = this.StartCoroutine(this.ShootCrossIE(4, 45f, false));
   }
 
   public void ShootCrossAngledContinous()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.ShootCrossIE(4, 45f, true));
+    this.currentAttack = this.StartCoroutine(this.ShootCrossIE(4, 45f, true));
   }
 
   public void ShootTripleSoftTargeted()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.ShootTripleSoftTargetedIE());
+    this.currentAttack = this.StartCoroutine(this.ShootTripleSoftTargetedIE());
   }
 
   public IEnumerator ShootTripleSoftTargetedIE()
@@ -229,11 +229,11 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * burrowingMiniBoss.Spine.timeScale) < (double) burrowingMiniBoss.spikesAnticipation)
       yield return (object) null;
-    burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.ShootSpikesInDirectionIE(dir, 15, 0.75f, false));
+    burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.ShootSpikesInDirectionIE(dir, 15, 0.75f, false));
     Vector3 direction1 = Quaternion.Euler(0.0f, 0.0f, -25f) * dir;
     Vector3 direction2 = Quaternion.Euler(0.0f, 0.0f, 25f) * dir;
-    burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.ShootSpikesInDirectionIE(direction1, 15, 0.75f, false));
-    burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.ShootSpikesInDirectionIE(direction2, 15, 0.75f, false));
+    burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.ShootSpikesInDirectionIE(direction1, 15, 0.75f, false));
+    burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.ShootSpikesInDirectionIE(direction2, 15, 0.75f, false));
     time = 0.0f;
     while ((double) (time += Time.deltaTime * burrowingMiniBoss.Spine.timeScale) < 2.0)
       yield return (object) null;
@@ -256,7 +256,7 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
     for (int index = 0; index < directions; ++index)
     {
       Vector3 vector2 = (Vector3) Utils.DegreeToVector2(num1 + directionOffset);
-      burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.ShootSpikesInDirectionIE(vector2, 15, 0.5f, continous, (System.Action<List<KeyValuePair<GameObject, float>>>) (s =>
+      burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.ShootSpikesInDirectionIE(vector2, 15, 0.5f, continous, (System.Action<List<KeyValuePair<GameObject, float>>>) (s =>
       {
         spikes.AddRange((IEnumerable<KeyValuePair<GameObject, float>>) s);
         ++count;
@@ -299,7 +299,7 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
 
   public void TargetedShootProjectiles()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.TargetedShootProjectilesIE());
+    this.currentAttack = this.StartCoroutine(this.TargetedShootProjectilesIE());
   }
 
   public IEnumerator TargetedShootProjectilesIE()
@@ -315,7 +315,7 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
         yield return (object) null;
       burrowingMiniBoss.Spine.AnimationState.SetAnimation(0, burrowingMiniBoss.shootAttackAnimation, false);
       burrowingMiniBoss.Spine.AnimationState.AddAnimation(0, burrowingMiniBoss.idleAnimation, true, 0.0f);
-      yield return (object) burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.ShootProjectilesIE(true, (System.Action) null));
+      yield return (object) burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.ShootProjectilesIE(true, (System.Action) null));
     }
     time = 0.0f;
     while ((double) (time += Time.deltaTime * burrowingMiniBoss.Spine.timeScale) < (double) burrowingMiniBoss.targetedShootingPost)
@@ -327,7 +327,7 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
 
   public void ShootProjectiles()
   {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.ShootProjectilesIE(false, (System.Action) null));
+    this.currentAttack = this.StartCoroutine(this.ShootProjectilesIE(false, (System.Action) null));
   }
 
   public IEnumerator ShootProjectilesIE(bool shootAtTarget, System.Action callback)
@@ -362,10 +362,7 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
       action();
   }
 
-  public void SpawnEnemies()
-  {
-    this.currentAttack = this.StartCoroutine((IEnumerator) this.SpawnEnemiesIE());
-  }
+  public void SpawnEnemies() => this.currentAttack = this.StartCoroutine(this.SpawnEnemiesIE());
 
   public IEnumerator SpawnEnemiesIE()
   {
@@ -457,7 +454,7 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
         Health.team2[index].untouchable = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
     for (int index = this.spawnedSpikes.Count - 1; index >= 0; --index)
@@ -557,19 +554,19 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
         if (burrowingMiniBoss.currentRoutine != null)
           burrowingMiniBoss.StopCoroutine(burrowingMiniBoss.currentRoutine);
         burrowingMiniBoss.targetPosition = Vector3.zero;
-        burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.MoveRoutine());
+        burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.MoveRoutine());
       }
       else if (burrowingMiniBoss.GetNewTargetPosition())
       {
         if (burrowingMiniBoss.currentRoutine != null)
           burrowingMiniBoss.StopCoroutine(burrowingMiniBoss.currentRoutine);
-        burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.MoveRoutine());
+        burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.MoveRoutine());
       }
       else
       {
         if (burrowingMiniBoss.currentRoutine != null)
           burrowingMiniBoss.StopCoroutine(burrowingMiniBoss.currentRoutine);
-        burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.ActiveRoutine());
+        burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.ActiveRoutine());
       }
     }
     else
@@ -658,7 +655,7 @@ public class EnemyJuicedBurrowingMiniBoss : UnitObject
       yield return (object) null;
     if (burrowingMiniBoss.currentRoutine != null)
       burrowingMiniBoss.StopCoroutine(burrowingMiniBoss.currentRoutine);
-    burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine((IEnumerator) burrowingMiniBoss.MoveRoutine());
+    burrowingMiniBoss.currentRoutine = burrowingMiniBoss.StartCoroutine(burrowingMiniBoss.MoveRoutine());
   }
 
   [CompilerGenerated]

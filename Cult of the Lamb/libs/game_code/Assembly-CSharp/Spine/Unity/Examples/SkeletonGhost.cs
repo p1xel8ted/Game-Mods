@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Spine.Unity.Examples.SkeletonGhost
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -66,7 +66,7 @@ public class SkeletonGhost : MonoBehaviour
     this.pool = new SkeletonGhostRenderer[this.maximumGhosts];
     for (int index = 0; index < this.maximumGhosts; ++index)
     {
-      GameObject gameObject = new GameObject(this.gameObject.name + " Ghost", (System.Type[]) new System.Type[3]
+      GameObject gameObject = new GameObject(this.gameObject.name + " Ghost", new System.Type[3]
       {
         typeof (SkeletonGhostRenderer),
         typeof (MeshRenderer),

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HubManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -42,11 +42,11 @@ public class HubManager : BaseMonoBehaviour
 
   public void OnEnable() => HubManager.Instance = this;
 
-  public void Start() => this.StartCoroutine((IEnumerator) this.PlaceAndPositionPlayer());
+  public void Start() => this.StartCoroutine(this.PlaceAndPositionPlayer());
 
   public void InitSpriteShapes()
   {
-    SpriteShapeRenderer[] objectsOfType = (SpriteShapeRenderer[]) UnityEngine.Object.FindObjectsOfType((System.Type) typeof (SpriteShapeRenderer));
+    SpriteShapeRenderer[] objectsOfType = (SpriteShapeRenderer[]) UnityEngine.Object.FindObjectsOfType(typeof (SpriteShapeRenderer));
     CommandBuffer buffer = new CommandBuffer();
     buffer.GetTemporaryRT(0, 256 /*0x0100*/, 256 /*0x0100*/, 0);
     buffer.SetRenderTarget((RenderTargetIdentifier) 0);
@@ -117,7 +117,7 @@ public class HubManager : BaseMonoBehaviour
       hubManager.Player.transform.position = entranceDoor.PlayerPosition.position;
       PlayerFarming.PositionAllPlayers(hubManager.Player.transform.position);
       hubManager.PlayerState = hubManager.Player.GetComponent<StateMachine>();
-      hubManager.StartCoroutine((IEnumerator) hubManager.DelayPlayerGoToAndStop());
+      hubManager.StartCoroutine(hubManager.DelayPlayerGoToAndStop());
     }
     MMTransition.ResumePlay();
     SimulationManager.UnPause();
@@ -139,7 +139,7 @@ public class HubManager : BaseMonoBehaviour
         door = Door.GetFirstNonEntranceDoor();
         if ((UnityEngine.Object) door != (UnityEngine.Object) null)
           this.PlayerState.facingAngle = Utils.GetAngle(this.PlayerState.transform.position, door.transform.position);
-        this.StartCoroutine((IEnumerator) this.DelayEndConversation());
+        this.StartCoroutine(this.DelayEndConversation());
       }));
     yield return (object) new WaitForSeconds(0.5f);
   }

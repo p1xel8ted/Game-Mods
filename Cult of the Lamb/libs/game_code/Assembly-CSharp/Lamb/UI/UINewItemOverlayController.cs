@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.UINewItemOverlayController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -103,7 +103,7 @@ public class UINewItemOverlayController : UIMenuBase
       Debug.Log((object) "UH OH something went wrong :( ");
     this.Show(instant);
     this.SpineStartPosition = Camera.main.WorldToScreenPoint(startPosition);
-    this.StartCoroutine((IEnumerator) this.MoveSpine());
+    this.StartCoroutine(this.MoveSpine());
   }
 
   public void Show(
@@ -129,7 +129,7 @@ public class UINewItemOverlayController : UIMenuBase
     Debug.Log((object) ("Skin =: " + TailorManager.GetSkin(itemType)));
     this.Show(instant);
     this.SpineStartPosition = Camera.main.WorldToScreenPoint(startPosition);
-    this.StartCoroutine((IEnumerator) this.MoveSpine());
+    this.StartCoroutine(this.MoveSpine());
   }
 
   public void Show(
@@ -163,7 +163,7 @@ public class UINewItemOverlayController : UIMenuBase
     }
     this.Show(instant);
     this.SpineStartPosition = Camera.main.WorldToScreenPoint(startPosition);
-    this.StartCoroutine((IEnumerator) this.MoveSpine());
+    this.StartCoroutine(this.MoveSpine());
   }
 
   public void Show(
@@ -208,7 +208,7 @@ public class UINewItemOverlayController : UIMenuBase
     }
     this.Show(instant);
     this.SpineStartPosition = Camera.main.WorldToScreenPoint(startPosition);
-    this.StartCoroutine((IEnumerator) this.MoveSpine());
+    this.StartCoroutine(this.MoveSpine());
   }
 
   public void TurnOnImage()
@@ -347,7 +347,7 @@ public class UINewItemOverlayController : UIMenuBase
     overlayController._infoCanvas.DOFade(0.0f, 0.66f).SetUpdate<TweenerCore<float, float, FloatOptions>>(true).SetEase<TweenerCore<float, float, FloatOptions>>(Ease.OutQuart);
     overlayController.LerpChild.DOLocalMoveX(vector3_2.x, 0.66f).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutQuart);
     yield return (object) new WaitForSecondsRealtime(0.5f);
-    overlayController.StartCoroutine((IEnumerator) overlayController.EndSpine());
+    overlayController.StartCoroutine(overlayController.EndSpine());
     yield return (object) new WaitForSecondsRealtime(0.15f);
     if (overlayController.MyTypeOfCard == UINewItemOverlayController.TypeOfCard.Decoration)
       PlayerFarming.Instance.simpleSpineAnimator.Animate("find-item/find-decoration-stop", 0, false);

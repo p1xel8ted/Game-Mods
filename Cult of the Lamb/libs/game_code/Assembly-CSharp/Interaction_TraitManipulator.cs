@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TraitManipulator
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -115,7 +115,7 @@ public class Interaction_TraitManipulator : Interaction
       menu.Show(infoById, infoById.TraitManipulateType);
       MonoSingleton<UIManager>.Instance.SetMenuInstance((UIMenuBase) menu);
       UITraitManipulatorResultsScreen manipulatorResultsScreen = menu;
-      manipulatorResultsScreen.OnHide = manipulatorResultsScreen.OnHide + (System.Action) (() => this.StartCoroutine((IEnumerator) this.CompletedIE()));
+      manipulatorResultsScreen.OnHide = manipulatorResultsScreen.OnHide + (System.Action) (() => this.StartCoroutine(this.CompletedIE()));
     }
     else if (this.StructureInfo.FollowerID != -1)
     {
@@ -193,7 +193,7 @@ public class Interaction_TraitManipulator : Interaction
       follower._directInfoAccess.TraitManipulateType = selectionType;
       this.StructureInfo.Progress = 0.0f;
       this.StructureInfo.FollowerID = follower.Info.ID;
-      this.StartCoroutine((IEnumerator) this.ManipulateFollowerIE(follower));
+      this.StartCoroutine(this.ManipulateFollowerIE(follower));
       foreach (InventoryItem inventoryItem in cost)
         Inventory.ChangeItemQuantity(inventoryItem.type, -inventoryItem.quantity);
     }
@@ -287,10 +287,7 @@ public class Interaction_TraitManipulator : Interaction
   }
 
   [CompilerGenerated]
-  public void \u003COnInteract\u003Eb__24_0()
-  {
-    this.StartCoroutine((IEnumerator) this.CompletedIE());
-  }
+  public void \u003COnInteract\u003Eb__24_0() => this.StartCoroutine(this.CompletedIE());
 
   [CompilerGenerated]
   public void \u003COnInteract\u003Eb__24_1() => this.EndTraitManipulator();

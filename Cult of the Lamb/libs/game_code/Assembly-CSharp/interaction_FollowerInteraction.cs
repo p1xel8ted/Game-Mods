@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: interaction_FollowerInteraction
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -275,7 +275,7 @@ public class interaction_FollowerInteraction : Interaction
     base.OnInteract(state);
     PlayerFarming.SetMainPlayer(state.GetComponent<PlayerFarming>());
     if (this.lightningIncoming)
-      this.StartCoroutine((IEnumerator) this.ProtectFromLightningIE());
+      this.StartCoroutine(this.ProtectFromLightningIE());
     else if (this.follower.Brain.CurrentTaskType == FollowerTaskType.Floating || this.follower.Brain.CanGiveSin())
     {
       if (this.follower.Brain.CurrentTaskType != FollowerTaskType.Floating)
@@ -371,7 +371,7 @@ public class interaction_FollowerInteraction : Interaction
             this.Close(false, reshowMenu: false);
           }
           else if (this.follower.Brain.CanLevelUp())
-            this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, (System.Action) (() =>
+            this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, (System.Action) (() =>
             {
               if (this.complaintType != Follower.ComplaintType.CompletedQuest || talkToFollowerQuest == null)
                 return;
@@ -506,7 +506,7 @@ public class interaction_FollowerInteraction : Interaction
                 ObjectivesData completedObjective = DataManager.Instance.CompletedObjectives[index];
                 if (completedObjective.Type == Objectives.TYPES.COLLECT_ITEM && completedObjective.GroupId == "Objectives/GroupTitles/Quest" && completedObjective.Follower == this.follower.Brain.Info.ID)
                 {
-                  routine = this.StartCoroutine((IEnumerator) this.GiveItemsRoutine(((Objectives_CollectItem) completedObjective).ItemType, ((Objectives_CollectItem) completedObjective).Target));
+                  routine = this.StartCoroutine(this.GiveItemsRoutine(((Objectives_CollectItem) completedObjective).ItemType, ((Objectives_CollectItem) completedObjective).Target));
                   break;
                 }
                 if (DataManager.Instance.HasBuildGoodSnowmanQuestAccepted && !DataManager.Instance.HasLifeToTheIceRitualQuestAccepted && completedObjective.Type == Objectives.TYPES.CUSTOM && completedObjective.Follower == this.follower.Brain.Info.ID && ((Objectives_Custom) completedObjective).CustomQuestType == Objectives.CustomQuestTypes.BuildGoodSnowman)
@@ -524,7 +524,7 @@ public class interaction_FollowerInteraction : Interaction
             }
             GameManager.GetInstance().OnConversationNew();
             GameManager.GetInstance().OnConversationNext(this.follower.gameObject, 4f);
-            this.StartCoroutine((IEnumerator) this.WaitForRoutine(routine, (System.Action) (() =>
+            this.StartCoroutine(this.WaitForRoutine(routine, (System.Action) (() =>
             {
               this.follower.AdorationUI.Hide();
               this.follower.PleasureUI.Hide();
@@ -552,7 +552,7 @@ public class interaction_FollowerInteraction : Interaction
                   this.follower.Brain.AddThought(Thought.LeaderDidQuest);
                   AudioManager.Instance.PlayOneShot("event:/followers/gain_loyalty", this.gameObject.transform.position);
                   TimeManager.TimeSinceLastQuest = 0.0f;
-                  this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+                  this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
                   {
                     GameManager.GetInstance().OnConversationNew();
                     GameManager.GetInstance().OnConversationNext(this.gameObject, 4f);
@@ -560,7 +560,7 @@ public class interaction_FollowerInteraction : Interaction
                     {
                       if (this.follower.Brain.CanLevelUp())
                       {
-                        this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, (System.Action) (() =>
+                        this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, (System.Action) (() =>
                         {
                           if (conv.Count > 0)
                           {
@@ -652,7 +652,7 @@ public class interaction_FollowerInteraction : Interaction
                         }
                         break;
                       case "Conversation_NPC/FollowerOnboarding/CureDissenter":
-                        this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+                        this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
                         {
                           if (!DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.Dissenter))
                             return;
@@ -662,7 +662,7 @@ public class interaction_FollowerInteraction : Interaction
                         timer = 6f;
                         break;
                       case "Conversation_NPC/FollowerOnboarding/Freezing/0":
-                        this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+                        this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
                         {
                           if (!DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.Freezing))
                             return;
@@ -681,13 +681,13 @@ public class interaction_FollowerInteraction : Interaction
                         isDLCObjective = true;
                         break;
                       case "Conversation_NPC/FollowerOnboarding/NameCult":
-                        this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+                        this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
                         {
                           this.preventCloseOnRemovingPlayer = true;
                           CoopManager.Instance.OnPlayerLeft += (System.Action) (() => PlayerFarming.Instance.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), this.follower.gameObject));
                           GameManager.GetInstance().OnConversationNew();
                           GameManager.GetInstance().OnConversationNext(this.gameObject, 4f);
-                          this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadCultNameAssets(), (System.Action) (() =>
+                          this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadCultNameAssets(), (System.Action) (() =>
                           {
                             UICultNameMenuController cultNameMenuInstance = MonoSingleton<UIManager>.Instance.CultNameMenuTemplate.Instantiate<UICultNameMenuController>();
                             cultNameMenuInstance.Show(false, true);
@@ -704,7 +704,7 @@ public class interaction_FollowerInteraction : Interaction
                         })));
                         return;
                       case "Conversation_NPC/FollowerOnboarding/Overheating/0":
-                        this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+                        this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
                         {
                           if (!DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.Overheating))
                             return;
@@ -717,7 +717,7 @@ public class interaction_FollowerInteraction : Interaction
                         MonoSingleton<UIManager>.Instance.ShowUpgradeTree(revealType: UpgradeSystem.Type.PleasureSystem);
                         break;
                       case "Conversation_NPC/FollowerOnboarding/SickFollower":
-                        this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+                        this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
                         {
                           IllnessBar.Instance?.Reveal();
                           if (!DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.Illness))
@@ -763,7 +763,7 @@ public class interaction_FollowerInteraction : Interaction
                     DataManager.Instance.LastFollowerQuestGivenTime = TimeManager.TotalElapsedGameTime;
                     if (flag)
                     {
-                      this.StartCoroutine((IEnumerator) this.AcceptQuestIE(objective));
+                      this.StartCoroutine(this.AcceptQuestIE(objective));
                       return;
                     }
                     if (DataManager.Instance.CurrentOnboardingFollowerTerm.Contains("DeathCat/Relic/First/0"))
@@ -775,13 +775,13 @@ public class interaction_FollowerInteraction : Interaction
                     if (DataManager.Instance.CurrentOnboardingFollowerTerm.Contains("Executioner/Follower/LegendaryAxe/0"))
                     {
                       this.Close(true, reshowMenu: false);
-                      GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() => this.StartCoroutine((IEnumerator) this.GiveLegendaryAxeWeapon())));
+                      GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() => this.StartCoroutine(this.GiveLegendaryAxeWeapon())));
                       return;
                     }
                   }
                   else if (this.complaintType == Follower.ComplaintType.GiveQuest && objective != null)
                   {
-                    this.StartCoroutine((IEnumerator) this.AcceptQuestIE(objective));
+                    this.StartCoroutine(this.AcceptQuestIE(objective));
                     return;
                   }
                   this.Close(false, reshowMenu: false);
@@ -1093,7 +1093,7 @@ public class interaction_FollowerInteraction : Interaction
         {
           if (!(bool) (UnityEngine.Object) this.playerFarming)
             this.playerFarming = PlayerFarming.FindClosestPlayer(this.transform.position);
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.RomanceRoutine(false))));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine(this.RomanceRoutine(false))));
         }));
       else
         this.follower.TimedAnimation("Reactions/react-happy1", 1.86666667f, (System.Action) (() => this.follower.Brain.CompleteCurrentTask()));
@@ -1294,14 +1294,14 @@ public class interaction_FollowerInteraction : Interaction
       }));
       this.follower.Brain.AddThought(Thought.LeaderDidQuest);
       AudioManager.Instance.PlayOneShot("event:/followers/gain_loyalty", this.gameObject.transform.position);
-      this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+      this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
       {
         GameManager.GetInstance().OnConversationNew();
         GameManager.GetInstance().OnConversationNext(this.gameObject, 4f);
         this.follower.Brain.AddAdoration(FollowerBrain.AdorationActions.Quest, (System.Action) (() =>
         {
           if (this.follower.Brain.CanLevelUp())
-            this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
+            this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
           else
             this.Close();
         }));
@@ -1315,7 +1315,7 @@ public class interaction_FollowerInteraction : Interaction
 
   public void CacheAndSetFollower(FollowerTask_GetAttention getAttentionTask = null, bool setManualControl = true)
   {
-    this.StartCoroutine((IEnumerator) this.CacheAndSetFollowerRoutine(getAttentionTask, setManualControl));
+    this.StartCoroutine(this.CacheAndSetFollowerRoutine(getAttentionTask, setManualControl));
   }
 
   public IEnumerator CacheAndSetFollowerRoutine(
@@ -1397,7 +1397,7 @@ public class interaction_FollowerInteraction : Interaction
   public void SelectTask(StateMachine state, bool Cancellable, bool GiveDoctrinePieceOnClose)
   {
     this.GiveDoctrinePieceOnClose = GiveDoctrinePieceOnClose;
-    this.StartCoroutine((IEnumerator) this.SelectTaskRoutine(state));
+    this.StartCoroutine(this.SelectTaskRoutine(state));
   }
 
   public IEnumerator SelectTaskRoutine(StateMachine state)
@@ -1408,7 +1408,7 @@ public class interaction_FollowerInteraction : Interaction
     GameManager.GetInstance().OnConversationNext(followerInteraction.gameObject, 4f);
     GameManager.GetInstance().AddPlayerToCamera();
     GameManager.GetInstance().CameraSetOffset(new Vector3(0.0f, 0.0f, -1f));
-    yield return (object) followerInteraction.StartCoroutine((IEnumerator) followerInteraction.CacheAndSetFollowerRoutine());
+    yield return (object) followerInteraction.StartCoroutine(followerInteraction.CacheAndSetFollowerRoutine());
     HUD_Manager.Instance.Hide(false, 0);
     followerInteraction.follower.Spine.transform.localScale = new Vector3(1f, 1f, 1f);
     SimulationManager.Pause();
@@ -1558,7 +1558,7 @@ public class interaction_FollowerInteraction : Interaction
               this.follower.Brain.SetPersonalOverrideTask(FollowerTaskType.SleepBedRest);
               goto case FollowerCommands.ChangeRole;
             }
-            this.StartCoroutine((IEnumerator) this.DelayCallback(1f, (System.Action) (() => this.follower.Brain.CurrentOverrideTaskType = FollowerTaskType.SleepBedRest)));
+            this.StartCoroutine(this.DelayCallback(1f, (System.Action) (() => this.follower.Brain.CurrentOverrideTaskType = FollowerTaskType.SleepBedRest)));
             goto case FollowerCommands.ChangeRole;
           }
           goto case FollowerCommands.ChangeRole;
@@ -1572,7 +1572,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
           this.follower.Brain.Stats.PaidTithes = true;
-          this.StartCoroutine((IEnumerator) this.ExtortMoneyRoutine());
+          this.StartCoroutine(this.ExtortMoneyRoutine());
           AudioManager.Instance.PlayOneShot("event:/followers/pop_in", this.transform.position);
           break;
         case FollowerCommands.Dance:
@@ -1584,7 +1584,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
           this.follower.Brain.Stats.Inspired = true;
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.DanceRoutine(true))));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine(this.DanceRoutine(true))));
           break;
         case FollowerCommands.Gift:
           this.eventListener.PlayFollowerVO(this.negativeAcknowledgeVO);
@@ -1788,7 +1788,7 @@ public class interaction_FollowerInteraction : Interaction
           {
             this.follower.Brain.NewRoleSet(NewRole);
             this.follower.Brain.SetPersonalOverrideTask(FollowerTask.GetFollowerTaskFromRole(NewRole));
-            this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+            this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
             {
               if (this.follower.Brain.HasTrait(FollowerTrait.TraitType.Drowsy) && this.follower.Brain.CurrentTask.Type == FollowerTaskType.Sleep)
                 return;
@@ -1812,7 +1812,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
           this.follower.Brain.Stats.KissedAction = true;
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.RomanceRoutine())));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine(this.RomanceRoutine())));
           break;
         case FollowerCommands.WakeUp:
           if (SeasonsManager.CurrentSeason == SeasonsManager.Season.Winter && this.follower.Brain.HasTrait(FollowerTrait.TraitType.Hibernation) && !this.follower.Brain._directInfoAccess.WorkThroughNight)
@@ -1941,11 +1941,11 @@ public class interaction_FollowerInteraction : Interaction
             {
               case FollowerCommands.Murder:
                 this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-                this.playerFarming.StartCoroutine((IEnumerator) this.MurderFollower());
+                this.playerFarming.StartCoroutine(this.MurderFollower());
                 break;
               case FollowerCommands.Ascend:
                 this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-                this.playerFarming.StartCoroutine((IEnumerator) this.AscendFollower());
+                this.playerFarming.StartCoroutine(this.AscendFollower());
                 break;
             }
           }));
@@ -1970,7 +1970,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
           this.follower.Brain.Stats.Intimidated = true;
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.IntimidateRoutine(true, this.playerFarming))));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine(this.IntimidateRoutine(true, this.playerFarming))));
           break;
         case FollowerCommands.Bribe:
           if (this.follower.Brain.Stats.Bribed)
@@ -1987,7 +1987,7 @@ public class interaction_FollowerInteraction : Interaction
             break;
           }
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-          this.StartCoroutine((IEnumerator) this.BribeRoutine());
+          this.StartCoroutine(this.BribeRoutine());
           break;
         case FollowerCommands.Ascend:
           if ((double) this.follower.Brain.Stats.Happiness >= 80.0)
@@ -2014,25 +2014,25 @@ public class interaction_FollowerInteraction : Interaction
           HUD_Manager.Instance.Hide(false, 0);
           break;
         case FollowerCommands.Gift_Small:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_SMALL));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_SMALL));
           break;
         case FollowerCommands.Gift_Medium:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_MEDIUM));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.GIFT_MEDIUM));
           break;
         case FollowerCommands.Gift_Necklace1:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_1));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_1));
           break;
         case FollowerCommands.Gift_Necklace2:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_2));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_2));
           break;
         case FollowerCommands.Gift_Necklace3:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_3));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_3));
           break;
         case FollowerCommands.Gift_Necklace4:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_4));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_4));
           break;
         case FollowerCommands.Gift_Necklace5:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_5));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_5));
           break;
         case FollowerCommands.Bless:
           if (this.follower.Brain.Stats.ReceivedBlessing)
@@ -2043,7 +2043,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
           this.follower.Brain.Stats.ReceivedBlessing = true;
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.BlessRoutine(true, this.playerFarming))));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine(this.BlessRoutine(true, this.playerFarming))));
           break;
         case FollowerCommands.MealGreatFish:
           this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_GREAT_FISH);
@@ -2058,7 +2058,7 @@ public class interaction_FollowerInteraction : Interaction
           this.follower.Brain.CompleteCurrentTask();
           goto case FollowerCommands.ChangeRole;
         case FollowerCommands.RemoveNecklace:
-          this.StartCoroutine((IEnumerator) this.RemoveNecklaceRoutine());
+          this.StartCoroutine(this.RemoveNecklaceRoutine());
           break;
         case FollowerCommands.Reeducate:
           if (this.follower.Brain.Stats.ReeducatedAction)
@@ -2069,7 +2069,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
           this.follower.Brain.Stats.ReeducatedAction = true;
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.ReeducateRoutine())));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1.5f : -1.5f), (System.Action) (() => this.StartCoroutine(this.ReeducateRoutine())));
           break;
         case FollowerCommands.MealBerries:
           this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_BERRIES);
@@ -2132,25 +2132,25 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.follower.Brain.Stats.PetDog = true;
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.PetDogRoutine())));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine(this.PetDogRoutine())));
           break;
         case FollowerCommands.Gift_Necklace_Light:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Light));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Light));
           break;
         case FollowerCommands.Gift_Necklace_Dark:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Dark));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Dark));
           break;
         case FollowerCommands.Gift_Necklace_Missionary:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Missionary));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Missionary));
           break;
         case FollowerCommands.Gift_Necklace_Demonic:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Demonic));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Demonic));
           break;
         case FollowerCommands.Gift_Necklace_Loyalty:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Loyalty));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Loyalty));
           break;
         case FollowerCommands.Gift_Necklace_Gold_Skull:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Gold_Skull));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Gold_Skull));
           break;
         case FollowerCommands.GiveLeaderItem:
           FollowerLocation location = FollowerLocation.Dungeon1_1;
@@ -2223,7 +2223,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.follower.Brain.Stats.ScaredTraitInteracted = true;
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-          this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.BullyRoutine())), forcePositionOnTimeout: true);
+          this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine(this.BullyRoutine())), forcePositionOnTimeout: true);
           break;
         case FollowerCommands.Reassure:
           if (this.follower.Brain.Stats.ScaredTraitInteracted)
@@ -2234,7 +2234,7 @@ public class interaction_FollowerInteraction : Interaction
           }
           this.follower.Brain.Stats.ScaredTraitInteracted = true;
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-          this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine((IEnumerator) this.ReassureRoutine())), forcePositionOnTimeout: true);
+          this.playerFarming.GoToAndStop(this.follower.transform.position + Vector3.right * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), GoToCallback: (System.Action) (() => this.StartCoroutine(this.ReassureRoutine())), forcePositionOnTimeout: true);
           break;
         case FollowerCommands.MealEgg:
           this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_EGG);
@@ -2303,7 +2303,7 @@ public class interaction_FollowerInteraction : Interaction
             this.follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Moving, this.follower.Brain.Info.Age < 10 ? "Baby/baby-crawl" : "Baby/baby-walk");
           if (this.Task != null)
             this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) null);
-          GameManager.GetInstance().WaitForSeconds(this.Task != null ? 2f : 0.0f, (System.Action) (() => this.StartCoroutine((IEnumerator) this.CuddleBabyRoutine())));
+          GameManager.GetInstance().WaitForSeconds(this.Task != null ? 2f : 0.0f, (System.Action) (() => this.StartCoroutine(this.CuddleBabyRoutine())));
           break;
         case FollowerCommands.HideNecklace:
         case FollowerCommands.ShowNecklace:
@@ -2348,7 +2348,7 @@ public class interaction_FollowerInteraction : Interaction
           this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
           if (!(bool) (UnityEngine.Object) this.playerFarming)
             this.playerFarming = PlayerFarming.FindClosestPlayer(this.transform.position);
-          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine((IEnumerator) this.PetDogRoutine())));
+          this.Task.GoToAndStop(this.follower, this.playerFarming.transform.position + Vector3.left * ((double) this.follower.transform.position.x < (double) this.playerFarming.transform.position.x ? 1f : -1f), (System.Action) (() => this.StartCoroutine(this.PetDogRoutine())));
           break;
         case FollowerCommands.MealSpicy:
           this.follower.Brain.CancelTargetedMeal(StructureBrain.TYPES.MEAL_SPICY);
@@ -2363,19 +2363,19 @@ public class interaction_FollowerInteraction : Interaction
           this.follower.Brain.CompleteCurrentTask();
           goto case FollowerCommands.ChangeRole;
         case FollowerCommands.Gift_Necklace_Deaths_Door:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Deaths_Door));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Deaths_Door));
           break;
         case FollowerCommands.Gift_Necklace_Winter:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Winter));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Winter));
           break;
         case FollowerCommands.Gift_Necklace_Frozen:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Frozen));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Frozen));
           break;
         case FollowerCommands.Gift_Necklace_Weird:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Weird));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Weird));
           break;
         case FollowerCommands.Gift_Necklace_Targeted:
-          this.StartCoroutine((IEnumerator) this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Targeted));
+          this.StartCoroutine(this.GiveItemRoutine(InventoryItem.ITEM_TYPE.Necklace_Targeted));
           break;
         case FollowerCommands.DrinkChilli:
           this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_CHILLI);
@@ -2420,25 +2420,25 @@ public class interaction_FollowerInteraction : Interaction
           this.follower.Brain.CompleteCurrentTask();
           goto case FollowerCommands.ChangeRole;
         case FollowerCommands.Give_Goat_Pet:
-          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_GOAT));
+          this.StartCoroutine(this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_GOAT));
           break;
         case FollowerCommands.Give_Cow_Pet:
-          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_COW));
+          this.StartCoroutine(this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_COW));
           break;
         case FollowerCommands.Give_Spider_Pet:
-          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SPIDER));
+          this.StartCoroutine(this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SPIDER));
           break;
         case FollowerCommands.Give_Llama_Pet:
-          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_LLAMA));
+          this.StartCoroutine(this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_LLAMA));
           break;
         case FollowerCommands.Give_Crab_Pet:
-          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_CRAB));
+          this.StartCoroutine(this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_CRAB));
           break;
         case FollowerCommands.Give_Snail_Pet:
-          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SNAIL));
+          this.StartCoroutine(this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_SNAIL));
           break;
         case FollowerCommands.Give_Turtle_Pet:
-          this.StartCoroutine((IEnumerator) this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_TURTLE));
+          this.StartCoroutine(this.GivePetRoutine(InventoryItem.ITEM_TYPE.ANIMAL_TURTLE));
           break;
         case FollowerCommands.DrinkMilkshake:
           this.follower.Brain.CancelTargetedDrink(InventoryItem.ITEM_TYPE.DRINK_MILKSHAKE);
@@ -2628,7 +2628,7 @@ public class interaction_FollowerInteraction : Interaction
         nextTask.GoToAndStop(follower, followerInteraction.transform.position + (Vector3) UnityEngine.Random.insideUnitCircle * 1.5f, (System.Action) (() =>
         {
           follower.Brain.Stats.Intimidated = true;
-          follower.StartCoroutine((IEnumerator) follower.GetComponent<interaction_FollowerInteraction>().IntimidateRoutine(false, playerToFace));
+          follower.StartCoroutine(follower.GetComponent<interaction_FollowerInteraction>().IntimidateRoutine(false, playerToFace));
         }));
       }
       GameManager.GetInstance().OnConversationNext(followerInteraction.gameObject, 4f);
@@ -2684,7 +2684,7 @@ public class interaction_FollowerInteraction : Interaction
       if (hostFollower)
       {
         if (this.follower.Brain.CanLevelUp())
-          this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+          this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
         else
           this.Close();
       }
@@ -2713,7 +2713,7 @@ public class interaction_FollowerInteraction : Interaction
         nextTask.GoToAndStop(follower, followerInteraction.transform.position + (Vector3) UnityEngine.Random.insideUnitCircle * 1.5f, (System.Action) (() =>
         {
           follower.Brain.Stats.ReceivedBlessing = true;
-          follower.StartCoroutine((IEnumerator) follower.GetComponent<interaction_FollowerInteraction>().BlessRoutine(false, playerToFace));
+          follower.StartCoroutine(follower.GetComponent<interaction_FollowerInteraction>().BlessRoutine(false, playerToFace));
         }));
       }
       GameManager.GetInstance().OnConversationNext(followerInteraction.gameObject, 4f);
@@ -2750,7 +2750,7 @@ public class interaction_FollowerInteraction : Interaction
       if (hostFollower)
       {
         if (this.follower.Brain.CanLevelUp())
-          this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+          this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
         else
           this.Close();
       }
@@ -2850,7 +2850,7 @@ public class interaction_FollowerInteraction : Interaction
     followerInteraction.follower.Brain.AddAdoration(FollowerBrain.AdorationActions.SmoochSpouse, (System.Action) (() =>
     {
       if (this.follower.Brain.CanLevelUp())
-        this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+        this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
       else
         this.Close(true, reshowMenu: reshowMenu);
     }));
@@ -3000,7 +3000,7 @@ public class interaction_FollowerInteraction : Interaction
         nextTask.GoToAndStop(follower, followerInteraction.transform.position + (Vector3) UnityEngine.Random.insideUnitCircle * 1.5f, (System.Action) (() =>
         {
           follower.Brain.Stats.Inspired = true;
-          follower.StartCoroutine((IEnumerator) follower.GetComponent<interaction_FollowerInteraction>().DanceRoutine(false));
+          follower.StartCoroutine(follower.GetComponent<interaction_FollowerInteraction>().DanceRoutine(false));
         }));
       }
       GameManager.GetInstance().OnConversationNext(followerInteraction.gameObject, 4f);
@@ -3042,7 +3042,7 @@ public class interaction_FollowerInteraction : Interaction
       {
         this.eventListener.PlayFollowerVO(this.bowVO);
         if (this.follower.Brain.CanLevelUp())
-          this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+          this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
         else
           this.Close();
       }
@@ -3179,7 +3179,7 @@ public class interaction_FollowerInteraction : Interaction
         yield return (object) null;
       ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.GiveGift);
       if (followerInteraction.follower.Brain.CanLevelUp())
-        followerInteraction.StartCoroutine((IEnumerator) followerInteraction.LevelUpRoutine(followerInteraction.previousTaskType, new System.Action(followerInteraction.Close), onFinishClose: false));
+        followerInteraction.StartCoroutine(followerInteraction.LevelUpRoutine(followerInteraction.previousTaskType, new System.Action(followerInteraction.Close), onFinishClose: false));
       else
         followerInteraction.Close();
     }
@@ -3260,7 +3260,7 @@ public class interaction_FollowerInteraction : Interaction
         yield return (object) null;
       ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.GiveGift);
       if (followerInteraction.follower.Brain.CanLevelUp())
-        followerInteraction.StartCoroutine((IEnumerator) followerInteraction.LevelUpRoutine(followerInteraction.previousTaskType, new System.Action(followerInteraction.Close), onFinishClose: false));
+        followerInteraction.StartCoroutine(followerInteraction.LevelUpRoutine(followerInteraction.previousTaskType, new System.Action(followerInteraction.Close), onFinishClose: false));
       else
         followerInteraction.Close();
     }
@@ -3733,7 +3733,7 @@ public class interaction_FollowerInteraction : Interaction
         }));
       }
       else
-        this.StartCoroutine((IEnumerator) this.WaitFrameToClose(callback));
+        this.StartCoroutine(this.WaitFrameToClose(callback));
     })));
     MMConversation.PlayVO = this.PlayVO;
     double num = (double) this.follower.SetBodyAnimation("worship-talk", true);
@@ -3851,7 +3851,7 @@ public class interaction_FollowerInteraction : Interaction
     {
       this.UnPause();
       this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-      this.StartCoroutine((IEnumerator) this.WaitFrameToClose());
+      this.StartCoroutine(this.WaitFrameToClose());
     })));
     MMConversation.PlayVO = this.PlayVO;
     double num = (double) this.follower.SetBodyAnimation("worship-talk", true);
@@ -3978,7 +3978,7 @@ public class interaction_FollowerInteraction : Interaction
           this.follower.Brain.LeavingCult = true;
         }
         else
-          this.StartCoroutine((IEnumerator) this.SimpleNewRecruitRoutine());
+          this.StartCoroutine(this.SimpleNewRecruitRoutine());
       }
     }
   }
@@ -4071,7 +4071,7 @@ public class interaction_FollowerInteraction : Interaction
     this.follower.SpeedMultiplier = 1f;
     this.follower.Brain.CheckChangeState();
     this.isLoadingAssets = true;
-    this.StartCoroutine((IEnumerator) UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadRebuildBedMinigameAssets(), (System.Action) (() =>
+    this.StartCoroutine(UIManager.LoadAssets(MonoSingleton<UIManager>.Instance.LoadRebuildBedMinigameAssets(), (System.Action) (() =>
     {
       this.isLoadingAssets = false;
       this._uiCookingMinigameOverlayController = MonoSingleton<UIManager>.Instance.RebuildBedMinigameOverlayControllerTemplate.Instantiate<UIRebuildBedMinigameOverlayController>();
@@ -4111,7 +4111,7 @@ public class interaction_FollowerInteraction : Interaction
         conversationEntry.SetZoom = true;
         conversationEntry.Zoom = 4f;
       }
-      MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() => this.StartCoroutine((IEnumerator) this.SpyChoiceIE()))));
+      MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() => this.StartCoroutine(this.SpyChoiceIE()))));
     }));
   }
 
@@ -4158,7 +4158,7 @@ public class interaction_FollowerInteraction : Interaction
     GameManager.GetInstance().OnConversationNext(Interaction_DLCShrine.Instance.gameObject);
     yield return (object) new WaitForSeconds(1f);
     DataManager.Instance.YngyaOffering = -2;
-    yield return (object) followerInteraction.StartCoroutine((IEnumerator) Interaction_DLCShrine.Instance.RotRevealIE());
+    yield return (object) followerInteraction.StartCoroutine(Interaction_DLCShrine.Instance.RotRevealIE());
     GameManager.GetInstance().OnConversationEnd();
   }
 
@@ -4183,7 +4183,7 @@ public class interaction_FollowerInteraction : Interaction
     FollowerBrain.SetFollowerCostume(followerInteraction.follower.Spine.Skeleton, followerInteraction.follower.Brain._directInfoAccess, forceUpdate: true);
     if (followerInteraction.follower.Brain.Info.ID == 100006 && followerInteraction.follower.Brain.Info.CursedState != Thought.Child && !DataManager.Instance.CompletedMidasFollowerQuest)
     {
-      followerInteraction.StartCoroutine((IEnumerator) followerInteraction.MidasSequenceIE());
+      followerInteraction.StartCoroutine(followerInteraction.MidasSequenceIE());
     }
     else
     {
@@ -4206,7 +4206,7 @@ public class interaction_FollowerInteraction : Interaction
       }
       GameManager.GetInstance().CameraSetOffset(new Vector3(-2f, 0.0f, 0.0f));
       UIFollowerIndoctrinationMenuController indoctrinationMenuInstance = MonoSingleton<UIManager>.Instance.ShowIndoctrinationMenu(followerInteraction.follower, new OriginalFollowerLookData(followerInteraction.follower.Brain._directInfoAccess));
-      indoctrinationMenuInstance.OnIndoctrinationCompleted += (System.Action) (() => this.StartCoroutine((IEnumerator) this.CharacterSetupCallback()));
+      indoctrinationMenuInstance.OnIndoctrinationCompleted += (System.Action) (() => this.StartCoroutine(this.CharacterSetupCallback()));
       UIFollowerIndoctrinationMenuController indoctrinationMenuController1 = indoctrinationMenuInstance;
       indoctrinationMenuController1.OnShown = indoctrinationMenuController1.OnShown + (System.Action) (() =>
       {
@@ -4314,7 +4314,7 @@ public class interaction_FollowerInteraction : Interaction
       this.LightningContainer.gameObject.SetActive(false);
     if ((UnityEngine.Object) HUD_Manager.Instance != (UnityEngine.Object) null)
       HUD_Manager.Instance.ClearLightningTarget();
-    this.StartCoroutine((IEnumerator) this.EnsureLightningOff());
+    this.StartCoroutine(this.EnsureLightningOff());
     AudioManager.Instance.StopLoop(this.lightningLoopSfx);
   }
 
@@ -4340,7 +4340,7 @@ public class interaction_FollowerInteraction : Interaction
     this.lightningIncoming = true;
     NotificationCentre.Instance.PlayFaithNotification("Notifications/FollowerLightningIncoming", 0.0f, NotificationBase.Flair.Negative, this.follower.Brain.Info.ID, this.follower.Brain.Info.Name);
     AudioManager.Instance.PlayOneShot("event:/weapon/crit_hit", PlayerFarming.Instance.gameObject);
-    this.lightningStrikeRoutine = GameManager.GetInstance().StartCoroutine((IEnumerator) this.LightningStrikeIncomingIE());
+    this.lightningStrikeRoutine = GameManager.GetInstance().StartCoroutine(this.LightningStrikeIncomingIE());
   }
 
   public IEnumerator LightningStrikeIncomingIE()
@@ -4468,14 +4468,14 @@ public class interaction_FollowerInteraction : Interaction
     }));
     this.follower.Brain.AddThought(Thought.LeaderDidQuest);
     AudioManager.Instance.PlayOneShot("event:/followers/gain_loyalty", this.gameObject.transform.position);
-    this.StartCoroutine((IEnumerator) this.FrameDelayCallback((System.Action) (() =>
+    this.StartCoroutine(this.FrameDelayCallback((System.Action) (() =>
     {
       GameManager.GetInstance().OnConversationNew();
       GameManager.GetInstance().OnConversationNext(this.gameObject, 4f);
       this.follower.Brain.AddAdoration(FollowerBrain.AdorationActions.Quest, (System.Action) (() =>
       {
         if (this.follower.Brain.CanLevelUp())
-          this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
+          this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
         else
           this.Close();
       }));
@@ -4498,7 +4498,7 @@ public class interaction_FollowerInteraction : Interaction
     this.follower.Brain.AddAdoration(FollowerBrain.AdorationActions.Quest, (System.Action) (() =>
     {
       if (this.follower.Brain.CanLevelUp())
-        this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
+        this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
       else
         this.Close();
     }));
@@ -4508,7 +4508,7 @@ public class interaction_FollowerInteraction : Interaction
   public void \u003CNamedCult\u003Eb__65_3()
   {
     if (this.follower.Brain.CanLevelUp())
-      this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
+      this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, GoToAndStop: false));
     else
       this.Close();
   }
@@ -4516,7 +4516,7 @@ public class interaction_FollowerInteraction : Interaction
   [CompilerGenerated]
   public void \u003CSelectTaskRoutine\u003Eb__71_0()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.OnboardRotstoneShrineIE());
+    GameManager.GetInstance().StartCoroutine(this.OnboardRotstoneShrineIE());
   }
 
   [CompilerGenerated]
@@ -4526,19 +4526,19 @@ public class interaction_FollowerInteraction : Interaction
     if (!this.follower.Brain.HasTrait(FollowerTrait.TraitType.Mutated) || !DataManager.Instance.TryRevealTutorialTopic(TutorialTopic.MutatedFollower))
       return;
     GameManager.GetInstance().OnConversationNew();
-    MonoSingleton<UIManager>.Instance.ShowTutorialOverlay(TutorialTopic.MutatedFollower, callback: (System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) this.OnboardRotstoneShrineIE())));
+    MonoSingleton<UIManager>.Instance.ShowTutorialOverlay(TutorialTopic.MutatedFollower, callback: (System.Action) (() => GameManager.GetInstance().StartCoroutine(this.OnboardRotstoneShrineIE())));
   }
 
   [CompilerGenerated]
   public void \u003CSelectTaskRoutine\u003Eb__71_3()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.OnboardRotstoneShrineIE());
+    GameManager.GetInstance().StartCoroutine(this.OnboardRotstoneShrineIE());
   }
 
   [CompilerGenerated]
   public void \u003CSelectTaskRoutine\u003Eb__71_1()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.OnboardRotstoneShrineIE());
+    GameManager.GetInstance().StartCoroutine(this.OnboardRotstoneShrineIE());
   }
 
   [CompilerGenerated]
@@ -4548,7 +4548,7 @@ public class interaction_FollowerInteraction : Interaction
   public void \u003CCuddleBabyRoutine\u003Eb__89_0()
   {
     if (this.follower.Brain.CanLevelUp())
-      this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+      this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
     else
       this.Close();
   }
@@ -4557,7 +4557,7 @@ public class interaction_FollowerInteraction : Interaction
   public void \u003CPetDogRoutine\u003Eb__90_0()
   {
     if (this.follower.Brain.CanLevelUp())
-      this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+      this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
     else
       this.Close();
   }
@@ -4566,7 +4566,7 @@ public class interaction_FollowerInteraction : Interaction
   public void \u003CReassureRoutine\u003Eb__91_0()
   {
     if (this.follower.Brain.CanLevelUp())
-      this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+      this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
     else
       this.Close();
   }
@@ -4576,7 +4576,7 @@ public class interaction_FollowerInteraction : Interaction
   {
     this.follower.Brain.AddThought(Thought.Intimidated);
     if (this.follower.Brain.CanLevelUp())
-      this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType));
+      this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType));
     else
       this.Close();
   }
@@ -4594,7 +4594,7 @@ public class interaction_FollowerInteraction : Interaction
       if (this.follower.Brain.CanLevelUp())
       {
         Debug.Log((object) ("previousTaskType: " + this.previousTaskType.ToString()));
-        this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, new System.Action(this.Close), onFinishClose: false));
+        this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, new System.Action(this.Close), onFinishClose: false));
       }
       else
         this.Close();
@@ -4607,7 +4607,7 @@ public class interaction_FollowerInteraction : Interaction
     if (this.follower.Brain.CanLevelUp())
     {
       Debug.Log((object) ("previousTaskType: " + this.previousTaskType.ToString()));
-      this.StartCoroutine((IEnumerator) this.LevelUpRoutine(this.previousTaskType, new System.Action(this.Close), onFinishClose: false));
+      this.StartCoroutine(this.LevelUpRoutine(this.previousTaskType, new System.Action(this.Close), onFinishClose: false));
     }
     else
       this.Close();
@@ -4618,7 +4618,7 @@ public class interaction_FollowerInteraction : Interaction
   {
     this.UnPause();
     this.eventListener.PlayFollowerVO(this.generalAcknowledgeVO);
-    this.StartCoroutine((IEnumerator) this.WaitFrameToClose());
+    this.StartCoroutine(this.WaitFrameToClose());
   }
 
   [CompilerGenerated]
@@ -4652,14 +4652,11 @@ public class interaction_FollowerInteraction : Interaction
       conversationEntry.SetZoom = true;
       conversationEntry.Zoom = 4f;
     }
-    MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() => this.StartCoroutine((IEnumerator) this.SpyChoiceIE()))));
+    MMConversation.Play(new ConversationObject(Entries, (List<MMTools.Response>) null, (System.Action) (() => this.StartCoroutine(this.SpyChoiceIE()))));
   }
 
   [CompilerGenerated]
-  public void \u003CSpyCatchSuccess\u003Eb__113_1()
-  {
-    this.StartCoroutine((IEnumerator) this.SpyChoiceIE());
-  }
+  public void \u003CSpyCatchSuccess\u003Eb__113_1() => this.StartCoroutine(this.SpyChoiceIE());
 
   [CompilerGenerated]
   public void \u003CSpyChoiceIE\u003Eb__114_0()
@@ -4667,14 +4664,11 @@ public class interaction_FollowerInteraction : Interaction
     this.follower.Brain.LeavingCult = false;
     this.follower.Brain.Info.Traits.Remove(FollowerTrait.TraitType.Spy);
     this.follower.Brain.Info.Traits.Add(FollowerTrait.TraitType.CriminalReformed);
-    this.StartCoroutine((IEnumerator) this.SimpleNewRecruitRoutine());
+    this.StartCoroutine(this.SimpleNewRecruitRoutine());
   }
 
   [CompilerGenerated]
-  public void \u003CSpyChoiceIE\u003Eb__114_1()
-  {
-    this.StartCoroutine((IEnumerator) this.MurderFollower());
-  }
+  public void \u003CSpyChoiceIE\u003Eb__114_1() => this.StartCoroutine(this.MurderFollower());
 
   [CompilerGenerated]
   public void \u003CSpyCatchFail\u003Eb__115_0()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SetSpriteshapeMaterial
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ public class SetSpriteshapeMaterial : BaseMonoBehaviour
   {
     foreach (SpriteShapeMaterial spriteShape1 in this.SpriteShapes)
     {
-      if ((UnityEngine.Object) spriteShape1.ss == (UnityEngine.Object) spriteShape)
+      if ((Object) spriteShape1.ss == (Object) spriteShape)
         return spriteShape1.GroundTag;
     }
     return GroundType.Grass;
@@ -36,7 +36,7 @@ public class SetSpriteshapeMaterial : BaseMonoBehaviour
 
   public void SetSpriteShapeMaterials()
   {
-    SpriteShapeController[] objectsOfType = UnityEngine.Object.FindObjectsOfType((System.Type) typeof (SpriteShapeController)) as SpriteShapeController[];
+    SpriteShapeController[] objectsOfType = Object.FindObjectsOfType(typeof (SpriteShapeController)) as SpriteShapeController[];
     Debug.Log((object) $"Found {objectsOfType.Length.ToString()} instances with this script attached");
     foreach (SpriteShapeController spriteShapeController in objectsOfType)
     {
@@ -50,9 +50,9 @@ public class SetSpriteshapeMaterial : BaseMonoBehaviour
     Debug.Log((object) ss);
     for (int index = 0; index < this.SpriteShapes.Count - 1; ++index)
     {
-      if ((UnityEngine.Object) this.SpriteShapes[index].ss == (UnityEngine.Object) ss)
+      if ((Object) this.SpriteShapes[index].ss == (Object) ss)
       {
-        if ((UnityEngine.Object) this.SpriteShapes[index].m == (UnityEngine.Object) null)
+        if ((Object) this.SpriteShapes[index].m == (Object) null)
           return this.fallBackMaterial;
         Debug.Log((object) this.SpriteShapes[index].m);
         return this.SpriteShapes[index].m;
@@ -67,7 +67,7 @@ public class SetSpriteshapeMaterial : BaseMonoBehaviour
     Debug.Log((object) ss);
     for (int index = 0; index < this.SpriteShapes.Count - 1; ++index)
     {
-      if ((UnityEngine.Object) this.SpriteShapes[index].ss == (UnityEngine.Object) ss)
+      if ((Object) this.SpriteShapes[index].ss == (Object) ss)
       {
         Debug.Log((object) this.SpriteShapes[index].m);
         return this.SpriteShapes[index].ssr;

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: SpawnEnemyOnDeath
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -133,7 +133,7 @@ public class SpawnEnemyOnDeath : BaseMonoBehaviour
           }
         }
         component1.DoKnockBack(randomStartAngle, this.spawnForce, 0.5f);
-        component1.StartCoroutine((IEnumerator) this.DelayedEnemyHealthEnable(component1));
+        component1.StartCoroutine(this.DelayedEnemyHealthEnable(component1));
         SpawnEnemyOnDeath.SpawnEvent onEnemySpawned2 = this.OnEnemySpawned;
         if (onEnemySpawned2 == null)
           return;
@@ -154,7 +154,7 @@ public class SpawnEnemyOnDeath : BaseMonoBehaviour
     {
       Health component = collider2D.GetComponent<Health>();
       if ((UnityEngine.Object) component != (UnityEngine.Object) null && component.team == Health.Team.Neutral)
-        collider2D.GetComponent<Health>().DealDamage((float) int.MaxValue, enemy.gameObject, Vector3.Lerp(component.transform.position, enemy.transform.position, 0.7f));
+        collider2D.GetComponent<Health>().DealDamage((float) int.MaxValue, enemy.gameObject, Vector3.Lerp(component.transform.position, enemy.transform.position, 0.7f), dealDamageImmediately: true);
     }
   }
 

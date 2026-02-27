@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySwordsmanWolf
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -169,7 +169,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
       this.damageColliderEvents.OnTriggerEnterEvent += new ColliderEvents.TriggerEvent(this.OnDamageTriggerEnter);
       this.damageColliderEvents.SetActive(false);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
   }
 
@@ -207,14 +207,14 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
       this.ClearPaths();
       this.SimpleSpineFlash.FlashFillRed();
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
       this.enraging = true;
       this.rageActive = true;
       this.health.invincible = true;
       this.health.IsDeflecting = true;
       if ((double) this.health.HP <= 0.0)
         this.health.HP = 0.1f;
-      this.StartCoroutine((IEnumerator) this.Enrage());
+      this.StartCoroutine(this.Enrage());
       Vector3 vector3 = ((this.transform.position - Attacker.transform.position).normalized * 3f) with
       {
         z = -2f
@@ -306,7 +306,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
       if ((double) AttackLocation.x < (double) this.transform.position.x && this.state.CURRENT_STATE != StateMachine.State.HitLeft)
         this.state.CURRENT_STATE = StateMachine.State.HitLeft;
       if (AttackType != Health.AttackTypes.Heavy && (!(AttackType == Health.AttackTypes.Projectile & FromBehind) || this.health.HasShield))
-        this.StartCoroutine((IEnumerator) this.HurtRoutine());
+        this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType == Health.AttackTypes.Projectile && !this.health.HasShield)
     {
@@ -314,7 +314,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
       this.Spine.skeleton.ScaleX = (double) this.state.LookAngle <= 90.0 || (double) this.state.LookAngle >= 270.0 ? -1f : 1f;
     }
     if (AttackType != Health.AttackTypes.NoKnockBack)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     this.SimpleSpineFlash.FlashFillRed();
   }
 
@@ -336,7 +336,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemySwordsmanWolf.Spine.timeScale) < 0.30000001192092896)
       yield return (object) null;
-    enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.WaitForTarget());
+    enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.WaitForTarget());
   }
 
   public IEnumerator WaitForTarget()
@@ -383,7 +383,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
     {
       if ((UnityEngine.Object) enemySwordsmanWolf.TargetObject == (UnityEngine.Object) null)
       {
-        enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.WaitForTarget());
+        enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.WaitForTarget());
         yield break;
       }
       float a = Vector3.Distance(enemySwordsmanWolf.TargetObject.transform.position, enemySwordsmanWolf.transform.position);
@@ -396,7 +396,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
       }
       yield return (object) null;
     }
-    enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.ChasePlayer());
+    enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.ChasePlayer());
   }
 
   public void LookAtTarget()
@@ -426,7 +426,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
     {
       if ((UnityEngine.Object) enemySwordsmanWolf.TargetObject == (UnityEngine.Object) null)
       {
-        enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.WaitForTarget());
+        enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.WaitForTarget());
         break;
       }
       if ((UnityEngine.Object) enemySwordsmanWolf.damageColliderEvents != (UnityEngine.Object) null)
@@ -469,9 +469,9 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
                   enemySwordsmanWolf.StopAllCoroutines();
                   enemySwordsmanWolf.DisableForces = false;
                   if (enemySwordsmanWolf.rageActive)
-                    enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.FightPlayer(enemySwordsmanWolf.rageAttackDistance));
+                    enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.FightPlayer(enemySwordsmanWolf.rageAttackDistance));
                   else
-                    enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.FightPlayer());
+                    enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.FightPlayer());
                 }
                 else if (!enemySwordsmanWolf.health.HasShield)
                 {
@@ -516,7 +516,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
     if ((double) a > (double) this.VisionRange)
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
       this.LookAtTarget();
   }
@@ -580,7 +580,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
         this.Points.Add(new Vector3(raycastHit2D.centroid.x, raycastHit2D.centroid.y) + Vector3.Normalize(this.transform.position - Position) * this.CircleCastOffset);
         this.PointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine((Vector3) raycastHit2D.centroid));
+      this.StartCoroutine(this.TeleportRoutine((Vector3) raycastHit2D.centroid));
     }
     else
     {
@@ -589,7 +589,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
         this.EndPoints.Add(new Vector3(Position.x, Position.y));
         this.EndPointsLink.Add(new Vector3(this.transform.position.x, this.transform.position.y));
       }
-      this.StartCoroutine((IEnumerator) this.TeleportRoutine(Position));
+      this.StartCoroutine(this.TeleportRoutine(Position));
     }
   }
 
@@ -632,7 +632,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
   public void GraveSpawn(bool longAnim = false)
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.GraveSpawnRoutine(longAnim));
+    this.StartCoroutine(this.GraveSpawnRoutine(longAnim));
   }
 
   public IEnumerator GraveSpawnRoutine(bool longAnim = false)
@@ -646,7 +646,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
     yield return (object) new WaitForSeconds(1.5f);
     enemySwordsmanWolf.health.invincible = false;
     enemySwordsmanWolf.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.WaitForTarget());
+    enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.WaitForTarget());
   }
 
   public void OnDrawGizmos()
@@ -699,7 +699,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
         {
           case StateMachine.State.Idle:
             enemySwordsmanWolf.TargetObject = (GameObject) null;
-            enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.WaitForTarget());
+            enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.WaitForTarget());
             yield break;
           case StateMachine.State.Moving:
             if ((bool) (UnityEngine.Object) enemySwordsmanWolf.TargetObject)
@@ -792,17 +792,17 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
                 enemySwordsmanWolf.speed = AttackSpeed * 0.0166666675f;
                 enemySwordsmanWolf.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? "grunt-attack-impact2" : "grunt-attack-impact", false);
               }
-              enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.DropAvalanches());
+              enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.DropAvalanches());
               enemySwordsmanWolf.canBeParried = true;
               if (enemySwordsmanWolf.rageActive)
               {
                 enemySwordsmanWolf.health.invincible = true;
                 enemySwordsmanWolf.ghost.ghostingEnabled = true;
                 enemySwordsmanWolf.health.IsDeflecting = true;
-                enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.EnableDamageCollider(0.35f, enemySwordsmanWolf.rageAttackDuration, new System.Action(enemySwordsmanWolf.\u003CFightPlayer\u003Eb__95_0)));
+                enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.EnableDamageCollider(0.35f, enemySwordsmanWolf.rageAttackDuration, new System.Action(enemySwordsmanWolf.\u003CFightPlayer\u003Eb__95_0)));
               }
               else
-                enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.EnableDamageCollider(0.0f));
+                enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.EnableDamageCollider(0.0f));
               if (!enemySwordsmanWolf.rageActive)
               {
                 if (!string.IsNullOrEmpty(enemySwordsmanWolf.attackSoundPath))
@@ -843,7 +843,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
       }
     }
     enemySwordsmanWolf.TargetObject = (GameObject) null;
-    enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.WaitForTarget());
+    enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.WaitForTarget());
   }
 
   public void BiomeGenerator_OnBiomeChangeRoom()
@@ -960,7 +960,7 @@ public class EnemySwordsmanWolf : UnitObject, IAttackResilient
     enemySwordsmanWolf.enraging = false;
     enemySwordsmanWolf.health.invincible = false;
     enemySwordsmanWolf.health.IsDeflecting = false;
-    enemySwordsmanWolf.StartCoroutine((IEnumerator) enemySwordsmanWolf.WaitForTarget());
+    enemySwordsmanWolf.StartCoroutine(enemySwordsmanWolf.WaitForTarget());
   }
 
   public void ResetResilience() => this.canEnrage = true;

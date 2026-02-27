@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WolfBossArm
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -132,7 +132,7 @@ public class WolfBossArm : MonoBehaviour
     Vector3 preOffset = this.root.Spine.transform.localPosition;
     AudioManager.Instance.PlayOneShot(startSFX, this.boss.gameObject);
     AudioManager.Instance.PlayOneShot(startVO, this.boss.gameObject);
-    this.SmackTarget(position, lightning, impactSFX, (System.Action) (() => this.StartCoroutine((IEnumerator) this.WaitForSeconds(1f, (System.Action) (() =>
+    this.SmackTarget(position, lightning, impactSFX, (System.Action) (() => this.StartCoroutine(this.WaitForSeconds(1f, (System.Action) (() =>
     {
       this.SetHandAnimation("animation", true);
       this.root.transform.DOLocalMove(preOffset, 0.66f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine);
@@ -159,14 +159,14 @@ public class WolfBossArm : MonoBehaviour
       piece.Spine.AnimationState.SetAnimation(0, "spikes-out", false);
       piece.Spine.AnimationState.AddAnimation(0, "spikes-loop", true, 0.0f);
     }
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(delay, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForSeconds(delay, (System.Action) (() =>
     {
       this.Attacking = true;
       foreach (WolfArmPiece piece in this.pieces)
         piece.SetDamageCollider(true);
       this.root.transform.DOPath(targets, duration, PathType.CatmullRom, gizmoColor: (Color?) new Color?()).SetEase<TweenerCore<Vector3, Path, PathOptions>>(Ease.InOutBack).OnComplete<TweenerCore<Vector3, Path, PathOptions>>((TweenCallback) (() =>
       {
-        this.StartCoroutine((IEnumerator) this.WaitForSeconds(0.5f, (System.Action) (() => this.Retract(fromPosition + this.boss.PositionOffset, (System.Action) (() =>
+        this.StartCoroutine(this.WaitForSeconds(0.5f, (System.Action) (() => this.Retract(fromPosition + this.boss.PositionOffset, (System.Action) (() =>
         {
           this.rootTargetPosition = fromPosition;
           this.idleTimer = -1f;
@@ -192,7 +192,7 @@ public class WolfBossArm : MonoBehaviour
     this.Attacking = true;
     this.SetHandAnimation("mouth_open_loop", true);
     this.SetRootDamageCollider(true);
-    this.StartCoroutine((IEnumerator) this.WaitForSeconds(this.expandDuration - 0.5f, (System.Action) (() =>
+    this.StartCoroutine(this.WaitForSeconds(this.expandDuration - 0.5f, (System.Action) (() =>
     {
       CameraManager.instance.ShakeCameraForDuration(1.75f, 2f, 0.3f);
       MMVibrate.RumbleForAllPlayers(1.5f, 1.75f, 0.3f);
@@ -265,7 +265,7 @@ public class WolfBossArm : MonoBehaviour
         else
           Explosion.CreateExplosion(vector3, Health.Team.Team2, this.health, 3f, playSFX: false);
         this.SetRootDamageCollider(true);
-        this.StartCoroutine((IEnumerator) this.WaitForSeconds(0.2f, (System.Action) (() => this.SetRootDamageCollider(false))));
+        this.StartCoroutine(this.WaitForSeconds(0.2f, (System.Action) (() => this.SetRootDamageCollider(false))));
       }));
     }));
   }
@@ -304,7 +304,7 @@ public class WolfBossArm : MonoBehaviour
           return;
         action();
       }));
-    this.StartCoroutine((IEnumerator) this.ExpandIE(expandDuration, animate));
+    this.StartCoroutine(this.ExpandIE(expandDuration, animate));
   }
 
   public IEnumerator ExpandIE(float expandDuration, bool animate = false)
@@ -322,7 +322,7 @@ public class WolfBossArm : MonoBehaviour
 
   public void JiggleArms(float jiggleMin, float jiggleMax, float duration)
   {
-    this.StartCoroutine((IEnumerator) this.JiggleArmsIE(jiggleMin, jiggleMax, duration));
+    this.StartCoroutine(this.JiggleArmsIE(jiggleMin, jiggleMax, duration));
   }
 
   public IEnumerator JiggleArmsIE(float jiggleMin, float jiggleMax, float duration)
@@ -414,9 +414,9 @@ public class WolfBossArm : MonoBehaviour
       action();
     });
     if (hidePieces)
-      this.StartCoroutine((IEnumerator) this.RetractIE(dur / 2f, dur, callback1));
+      this.StartCoroutine(this.RetractIE(dur / 2f, dur, callback1));
     else
-      this.StartCoroutine((IEnumerator) this.WaitForSeconds(dur, callback1));
+      this.StartCoroutine(this.WaitForSeconds(dur, callback1));
   }
 
   public IEnumerator RetractIE(float delay, float retractDuration, System.Action callback)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJellySpikerMiniBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -213,13 +213,13 @@ public class EnemyJellySpikerMiniBoss : UnitObject
         switch (num2)
         {
           case 0:
-            this.StartCoroutine((IEnumerator) this.BeginChargeAttackIE());
+            this.StartCoroutine(this.BeginChargeAttackIE());
             break;
           case 1:
-            this.StartCoroutine((IEnumerator) this.SpawnSpikesInLineIE(this.spikeAmount, this.delayBetweenSpikes, this.distanceBetweenSpikes));
+            this.StartCoroutine(this.SpawnSpikesInLineIE(this.spikeAmount, this.delayBetweenSpikes, this.distanceBetweenSpikes));
             break;
           default:
-            this.StartCoroutine((IEnumerator) this.SpawnSpikesInCircleLongIE(8, this.delayBetweenSpikes));
+            this.StartCoroutine(this.SpawnSpikesInCircleLongIE(8, this.delayBetweenSpikes));
             break;
         }
       }
@@ -230,13 +230,13 @@ public class EnemyJellySpikerMiniBoss : UnitObject
         switch (num3)
         {
           case 0:
-            this.StartCoroutine((IEnumerator) this.SpikeAttackIE());
+            this.StartCoroutine(this.SpikeAttackIE());
             break;
           case 1:
-            this.StartCoroutine((IEnumerator) this.SpawnSpikesInCircleIE(this.spikeRingAmount, this.delayBetweenSpikesRing, this.distanceBetweenSpikesRing));
+            this.StartCoroutine(this.SpawnSpikesInCircleIE(this.spikeRingAmount, this.delayBetweenSpikesRing, this.distanceBetweenSpikesRing));
             break;
           default:
-            this.StartCoroutine((IEnumerator) this.SpawnSpikesInCircleLongIE(8, this.delayBetweenSpikes));
+            this.StartCoroutine(this.SpawnSpikesInCircleLongIE(8, this.delayBetweenSpikes));
             break;
         }
       }
@@ -390,7 +390,7 @@ public class EnemyJellySpikerMiniBoss : UnitObject
     this.damageColliderEvents.gameObject.SetActive(false);
     this.speed = 0.0f;
     this.cooldown = true;
-    this.StartCoroutine((IEnumerator) this.CoolingDown(this.chargeCooldown));
+    this.StartCoroutine(this.CoolingDown(this.chargeCooldown));
   }
 
   public IEnumerator SpikeAttackIE()
@@ -417,11 +417,11 @@ public class EnemyJellySpikerMiniBoss : UnitObject
     this.Spine.AnimationState.SetAnimation(0, this.spikeAnimation, false);
     this.Spine.AnimationState.AddAnimation(0, this.idleAnimation, true, 0.0f);
     this.ClearPaths();
-    this.StartCoroutine((IEnumerator) this.TurnOnDamageColliderForDuration(this.spikeColliderDuration));
+    this.StartCoroutine(this.TurnOnDamageColliderForDuration(this.spikeColliderDuration));
     this.cooldown = true;
     this.attacking = false;
     this.shortAttacking = false;
-    this.StartCoroutine((IEnumerator) this.CoolingDown(this.spikeCooldown));
+    this.StartCoroutine(this.CoolingDown(this.spikeCooldown));
   }
 
   public IEnumerator CoolingDown(float duration)
@@ -472,7 +472,7 @@ public class EnemyJellySpikerMiniBoss : UnitObject
       {
         Health.team2[index].invincible = false;
         Health.team2[index].enabled = true;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, dealDamageImmediately: true);
       }
     }
   }
@@ -538,10 +538,10 @@ public class EnemyJellySpikerMiniBoss : UnitObject
     Vector3 normalized = (jellySpikerMiniBoss.currentTarget.transform.position - jellySpikerMiniBoss.transform.position).normalized;
     if (jellySpikerMiniBoss.tripleBeams)
     {
-      jellySpikerMiniBoss.StartCoroutine((IEnumerator) jellySpikerMiniBoss.ShootSpikesInDirectionIE(amount, Quaternion.Euler(0.0f, 0.0f, -15f) * normalized, delayBetweenSpikes, distanceBetweenSpikes));
-      jellySpikerMiniBoss.StartCoroutine((IEnumerator) jellySpikerMiniBoss.ShootSpikesInDirectionIE(amount, Quaternion.Euler(0.0f, 0.0f, 15f) * normalized, delayBetweenSpikes, distanceBetweenSpikes));
+      jellySpikerMiniBoss.StartCoroutine(jellySpikerMiniBoss.ShootSpikesInDirectionIE(amount, Quaternion.Euler(0.0f, 0.0f, -15f) * normalized, delayBetweenSpikes, distanceBetweenSpikes));
+      jellySpikerMiniBoss.StartCoroutine(jellySpikerMiniBoss.ShootSpikesInDirectionIE(amount, Quaternion.Euler(0.0f, 0.0f, 15f) * normalized, delayBetweenSpikes, distanceBetweenSpikes));
     }
-    yield return (object) jellySpikerMiniBoss.StartCoroutine((IEnumerator) jellySpikerMiniBoss.ShootSpikesInDirectionIE(amount, normalized, delayBetweenSpikes, distanceBetweenSpikes));
+    yield return (object) jellySpikerMiniBoss.StartCoroutine(jellySpikerMiniBoss.ShootSpikesInDirectionIE(amount, normalized, delayBetweenSpikes, distanceBetweenSpikes));
     yield return (object) new WaitForSeconds(1f);
     jellySpikerMiniBoss.attacking = false;
   }
@@ -573,7 +573,7 @@ public class EnemyJellySpikerMiniBoss : UnitObject
     for (int index = 0; index < amount; ++index)
     {
       Vector3 direction = new Vector3(Mathf.Cos((float) num * ((float) Math.PI / 180f)), Mathf.Sin((float) num * ((float) Math.PI / 180f)), 0.0f);
-      jellySpikerMiniBoss.StartCoroutine((IEnumerator) jellySpikerMiniBoss.ShootSpikesInDirectionIE(jellySpikerMiniBoss.spikeRingAmount, direction, jellySpikerMiniBoss.delayBetweenSpikesRing, jellySpikerMiniBoss.distanceBetweenSpikesRing));
+      jellySpikerMiniBoss.StartCoroutine(jellySpikerMiniBoss.ShootSpikesInDirectionIE(jellySpikerMiniBoss.spikeRingAmount, direction, jellySpikerMiniBoss.delayBetweenSpikesRing, jellySpikerMiniBoss.distanceBetweenSpikesRing));
       num = (int) Utils.Repeat((float) (num + 360 / amount), 360f);
     }
     yield return (object) new WaitForSeconds((float) ((double) jellySpikerMiniBoss.spikeAnticipation + (double) delayBetweenSpikes + 1.0));
@@ -611,7 +611,7 @@ public class EnemyJellySpikerMiniBoss : UnitObject
     for (int index = 0; index < amount; ++index)
     {
       Vector3 direction = new Vector3(Mathf.Cos((float) num * ((float) Math.PI / 180f)), Mathf.Sin((float) num * ((float) Math.PI / 180f)), 0.0f);
-      jellySpikerMiniBoss.StartCoroutine((IEnumerator) jellySpikerMiniBoss.ShootSpikesInDirectionIE(jellySpikerMiniBoss.spikeRingLongAmount, direction, delayBetweenSpikes, jellySpikerMiniBoss.distanceBetweenSpikes));
+      jellySpikerMiniBoss.StartCoroutine(jellySpikerMiniBoss.ShootSpikesInDirectionIE(jellySpikerMiniBoss.spikeRingLongAmount, direction, delayBetweenSpikes, jellySpikerMiniBoss.distanceBetweenSpikes));
       num = (int) Utils.Repeat((float) (num + 360 / amount), 360f);
     }
     yield return (object) new WaitForSeconds((float) ((double) jellySpikerMiniBoss.spikeAnticipation + (double) delayBetweenSpikes + 1.0));

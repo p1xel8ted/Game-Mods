@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualRessurect
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -24,17 +24,17 @@ public class RitualRessurect : Ritual
   public override void Play()
   {
     base.Play();
-    this.StartCoroutine((IEnumerator) this.RitualRoutine());
+    this.StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
   {
     RitualRessurect ritualRessurect = this;
     AudioManager.Instance.PlayOneShot("event:/rituals/generic_start_ritual");
-    yield return (object) ritualRessurect.StartCoroutine((IEnumerator) ritualRessurect.CentreAndAnimatePlayer());
+    yield return (object) ritualRessurect.StartCoroutine(ritualRessurect.CentreAndAnimatePlayer());
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
     Debug.Log((object) "Ritual sacrifice begin gather");
-    yield return (object) ritualRessurect.StartCoroutine((IEnumerator) ritualRessurect.WaitFollowersFormCircle());
+    yield return (object) ritualRessurect.StartCoroutine(ritualRessurect.WaitFollowersFormCircle());
     Debug.Log((object) "Ritual sacrifice end gather");
     SimulationManager.Pause();
     PlayerFarming.Instance.simpleSpineAnimator.Animate("rituals/ritual-start", 0, false);
@@ -70,7 +70,7 @@ public class RitualRessurect : Ritual
     AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/select_follower", PlayerFarming.Instance.gameObject);
     yield return (object) null;
     Interaction_TempleAltar.Instance.SimpleSetCamera.Reset();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) ritualRessurect.DoRessurectRoutine());
+    GameManager.GetInstance().StartCoroutine(ritualRessurect.DoRessurectRoutine());
   }
 
   public IEnumerator DoRessurectRoutine()
@@ -192,7 +192,7 @@ public class RitualRessurect : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num3 += Delay;
-      ritualRessurect.StartCoroutine((IEnumerator) ritualRessurect.DelayFollowerReaction(brain, Delay));
+      ritualRessurect.StartCoroutine(ritualRessurect.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1f);
     if (revivedFollower.Brain.HasTrait(FollowerTrait.TraitType.ExistentialDread))

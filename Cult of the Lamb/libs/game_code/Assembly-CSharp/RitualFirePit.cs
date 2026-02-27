@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualFirePit
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -25,7 +25,7 @@ public class RitualFirePit : Ritual
   public override void Play()
   {
     base.Play();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -53,7 +53,7 @@ public class RitualFirePit : Ritual
     while (firePit.StructureInfo == null)
       yield return (object) null;
     Debug.Log((object) "B");
-    yield return (object) ritualFirePit.StartCoroutine((IEnumerator) ritualFirePit.WaitForFollowersToTakeSeat(0));
+    yield return (object) ritualFirePit.StartCoroutine(ritualFirePit.WaitForFollowersToTakeSeat(0));
     Debug.Log((object) "C");
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
     PlayerFarming.Instance.Spine.skeleton.UpdateWorldTransform();
@@ -119,7 +119,7 @@ public class RitualFirePit : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num1 += Delay;
-      ritualFirePit.StartCoroutine((IEnumerator) ritualFirePit.DelayFollowerReaction(brain, Delay));
+      ritualFirePit.StartCoroutine(ritualFirePit.DelayFollowerReaction(brain, Delay));
     }
     yield return (object) new WaitForSeconds(1.5f);
     Interaction_TempleAltar.Instance.CloseUpCamera.Reset();
@@ -146,7 +146,7 @@ public class RitualFirePit : Ritual
     follower.HoodOff(onComplete: (System.Action) (() => waiting = false));
     while (waiting)
       yield return (object) null;
-    yield return (object) ritualFirePit.StartCoroutine((IEnumerator) follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
+    yield return (object) ritualFirePit.StartCoroutine(follower.GoToRoutine(ChurchFollowerManager.Instance.RitualCenterPosition.position + positions[index]));
     double num = (double) follower.SetBodyAnimation("dance-hooded", true);
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.Tarot.Interaction_TarotCardUnlock
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -66,7 +66,7 @@ public class Interaction_TarotCardUnlock : Interaction
     }
   }
 
-  public void DoRoutine() => this.StartCoroutine((IEnumerator) this.DoRoutineRoutine());
+  public void DoRoutine() => this.StartCoroutine(this.DoRoutineRoutine());
 
   public IEnumerator DoRoutineRoutine()
   {
@@ -80,7 +80,7 @@ public class Interaction_TarotCardUnlock : Interaction
     interactionTarotCardUnlock.state.facingAngle = -90f;
     interactionTarotCardUnlock.c = CameraFollowTarget.Instance;
     interactionTarotCardUnlock.c.DisablePlayerLook = true;
-    interactionTarotCardUnlock.StartCoroutine((IEnumerator) interactionTarotCardUnlock.CentrePlayer());
+    interactionTarotCardUnlock.StartCoroutine(interactionTarotCardUnlock.CentrePlayer());
     AudioManager.Instance.PlayOneShot("event:/tarot/tarot_card_pull", interactionTarotCardUnlock.gameObject);
     interactionTarotCardUnlock.playerFarming.simpleSpineAnimator.Animate("cards/cards-start", 0, false);
     interactionTarotCardUnlock.playerFarming.simpleSpineAnimator.AddAnimate("cards/cards-loop", 0, true, 0.0f);
@@ -115,7 +115,7 @@ public class Interaction_TarotCardUnlock : Interaction
 
   public void BackToIdle(PlayerFarming playerFarming)
   {
-    this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(playerFarming));
+    this.StartCoroutine(this.BackToIdleRoutine(playerFarming));
   }
 
   public IEnumerator BackToIdleRoutine(PlayerFarming playerFarming)
@@ -132,7 +132,7 @@ public class Interaction_TarotCardUnlock : Interaction
       playerFarming.simpleSpineAnimator.Animate("cards/cards-stop-seperate", 0, false);
       playerFarming.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
       interactionTarotCardUnlock.StopAllCoroutines();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) interactionTarotCardUnlock.DelayEffectsRoutine(playerFarming));
+      GameManager.GetInstance().StartCoroutine(interactionTarotCardUnlock.DelayEffectsRoutine(playerFarming));
       return false;
     }
     // ISSUE: reference to a compiler-generated field

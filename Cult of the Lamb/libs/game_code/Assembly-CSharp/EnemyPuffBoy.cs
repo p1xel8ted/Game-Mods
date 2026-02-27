@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyPuffBoy
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -28,7 +28,7 @@ public class EnemyPuffBoy : UnitObject
 
   public void Start()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.SeperateObject = true;
   }
 
@@ -51,7 +51,7 @@ public class EnemyPuffBoy : UnitObject
     }
     while ((double) Vector3.Distance(enemyPuffBoy.TargetObject.transform.position, enemyPuffBoy.transform.position) > (double) enemyPuffBoy.Range)
       yield return (object) null;
-    enemyPuffBoy.ChasePlayerCoroutine = enemyPuffBoy.StartCoroutine((IEnumerator) enemyPuffBoy.ChasePlayer());
+    enemyPuffBoy.ChasePlayerCoroutine = enemyPuffBoy.StartCoroutine(enemyPuffBoy.ChasePlayer());
   }
 
   public override void OnHit(
@@ -106,7 +106,7 @@ public class EnemyPuffBoy : UnitObject
     {
       if ((UnityEngine.Object) enemyPuffBoy.TargetObject == (UnityEngine.Object) null)
       {
-        enemyPuffBoy.StartCoroutine((IEnumerator) enemyPuffBoy.WaitForTarget());
+        enemyPuffBoy.StartCoroutine(enemyPuffBoy.WaitForTarget());
         break;
       }
       enemyPuffBoy.Seperate(enemyPuffBoy.SeperationRadius);
@@ -149,7 +149,7 @@ public class EnemyPuffBoy : UnitObject
             enemyPuffBoy.simpleSpineAnimator.FlashWhite(false);
             CameraManager.shakeCamera(0.2f, Utils.GetAngle(enemyPuffBoy.transform.position, enemyPuffBoy.TargetObject.transform.position));
             enemyPuffBoy.collider2DList = new List<Collider2D>();
-            enemyPuffBoy.DamageCollider.GetContacts((List<Collider2D>) enemyPuffBoy.collider2DList);
+            enemyPuffBoy.DamageCollider.GetContacts(enemyPuffBoy.collider2DList);
             using (List<Collider2D>.Enumerator enumerator = enemyPuffBoy.collider2DList.GetEnumerator())
             {
               while (enumerator.MoveNext())

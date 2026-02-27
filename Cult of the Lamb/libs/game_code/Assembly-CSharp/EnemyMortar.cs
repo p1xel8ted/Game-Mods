@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyMortar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -38,7 +38,7 @@ public class EnemyMortar : UnitObject
 
   public void Start()
   {
-    this.StartCoroutine((IEnumerator) this.WaitForTarget());
+    this.StartCoroutine(this.WaitForTarget());
     this.rb2D = this.GetComponent<Rigidbody2D>();
     this.SeperateObject = true;
   }
@@ -63,14 +63,14 @@ public class EnemyMortar : UnitObject
         break;
       case "shoot complete":
         this.state.CURRENT_STATE = StateMachine.State.Idle;
-        this.StartCoroutine((IEnumerator) this.ChasePlayer());
+        this.StartCoroutine(this.ChasePlayer());
         break;
       case "attack":
         if (this.simpleSpineAnimator.IsVisible)
           CameraManager.shakeCamera(0.3f, Utils.GetAngle(this.transform.position, this.TargetObject.transform.position));
         this.Attacked = true;
         this.collider2DList = new List<Collider2D>();
-        this.DamageCollider.GetContacts((List<Collider2D>) this.collider2DList);
+        this.DamageCollider.GetContacts(this.collider2DList);
         using (List<Collider2D>.Enumerator enumerator = this.collider2DList.GetEnumerator())
         {
           while (enumerator.MoveNext())
@@ -83,7 +83,7 @@ public class EnemyMortar : UnitObject
         }
       case "attack complete":
         this.state.CURRENT_STATE = StateMachine.State.Idle;
-        this.StartCoroutine((IEnumerator) this.ChasePlayer());
+        this.StartCoroutine(this.ChasePlayer());
         break;
     }
   }
@@ -106,7 +106,7 @@ public class EnemyMortar : UnitObject
     }
     while ((double) Vector3.Distance(enemyMortar.TargetObject.transform.position, enemyMortar.transform.position) > (double) enemyMortar.Range)
       yield return (object) null;
-    enemyMortar.ChasePlayerCoroutine = enemyMortar.StartCoroutine((IEnumerator) enemyMortar.ChasePlayer());
+    enemyMortar.ChasePlayerCoroutine = enemyMortar.StartCoroutine(enemyMortar.ChasePlayer());
   }
 
   public override void OnHit(
@@ -186,7 +186,7 @@ public class EnemyMortar : UnitObject
     {
       if ((UnityEngine.Object) enemyMortar.TargetObject == (UnityEngine.Object) null)
       {
-        enemyMortar.StartCoroutine((IEnumerator) enemyMortar.WaitForTarget());
+        enemyMortar.StartCoroutine(enemyMortar.WaitForTarget());
         break;
       }
       if (enemyMortar.state.CURRENT_STATE != StateMachine.State.RecoverFromAttack)
@@ -197,7 +197,7 @@ public class EnemyMortar : UnitObject
         float num = Vector2.Distance((Vector2) enemyMortar.transform.position, (Vector2) enemyMortar.TargetObject.transform.position);
         if ((double) num < 20.0 && (double) num > 3.0 && (double) AttackTimer < 0.0)
         {
-          enemyMortar.StartCoroutine((IEnumerator) enemyMortar.ThrowRock());
+          enemyMortar.StartCoroutine(enemyMortar.ThrowRock());
           break;
         }
       }

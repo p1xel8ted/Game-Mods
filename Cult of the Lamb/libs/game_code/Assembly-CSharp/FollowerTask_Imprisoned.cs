@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_Imprisoned
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -73,7 +73,7 @@ public class FollowerTask_Imprisoned : FollowerTask
     followerById.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "Prison/stocks-ready");
     if (this._dissentBubbleCoroutine != null)
       followerById.StopCoroutine(this._dissentBubbleCoroutine);
-    this._dissentBubbleCoroutine = followerById.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(followerById));
+    this._dissentBubbleCoroutine = followerById.StartCoroutine(this.DissentBubbleRoutine(followerById));
   }
 
   public override Vector3 UpdateDestination(Follower follower)
@@ -95,7 +95,7 @@ public class FollowerTask_Imprisoned : FollowerTask
         follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "Prison/stocks-ready");
         if (this._dissentBubbleCoroutine != null)
           follower.StopCoroutine(this._dissentBubbleCoroutine);
-        this._dissentBubbleCoroutine = follower.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(follower));
+        this._dissentBubbleCoroutine = follower.StartCoroutine(this.DissentBubbleRoutine(follower));
       }
       else
         follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "Prison/stocks");
@@ -115,7 +115,7 @@ public class FollowerTask_Imprisoned : FollowerTask
     {
       if (this._dissentBubbleCoroutine != null)
         follower.StopCoroutine(this._dissentBubbleCoroutine);
-      this._dissentBubbleCoroutine = follower.StartCoroutine((IEnumerator) this.DissentBubbleRoutine(follower));
+      this._dissentBubbleCoroutine = follower.StartCoroutine(this.DissentBubbleRoutine(follower));
       follower.SimpleAnimator.ChangeStateAnimation(StateMachine.State.Idle, "Prison/stocks-ready");
     }
     else
@@ -239,7 +239,7 @@ public class FollowerTask_Imprisoned : FollowerTask
 
   public void SetPrisonID(GameObject body)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() => this._prison.Data.FollowerID = this._brain.Info.ID)));
+    GameManager.GetInstance().StartCoroutine(this.FrameDelay((System.Action) (() => this._prison.Data.FollowerID = this._brain.Info.ID)));
   }
 
   public IEnumerator FrameDelay(System.Action callback)

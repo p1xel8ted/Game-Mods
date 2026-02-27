@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyTentacleMonster
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using CotL.Projectiles;
@@ -310,6 +310,7 @@ public class EnemyTentacleMonster : UnitObject
     ProjectilePatternBase.OnProjectileSpawned += new ProjectilePatternBase.ProjectileEvent(enemyTentacleMonster.OnProjectileSpawned);
     UnityEngine.Physics.autoSimulation = false;
     SimulationManager.Pause();
+    CoopManager.Instance.OnPlayerJoined += new System.Action(enemyTentacleMonster.OnPlayerJoined);
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E2__current = (object) null;
     // ISSUE: reference to a compiler-generated field
@@ -320,6 +321,7 @@ public class EnemyTentacleMonster : UnitObject
   public override void OnDestroy()
   {
     base.OnDestroy();
+    CoopManager.Instance.OnPlayerJoined -= new System.Action(this.OnPlayerJoined);
     AudioManager.Instance.StopLoop(this.grenadeLoopingSoundInstance);
     ProjectilePatternBase.OnProjectileSpawned -= new ProjectilePatternBase.ProjectileEvent(this.OnProjectileSpawned);
     if (this.loadedhhgEnemies != null)
@@ -389,7 +391,7 @@ public class EnemyTentacleMonster : UnitObject
   {
     base.OnEnable();
     if (this.activated)
-      this.StartCoroutine((IEnumerator) this.DelayAddCamera());
+      this.StartCoroutine(this.DelayAddCamera());
     this.Preload();
     this.currentTarget = (Health) PlayerFarming.Instance.health;
   }
@@ -427,11 +429,11 @@ public class EnemyTentacleMonster : UnitObject
     GameManager.GetInstance().AddToCamera(this.gameObject);
     GameManager.GetInstance().CamFollowTarget.MinZoom = 9f;
     GameManager.GetInstance().CamFollowTarget.MaxZoom = 18f;
-    this.StartCoroutine((IEnumerator) this.DelayCallback(1f, (System.Action) (() =>
+    this.StartCoroutine(this.DelayCallback(1f, (System.Action) (() =>
     {
       this.activated = true;
       this.currentPhaseNumber = 1;
-      this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.RandomSpawnIE());
+      this.currentAttackRoutine = this.StartCoroutine(this.RandomSpawnIE());
     })));
   }
 
@@ -514,12 +516,12 @@ public class EnemyTentacleMonster : UnitObject
       this.recentlyTeleported = true;
       if ((double) num1 < (double) this.daggerOverrideMinRadius)
       {
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.DaggerAttackIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.DaggerAttackIE());
         return;
       }
       if ((double) num1 < (double) this.daggerOverrideMinRadius * 2.0)
       {
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TeleportAwayFromPlayerIE(0.25f));
+        this.currentAttackRoutine = this.StartCoroutine(this.TeleportAwayFromPlayerIE(0.25f));
         return;
       }
     }
@@ -528,42 +530,39 @@ public class EnemyTentacleMonster : UnitObject
     if (num2 < 2 && this.CanSpawnEnemies())
     {
       if (UnityEngine.Random.Range(0, 2) == 0 && this.spawnedEnemies.Count < 3)
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.RandomSpawnIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.RandomSpawnIE());
       else
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.SweepingSpawnIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.SweepingSpawnIE());
     }
     else if (num2 == 2 && (double) num1 > 4.0)
     {
-      this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.SwordAttackIE());
+      this.currentAttackRoutine = this.StartCoroutine(this.SwordAttackIE());
     }
     else
     {
       switch (UnityEngine.Random.Range(0, 4))
       {
         case 0:
-          this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileBeamIE());
+          this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileBeamIE());
           break;
         case 1:
-          this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileRandomIE());
+          this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileRandomIE());
           break;
         default:
-          this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileRingsIE());
+          this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileRingsIE());
           break;
       }
     }
   }
 
-  public void BeginPhase2()
-  {
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.Phase2IE());
-  }
+  public void BeginPhase2() => this.currentAttackRoutine = this.StartCoroutine(this.Phase2IE());
 
   public IEnumerator Phase2IE()
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
-    yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.EnragedIE());
+    yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.EnragedIE());
     enemyTentacleMonster.maxSpeed *= 2f;
-    yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.ShootProjectileCircleIE());
+    yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.ShootProjectileCircleIE());
     enemyTentacleMonster.currentAttackRoutine = (Coroutine) null;
   }
 
@@ -577,12 +576,12 @@ public class EnemyTentacleMonster : UnitObject
       this.recentlyTeleported = true;
       if ((double) num1 < (double) this.daggerOverrideMinRadius)
       {
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.DaggerAttackIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.DaggerAttackIE());
         return;
       }
       if ((double) num1 < (double) this.daggerOverrideMinRadius * 2.0)
       {
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.TeleportAwayFromPlayerIE(0.25f));
+        this.currentAttackRoutine = this.StartCoroutine(this.TeleportAwayFromPlayerIE(0.25f));
         return;
       }
     }
@@ -592,31 +591,31 @@ public class EnemyTentacleMonster : UnitObject
     {
       int num3 = UnityEngine.Random.Range(0, 3);
       if (num3 == 0 && this.spawnedEnemies.Count < 5)
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.RandomSpawnIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.RandomSpawnIE());
       else if (num3 == 1)
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.HolyHandGrenadeIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.HolyHandGrenadeIE());
       else
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.SweepingSpawnIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.SweepingSpawnIE());
     }
     else if (num2 == 2)
     {
       if ((double) num1 > 4.0)
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.SwordAttackIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.SwordAttackIE());
       else
-        this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.DaggerRapidAttackIE());
+        this.currentAttackRoutine = this.StartCoroutine(this.DaggerRapidAttackIE());
     }
     else
     {
       switch (UnityEngine.Random.Range(0, 3))
       {
         case 0:
-          this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileCircleIE());
+          this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileCircleIE());
           break;
         case 1:
-          this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileRandomIE());
+          this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileRandomIE());
           break;
         default:
-          this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.ShootProjectileRingsTripleIE());
+          this.currentAttackRoutine = this.StartCoroutine(this.ShootProjectileRingsTripleIE());
           break;
       }
     }
@@ -639,7 +638,7 @@ public class EnemyTentacleMonster : UnitObject
     }
   }
 
-  public void HolyHandGrenade() => this.StartCoroutine((IEnumerator) this.HolyHandGrenadeIE());
+  public void HolyHandGrenade() => this.StartCoroutine(this.HolyHandGrenadeIE());
 
   public IEnumerator HolyHandGrenadeIE()
   {
@@ -683,7 +682,7 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster1.currentTarget = enemyTentacleMonster1.ReconsiderPlayerTarget();
   }
 
-  public void SweepingSpawn() => this.StartCoroutine((IEnumerator) this.SweepingSpawnIE());
+  public void SweepingSpawn() => this.StartCoroutine(this.SweepingSpawnIE());
 
   public IEnumerator SweepingSpawnIE()
   {
@@ -734,7 +733,7 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster1.currentTarget = enemyTentacleMonster1.ReconsiderPlayerTarget();
   }
 
-  public void RandomSpawn() => this.StartCoroutine((IEnumerator) this.RandomSpawnIE());
+  public void RandomSpawn() => this.StartCoroutine(this.RandomSpawnIE());
 
   public IEnumerator RandomSpawnIE()
   {
@@ -785,16 +784,13 @@ public class EnemyTentacleMonster : UnitObject
     AudioManager.Instance.PlayOneShot("event:/boss/jellyfish/grenade_spawn", this.gameObject);
   }
 
-  public void ShootProjectileCircle()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileCircleIE());
-  }
+  public void ShootProjectileCircle() => this.StartCoroutine(this.ShootProjectileCircleIE());
 
   public IEnumerator ShootProjectileCircleIE()
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     if ((double) Vector3.Distance(enemyTentacleMonster.transform.position, enemyTentacleMonster.currentTarget.transform.position) < 4.0)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
     enemyTentacleMonster.moving = false;
     enemyTentacleMonster.spine.AnimationState.SetAnimation(0, enemyTentacleMonster.shootProjectilesAnimation, true);
     AudioManager.Instance.StopLoop(enemyTentacleMonster.grenadeLoopingSoundInstance);
@@ -818,16 +814,13 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster.currentTarget = enemyTentacleMonster.ReconsiderPlayerTarget();
   }
 
-  public void ShootProjectileSnake()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileSnakeIE());
-  }
+  public void ShootProjectileSnake() => this.StartCoroutine(this.ShootProjectileSnakeIE());
 
   public IEnumerator ShootProjectileSnakeIE()
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     if ((double) Vector3.Distance(enemyTentacleMonster.transform.position, enemyTentacleMonster.currentTarget.transform.position) < 4.0)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
     enemyTentacleMonster.spine.AnimationState.SetAnimation(0, enemyTentacleMonster.shootProjectilesAnimation, true);
     AudioManager.Instance.StopLoop(enemyTentacleMonster.grenadeLoopingSoundInstance);
     enemyTentacleMonster.grenadeLoopingSoundInstance = AudioManager.Instance.CreateLoop("event:/boss/jellyfish/grenade_loop", enemyTentacleMonster.gameObject, true);
@@ -844,16 +837,13 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster.currentAttackRoutine = (Coroutine) null;
   }
 
-  public void ShootProjectileRandom()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileRandomIE());
-  }
+  public void ShootProjectileRandom() => this.StartCoroutine(this.ShootProjectileRandomIE());
 
   public IEnumerator ShootProjectileRandomIE()
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     if ((double) Vector3.Distance(enemyTentacleMonster.transform.position, enemyTentacleMonster.currentTarget.transform.position) < 4.0)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
     enemyTentacleMonster.spine.AnimationState.SetAnimation(0, enemyTentacleMonster.shootProjectilesAnimation, true);
     AudioManager.Instance.StopLoop(enemyTentacleMonster.grenadeLoopingSoundInstance);
     enemyTentacleMonster.grenadeLoopingSoundInstance = AudioManager.Instance.CreateLoop("event:/boss/jellyfish/grenade_loop", enemyTentacleMonster.gameObject, true);
@@ -875,16 +865,13 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster.currentTarget = enemyTentacleMonster.ReconsiderPlayerTarget();
   }
 
-  public void ShootProjectileScatter()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileScatterIE());
-  }
+  public void ShootProjectileScatter() => this.StartCoroutine(this.ShootProjectileScatterIE());
 
   public IEnumerator ShootProjectileScatterIE()
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     if ((double) Vector3.Distance(enemyTentacleMonster.transform.position, enemyTentacleMonster.currentTarget.transform.position) < 4.0)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
     enemyTentacleMonster.spine.AnimationState.SetAnimation(0, enemyTentacleMonster.shootProjectilesAnimation, true);
     AudioManager.Instance.StopLoop(enemyTentacleMonster.grenadeLoopingSoundInstance);
     enemyTentacleMonster.grenadeLoopingSoundInstance = AudioManager.Instance.CreateLoop("event:/boss/jellyfish/grenade_loop", enemyTentacleMonster.gameObject, true);
@@ -901,16 +888,13 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster.currentAttackRoutine = (Coroutine) null;
   }
 
-  public void ShootProjectileBeam()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileBeamIE());
-  }
+  public void ShootProjectileBeam() => this.StartCoroutine(this.ShootProjectileBeamIE());
 
   public IEnumerator ShootProjectileBeamIE()
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     if ((double) Vector3.Distance(enemyTentacleMonster.transform.position, enemyTentacleMonster.currentTarget.transform.position) < 4.0)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
     enemyTentacleMonster.spine.AnimationState.SetAnimation(0, enemyTentacleMonster.shootProjectilesAnimation, true);
     AudioManager.Instance.StopLoop(enemyTentacleMonster.grenadeLoopingSoundInstance);
     enemyTentacleMonster.grenadeLoopingSoundInstance = AudioManager.Instance.CreateLoop("event:/boss/jellyfish/grenade_loop", enemyTentacleMonster.gameObject, true);
@@ -932,10 +916,7 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster.currentTarget = enemyTentacleMonster.ReconsiderPlayerTarget();
   }
 
-  public void ShootProjectileRings()
-  {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileRingsIE());
-  }
+  public void ShootProjectileRings() => this.StartCoroutine(this.ShootProjectileRingsIE());
 
   public void InitializeProjectilePatternRings()
   {
@@ -952,7 +933,7 @@ public class EnemyTentacleMonster : UnitObject
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     if ((double) Vector3.Distance(enemyTentacleMonster.transform.position, enemyTentacleMonster.currentTarget.transform.position) < 4.0)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
     enemyTentacleMonster.moving = false;
     enemyTentacleMonster.spine.AnimationState.SetAnimation(0, enemyTentacleMonster.shootProjectilesAnimation, true);
     AudioManager.Instance.StopLoop(enemyTentacleMonster.grenadeLoopingSoundInstance);
@@ -985,14 +966,14 @@ public class EnemyTentacleMonster : UnitObject
 
   public void ShootProjectileRingsTriple()
   {
-    this.StartCoroutine((IEnumerator) this.ShootProjectileRingsTripleIE());
+    this.StartCoroutine(this.ShootProjectileRingsTripleIE());
   }
 
   public IEnumerator ShootProjectileRingsTripleIE()
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     if ((double) Vector3.Distance(enemyTentacleMonster.transform.position, enemyTentacleMonster.currentTarget.transform.position) < 4.0)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportAwayFromPlayerIE(nullifyRoutine: false));
     enemyTentacleMonster.moving = false;
     enemyTentacleMonster.spine.AnimationState.SetAnimation(0, enemyTentacleMonster.shootProjectilesAnimation, true);
     AudioManager.Instance.StopLoop(enemyTentacleMonster.grenadeLoopingSoundInstance);
@@ -1038,7 +1019,7 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster.currentTarget = enemyTentacleMonster.ReconsiderPlayerTarget();
   }
 
-  public void DaggerAttack() => this.StartCoroutine((IEnumerator) this.DaggerAttackIE());
+  public void DaggerAttack() => this.StartCoroutine(this.DaggerAttackIE());
 
   public IEnumerator DaggerAttackIE(bool finishAttack = true)
   {
@@ -1058,7 +1039,7 @@ public class EnemyTentacleMonster : UnitObject
       yield return (object) null;
     enemyTentacleMonster.maxSpeed = ogMaxSpeed;
     enemyTentacleMonster.speed = enemyTentacleMonster.maxSpeed / 2f;
-    enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.EnableCollider(enemyTentacleMonster.daggerCollider.gameObject, 0.25f));
+    enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.EnableCollider(enemyTentacleMonster.daggerCollider.gameObject, 0.25f));
     time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyTentacleMonster.spine.timeScale) < 1.5)
       yield return (object) null;
@@ -1072,7 +1053,7 @@ public class EnemyTentacleMonster : UnitObject
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     for (int i = 0; i < UnityEngine.Random.Range(2, 5); ++i)
-      yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.DaggerAttackIE(false));
+      yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.DaggerAttackIE(false));
     float dur = UnityEngine.Random.Range(0.5f, 1f);
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyTentacleMonster.spine.timeScale) < (double) dur)
@@ -1080,7 +1061,7 @@ public class EnemyTentacleMonster : UnitObject
     enemyTentacleMonster.currentAttackRoutine = (Coroutine) null;
   }
 
-  public void SwordAttack() => this.StartCoroutine((IEnumerator) this.SwordAttackIE());
+  public void SwordAttack() => this.StartCoroutine(this.SwordAttackIE());
 
   public IEnumerator SwordAttackIE()
   {
@@ -1107,7 +1088,7 @@ public class EnemyTentacleMonster : UnitObject
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyTentacleMonster.spine.timeScale) < 0.10000000149011612)
       yield return (object) null;
-    enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.EnableCollider(enemyTentacleMonster.swordCollider.gameObject, 0.15f));
+    enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.EnableCollider(enemyTentacleMonster.swordCollider.gameObject, 0.15f));
     time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyTentacleMonster.spine.timeScale) < 0.10000000149011612)
       yield return (object) null;
@@ -1141,26 +1122,20 @@ public class EnemyTentacleMonster : UnitObject
     component.health.DealDamage(1f, this.gameObject, this.transform.position, false, Health.AttackTypes.Melee, false, (Health.AttackFlags) 0);
   }
 
-  public void TeleportAwayFromPlayer()
-  {
-    this.StartCoroutine((IEnumerator) this.TeleportAwayFromPlayerIE(0.5f));
-  }
+  public void TeleportAwayFromPlayer() => this.StartCoroutine(this.TeleportAwayFromPlayerIE(0.5f));
 
-  public void TeleportNearPlayer()
-  {
-    this.StartCoroutine((IEnumerator) this.TeleportNearPlayerIE(0.0f));
-  }
+  public void TeleportNearPlayer() => this.StartCoroutine(this.TeleportNearPlayerIE(0.0f));
 
   public void TeleportToPostion(Vector3 position)
   {
-    this.StartCoroutine((IEnumerator) this.TeleportToPositionIE(position));
+    this.StartCoroutine(this.TeleportToPositionIE(position));
   }
 
   public IEnumerator TeleportAwayFromPlayerIE(float endDelay = 1f, bool nullifyRoutine = true)
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     enemyTentacleMonster.moving = false;
-    yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportToPositionIE(enemyTentacleMonster.GetPositionAwayFromPlayer(), endDelay));
+    yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportToPositionIE(enemyTentacleMonster.GetPositionAwayFromPlayer(), endDelay));
     if (nullifyRoutine)
     {
       enemyTentacleMonster.moving = true;
@@ -1172,7 +1147,7 @@ public class EnemyTentacleMonster : UnitObject
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
     enemyTentacleMonster.moving = false;
-    yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportOutIE());
+    yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportOutIE());
     Vector3 position = enemyTentacleMonster.currentTarget.transform.position;
     float degree = (float) UnityEngine.Random.Range(0, 360);
     int num = 0;
@@ -1189,7 +1164,7 @@ public class EnemyTentacleMonster : UnitObject
       }
     }
     enemyTentacleMonster.transform.position = position;
-    yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportInIE());
+    yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportInIE());
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyTentacleMonster.spine.timeScale) < (double) endDelay)
       yield return (object) null;
@@ -1199,9 +1174,9 @@ public class EnemyTentacleMonster : UnitObject
   public IEnumerator TeleportToPositionIE(Vector3 position, float endDelay = 0.0f)
   {
     EnemyTentacleMonster enemyTentacleMonster = this;
-    yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportOutIE());
+    yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportOutIE());
     enemyTentacleMonster.transform.position = position;
-    yield return (object) enemyTentacleMonster.StartCoroutine((IEnumerator) enemyTentacleMonster.TeleportInIE());
+    yield return (object) enemyTentacleMonster.StartCoroutine(enemyTentacleMonster.TeleportInIE());
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyTentacleMonster.spine.timeScale) < (double) endDelay)
       yield return (object) null;
@@ -1367,7 +1342,7 @@ public class EnemyTentacleMonster : UnitObject
     this.moving = false;
     UnityEngine.Physics.autoSimulation = true;
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
   }
 
   public IEnumerator Die()
@@ -1458,7 +1433,7 @@ public class EnemyTentacleMonster : UnitObject
         if ((UnityEngine.Object) component != (UnityEngine.Object) null)
         {
           component.enabled = true;
-          component.DealDamage(component.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+          component.DealDamage(component.totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
         }
       }
     }
@@ -1469,7 +1444,7 @@ public class EnemyTentacleMonster : UnitObject
         Health.team2[index].enabled = true;
         Health.team2[index].invincible = false;
         Health.team2[index].untouchable = false;
-        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy);
+        Health.team2[index].DealDamage(Health.team2[index].totalHP, this.gameObject, this.transform.position, AttackType: Health.AttackTypes.Heavy, dealDamageImmediately: true);
       }
     }
   }
@@ -1480,6 +1455,19 @@ public class EnemyTentacleMonster : UnitObject
     AudioManager.Instance.StopLoop(this.grenadeLoopingSoundInstance);
     this.currentAttackRoutine = (Coroutine) null;
     this.moving = true;
+  }
+
+  public void OnPlayerJoined()
+  {
+    foreach (PlayerFarming player in PlayerFarming.players)
+    {
+      if ((UnityEngine.Object) player != (UnityEngine.Object) null)
+      {
+        CircleCollider2D component = player.GetComponent<CircleCollider2D>();
+        if (!this.projectileTargets.Contains((Collider2D) component))
+          this.projectileTargets.Add((Collider2D) component);
+      }
+    }
   }
 
   [CompilerGenerated]
@@ -1509,7 +1497,7 @@ public class EnemyTentacleMonster : UnitObject
   {
     this.activated = true;
     this.currentPhaseNumber = 1;
-    this.currentAttackRoutine = this.StartCoroutine((IEnumerator) this.RandomSpawnIE());
+    this.currentAttackRoutine = this.StartCoroutine(this.RandomSpawnIE());
   }
 
   [CompilerGenerated]

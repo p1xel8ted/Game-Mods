@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PickUp
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -460,7 +460,7 @@ public class PickUp : BaseMonoBehaviour
     simpleInventory.GiveItem(this.type);
     this.Collected = true;
     this.FacingAngle = -1f;
-    this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() => this.gameObject.Recycle())));
+    this.StartCoroutine(this.FrameDelay((System.Action) (() => this.gameObject.Recycle())));
   }
 
   public virtual void PickMeUp()
@@ -486,7 +486,7 @@ public class PickUp : BaseMonoBehaviour
     this.PickedUp();
     this.Collected = true;
     this.FacingAngle = -1f;
-    this.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+    this.StartCoroutine(this.FrameDelay((System.Action) (() =>
     {
       this.Player = (GameObject) null;
       this.gameObject.Recycle();

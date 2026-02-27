@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyOoglerBell
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -90,7 +90,7 @@ public class EnemyOoglerBell : MonoBehaviour
       this.damageCollider.SetActive(false);
     }
     this.transform.position = new Vector3(this.currentTarget.transform.position.x, this.currentTarget.transform.position.y, this.zOffset);
-    this.StartCoroutine((IEnumerator) this.FollowTarget());
+    this.StartCoroutine(this.FollowTarget());
   }
 
   public void OnDisable()
@@ -149,7 +149,7 @@ public class EnemyOoglerBell : MonoBehaviour
       enemyOoglerBell.transform.position = Vector3.MoveTowards(enemyOoglerBell.transform.position, target, Time.deltaTime * enemyOoglerBell.speed);
       if ((double) Vector2.Distance((Vector2) (enemyOoglerBell.transform.position + Vector3.up * enemyOoglerBell.attackYOffset), (Vector2) enemyOoglerBell.currentTarget.transform.position) <= (double) enemyOoglerBell.attackDistance && (double) Time.time > (double) EnemyOoglerBell.lastSlamTime)
       {
-        enemyOoglerBell.StartCoroutine((IEnumerator) enemyOoglerBell.Drop());
+        enemyOoglerBell.StartCoroutine(enemyOoglerBell.Drop());
         break;
       }
       yield return (object) null;
@@ -161,7 +161,7 @@ public class EnemyOoglerBell : MonoBehaviour
     EnemyOoglerBell enemyOoglerBell = this;
     EnemyOoglerBell.lastSlamTime = Time.time + 2f;
     DG.Tweening.Sequence s = DOTween.Sequence();
-    enemyOoglerBell.StartCoroutine((IEnumerator) enemyOoglerBell.FlashWhite(enemyOoglerBell.dropAnticipationTime));
+    enemyOoglerBell.StartCoroutine(enemyOoglerBell.FlashWhite(enemyOoglerBell.dropAnticipationTime));
     enemyOoglerBell.Spine.AnimationState.SetAnimation(0, "attack-charge", false);
     s.Append((Tween) enemyOoglerBell.transform.DOMoveZ(enemyOoglerBell.dropInBackAmount, enemyOoglerBell.dropInBackTime).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutSine));
     s.AppendInterval(enemyOoglerBell.dropAnticipationTime);
@@ -202,7 +202,7 @@ public class EnemyOoglerBell : MonoBehaviour
     enemyOoglerBell.Spine.AnimationState.AddAnimation(0, "idle", true, 0.0f);
     yield return (object) enemyOoglerBell.transform.DOMoveZ(enemyOoglerBell.zOffset, enemyOoglerBell.recoverTime).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.OutBack).WaitForCompletion();
     yield return (object) new WaitForSeconds(0.1f);
-    enemyOoglerBell.StartCoroutine((IEnumerator) enemyOoglerBell.FollowTarget());
+    enemyOoglerBell.StartCoroutine(enemyOoglerBell.FollowTarget());
   }
 
   public void DropAvalanche()

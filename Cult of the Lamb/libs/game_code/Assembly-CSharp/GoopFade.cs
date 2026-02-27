@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: GoopFade
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -30,7 +30,7 @@ public class GoopFade : BaseMonoBehaviour
     this.UseDeltaTime = UseDeltaTime;
     this.Duration = _Duration;
     this.Delay = _Delay;
-    this.StartCoroutine((IEnumerator) this.FadeInRoutine());
+    this.StartCoroutine(this.FadeInRoutine());
   }
 
   public void FadeOut(float _Duration = 2f, float _Delay = 0.0f, bool UseDeltaTime = true)
@@ -39,7 +39,7 @@ public class GoopFade : BaseMonoBehaviour
     this.UseDeltaTime = UseDeltaTime;
     this.Duration = _Duration;
     this.Delay = _Delay;
-    this.StartCoroutine((IEnumerator) this.FadeOutRoutine());
+    this.StartCoroutine(this.FadeOutRoutine());
   }
 
   public IEnumerator FadeInRoutine()

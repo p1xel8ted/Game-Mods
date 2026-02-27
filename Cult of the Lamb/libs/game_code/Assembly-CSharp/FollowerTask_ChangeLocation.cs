@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerTask_ChangeLocation
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMBiomeGeneration;
@@ -54,7 +54,7 @@ public class FollowerTask_ChangeLocation : FollowerTask
       follower.TimedAnimation("Conversations/greet-nice", 1.93333328f, (System.Action) (() =>
       {
         if ((UnityEngine.Object) follower != (UnityEngine.Object) null)
-          follower.StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+          follower.StartCoroutine(this.FrameDelay((System.Action) (() =>
           {
             if ((UnityEngine.Object) follower != (UnityEngine.Object) null)
               follower.TimedAnimation("spawn-out", 0.8333333f, (System.Action) (() => this.ChangedLocation()));

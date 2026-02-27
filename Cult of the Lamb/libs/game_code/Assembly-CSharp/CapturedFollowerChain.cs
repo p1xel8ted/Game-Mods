@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: CapturedFollowerChain
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -36,7 +36,7 @@ public class CapturedFollowerChain : MonoBehaviour
     double num = (double) follower.Follower.SetBodyAnimation("FinalBoss/appear", false);
     follower.Follower.AddBodyAnimation("FinalBoss/idle", true, 0.0f);
     follower.Follower.Spine.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.AnimationState_Event);
-    this.StartCoroutine((IEnumerator) this.FrameDelay());
+    this.StartCoroutine(this.FrameDelay());
   }
 
   public IEnumerator FrameDelay()
@@ -57,7 +57,7 @@ public class CapturedFollowerChain : MonoBehaviour
       this.follower.Follower.AddBodyAnimation("FinalBoss/idle", true, 0.0f);
     }
     else
-      this.StartCoroutine((IEnumerator) this.SpawnFervourIE());
+      this.StartCoroutine(this.SpawnFervourIE());
     this.DroppingFervour = true;
   }
 
@@ -81,7 +81,7 @@ public class CapturedFollowerChain : MonoBehaviour
   {
     if (e.Data.Name == "fervour")
     {
-      this.StartCoroutine((IEnumerator) this.SpawnFervourIE());
+      this.StartCoroutine(this.SpawnFervourIE());
     }
     else
     {

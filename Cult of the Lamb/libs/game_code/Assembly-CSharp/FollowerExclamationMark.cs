@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: FollowerExclamationMark
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections;
@@ -24,7 +24,7 @@ public class FollowerExclamationMark : BaseMonoBehaviour
   public SpriteRenderer InjuredIconRing;
   public Gradient RadialGradient;
 
-  public void OnEnable() => this.StartCoroutine((IEnumerator) this.Init());
+  public void OnEnable() => this.StartCoroutine(this.Init());
 
   public IEnumerator Init()
   {
@@ -222,7 +222,7 @@ public class FollowerExclamationMark : BaseMonoBehaviour
   {
     if (this.Image.activeSelf)
       return;
-    this.StartCoroutine((IEnumerator) this.ShowRoutine());
+    this.StartCoroutine(this.ShowRoutine());
   }
 
   public IEnumerator ShowRoutine()
@@ -245,7 +245,7 @@ public class FollowerExclamationMark : BaseMonoBehaviour
   {
     if (!this.Image.activeSelf)
       return;
-    this.StartCoroutine((IEnumerator) this.HideRoutine());
+    this.StartCoroutine(this.HideRoutine());
   }
 
   public IEnumerator HideRoutine()

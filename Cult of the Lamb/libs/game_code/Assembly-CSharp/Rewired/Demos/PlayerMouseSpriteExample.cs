@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Demos.PlayerMouseSpriteExample
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -59,7 +59,7 @@ public class PlayerMouseSpriteExample : MonoBehaviour
     this.mouse.pointerSpeed = 1f;
     this.mouse.wheel.yAxis.repeatRate = 5f;
     this.mouse.screenPosition = new Vector2((float) Screen.width * 0.5f, (float) Screen.height * 0.5f);
-    this.mouse.ScreenPositionChangedEvent += (Action<Vector2>) new Action<Vector2>(this.OnScreenPositionChanged);
+    this.mouse.ScreenPositionChangedEvent += new Action<Vector2>(this.OnScreenPositionChanged);
     this.OnScreenPositionChanged(this.mouse.screenPosition);
   }
 
@@ -81,7 +81,7 @@ public class PlayerMouseSpriteExample : MonoBehaviour
   {
     if (!ReInput.isReady)
       return;
-    this.mouse.ScreenPositionChangedEvent -= (Action<Vector2>) new Action<Vector2>(this.OnScreenPositionChanged);
+    this.mouse.ScreenPositionChangedEvent -= new Action<Vector2>(this.OnScreenPositionChanged);
   }
 
   public void CreateClickEffect(Color color)

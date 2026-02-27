@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: VFXObject
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -100,7 +100,7 @@ public abstract class VFXObject : MonoBehaviour
     this._playSFX = playSFX;
     this._playing = true;
     this.UpdateMaterialOverrides();
-    this.StartCoroutine((IEnumerator) this.DelayedEmit(this._emissionDelay + addEmissionDelay));
+    this.StartCoroutine(this.DelayedEmit(this._emissionDelay + addEmissionDelay));
   }
 
   public virtual void AddMaterialOverride(VFXMaterialOverride vfxMaterialOverride)
@@ -141,7 +141,7 @@ public abstract class VFXObject : MonoBehaviour
       onEmitted(this);
     if ((double) this._maxDuration <= 0.0)
       return;
-    this.StartCoroutine((IEnumerator) this.DelayedStop(this._maxDuration));
+    this.StartCoroutine(this.DelayedStop(this._maxDuration));
   }
 
   public void MatchPrefabLocalTransform(Transform thisTransform)

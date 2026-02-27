@@ -1,11 +1,9 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Lamb.UI.MMDynamicVerticalLayoutGroup
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -55,21 +53,11 @@ public class MMDynamicVerticalLayoutGroup : MonoBehaviour, ILayoutGroup, ILayout
   public void UpdateLayout()
   {
     List<RectTransform> rectTransformList = new List<RectTransform>();
-    IEnumerator enumerator = (IEnumerator) this.transform.GetEnumerator();
-    try
+    foreach (RectTransform rectTransform in this.transform)
     {
-      while (enumerator.MoveNext())
-      {
-        RectTransform current = (RectTransform) enumerator.Current;
-        LayoutElement component;
-        if (current.gameObject.activeSelf && (!current.TryGetComponent<LayoutElement>(out component) || !component.ignoreLayout))
-          rectTransformList.Add(current);
-      }
-    }
-    finally
-    {
-      if (enumerator is IDisposable disposable)
-        disposable.Dispose();
+      LayoutElement component;
+      if (rectTransform.gameObject.activeSelf && (!rectTransform.TryGetComponent<LayoutElement>(out component) || !component.ignoreLayout))
+        rectTransformList.Add(rectTransform);
     }
     Vector2 zero = Vector2.zero;
     for (int index = 0; index < rectTransformList.Count; ++index)

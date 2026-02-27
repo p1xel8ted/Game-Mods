@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyGuardian1
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMODUnity;
@@ -79,7 +79,7 @@ public class EnemyGuardian1 : UnitObject
         this.Particles.Stop();
         this.health.invincible = false;
         this.HealthCollider.enabled = true;
-        this.StartCoroutine((IEnumerator) this.FightPlayer());
+        this.StartCoroutine(this.FightPlayer());
         UIBossHUD.Play(this.health, LocalizationManager.GetTranslation(this.DisplayName));
       }
       AudioManager.Instance.SetMusicRoomID(1, "deathcat_room_id");
@@ -117,7 +117,7 @@ public class EnemyGuardian1 : UnitObject
     this.simpleSpineAnimator.FlashWhite(false);
     this.lineRenderer.gameObject.SetActive(false);
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.Die());
+    this.StartCoroutine(this.Die());
     this.GetComponent<Collider2D>().enabled = false;
     GameManager.GetInstance().RemoveFromCamera(this.gameObject);
     UIBossHUD.Hide();
@@ -128,7 +128,7 @@ public class EnemyGuardian1 : UnitObject
         Health component = spawnedEnemy.GetComponent<Health>();
         component.enabled = true;
         component.invincible = false;
-        component.DealDamage(float.MaxValue, component.gameObject, component.transform.position);
+        component.DealDamage(float.MaxValue, component.gameObject, component.transform.position, dealDamageImmediately: true);
       }
     }
   }
@@ -176,7 +176,7 @@ public class EnemyGuardian1 : UnitObject
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
       enemyGuardian1.simpleSpineAnimator.Animate("idle", 0, true);
-      enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.SpawnTraps());
+      enemyGuardian1.StartCoroutine(enemyGuardian1.SpawnTraps());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -199,7 +199,7 @@ public class EnemyGuardian1 : UnitObject
         GameManager.GetInstance().OnConversationEnd();
         this.health.invincible = false;
         this.HealthCollider.enabled = true;
-        this.StartCoroutine((IEnumerator) this.FightPlayer());
+        this.StartCoroutine(this.FightPlayer());
         AudioManager.Instance.SetMusicRoomID(1, "deathcat_room_id");
         UIBossHUD.Play(this.health, LocalizationManager.GetTranslation(this.DisplayName));
         GameManager.GetInstance().AddToCamera(this.gameObject);
@@ -219,7 +219,7 @@ public class EnemyGuardian1 : UnitObject
   public void Play()
   {
     Debug.Log((object) "PLAY!");
-    this.StartCoroutine((IEnumerator) this.Activate());
+    this.StartCoroutine(this.Activate());
   }
 
   public IEnumerator Activate()
@@ -280,7 +280,7 @@ public class EnemyGuardian1 : UnitObject
           enemyGuardian1.state.facingAngle = Utils.GetAngle(enemyGuardian1.transform.position, enemyGuardian1.TargetPosition);
           if ((double) (enemyGuardian1.state.Timer += Time.deltaTime) >= 0.5)
           {
-            enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.EnableCollider());
+            enemyGuardian1.StartCoroutine(enemyGuardian1.EnableCollider());
             CameraManager.shakeCamera(0.4f, enemyGuardian1.state.facingAngle);
             enemyGuardian1.state.CURRENT_STATE = StateMachine.State.RecoverFromAttack;
             enemyGuardian1.speed = AttackSpeed * Time.deltaTime;
@@ -318,9 +318,9 @@ public class EnemyGuardian1 : UnitObject
     if ((UnityEngine.Object) enemyGuardian1.damageColliderEvents != (UnityEngine.Object) null)
       enemyGuardian1.damageColliderEvents.SetActive(false);
     if (UnityEngine.Random.Range(0, 4) < 3)
-      enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.SpawnTraps());
+      enemyGuardian1.StartCoroutine(enemyGuardian1.SpawnTraps());
     else
-      enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.FightPlayer());
+      enemyGuardian1.StartCoroutine(enemyGuardian1.FightPlayer());
   }
 
   public IEnumerator EnableCollider()
@@ -346,20 +346,20 @@ public class EnemyGuardian1 : UnitObject
       switch (enemyGuardian1.TrapPattern)
       {
         case 0:
-          yield return (object) enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.TrapPattern0());
+          yield return (object) enemyGuardian1.StartCoroutine(enemyGuardian1.TrapPattern0());
           break;
         case 1:
-          yield return (object) enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.TrapPatternChasePlayer());
+          yield return (object) enemyGuardian1.StartCoroutine(enemyGuardian1.TrapPatternChasePlayer());
           break;
         case 2:
-          yield return (object) enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.TrapPattern1());
+          yield return (object) enemyGuardian1.StartCoroutine(enemyGuardian1.TrapPattern1());
           break;
       }
       yield return (object) new WaitForSeconds(0.5f);
       if (enemyGuardian1.spawnedEnemies.Count <= 1)
-        enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.SpawnEnemies());
+        enemyGuardian1.StartCoroutine(enemyGuardian1.SpawnEnemies());
       else
-        enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.FightPlayer());
+        enemyGuardian1.StartCoroutine(enemyGuardian1.FightPlayer());
     }
   }
 
@@ -521,7 +521,7 @@ public class EnemyGuardian1 : UnitObject
       enemyGuardian1.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
       yield return (object) new WaitForSeconds(0.5f);
       yield return (object) new WaitForSeconds(1f);
-      enemyGuardian1.StartCoroutine((IEnumerator) enemyGuardian1.FightPlayer());
+      enemyGuardian1.StartCoroutine(enemyGuardian1.FightPlayer());
     }
   }
 

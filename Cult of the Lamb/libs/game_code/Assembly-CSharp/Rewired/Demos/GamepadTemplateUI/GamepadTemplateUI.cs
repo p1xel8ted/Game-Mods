@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Demos.GamepadTemplateUI.GamepadTemplateUI
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -107,8 +107,8 @@ public class GamepadTemplateUI : MonoBehaviour
       new Rewired.Demos.GamepadTemplateUI.GamepadTemplateUI.Stick(this.leftStick, 0, 1),
       new Rewired.Demos.GamepadTemplateUI.GamepadTemplateUI.Stick(this.rightStick, 2, 3)
     };
-    ReInput.ControllerConnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
-    ReInput.ControllerDisconnectedEvent += (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerDisconnected);
+    ReInput.ControllerConnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
+    ReInput.ControllerDisconnectedEvent += new Action<ControllerStatusChangedEventArgs>(this.OnControllerDisconnected);
   }
 
   public void Start()
@@ -120,8 +120,8 @@ public class GamepadTemplateUI : MonoBehaviour
 
   public void OnDestroy()
   {
-    ReInput.ControllerConnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
-    ReInput.ControllerDisconnectedEvent -= (Action<ControllerStatusChangedEventArgs>) new Action<ControllerStatusChangedEventArgs>(this.OnControllerDisconnected);
+    ReInput.ControllerConnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnControllerConnected);
+    ReInput.ControllerDisconnectedEvent -= new Action<ControllerStatusChangedEventArgs>(this.OnControllerDisconnected);
   }
 
   public void Update()
@@ -137,7 +137,7 @@ public class GamepadTemplateUI : MonoBehaviour
       this._uiElementsArray[index].element.Deactivate();
     for (int index = 0; index < this._sticks.Length; ++index)
       this._sticks[index].Reset();
-    IList<InputAction> actions = (IList<InputAction>) ReInput.mapping.Actions;
+    IList<InputAction> actions = ReInput.mapping.Actions;
     for (int index = 0; index < actions.Count; ++index)
       this.ActivateElements(this.player, actions[index].id);
   }
@@ -147,14 +147,14 @@ public class GamepadTemplateUI : MonoBehaviour
     float axis = player.GetAxis(actionId);
     if ((double) axis == 0.0)
       return;
-    IList<InputActionSourceData> currentInputSources = (IList<InputActionSourceData>) player.GetCurrentInputSources(actionId);
+    IList<InputActionSourceData> currentInputSources = player.GetCurrentInputSources(actionId);
     for (int index1 = 0; index1 < currentInputSources.Count; ++index1)
     {
       InputActionSourceData actionSourceData = currentInputSources[index1];
       IGamepadTemplate template = actionSourceData.controller.GetTemplate<IGamepadTemplate>();
       if (template != null)
       {
-        template.GetElementTargets((ControllerElementTarget) actionSourceData.actionElementMap, (IList<ControllerTemplateElementTarget>) this._tempTargetList);
+        template.GetElementTargets((ControllerElementTarget) actionSourceData.actionElementMap, this._tempTargetList);
         for (int index2 = 0; index2 < this._tempTargetList.Count; ++index2)
         {
           ControllerTemplateElementTarget tempTarget = this._tempTargetList[index2];
@@ -174,7 +174,7 @@ public class GamepadTemplateUI : MonoBehaviour
   {
     for (int index = 0; index < this._uiElementsArray.Length; ++index)
       this._uiElementsArray[index].element.ClearLabels();
-    IList<InputAction> actions = (IList<InputAction>) ReInput.mapping.Actions;
+    IList<InputAction> actions = ReInput.mapping.Actions;
     for (int index = 0; index < actions.Count; ++index)
       this.DrawLabels(this.player, actions[index]);
   }

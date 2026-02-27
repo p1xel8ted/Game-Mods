@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyForestHead
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -33,7 +33,7 @@ public class EnemyForestHead : BaseMonoBehaviour
     EnemyForestMushroom.enemyForestMushrooms.Add(this.gameObject);
   }
 
-  public void Start() => this.StartCoroutine((IEnumerator) this.ChasePlayer());
+  public void Start() => this.StartCoroutine(this.ChasePlayer());
 
   public void OnDisable()
   {
@@ -48,7 +48,7 @@ public class EnemyForestHead : BaseMonoBehaviour
     bool FromBehind)
   {
     float f = Utils.GetAngle(Attacker.transform.position, this.transform.position) * ((float) Math.PI / 180f);
-    this.StartCoroutine((IEnumerator) this.AddForce((Vector3) new Vector2(this.KnockbackSpeed * Mathf.Cos(f), this.KnockbackSpeed * Mathf.Sin(f))));
+    this.StartCoroutine(this.AddForce((Vector3) new Vector2(this.KnockbackSpeed * Mathf.Cos(f), this.KnockbackSpeed * Mathf.Sin(f))));
     this.simpleSpineAnimator.FillColor(Color.red);
     CameraManager.shakeCamera(0.2f, Utils.GetAngle(Attacker.transform.position, this.transform.position));
   }
@@ -109,7 +109,7 @@ public class EnemyForestHead : BaseMonoBehaviour
       if (num < 5.0 && (double) (AttackDelay -= Time.deltaTime) < 0.0 && EnemyForestMushroom.enemyForestMushrooms.Count < 5)
       {
         Loop = false;
-        enemyForestHead.StartCoroutine((IEnumerator) enemyForestHead.SpawnEnemy());
+        enemyForestHead.StartCoroutine(enemyForestHead.SpawnEnemy());
       }
       else
         yield return (object) null;
@@ -122,11 +122,11 @@ public class EnemyForestHead : BaseMonoBehaviour
     enemyForestHead.MoveSpeed = 0.0f;
     enemyForestHead.state.CURRENT_STATE = StateMachine.State.SignPostAttack;
     yield return (object) new WaitForSeconds(1f);
-    enemyForestHead.StartCoroutine((IEnumerator) enemyForestHead.DoSpawn());
+    enemyForestHead.StartCoroutine(enemyForestHead.DoSpawn());
     yield return (object) new WaitForSeconds(1f);
     enemyForestHead.state.CURRENT_STATE = StateMachine.State.RecoverFromAttack;
     yield return (object) new WaitForSeconds(0.5f);
-    enemyForestHead.StartCoroutine((IEnumerator) enemyForestHead.ChasePlayer());
+    enemyForestHead.StartCoroutine(enemyForestHead.ChasePlayer());
   }
 
   public IEnumerator DoSpawn()

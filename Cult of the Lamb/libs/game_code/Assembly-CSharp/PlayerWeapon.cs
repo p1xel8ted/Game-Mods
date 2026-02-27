@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: PlayerWeapon
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -30,6 +30,7 @@ public class PlayerWeapon : BaseMonoBehaviour
   public ChainHook chainHook;
   [SerializeField]
   public ChainHook chainHook1;
+  public Tween chainHeavyAttackTween;
   [Tooltip("Used only for the thid chain weapon attack.")]
   [Range(0.0f, 180f)]
   [SerializeField]
@@ -62,6 +63,7 @@ public class PlayerWeapon : BaseMonoBehaviour
   [CompilerGenerated]
   public static float \u003CCriticalHitTimer\u003Ek__BackingField;
   public float criticalHitChargeDuration = 25f;
+  public float currentCritValue;
   public string invincibleOnHitSFX = "event:/dlc/combat/invulnerable_impact";
   public string chainSwingBasicSFX = "event:/dlc/weapon/chain_swing_basic";
   public string chainSwingLargeSFX = "event:/dlc/weapon/chain_swing_large";
@@ -238,6 +240,11 @@ public class PlayerWeapon : BaseMonoBehaviour
       }
       return (int) ((double) num * (double) attackCostMultiplier);
     }
+  }
+
+  public void OnDisable()
+  {
+    BiomeGenerator.OnBiomeLeftRoom -= new BiomeGenerator.BiomeAction(this.KillChainHeavyAttackTween);
   }
 
   public void Start()
@@ -453,7 +460,7 @@ public class PlayerWeapon : BaseMonoBehaviour
           Health component2 = component1.gameObject.GetComponent<Health>();
           if ((UnityEngine.Object) component2 != (UnityEngine.Object) null && (UnityEngine.Object) component2 != (UnityEngine.Object) this.health && component2.team != (Health.Team) ((int) this.overrideTeam ?? (int) this.health.team))
           {
-            component2.DealDamage(PlayerWeapon.HeavyGauntletDamageFirst, this.gameObject, Vector3.Lerp(this.transform.position, component2.transform.position, 0.8f));
+            component2.DealDamage(PlayerWeapon.HeavyGauntletDamageFirst, this.gameObject, Vector3.Lerp(this.transform.position, component2.transform.position, 0.8f), dealDamageImmediately: true);
             CameraManager.shakeCamera(0.6f, Utils.GetAngle(this.transform.position, component2.transform.position));
           }
         }
@@ -562,7 +569,7 @@ public class PlayerWeapon : BaseMonoBehaviour
       for (int index = 0; index < healthList.Count; ++index)
       {
         if ((UnityEngine.Object) healthList[index] != (UnityEngine.Object) null && (double) Vector2.Distance((Vector2) healthList[index].transform.position, (Vector2) (this.transform.position + facingVector * 0.2f)) <= 0.5)
-          healthList[index].DealDamage(damage, this.gameObject, this.transform.position + facingVector * 0.2f);
+          healthList[index].DealDamage(damage, this.gameObject, this.transform.position + facingVector * 0.2f, dealDamageImmediately: true);
       }
     }
     switch (this.CurrentCombo)
@@ -760,13 +767,10 @@ public class PlayerWeapon : BaseMonoBehaviour
     if ((double) critMultiplier > 1.0 && AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit))
       damage2 *= critMultiplier;
     float Damage = damage2 / num;
-    h.DealDamage(Damage, this.gameObject, Vector3.Lerp(this.transform.position, h.transform.position, 0.8f), AttackType: AttackType, AttackFlags: AttackFlags);
+    h.DealDamage(Damage, this.gameObject, Vector3.Lerp(this.transform.position, h.transform.position, 0.8f), AttackType: AttackType, dealDamageImmediately: true, AttackFlags: AttackFlags);
   }
 
-  public void DoSlowMo(bool setZoom = true)
-  {
-    this.StartCoroutine((IEnumerator) this.SlowMo(setZoom));
-  }
+  public void DoSlowMo(bool setZoom = true) => this.StartCoroutine(this.SlowMo(setZoom));
 
   public IEnumerator SlowMo(bool setZoom = true)
   {
@@ -826,7 +830,7 @@ public class PlayerWeapon : BaseMonoBehaviour
       if ((double) h.HP <= 0.0)
       {
         if (h.SlowMoOnkill)
-          this.StartCoroutine((IEnumerator) this.SlowMo());
+          this.StartCoroutine(this.SlowMo());
         if (DataManager.Instance.PLAYER_ARROW_AMMO <= 0)
           this.playerArrows.RestockAllArrows();
         CameraManager.shakeCamera(0.6f, Utils.GetAngle(this.transform.position, h.gameObject.transform.position));
@@ -920,7 +924,7 @@ public class PlayerWeapon : BaseMonoBehaviour
         {
           if (this.attackRoutine != null)
             this.StopCoroutine(this.attackRoutine);
-          this.attackRoutine = this.playerFarming.CurrentWeaponInfo.WeaponType != EquipmentType.Hammer ? this.StartCoroutine((IEnumerator) this.DoAttackRoutine()) : this.StartCoroutine((IEnumerator) this.DoAttackRoutineButtonUp());
+          this.attackRoutine = this.playerFarming.CurrentWeaponInfo.WeaponType != EquipmentType.Hammer ? this.StartCoroutine(this.DoAttackRoutine()) : this.StartCoroutine(this.DoAttackRoutineButtonUp());
         }
         if (this.DoingHeavyAttack)
           Debug.Log((object) "DOING HEAVY ATTACK ALREADY");
@@ -930,7 +934,7 @@ public class PlayerWeapon : BaseMonoBehaviour
           {
             if (this.attackRoutine != null)
               this.StopCoroutine(this.attackRoutine);
-            this.attackRoutine = this.StartCoroutine((IEnumerator) this.DoAttackRoutine(true));
+            this.attackRoutine = this.StartCoroutine(this.DoAttackRoutine(true));
             break;
           }
           this.playerFarming.playerSpells.faithAmmo.UseAmmo((float) this.HeavyAttackFervourCost, false);
@@ -944,7 +948,7 @@ public class PlayerWeapon : BaseMonoBehaviour
       {
         if (this.attackRoutine != null)
           this.StopCoroutine(this.attackRoutine);
-        this.attackRoutine = this.StartCoroutine((IEnumerator) this.DoAttackRoutine(true));
+        this.attackRoutine = this.StartCoroutine(this.DoAttackRoutine(true));
       }
       else
       {
@@ -956,22 +960,23 @@ public class PlayerWeapon : BaseMonoBehaviour
     {
       if (this.playerFarming.CurrentWeaponInfo != null && (double) this.playerFarming.CurrentWeaponInfo.CriticalChance > 0.0)
       {
-        this.criticalTimer.UpdateCharging(PlayerWeapon.CriticalHitTimer / this.criticalHitChargeDuration);
+        this.currentCritValue = PlayerWeapon.CriticalHitTimer / this.criticalHitChargeDuration;
         PlayerWeapon.CriticalHitTimer += Time.deltaTime;
       }
       if (TrinketManager.HasTrinket(TarotCards.Card.EmptyFervourCritical, this.playerFarming))
       {
         if (Mathf.FloorToInt(this.playerFarming.playerSpells.faithAmmo.Ammo / (float) this.playerFarming.playerSpells.AmmoCost) <= 0)
         {
-          this.criticalTimer.UpdateCharging(float.MaxValue);
+          this.currentCritValue = float.MaxValue;
           PlayerWeapon.CriticalHitTimer = this.criticalHitChargeDuration;
         }
         else if ((double) this.playerFarming.CurrentWeaponInfo.CriticalChance <= 0.0)
         {
-          this.criticalTimer.UpdateCharging(0.0f);
+          this.currentCritValue = 0.0f;
           PlayerWeapon.CriticalHitTimer = 0.0f;
         }
       }
+      this.criticalTimer.UpdateCharging(this.currentCritValue);
     }
     if ((double) this.damageNegationTimer <= 0.0)
       return;
@@ -989,9 +994,9 @@ public class PlayerWeapon : BaseMonoBehaviour
     if (this.attackRoutine != null)
       this.StopCoroutine(this.attackRoutine);
     if (this.playerFarming.CurrentWeaponInfo.WeaponType == EquipmentType.Hammer)
-      this.attackRoutine = this.StartCoroutine((IEnumerator) this.DoAttackRoutineButtonUp());
+      this.attackRoutine = this.StartCoroutine(this.DoAttackRoutineButtonUp());
     else
-      this.attackRoutine = this.StartCoroutine((IEnumerator) this.DoAttackRoutine());
+      this.attackRoutine = this.StartCoroutine(this.DoAttackRoutine());
   }
 
   public void ManualHit(Health.Team? overrideTeam = null)
@@ -1000,9 +1005,9 @@ public class PlayerWeapon : BaseMonoBehaviour
     if (this.attackRoutine != null)
       this.StopCoroutine(this.attackRoutine);
     if (this.playerFarming.CurrentWeaponInfo.WeaponType == EquipmentType.Hammer)
-      this.attackRoutine = this.StartCoroutine((IEnumerator) this.DoAttackRoutineButtonUp());
+      this.attackRoutine = this.StartCoroutine(this.DoAttackRoutineButtonUp());
     else
-      this.attackRoutine = this.StartCoroutine((IEnumerator) this.DoAttackRoutine());
+      this.attackRoutine = this.StartCoroutine(this.DoAttackRoutine());
   }
 
   public void SetWeapon(EquipmentType weaponType, int WeaponLevel)
@@ -1142,12 +1147,12 @@ public class PlayerWeapon : BaseMonoBehaviour
           case EquipmentType.Axe:
             playerWeapon.DoHeavyAttack = false;
             playerWeapon.StopAllCoroutines();
-            playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoAxeHeavyAttack());
+            playerWeapon.StartCoroutine(playerWeapon.DoAxeHeavyAttack());
             yield break;
           case EquipmentType.Hammer:
             playerWeapon.DoHeavyAttack = false;
             playerWeapon.StopAllCoroutines();
-            playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoHammerHeavyAttack());
+            playerWeapon.StartCoroutine(playerWeapon.DoHammerHeavyAttack());
             yield break;
           case EquipmentType.Dagger:
             playerWeapon.HeavyAttackSound = !UpgradeSystem.GetUnlocked(UpgradeSystem.Type.PUpgrade_HA_Dagger) ? AudioManager.Instance.CreateLoop("event:/weapon/dagger_heavy/dagger_heavy_lvl1", playerWeapon.gameObject, true) : AudioManager.Instance.CreateLoop("event:/weapon/dagger_heavy/dagger_heavy_lvl2", playerWeapon.gameObject, true);
@@ -1170,17 +1175,17 @@ public class PlayerWeapon : BaseMonoBehaviour
           case EquipmentType.Blunderbuss:
             playerWeapon.DoHeavyAttack = false;
             playerWeapon.StopAllCoroutines();
-            playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoBlunderHeavyAttack());
+            playerWeapon.StartCoroutine(playerWeapon.DoBlunderHeavyAttack());
             yield break;
           case EquipmentType.Shield:
             playerWeapon.DoHeavyAttack = false;
             playerWeapon.StopAllCoroutines();
-            playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoShieldHeavyAttack());
+            playerWeapon.StartCoroutine(playerWeapon.DoShieldHeavyAttack());
             yield break;
           case EquipmentType.Chain:
             playerWeapon.DoHeavyAttack = false;
             playerWeapon.StopAllCoroutines();
-            playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoChainHeavyAttack());
+            playerWeapon.StartCoroutine(playerWeapon.DoChainHeavyAttack());
             break;
           default:
             playerWeapon.DoHeavyAttack = false;
@@ -1290,7 +1295,7 @@ public class PlayerWeapon : BaseMonoBehaviour
           playerWeapon.DoAttachmentEffect(AttachmentState.OnAttackEnd);
           if (playerWeapon.attackRoutine != null)
             playerWeapon.StopCoroutine(playerWeapon.attackRoutine);
-          playerWeapon.attackRoutine = playerWeapon.playerFarming.CurrentWeaponInfo.WeaponType != EquipmentType.Hammer ? playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoAttackRoutine()) : playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoAttackRoutineButtonUp());
+          playerWeapon.attackRoutine = playerWeapon.playerFarming.CurrentWeaponInfo.WeaponType != EquipmentType.Hammer ? playerWeapon.StartCoroutine(playerWeapon.DoAttackRoutine()) : playerWeapon.StartCoroutine(playerWeapon.DoAttackRoutineButtonUp());
           yield break;
         }
         yield return (object) null;
@@ -1349,17 +1354,17 @@ public class PlayerWeapon : BaseMonoBehaviour
             case EquipmentType.Axe:
               playerWeapon.DoHeavyAttack = false;
               playerWeapon.StopAllCoroutines();
-              playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoAxeHeavyAttack());
+              playerWeapon.StartCoroutine(playerWeapon.DoAxeHeavyAttack());
               yield break;
             case EquipmentType.Hammer:
               playerWeapon.DoHeavyAttack = false;
               playerWeapon.StopAllCoroutines();
-              playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoHammerHeavyAttack());
+              playerWeapon.StartCoroutine(playerWeapon.DoHammerHeavyAttack());
               yield break;
             case EquipmentType.Dagger:
               playerWeapon.DoHeavyAttack = false;
               playerWeapon.StopAllCoroutines();
-              playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoDaggerHeavyAttack());
+              playerWeapon.StartCoroutine(playerWeapon.DoDaggerHeavyAttack());
               yield break;
             case EquipmentType.Gauntlet:
               playerWeapon.CanChangeDirection = false;
@@ -1376,18 +1381,18 @@ public class PlayerWeapon : BaseMonoBehaviour
             case EquipmentType.Blunderbuss:
               playerWeapon.DoHeavyAttack = false;
               playerWeapon.StopAllCoroutines();
-              playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoBlunderHeavyAttack());
+              playerWeapon.StartCoroutine(playerWeapon.DoBlunderHeavyAttack());
               yield break;
             case EquipmentType.Shield:
               playerWeapon.DoHeavyAttack = false;
               playerWeapon.StopAllCoroutines();
               Debug.Log((object) "SHIELD HEAVY ATTACK TIME 2");
-              playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoShieldHeavyAttack());
+              playerWeapon.StartCoroutine(playerWeapon.DoShieldHeavyAttack());
               yield break;
             case EquipmentType.Chain:
               playerWeapon.DoHeavyAttack = false;
               playerWeapon.StopAllCoroutines();
-              playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoChainHeavyAttack());
+              playerWeapon.StartCoroutine(playerWeapon.DoChainHeavyAttack());
               yield break;
             default:
               playerWeapon.DoHeavyAttack = false;
@@ -1403,7 +1408,7 @@ public class PlayerWeapon : BaseMonoBehaviour
             playerWeapon.StopCoroutine(playerWeapon.ShieldHoldCoroutine);
             playerWeapon.ShieldHoldCoroutine = (Coroutine) null;
           }
-          playerWeapon.ShieldHoldCoroutine = playerWeapon.StartCoroutine((IEnumerator) playerWeapon.WaitForShieldBlocking());
+          playerWeapon.ShieldHoldCoroutine = playerWeapon.StartCoroutine(playerWeapon.WaitForShieldBlocking());
           Debug.Log((object) "Shiwlf coroutinge should start here");
         }
         playerWeapon.StealthSneakAttack = playerWeapon.state.CURRENT_STATE == StateMachine.State.Stealth;
@@ -1499,7 +1504,7 @@ public class PlayerWeapon : BaseMonoBehaviour
             playerWeapon.DoAttachmentEffect(AttachmentState.OnAttackEnd);
             if (playerWeapon.attackRoutine != null)
               playerWeapon.StopCoroutine(playerWeapon.attackRoutine);
-            playerWeapon.attackRoutine = playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoAttackRoutine(DoForceHeavyAttack));
+            playerWeapon.attackRoutine = playerWeapon.StartCoroutine(playerWeapon.DoAttackRoutine(DoForceHeavyAttack));
             yield break;
           }
           if (!followingHeavyAttack && UpgradeSystem.GetUnlocked(UpgradeSystem.Type.PUpgrade_HeavyAttacks) && !DataManager.Instance.SpecialAttacksDisabled)
@@ -1522,7 +1527,7 @@ public class PlayerWeapon : BaseMonoBehaviour
               if (!followingHeavyAttack && !playerWeapon.CheckForDeath())
               {
                 playerWeapon.StopAllCoroutines();
-                playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoAttackRoutine(true, true));
+                playerWeapon.StartCoroutine(playerWeapon.DoAttackRoutine(true, true));
                 yield break;
               }
             }
@@ -1544,7 +1549,7 @@ public class PlayerWeapon : BaseMonoBehaviour
     if (InputManager.Gameplay.GetAttackButtonHeld(playerWeapon.playerFarming))
     {
       playerWeapon.StopAllCoroutines();
-      playerWeapon.StartCoroutine((IEnumerator) playerWeapon.DoShieldBlocking());
+      playerWeapon.StartCoroutine(playerWeapon.DoShieldBlocking());
     }
   }
 
@@ -2149,13 +2154,14 @@ public class PlayerWeapon : BaseMonoBehaviour
       else if ((double) num3 < (double) num2)
         moveToPosition = (Vector3) (raycastHit2D.point - normalized);
     }
-    if (RoomLockController.IsPositionOutOfRoom(moveToPosition, true))
-      moveToPosition = playerWeapon.transform.position;
     yield return (object) new WaitForSeconds(0.3f);
     bool hasReachSmashPrecent = false;
     playerWeapon.skeletonAnimation.AnimationState.SetAnimation(0, "attack-chain-heavy-fly", true);
     AudioManager.Instance.PlayOneShot(playerWeapon.chainHeavyAttackJumpSFX, playerWeapon.gameObject);
-    playerWeapon.transform.DOMove(moveToPosition, attackduration).OnUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
+    Vector3 originalPosition = playerWeapon.transform.position;
+    BiomeGenerator.OnBiomeLeftRoom -= new BiomeGenerator.BiomeAction(playerWeapon.KillChainHeavyAttackTween);
+    BiomeGenerator.OnBiomeLeftRoom += new BiomeGenerator.BiomeAction(playerWeapon.KillChainHeavyAttackTween);
+    playerWeapon.chainHeavyAttackTween = (Tween) playerWeapon.transform.DOMove(moveToPosition, attackduration).OnUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
     {
       if ((double) ((List<Tween>) DOTween.TweensByTarget((object) this.transform))[0].ElapsedPercentage() < 0.40000000596046448 || hasReachSmashPrecent)
         return;
@@ -2165,6 +2171,7 @@ public class PlayerWeapon : BaseMonoBehaviour
     {
       isPlayerMoving = false;
       this.chainHook.gameObject.SetActive(false);
+      BiomeGenerator.OnBiomeLeftRoom -= new BiomeGenerator.BiomeAction(this.KillChainHeavyAttackTween);
       Vector3 Position = moveToPosition with { z = 0.0f };
       BiomeConstants.Instance.EmitHammerEffects(Position, 1f, 1.2f, 0.3f, true, 1.3f, false);
       AudioManager.Instance.PlayOneShot(this.chainGroundImpactLargeSFX, this.transform.position);
@@ -2174,16 +2181,33 @@ public class PlayerWeapon : BaseMonoBehaviour
         Health component2 = component1.gameObject.GetComponent<Health>();
         if ((UnityEngine.Object) component2 != (UnityEngine.Object) null && (UnityEngine.Object) component2 != (UnityEngine.Object) this.health && component2.team != (Health.Team) ((int) this.overrideTeam ?? (int) this.health.team))
         {
-          component2.DealDamage(chainHookDamage, this.gameObject, Vector3.Lerp(this.transform.position, component2.transform.position, 0.8f), AttackType: currentComboData.AttackType, AttackFlags: attackFlags);
+          component2.DealDamage(chainHookDamage, this.gameObject, Vector3.Lerp(this.transform.position, component2.transform.position, 0.8f), AttackType: currentComboData.AttackType, dealDamageImmediately: true, AttackFlags: attackFlags);
           CameraManager.shakeCamera(0.6f, Utils.GetAngle(this.transform.position, component2.transform.position));
         }
       }
+    })).OnKill<TweenerCore<Vector3, Vector3, VectorOptions>>((TweenCallback) (() =>
+    {
+      if (isPlayerMoving)
+      {
+        this.transform.position = originalPosition;
+        isPlayerMoving = false;
+        this.chainHook.gameObject.SetActive(false);
+      }
+      BiomeGenerator.OnBiomeLeftRoom -= new BiomeGenerator.BiomeAction(this.KillChainHeavyAttackTween);
     }));
     yield return (object) new WaitUntil((Func<bool>) (() => !isPlayerMoving));
     yield return (object) new WaitForSeconds(0.5f);
     if (playerWeapon.state.CURRENT_STATE != StateMachine.State.InActive)
       playerWeapon.state.CURRENT_STATE = StateMachine.State.Idle;
     playerWeapon.DoingHeavyAttack = false;
+  }
+
+  public void KillChainHeavyAttackTween()
+  {
+    BiomeGenerator.OnBiomeLeftRoom -= new BiomeGenerator.BiomeAction(this.KillChainHeavyAttackTween);
+    if (this.chainHeavyAttackTween == null || !this.chainHeavyAttackTween.IsActive() || this.chainHeavyAttackTween.IsComplete())
+      return;
+    this.chainHeavyAttackTween.Kill();
   }
 
   public void EndBlunderAimingPhaseOnHit(
@@ -2416,10 +2440,10 @@ public class PlayerWeapon : BaseMonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CHandleAnimationStateEvent\u003Eb__84_0(ThrownAxe axe) => this.thrownAxe = axe;
+  public void \u003CHandleAnimationStateEvent\u003Eb__87_0(ThrownAxe axe) => this.thrownAxe = axe;
 
   [CompilerGenerated]
-  public void \u003CChainAttack\u003Eb__87_0(Vector3 hitPosition)
+  public void \u003CChainAttack\u003Eb__90_0(Vector3 hitPosition)
   {
     this.chainHook.SetCollidersActive(true);
     Vector3 Position = ((hitPosition + this.chainHook1.GetHookPosition()) * 0.5f) with
@@ -2446,13 +2470,13 @@ public class PlayerWeapon : BaseMonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CChainAttack\u003Eb__87_1()
+  public void \u003CChainAttack\u003Eb__90_1()
   {
     AudioManager.Instance.PlayOneShot(this.chainPullbackSFX, this.transform.position);
   }
 
   [CompilerGenerated]
-  public void \u003CChainAttack\u003Eb__87_2(Vector3 hitPosition)
+  public void \u003CChainAttack\u003Eb__90_2(Vector3 hitPosition)
   {
     this.chainHook1.SetCollidersActive(true);
     if (this.state.CURRENT_STATE == StateMachine.State.Attacking)
@@ -2461,7 +2485,7 @@ public class PlayerWeapon : BaseMonoBehaviour
   }
 
   [CompilerGenerated]
-  public void \u003CUpdate\u003Eb__105_0() => this.damageNegation.gameObject.SetActive(false);
+  public void \u003CUpdate\u003Eb__108_0() => this.damageNegation.gameObject.SetActive(false);
 
   public delegate void DoSpecialAction();
 

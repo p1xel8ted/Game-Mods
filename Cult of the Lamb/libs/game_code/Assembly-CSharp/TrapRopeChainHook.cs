@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: TrapRopeChainHook
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -65,7 +65,7 @@ public class TrapRopeChainHook : UnitObject
   {
     if (!((UnityEngine.Object) this.gameObject != (UnityEngine.Object) null))
       return;
-    this.handHealth.DealDamage(9999f, this.gameObject, this.transform.position);
+    this.handHealth.DealDamage(9999f, this.gameObject, this.transform.position, dealDamageImmediately: true);
   }
 
   public new void OnDestroy() => AudioManager.Instance.StopLoop(this.chainLoopInstanceSFX);
@@ -79,7 +79,7 @@ public class TrapRopeChainHook : UnitObject
   {
     if (!((UnityEngine.Object) this.hookHealth != (UnityEngine.Object) null))
       return;
-    this.hookHealth.DealDamage(9999f, Attacker, this.hookHealth.transform.position);
+    this.hookHealth.DealDamage(9999f, Attacker, this.hookHealth.transform.position, dealDamageImmediately: true);
   }
 
   public void OnHookHit(

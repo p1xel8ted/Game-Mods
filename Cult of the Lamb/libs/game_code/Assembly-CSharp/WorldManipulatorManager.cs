@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WorldManipulatorManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -24,7 +24,7 @@ public static class WorldManipulatorManager
     float delay = 0.0f,
     bool twitch = false)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() =>
     {
       string nonLocalisedString = "";
       List<Follower> possibleFollowers;
@@ -76,7 +76,7 @@ public static class WorldManipulatorManager
           break;
         case WorldManipulatorManager.Manipulations.DropRandomWeaponCurse:
         case WorldManipulatorManager.Manipulations.DropRandomRelic:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.DropRandomWeaponRelic(manipulation));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.DropRandomWeaponRelic(manipulation));
           break;
         case WorldManipulatorManager.Manipulations.ChargeCurrentRelic:
           PlayerFarming.Instance.playerRelic.FullyCharge();
@@ -100,7 +100,7 @@ public static class WorldManipulatorManager
           DataManager.Instance.EnemiesDropGoldDuringRun = true;
           break;
         case WorldManipulatorManager.Manipulations.GainCorruptedTarotPositive:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.GiveCorruptedTarotPositiveRoutine());
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.GiveCorruptedTarotPositiveRoutine());
           break;
         case WorldManipulatorManager.Manipulations.FreezeEnemies:
           BiomeGenerator.OnBiomeEnteredCombatRoom += new BiomeGenerator.BiomeAction(WorldManipulatorManager.FreezeEnemiesOnEnterCombatRoom);
@@ -110,7 +110,7 @@ public static class WorldManipulatorManager
           break;
         case WorldManipulatorManager.Manipulations.TakeDamage:
           int damage = Mathf.Max(1, UnityEngine.Random.Range(0, (int) ((double) PlayerFarming.Instance.health.HP / 2.0)));
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.TakeDamageIE(damage));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.TakeDamageIE(damage));
           nonLocalisedString = damage.ToString();
           break;
         case WorldManipulatorManager.Manipulations.IncreaseEnemyModifiersChance:
@@ -156,10 +156,10 @@ public static class WorldManipulatorManager
           DataManager.Instance.BossHealthMultiplier += 0.5f;
           break;
         case WorldManipulatorManager.Manipulations.CombatNodes:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.ConvertAllMapNodesIE());
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.ConvertAllMapNodesIE());
           break;
         case WorldManipulatorManager.Manipulations.GainCorruptedTarotNegative:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.GiveCorruptedTarotNegativeRoutine());
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.GiveCorruptedTarotNegativeRoutine());
           break;
         case WorldManipulatorManager.Manipulations.NoRollingInNextRoom:
           DataManager.Instance.NoRollInNextCombatRoom = true;
@@ -175,22 +175,22 @@ public static class WorldManipulatorManager
           BiomeGenerator.SpawnPoisonsInRoom(UnityEngine.Random.Range(40, 60), (bool) (UnityEngine.Object) PlayerFarming.Instance);
           break;
         case WorldManipulatorManager.Manipulations.ResetTempleCooldowns:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => UpgradeSystem.ClearAllCoolDowns())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => UpgradeSystem.ClearAllCoolDowns())));
           break;
         case WorldManipulatorManager.Manipulations.InstantlyBuildStructures:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => StructureManager.BuildAllStructures())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => StructureManager.BuildAllStructures())));
           break;
         case WorldManipulatorManager.Manipulations.GainFaith:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => CultFaithManager.AddThought(Thought.FaithIncreased))));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => CultFaithManager.AddThought(Thought.FaithIncreased))));
           break;
         case WorldManipulatorManager.Manipulations.ResurrectBuriedFollower:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.ResurrectBurriedFollower())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.ResurrectBurriedFollower())));
           break;
         case WorldManipulatorManager.Manipulations.CureCursedFollowers:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.CureAllCursedFollowers())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.CureAllCursedFollowers())));
           break;
         case WorldManipulatorManager.Manipulations.ClearAllWaste:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => StructureManager.ClearAllWaste())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => StructureManager.ClearAllWaste())));
           break;
         case WorldManipulatorManager.Manipulations.FollowerInstantlyLevelled:
           FollowerBrain followerBrain1 = FollowerManager.MakeFollowerGainLevel();
@@ -303,41 +303,41 @@ public static class WorldManipulatorManager
           }
           break;
         case WorldManipulatorManager.Manipulations.SpawnGreatMeals:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => WorldManipulatorManager.SpawnGreatMeals())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => WorldManipulatorManager.SpawnGreatMeals())));
           break;
         case WorldManipulatorManager.Manipulations.FillDevotion:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() =>
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() =>
           {
             int Delta = DataManager.GetTargetXP(Mathf.Min(DataManager.Instance.Level, DataManager.TargetXP.Count - 1)) - DataManager.Instance.XP;
             PlayerFarming.Instance.GetXP((float) Delta);
           })));
           break;
         case WorldManipulatorManager.Manipulations.FillSermon:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => DoctrineUpgradeSystem.SetXPBySermon(SermonCategory.PlayerUpgrade, DoctrineUpgradeSystem.GetXPTargetBySermon(SermonCategory.PlayerUpgrade)))));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => DoctrineUpgradeSystem.SetXPBySermon(SermonCategory.PlayerUpgrade, DoctrineUpgradeSystem.GetXPTargetBySermon(SermonCategory.PlayerUpgrade)))));
           break;
         case WorldManipulatorManager.Manipulations.LuckyKnucklebones:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => DataManager.Instance.NextKnucklbonesLucky = true)));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => DataManager.Instance.NextKnucklbonesLucky = true)));
           break;
         case WorldManipulatorManager.Manipulations.FreeRitual:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => DataManager.Instance.NextRitualFree = true)));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => DataManager.Instance.NextRitualFree = true)));
           break;
         case WorldManipulatorManager.Manipulations.AllFollowersPoopOrVomit:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.MakeAllFollowersPoopOrVomit())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.MakeAllFollowersPoopOrVomit())));
           break;
         case WorldManipulatorManager.Manipulations.BreakAllBeds:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => StructureManager.BreakRandomBeds())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => StructureManager.BreakRandomBeds())));
           break;
         case WorldManipulatorManager.Manipulations.SkipTime:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => TimeManager.SkipTime(600f))));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => TimeManager.SkipTime(600f))));
           break;
         case WorldManipulatorManager.Manipulations.SleepFollowers:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerActive((System.Action) (() => FollowerManager.MakeAllFollowersFallAsleep()))))));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerActive((System.Action) (() => FollowerManager.MakeAllFollowersFallAsleep()))))));
           break;
         case WorldManipulatorManager.Manipulations.RandomCursedState:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.GiveFollowersRandomCurse(UnityEngine.Random.Range(Mathf.Clamp(Mathf.RoundToInt((float) DataManager.Instance.Followers.Count / 6f), 1, DataManager.Instance.Followers.Count), Mathf.Clamp(Mathf.RoundToInt((float) DataManager.Instance.Followers.Count / 4f), 1, DataManager.Instance.Followers.Count) + 1)))));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.GiveFollowersRandomCurse(UnityEngine.Random.Range(Mathf.Clamp(Mathf.RoundToInt((float) DataManager.Instance.Followers.Count / 6f), 1, DataManager.Instance.Followers.Count), Mathf.Clamp(Mathf.RoundToInt((float) DataManager.Instance.Followers.Count / 4f), 1, DataManager.Instance.Followers.Count) + 1)))));
           break;
         case WorldManipulatorManager.Manipulations.KillRandomFollower:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.KillRandomFollower(true))));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => FollowerManager.KillRandomFollower(true))));
           break;
         case WorldManipulatorManager.Manipulations.ToiletsInstantlyFull:
           BaseLocationManager.Instance.InstantlyFillAllToilets();
@@ -410,7 +410,7 @@ public static class WorldManipulatorManager
           }
           break;
         case WorldManipulatorManager.Manipulations.PossessedFollower:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerActive((System.Action) (() =>
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerActive((System.Action) (() =>
           {
             possibleFollowers = new List<Follower>();
             foreach (Follower follower in Follower.Followers)
@@ -441,7 +441,7 @@ public static class WorldManipulatorManager
           }
           break;
         case WorldManipulatorManager.Manipulations.PoopNursery:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() =>
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() =>
           {
             List<Interaction_Daycare> interactionDaycareList = new List<Interaction_Daycare>();
             foreach (Interaction_Daycare daycare in Interaction_Daycare.Daycares)
@@ -480,7 +480,7 @@ public static class WorldManipulatorManager
           {
             Follower follower = possibleFollowers[UnityEngine.Random.Range(0, possibleFollowers.Count)];
             nonLocalisedString = $"<color=#FFD201>{follower.Brain.Info.Name}</color>";
-            GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.ConvertToCursed(follower));
+            GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.ConvertToCursed(follower));
             break;
           }
           break;
@@ -495,12 +495,12 @@ public static class WorldManipulatorManager
           {
             Follower follower = possibleFollowers[UnityEngine.Random.Range(0, possibleFollowers.Count)];
             nonLocalisedString = $"<color=#FFD201>{follower.Brain.Info.Name}</color>";
-            GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.ConvertToChild(follower));
+            GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.ConvertToChild(follower));
             break;
           }
           break;
         case WorldManipulatorManager.Manipulations.SpawnDeadlyDish:
-          GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => WorldManipulatorManager.SpawnDeadlyMeal())));
+          GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerIsAtBase((System.Action) (() => WorldManipulatorManager.SpawnDeadlyMeal())));
           break;
         default:
           return;
@@ -1049,7 +1049,7 @@ label_16:
       TrinketManager.AddEncounteredTrinket(card, player);
       TrinketManager.AddTrinket(card, player);
       player.CorruptedTrinketsOnlyPositive.Add(card);
-      yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.GiveTarotRoutine(card, player));
+      yield return (object) GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.GiveTarotRoutine(card, player));
     }
     foreach (Health health in Health.team2)
     {
@@ -1078,7 +1078,7 @@ label_16:
       TrinketManager.AddEncounteredTrinket(card, player);
       TrinketManager.AddTrinket(card, player);
       player.CorruptedTrinketsOnlyNegative.Add(card);
-      yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.GiveTarotRoutine(card, player));
+      yield return (object) GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.GiveTarotRoutine(card, player));
     }
     foreach (Health health in Health.team2)
     {
@@ -1132,7 +1132,7 @@ label_16:
 
   public static IEnumerator ConvertToChild(Follower follower)
   {
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerActive());
+    yield return (object) GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerActive());
     GameManager.GetInstance().OnConversationNew(PlayerFarming.Instance);
     GameManager.GetInstance().OnConversationNext(follower.gameObject);
     follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_ManualControl());
@@ -1153,7 +1153,7 @@ label_16:
 
   public static IEnumerator ConvertToCursed(Follower follower)
   {
-    yield return (object) GameManager.GetInstance().StartCoroutine((IEnumerator) WorldManipulatorManager.WaitTillPlayerActive());
+    yield return (object) GameManager.GetInstance().StartCoroutine(WorldManipulatorManager.WaitTillPlayerActive());
     GameManager.GetInstance().OnConversationNew(PlayerFarming.Instance);
     GameManager.GetInstance().OnConversationNext(follower.gameObject);
     follower.Brain.HardSwapToTask((FollowerTask) new FollowerTask_ManualControl());

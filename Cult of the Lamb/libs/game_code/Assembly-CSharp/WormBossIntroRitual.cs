@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: WormBossIntroRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -149,7 +149,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
       this.\u003C\u003E1__state = -1;
       wormBossIntroRitual.frogBoss.EnemiesToTrack[0].gameObject.GetComponent<EnemyWormBoss>();
       wormBossIntroRitual.Preload();
-      wormBossIntroRitual.StartCoroutine((IEnumerator) wormBossIntroRitual.CompleteHealingBishopRoom());
+      wormBossIntroRitual.StartCoroutine(wormBossIntroRitual.CompleteHealingBishopRoom());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -214,7 +214,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
           this.playerBehindTargetPosition = Vector3.down * 6f;
         }
       }
-      this.StartCoroutine((IEnumerator) this.HealingIE());
+      this.StartCoroutine(this.HealingIE());
     }
     else
     {
@@ -227,7 +227,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
           this.playerBehindTargetPosition = collision.transform.position + Vector3.right * 1.5f;
         }
       }
-      this.StartCoroutine((IEnumerator) this.RitualRoutine());
+      this.StartCoroutine(this.RitualRoutine());
     }
   }
 
@@ -311,7 +311,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
       wormBossIntroRitual.tweens.Add((Tween) DOTween.To((DOGetter<Vector3>) (() => GameManager.GetInstance().CamFollowTarget.TargetOffset), (DOSetter<Vector3>) (x => GameManager.GetInstance().CamFollowTarget.TargetOffset = x), Vector3.forward * -2f, 6f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InSine));
       wormBossIntroRitual.amplifyColorEffect.BlendTo((Texture) wormBossIntroRitual.lutTexture, 6f, (System.Action) null);
       for (int index = 0; index < wormBossIntroRitual.enemySpines.Length; ++index)
-        wormBossIntroRitual.StartCoroutine((IEnumerator) wormBossIntroRitual.SpawnSouls(wormBossIntroRitual.enemySpines[index].transform.position));
+        wormBossIntroRitual.StartCoroutine(wormBossIntroRitual.SpawnSouls(wormBossIntroRitual.enemySpines[index].transform.position));
       yield return (object) new WaitForSeconds(1f);
       wormBossIntroRitual.bloodParticle.SetActive(true);
       yield return (object) new WaitForSeconds(2f);
@@ -393,7 +393,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
     }
     yield return (object) new WaitForSeconds(0.15f);
     foreach (LongGrass longGrass in wormBossIntroRitual.surroundingGrass)
-      longGrass.StartCoroutine((IEnumerator) longGrass.ShakeGrassRoutine(wormBossIntroRitual.gameObject, 2f));
+      longGrass.StartCoroutine(longGrass.ShakeGrassRoutine(wormBossIntroRitual.gameObject, 2f));
   }
 
   public IEnumerator CompleteHealingBishopRoom()
@@ -409,7 +409,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
   {
     if (!(e.Data.Name == "transform"))
       return;
-    this.StartCoroutine((IEnumerator) this.BossTransformed());
+    this.StartCoroutine(this.BossTransformed());
   }
 
   public void SpawnDeadBody(Vector3 pos, Vector3 scale)
@@ -492,6 +492,7 @@ public class WormBossIntroRitual : BaseMonoBehaviour
       yield return (object) null;
     if (accepted)
     {
+      bool changedBishopSkin = !follower.FollowerBrain.Info.SkinName.Contains("CultLeader");
       AudioManager.Instance.PlayOneShot("event:/Stings/bishop_healed", wormBossIntroRitual.gameObject);
       GameManager.GetInstance().OnConversationNext(wormBossIntroRitual.gameObject, 5f);
       wormBossIntroRitual.healEffect.gameObject.SetActive(true);
@@ -510,7 +511,8 @@ public class WormBossIntroRitual : BaseMonoBehaviour
       BiomeConstants.Instance.EmitSmokeExplosionVFX(Vector3.zero);
       AudioManager.Instance.PlayOneShot("event:/relics/puff_of_smoke", wormBossIntroRitual.gameObject);
       follower.Follower.Spine.Skeleton.SetSkin(follower.FollowerBrain.Info.SkinName);
-      foreach (WorshipperData.SlotAndColor slotAndColour in WorshipperData.Instance.GetColourData(follower.FollowerBrain.Info.SkinName).SlotAndColours[follower.FollowerBrain.Info.SkinColour].SlotAndColours)
+      WorshipperData.SkinAndData colourData = WorshipperData.Instance.GetColourData(follower.FollowerBrain.Info.SkinName);
+      foreach (WorshipperData.SlotAndColor slotAndColour in (changedBishopSkin ? colourData.SlotAndColours[0] : colourData.SlotAndColours[follower.FollowerBrain.Info.SkinColour]).SlotAndColours)
       {
         Slot slot = follower.Follower.Spine.Skeleton.FindSlot(slotAndColour.Slot);
         if (slot != null)

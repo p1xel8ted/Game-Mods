@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: ProjectilePattern
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -81,17 +81,17 @@ public class ProjectilePattern : ProjectilePatternBase
 
   public void Shoot()
   {
-    this.StartCoroutine((IEnumerator) this.ShootIE(0.0f, (GameObject) null, (Transform) null, false));
+    this.StartCoroutine(this.ShootIE(0.0f, (GameObject) null, (Transform) null, false));
   }
 
   public void Shoot(float delay, GameObject target, Transform parent)
   {
-    this.StartCoroutine((IEnumerator) this.ShootIE(delay, target, parent, false));
+    this.StartCoroutine(this.ShootIE(delay, target, parent, false));
   }
 
   public void Shoot(float delay, Vector3 targetPosition, Transform parent)
   {
-    this.StartCoroutine((IEnumerator) this.ShootIE(targetPosition, delay, parent));
+    this.StartCoroutine(this.ShootIE(targetPosition, delay, parent));
   }
 
   public override IEnumerator ShootIE(

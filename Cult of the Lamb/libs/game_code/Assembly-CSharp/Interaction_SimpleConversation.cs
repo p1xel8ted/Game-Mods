@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_SimpleConversation
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -190,7 +190,7 @@ public class Interaction_SimpleConversation : Interaction
     this.\u003C\u003E1__state = -1;
     simpleConversation.Play(player);
     // ISSUE: reference to a compiler-generated field
-    this.\u003C\u003E2__current = (object) new WaitUntil((Func<bool>) new Func<bool>(simpleConversation.\u003CPlayIE\u003Eb__43_0));
+    this.\u003C\u003E2__current = (object) new WaitUntil(new Func<bool>(simpleConversation.\u003CPlayIE\u003Eb__43_0));
     // ISSUE: reference to a compiler-generated field
     this.\u003C\u003E1__state = 1;
     return true;
@@ -233,7 +233,7 @@ public class Interaction_SimpleConversation : Interaction
       this.Spine.AnimationState.SetAnimation(0, this.TriggeredAnimation, false);
       this.Spine.AnimationState.Complete += new Spine.AnimationState.TrackEntryDelegate(this.Complete);
       this.Spine.AnimationState.AddAnimation(0, this.EndOnAnimation, false, 0.0f);
-      this.StartCoroutine((IEnumerator) this.ReEnableMeshRenderer());
+      this.StartCoroutine(this.ReEnableMeshRenderer());
     }
     else
     {
@@ -251,7 +251,7 @@ public class Interaction_SimpleConversation : Interaction
     if (!((UnityEngine.Object) state != (UnityEngine.Object) null) || !this.MovePlayerToListenPosition)
       return;
     if ((UnityEngine.Object) this.playerFarming != (UnityEngine.Object) null)
-      this.playerFarming.GoToAndStop(this.transform.position + this.ListenPosition, this.gameObject, DisableCollider: this.gotoDisableCollider, GoToCallback: (System.Action) (() => GameManager.GetInstance().StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+      this.playerFarming.GoToAndStop(this.transform.position + this.ListenPosition, this.gameObject, DisableCollider: this.gotoDisableCollider, GoToCallback: (System.Action) (() => GameManager.GetInstance().StartCoroutine(this.FrameDelay((System.Action) (() =>
       {
         if (!this.Finished || this.playerFarming.state.CURRENT_STATE != StateMachine.State.InActive)
           return;
@@ -334,7 +334,7 @@ public class Interaction_SimpleConversation : Interaction
   [CompilerGenerated]
   public void \u003COnInteract\u003Eb__55_0()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.FrameDelay((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.FrameDelay((System.Action) (() =>
     {
       if (!this.Finished || this.playerFarming.state.CURRENT_STATE != StateMachine.State.InActive)
         return;

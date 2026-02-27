@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RitualBrainwashing
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -27,7 +27,7 @@ public class RitualBrainwashing : Ritual
         followerBrain.CurrentTask.Abort();
     }
     Interaction_TempleAltar.Instance.FrontWall.SetActive(false);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.RitualRoutine());
+    GameManager.GetInstance().StartCoroutine(this.RitualRoutine());
   }
 
   public IEnumerator RitualRoutine()
@@ -41,7 +41,7 @@ public class RitualBrainwashing : Ritual
       PlayerFarming.Instance.state.transform.DOMove(ChurchFollowerManager.Instance.RitualCenterPosition.position + Vector3.up, 0.1f).SetEase<TweenerCore<Vector3, Vector3, VectorOptions>>(Ease.InOutSine).SetUpdate<TweenerCore<Vector3, Vector3, VectorOptions>>(true);
     }));
     Interaction_TempleAltar.Instance.SimpleSetCamera.Play();
-    yield return (object) ritualBrainwashing.StartCoroutine((IEnumerator) ritualBrainwashing.WaitFollowersFormCircle(true));
+    yield return (object) ritualBrainwashing.StartCoroutine(ritualBrainwashing.WaitFollowersFormCircle(true));
     yield return (object) new WaitForSeconds(1f);
     PlayerFarming.Instance.simpleSpineAnimator.Animate("build", 0, true);
     PlayerFarming.Instance.Spine.skeleton.FindBone("ritualring").Rotation += 60f;
@@ -66,7 +66,7 @@ public class RitualBrainwashing : Ritual
     float delay = 0.0f;
     foreach (FollowerBrain followerBrain in Ritual.GetFollowersAvailableToAttendSermon())
     {
-      ritualBrainwashing.StartCoroutine((IEnumerator) ritualBrainwashing.GiveShrooms(FollowerManager.FindFollowerByID(followerBrain.Info.ID), 5f, delay));
+      ritualBrainwashing.StartCoroutine(ritualBrainwashing.GiveShrooms(FollowerManager.FindFollowerByID(followerBrain.Info.ID), 5f, delay));
       delay += 0.1f;
     }
     yield return (object) new WaitForSeconds(1f);
@@ -120,7 +120,7 @@ public class RitualBrainwashing : Ritual
     {
       float Delay = UnityEngine.Random.Range(0.1f, 0.5f);
       num += Delay;
-      ritualBrainwashing.StartCoroutine((IEnumerator) ritualBrainwashing.DelayFollowerReaction(brain, Delay));
+      ritualBrainwashing.StartCoroutine(ritualBrainwashing.DelayFollowerReaction(brain, Delay));
     }
     BiomeConstants.Instance.PsychedelicFadeOut(1.5f);
     AudioManager.Instance.SetMusicPsychedelic(0.0f);

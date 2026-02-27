@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: MenuDLCAdController
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -56,7 +56,7 @@ public class MenuDLCAdController : MonoBehaviour
   public void Start()
   {
     if (this.steamSaleChecker.isActiveAndEnabled)
-      this.StartCoroutine((IEnumerator) this.steamSaleChecker.CheckIfOnSale(this.steamAppID));
+      this.StartCoroutine(this.steamSaleChecker.CheckIfOnSale(this.steamAppID));
     if (GameManager.AuthenticateMajorDLC())
       return;
     this.buttonObj.OnSelected += new System.Action(this.OnButtonSelect);
@@ -73,7 +73,7 @@ public class MenuDLCAdController : MonoBehaviour
     this.buttonObj.enabled = false;
     this._bannerObj.gameObject.SetActive(false);
     if (this.dlcRefreshRoutine == null)
-      this.dlcRefreshRoutine = this.StartCoroutine((IEnumerator) this.DLC_refreshed());
+      this.dlcRefreshRoutine = this.StartCoroutine(this.DLC_refreshed());
     this.availableText.gameObject.SetActive(true);
   }
 

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyWoodmanBig
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -212,7 +212,7 @@ public class EnemyWoodmanBig : UnitObject
       this.damageColliderEvents.SetActive(false);
     }
     if (this.state.CURRENT_STATE != StateMachine.State.Dead)
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     this.rb.simulated = true;
   }
 
@@ -293,7 +293,7 @@ public class EnemyWoodmanBig : UnitObject
       {
         if (this.hurtRoutine != null)
           this.StopCoroutine(this.hurtRoutine);
-        this.hurtRoutine = this.StartCoroutine((IEnumerator) this.HurtRoutine());
+        this.hurtRoutine = this.StartCoroutine(this.HurtRoutine());
       }
     }
     if (AttackType == Health.AttackTypes.Projectile && !this.health.HasShield)
@@ -305,7 +305,7 @@ public class EnemyWoodmanBig : UnitObject
     {
       if (this.jumpDiveRoutine != null)
         this.StopJumpDiveAttackEarly();
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     }
     this.SimpleSpineFlash.FlashFillRed();
   }
@@ -314,7 +314,7 @@ public class EnemyWoodmanBig : UnitObject
   {
     if (this.activatingRoutine != null)
       return;
-    this.activatingRoutine = this.StartCoroutine((IEnumerator) this.ActivateWoodmanRoutine());
+    this.activatingRoutine = this.StartCoroutine(this.ActivateWoodmanRoutine());
   }
 
   public IEnumerator ActivateWoodmanRoutine()
@@ -359,7 +359,7 @@ public class EnemyWoodmanBig : UnitObject
     float time = 0.0f;
     while ((double) (time += Time.deltaTime * enemyWoodmanBig.Spine.timeScale) < 0.30000001192092896)
       yield return (object) null;
-    enemyWoodmanBig.StartCoroutine((IEnumerator) enemyWoodmanBig.WaitForTarget());
+    enemyWoodmanBig.StartCoroutine(enemyWoodmanBig.WaitForTarget());
     enemyWoodmanBig.hurtRoutine = (Coroutine) null;
   }
 
@@ -404,7 +404,7 @@ public class EnemyWoodmanBig : UnitObject
       yield return (object) null;
     }
     enemyWoodmanBig.FindPath(enemyWoodmanBig.TargetPosition);
-    enemyWoodmanBig.StartCoroutine((IEnumerator) enemyWoodmanBig.ChasePlayer());
+    enemyWoodmanBig.StartCoroutine(enemyWoodmanBig.ChasePlayer());
   }
 
   public void LookAtTarget()
@@ -462,7 +462,7 @@ public class EnemyWoodmanBig : UnitObject
                 {
                   enemyWoodmanBig.StopAllCoroutines();
                   enemyWoodmanBig.DisableForces = false;
-                  enemyWoodmanBig.StartCoroutine((IEnumerator) enemyWoodmanBig.FightPlayer());
+                  enemyWoodmanBig.StartCoroutine(enemyWoodmanBig.FightPlayer());
                 }
                 else if (!enemyWoodmanBig.health.HasShield)
                 {
@@ -503,7 +503,7 @@ public class EnemyWoodmanBig : UnitObject
     if ((double) a > (double) this.VisionRange)
       return;
     if (!this.requireLineOfSite || this.CheckLineOfSightOnTarget(TargetObject, TargetObject.transform.position, Mathf.Min(a, (float) this.VisionRange)))
-      this.StartCoroutine((IEnumerator) this.WaitForTarget());
+      this.StartCoroutine(this.WaitForTarget());
     else
       this.LookAtTarget();
   }
@@ -583,7 +583,7 @@ public class EnemyWoodmanBig : UnitObject
         switch (enemyWoodmanBig.state.CURRENT_STATE)
         {
           case StateMachine.State.Idle:
-            enemyWoodmanBig.StartCoroutine((IEnumerator) enemyWoodmanBig.WaitForTarget());
+            enemyWoodmanBig.StartCoroutine(enemyWoodmanBig.WaitForTarget());
             yield break;
           case StateMachine.State.Moving:
             if ((bool) (UnityEngine.Object) enemyWoodmanBig.GetClosestTarget())
@@ -648,7 +648,7 @@ public class EnemyWoodmanBig : UnitObject
               enemyWoodmanBig.speed = AttackSpeed * 0.0166666675f;
               enemyWoodmanBig.Spine.AnimationState.SetAnimation(0, AttackCount == NumAttacks ? enemyWoodmanBig.attackImpact2Anim : enemyWoodmanBig.attackImpactAnim, false);
               enemyWoodmanBig.canBeParried = true;
-              enemyWoodmanBig.StartCoroutine((IEnumerator) enemyWoodmanBig.EnableDamageCollider(0.0f));
+              enemyWoodmanBig.StartCoroutine(enemyWoodmanBig.EnableDamageCollider(0.0f));
               enemyWoodmanBig.DoKnockBack(enemyWoodmanBig.GetClosestTarget().gameObject, -1f, 1f);
               if (!string.IsNullOrEmpty(enemyWoodmanBig.AttackBiteSwipeSFX))
                 AudioManager.Instance.PlayOneShot(enemyWoodmanBig.AttackBiteSwipeSFX, enemyWoodmanBig.transform.position);
@@ -685,7 +685,7 @@ public class EnemyWoodmanBig : UnitObject
         yield return (object) null;
       }
     }
-    enemyWoodmanBig.StartCoroutine((IEnumerator) enemyWoodmanBig.WaitForTarget());
+    enemyWoodmanBig.StartCoroutine(enemyWoodmanBig.WaitForTarget());
   }
 
   public void BiomeGenerator_OnBiomeChangeRoom()
@@ -733,7 +733,7 @@ public class EnemyWoodmanBig : UnitObject
   {
     if (this.jumpDiveRoutine != null)
       return;
-    this.jumpDiveRoutine = this.StartCoroutine((IEnumerator) this.JumpDiveRoutine());
+    this.jumpDiveRoutine = this.StartCoroutine(this.JumpDiveRoutine());
   }
 
   public void StopJumpDiveAttackEarly()
@@ -798,7 +798,7 @@ public class EnemyWoodmanBig : UnitObject
     enemyWoodmanBig.transform.position = targetPosition;
     if (!string.IsNullOrEmpty(enemyWoodmanBig.AttackJumpLandSFX))
       AudioManager.Instance.PlayOneShot(enemyWoodmanBig.AttackJumpLandSFX, enemyWoodmanBig.gameObject);
-    yield return (object) enemyWoodmanBig.StartCoroutine((IEnumerator) enemyWoodmanBig.JumpRecoveryRoutine());
+    yield return (object) enemyWoodmanBig.StartCoroutine(enemyWoodmanBig.JumpRecoveryRoutine());
     enemyWoodmanBig.state.CURRENT_STATE = StateMachine.State.Idle;
     enemyWoodmanBig.isJumpDiving = false;
     enemyWoodmanBig.FindPath(enemyWoodmanBig.TargetPosition);

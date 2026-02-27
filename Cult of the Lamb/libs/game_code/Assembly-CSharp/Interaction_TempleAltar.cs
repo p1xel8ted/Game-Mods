@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TempleAltar
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -192,17 +192,17 @@ public class Interaction_TempleAltar : Interaction
     this.Collider.enabled = false;
     if (!this.initialInteraction && this.FollowersReadyForLevelUp())
     {
-      this.StartCoroutine((IEnumerator) this.BulkLevelFollowers());
+      this.StartCoroutine(this.BulkLevelFollowers());
     }
     else
     {
       if (!this.initialInteraction && Ritual.FollowerToAttendSermon != null && Ritual.FollowerToAttendSermon.Count > 0)
-        GameManager.GetInstance().StartCoroutine((IEnumerator) Interaction_TempleAltar.Instance.FollowersEnterForSermonRoutine(true));
+        GameManager.GetInstance().StartCoroutine(Interaction_TempleAltar.Instance.FollowersEnterForSermonRoutine(true));
       this.previousWasSermon = false;
-      this.StartCoroutine((IEnumerator) this.WaitForPlayersToGetIntoPosition((System.Action) (() =>
+      this.StartCoroutine(this.WaitForPlayersToGetIntoPosition((System.Action) (() =>
       {
         this.Collider.enabled = true;
-        this.StartCoroutine((IEnumerator) this.DelayMenu());
+        this.StartCoroutine(this.DelayMenu());
         this.initialInteraction = false;
       })));
     }
@@ -335,7 +335,7 @@ public class Interaction_TempleAltar : Interaction
       GameManager.GetInstance().OnConversationNext(this.state.gameObject, 6f);
       AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/start_ritual", this.playerFarming.gameObject);
       this.RitualAvailableAnimator.Play("Hidden");
-      this.StartCoroutine((IEnumerator) this.OpenRitualMenuRoutine());
+      this.StartCoroutine(this.OpenRitualMenuRoutine());
       this.Activated = false;
     }
   }
@@ -385,7 +385,7 @@ public class Interaction_TempleAltar : Interaction
     GameManager.GetInstance().OnConversationNext(this.state.gameObject, 6f);
     AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/start_ritual", this.playerFarming.gameObject);
     this.RitualAvailableAnimator.Play("Hidden");
-    this.StartCoroutine((IEnumerator) this.OpenPlayerUpgradeRoutine());
+    this.StartCoroutine(this.OpenPlayerUpgradeRoutine());
     this.Activated = false;
   }
 
@@ -410,7 +410,7 @@ public class Interaction_TempleAltar : Interaction
 
   public void DoCancel()
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.TryOnboardSin((System.Action) (() =>
+    GameManager.GetInstance().StartCoroutine(this.TryOnboardSin((System.Action) (() =>
     {
       MonoSingleton<UIManager>.Instance.ForceBlockMenus = false;
       MonoSingleton<UIManager>.Instance.ForceDisableSaving = false;
@@ -457,7 +457,7 @@ public class Interaction_TempleAltar : Interaction
               }
             }
             f.CompleteCurrentTask();
-            this.StartCoroutine((IEnumerator) this.DelayCallback(1f, (System.Action) (() =>
+            this.StartCoroutine(this.DelayCallback(1f, (System.Action) (() =>
             {
               if (f.CurrentTaskType != FollowerTaskType.AttendTeaching)
                 return;
@@ -468,7 +468,7 @@ public class Interaction_TempleAltar : Interaction
       }
       this.ResetSprite();
       ChurchFollowerManager.Instance.ClearAudienceBrains();
-      this.StartCoroutine((IEnumerator) this.MidasStealDonationsIE((System.Action) (() =>
+      this.StartCoroutine(this.MidasStealDonationsIE((System.Action) (() =>
       {
         this.performedSermon = false;
         this.state.CURRENT_STATE = StateMachine.State.Idle;
@@ -576,10 +576,10 @@ public class Interaction_TempleAltar : Interaction
       float q = 0.0f;
       DOTween.To((DOGetter<float>) (() => q), (DOSetter<float>) (x => q = x), 1f, 1f).OnUpdate<TweenerCore<float, float, FloatOptions>>((TweenCallback) (() => GameManager.GetInstance().CamFollowTarget.SetOffset(Vector3.Lerp(Vector3.zero, Vector3.forward * 2.25f, q))));
       ChurchFollowerManager.Instance.RedLightingVolume.gameObject.SetActive(true);
-      interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.ShakeScreen());
-      interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.Rumble());
+      interactionTempleAltar.StartCoroutine(interactionTempleAltar.ShakeScreen());
+      interactionTempleAltar.StartCoroutine(interactionTempleAltar.Rumble());
       interactionTempleAltar.ResetSprite();
-      interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.sinOnboardingMenu.SinIntroSequenceIE(new Vector3(0.15f, interactionTempleAltar.playerFarming.CrownBone.position.y, interactionTempleAltar.playerFarming.CrownBone.position.z), spawnPos - Vector3.forward * 5f));
+      interactionTempleAltar.StartCoroutine(interactionTempleAltar.sinOnboardingMenu.SinIntroSequenceIE(new Vector3(0.15f, interactionTempleAltar.playerFarming.CrownBone.position.y, interactionTempleAltar.playerFarming.CrownBone.position.z), spawnPos - Vector3.forward * 5f));
       interactionTempleAltar.playerFarming.state.CURRENT_STATE = StateMachine.State.CustomAnimation;
       yield return (object) new WaitForEndOfFrame();
       interactionTempleAltar.playerFarming.state.LockStateChanges = true;
@@ -611,7 +611,7 @@ public class Interaction_TempleAltar : Interaction
       ChurchFollowerManager.Instance.PlayOverlay(ChurchFollowerManager.OverlayType.Sacrifice, "snakes-combined");
       AudioManager.Instance.PlayOneShot("event:/rituals/snakes_hissing");
       MMVibrate.Haptic(MMVibrate.HapticTypes.HeavyImpact, interactionTempleAltar.playerFarming);
-      interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.SpawnSnakes(spawnPos));
+      interactionTempleAltar.StartCoroutine(interactionTempleAltar.SpawnSnakes(spawnPos));
       yield return (object) new WaitForSeconds(0.5f);
       foreach (Follower follower2 in followers)
       {
@@ -647,7 +647,7 @@ public class Interaction_TempleAltar : Interaction
         double num = (double) follower.SetBodyAnimation("idle-ritual-up", true);
       }
       DataManager.Instance.PleasureRevealed = true;
-      yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.sinOnboardingMenu.CrownSequence());
+      yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.sinOnboardingMenu.CrownSequence());
       GameManager.GetInstance().CamFollowTarget.MoveSpeed /= 2f;
       yield return (object) new WaitForSeconds(0.5f);
       MonoSingleton<UIManager>.Instance.ForceBlockPause = false;
@@ -778,9 +778,9 @@ public class Interaction_TempleAltar : Interaction
     interactionTempleAltar.playerFarming.simpleSpineAnimator.Animate("build", 0, true);
     AudioManager.Instance.PlayOneShot("event:/sermon/start_sermon", interactionTempleAltar.playerFarming.gameObject);
     AudioManager.Instance.PlayOneShot("event:/building/building_bell_ring", interactionTempleAltar.playerFarming.gameObject);
-    interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.CentrePlayer());
+    interactionTempleAltar.StartCoroutine(interactionTempleAltar.CentrePlayer());
     GameManager.GetInstance().OnConversationNext(interactionTempleAltar.playerFarming.CameraBone, 12f);
-    yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.FollowersEnterForSermonRoutine());
+    yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.FollowersEnterForSermonRoutine());
     SimulationManager.Pause();
     GameManager.GetInstance().OnConversationNext(interactionTempleAltar.playerFarming.CameraBone, 7f);
     GameManager.GetInstance().CameraSetOffset(new Vector3(0.0f, 0.0f, -0.5f));
@@ -805,7 +805,7 @@ public class Interaction_TempleAltar : Interaction
       Debug.Log((object) "A");
       interactionTempleAltar.SermonCategory = SermonCategory.Special;
       interactionTempleAltar.SermonsStillAvailable = true;
-      interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.GatherFollowers());
+      interactionTempleAltar.StartCoroutine(interactionTempleAltar.GatherFollowers());
     }
     else if (interactionTempleAltar.SermonsStillAvailable)
     {
@@ -837,7 +837,7 @@ public class Interaction_TempleAltar : Interaction
         else
         {
           this.SermonCategory = finalisedCategory;
-          this.StartCoroutine((IEnumerator) this.GatherFollowers());
+          this.StartCoroutine(this.GatherFollowers());
           AudioManager.Instance.PlayOneShot("event:/sermon/select_sermon", this.playerFarming.gameObject);
         }
       });
@@ -846,7 +846,7 @@ public class Interaction_TempleAltar : Interaction
     else
     {
       interactionTempleAltar.SermonCategory = SermonCategory.None;
-      interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.GatherFollowers());
+      interactionTempleAltar.StartCoroutine(interactionTempleAltar.GatherFollowers());
     }
   }
 
@@ -903,7 +903,7 @@ public class Interaction_TempleAltar : Interaction
       float xp = DoctrineUpgradeSystem.GetXPBySermon(interactionTempleAltar.SermonCategory);
       float target = DoctrineUpgradeSystem.GetXPTargetBySermon(interactionTempleAltar.SermonCategory);
       float num = 1.5f - (target - xp);
-      yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.Show(xp, interactionTempleAltar.SermonCategory));
+      yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.Show(xp, interactionTempleAltar.SermonCategory));
       GameManager.GetInstance().OnConversationNext(interactionTempleAltar.playerFarming.CameraBone, 11f);
       int studyIncrementCount = Mathf.FloorToInt(DataManager.Instance.TempleStudyXP / 0.1f);
       float delay = 1.5f / (float) studyIncrementCount;
@@ -923,17 +923,17 @@ public class Interaction_TempleAltar : Interaction
           if ((double) xp >= (double) target)
           {
             yield return (object) new WaitForSeconds(0.5f);
-            yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+            yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
             AudioManager.Instance.PlayOneShot("event:/sermon/upgrade_menu_appear");
-            yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
-            yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.Hide());
-            yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.AskQuestionRoutine(InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE));
+            yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
+            yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.Hide());
+            yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.AskQuestionRoutine(InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE));
             xp = 0.0f;
             if (DoctrineUpgradeSystem.GetLevelBySermon(interactionTempleAltar.SermonCategory) < 4)
             {
               if (i < studyIncrementCount - 1)
               {
-                yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.Show(0.0f, interactionTempleAltar.SermonCategory));
+                yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.Show(0.0f, interactionTempleAltar.SermonCategory));
                 interactionTempleAltar.barLocalXP = 0.0f;
               }
             }
@@ -942,7 +942,7 @@ public class Interaction_TempleAltar : Interaction
           }
         }
         yield return (object) new WaitForSeconds(1f);
-        yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+        yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
         yield return (object) new WaitForSeconds(0.5f);
       }
       int followersCount = Ritual.FollowerToAttendSermon.Count;
@@ -962,16 +962,16 @@ public class Interaction_TempleAltar : Interaction
         if ((double) xp >= (double) target)
         {
           yield return (object) new WaitForSeconds(0.5f);
-          yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
-          yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
-          yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.Hide());
-          yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.AskQuestionRoutine(InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE));
+          yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+          yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.FlashBarRoutine(0.3f, 1f));
+          yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.Hide());
+          yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.AskQuestionRoutine(InventoryItem.ITEM_TYPE.CRYSTAL_DOCTRINE_STONE));
           xp = 0.0f;
           if (DoctrineUpgradeSystem.GetLevelBySermon(interactionTempleAltar.SermonCategory) < 4)
           {
             if (count < followersCount - 1)
             {
-              yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.Show(0.0f, interactionTempleAltar.SermonCategory));
+              yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.Show(0.0f, interactionTempleAltar.SermonCategory));
               interactionTempleAltar.barLocalXP = 0.0f;
             }
           }
@@ -983,7 +983,7 @@ public class Interaction_TempleAltar : Interaction
       while (count < followersCount);
       ChurchFollowerManager.Instance.EndSermonEffect();
       yield return (object) new WaitForSeconds(0.5f);
-      yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
+      yield return (object) interactionTempleAltar.StartCoroutine(interactionTempleAltar.UIDoctrineBar.UpdateSecondBar(xp, 0.5f));
       yield return (object) new WaitForSeconds(0.5f);
       UnityEngine.Object.Destroy((UnityEngine.Object) interactionTempleAltar.UIDoctrineBar.gameObject);
       DoctrineUpgradeSystem.SetXPBySermon(interactionTempleAltar.SermonCategory, xp);
@@ -1021,7 +1021,7 @@ public class Interaction_TempleAltar : Interaction
         else
           allBrain.AddThought(Thought.WatchedSermon);
         allBrain.AddAdoration(FollowerBrain.AdorationActions.Sermon, (System.Action) null);
-        interactionTempleAltar.StartCoroutine((IEnumerator) interactionTempleAltar.DelayFollowerReaction(allBrain, UnityEngine.Random.Range(0.1f, 0.5f)));
+        interactionTempleAltar.StartCoroutine(interactionTempleAltar.DelayFollowerReaction(allBrain, UnityEngine.Random.Range(0.1f, 0.5f)));
         FollowerManager.FindFollowerByID(allBrain.Info.ID)?.ShowAllFollowerIcons(false);
       }
     }
@@ -1053,7 +1053,7 @@ public class Interaction_TempleAltar : Interaction
   public void IncrementXPBar()
   {
     this.barLocalXP += 0.1f;
-    this.StartCoroutine((IEnumerator) this.UIDoctrineBar.UpdateFirstBar(this.barLocalXP, 0.1f));
+    this.StartCoroutine(this.UIDoctrineBar.UpdateFirstBar(this.barLocalXP, 0.1f));
   }
 
   public IEnumerator AskQuestionRoutine(InventoryItem.ITEM_TYPE currency)
@@ -1156,8 +1156,8 @@ public class Interaction_TempleAltar : Interaction
       {
         AudioManager.Instance.PlayOneShot("event:/ritual_sacrifice/start_ritual", playerFarming.gameObject);
         this.RitualAvailableAnimator.Play("Hidden");
-        this.StartCoroutine((IEnumerator) this.CentrePlayer());
-        this.StartCoroutine((IEnumerator) this.OpenRitualMenuRoutine());
+        this.StartCoroutine(this.CentrePlayer());
+        this.StartCoroutine(this.OpenRitualMenuRoutine());
       }));
     }
   }
@@ -1219,14 +1219,14 @@ public class Interaction_TempleAltar : Interaction
         this.CurrentRitual = (Ritual) flockOfTheFaithful;
         break;
       case UpgradeSystem.Type.Ritual_UnlockWeapon:
-        this.StartCoroutine((IEnumerator) this.DelayCallback(0.5f, (System.Action) (() => (UnityEngine.Object.Instantiate(Resources.Load("Prefabs/UI/UI Unlock Weapon"), GameObject.FindWithTag("Canvas").transform) as GameObject).GetComponent<UIUnlockWeapon>().Init((System.Action) (() =>
+        this.StartCoroutine(this.DelayCallback(0.5f, (System.Action) (() => (UnityEngine.Object.Instantiate(Resources.Load("Prefabs/UI/UI Unlock Weapon"), GameObject.FindWithTag("Canvas").transform) as GameObject).GetComponent<UIUnlockWeapon>().Init((System.Action) (() =>
         {
           this.CurrentRitual = (Ritual) this.gameObject.AddComponent<RitualUnlockWeapon>();
           this.CurrentRitual.Play();
         }), (System.Action) (() => this.OpenRitualMenu())))));
         break;
       case UpgradeSystem.Type.Ritual_UnlockCurse:
-        this.StartCoroutine((IEnumerator) this.DelayCallback(0.5f, (System.Action) (() => (UnityEngine.Object.Instantiate(Resources.Load("Prefabs/UI/UI Unlock Curse"), GameObject.FindWithTag("Canvas").transform) as GameObject).GetComponent<UIUnlockCurse>().Init((System.Action) (() =>
+        this.StartCoroutine(this.DelayCallback(0.5f, (System.Action) (() => (UnityEngine.Object.Instantiate(Resources.Load("Prefabs/UI/UI Unlock Curse"), GameObject.FindWithTag("Canvas").transform) as GameObject).GetComponent<UIUnlockCurse>().Init((System.Action) (() =>
         {
           this.CurrentRitual = (Ritual) this.gameObject.AddComponent<RitualUnlockCurse>();
           this.CurrentRitual.Play();
@@ -1405,13 +1405,13 @@ public class Interaction_TempleAltar : Interaction
   public void UnlockHeartsCallback(bool cancelled)
   {
     Ritual.OnEnd -= new System.Action<bool>(this.UnlockHeartsCallback);
-    this.StartCoroutine((IEnumerator) this.UnlockHeartsCallbackRoutine());
+    this.StartCoroutine(this.UnlockHeartsCallbackRoutine());
   }
 
   public IEnumerator UnlockHeartsCallbackRoutine()
   {
     yield return (object) new WaitForSeconds(5f);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) UpgradeSystem.ListOfUnlocksRoutine());
+    GameManager.GetInstance().StartCoroutine(UpgradeSystem.ListOfUnlocksRoutine());
   }
 
   public void RitualOnEnd(bool cancelled)
@@ -1433,7 +1433,7 @@ public class Interaction_TempleAltar : Interaction
       AchievementsWrapper.UnlockAchievement(Unify.Achievements.Instance.Lookup("FIRST_RITUAL"));
       ObjectiveManager.CompleteCustomObjective(Objectives.CustomQuestTypes.PerformAnyRitual);
       if (!DataManager.Instance.ShowLoyaltyBars)
-        GameManager.GetInstance().StartCoroutine((IEnumerator) this.WaitForConversationToEnd((System.Action) (() =>
+        GameManager.GetInstance().StartCoroutine(this.WaitForConversationToEnd((System.Action) (() =>
         {
           Onboarding.Instance.RatLoyalty.SetActive(true);
           Onboarding.Instance.RatLoyalty.GetComponent<Interaction_SimpleConversation>().Play();
@@ -1441,7 +1441,7 @@ public class Interaction_TempleAltar : Interaction
       switch (this.RitualType)
       {
         case UpgradeSystem.Type.Ritual_Sacrifice:
-          this.StartCoroutine((IEnumerator) this.UnlockSacrifices());
+          this.StartCoroutine(this.UnlockSacrifices());
           UpgradeSystem.AddCooldown(this.RitualType, 8400f);
           break;
         case UpgradeSystem.Type.Ritual_ConsumeFollower:
@@ -1564,7 +1564,7 @@ public class Interaction_TempleAltar : Interaction
     }
     if (this.playerLeftDuringRitual)
     {
-      this.StartCoroutine((IEnumerator) this.DelayRemoveCoopDuringRitual());
+      this.StartCoroutine(this.DelayRemoveCoopDuringRitual());
       this.playerLeftDuringRitual = false;
     }
     else
@@ -1602,7 +1602,7 @@ public class Interaction_TempleAltar : Interaction
 
   public void GetAbilityRoutine(UpgradeSystem.Type Type)
   {
-    this.StartCoroutine((IEnumerator) this.GetAbilityRoutineIE(Type));
+    this.StartCoroutine(this.GetAbilityRoutineIE(Type));
   }
 
   public IEnumerator UnlockSacrifices()
@@ -1695,7 +1695,7 @@ public class Interaction_TempleAltar : Interaction
 
   public void GetFleeceRoutine(int oldFleece, int newFleece)
   {
-    this.StartCoroutine((IEnumerator) this.GetFleeceRoutineIE(oldFleece, newFleece));
+    this.StartCoroutine(this.GetFleeceRoutineIE(oldFleece, newFleece));
   }
 
   public IEnumerator GetFleeceRoutineIE(int oldFleece, int newFleece)
@@ -1763,7 +1763,7 @@ public class Interaction_TempleAltar : Interaction
     Ritual ritual = interactionTempleAltar.gameObject.AddComponent<Ritual>();
     if (num1 == 0)
     {
-      yield return (object) interactionTempleAltar.StartCoroutine((IEnumerator) ritual.WaitFollowersFormCircle(putOnHoods: false, zoom: 8f));
+      yield return (object) interactionTempleAltar.StartCoroutine(ritual.WaitFollowersFormCircle(putOnHoods: false, zoom: 8f));
       foreach (FollowerBrain followerBrain in Ritual.FollowerToAttendSermon)
       {
         Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
@@ -1806,7 +1806,7 @@ public class Interaction_TempleAltar : Interaction
         Follower followerById = FollowerManager.FindFollowerByID(followerBrain.Info.ID);
         if ((UnityEngine.Object) followerById != (UnityEngine.Object) null)
         {
-          interactionTempleAltar.StartCoroutine((IEnumerator) followerById.GetComponent<interaction_FollowerInteraction>().LevelUpRoutineTemple(interactionTempleAltar.playerFarming));
+          interactionTempleAltar.StartCoroutine(followerById.GetComponent<interaction_FollowerInteraction>().LevelUpRoutineTemple(interactionTempleAltar.playerFarming));
           yield return (object) new WaitForSeconds(0.5f);
         }
       }
@@ -1829,7 +1829,7 @@ public class Interaction_TempleAltar : Interaction
   public void \u003COnInteract\u003Eb__58_0()
   {
     this.Collider.enabled = true;
-    this.StartCoroutine((IEnumerator) this.DelayMenu());
+    this.StartCoroutine(this.DelayMenu());
     this.initialInteraction = false;
   }
 
@@ -1916,7 +1916,7 @@ public class Interaction_TempleAltar : Interaction
             }
           }
           f.CompleteCurrentTask();
-          this.StartCoroutine((IEnumerator) this.DelayCallback(1f, (System.Action) (() =>
+          this.StartCoroutine(this.DelayCallback(1f, (System.Action) (() =>
           {
             if (f.CurrentTaskType != FollowerTaskType.AttendTeaching)
               return;
@@ -1927,7 +1927,7 @@ public class Interaction_TempleAltar : Interaction
     }
     this.ResetSprite();
     ChurchFollowerManager.Instance.ClearAudienceBrains();
-    this.StartCoroutine((IEnumerator) this.MidasStealDonationsIE((System.Action) (() =>
+    this.StartCoroutine(this.MidasStealDonationsIE((System.Action) (() =>
     {
       this.performedSermon = false;
       this.state.CURRENT_STATE = StateMachine.State.Idle;

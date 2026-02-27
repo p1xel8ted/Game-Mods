@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HourGlass
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine;
@@ -47,7 +47,7 @@ public class HourGlass : BaseMonoBehaviour
 
   public void Start() => this.CurrentState = HourGlass.State.idle;
 
-  public void TurnHouseglass() => this.StartCoroutine((IEnumerator) this.OpenDoors());
+  public void TurnHouseglass() => this.StartCoroutine(this.OpenDoors());
 
   public IEnumerator DoTurn()
   {
@@ -62,8 +62,8 @@ public class HourGlass : BaseMonoBehaviour
       this.\u003C\u003E1__state = -1;
       HUD_Timer.Timer = 120f;
       HUD_Timer.TimerRunning = true;
-      hourGlass.StartCoroutine((IEnumerator) hourGlass.DoActive());
-      hourGlass.StartCoroutine((IEnumerator) hourGlass.OpenDoors());
+      hourGlass.StartCoroutine(hourGlass.DoActive());
+      hourGlass.StartCoroutine(hourGlass.OpenDoors());
       return false;
     }
     // ISSUE: reference to a compiler-generated field

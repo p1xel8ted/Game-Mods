@@ -1,11 +1,10 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: BaseBiomeAreaCulling
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Mathematics;
@@ -78,20 +77,10 @@ public class BaseBiomeAreaCulling : MonoBehaviour
       if (gameObject3.name == "Room")
         gameObject1 = gameObject3;
     }
-    IEnumerator enumerator = (IEnumerator) gameObject1.transform.GetEnumerator();
-    try
+    foreach (Transform transform in gameObject1.transform)
     {
-      while (enumerator.MoveNext())
-      {
-        Transform current = (Transform) enumerator.Current;
-        if (current.gameObject.name == "SceneryTransform")
-          gameObject2 = current.gameObject;
-      }
-    }
-    finally
-    {
-      if (enumerator is IDisposable disposable)
-        disposable.Dispose();
+      if (transform.gameObject.name == "SceneryTransform")
+        gameObject2 = transform.gameObject;
     }
     Queue<Transform> transformQueue = new Queue<Transform>((IEnumerable<Transform>) gameObject2.GetComponentsInChildren<Transform>(true));
     this.AddCullableAreasToList();

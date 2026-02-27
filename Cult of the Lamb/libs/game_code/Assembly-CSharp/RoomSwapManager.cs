@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: RoomSwapManager
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMRoomGeneration;
@@ -55,7 +55,7 @@ public class RoomSwapManager : BaseMonoBehaviour
     if ((Object) this.Church != (Object) null && this.Church.activeSelf)
       this.ActivateRoom();
     else
-      this.StartCoroutine((IEnumerator) this.ActivateChurch());
+      this.StartCoroutine(this.ActivateChurch());
   }
 
   public IEnumerator ActivateChurch()
@@ -74,7 +74,7 @@ public class RoomSwapManager : BaseMonoBehaviour
     AudioManager.Instance.PlayOneShot("event:/enter_leave_buildings/enter_building", PlayerFarming.Instance.gameObject);
     if (SeasonsManager.CurrentWeatherEvent == SeasonsManager.WeatherEvent.Blizzard)
       AudioManager.Instance.StopCurrentAtmos();
-    yield return (object) roomSwapManager.StartCoroutine((IEnumerator) roomSwapManager.LoadAddressableAsset());
+    yield return (object) roomSwapManager.StartCoroutine(roomSwapManager.LoadAddressableAsset());
     yield return (object) null;
     roomSwapManager.Church.SetActive(true);
     if (roomSwapManager.ChurchUpdatePathfindingAndCollisions && roomSwapManager.ChurchUpadteGenerateRoomPathfinding)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_RanchHutch
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -116,7 +116,7 @@ public class Interaction_RanchHutch : Interaction
         animals.Add(ranchSelectEntry);
       }
     }
-    MonoSingleton<UIManager>.Instance.ShowRanchMatingtMenu(animals, ranch.Brain.Capacity, this).OnAnimalChosen += (System.Action<StructuresData.Ranchable_Animal, StructuresData.Ranchable_Animal>) ((a, b) => this.StartCoroutine((IEnumerator) this.StartMating(a, b)));
+    MonoSingleton<UIManager>.Instance.ShowRanchMatingtMenu(animals, ranch.Brain.Capacity, this).OnAnimalChosen += (System.Action<StructuresData.Ranchable_Animal, StructuresData.Ranchable_Animal>) ((a, b) => this.StartCoroutine(this.StartMating(a, b)));
   }
 
   public RanchSelectEntry.Status GetAnimalAvailablilityStatus(
@@ -202,7 +202,7 @@ public class Interaction_RanchHutch : Interaction
     CameraManager.instance.ShakeCameraForDuration(0.5f, 0.75f, 0.3f);
     GameManager.GetInstance().OnConversationNext(interactionRanchHutch.gameObject, 3f);
     yield return (object) new WaitForSeconds(1f);
-    yield return (object) interactionRanchHutch.StartCoroutine((IEnumerator) interactionRanchHutch.BabyBornIE(ranch));
+    yield return (object) interactionRanchHutch.StartCoroutine(interactionRanchHutch.BabyBornIE(ranch));
   }
 
   public void OnRanchableEnterHutch(
@@ -345,7 +345,7 @@ public class Interaction_RanchHutch : Interaction
     StructuresData.Ranchable_Animal a,
     StructuresData.Ranchable_Animal b)
   {
-    this.StartCoroutine((IEnumerator) this.StartMating(a, b));
+    this.StartCoroutine(this.StartMating(a, b));
   }
 
   [CompilerGenerated]

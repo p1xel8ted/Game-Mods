@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Health
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -548,7 +548,7 @@ public class Health : BaseMonoBehaviour
 
   public static void DamageAllEnemies(float damage, Health.DamageAllEnemiesType damageType)
   {
-    GameManager.GetInstance().StartCoroutine((IEnumerator) PlayerFarming.Instance.health.DamageAllEnemiesIE(damage, damageType));
+    GameManager.GetInstance().StartCoroutine(PlayerFarming.Instance.health.DamageAllEnemiesIE(damage, damageType));
   }
 
   public IEnumerator DamageAllEnemiesIE(float damage, Health.DamageAllEnemiesType damageType)
@@ -646,511 +646,537 @@ public class Health : BaseMonoBehaviour
       AttackFlags |= Health.AttackFlags.Crit;
     if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null)
       this.Velocity = AttackLocation - Attacker.transform.position;
-    if (this.isPlayer)
+    if (dealDamageImmediately)
     {
-      if (dealDamageImmediately)
-      {
+      if (this.isPlayer)
         MMVibrate.Haptic(MMVibrate.HapticTypes.HeavyImpact, this.playerFarming, coroutineSupport: (MonoBehaviour) this);
-        this.damageEventQueue = (Health.DealDamageEvent) null;
-      }
-      if (!dealDamageImmediately)
+      this.damageEventQueue = (Health.DealDamageEvent) null;
+      if (this.isPlayer)
       {
-        if (this.damageEventQueue != null)
-          return false;
-        this.damageEventQueue = new Health.DealDamageEvent(Time.unscaledTime, Damage, Attacker, AttackLocation, BreakBlocking, AttackType, AttackFlags);
-        return true;
-      }
-      PlayerWeapon.EquippedWeaponsInfo currentWeaponInfo = this.playerFarming.CurrentWeaponInfo;
-      bool flag1 = false;
-      bool flag2 = this.ChanceToNegateDamage(currentWeaponInfo.NegateDamageChance + TrinketManager.GetNegateDamageChance(this.playerFarming)) || flag1;
-      bool flag3 = TrinketManager.CanNegateDamage(this.playerFarming) && this.state.CURRENT_STATE == StateMachine.State.Heal || flag2;
-      PlayerWeapon component1 = this.GetComponent<PlayerWeapon>();
-      if ((UnityEngine.Object) component1 != (UnityEngine.Object) null && component1.ChargedNegation)
-      {
-        flag3 = true;
-        component1.ChargedNegation = false;
-      }
-      if (flag3)
-      {
-        if (TrinketManager.HasTrinket(TarotCards.Card.MutatedNegateHit, this.playerFarming))
+        PlayerWeapon.EquippedWeaponsInfo currentWeaponInfo = this.playerFarming.CurrentWeaponInfo;
+        bool flag1 = false;
+        bool flag2 = this.ChanceToNegateDamage(currentWeaponInfo.NegateDamageChance + TrinketManager.GetNegateDamageChance(this.playerFarming)) || flag1;
+        bool flag3 = TrinketManager.CanNegateDamage(this.playerFarming) && this.state.CURRENT_STATE == StateMachine.State.Heal || flag2;
+        PlayerWeapon component1 = this.GetComponent<PlayerWeapon>();
+        if ((UnityEngine.Object) component1 != (UnityEngine.Object) null && component1.ChargedNegation)
         {
-          if ((UnityEngine.Object) health == (UnityEngine.Object) null)
-          {
-            GameObject spellOwner = Health.GetSpellOwner(Attacker);
-            if ((UnityEngine.Object) spellOwner != (UnityEngine.Object) null)
-              health = spellOwner.GetComponent<Health>();
-          }
-          if ((UnityEngine.Object) health != (UnityEngine.Object) null)
-            health.DealDamage(component1.GetAverageWeaponDamage(this.playerFarming.currentWeapon, this.playerFarming.currentWeaponLevel), this.gameObject, AttackLocation);
+          flag3 = true;
+          component1.ChargedNegation = false;
         }
-        AudioManager.Instance.PlayOneShot("event:/dlc/combat/defended_impact", this.transform.position);
-        System.Action onDamageNegated = this.OnDamageNegated;
-        if (onDamageNegated != null)
-          onDamageNegated();
-        this.NegatedDamage(AttackLocation);
-        return false;
-      }
-      if ((double) this.HP == 1.0)
-      {
-        float num = DifficultyManager.GetChanceOfNegatingDeath() + (PlayerWeapon.FirstTimeUsingWeapon ? 0.2f : 0.0f);
-        if ((double) UnityEngine.Random.Range(0.0f, 1f) <= (double) num)
-          return false;
-      }
-      this.playerFarming.GetBlackSoul(TrinketManager.GetBlackSoulsOnDamaged(this.playerFarming), false);
-      if (TrinketManager.DropBlackGoopOnDamaged(this.playerFarming))
-        TrapGoop.CreateGoop(position1, 5, 0.5f, this.playerFarming.gameObject, GenerateRoom.Instance.transform);
-      if (TrinketManager.DropBombOnDamaged(this.playerFarming) && !TrinketManager.IsOnCooldown(TarotCards.Card.BombOnDamaged, this.playerFarming))
-      {
-        Bomb.CreateBomb(position1, this, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent);
-        TrinketManager.TriggerCooldown(TarotCards.Card.BombOnDamaged, this.playerFarming);
-      }
-      if (TrinketManager.DropTentacleOnDamaged(this.playerFarming) && !TrinketManager.IsOnCooldown(TarotCards.Card.TentacleOnDamaged, this.playerFarming))
-      {
-        float Duration = 10f;
-        CurseData curseData = EquipmentManager.GetCurseData(EquipmentType.TENTACLE_TAROT_REF);
-        Tentacle t = UnityEngine.Object.Instantiate<GameObject>(curseData.Prefab, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent, true).GetComponent<Tentacle>();
-        t.transform.position = position1;
-        t.GetComponent<Health>().enabled = false;
-        GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(curseData.SecondaryPrefab, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent);
-        gameObject.transform.position = position1 - Vector3.right;
-        gameObject.GetComponent<FX_CrackController>().duration = Duration + 0.5f;
-        float damage = curseData.Damage;
-        t.Play(0.0f, Duration, damage * PlayerSpells.GetCurseDamageMultiplier(this.playerFarming), this.team, false, 0, true, true);
-        TrinketManager.TriggerCooldown(TarotCards.Card.TentacleOnDamaged, this.playerFarming);
-        CameraManager.instance.ShakeCameraForDuration(0.6f, 0.8f, 0.25f);
-        AudioManager.Instance.PlayOneShot("event:/material/stone_break", this.gameObject);
-        AudioManager.Instance.PlayOneShot("event:/followers/break_free", this.gameObject);
-        BiomeConstants.Instance.EmitParticleChunk(BiomeConstants.TypeOfParticle.stone, t.transform.position, Vector3.one, 5);
-        GameManager.GetInstance().WaitForSeconds(Duration + 0.5f, (System.Action) (() =>
+        if (flag3)
         {
-          if (!((UnityEngine.Object) t != (UnityEngine.Object) null))
-            return;
+          if (TrinketManager.HasTrinket(TarotCards.Card.MutatedNegateHit, this.playerFarming))
+          {
+            if ((UnityEngine.Object) health == (UnityEngine.Object) null)
+            {
+              GameObject spellOwner = Health.GetSpellOwner(Attacker);
+              if ((UnityEngine.Object) spellOwner != (UnityEngine.Object) null)
+                health = spellOwner.GetComponent<Health>();
+            }
+            if ((UnityEngine.Object) health != (UnityEngine.Object) null)
+              health.DealDamage(component1.GetAverageWeaponDamage(this.playerFarming.currentWeapon, this.playerFarming.currentWeaponLevel), this.gameObject, AttackLocation);
+          }
+          AudioManager.Instance.PlayOneShot("event:/dlc/combat/defended_impact", this.transform.position);
+          System.Action onDamageNegated = this.OnDamageNegated;
+          if (onDamageNegated != null)
+            onDamageNegated();
+          this.NegatedDamage(AttackLocation);
+          return false;
+        }
+        if ((double) this.HP == 1.0)
+        {
+          float num = DifficultyManager.GetChanceOfNegatingDeath() + (PlayerWeapon.FirstTimeUsingWeapon ? 0.2f : 0.0f);
+          if ((double) UnityEngine.Random.Range(0.0f, 1f) <= (double) num)
+            return false;
+        }
+        this.playerFarming.GetBlackSoul(TrinketManager.GetBlackSoulsOnDamaged(this.playerFarming), false);
+        if (TrinketManager.DropBlackGoopOnDamaged(this.playerFarming))
+          TrapGoop.CreateGoop(position1, 5, 0.5f, this.playerFarming.gameObject, GenerateRoom.Instance.transform);
+        if (TrinketManager.DropBombOnDamaged(this.playerFarming) && !TrinketManager.IsOnCooldown(TarotCards.Card.BombOnDamaged, this.playerFarming))
+        {
+          Bomb.CreateBomb(position1, this, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent);
+          TrinketManager.TriggerCooldown(TarotCards.Card.BombOnDamaged, this.playerFarming);
+        }
+        if (TrinketManager.DropTentacleOnDamaged(this.playerFarming) && !TrinketManager.IsOnCooldown(TarotCards.Card.TentacleOnDamaged, this.playerFarming))
+        {
+          float Duration = 10f;
+          CurseData curseData = EquipmentManager.GetCurseData(EquipmentType.TENTACLE_TAROT_REF);
+          Tentacle t = UnityEngine.Object.Instantiate<GameObject>(curseData.Prefab, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent, true).GetComponent<Tentacle>();
+          t.transform.position = position1;
+          t.GetComponent<Health>().enabled = false;
+          GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(curseData.SecondaryPrefab, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent);
+          gameObject.transform.position = position1 - Vector3.right;
+          gameObject.GetComponent<FX_CrackController>().duration = Duration + 0.5f;
+          float damage = curseData.Damage;
+          t.Play(0.0f, Duration, damage * PlayerSpells.GetCurseDamageMultiplier(this.playerFarming), this.team, false, 0, true, true);
+          TrinketManager.TriggerCooldown(TarotCards.Card.TentacleOnDamaged, this.playerFarming);
+          CameraManager.instance.ShakeCameraForDuration(0.6f, 0.8f, 0.25f);
           AudioManager.Instance.PlayOneShot("event:/material/stone_break", this.gameObject);
           AudioManager.Instance.PlayOneShot("event:/followers/break_free", this.gameObject);
-          CameraManager.instance.ShakeCameraForDuration(0.3f, 0.5f, 0.2f);
-          BiomeConstants.Instance.EmitSmokeExplosionVFX(t.transform.position);
-          BiomeConstants.Instance.EmitParticleChunk(BiomeConstants.TypeOfParticle.stone, t.transform.position, Vector3.one, 10);
-        }));
-      }
-      if (TrinketManager.StrikeLightningOnDamaged(this.playerFarming))
-      {
-        ISpellOwning component2 = Attacker.GetComponent<ISpellOwning>();
-        health = (Health) null;
-        if (component2 != null)
-        {
-          GameObject owner = component2.GetOwner();
-          if ((UnityEngine.Object) owner != (UnityEngine.Object) null)
+          BiomeConstants.Instance.EmitParticleChunk(BiomeConstants.TypeOfParticle.stone, t.transform.position, Vector3.one, 5);
+          GameManager.GetInstance().WaitForSeconds(Duration + 0.5f, (System.Action) (() =>
           {
-            health = owner.GetComponent<Health>();
-            if ((UnityEngine.Object) health == (UnityEngine.Object) this)
-              health = (Health) null;
+            if (!((UnityEngine.Object) t != (UnityEngine.Object) null))
+              return;
+            AudioManager.Instance.PlayOneShot("event:/material/stone_break", this.gameObject);
+            AudioManager.Instance.PlayOneShot("event:/followers/break_free", this.gameObject);
+            CameraManager.instance.ShakeCameraForDuration(0.3f, 0.5f, 0.2f);
+            BiomeConstants.Instance.EmitSmokeExplosionVFX(t.transform.position);
+            BiomeConstants.Instance.EmitParticleChunk(BiomeConstants.TypeOfParticle.stone, t.transform.position, Vector3.one, 10);
+          }));
+        }
+        if (TrinketManager.StrikeLightningOnDamaged(this.playerFarming))
+        {
+          ISpellOwning component2 = Attacker.GetComponent<ISpellOwning>();
+          health = (Health) null;
+          if (component2 != null)
+          {
+            GameObject owner = component2.GetOwner();
+            if ((UnityEngine.Object) owner != (UnityEngine.Object) null)
+            {
+              health = owner.GetComponent<Health>();
+              if ((UnityEngine.Object) health == (UnityEngine.Object) this)
+                health = (Health) null;
+            }
+          }
+          else
+            health = Attacker.GetComponent<Health>();
+          if ((UnityEngine.Object) health != (UnityEngine.Object) null && !health.IsHidden)
+            new LightningStrikeAbility(1).Play(this.gameObject, Health.Team.Team2, 8f, this.playerFarming, true, new List<Health>()
+            {
+              health
+            }, "");
+        }
+        if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedBombsAndHealth, this.playerFarming) && !TrinketManager.IsCorruptedNegativeEffectNegated(TarotCards.Card.CorruptedBombsAndHealth, this.playerFarming))
+        {
+          int ofCorruptedBombs = TrinketManager.GetAmountOfCorruptedBombs(this.playerFarming);
+          for (int index = 0; index < ofCorruptedBombs; ++index)
+            Bomb.CreateBomb(this.transform.position, (Health) null, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent);
+        }
+        if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedTradeOff, this.playerFarming) && !TrinketManager.IsCorruptedPositiveEffectNegated(TarotCards.Card.CorruptedTradeOff, this.playerFarming))
+          this.StartCoroutine(this.DamageAllEnemiesIE((float) TrinketManager.GetDamageTradeOff(this.playerFarming) + DataManager.GetWeaponDamageMultiplier(this.playerFarming.currentWeaponLevel) * 3f, Health.DamageAllEnemiesType.TradeOff));
+        if (TrinketManager.HasTrinket(TarotCards.Card.EasyMoney, this.playerFarming) && DataManager.Instance.PlayerFleece != 8 && (double) UnityEngine.Random.value < (double) TrinketManager.ChanceToDropWoolOnHit(this.playerFarming))
+        {
+          InventoryItem.Spawn(InventoryItem.ITEM_TYPE.WOOL, 1, this.transform.position + Vector3.back, 0.0f);
+          AudioManager.Instance.PlayOneShot("event:/dlc/tarot/shearingblade_trigger", this.transform.position);
+        }
+        if (TrinketManager.HasTrinket(TarotCards.Card.MutatedFreezeOnHit, this.playerFarming) && (double) UnityEngine.Random.value < 0.25)
+          BiomeConstants.Instance.FreezeTime();
+        if (TrinketManager.HasTrinket(TarotCards.Card.HitKillEnemy, this.playerFarming))
+        {
+          Health.team2.Shuffle<Health>();
+          for (int index = Health.team2.Count - 1; index >= 0; --index)
+          {
+            UnitObject component3 = Health.team2[index].GetComponent<UnitObject>();
+            if ((!((UnityEngine.Object) component3 != (UnityEngine.Object) null) || !component3.IsBoss) && (UnityEngine.Object) Health.team2[index] != (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<BossIntro>() == (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<DeathCatController>() == (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<WolfArmPiece>() == (UnityEngine.Object) null && Health.team2[index].CanBeKilledByTarot)
+            {
+              this.StartCoroutine(Health.\u003CDealDamage\u003Eg__DamageEnemy\u007C228_1(Health.team2[index]));
+              break;
+            }
           }
         }
-        else
-          health = Attacker.GetComponent<Health>();
-        if ((UnityEngine.Object) health != (UnityEngine.Object) null && !health.IsHidden)
-          new LightningStrikeAbility(1).Play(this.gameObject, Health.Team.Team2, 8f, this.playerFarming, true, new List<Health>()
-          {
-            health
-          }, "");
+        PlayerFleeceManager.ResetDamageModifier();
+        if (PlayerFleeceManager.FleeceCausesPoisonOnHit())
+          this.AddPoison((GameObject) null, Mathf.Max(2f, DifficultyManager.GetInvincibleTimeMultiplier()));
       }
-      if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedBombsAndHealth, this.playerFarming) && !TrinketManager.IsCorruptedNegativeEffectNegated(TarotCards.Card.CorruptedBombsAndHealth, this.playerFarming))
+      if (this.OnHitEarly != null)
+        this.OnHitEarly(Attacker, AttackLocation, AttackType);
+      if (this.invincible)
+        return false;
+      Health.HealthEvent onDamaged = this.OnDamaged;
+      if (onDamaged != null)
+        onDamaged(Attacker, AttackLocation, Damage, AttackType, AttackFlags);
+      Damage *= this.DamageModifier;
+      if (this.isPlayer)
       {
-        int ofCorruptedBombs = TrinketManager.GetAmountOfCorruptedBombs(this.playerFarming);
-        for (int index = 0; index < ofCorruptedBombs; ++index)
-          Bomb.CreateBomb(this.transform.position, (Health) null, (UnityEngine.Object) GenerateRoom.Instance != (UnityEngine.Object) null ? GenerateRoom.Instance.transform : this.transform.parent);
-      }
-      if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedTradeOff, this.playerFarming) && !TrinketManager.IsCorruptedPositiveEffectNegated(TarotCards.Card.CorruptedTradeOff, this.playerFarming))
-        this.StartCoroutine((IEnumerator) this.DamageAllEnemiesIE((float) TrinketManager.GetDamageTradeOff(this.playerFarming) + DataManager.GetWeaponDamageMultiplier(this.playerFarming.currentWeaponLevel) * 3f, Health.DamageAllEnemiesType.TradeOff));
-      if (TrinketManager.HasTrinket(TarotCards.Card.EasyMoney, this.playerFarming) && DataManager.Instance.PlayerFleece != 8 && (double) UnityEngine.Random.value < (double) TrinketManager.ChanceToDropWoolOnHit(this.playerFarming))
-      {
-        InventoryItem.Spawn(InventoryItem.ITEM_TYPE.WOOL, 1, this.transform.position + Vector3.back, 0.0f);
-        AudioManager.Instance.PlayOneShot("event:/dlc/tarot/shearingblade_trigger", this.transform.position);
-      }
-      if (TrinketManager.HasTrinket(TarotCards.Card.MutatedFreezeOnHit, this.playerFarming) && (double) UnityEngine.Random.value < 0.25)
-        BiomeConstants.Instance.FreezeTime();
-      if (TrinketManager.HasTrinket(TarotCards.Card.HitKillEnemy, this.playerFarming))
-      {
-        Health.team2.Shuffle<Health>();
-        for (int index = Health.team2.Count - 1; index >= 0; --index)
+        switch (PlayerFarming.Location)
         {
-          UnitObject component3 = Health.team2[index].GetComponent<UnitObject>();
-          if ((!((UnityEngine.Object) component3 != (UnityEngine.Object) null) || !component3.IsBoss) && (UnityEngine.Object) Health.team2[index] != (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<BossIntro>() == (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<DeathCatController>() == (UnityEngine.Object) null && (UnityEngine.Object) Health.team2[index].GetComponentInParent<WolfArmPiece>() == (UnityEngine.Object) null && Health.team2[index].CanBeKilledByTarot)
-          {
-            this.StartCoroutine((IEnumerator) Health.\u003CDealDamage\u003Eg__DamageEnemy\u007C228_1(Health.team2[index]));
+          case FollowerLocation.Dungeon1_5:
+            if (!BiomeGenerator.Instance.OnboardingDungeon5)
+              break;
+            goto case FollowerLocation.LambTown;
+          case FollowerLocation.LambTown:
+            Damage = 0.0f;
             break;
-          }
         }
       }
-      PlayerFleeceManager.ResetDamageModifier();
-      if (PlayerFleeceManager.FleeceCausesPoisonOnHit())
-        this.AddPoison((GameObject) null, Mathf.Max(2f, DifficultyManager.GetInvincibleTimeMultiplier()));
-    }
-    if (this.OnHitEarly != null)
-      this.OnHitEarly(Attacker, AttackLocation, AttackType);
-    if (this.invincible)
-      return false;
-    Health.HealthEvent onDamaged = this.OnDamaged;
-    if (onDamaged != null)
-      onDamaged(Attacker, AttackLocation, Damage, AttackType, AttackFlags);
-    Damage *= this.DamageModifier;
-    if (this.isPlayer)
-    {
-      switch (PlayerFarming.Location)
+      bool flag4 = false;
+      if ((bool) (UnityEngine.Object) attackerPlayerFarming)
       {
-        case FollowerLocation.Dungeon1_5:
-          if (!BiomeGenerator.Instance.OnboardingDungeon5)
+        WeaponData weaponData = EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon);
+        if ((UnityEngine.Object) weaponData != (UnityEngine.Object) null && weaponData.EquipmentType == EquipmentType.Sword_Ratau)
+        {
+          flag4 = true;
+          AudioManager.Instance.PlayOneShot("event:/material/wood_impact", position1);
+        }
+      }
+      if (!flag4)
+      {
+        switch (this.ImpactSoundToPlay)
+        {
+          case Health.IMPACT_SFX.IMPACT_BLUNT:
+            AudioManager.Instance.PlayOneShot("event:/enemy/impact_blunt", position1);
             break;
-          goto case FollowerLocation.LambTown;
-        case FollowerLocation.LambTown:
-          Damage = 0.0f;
-          break;
+          case Health.IMPACT_SFX.IMPACT_NORMAL:
+            AudioManager.Instance.PlayOneShot("event:/enemy/impact_normal", position1);
+            break;
+          case Health.IMPACT_SFX.IMPACT_SQUISHY:
+            AudioManager.Instance.PlayOneShot("event:/enemy/impact_squishy", position1);
+            break;
+          case Health.IMPACT_SFX.HIT_SMALL:
+            AudioManager.Instance.PlayOneShot("event:/enemy/gethit_small", position1);
+            break;
+          case Health.IMPACT_SFX.HIT_MEDIUM:
+            AudioManager.Instance.PlayOneShot("event:/enemy/gethit_medium", position1);
+            break;
+          case Health.IMPACT_SFX.HIT_LARGE:
+            AudioManager.Instance.PlayOneShot("event:/enemy/gethit_large", position1);
+            break;
+        }
       }
-    }
-    bool flag4 = false;
-    if ((bool) (UnityEngine.Object) attackerPlayerFarming)
-    {
-      WeaponData weaponData = EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon);
-      if ((UnityEngine.Object) weaponData != (UnityEngine.Object) null && weaponData.EquipmentType == EquipmentType.Sword_Ratau)
+      if (AttackType == Health.AttackTypes.Projectile)
+        Damage *= this.ArrowAttackVulnerability;
+      if (AttackType == Health.AttackTypes.Melee)
+        Damage *= this.MeleeAttackVulnerability;
+      float angle1 = Utils.GetAngle(position1, AttackLocation);
+      if (this.HasShield)
       {
-        flag4 = true;
-        AudioManager.Instance.PlayOneShot("event:/material/wood_impact", position1);
-      }
-    }
-    if (!flag4)
-    {
-      switch (this.ImpactSoundToPlay)
-      {
-        case Health.IMPACT_SFX.IMPACT_BLUNT:
-          AudioManager.Instance.PlayOneShot("event:/enemy/impact_blunt", position1);
-          break;
-        case Health.IMPACT_SFX.IMPACT_NORMAL:
-          AudioManager.Instance.PlayOneShot("event:/enemy/impact_normal", position1);
-          break;
-        case Health.IMPACT_SFX.IMPACT_SQUISHY:
-          AudioManager.Instance.PlayOneShot("event:/enemy/impact_squishy", position1);
-          break;
-        case Health.IMPACT_SFX.HIT_SMALL:
-          AudioManager.Instance.PlayOneShot("event:/enemy/gethit_small", position1);
-          break;
-        case Health.IMPACT_SFX.HIT_MEDIUM:
-          AudioManager.Instance.PlayOneShot("event:/enemy/gethit_medium", position1);
-          break;
-        case Health.IMPACT_SFX.HIT_LARGE:
-          AudioManager.Instance.PlayOneShot("event:/enemy/gethit_large", position1);
-          break;
-      }
-    }
-    if (AttackType == Health.AttackTypes.Projectile)
-      Damage *= this.ArrowAttackVulnerability;
-    if (AttackType == Health.AttackTypes.Melee)
-      Damage *= this.MeleeAttackVulnerability;
-    float angle1 = Utils.GetAngle(position1, AttackLocation);
-    if (this.HasShield)
-    {
-      if ((UnityEngine.Object) attackerPlayerFarming != (UnityEngine.Object) null)
-        ++this.hitsWithShield;
-      if (this.hitsWithShield == 3)
-      {
-        System.Action onTutorialShown = BiomeGenerator.OnTutorialShown;
-        if (onTutorialShown != null)
-          onTutorialShown();
-      }
-      this.HandleShieldBreak(AttackFlags, angle1);
-      Damage *= 0.2f;
-    }
-    if ((bool) (UnityEngine.Object) this.protector)
-    {
-      Attacker.GetComponent<UnitObject>();
-      if ((UnityEngine.Object) this.showHpBar != (UnityEngine.Object) null && (bool) (UnityEngine.Object) this.showHpBar.hpBar && (bool) (UnityEngine.Object) this.showHpBar.hpBar.groupIndicator)
-      {
-        this.showHpBar.hpBar.groupIndicator.transform.localScale = Vector3.one;
-        this.showHpBar.hpBar.groupIndicator.transform.DOKill();
-        this.showHpBar.hpBar.groupIndicator.transform.DOPunchScale(Vector3.one * 1.25f, 0.25f);
-      }
-      Damage *= this.protector.damageMultiplier;
-    }
-    if ((double) Damage > 0.0)
-    {
-      if (this.isPlayer)
-      {
-        DataManager.Instance.PlayerDamageReceived += Damage;
-        DataManager.Instance.PlayerDamageReceivedThisRun += Damage;
-      }
-      else if (this.team == Health.Team.Team2)
-      {
-        DataManager.Instance.PlayerDamageDealtThisRun += Damage;
-        DataManager.Instance.PlayerDamageDealt += Damage;
-        if ((bool) (UnityEngine.Object) attackerPlayerFarming && (UnityEngine.Object) attackerPlayerFarming.playerRelic.CurrentRelic != (UnityEngine.Object) null && !AttackFlags.HasFlag((Enum) Health.AttackFlags.DoesntChargeRelics))
-          attackerPlayerFarming.playerRelic.IncreaseChargedAmount(Damage);
-      }
-      else if (this.team == Health.Team.Neutral && (bool) (UnityEngine.Object) attackerPlayerFarming && (bool) (UnityEngine.Object) attackerPlayerFarming.playerRelic)
-        attackerPlayerFarming.playerRelic.IncreaseChargedAmount(Mathf.Min(Damage / 10f, 1f));
-    }
-    if (!BreakBlocking && (UnityEngine.Object) this.state != (UnityEngine.Object) null && this.state.CURRENT_STATE == StateMachine.State.Defending)
-    {
-      BiomeConstants.Instance.HitFX_Blocked.Spawn(AttackLocation, Quaternion.identity);
-      Damage = 0.0f;
-    }
-    if (this.team == Health.Team.PlayerTeam && !this.IsCharmedEnemy)
-    {
-      float num = DungeonModifier.HasNegativeModifier(DungeonNegativeModifier.DoubleDamage, 2f, 1f) + PlayerFleeceManager.GetDamageReceivedMultiplier();
-      if (this.isPlayer)
-      {
-        if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedTradeOff, this.playerFarming) && !TrinketManager.IsCorruptedNegativeEffectNegated(TarotCards.Card.CorruptedTradeOff, this.playerFarming))
-          num *= (float) TrinketManager.GetEnemyDamageMultiplier(this.playerFarming);
-        if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedPoisonCoins, this.playerFarming) && (AttackFlags.HasFlag((Enum) Health.AttackFlags.Poison) || AttackType == Health.AttackTypes.Poison) && !TrinketManager.IsCorruptedNegativeEffectNegated(TarotCards.Card.CorruptedPoisonCoins, this.playerFarming))
-          num *= (float) TrinketManager.GetEnemyPoisonDamageMultiplier(this.playerFarming);
-      }
-      Damage *= Mathf.Clamp(num, 1f, 2f);
-    }
-    if (this.BlackSoulOnHit && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && (bool) (UnityEngine.Object) attackerPlayerFarming && (AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Bullet) && this.team == Health.Team.Team2 && !this.gameObject.CompareTag("Projectile"))
-    {
-      BlackSoul blackSoul = InventoryItem.SpawnBlackSoul(Mathf.RoundToInt(UnityEngine.Random.Range(1f, 2f) * TrinketManager.GetBlackSoulsMultiplier(attackerPlayerFarming)), position1, true, true);
-      if ((bool) (UnityEngine.Object) blackSoul)
-        blackSoul.SetAngle((float) UnityEngine.Random.Range(0, 360), new Vector2(2f, 4f));
-    }
-    this.HandleFervourOnHit(attackerPlayerFarming, AttackType, position1);
-    if ((double) this.IceHearts > 0.0 && (double) Damage > 0.0)
-    {
-      float iceHearts = this.IceHearts;
-      this.IceHearts -= Damage;
-      Damage -= iceHearts;
-      if ((double) this.IceHearts < 0.0)
-        this.IceHearts = 0.0f;
-      this.ApplyHeartEffects(Health.HeartEffects.Ice);
-    }
-    if ((double) this.FireHearts > 0.0 && (double) Damage > 0.0)
-    {
-      float fireHearts = this.FireHearts;
-      this.FireHearts -= Damage;
-      Damage -= fireHearts;
-      if ((double) this.FireHearts < 0.0)
-        this.FireHearts = 0.0f;
-      this.ApplyHeartEffects(Health.HeartEffects.Fire);
-    }
-    if ((double) this.BlackHearts > 0.0 && (double) Damage > 0.0)
-    {
-      float blackHearts = this.BlackHearts;
-      this.BlackHearts -= Damage;
-      Damage -= blackHearts;
-      if ((double) this.BlackHearts < 0.0)
-        this.BlackHearts = 0.0f;
-      int level = 0;
-      if (this.isPlayer)
-        level = this.GetComponent<PlayerWeapon>().CurrentWeaponLevel;
-      this.StartCoroutine((IEnumerator) this.DamageAllEnemiesIE((float) (1.25 + (double) DataManager.GetWeaponDamageMultiplier(level) * 3.0), Health.DamageAllEnemiesType.BlackHeart));
-    }
-    if ((double) this.BlueHearts > 0.0 && (double) Damage > 0.0)
-    {
-      float blueHearts = this.BlueHearts;
-      this.BlueHearts -= Damage;
-      Damage -= blueHearts;
-      if ((double) this.BlueHearts < 0.0)
-        this.BlueHearts = 0.0f;
-    }
-    if ((double) this.SpiritHearts > 0.0 && (double) Damage > 0.0)
-    {
-      float spiritHearts = this.SpiritHearts;
-      this.SpiritHearts -= Damage;
-      Damage -= spiritHearts;
-      if ((double) this.SpiritHearts < 0.0)
-        this.SpiritHearts = 0.0f;
-    }
-    if (this.GodMode == Health.CheatMode.Demigod)
-      Damage = 0.0f;
-    if (AttackFlags.HasFlag((Enum) Health.AttackFlags.NonLethal))
-      Damage = Mathf.Max(0.0f, this.HP - 0.1f);
-    if ((double) Damage > 0.0)
-      this.HP -= Damage;
-    if (this.team != Health.Team.Neutral && !this.IsPoisoned)
-    {
-      bool flag5 = false;
-      float num1 = 0.0f;
-      float num2 = 0.0f;
-      bool flag6 = false;
-      if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Poison))
-      {
-        flag6 = true;
-        flag5 = true;
-        if (AttackType == Health.AttackTypes.Projectile && (bool) (UnityEngine.Object) health && health.isPlayer && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
-          num1 = 0.2f * (float) attackerPlayerFarming.currentCurseLevel;
-      }
-      if ((AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Heavy || AttackType == Health.AttackTypes.Bullet) && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None && (UnityEngine.Object) EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon) != (UnityEngine.Object) null && EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).ContainsAttachmentType(AttachmentEffect.Poison) && !this.isPlayer && !this.isPlayerAlly && (UnityEngine.Object) health != (UnityEngine.Object) null && health.isPlayer)
-      {
-        float num3 = UnityEngine.Random.value;
-        if ((bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None)
+        if ((UnityEngine.Object) attackerPlayerFarming != (UnityEngine.Object) null)
+          ++this.hitsWithShield;
+        if (this.hitsWithShield == 3)
         {
-          float poisonChance = EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).GetAttachment(AttachmentEffect.Poison).poisonChance;
-          if (flag6 || (double) num3 <= (double) poisonChance)
+          System.Action onTutorialShown = BiomeGenerator.OnTutorialShown;
+          if (onTutorialShown != null)
+            onTutorialShown();
+        }
+        this.HandleShieldBreak(AttackFlags, angle1);
+        Damage *= 0.2f;
+      }
+      if ((bool) (UnityEngine.Object) this.protector)
+      {
+        Attacker.GetComponent<UnitObject>();
+        if ((UnityEngine.Object) this.showHpBar != (UnityEngine.Object) null && (bool) (UnityEngine.Object) this.showHpBar.hpBar && (bool) (UnityEngine.Object) this.showHpBar.hpBar.groupIndicator)
+        {
+          this.showHpBar.hpBar.groupIndicator.transform.localScale = Vector3.one;
+          this.showHpBar.hpBar.groupIndicator.transform.DOKill();
+          this.showHpBar.hpBar.groupIndicator.transform.DOPunchScale(Vector3.one * 1.25f, 0.25f);
+        }
+        Damage *= this.protector.damageMultiplier;
+      }
+      if ((double) Damage > 0.0)
+      {
+        if (this.isPlayer)
+        {
+          DataManager.Instance.PlayerDamageReceived += Damage;
+          DataManager.Instance.PlayerDamageReceivedThisRun += Damage;
+        }
+        else if (this.team == Health.Team.Team2)
+        {
+          DataManager.Instance.PlayerDamageDealtThisRun += Damage;
+          DataManager.Instance.PlayerDamageDealt += Damage;
+          if ((bool) (UnityEngine.Object) attackerPlayerFarming && (UnityEngine.Object) attackerPlayerFarming.playerRelic.CurrentRelic != (UnityEngine.Object) null && !AttackFlags.HasFlag((Enum) Health.AttackFlags.DoesntChargeRelics))
+            attackerPlayerFarming.playerRelic.IncreaseChargedAmount(Damage);
+        }
+        else if (this.team == Health.Team.Neutral && (bool) (UnityEngine.Object) attackerPlayerFarming && (bool) (UnityEngine.Object) attackerPlayerFarming.playerRelic)
+          attackerPlayerFarming.playerRelic.IncreaseChargedAmount(Mathf.Min(Damage / 10f, 1f));
+      }
+      if (!BreakBlocking && (UnityEngine.Object) this.state != (UnityEngine.Object) null && this.state.CURRENT_STATE == StateMachine.State.Defending)
+      {
+        BiomeConstants.Instance.HitFX_Blocked.Spawn(AttackLocation, Quaternion.identity);
+        Damage = 0.0f;
+      }
+      if (this.team == Health.Team.PlayerTeam && !this.IsCharmedEnemy)
+      {
+        float num = DungeonModifier.HasNegativeModifier(DungeonNegativeModifier.DoubleDamage, 2f, 1f) + PlayerFleeceManager.GetDamageReceivedMultiplier();
+        if (this.isPlayer)
+        {
+          if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedTradeOff, this.playerFarming) && !TrinketManager.IsCorruptedNegativeEffectNegated(TarotCards.Card.CorruptedTradeOff, this.playerFarming))
+            num *= (float) TrinketManager.GetEnemyDamageMultiplier(this.playerFarming);
+          if (TrinketManager.HasTrinket(TarotCards.Card.CorruptedPoisonCoins, this.playerFarming) && (AttackFlags.HasFlag((Enum) Health.AttackFlags.Poison) || AttackType == Health.AttackTypes.Poison) && !TrinketManager.IsCorruptedNegativeEffectNegated(TarotCards.Card.CorruptedPoisonCoins, this.playerFarming))
+            num *= (float) TrinketManager.GetEnemyPoisonDamageMultiplier(this.playerFarming);
+        }
+        Damage *= Mathf.Clamp(num, 1f, 2f);
+      }
+      if (this.BlackSoulOnHit && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && (bool) (UnityEngine.Object) attackerPlayerFarming && (AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Bullet) && this.team == Health.Team.Team2 && !this.gameObject.CompareTag("Projectile"))
+      {
+        BlackSoul blackSoul = InventoryItem.SpawnBlackSoul(Mathf.RoundToInt(UnityEngine.Random.Range(1f, 2f) * TrinketManager.GetBlackSoulsMultiplier(attackerPlayerFarming)), position1, true, true);
+        if ((bool) (UnityEngine.Object) blackSoul)
+          blackSoul.SetAngle((float) UnityEngine.Random.Range(0, 360), new Vector2(2f, 4f));
+      }
+      this.HandleFervourOnHit(attackerPlayerFarming, AttackType, position1);
+      if ((double) this.IceHearts > 0.0 && (double) Damage > 0.0)
+      {
+        float iceHearts = this.IceHearts;
+        this.IceHearts -= Damage;
+        Damage -= iceHearts;
+        if ((double) this.IceHearts < 0.0)
+          this.IceHearts = 0.0f;
+        this.ApplyHeartEffects(Health.HeartEffects.Ice);
+      }
+      if ((double) this.FireHearts > 0.0 && (double) Damage > 0.0)
+      {
+        float fireHearts = this.FireHearts;
+        this.FireHearts -= Damage;
+        Damage -= fireHearts;
+        if ((double) this.FireHearts < 0.0)
+          this.FireHearts = 0.0f;
+        this.ApplyHeartEffects(Health.HeartEffects.Fire);
+      }
+      if ((double) this.BlackHearts > 0.0 && (double) Damage > 0.0)
+      {
+        float blackHearts = this.BlackHearts;
+        this.BlackHearts -= Damage;
+        Damage -= blackHearts;
+        if ((double) this.BlackHearts < 0.0)
+          this.BlackHearts = 0.0f;
+        int level = 0;
+        if (this.isPlayer)
+          level = this.GetComponent<PlayerWeapon>().CurrentWeaponLevel;
+        this.StartCoroutine(this.DamageAllEnemiesIE((float) (1.25 + (double) DataManager.GetWeaponDamageMultiplier(level) * 3.0), Health.DamageAllEnemiesType.BlackHeart));
+      }
+      if ((double) this.BlueHearts > 0.0 && (double) Damage > 0.0)
+      {
+        float blueHearts = this.BlueHearts;
+        this.BlueHearts -= Damage;
+        Damage -= blueHearts;
+        if ((double) this.BlueHearts < 0.0)
+          this.BlueHearts = 0.0f;
+      }
+      if ((double) this.SpiritHearts > 0.0 && (double) Damage > 0.0)
+      {
+        float spiritHearts = this.SpiritHearts;
+        this.SpiritHearts -= Damage;
+        Damage -= spiritHearts;
+        if ((double) this.SpiritHearts < 0.0)
+          this.SpiritHearts = 0.0f;
+      }
+      if (this.GodMode == Health.CheatMode.Demigod)
+        Damage = 0.0f;
+      if (AttackFlags.HasFlag((Enum) Health.AttackFlags.NonLethal))
+        Damage = Mathf.Max(0.0f, this.HP - 0.1f);
+      if ((double) Damage > 0.0)
+        this.HP -= Damage;
+      if (this.team != Health.Team.Neutral && !this.IsPoisoned)
+      {
+        bool flag5 = false;
+        float num1 = 0.0f;
+        float num2 = 0.0f;
+        bool flag6 = false;
+        if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Poison))
+        {
+          flag6 = true;
+          flag5 = true;
+          if (AttackType == Health.AttackTypes.Projectile && (bool) (UnityEngine.Object) health && health.isPlayer && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
+            num1 = 0.2f * (float) attackerPlayerFarming.currentCurseLevel;
+        }
+        if ((AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Heavy || AttackType == Health.AttackTypes.Bullet) && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None && (UnityEngine.Object) EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon) != (UnityEngine.Object) null && EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).ContainsAttachmentType(AttachmentEffect.Poison) && !this.isPlayer && !this.isPlayerAlly && (UnityEngine.Object) health != (UnityEngine.Object) null && health.isPlayer)
+        {
+          float num3 = UnityEngine.Random.value;
+          if ((bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None)
           {
-            flag5 = true;
-            num2 = 0.2f * (float) attackerPlayerFarming.currentWeaponLevel;
+            float poisonChance = EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).GetAttachment(AttachmentEffect.Poison).poisonChance;
+            if (flag6 || (double) num3 <= (double) poisonChance)
+            {
+              flag5 = true;
+              num2 = 0.2f * (float) attackerPlayerFarming.currentWeaponLevel;
+            }
           }
         }
+        this.enemyPoisonDamage = Mathf.Max(this.enemyPoisonDamage, num2, num1);
+        if (flag5)
+          this.AddPoison(Attacker);
       }
-      this.enemyPoisonDamage = Mathf.Max(this.enemyPoisonDamage, num2, num1);
-      if (flag5)
-        this.AddPoison(Attacker);
-    }
-    if (this.team != Health.Team.Neutral && !this.IsBurned)
-    {
-      bool flag7 = false;
-      float num4 = 0.0f;
-      float num5 = 0.0f;
-      bool flag8 = false;
-      if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Burn) || AttackFlags == Health.AttackFlags.Burn)
+      if (this.team != Health.Team.Neutral && !this.IsBurned)
       {
-        flag8 = true;
-        flag7 = true;
-        if (AttackType == Health.AttackTypes.Projectile && (bool) (UnityEngine.Object) health && health.isPlayer && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
-          num5 = 0.2f * (float) attackerPlayerFarming.currentCurseLevel;
-      }
-      if ((AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Heavy || AttackType == Health.AttackTypes.Bullet) && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None && (UnityEngine.Object) EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon) != (UnityEngine.Object) null && EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).ContainsAttachmentType(AttachmentEffect.Burn) && !this.isPlayer && !this.isPlayerAlly && (UnityEngine.Object) health != (UnityEngine.Object) null && health.isPlayer)
-      {
-        float num6 = UnityEngine.Random.value;
-        if ((bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None)
+        bool flag7 = false;
+        float num4 = 0.0f;
+        float num5 = 0.0f;
+        bool flag8 = false;
+        if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Burn) || AttackFlags == Health.AttackFlags.Burn)
         {
-          float burnChance = EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).GetAttachment(AttachmentEffect.Burn).burnChance;
-          if (flag8 || (double) num6 <= (double) burnChance)
+          flag8 = true;
+          flag7 = true;
+          if (AttackType == Health.AttackTypes.Projectile && (bool) (UnityEngine.Object) health && health.isPlayer && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
+            num5 = 0.2f * (float) attackerPlayerFarming.currentCurseLevel;
+        }
+        if ((AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Heavy || AttackType == Health.AttackTypes.Bullet) && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None && (UnityEngine.Object) EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon) != (UnityEngine.Object) null && EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).ContainsAttachmentType(AttachmentEffect.Burn) && !this.isPlayer && !this.isPlayerAlly && (UnityEngine.Object) health != (UnityEngine.Object) null && health.isPlayer)
+        {
+          float num6 = UnityEngine.Random.value;
+          if ((bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming && attackerPlayerFarming.currentWeapon != EquipmentType.None)
           {
-            flag7 = true;
-            num5 = 0.2f * (float) attackerPlayerFarming.currentWeaponLevel;
+            float burnChance = EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).GetAttachment(AttachmentEffect.Burn).burnChance;
+            if (flag8 || (double) num6 <= (double) burnChance)
+            {
+              flag7 = true;
+              num5 = 0.2f * (float) attackerPlayerFarming.currentWeaponLevel;
+            }
           }
         }
+        this.enemyBurnDamage = Mathf.Max(this.enemyBurnDamage, num5, num4);
+        if (flag7)
+          this.AddBurn(Attacker.gameObject);
       }
-      this.enemyBurnDamage = Mathf.Max(this.enemyBurnDamage, num5, num4);
-      if (flag7)
-        this.AddBurn(Attacker.gameObject);
-    }
-    this.HP = Mathf.Clamp(this.HP, 0.0f, float.MaxValue);
-    bool flag9 = (double) this.CurrentHP <= 0.0 && this.GodMode != Health.CheatMode.Immortal;
-    if (flag9)
-    {
-      Health.DieAction onDieEarly = this.OnDieEarly;
-      if (onDieEarly != null)
-        onDieEarly(Attacker, AttackLocation, this, AttackType, AttackFlags);
-    }
-    if (this.invincible)
-      return false;
-    if (!flag9)
-    {
-      bool FromBehind = false;
-      if ((UnityEngine.Object) this.state != (UnityEngine.Object) null && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && (UnityEngine.Object) this.transform != (UnityEngine.Object) null)
-        FromBehind = (double) Mathf.Abs(this.state.facingAngle - Utils.GetAngle(position1, Attacker.transform.position) % 360f) >= 150.0;
-      if (AttackType == Health.AttackTypes.Poison || AttackType == Health.AttackTypes.Electrified)
+      this.HP = Mathf.Clamp(this.HP, 0.0f, float.MaxValue);
+      bool flag9 = (double) this.CurrentHP <= 0.0 && this.GodMode != Health.CheatMode.Immortal;
+      if (flag9)
       {
-        this.showHpBar?.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
-        UIBossHUD.Instance?.OnBossHit(Attacker, AttackLocation, AttackType, FromBehind);
-        Health.HitAction onPoisonedHit = this.OnPoisonedHit;
-        if (onPoisonedHit != null)
-          onPoisonedHit(Attacker, AttackLocation, Health.AttackTypes.Poison, FromBehind);
+        Health.DieAction onDieEarly = this.OnDieEarly;
+        if (onDieEarly != null)
+          onDieEarly(Attacker, AttackLocation, this, AttackType, AttackFlags);
       }
-      else if (AttackType == Health.AttackTypes.Burn)
+      if (this.invincible)
+        return false;
+      if (!flag9)
       {
-        this.showHpBar?.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
-        UIBossHUD.Instance?.OnBossHit(Attacker, AttackLocation, AttackType, FromBehind);
-        Health.HitAction onBurnHit = this.OnBurnHit;
-        if (onBurnHit != null)
-          onBurnHit(Attacker, AttackLocation, Health.AttackTypes.Burn, FromBehind);
-      }
-      if (AttackType != Health.AttackTypes.Poison && AttackType != Health.AttackTypes.Electrified && AttackType != Health.AttackTypes.Burn || this.isPlayer)
-      {
-        Health.HitAction onHit = this.OnHit;
-        if (onHit != null)
-          onHit(Attacker, AttackLocation, AttackType, FromBehind);
-        this.OnHitCallback?.Invoke();
-      }
-      if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Penetration))
-      {
-        Health.HitAction onPenetrationHit = this.OnPenetrationHit;
-        if (onPenetrationHit != null)
-          onPenetrationHit(Attacker, AttackLocation, AttackType, FromBehind);
-      }
-    }
-    else
-    {
-      bool FromBehind = false;
-      if ((UnityEngine.Object) this.state != (UnityEngine.Object) null && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && (UnityEngine.Object) this.transform != (UnityEngine.Object) null)
-        FromBehind = (double) Mathf.Abs(this.state.facingAngle - Utils.GetAngle(position1, Attacker.transform.position) % 360f) >= 150.0;
-      Health.HitAction onHitForceBossHud = this.OnHitForceBossHUD;
-      if (onHitForceBossHud != null)
-        onHitForceBossHud(Attacker, AttackLocation, AttackType, FromBehind);
-    }
-    Vector3 vector3_1 = position1 - AttackLocation;
-    float angle2 = Utils.GetAngle(position1, AttackLocation);
-    if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null)
-    {
-      StateMachine component = Attacker.GetComponent<StateMachine>();
-      if (!this.isPlayer)
-      {
-        if (this.InanimateObject)
+        bool FromBehind = false;
+        if ((UnityEngine.Object) this.state != (UnityEngine.Object) null && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && (UnityEngine.Object) this.transform != (UnityEngine.Object) null)
+          FromBehind = (double) Mathf.Abs(this.state.facingAngle - Utils.GetAngle(position1, Attacker.transform.position) % 360f) >= 150.0;
+        if (AttackType == Health.AttackTypes.Poison || AttackType == Health.AttackTypes.Electrified)
         {
-          if (this.InanimateObjectEffect)
-            BiomeConstants.Instance.EmitHitVFX(position1 + Vector3.back, Quaternion.identity.z, "HitFX_Weak");
+          this.showHpBar?.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
+          UIBossHUD.Instance?.OnBossHit(Attacker, AttackLocation, AttackType, FromBehind);
+          Health.HitAction onPoisonedHit = this.OnPoisonedHit;
+          if (onPoisonedHit != null)
+            onPoisonedHit(Attacker, AttackLocation, Health.AttackTypes.Poison, FromBehind);
         }
-        else if (this.ImpactOnHit && this.team != Health.Team.Neutral && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
+        else if (AttackType == Health.AttackTypes.Burn)
         {
-          if (!AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit) || this.InanimateObject)
+          this.showHpBar?.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
+          UIBossHUD.Instance?.OnBossHit(Attacker, AttackLocation, AttackType, FromBehind);
+          Health.HitAction onBurnHit = this.OnBurnHit;
+          if (onBurnHit != null)
+            onBurnHit(Attacker, AttackLocation, Health.AttackTypes.Burn, FromBehind);
+        }
+        if (AttackType != Health.AttackTypes.Poison && AttackType != Health.AttackTypes.Electrified && AttackType != Health.AttackTypes.Burn || this.isPlayer)
+        {
+          Health.HitAction onHit = this.OnHit;
+          if (onHit != null)
+            onHit(Attacker, AttackLocation, AttackType, FromBehind);
+          this.OnHitCallback?.Invoke();
+        }
+        if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Penetration))
+        {
+          Health.HitAction onPenetrationHit = this.OnPenetrationHit;
+          if (onPenetrationHit != null)
+            onPenetrationHit(Attacker, AttackLocation, AttackType, FromBehind);
+        }
+      }
+      else
+      {
+        bool FromBehind = false;
+        if ((UnityEngine.Object) this.state != (UnityEngine.Object) null && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && (UnityEngine.Object) this.transform != (UnityEngine.Object) null)
+          FromBehind = (double) Mathf.Abs(this.state.facingAngle - Utils.GetAngle(position1, Attacker.transform.position) % 360f) >= 150.0;
+        Health.HitAction onHitForceBossHud = this.OnHitForceBossHUD;
+        if (onHitForceBossHud != null)
+          onHitForceBossHud(Attacker, AttackLocation, AttackType, FromBehind);
+      }
+      Vector3 vector3_1 = position1 - AttackLocation;
+      float angle2 = Utils.GetAngle(position1, AttackLocation);
+      if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null)
+      {
+        StateMachine component = Attacker.GetComponent<StateMachine>();
+        if (!this.isPlayer)
+        {
+          if (this.InanimateObject)
           {
-            BiomeConstants.Instance.PlayerEmitHitImpactEffect(position1 + Vector3.back * 0.5f, (UnityEngine.Object) component != (UnityEngine.Object) null ? component.facingAngle : angle2, false, this.ImpactOnHitColor, this.ImpactOnHitScale, AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit), attackerPlayerFarming);
+            if (this.InanimateObjectEffect)
+              BiomeConstants.Instance.EmitHitVFX(position1 + Vector3.back, Quaternion.identity.z, "HitFX_Weak");
+          }
+          else if (this.ImpactOnHit && this.team != Health.Team.Neutral && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
+          {
+            if (!AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit) || this.InanimateObject)
+            {
+              BiomeConstants.Instance.PlayerEmitHitImpactEffect(position1 + Vector3.back * 0.5f, (UnityEngine.Object) component != (UnityEngine.Object) null ? component.facingAngle : angle2, false, this.ImpactOnHitColor, this.ImpactOnHitScale, AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit), attackerPlayerFarming);
+            }
+            else
+            {
+              GameManager.GetInstance().HitStop(0.2f);
+              BiomeConstants instance2 = BiomeConstants.Instance;
+              Vector3 Position = position1 + Vector3.back * 0.5f;
+              double Angle = (UnityEngine.Object) component != (UnityEngine.Object) null ? (double) component.facingAngle : (double) angle2;
+              bool flag10 = AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit);
+              PlayerFarming playerFarming1 = attackerPlayerFarming;
+              Color color = new Color();
+              int num = flag10 ? 1 : 0;
+              PlayerFarming playerFarming2 = playerFarming1;
+              instance2.PlayerEmitHitImpactEffect(Position, (float) Angle, color: color, crit: num != 0, playerFarming: playerFarming2);
+            }
+          }
+        }
+        else if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit))
+        {
+          if (!flag9)
+          {
+            BiomeConstants instance3 = BiomeConstants.Instance;
+            Vector3 Position = position1 + Vector3.back * 0.5f;
+            double Angle = (UnityEngine.Object) component != (UnityEngine.Object) null ? (double) component.facingAngle : (double) angle2;
+            bool flag11 = AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit);
+            Color color = new Color();
+            int num = flag11 ? 1 : 0;
+            instance3.PlayerEmitHitImpactEffect(Position, (float) Angle, color: color, crit: num != 0);
           }
           else
           {
-            GameManager.GetInstance().HitStop(0.2f);
-            BiomeConstants instance2 = BiomeConstants.Instance;
+            BiomeConstants instance4 = BiomeConstants.Instance;
             Vector3 Position = position1 + Vector3.back * 0.5f;
             double Angle = (UnityEngine.Object) component != (UnityEngine.Object) null ? (double) component.facingAngle : (double) angle2;
-            bool flag10 = AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit);
-            PlayerFarming playerFarming1 = attackerPlayerFarming;
+            bool flag12 = AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit);
             Color color = new Color();
-            int num = flag10 ? 1 : 0;
-            PlayerFarming playerFarming2 = playerFarming1;
-            instance2.PlayerEmitHitImpactEffect(Position, (float) Angle, color: color, crit: num != 0, playerFarming: playerFarming2);
+            int num = flag12 ? 1 : 0;
+            instance4.PlayerEmitHitImpactEffect(Position, (float) Angle, false, color, crit: num != 0);
           }
         }
-      }
-      else if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit))
-      {
-        if (!flag9)
+        if (this.team != Health.Team.Neutral)
         {
-          BiomeConstants instance3 = BiomeConstants.Instance;
-          Vector3 Position = position1 + Vector3.back * 0.5f;
-          double Angle = (UnityEngine.Object) component != (UnityEngine.Object) null ? (double) component.facingAngle : (double) angle2;
-          bool flag11 = AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit);
-          Color color = new Color();
-          int num = flag11 ? 1 : 0;
-          instance3.PlayerEmitHitImpactEffect(Position, (float) Angle, color: color, crit: num != 0);
-        }
-        else
-        {
-          BiomeConstants instance4 = BiomeConstants.Instance;
-          Vector3 Position = position1 + Vector3.back * 0.5f;
-          double Angle = (UnityEngine.Object) component != (UnityEngine.Object) null ? (double) component.facingAngle : (double) angle2;
-          bool flag12 = AttackFlags.HasFlag((Enum) Health.AttackFlags.Crit);
-          Color color = new Color();
-          int num = flag12 ? 1 : 0;
-          instance4.PlayerEmitHitImpactEffect(Position, (float) Angle, false, color, crit: num != 0);
+          if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Charm))
+            this.AddCharm();
+          else if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Ice))
+            this.AddIce();
+          else if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Electrified) && !flag9)
+            this.AddElectrified(Attacker);
         }
       }
-      if (this.team != Health.Team.Neutral)
+      if (this.BloodOnHit)
       {
-        if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Charm))
-          this.AddCharm();
-        else if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Ice))
-          this.AddIce();
-        else if (AttackFlags.HasFlag((Enum) Health.AttackFlags.Electrified) && !flag9)
-          this.AddElectrified(Attacker);
-      }
-    }
-    if (this.BloodOnHit)
-    {
-      Vector3 vector3_2 = new Vector3(position1.x, position1.y, 0.0f);
-      if (!this.gameObject.CompareTag("Player") && !flag9)
-      {
-        if (AttackType == Health.AttackTypes.Heavy)
+        Vector3 vector3_2 = new Vector3(position1.x, position1.y, 0.0f);
+        if (!this.gameObject.CompareTag("Player") && !flag9)
         {
-          BiomeConstants.Instance.EmitBloodSplatter(vector3_2, vector3_1.normalized, this.bloodColor);
+          if (AttackType == Health.AttackTypes.Heavy)
+          {
+            BiomeConstants.Instance.EmitBloodSplatter(vector3_2, vector3_1.normalized, this.bloodColor);
+            BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black");
+            string[] strArray = new string[2]
+            {
+              "BloodImpact_Large_0",
+              "BloodImpact_Large_1"
+            };
+            int index = UnityEngine.Random.Range(0, strArray.Length - 1);
+            if (strArray[index] != null)
+              BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index]);
+          }
+          else
+          {
+            BiomeConstants.Instance.EmitBloodSplatter(vector3_2, vector3_1.normalized, this.bloodColor);
+            string[] strArray = new string[3]
+            {
+              "BloodImpact_0",
+              "BloodImpact_1",
+              "BloodImpact_2"
+            };
+            int index = UnityEngine.Random.Range(0, strArray.Length - 1);
+            if (strArray[index] != null)
+              BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index]);
+          }
+        }
+        else if (AttackType == Health.AttackTypes.Heavy)
+        {
+          if ((UnityEngine.Object) this.state != (UnityEngine.Object) null)
+          {
+            if (this.state.CURRENT_STATE != StateMachine.State.Flying)
+              BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
+          }
+          else
+            BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
           BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black");
           string[] strArray = new string[2]
           {
@@ -1159,10 +1185,17 @@ public class Health : BaseMonoBehaviour
           };
           int index = UnityEngine.Random.Range(0, strArray.Length - 1);
           if (strArray[index] != null)
-            BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index]);
+            BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index], false);
         }
         else
         {
+          if ((UnityEngine.Object) this.state != (UnityEngine.Object) null)
+          {
+            if (this.state.CURRENT_STATE != StateMachine.State.Flying)
+              BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
+          }
+          else
+            BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
           BiomeConstants.Instance.EmitBloodSplatter(vector3_2, vector3_1.normalized, this.bloodColor);
           string[] strArray = new string[3]
           {
@@ -1172,167 +1205,132 @@ public class Health : BaseMonoBehaviour
           };
           int index = UnityEngine.Random.Range(0, strArray.Length - 1);
           if (strArray[index] != null)
-            BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index]);
+            BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index], false);
         }
       }
-      else if (AttackType == Health.AttackTypes.Heavy)
+      if (this.ScreenshakeOnHit && !(this.ScreenshakeOnDie & flag9))
+        CameraManager.shakeCamera(this.ScreenShakeOnDieIntensity / 3f);
+      if (this.isPlayer)
       {
-        if ((UnityEngine.Object) this.state != (UnityEngine.Object) null)
+        if ((double) this.CurrentHP <= 1.0 && TrinketManager.HasTrinket(TarotCards.Card.DeathsDoor, this.playerFarming))
+          this.StartCoroutine(this.DamageAllEnemiesIE((float) TrinketManager.GetDamageAllEnemiesAmount(TarotCards.Card.DeathsDoor, this.playerFarming) + DataManager.GetWeaponDamageMultiplier(this.playerFarming.currentWeaponLevel) * 3f, Health.DamageAllEnemiesType.DeathsDoor));
+        if ((double) this.CurrentHP <= 1.0 && TrinketManager.HasTrinket(TarotCards.Card.LastChance, this.playerFarming))
         {
-          if (this.state.CURRENT_STATE != StateMachine.State.Flying)
-            BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
-        }
-        else
-          BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
-        BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black");
-        string[] strArray = new string[2]
-        {
-          "BloodImpact_Large_0",
-          "BloodImpact_Large_1"
-        };
-        int index = UnityEngine.Random.Range(0, strArray.Length - 1);
-        if (strArray[index] != null)
-          BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index], false);
-      }
-      else
-      {
-        if ((UnityEngine.Object) this.state != (UnityEngine.Object) null)
-        {
-          if (this.state.CURRENT_STATE != StateMachine.State.Flying)
-            BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
-        }
-        else
-          BiomeConstants.Instance.EmitBloodSplatterGroundParticles(vector3_2, this.Velocity, this.bloodColor);
-        BiomeConstants.Instance.EmitBloodSplatter(vector3_2, vector3_1.normalized, this.bloodColor);
-        string[] strArray = new string[3]
-        {
-          "BloodImpact_0",
-          "BloodImpact_1",
-          "BloodImpact_2"
-        };
-        int index = UnityEngine.Random.Range(0, strArray.Length - 1);
-        if (strArray[index] != null)
-          BiomeConstants.Instance.EmitBloodImpact(vector3_2 + Vector3.back * 0.5f, angle2, "black", strArray[index], false);
-      }
-    }
-    if (this.ScreenshakeOnHit && !(this.ScreenshakeOnDie & flag9))
-      CameraManager.shakeCamera(this.ScreenShakeOnDieIntensity / 3f);
-    if (this.isPlayer)
-    {
-      if ((double) this.CurrentHP <= 1.0 && TrinketManager.HasTrinket(TarotCards.Card.DeathsDoor, this.playerFarming))
-        this.StartCoroutine((IEnumerator) this.DamageAllEnemiesIE((float) TrinketManager.GetDamageAllEnemiesAmount(TarotCards.Card.DeathsDoor, this.playerFarming) + DataManager.GetWeaponDamageMultiplier(this.playerFarming.currentWeaponLevel) * 3f, Health.DamageAllEnemiesType.DeathsDoor));
-      if ((double) this.CurrentHP <= 1.0 && TrinketManager.HasTrinket(TarotCards.Card.LastChance, this.playerFarming))
-      {
-        if ((double) this.CurrentHP == 1.0)
-        {
-          this.playerFarming.CustomAnimationWithCallback("resurrect", false, (System.Action) (() =>
+          if ((double) this.CurrentHP == 1.0)
           {
-            this.state.LockStateChanges = false;
-            this.state.CURRENT_STATE = StateMachine.State.Idle;
-          }));
-          this.state.LockStateChanges = true;
+            this.playerFarming.CustomAnimationWithCallback("resurrect", false, (System.Action) (() =>
+            {
+              this.state.LockStateChanges = false;
+              this.state.CURRENT_STATE = StateMachine.State.Idle;
+            }));
+            this.state.LockStateChanges = true;
+          }
+          this.IceHearts += (float) TrinketManager.GetIceHeartsToHealOnRevive(this.playerFarming);
+          TrinketManager.RemoveTrinket(TarotCards.Card.LastChance, this.playerFarming);
+          BiomeConstants.Instance.ShowDestroyTarot(this.transform);
+          Vector3 position2 = this.playerFarming.CameraBone.transform.position;
+          BiomeConstants.Instance.EmitHeartPickUpVFX(position2, 0.0f, "black", "burst_big");
+          AudioManager.Instance.PlayOneShot("event:/dlc/tarot/frostsbite_trigger", position2);
         }
-        this.IceHearts += (float) TrinketManager.GetIceHeartsToHealOnRevive(this.playerFarming);
-        TrinketManager.RemoveTrinket(TarotCards.Card.LastChance, this.playerFarming);
-        BiomeConstants.Instance.ShowDestroyTarot(this.transform);
-        Vector3 position2 = this.playerFarming.CameraBone.transform.position;
-        BiomeConstants.Instance.EmitHeartPickUpVFX(position2, 0.0f, "black", "burst_big");
-        AudioManager.Instance.PlayOneShot("event:/dlc/tarot/frostsbite_trigger", position2);
       }
-    }
-    if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null && this.team == Health.Team.Team2 && AttackType == Health.AttackTypes.Projectile && (bool) (UnityEngine.Object) Attacker.GetComponentInParent<MegaSlash>() && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
-    {
-      if (attackerPlayerFarming.currentCurse == EquipmentType.MegaSlash_Ice && (double) UnityEngine.Random.value <= (double) EquipmentManager.GetCurseData(EquipmentType.MegaSlash_Ice).Chance)
-        this.AddIce();
-      else if (attackerPlayerFarming.currentCurse == EquipmentType.MegaSlash_Charm && (double) UnityEngine.Random.value <= (double) EquipmentManager.GetCurseData(EquipmentType.MegaSlash_Charm).Chance)
-        this.AddCharm();
-    }
-    if (flag9)
-    {
-      if (this.team == Health.Team.Team2)
+      if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null && this.team == Health.Team.Team2 && AttackType == Health.AttackTypes.Projectile && (bool) (UnityEngine.Object) Attacker.GetComponentInParent<MegaSlash>() && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming)
       {
-        ++DataManager.Instance.PlayerKillsOnRun;
-        ++DataManager.Instance.KillsInGame;
-        if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && ((bool) (UnityEngine.Object) attackerPlayerFarming || (bool) (UnityEngine.Object) Attacker.GetComponentInParent<MegaSlash>()))
+        if (attackerPlayerFarming.currentCurse == EquipmentType.MegaSlash_Ice && (double) UnityEngine.Random.value <= (double) EquipmentManager.GetCurseData(EquipmentType.MegaSlash_Ice).Chance)
+          this.AddIce();
+        else if (attackerPlayerFarming.currentCurse == EquipmentType.MegaSlash_Charm && (double) UnityEngine.Random.value <= (double) EquipmentManager.GetCurseData(EquipmentType.MegaSlash_Charm).Chance)
+          this.AddCharm();
+      }
+      if (flag9)
+      {
+        if (this.team == Health.Team.Team2)
         {
-          if ((AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Bullet) && EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).ContainsAttachmentType(AttachmentEffect.Necromancy) && (double) UnityEngine.Random.value <= (double) EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).GetAttachment(AttachmentEffect.Necromancy).necromancyChance || AttackType == Health.AttackTypes.Projectile && attackerPlayerFarming.currentCurse == EquipmentType.MegaSlash_Necromancy)
-            ProjectileGhost.SpawnGhost(position1, 0.0f, 1f + DataManager.GetWeaponDamageMultiplier(attackerPlayerFarming.currentWeaponLevel), 1f);
-          if (AttackType == Health.AttackTypes.Melee && (bool) (UnityEngine.Object) attackerPlayerFarming.CurrentWeaponInfo.WeaponData.GetAttachment(AttachmentEffect.NeighbouringDamage))
+          ++DataManager.Instance.PlayerKillsOnRun;
+          ++DataManager.Instance.KillsInGame;
+          if ((UnityEngine.Object) Attacker != (UnityEngine.Object) null && (bool) (UnityEngine.Object) health && (bool) (UnityEngine.Object) attackerPlayerFarming && (UnityEngine.Object) Attacker != (UnityEngine.Object) null && ((bool) (UnityEngine.Object) attackerPlayerFarming || (bool) (UnityEngine.Object) Attacker.GetComponentInParent<MegaSlash>()))
           {
-            Health targetEnemy = UnitObject.GetClosestTarget(this.transform, Health.Team.Team2);
-            if ((UnityEngine.Object) targetEnemy != (UnityEngine.Object) null)
-              SoulCustomTarget.Create(targetEnemy.gameObject, this.transform.position, Color.red, (System.Action) (() =>
-              {
-                if (!((UnityEngine.Object) targetEnemy != (UnityEngine.Object) null))
-                  return;
-                targetEnemy.DealDamage(attackerPlayerFarming.playerWeapon.GetAverageWeaponDamage(attackerPlayerFarming.currentWeapon, attackerPlayerFarming.currentWeaponLevel), attackerPlayerFarming.gameObject, targetEnemy.transform.position);
-              }), 0.75f);
+            if ((AttackType == Health.AttackTypes.Melee || AttackType == Health.AttackTypes.Bullet) && EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).ContainsAttachmentType(AttachmentEffect.Necromancy) && (double) UnityEngine.Random.value <= (double) EquipmentManager.GetWeaponData(attackerPlayerFarming.currentWeapon).GetAttachment(AttachmentEffect.Necromancy).necromancyChance || AttackType == Health.AttackTypes.Projectile && attackerPlayerFarming.currentCurse == EquipmentType.MegaSlash_Necromancy)
+              ProjectileGhost.SpawnGhost(position1, 0.0f, 1f + DataManager.GetWeaponDamageMultiplier(attackerPlayerFarming.currentWeaponLevel), 1f);
+            if (AttackType == Health.AttackTypes.Melee && (bool) (UnityEngine.Object) attackerPlayerFarming.CurrentWeaponInfo.WeaponData.GetAttachment(AttachmentEffect.NeighbouringDamage))
+            {
+              Health targetEnemy = UnitObject.GetClosestTarget(this.transform, Health.Team.Team2);
+              if ((UnityEngine.Object) targetEnemy != (UnityEngine.Object) null)
+                SoulCustomTarget.Create(targetEnemy.gameObject, this.transform.position, Color.red, (System.Action) (() =>
+                {
+                  if (!((UnityEngine.Object) targetEnemy != (UnityEngine.Object) null))
+                    return;
+                  targetEnemy.DealDamage(attackerPlayerFarming.playerWeapon.GetAverageWeaponDamage(attackerPlayerFarming.currentWeapon, attackerPlayerFarming.currentWeaponLevel), attackerPlayerFarming.gameObject, targetEnemy.transform.position, dealDamageImmediately: true);
+                }), 0.75f);
+            }
           }
         }
-      }
-      switch (this.DeathSoundToPlay)
-      {
-        case Health.DEATH_SFX.DEATH_SMALL:
-          AudioManager.Instance.PlayOneShot("event:/enemy/enemy_death_small", position1);
-          break;
-        case Health.DEATH_SFX.DEATH_MEDIUM:
-          AudioManager.Instance.PlayOneShot("event:/enemy/enemy_death_medium", position1);
-          break;
-        case Health.DEATH_SFX.DEATH_LARGE:
-          AudioManager.Instance.PlayOneShot("event:/enemy/enemy_death_large", position1);
-          break;
-      }
-      MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, this.playerFarming, coroutineSupport: (MonoBehaviour) GameManager.GetInstance());
-      if (DungeonModifier.HasNegativeModifier(DungeonNegativeModifier.DropPoison) && this.team == Health.Team.Team2)
-        TrapPoison.CreatePoison(position1, 5, 0.5f, this.transform.parent);
-      if (this.SmokeOnDie && !this.isPlayer)
-        BiomeConstants.Instance.EmitSmokeExplosionVFX(position1 + Vector3.back * 0.5f);
-      if (this.BloodOnDie)
-      {
-        if (!this.isPlayer)
-          BiomeConstants.Instance.EmitBloodSplatter(position1, vector3_1.normalized, this.bloodColor);
-        if ((UnityEngine.Object) this.state != (UnityEngine.Object) null)
+        switch (this.DeathSoundToPlay)
         {
-          if (this.state.CURRENT_STATE != StateMachine.State.Flying)
+          case Health.DEATH_SFX.DEATH_SMALL:
+            AudioManager.Instance.PlayOneShot("event:/enemy/enemy_death_small", position1);
+            break;
+          case Health.DEATH_SFX.DEATH_MEDIUM:
+            AudioManager.Instance.PlayOneShot("event:/enemy/enemy_death_medium", position1);
+            break;
+          case Health.DEATH_SFX.DEATH_LARGE:
+            AudioManager.Instance.PlayOneShot("event:/enemy/enemy_death_large", position1);
+            break;
+        }
+        MMVibrate.Haptic(MMVibrate.HapticTypes.MediumImpact, this.playerFarming, coroutineSupport: (MonoBehaviour) GameManager.GetInstance());
+        if (DungeonModifier.HasNegativeModifier(DungeonNegativeModifier.DropPoison) && this.team == Health.Team.Team2)
+          TrapPoison.CreatePoison(position1, 5, 0.5f, this.transform.parent);
+        if (this.SmokeOnDie && !this.isPlayer)
+          BiomeConstants.Instance.EmitSmokeExplosionVFX(position1 + Vector3.back * 0.5f);
+        if (this.BloodOnDie)
+        {
+          if (!this.isPlayer)
+            BiomeConstants.Instance.EmitBloodSplatter(position1, vector3_1.normalized, this.bloodColor);
+          if ((UnityEngine.Object) this.state != (UnityEngine.Object) null)
+          {
+            if (this.state.CURRENT_STATE != StateMachine.State.Flying)
+              BiomeConstants.Instance.EmitBloodSplatterGroundParticles(position1, this.Velocity, this.bloodColor);
+          }
+          else
             BiomeConstants.Instance.EmitBloodSplatterGroundParticles(position1, this.Velocity, this.bloodColor);
+          BiomeConstants.Instance.EmitBloodImpact(position1 + Vector3.back * 0.5f, angle2, "black", useDeltaTime: !this.isPlayer);
+          string[] strArray = new string[2]
+          {
+            "BloodImpact_Large_0",
+            "BloodImpact_Large_1"
+          };
+          int index = UnityEngine.Random.Range(0, 1);
+          BiomeConstants.Instance.EmitBloodImpact(position1 + Vector3.back * 0.5f, angle2, "black", strArray[index], !this.isPlayer);
+        }
+        if (this.spawnParticles)
+          BiomeConstants.Instance.EmitParticleChunk(this.typeOfParticle, position1, this.Velocity, 6);
+        if (this.ScreenshakeOnDie)
+          CameraManager.shakeCamera(this.ScreenShakeOnDieIntensity);
+        if (this.EmitGroundSmashDecal)
+          BiomeConstants.Instance.EmitGroundSmashVFXParticles(new Vector3(position1.x, position1.y, 0.0f));
+        this.HP = 0.0f;
+        this.HandleBuffs(Attacker);
+        this.ClearElectrified();
+        if (this.OnDie != null)
+          this.OnDie(Attacker, AttackLocation, this, AttackType, AttackFlags);
+        if (Health.OnDieAny != null)
+          Health.OnDieAny(this);
+        if (this.OnDieCallback != null)
+          this.OnDieCallback.Invoke();
+        if (this.DestroyOnDeath)
+        {
+          UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);
         }
         else
-          BiomeConstants.Instance.EmitBloodSplatterGroundParticles(position1, this.Velocity, this.bloodColor);
-        BiomeConstants.Instance.EmitBloodImpact(position1 + Vector3.back * 0.5f, angle2, "black", useDeltaTime: !this.isPlayer);
-        string[] strArray = new string[2]
         {
-          "BloodImpact_Large_0",
-          "BloodImpact_Large_1"
-        };
-        int index = UnityEngine.Random.Range(0, 1);
-        BiomeConstants.Instance.EmitBloodImpact(position1 + Vector3.back * 0.5f, angle2, "black", strArray[index], !this.isPlayer);
+          this.enabled = false;
+          if ((bool) (UnityEngine.Object) this.state && !(this is HealthPlayer))
+            this.state.CURRENT_STATE = StateMachine.State.Dead;
+        }
       }
-      if (this.spawnParticles)
-        BiomeConstants.Instance.EmitParticleChunk(this.typeOfParticle, position1, this.Velocity, 6);
-      if (this.ScreenshakeOnDie)
-        CameraManager.shakeCamera(this.ScreenShakeOnDieIntensity);
-      if (this.EmitGroundSmashDecal)
-        BiomeConstants.Instance.EmitGroundSmashVFXParticles(new Vector3(position1.x, position1.y, 0.0f));
-      this.HP = 0.0f;
-      this.HandleBuffs(Attacker);
-      this.ClearElectrified();
-      if (this.OnDie != null)
-        this.OnDie(Attacker, AttackLocation, this, AttackType, AttackFlags);
-      if (Health.OnDieAny != null)
-        Health.OnDieAny(this);
-      if (this.OnDieCallback != null)
-        this.OnDieCallback.Invoke();
-      if (this.DestroyOnDeath)
-      {
-        UnityEngine.Object.Destroy((UnityEngine.Object) this.gameObject);
-      }
-      else
-      {
-        this.enabled = false;
-        if ((bool) (UnityEngine.Object) this.state && !(this is HealthPlayer))
-          this.state.CURRENT_STATE = StateMachine.State.Dead;
-      }
+      return true;
     }
+    if (this.damageEventQueue != null)
+      return false;
+    this.damageEventQueue = new Health.DealDamageEvent(Time.unscaledTime, Damage, Attacker, AttackLocation, BreakBlocking, AttackType, AttackFlags);
     return true;
   }
 
@@ -1469,14 +1467,14 @@ public class Health : BaseMonoBehaviour
         for (int index = Health.team2.Count - 1; index >= 0; --index)
         {
           if ((UnityEngine.Object) Health.team2[index] != (UnityEngine.Object) null && (double) Vector3.Distance(Health.team2[index].transform.position, postion) <= (double) radius)
-            Health.team2[index].DealDamage(damage, Health.team2[index].gameObject, postion);
+            Health.team2[index].DealDamage(damage, Health.team2[index].gameObject, postion, dealDamageImmediately: true);
         }
         break;
       case Health.Team.Team2:
         for (int index = Health.playerTeam.Count - 1; index >= 0; --index)
         {
           if ((UnityEngine.Object) Health.playerTeam[index] != (UnityEngine.Object) null && (double) Vector3.Distance(Health.playerTeam[index].transform.position, postion) <= (double) radius)
-            Health.playerTeam[index].DealDamage(damage, Health.playerTeam[index].gameObject, postion);
+            Health.playerTeam[index].DealDamage(damage, Health.playerTeam[index].gameObject, postion, dealDamageImmediately: true);
         }
         break;
     }
@@ -1808,10 +1806,7 @@ public class Health : BaseMonoBehaviour
     Interaction_Chest.Instance?.ReviveSpawned(this);
   }
 
-  public void DestroyNextFrame()
-  {
-    this.StartCoroutine((IEnumerator) this.DestroyNextFrameRoutine());
-  }
+  public void DestroyNextFrame() => this.StartCoroutine(this.DestroyNextFrameRoutine());
 
   public bool ChanceToNegateDamage(float chance)
   {
@@ -1979,7 +1974,7 @@ public class Health : BaseMonoBehaviour
       if ((double) duration != -1.0)
       {
         if (this.isPlayer)
-          this.StartCoroutine((IEnumerator) this.ClearPoisonAfterTime(duration));
+          this.StartCoroutine(this.ClearPoisonAfterTime(duration));
         else
           this.enemyPoisonTimestamp = Time.time + duration;
       }
@@ -2569,7 +2564,7 @@ public class Health : BaseMonoBehaviour
       if ((double) duration != -1.0)
       {
         if (this.isPlayer)
-          this.StartCoroutine((IEnumerator) this.ClearBurnAfterTime(duration));
+          this.StartCoroutine(this.ClearBurnAfterTime(duration));
         else
           this.enemyBurnTimestamp = Time.time + duration;
       }

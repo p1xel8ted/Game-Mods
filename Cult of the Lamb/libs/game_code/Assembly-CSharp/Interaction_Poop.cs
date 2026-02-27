@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Poop
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -162,7 +162,7 @@ public class Interaction_Poop : Interaction
   public void Play()
   {
     this.Scale = 2f;
-    this.StartCoroutine((IEnumerator) this.ScaleRoutine());
+    this.StartCoroutine(this.ScaleRoutine());
   }
 
   public IEnumerator ScaleRoutine()
@@ -197,7 +197,7 @@ public class Interaction_Poop : Interaction
       this.skeletonAnimation.AnimationState.Event += new Spine.AnimationState.TrackEntryEventDelegate(this.HandleEvent);
       this.EventListenerActive = true;
     }
-    this.StartCoroutine((IEnumerator) this.DoClean());
+    this.StartCoroutine(this.DoClean());
   }
 
   public void HandleEvent(TrackEntry trackEntry, Spine.Event e)
@@ -245,11 +245,11 @@ public class Interaction_Poop : Interaction
     else if (interactionPoop.StructureBrain.Data.Type == StructureBrain.TYPES.TOXIC_WASTE)
       ChoreDuration *= 2f;
     if (interactionPoop.StructureBrain.Data.Type == StructureBrain.TYPES.POOP_DEVOTION)
-      interactionPoop.StartCoroutine((IEnumerator) interactionPoop.DevotionIE(ChoreDuration));
+      interactionPoop.StartCoroutine(interactionPoop.DevotionIE(ChoreDuration));
     else if (interactionPoop.StructureBrain.Data.Type == StructureBrain.TYPES.POOP_GOLD)
-      interactionPoop.StartCoroutine((IEnumerator) interactionPoop.GoldIE(ChoreDuration));
+      interactionPoop.StartCoroutine(interactionPoop.GoldIE(ChoreDuration));
     else if (interactionPoop.StructureBrain.Data.Type == StructureBrain.TYPES.POOP_MASSIVE)
-      interactionPoop.StartCoroutine((IEnumerator) interactionPoop.PoopIE(ChoreDuration));
+      interactionPoop.StartCoroutine(interactionPoop.PoopIE(ChoreDuration));
     yield return (object) new WaitForSeconds(ChoreDuration / 2f);
     if (interactionPoop.StructureInfo.Type != StructureBrain.TYPES.POOP_PET)
       interactionPoop._playerFarming.playerChoreXPBarController.AddChoreXP(interactionPoop.playerFarming, multiplier);
@@ -259,7 +259,7 @@ public class Interaction_Poop : Interaction
     {
       if (interactionPoop.StructureInfo.Type == StructureBrain.TYPES.POOP_PET)
       {
-        yield return (object) interactionPoop.StartCoroutine((IEnumerator) interactionPoop.RevealPoopPetIE(followerById));
+        yield return (object) interactionPoop.StartCoroutine(interactionPoop.RevealPoopPetIE(followerById));
         interactionPoop._playerFarming.playerChoreXPBarController.AddChoreXP(interactionPoop.playerFarming, multiplier);
       }
       else if (interactionPoop.StructureInfo.Type == StructureBrain.TYPES.POOP_MASSIVE || interactionPoop.StructureInfo.Type == StructureBrain.TYPES.TOXIC_WASTE)

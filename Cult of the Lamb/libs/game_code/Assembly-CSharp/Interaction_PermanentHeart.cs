@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_PermanentHeart
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -81,7 +81,7 @@ public class Interaction_PermanentHeart : Interaction
     BiomeConstants.Instance.EmitHeartPickUpVFX(this.transform.position, 0.0f, "red", "burst_big");
     BiomeConstants.Instance.EmitBloodImpact(this.transform.position, 0.0f, "red", "BloodImpact_Large_0");
     AudioManager.Instance.PlayOneShot("event:/followers/love_hearts", this.transform.position);
-    this.StartCoroutine((IEnumerator) this.PlayerPickUpBook());
+    this.StartCoroutine(this.PlayerPickUpBook());
     this.Interactable = false;
   }
 }

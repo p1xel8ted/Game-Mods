@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: YngyaChunk
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -117,7 +117,7 @@ public class YngyaChunk : MonoBehaviour
     {
       if (this.attacking)
         return;
-      this.StartCoroutine((IEnumerator) this.AttackIE());
+      this.StartCoroutine(this.AttackIE());
     }
   }
 
@@ -149,11 +149,11 @@ public class YngyaChunk : MonoBehaviour
     yngyaChunk.attacking = true;
     yield return (object) CoroutineStatics.WaitForScaledSeconds(0.5f, yngyaChunk.Spine);
     if (yngyaChunk.chunkType == YngyaChunk.ChunkType.ProjectileRing)
-      yield return (object) yngyaChunk.StartCoroutine((IEnumerator) yngyaChunk.ProjectileRingAttack());
+      yield return (object) yngyaChunk.StartCoroutine(yngyaChunk.ProjectileRingAttack());
     else if (yngyaChunk.chunkType == YngyaChunk.ChunkType.ProjectileSplatter)
-      yield return (object) yngyaChunk.StartCoroutine((IEnumerator) yngyaChunk.ProjectileSplatAttack());
+      yield return (object) yngyaChunk.StartCoroutine(yngyaChunk.ProjectileSplatAttack());
     else if (yngyaChunk.chunkType == YngyaChunk.ChunkType.Flames)
-      yield return (object) yngyaChunk.StartCoroutine((IEnumerator) yngyaChunk.FlameAttack());
+      yield return (object) yngyaChunk.StartCoroutine(yngyaChunk.FlameAttack());
     string soundPath = "";
     switch (yngyaChunk.chunkType)
     {
@@ -183,7 +183,7 @@ public class YngyaChunk : MonoBehaviour
     YngyaChunk yngyaChunk = this;
     yngyaChunk.spawnedProjectiles.Clear();
     yngyaChunk.Spine.AnimationState.SetAnimation(0, yngyaChunk.ExplodeStartAnimation, true);
-    yngyaChunk.StartCoroutine((IEnumerator) yngyaChunk.FlashFillWhite((float) ((double) yngyaChunk.amount * 0.05000000074505806 + 2.5)));
+    yngyaChunk.StartCoroutine(yngyaChunk.FlashFillWhite((float) ((double) yngyaChunk.amount * 0.05000000074505806 + 2.5)));
     AudioManager.Instance.PlayOneShot(yngyaChunk.attackCircleStartSFX, yngyaChunk.gameObject);
     float aimingAngle = Random.Range(0.0f, 360f);
     for (int i = 0; i < yngyaChunk.amount; ++i)
@@ -227,7 +227,7 @@ public class YngyaChunk : MonoBehaviour
   {
     YngyaChunk yngyaChunk = this;
     yngyaChunk.Spine.AnimationState.SetAnimation(0, yngyaChunk.SplatterAnimation, true);
-    yngyaChunk.StartCoroutine((IEnumerator) yngyaChunk.FlashFillWhite((float) ((double) yngyaChunk.amount * 0.05000000074505806 + 2.0)));
+    yngyaChunk.StartCoroutine(yngyaChunk.FlashFillWhite((float) ((double) yngyaChunk.amount * 0.05000000074505806 + 2.0)));
     AudioManager.Instance.PlayOneShot(yngyaChunk.attackSpitStartSFX, yngyaChunk.gameObject);
     AudioManager.Instance.PlayOneShot(yngyaChunk.attackSpitStartVO, yngyaChunk.gameObject);
     yield return (object) CoroutineStatics.WaitForScaledSeconds(2f, yngyaChunk.Spine);
@@ -245,7 +245,7 @@ public class YngyaChunk : MonoBehaviour
   public IEnumerator FlameAttack()
   {
     YngyaChunk yngyaChunk = this;
-    yngyaChunk.StartCoroutine((IEnumerator) yngyaChunk.FlashFillWhite(1.5f));
+    yngyaChunk.StartCoroutine(yngyaChunk.FlashFillWhite(1.5f));
     yield return (object) CoroutineStatics.WaitForScaledSeconds(1.5f, yngyaChunk.Spine);
     yngyaChunk.child.gameObject.SetActive(false);
     TrapLavaTimed component = yngyaChunk.prefab.GetComponent<TrapLavaTimed>();

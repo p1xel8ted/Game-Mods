@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Flockade.FlockadeGameScreen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -159,7 +159,7 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
 
   public override void OnShowStarted() => this.DeactivateAllSelectables();
 
-  public override void OnShowCompleted() => this.StartCoroutine((IEnumerator) this.PlayGame());
+  public override void OnShowCompleted() => this.StartCoroutine(this.PlayGame());
 
   public IEnumerator PlayGame()
   {
@@ -262,7 +262,7 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
     flockadeGameScreen._controlPrompts.HideAcceptButton();
     MonoSingleton<UINavigatorNew>.Instance.AllowInputOnlyFromPlayer = (PlayerFarming) null;
     flockadeGameScreen._controlPrompts.ShowAcceptButton();
-    yield return (object) new WaitUntil((Func<bool>) new Func<bool>(flockadeGameScreen.\u003CEndGame\u003Eb__43_0));
+    yield return (object) new WaitUntil(new Func<bool>(flockadeGameScreen.\u003CEndGame\u003Eb__43_0));
     (int, int) valueTuple1 = (flockadeGameScreen._player.Victories.Count, flockadeGameScreen._player.Opponent.Victories.Count);
     FlockadeUIController.Result result1;
     if (valueTuple1.Item1 > valueTuple1.Item2)
@@ -322,7 +322,7 @@ public class FlockadeGameScreen : UISubmenuBase, IFlockadeTwitchMetadataProvider
   {
     this.StopAllCoroutines();
     this.DeactivateAllSelectables();
-    this.StartCoroutine((IEnumerator) this.EndGame());
+    this.StartCoroutine(this.EndGame());
   }
 
   public virtual void LateUpdate()

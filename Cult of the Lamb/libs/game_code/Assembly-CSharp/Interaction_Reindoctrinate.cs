@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Reindoctrinate
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -150,7 +150,7 @@ public class Interaction_Reindoctrinate : Interaction
             this.sacrificeFollower.Brain.HardSwapToTask((FollowerTask) this.Task);
             GameManager.GetInstance().OnConversationNext(this.sacrificeFollower.gameObject);
             this.sacrificeFollower.transform.position = this.transform.position;
-            this.StartCoroutine((IEnumerator) this.SimpleNewRecruitRoutine(true));
+            this.StartCoroutine(this.SimpleNewRecruitRoutine(true));
             followerSelectInstance.Hide();
             GameManager.GetInstance().WaitForSeconds(0.0f, (System.Action) (() => this.sacrificeFollower.FacePosition(this.playerFarming.gameObject.transform.position)));
           });
@@ -210,7 +210,7 @@ public class Interaction_Reindoctrinate : Interaction
       indoctrinationMenuController3.OnHidden = indoctrinationMenuController3.OnHidden + (System.Action) (() => indoctrinationMenuInstance = (UIFollowerIndoctrinationMenuController) null);
     }
     else
-      interactionReindoctrinate.StartCoroutine((IEnumerator) interactionReindoctrinate.CharacterSetupCallback());
+      interactionReindoctrinate.StartCoroutine(interactionReindoctrinate.CharacterSetupCallback());
   }
 
   public IEnumerator CharacterSetupCallback()
@@ -248,7 +248,7 @@ public class Interaction_Reindoctrinate : Interaction
   [CompilerGenerated]
   public void \u003CSimpleNewRecruitRoutine\u003Eb__20_0()
   {
-    this.StartCoroutine((IEnumerator) this.CharacterSetupCallback());
+    this.StartCoroutine(this.CharacterSetupCallback());
   }
 
   [CompilerGenerated]

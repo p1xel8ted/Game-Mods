@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_TempleBossRitual
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using MMTools;
@@ -22,8 +22,8 @@ public class Interaction_TempleBossRitual : Interaction
   public override void OnInteract(StateMachine state)
   {
     base.OnInteract(state);
-    this.StartCoroutine((IEnumerator) this.InteractionRoutine());
-    this.StartCoroutine((IEnumerator) this.CentrePlayer());
+    this.StartCoroutine(this.InteractionRoutine());
+    this.StartCoroutine(this.CentrePlayer());
   }
 
   public IEnumerator CentrePlayer()
@@ -76,7 +76,7 @@ public class Interaction_TempleBossRitual : Interaction
     }
     this.RoomSwapManager.ToggleChurch();
     CameraManager.shakeCamera(0.5f);
-    GameManager.GetInstance().StartCoroutine((IEnumerator) this.PlayerStopAnimationRoutine());
+    GameManager.GetInstance().StartCoroutine(this.PlayerStopAnimationRoutine());
   }
 
   public IEnumerator PlayerStopAnimationRoutine()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemyJuicedMaggotMiniBoss
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -93,7 +93,7 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
       tailPiece.ForcePosition(Vector3.up);
     }
     this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, 0.0f);
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDisable()
@@ -114,7 +114,7 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
     base.OnHit(Attacker, AttackLocation, AttackType, FromBehind);
     this.EscapeIfHit = false;
     if (AttackType != Health.AttackTypes.NoKnockBack)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     foreach (SimpleSpineFlash simpleSpineFlash in this.SimpleSpineFlashes)
       simpleSpineFlash.FlashFillRed();
   }
@@ -130,7 +130,7 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
         return false;
       // ISSUE: reference to a compiler-generated field
       this.\u003C\u003E1__state = -1;
-      juicedMaggotMiniBoss.StartCoroutine((IEnumerator) juicedMaggotMiniBoss.ActiveRoutine());
+      juicedMaggotMiniBoss.StartCoroutine(juicedMaggotMiniBoss.ActiveRoutine());
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -181,10 +181,10 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
     switch (juicedMaggotMiniBoss.ActionPaterrn)
     {
       case EnemyJuicedMaggotMiniBoss.AttackPatterns.Dive:
-        juicedMaggotMiniBoss.StartCoroutine((IEnumerator) juicedMaggotMiniBoss.DiveMoveRoutine());
+        juicedMaggotMiniBoss.StartCoroutine(juicedMaggotMiniBoss.DiveMoveRoutine());
         break;
       case EnemyJuicedMaggotMiniBoss.AttackPatterns.Shoot:
-        juicedMaggotMiniBoss.StartCoroutine((IEnumerator) juicedMaggotMiniBoss.ShootRoutine());
+        juicedMaggotMiniBoss.StartCoroutine(juicedMaggotMiniBoss.ShootRoutine());
         break;
     }
     ++juicedMaggotMiniBoss.ActionPaterrn;
@@ -271,7 +271,7 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
     }
     yield return (object) new WaitForEndOfFrame();
     juicedMaggotMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
-    juicedMaggotMiniBoss.StartCoroutine((IEnumerator) juicedMaggotMiniBoss.ActiveRoutine());
+    juicedMaggotMiniBoss.StartCoroutine(juicedMaggotMiniBoss.ActiveRoutine());
   }
 
   public void ForceTailDirection(Vector3 Direction)
@@ -315,7 +315,7 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
       juicedMaggotMiniBoss.Spine.AnimationState.SetAnimation(0, juicedMaggotMiniBoss.ShootAnimationLong, false);
       doRoar = false;
     }
-    yield return (object) juicedMaggotMiniBoss.StartCoroutine((IEnumerator) juicedMaggotMiniBoss.b.ShootIE());
+    yield return (object) juicedMaggotMiniBoss.StartCoroutine(juicedMaggotMiniBoss.b.ShootIE());
     juicedMaggotMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
     juicedMaggotMiniBoss.EscapeIfHit = true;
     float time = 0.0f;
@@ -334,7 +334,7 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
     while ((double) (time += Time.deltaTime * juicedMaggotMiniBoss.Spine.timeScale) < 2.0)
       yield return (object) null;
     juicedMaggotMiniBoss.EscapeIfHit = false;
-    juicedMaggotMiniBoss.StartCoroutine((IEnumerator) juicedMaggotMiniBoss.ActiveRoutine());
+    juicedMaggotMiniBoss.StartCoroutine(juicedMaggotMiniBoss.ActiveRoutine());
   }
 
   public IEnumerator MoveRoutine()
@@ -357,7 +357,7 @@ public class EnemyJuicedMaggotMiniBoss : UnitObject
     while ((double) (time += Time.deltaTime * juicedMaggotMiniBoss.Spine.timeScale) < 0.5)
       yield return (object) null;
     juicedMaggotMiniBoss.state.CURRENT_STATE = StateMachine.State.Idle;
-    juicedMaggotMiniBoss.StartCoroutine((IEnumerator) juicedMaggotMiniBoss.ActiveRoutine());
+    juicedMaggotMiniBoss.StartCoroutine(juicedMaggotMiniBoss.ActiveRoutine());
   }
 
   public bool GetNewTargetPosition()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIComicTriggerSfx
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -60,14 +60,14 @@ public class UIComicTriggerSfx : MonoBehaviour
     this.sfxPlayed = false;
     if (this.triggerType == SFXTriggerType.OnEnable)
     {
-      this.StartCoroutine((IEnumerator) this.PlaySFXWithDelay());
+      this.StartCoroutine(this.PlaySFXWithDelay());
       this.sfxPlayed = true;
     }
     if (this.triggerType != SFXTriggerType.OnSegmentShown)
       return;
     this.comicSegment.OnSegmentShown.AddListener((UnityAction) (() =>
     {
-      this.StartCoroutine((IEnumerator) this.PlaySFXWithDelay());
+      this.StartCoroutine(this.PlaySFXWithDelay());
       this.sfxPlayed = true;
     }));
   }
@@ -83,7 +83,7 @@ public class UIComicTriggerSfx : MonoBehaviour
   {
     if (this.sfxPlayed || !this.IsVisible())
       return;
-    this.StartCoroutine((IEnumerator) this.PlaySFXWithDelay());
+    this.StartCoroutine(this.PlaySFXWithDelay());
     this.sfxPlayed = true;
   }
 
@@ -147,7 +147,7 @@ public class UIComicTriggerSfx : MonoBehaviour
   [CompilerGenerated]
   public void \u003COnEnable\u003Eb__19_0()
   {
-    this.StartCoroutine((IEnumerator) this.PlaySFXWithDelay());
+    this.StartCoroutine(this.PlaySFXWithDelay());
     this.sfxPlayed = true;
   }
 }

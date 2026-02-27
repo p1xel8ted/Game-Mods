@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: src.UI.Menus.KBGameScreen
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -133,7 +133,7 @@ public class KBGameScreen : UISubmenuBase
     yield return (object) kbGameScreen._background.TransitionToEndValues();
   }
 
-  public override void OnShowCompleted() => this.StartCoroutine((IEnumerator) this.DoGameLoop());
+  public override void OnShowCompleted() => this.StartCoroutine(this.DoGameLoop());
 
   public override IEnumerator DoHideAnimation()
   {
@@ -277,7 +277,7 @@ public class KBGameScreen : UISubmenuBase
         }
       }
     }
-    yield return (object) currentDice.StartCoroutine((IEnumerator) currentDice.RollRoutine(1f, luckyRoll));
+    yield return (object) currentDice.StartCoroutine(currentDice.RollRoutine(1f, luckyRoll));
     yield return (object) new WaitForSecondsRealtime(0.5f);
     while ((UnityEngine.Object) this._exitConfirmationInstance != (UnityEngine.Object) null && (UnityEngine.Object) player == (UnityEngine.Object) this._player)
       yield return (object) null;
@@ -364,7 +364,7 @@ public class KBGameScreen : UISubmenuBase
   public void ForceEndGame()
   {
     this.StopAllCoroutines();
-    this.StartCoroutine((IEnumerator) this.DoEndGame());
+    this.StartCoroutine(this.DoEndGame());
   }
 
   public KBGameScreen.TwitchMetadata GetBoardData(int dieToPlace)

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: EnemySpider
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using Spine.Unity;
@@ -109,7 +109,7 @@ public class EnemySpider : UnitObject
       this.damageColliderEvents.SetActive(false);
     }
     this.state.CURRENT_STATE = StateMachine.State.Idle;
-    this.StartCoroutine((IEnumerator) this.ActiveRoutine());
+    this.StartCoroutine(this.ActiveRoutine());
   }
 
   public override void OnDie(
@@ -186,7 +186,7 @@ public class EnemySpider : UnitObject
             enemySpider.SetAnimation(enemySpider.IdleAnimation, true);
         }
         if (enemySpider.ShouldAttack())
-          enemySpider.StartCoroutine((IEnumerator) enemySpider.AttackRoutine());
+          enemySpider.StartCoroutine(enemySpider.AttackRoutine());
         yield return (object) null;
       }
       yield return (object) null;
@@ -269,10 +269,10 @@ public class EnemySpider : UnitObject
     if (this.Attacking && this.CanBeInterrupted)
     {
       this.StopAllCoroutines();
-      this.StartCoroutine((IEnumerator) this.HurtRoutine());
+      this.StartCoroutine(this.HurtRoutine());
     }
     if (AttackType != Health.AttackTypes.NoKnockBack && !this.DisableKnockback && this.CanBeInterrupted)
-      this.StartCoroutine((IEnumerator) this.ApplyForceRoutine(Attacker));
+      this.StartCoroutine(this.ApplyForceRoutine(Attacker));
     this.SimpleSpineFlash.FlashFillRed();
     AudioManager.Instance.PlayOneShot(this.getHitSfx, this.transform.position);
   }
@@ -317,9 +317,9 @@ public class EnemySpider : UnitObject
     enemySpider.DisableForces = false;
     enemySpider.IdleWait = 0.0f;
     enemySpider.state.CURRENT_STATE = StateMachine.State.Idle;
-    enemySpider.StartCoroutine((IEnumerator) enemySpider.ActiveRoutine());
+    enemySpider.StartCoroutine(enemySpider.ActiveRoutine());
     if (enemySpider.CounterAttack)
-      enemySpider.StartCoroutine((IEnumerator) enemySpider.AttackRoutine());
+      enemySpider.StartCoroutine(enemySpider.AttackRoutine());
   }
 
   public void GetNewTargetPosition()

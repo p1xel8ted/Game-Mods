@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: HUD_WorldToHUDHeart
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -19,7 +19,7 @@ public class HUD_WorldToHUDHeart : BaseMonoBehaviour
   public float v2 = 0.4f;
   public System.Action Callback;
 
-  public void OnEnable() => this.StartCoroutine((IEnumerator) this.MoveRoutine());
+  public void OnEnable() => this.StartCoroutine(this.MoveRoutine());
 
   public IEnumerator MoveRoutine()
   {
@@ -46,7 +46,7 @@ public class HUD_WorldToHUDHeart : BaseMonoBehaviour
         Looping = false;
     }
     CameraManager.shakeCamera(0.1f, Angle);
-    hudWorldToHudHeart.StartCoroutine((IEnumerator) hudWorldToHudHeart.ScaleRoutine());
+    hudWorldToHudHeart.StartCoroutine(hudWorldToHudHeart.ScaleRoutine());
   }
 
   public IEnumerator ScaleRoutine()

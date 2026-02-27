@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: UIFollowerName
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -136,7 +136,7 @@ public class UIFollowerName : MonoBehaviour
     }
   }
 
-  public void RegenerateLabels() => this.StartCoroutine((IEnumerator) this.Regenerate());
+  public void RegenerateLabels() => this.StartCoroutine(this.Regenerate());
 
   public IEnumerator Regenerate()
   {
@@ -187,7 +187,7 @@ public class UIFollowerName : MonoBehaviour
     if (!GameManager.InMenu || !(this.transform.localScale == Vector3.one))
       return;
     this.Hide();
-    this.StartCoroutine((IEnumerator) this.WaitForOutOfMenu());
+    this.StartCoroutine(this.WaitForOutOfMenu());
   }
 
   public IEnumerator WaitForOutOfMenu()

@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_Cauldron
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using FMOD.Studio;
@@ -94,7 +94,7 @@ public class Interaction_Cauldron : Interaction
   public virtual void ShowMenu()
   {
     UICookingFireMenuController cookingFireMenu = MonoSingleton<UIManager>.Instance.ShowCookingFireMenu(this.structure.Structure_Info);
-    cookingFireMenu.OnConfirm += (System.Action) (() => this.StartCoroutine((IEnumerator) this.Cook()));
+    cookingFireMenu.OnConfirm += (System.Action) (() => this.StartCoroutine(this.Cook()));
     UICookingFireMenuController fireMenuController = cookingFireMenu;
     fireMenuController.OnHidden = fireMenuController.OnHidden + (System.Action) (() => cookingFireMenu = (UICookingFireMenuController) null);
   }

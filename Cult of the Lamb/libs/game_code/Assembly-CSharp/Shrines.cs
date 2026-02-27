@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Shrines
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using DG.Tweening;
@@ -208,7 +208,7 @@ public class Shrines : Interaction
     base.OnInteract(state);
     if (this.GetCostQuantity() <= Inventory.GetItemQuantity(20))
     {
-      this.giveGoldRoutine = this.StartCoroutine((IEnumerator) this.GiveGold(this.playerFarming));
+      this.giveGoldRoutine = this.StartCoroutine(this.GiveGold(this.playerFarming));
     }
     else
     {
@@ -302,7 +302,7 @@ public class Shrines : Interaction
         break;
       case Shrines.ShrineType.TAROT_CARD:
         Debug.Log((object) "TAROT CARD!");
-        this.StartCoroutine((IEnumerator) this.DrawCardRoutine(playerFarming));
+        this.StartCoroutine(this.DrawCardRoutine(playerFarming));
         break;
       case Shrines.ShrineType.DAMAGE:
         InventoryItem.Spawn(InventoryItem.ITEM_TYPE.TRINKET_CARD, 1, this.transform.position + Vector3.down, 0.0f).GetComponent<Interaction_TarotCard>().CardOverride = TarotCards.Card.Moon;
@@ -359,8 +359,8 @@ public class Shrines : Interaction
         if (card == card1)
           card3 = card2;
         if (CoopManager.CoopActive)
-          GameManager.GetInstance().StartCoroutine((IEnumerator) this.DelayEffectsRoutine(card3, 0.0f, playerFarming.isLamb ? PlayerFarming.players[1] : PlayerFarming.players[0]));
-        this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(card, 0.0f));
+          GameManager.GetInstance().StartCoroutine(this.DelayEffectsRoutine(card3, 0.0f, playerFarming.isLamb ? PlayerFarming.players[1] : PlayerFarming.players[0]));
+        this.StartCoroutine(this.BackToIdleRoutine(card, 0.0f));
       });
       UITarotChoiceOverlayController overlayController = tarotChoiceOverlayInstance;
       overlayController.OnHidden = overlayController.OnHidden + (System.Action) (() => tarotChoiceOverlayInstance = (UITarotChoiceOverlayController) null);
@@ -368,15 +368,15 @@ public class Shrines : Interaction
     else if (card1 != null || card2 != null)
     {
       if (card1 != null)
-        UITrinketCards.Play(card1, (System.Action) (() => this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(card1, 0.0f))));
+        UITrinketCards.Play(card1, (System.Action) (() => this.StartCoroutine(this.BackToIdleRoutine(card1, 0.0f))));
       else if (card2 != null)
-        UITrinketCards.Play(card2, (System.Action) (() => this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(card2, 0.0f))));
+        UITrinketCards.Play(card2, (System.Action) (() => this.StartCoroutine(this.BackToIdleRoutine(card2, 0.0f))));
     }
   }
 
   public void BackToIdle(PlayerFarming playerFarming)
   {
-    this.StartCoroutine((IEnumerator) this.BackToIdleRoutine(playerFarming));
+    this.StartCoroutine(this.BackToIdleRoutine(playerFarming));
   }
 
   public IEnumerator BackToIdleRoutine(TarotCards.TarotCard card, float delay)
@@ -393,7 +393,7 @@ public class Shrines : Interaction
       shrines.playerFarming.simpleSpineAnimator.Animate("cards/cards-stop-seperate", 0, false);
       shrines.playerFarming.simpleSpineAnimator.AddAnimate("idle", 0, true, 0.0f);
       shrines.StopAllCoroutines();
-      GameManager.GetInstance().StartCoroutine((IEnumerator) shrines.DelayEffectsRoutine(card, delay, shrines.playerFarming));
+      GameManager.GetInstance().StartCoroutine(shrines.DelayEffectsRoutine(card, delay, shrines.playerFarming));
       return false;
     }
     // ISSUE: reference to a compiler-generated field
@@ -440,7 +440,7 @@ public class Shrines : Interaction
     playerFarming.SpineUseDeltaTime(true);
     SimpleSetCamera.EnableAll();
     GameManager.GetInstance().UnFreezeAllies();
-    GameManager.GetInstance().StartCoroutine((IEnumerator) shrines.DelayEffectsRoutine(playerFarming));
+    GameManager.GetInstance().StartCoroutine(shrines.DelayEffectsRoutine(playerFarming));
   }
 
   public IEnumerator DelayEffectsRoutine(PlayerFarming playerFarming)

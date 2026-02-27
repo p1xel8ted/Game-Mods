@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Demos.PressAnyButtonToJoinExample_Assigner
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ public class PressAnyButtonToJoinExample_Assigner : MonoBehaviour
 
   public void AssignJoysticksToPlayers()
   {
-    IList<Joystick> joysticks = (IList<Joystick>) ReInput.controllers.Joysticks;
+    IList<Joystick> joysticks = ReInput.controllers.Joysticks;
     for (int index = 0; index < joysticks.Count; ++index)
     {
       Joystick joystick = joysticks[index];
@@ -37,7 +37,7 @@ public class PressAnyButtonToJoinExample_Assigner : MonoBehaviour
 
   public Player FindPlayerWithoutJoystick()
   {
-    IList<Player> players = (IList<Player>) ReInput.players.Players;
+    IList<Player> players = ReInput.players.Players;
     for (int index = 0; index < players.Count; ++index)
     {
       if (players[index].controllers.joystickCount <= 0)

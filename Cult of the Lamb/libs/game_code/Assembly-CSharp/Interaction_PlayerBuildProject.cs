@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Interaction_PlayerBuildProject
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using I2.Loc;
@@ -63,7 +63,7 @@ public class Interaction_PlayerBuildProject : Interaction
     base.OnInteract(state);
     this.playerFarming.simpleSpineAnimator.OnSpineEvent += new SimpleSpineAnimator.SpineEvent(this.SimpleSpineAnimator_OnSpineEvent);
     this.Activating = true;
-    this.StartCoroutine((IEnumerator) this.DoBuild(this.playerFarming));
+    this.StartCoroutine(this.DoBuild(this.playerFarming));
   }
 
   public override void GetSecondaryLabel()

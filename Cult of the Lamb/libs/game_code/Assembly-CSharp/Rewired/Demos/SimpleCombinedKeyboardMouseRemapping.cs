@@ -1,7 +1,7 @@
 ﻿// Decompiled with JetBrains decompiler
 // Type: Rewired.Demos.SimpleCombinedKeyboardMouseRemapping
 // Assembly: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F70CF1F-EE8D-4EAB-9CF8-16424448359F
+// MVID: 5ECA9E40-DF29-464B-A6ED-FE41BA24084E
 // Assembly location: F:\OneDrive\Development\Game-Mods\Cult of the Lamb\libs\Assembly-CSharp.dll
 
 using System;
@@ -43,10 +43,10 @@ public class SimpleCombinedKeyboardMouseRemapping : MonoBehaviour
     this.inputMapper_mouse.options.ignoreMouseYAxis = true;
     this.inputMapper_keyboard.options.allowButtonsOnFullAxisAssignment = false;
     this.inputMapper_mouse.options.allowButtonsOnFullAxisAssignment = false;
-    this.inputMapper_keyboard.InputMappedEvent += (Action<InputMapper.InputMappedEventData>) new Action<InputMapper.InputMappedEventData>(this.OnInputMapped);
-    this.inputMapper_keyboard.StoppedEvent += (Action<InputMapper.StoppedEventData>) new Action<InputMapper.StoppedEventData>(this.OnStopped);
-    this.inputMapper_mouse.InputMappedEvent += (Action<InputMapper.InputMappedEventData>) new Action<InputMapper.InputMappedEventData>(this.OnInputMapped);
-    this.inputMapper_mouse.StoppedEvent += (Action<InputMapper.StoppedEventData>) new Action<InputMapper.StoppedEventData>(this.OnStopped);
+    this.inputMapper_keyboard.InputMappedEvent += new Action<InputMapper.InputMappedEventData>(this.OnInputMapped);
+    this.inputMapper_keyboard.StoppedEvent += new Action<InputMapper.StoppedEventData>(this.OnStopped);
+    this.inputMapper_mouse.InputMappedEvent += new Action<InputMapper.InputMappedEventData>(this.OnInputMapped);
+    this.inputMapper_mouse.StoppedEvent += new Action<InputMapper.StoppedEventData>(this.OnStopped);
     this.InitializeUI();
   }
 
@@ -69,7 +69,7 @@ public class SimpleCombinedKeyboardMouseRemapping : MonoBehaviour
       int actionElementMapId = -1;
       for (int index2 = 0; index2 < 2; ++index2)
       {
-        foreach (ActionElementMap actionElementMap in (IEnumerable<ActionElementMap>) this.player.controllers.maps.GetMap(index2 == 0 ? ControllerType.Keyboard : ControllerType.Mouse, 0, "Default", "Default").ElementMapsWithAction(action.id))
+        foreach (ActionElementMap actionElementMap in this.player.controllers.maps.GetMap(index2 == 0 ? ControllerType.Keyboard : ControllerType.Mouse, 0, "Default", "Default").ElementMapsWithAction(action.id))
         {
           if (actionElementMap.ShowInField(row.actionRange))
           {
@@ -97,29 +97,11 @@ public class SimpleCombinedKeyboardMouseRemapping : MonoBehaviour
 
   public void InitializeUI()
   {
-    IEnumerator enumerator1 = (IEnumerator) this.actionGroupTransform.GetEnumerator();
-    try
-    {
-      while (enumerator1.MoveNext())
-        UnityEngine.Object.Destroy((UnityEngine.Object) ((Component) enumerator1.Current).gameObject);
-    }
-    finally
-    {
-      if (enumerator1 is IDisposable disposable)
-        disposable.Dispose();
-    }
-    IEnumerator enumerator2 = (IEnumerator) this.fieldGroupTransform.GetEnumerator();
-    try
-    {
-      while (enumerator2.MoveNext())
-        UnityEngine.Object.Destroy((UnityEngine.Object) ((Component) enumerator2.Current).gameObject);
-    }
-    finally
-    {
-      if (enumerator2 is IDisposable disposable)
-        disposable.Dispose();
-    }
-    foreach (InputAction action in (IEnumerable<InputAction>) ReInput.mapping.ActionsInCategory("Default"))
+    foreach (Component component in (Transform) this.actionGroupTransform)
+      UnityEngine.Object.Destroy((UnityEngine.Object) component.gameObject);
+    foreach (Component component in (Transform) this.fieldGroupTransform)
+      UnityEngine.Object.Destroy((UnityEngine.Object) component.gameObject);
+    foreach (InputAction action in ReInput.mapping.ActionsInCategory("Default"))
     {
       if (action.type == InputActionType.Axis)
       {
@@ -163,7 +145,7 @@ public class SimpleCombinedKeyboardMouseRemapping : MonoBehaviour
       actionElementMapId = actionElementMapToReplaceId,
       controllerMap = controllerMap
     };
-    this.StartCoroutine((IEnumerator) this.StartListeningDelayed(index, map1, map2, actionElementMapToReplaceId));
+    this.StartCoroutine(this.StartListeningDelayed(index, map1, map2, actionElementMapToReplaceId));
   }
 
   public IEnumerator StartListeningDelayed(
