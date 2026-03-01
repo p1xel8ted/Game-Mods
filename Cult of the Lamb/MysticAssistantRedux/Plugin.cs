@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.mysticassistant";
     private const string PluginName = "Mystic Assistant Redux";
-    private const string PluginVer = "0.1.2";
+    private const string PluginVer = "0.1.3";
 
     internal static ManualLogSource Log { get; private set; }
 

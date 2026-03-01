@@ -1,3 +1,8 @@
+### 0.1.3 - 01/03/2026
+
+**Fixes:**
+- Fixed shop failing to open after changing settings or updating the mod
+
 ### 0.1.2 - 24/02/2026
 
 **Fixes:**

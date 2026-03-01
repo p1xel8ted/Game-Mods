@@ -74,7 +74,8 @@ public static class MysticShopPatches
                 RequiresDiscovery = false,
                 HideQuantity = false,
                 ShowCoins = false,
-                AllowInputOnlyFromPlayer = playerFarming
+                AllowInputOnlyFromPlayer = playerFarming,
+                DontCache = true
             }
         );
 
