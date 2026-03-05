@@ -64,6 +64,9 @@ public partial class Plugin
    // internal static ConfigEntry<bool> TripleMagnetRange { get; private set; }
    // internal static ConfigEntry<bool> UseCustomMagnetRange { get; private set; }
     internal static ConfigEntry<float> MagnetRangeMultiplier { get; private set; }
+    internal static ConfigEntry<float> ResourceDropMultiplier { get; private set; }
+    internal static ConfigEntry<int> ResourceDropSpawnCap { get; private set; }
+    internal static ConfigEntry<bool> ResourceDropMultiplierBlackSouls { get; private set; }
 
     private static ConfigEntry<bool> MainMenuGlitch { get; set; }
 

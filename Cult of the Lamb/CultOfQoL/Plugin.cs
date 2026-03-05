@@ -276,14 +276,30 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         // ── Loot ──
+        ResourceDropMultiplier = _configInstance.Bind(LootSection, "Resource Drop Multiplier", 1.0f, new ConfigDescription("Multiply the quantity of dropped resources (wood, stone, gold, food, etc.). Set to 1 for default game behavior.", new AcceptableValueRange<float>(1f, 10f), new ConfigurationManagerAttributes
+        {
+            Order = 6
+        }));
+        ResourceDropMultiplier.SettingChanged += (_, _) =>
+        {
+            ResourceDropMultiplier.Value = Mathf.Round(ResourceDropMultiplier.Value * 4) / 4;
+        };
+        ResourceDropSpawnCap = _configInstance.Bind(LootSection, "Resource Drop Spawn Cap", 30, new ConfigDescription("Maximum number of physical pickups to spawn per drop event. Extra resources above this cap are added directly to your inventory. Lower values improve performance with high multipliers.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes
+        {
+            Order = 5, DispName = "    └ Spawn Cap"
+        }));
+        ResourceDropMultiplierBlackSouls = _configInstance.Bind(LootSection, "Multiply Black Souls", false, new ConfigDescription("Also apply the resource multiplier to Black Souls (spirit ammo). Off by default since black souls already have their own tarot-based multiplier.", null, new ConfigurationManagerAttributes
+        {
+            Order = 4, DispName = "    └ Multiply Black Souls"
+        }));
         AllLootMagnets = _configInstance.Bind(LootSection, "All Loot Magnets", false, new ConfigDescription("All loot is magnetized to you.", null, new ConfigurationManagerAttributes
         {
-            Order = 2
+            Order = 3
         }));
         AllLootMagnets.SettingChanged += (_, _) => { UpdateAllMagnets(); };
         MagnetRangeMultiplier = _configInstance.Bind(LootSection, "Magnet Range Multiplier", 1.0f, new ConfigDescription("Apply a multiplier to the magnet range.", new AcceptableValueRange<float>(-10f, 10f), new ConfigurationManagerAttributes
         {
-            Order = 1, DispName = "    └ Magnet Range Multiplier"
+            Order = 2, DispName = "    └ Magnet Range Multiplier"
         }));
         MagnetRangeMultiplier.SettingChanged += (_, _) =>
         {

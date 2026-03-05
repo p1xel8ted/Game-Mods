@@ -1,0 +1,10 @@
+{
+  "name": "Code Vein Vortex Extension",
+  "author": "ChemBoy1",
+  "version": "0.1.0",
+  "description": "This extension adds CODE VEIN modding support to Vortex Mod Manager.",
+  "type": "game",
+  "path": "",
+  "bundled": false,
+  "modId": 0
+}

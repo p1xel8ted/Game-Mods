@@ -1,0 +1,10 @@
+{
+  "name": "Resident Evil Requiem Vortex Extension",
+  "author": "ChemBoy1",
+  "version": "0.1.0",
+  "description": "Adds Vortex mod support for Resident Evil Requiem. Fluffy Mod Manager automatically installed. Steam supported.",
+  "type": "game",
+  "path": "C:\\Users\\Ben\\AppData\\Roaming\\Vortex\\plugins\\Vortex Extension Update - Resident Evil Requiem Vortex Extension v0.1.0.7z",
+  "bundled": false,
+  "modId": 1653
+}

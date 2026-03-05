@@ -1,0 +1,8 @@
+<Project>
+    <PropertyGroup>
+        <!-- Path to your Cuisineer game installation -->
+        <GamePath>G:\SteamLibrary\steamapps\common\Cuisineer</GamePath>
+        <BepInExInteropPath>$(GamePath)\BepInEx\interop</BepInExInteropPath>
+        <BepInExPluginsPath>$(GamePath)\BepInEx\plugins</BepInExPluginsPath>
+    </PropertyGroup>
+</Project>

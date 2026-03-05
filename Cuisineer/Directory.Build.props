@@ -1,0 +1,57 @@
+<Project>
+
+    <Import Project="Environment.props" Condition="Exists('Environment.props')" />
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Deterministic>true</Deterministic>
+        <IsPackable>false</IsPackable>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Nullable>disable</Nullable>
+        <NoWarn>Publicizer001,CS1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DebugType>portable</DebugType>
+        <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Authors>p1xel8ted</Authors>
+        <Company>$(Authors)</Company>
+        <Product>$(MSBuildProjectName)</Product>
+        <Description>$(MSBuildProjectName)</Description>
+        <PackageId>$(MSBuildProjectName)</PackageId>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <OutputPath>$(BepInExPluginsPath)</OutputPath>
+    </PropertyGroup>
+
+    <ItemDefinitionGroup>
+        <Reference>
+            <Private>False</Private>
+        </Reference>
+        <ProjectReference>
+            <Private>False</Private>
+        </ProjectReference>
+        <PackageReference>
+            <Private>False</Private>
+        </PackageReference>
+    </ItemDefinitionGroup>
+
+    <!-- BepInEx IL2CPP -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+    </ItemGroup>
+
+    <!-- All interop assemblies -->
+    <ItemGroup>
+        <Reference Include="$(BepInExInteropPath)\*.dll" />
+    </ItemGroup>
+
+    <Import Project="zip.target" />
+
+</Project>
