@@ -79,10 +79,7 @@ public static class ToolDictionaries
     private static readonly Dictionary<int, string> ScytheData = new()
     {
         {3000, "Scythe"},
-        {30000, "Adamant Scythe"},
-        {30020, "Mithril Scythe"},
-        {30030, "Sunite Scythe"},
-        {30090, "Glorite Scythe"},
+        {10810, "Old Scythe"},
         {30007, "Dev Scythe"},
     };
 

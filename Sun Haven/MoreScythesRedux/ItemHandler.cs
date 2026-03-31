@@ -26,7 +26,7 @@ public static class ItemHandler
                     return;
                 }
 
-                var item = ScriptableObject.CreateInstance<ItemData>();
+                var item = ScriptableObject.CreateInstance<ToolData>();
                 var jsonData = FileLoader.LoadFile(Assembly.GetExecutingAssembly(), $"data.{scythe.id}.json");
                 if (string.IsNullOrEmpty(jsonData))
                 {
@@ -72,7 +72,7 @@ public static class ItemHandler
              
 
                 Database.Instance.ids[item.name.RemoveWhitespace().ToLower()] = item.id;
-                Database.Instance.types[item.id] = typeof(ItemData);
+                Database.Instance.types[item.id] = typeof(ToolData);
                 Database.Instance.validIDs.Add(item.id);
 
                 var node = Database.Instance.lruList.AddFirst(new Database.CacheItem(item.id, item));

@@ -90,6 +90,7 @@ public static class Patches
         }
 
         __instance.bobberRadius = radius;
+        __instance.collider.radius = radius;
         if (Plugin.Debug.Value)
         {
             Plugin.LOG.LogInfo($"{message}");
@@ -125,7 +126,7 @@ public static class Patches
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(FishSpawnManager), nameof(FishSpawnManager.Start))]
-    private static void FishSpawnManager_Start(ref int ___spawnLimit)
+    private static void FishSpawnManager_Start()
     {
         if (Plugin.Debug.Value)
         {
@@ -140,7 +141,6 @@ public static class Patches
         if (Plugin.ModifyFishSpawnLimit.Value)
         {
             FishSpawnManager.Instance.spawnLimit = Plugin.FishSpawnLimit.Value;
-            ___spawnLimit = Plugin.FishSpawnLimit.Value;
         }
 
         foreach (var itemData in FishingRod.fishingMuseumItems)
@@ -188,7 +188,7 @@ public static class Patches
     public static void FishingRod_TargetBobber(ref Bobber bobber)
     {
         if (!Plugin.InstantAttraction.Value) return;
-        bobber.FishingRod.fishAttractionRate = -100;
+        bobber.FishingRod.fishAttractionRate = 10000;
     }
 
     [HarmonyPrefix]
@@ -196,38 +196,15 @@ public static class Patches
     public static bool PushDialogue(ref DialogueController __instance, ref DialogueNode dialogue,
         ref UnityAction onComplete, ref bool animateOnComplete, ref bool ignoreDialogueOnGoing)
     {
-        if (!Player.Instance.IsFishing)
-        {
-            if (Plugin.Debug.Value)
-            {
-                Plugin.LOG.LogInfo("Player isn't fishing! Let dialogue run like normal...");
-            }
-
-            return true;
-        }
+        if (!Player.Instance.IsFishing || !Plugin.DisableCaughtFishWindow.Value) return true;
 
         if (Plugin.Debug.Value)
         {
-            Plugin.LOG.LogInfo("Player is fishing! Modify dialogue if their settings allow...");
+            Plugin.LOG.LogInfo("Player is fishing, skipping catch dialogue.");
         }
 
-        var caughtFish = dialogue.dialogueText.Any(line => line.ToLowerInvariant().Contains(Const.Caught));
-
-        if (caughtFish)
-        {
-            if (Plugin.Debug.Value)
-            {
-                Plugin.LOG.LogInfo("Caught just a fish!");
-            }
-
-            if (Plugin.DisableCaughtFishWindow.Value)
-            {
-                onComplete?.Invoke();
-                return false;
-            }
-        }
-
-        return true;
+        onComplete?.Invoke();
+        return false;
     }
 
     [HarmonyPrefix]

@@ -8,17 +8,5 @@
 
     <Import Project="..\zip.target"/>
 
-    <!-- Project-specific references -->
-    <ItemGroup>
-        <Reference Include="I2Localization">
-            <HintPath>..\libs\I2Localization.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.UnityWebRequestModule">
-            <HintPath>..\libs\UnityEngine.UnityWebRequestModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.VideoModule">
-            <HintPath>..\libs\UnityEngine.VideoModule.dll</HintPath>
-        </Reference>
-    </ItemGroup>
 
 </Project>

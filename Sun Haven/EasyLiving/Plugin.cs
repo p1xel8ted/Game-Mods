@@ -25,6 +25,7 @@ public partial class Plugin : BaseUnityPlugin
     private static ConfigEntry<KeyboardShortcut> MoveSpeedMultiplierDecrease { get; set; }
 
     public static ConfigEntry<bool> MaterialsOnlyDefault { get; private set; }
+    public static ConfigEntry<bool> EnableRegeneration { get; private set; }
     // public static ConfigEntry<bool> IncreaseWateringCanFillRange { get; private set; }
 
     public static ConfigEntry<bool> PlayerStartsAwayFromMailbox { get; private set; }
@@ -115,6 +116,7 @@ public partial class Plugin : BaseUnityPlugin
         SkipAutoLoadMostRecentSaveShortcut = Config.Bind("06. Saves", "Skip Auto Load Most Recent Save Shortcut", new KeyboardShortcut(KeyCode.LeftShift), new ConfigDescription("Keybind to hold to skip auto loading the most recent save.", null, new ConfigurationManagerAttributes { Order = 8 }));
         MaterialsOnlyDefault = Config.Bind("07. Crafting", "Materials Only Default", true, new ConfigDescription("Set the default crafting filter to 'Materials Only' when opening a crafting table.", null, new ConfigurationManagerAttributes { Order = 7 }));
         // IncreaseWateringCanFillRange = Config.Bind("08. Farming", "Increase Watering Can Fill Range", true, new ConfigDescription("Increase the watering can fill range.", null, new ConfigurationManagerAttributes {Order = 5}));
+        EnableRegeneration = Config.Bind("05. Player", "Enable Health/Mana Regeneration", true, new ConfigDescription("Slowly regenerate health and mana over time. Adds +1 HP and +1 MP every few seconds on top of the game's natural regeneration.", null, new ConfigurationManagerAttributes { Order = 6 }));
         Emotes = Config.Bind("09. Player Settings", "Emotes", true, new ConfigDescription("Enable emotes.", null, new ConfigurationManagerAttributes { Order = 4 }));
         Emotes.SettingChanged += (_, _) => { UpdatePlayerPref(); };
         FastDialogue = Config.Bind("09. Player Settings", "Fast Dialogue", true, new ConfigDescription("According to game code increases dialogue speed, but I have my doubts. Try for yourself.", null, new ConfigurationManagerAttributes { Order = 2 }));
@@ -161,19 +163,22 @@ public partial class Plugin : BaseUnityPlugin
     private static void SceneManagerOnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
         UpdatePlayerPref();
-        var maxRefreshRateRatio = Screen.resolutions
-            .OrderByDescending(r => (float)r.refreshRateRatio.value)
+        var maxRefreshRate = Screen.resolutions
             .Select(r => r.refreshRateRatio)
+            .Where(r => r.value > 0)
+            .OrderByDescending(r => r.value)
             .FirstOrDefault();
 
-        if (ResolutionChange.Value)
+        if (maxRefreshRate.value > 0)
         {
-            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow, maxRefreshRateRatio);
-            LOG.LogInfo($"Screen resolution set to {Display.main.systemWidth}x{Display.main.systemHeight} @ {maxRefreshRateRatio}Hz");
+            if (ResolutionChange.Value)
+            {
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow, maxRefreshRate);
+                LOG.LogInfo($"Screen resolution set to {Display.main.systemWidth}x{Display.main.systemHeight} @ {maxRefreshRate}Hz");
+            }
+
+            Time.fixedDeltaTime = (float)(1f / maxRefreshRate.value);
+            LOG.LogInfo($"FixedDeltaTime set to {Time.fixedDeltaTime}");
         }
-
-        Time.fixedDeltaTime = (float)(1f / maxRefreshRateRatio.value);
-
-        LOG.LogInfo($"FixedDeltaTime set to {Time.fixedDeltaTime}");
     }
 }

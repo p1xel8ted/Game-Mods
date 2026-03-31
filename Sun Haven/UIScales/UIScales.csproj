@@ -16,12 +16,6 @@
 
     <Import Project="..\zip.target"/>
 
-    <!-- Project-specific references -->
-    <ItemGroup>
-        <Reference Include="Unity.TextMeshPro">
-            <HintPath>..\libs\Unity.TextMeshPro.dll</HintPath>
-        </Reference>
-    </ItemGroup>
 
     <ItemGroup>
         <None Remove="notifications.png" />

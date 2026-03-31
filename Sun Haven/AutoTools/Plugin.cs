@@ -1,4 +1,4 @@
-﻿using MonoMod.Utils;
+using MonoMod.Utils;
 
 namespace AutoTools;
 
@@ -8,7 +8,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.autotools";
     private const string PluginName = "Auto Tools";
-    private const string PluginVersion = "0.1.0";
+    private const string PluginVersion = "0.2.0";
     private const string CategoryGeneral = "01. General";
     private const string CategoryFarm = "02. Farm";
     private const string CategoryEnemies = "03. Enemies";
@@ -16,6 +16,7 @@ public class Plugin : BaseUnityPlugin
     private const string CategoryDebug = "05. Debug";
     private static ManualLogSource LOG { get; set; }
     internal static ConfigEntry<bool> EnableAutoTool { get; private set; }
+    internal static ConfigEntry<DetectionMode> ToolDetectionMode { get; private set; }
     internal static ConfigEntry<bool> EnableAutoToolOnFarmTiles { get; private set; }
     internal static ConfigEntry<bool> EnableAutoPickaxe { get; private set; }
     internal static ConfigEntry<bool> EnableAutoAxe { get; private set; }
@@ -29,15 +30,18 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> EnableEnemyDetection { get; private set; }
     internal static ConfigEntry<bool> UseCombatRange { get; private set; }
     internal static ConfigEntry<int> CombatRange { get; private set; }
+    internal static ConfigEntry<float> SwitchCooldown { get; private set; }
 
     private void Awake()
     {
         LOG = Logger;
-        
+
         WateringCan.onWateringCanEmpty += FindNextWateringCan;
         WateringCan.onFillUpWateringCan += FillWateringCanProper;
 
-        EnableAutoTool = Config.Bind(CategoryGeneral, "Enable AutoTools", true, new ConfigDescription("Enable AutoTools.", null, new ConfigurationManagerAttributes {Order = 27}));
+        EnableAutoTool = Config.Bind(CategoryGeneral, "Enable AutoTools", true, new ConfigDescription("Enable AutoTools.", null, new ConfigurationManagerAttributes {Order = 30}));
+        ToolDetectionMode = Config.Bind(CategoryGeneral, "Detection Mode", DetectionMode.Cursor, new ConfigDescription("Cursor: switches tools based on what you aim at (mouse/right stick). Proximity: legacy mode, switches based on what you walk near.", null, new ConfigurationManagerAttributes {Order = 29}));
+        SwitchCooldown = Config.Bind(CategoryGeneral, "Switch Cooldown", 0.2f, new ConfigDescription("Minimum time in seconds between tool switches to prevent flickering.", new AcceptableValueRange<float>(0.05f, 1f), new ConfigurationManagerAttributes {Order = 28}));
         EnableAutoToolOnFarmTiles = Config.Bind(CategoryFarm, "Enable AutoTools On Farm Tiles", false, new ConfigDescription("Enable AutoTools On Farm Tiles.", null, new ConfigurationManagerAttributes {Order = 26}));
         EnableEnemyDetection = Config.Bind(CategoryEnemies, "Enable Enemy Detection", true, new ConfigDescription("If enabled, tool switching will be disabled when enemies are in the area.", null, new ConfigurationManagerAttributes {Order = 25}));
         UseCombatRange = Config.Bind(CategoryEnemies, "Use Combat Range", false, new ConfigDescription("Use Combat Range for switching instead of based on area.", null, new ConfigurationManagerAttributes {Order = 25}));
@@ -55,7 +59,7 @@ public class Plugin : BaseUnityPlugin
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Logger.LogInfo($"Plugin {PluginName} is loaded! Running game version {Application.version} on {PlatformHelper.Current}.");
     }
-    
+
     private static void FillWateringCanProper()
     {
         if (!Player.Instance) return;
@@ -63,12 +67,12 @@ public class Plugin : BaseUnityPlugin
         var wc = ((WateringCanData) Utils.GetItemData(item.id)).waterCapacity;
         item.WaterAmount = wc;
     }
-    
+
     private void OnDestroy()
     {
         OnDisable();
     }
-    
+
     private void OnDisable()
     {
         WateringCan.onWateringCanEmpty -= FindNextWateringCan;
@@ -76,7 +80,7 @@ public class Plugin : BaseUnityPlugin
         LOG.LogError($"Plugin {PluginName} was disabled/destroyed! Unless you are exiting the game, please install Keep Alive! - https://www.nexusmods.com/sunhaven/mods/31");
     }
 
-    
+
     internal static void DebugLog(string str)
     {
         if (!EnableDebug.Value) return;
@@ -89,4 +93,10 @@ public class Plugin : BaseUnityPlugin
         Utils.Notify(Tools.YourWateringCanIsEmpty, Tools.GetBestWateringCanId(), true);
         Tools.FindBestTool(Tools.Tool.WateringCan);
     }
+}
+
+internal enum DetectionMode
+{
+    Cursor,
+    Proximity
 }

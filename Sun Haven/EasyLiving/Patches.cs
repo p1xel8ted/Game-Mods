@@ -4,10 +4,10 @@
 [HarmonyAfter("devopsdinosaur.sunhaven.continue_button")]
 public static class Patches
 {
-    private const float BaseMoveSpeed = 4.5f;
     private const string SkippingLoadOfLastModifiedSave = "Skipping load of last modified save.";
-    private const float RegenerationInterval = 3f; // Example value for regeneration interval
+    private const float RegenerationInterval = 3f;
     private const string PlayerFarmScene = "2playerfarm";
+    private static float _originalMoveSpeed;
 
     internal const string DevOpsContinue = "devopsdinosaur.sunhaven.continue_button";
     internal static GameObject QuitToDesktopButton { get; set; }
@@ -52,9 +52,22 @@ public static class Patches
 
     private static void ApplyMoveSpeed(Player player)
     {
-        if (player == null || Player.Instance == null) return;
-        if (!Plugin.ApplyMoveSpeedMultiplier.Value) return;
-        var newSpeed = BaseMoveSpeed * Plugin.MoveSpeedMultiplier.Value;
+        if (!Plugin.ApplyMoveSpeedMultiplier.Value)
+        {
+            if (_originalMoveSpeed > 0f && !Mathf.Approximately(player.moveSpeed, _originalMoveSpeed))
+            {
+                player.moveSpeed = _originalMoveSpeed;
+            }
+
+            return;
+        }
+
+        if (_originalMoveSpeed <= 0f)
+        {
+            _originalMoveSpeed = player.moveSpeed;
+        }
+
+        var newSpeed = _originalMoveSpeed * Plugin.MoveSpeedMultiplier.Value;
         if (!Mathf.Approximately(player.moveSpeed, newSpeed))
         {
             player.moveSpeed = newSpeed;
@@ -63,7 +76,7 @@ public static class Patches
 
     private static void RegenerateHealthAndMana(Player player)
     {
-        if (player == null || Player.Instance == null) return;
+        if (!Plugin.EnableRegeneration.Value) return;
         _regenerationTimer += Time.deltaTime;
         if (!(_regenerationTimer >= RegenerationInterval)) return;
         _regenerationTimer = 0f;
@@ -76,14 +89,14 @@ public static class Patches
         return currentStat < maxStat ? currentStat + regenerationAmount : currentStat;
     }
 
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.MoveSpeed), MethodType.Getter)]
     public static void Player_MoveSpeed(ref Player __instance, ref float __result)
     {
         if (__instance == null || Player.Instance == null) return;
         if (!Plugin.ApplyMoveSpeedMultiplier.Value) return;
-        __result = BaseMoveSpeed * Plugin.MoveSpeedMultiplier.Value;
+        if (_originalMoveSpeed <= 0f) return;
+        __result = _originalMoveSpeed * Plugin.MoveSpeedMultiplier.Value;
     }
 
     [HarmonyPostfix]
@@ -121,9 +134,8 @@ public static class Patches
     [HarmonyPatch(typeof(ScrollRect), nameof(ScrollRect.LateUpdate))]
     public static void ScrollRect_Initialize(ref ScrollRect __instance)
     {
-        // Plugin.LOG.LogWarning($"ScrollRect: {__instance.name}, {GetGameObjectPath(__instance.gameObject)}");
-
-        if (__instance.gameObject.GetGameObjectPath() != "Player(Clone)/UI_Quests/QuestTracker/Scroll View") return;
+        if (__instance.name != "Scroll View") return;
+        if (__instance.transform.parent == null || __instance.transform.parent.name != "QuestTracker") return;
 
 
         if (!Plugin.EnableAdjustQuestTrackerHeightView.Value)
@@ -151,14 +163,38 @@ public static class Patches
     public static bool DialogueController_PushDialogue(ref DialogueNode dialogue, ref UnityAction onComplete)
     {
         if (!Plugin.SkipMuseumMissingItemsDialogue.Value) return true;
+        if (dialogue?.dialogueText == null || dialogue.dialogueText.Count == 0) return true;
 
-        if (dialogue.dialogueText.Any(str => str.Contains("museum bundle") && str.Contains("missing items")))
+        if (dialogue.dialogueText.Any(IsMuseumBundleText))
         {
             onComplete?.Invoke();
             return false;
         }
 
         return true;
+    }
+
+    private static bool IsMuseumBundleText(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return false;
+        return text == ScriptLocalization.MuseumBundles_Finished
+               || text == ScriptLocalization.MuseumBundles_Alchemy
+               || text == ScriptLocalization.MuseumBundles_Bars
+               || text == ScriptLocalization.MuseumBundles_Combat
+               || text == ScriptLocalization.MuseumBundles_Crops
+               || text == ScriptLocalization.MuseumBundles_Exploration
+               || text == ScriptLocalization.MuseumBundles_Fishing
+               || text == ScriptLocalization.MuseumBundles_FishingRelics
+               || text == ScriptLocalization.MuseumBundles_Flowers
+               || text == ScriptLocalization.MuseumBundles_Foraging
+               || text == ScriptLocalization.MuseumBundles_Gems
+               || text == ScriptLocalization.MuseumBundles_Golden
+               || text == ScriptLocalization.MuseumBundles_Mana
+               || text == ScriptLocalization.MuseumBundles_Money
+               || text == ScriptLocalization.MuseumBundles_NVFarming
+               || text == ScriptLocalization.MuseumBundles_NVMining
+               || text == ScriptLocalization.MuseumBundles_WGFarming
+               || text == ScriptLocalization.MuseumBundles_WGMining;
     }
 
     [HarmonyPrefix]
@@ -179,7 +215,9 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerSettings), nameof(PlayerSettings.OnEnable))]
     public static void PlayerSettings_OnEnable()
     {
-        var moneyInfo = Player.Instance.PlayerInventory._panels.Find(a => a.name == "Items").Find("Money");
+        if (Player.Instance == null || Player.Instance.PlayerInventory == null) return;
+
+        var moneyInfo = Player.Instance.PlayerInventory._panels.Find(a => a.name == "Items")?.Find("Money");
         if (moneyInfo)
         {
             moneyInfo.gameObject.SetActive(true);
@@ -338,7 +376,9 @@ public static class Patches
     [HarmonyPatch(typeof(DLCScrollerData), nameof(DLCScrollerData.Setup))]
     public static void DLCScrollerData_Setup(ref DLCScrollerData __instance, ref Scroller scroller)
     {
-        for (var i = 0; i < __instance.steamPackIDs.Count; i++)
+        if (scroller.gameObjects == null) return;
+        var count = Math.Min(__instance.steamPackIDs.Count, scroller.gameObjects.Count);
+        for (var i = 0; i < count; i++)
         {
             var steamID = __instance.steamPackIDs[i];
             var component = scroller.gameObjects[i];

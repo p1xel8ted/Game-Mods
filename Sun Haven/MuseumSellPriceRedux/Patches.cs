@@ -47,7 +47,7 @@ public static class Patches
         AncientAngelQuill
     };
 
-    private static Dictionary<int, string> DescriptionCache { get; } = new();
+    private static readonly HashSet<int> MuseumItemIds = new();
 
     public static void ItemData_Loaded(int itemId)
     {
@@ -56,25 +56,19 @@ public static class Patches
         {
             var item = GetItemFromCache(Database.Instance, itemId);
 
-
             if (!item)
             {
                 Plugin.Log($"Item with id {itemId} was not found in the cache!", error: true);
                 return;
             }
 
-
-            if (DescriptionCache != null)
+            // Use the English description field (always available as fallback regardless of game language)
+            // to identify museum items once at load time, then use IDs for all subsequent checks
+            if (item.description.Contains(WouldLookGoodInAMuseum, StringComparison.OrdinalIgnoreCase))
             {
-                DescriptionCache[itemId] = item.description;
-            }
-            else
-            {
-                Plugin.Log("DescriptionCache is not initialized!", error: true);
-                return;
+                MuseumItemIds.Add(itemId);
             }
         }
-
 
         if (itemSellInfo == null)
         {
@@ -82,21 +76,13 @@ public static class Patches
             return;
         }
 
-
         BackupItemPrices(itemSellInfo, itemId);
         ModifyItem(itemSellInfo, itemId);
     }
 
-
     private static bool IsMuseumItem(int id, float price)
     {
-        var description = GetDescription(id);
-        return description.Contains(WouldLookGoodInAMuseum, StringComparison.OrdinalIgnoreCase) && price <= 11f;
-    }
-
-    private static string GetDescription(int itemId)
-    {
-        return DescriptionCache.TryGetValue(itemId, out var description) ? description : string.Empty;
+        return MuseumItemIds.Contains(id) && price <= 11f;
     }
 
     private static void BackupItemPrices(ItemSellInfo itemSellInfo, int item)

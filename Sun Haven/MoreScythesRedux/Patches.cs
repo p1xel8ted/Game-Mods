@@ -41,6 +41,7 @@ public static class Patches
             recipe.worldProgressTokens = [];
             recipe.characterProgressTokens = [];
             recipe.questProgressTokens = [];
+            recipe.recipeType = RecipeType.Anvil;
             recipe.hoursToCraft = item.craftingHours;
 
             recipe.output = new ItemInfo {item = item.data, amount = 1};

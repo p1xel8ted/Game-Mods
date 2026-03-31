@@ -16,59 +16,5 @@
 
     <Import Project="..\zip.target"/>
 
-    <!-- Project-specific references -->
-    <ItemGroup>
-        <Reference Include="Assembly-CSharp">
-            <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
-        </Reference>
-        <Reference Include="com.rlabrecque.steamworks.net">
-            <HintPath>..\libs\com.rlabrecque.steamworks.net.dll</HintPath>
-        </Reference>
-        <Reference Include="I2Localization">
-            <HintPath>..\libs\I2Localization.dll</HintPath>
-        </Reference>
-        <Reference Include="QFSW.QC.Demo">
-            <HintPath>..\libs\QFSW.QC.Demo.dll</HintPath>
-        </Reference>
-        <Reference Include="QFSW.QC.Extras">
-            <HintPath>..\libs\QFSW.QC.Extras.dll</HintPath>
-        </Reference>
-        <Reference Include="QFSW.QC.Grammar">
-            <HintPath>..\libs\QFSW.QC.Grammar.dll</HintPath>
-        </Reference>
-        <Reference Include="QFSW.QC.Parsers">
-            <HintPath>..\libs\QFSW.QC.Parsers.dll</HintPath>
-        </Reference>
-        <Reference Include="QFSW.QC.Serializers">
-            <HintPath>..\libs\QFSW.QC.Serializers.dll</HintPath>
-        </Reference>
-        <Reference Include="QFSW.QC.UI">
-            <HintPath>..\libs\QFSW.QC.UI.dll</HintPath>
-        </Reference>
-        <Reference Include="SunHaven.Loading">
-            <HintPath>..\libs\SunHaven.Loading.dll</HintPath>
-        </Reference>
-        <Reference Include="Unity.2D.PixelPerfect">
-            <HintPath>..\libs\Unity.2D.PixelPerfect.dll</HintPath>
-        </Reference>
-        <Reference Include="Unity.Postprocessing.Runtime">
-            <HintPath>..\libs\Unity.Postprocessing.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
-            <HintPath>..\libs\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
-        </Reference>
-        <Reference Include="Unity.RenderPipelines.Core.Runtime">
-            <HintPath>..\libs\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="Unity.RenderPipelines.Universal.Runtime">
-            <HintPath>..\libs\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
-        </Reference>
-        <Reference Include="Unity.ScriptableBuildPipeline">
-            <HintPath>..\libs\Unity.ScriptableBuildPipeline.dll</HintPath>
-        </Reference>
-        <Reference Include="Unity.TextMeshPro">
-            <HintPath>..\libs\Unity.TextMeshPro.dll</HintPath>
-        </Reference>
-    </ItemGroup>
 
 </Project>

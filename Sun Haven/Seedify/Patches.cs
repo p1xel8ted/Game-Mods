@@ -122,6 +122,8 @@ public static class Patches
     [HarmonyPatch(typeof(UIHandler), nameof(UIHandler.ResetEvents))]
     public static void UIHandler_ResetEvents(UIHandler __instance)
     {
+        ScenePortalManager.onLoadedWorld -= RunUpdaters;
+        ScenePortalManager.onFinishLoadingDecorations -= RunUpdaters;
         ScenePortalManager.onLoadedWorld += RunUpdaters;
         ScenePortalManager.onFinishLoadingDecorations += RunUpdaters;
     }

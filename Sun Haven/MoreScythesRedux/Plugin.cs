@@ -25,9 +25,9 @@ public class Plugin : BaseUnityPlugin
 
                 ItemHandler.CreateScytheItems();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //fail silently
+                LOG?.LogWarning($"Scythe creation deferred: {e.Message}");
             }
         };
         

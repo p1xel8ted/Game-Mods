@@ -16,15 +16,6 @@
 
     <Import Project="..\zip.target"/>
 
-    <!-- Project-specific references -->
-    <ItemGroup>
-        <Reference Include="DOTween">
-            <HintPath>..\libs\DOTween.dll</HintPath>
-        </Reference>
-        <Reference Include="DOTweenPro">
-            <HintPath>..\libs\DOTweenPro.dll</HintPath>
-        </Reference>
-    </ItemGroup>
 
     <ItemGroup>
         <None Remove="thumb.png" />

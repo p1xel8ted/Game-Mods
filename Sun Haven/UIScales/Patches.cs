@@ -174,10 +174,14 @@ public static class Patches
     public static void MainMenuController_PopupPanel(MainMenuController __instance, string childPanelName)
     {
         if (!childPanelName.StartsWith("Settings", StringComparison.OrdinalIgnoreCase)) return;
+        if (__instance.settings == null) return;
 
         var slider = __instance.settings.zoomSlider;
         var text = __instance.settings.zoomTMP;
-        SetupZoomSlider(slider, text);
+        if (slider && text)
+        {
+            SetupZoomSlider(slider, text);
+        }
     }
 
     [HarmonyPostfix]
