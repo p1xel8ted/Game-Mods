@@ -12,31 +12,45 @@ public static class Patches
     /// </summary>
     [UsedImplicitly] public static List<Slot> GearSlots = [];
 
+    /// <summary>
+    /// After the game loads inventory data, check if saved items exist for custom slots
+    /// and restore them. The game's LoadInventory skips keys >= Items.Count, so we
+    /// extend Items and manually load the custom slot data from the save.
+    /// </summary>
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.SetUpInventoryData))]
-    private static void PlayerInventory_SetUpInventoryData(PlayerInventory __instance)
+    [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.LoadPlayerInventory))]
+    private static void PlayerInventory_LoadPlayerInventory(PlayerInventory __instance)
     {
-        foreach (var item in __instance.Items)
+        var savedItems = SingletonBehaviour<GameSave>.Instance?.CurrentSave?.characterData?.Items;
+        if (savedItems == null) return;
+
+        // Extend Items list if needed
+        while (__instance.Items.Count <= Const.NewAmuletSlotTwo)
         {
-            Plugin.LOG.LogWarning($"Item: {item.id}-{item.item.Type}, {item.item.ID()}, {item.slot.slotNumber}, {item.slotNumber}");
+            __instance.Items.Add(new SlotItemData(new NormalItem(0), 0, __instance.Items.Count, null));
+        }
+
+        // Manually restore items the game skipped due to bounds check
+        foreach (var kvp in savedItems)
+        {
+            if (kvp.Key < Const.NewRingSlotOne || kvp.Key > Const.NewAmuletSlotTwo) continue;
+            if (kvp.Value?.Item == null || kvp.Value.Item.ID() == 0) continue;
+            if (!PSS.Database.ValidID(kvp.Value.Item.ID())) continue;
+
+            __instance.Items[kvp.Key].item = kvp.Value.Item;
+            __instance.Items[kvp.Key].id = kvp.Value.Item.ID();
+            __instance.Items[kvp.Key].amount = kvp.Value.Amount;
         }
     }
 
-    /// <summary>
-    /// Harmony prefix patch for PlayerInventory's LoadPlayerInventory method.
-    /// </summary>
-    /// <param name="__instance">The instance of <see cref="PlayerInventory"/> being patched.</param>
-    /// <remarks>
-    /// Initializes and sets up custom gear slots and panels if they haven't been created already.
-    /// </remarks>
-    [HarmonyPrefix]
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.OpenMajorPanel))]
     private static void PlayerInventory_Initialize(PlayerInventory __instance, int panelIndex)
     {
         if (!GameObject.Find(Const.PlayerInventoryPath)) return;
-        
-        if(panelIndex != 0) return;
-        
+
+        if (panelIndex != 0) return;
+
         if (UI.SlotsCreated && UI.GearPanel != null)
         {
             Utils.Log("Slots already created. Skipping slot creation etc.");
@@ -44,12 +58,43 @@ public static class Patches
         }
 
         UI.InitializeGearPanel();
-        
-      //UI.CreateSlots(__instance, ArmorType.Ring, 2);
-       //  UI.CreateSlots(__instance, ArmorType.Keepsake, 2);
-        // UI.CreateSlots(__instance, ArmorType.Amulet, 2);
 
-         __instance.SetUpInventoryData();
+        UI.CreateSlots(__instance, ArmorType.Ring, 2);
+        UI.CreateSlots(__instance, ArmorType.Keepsake, 2);
+        UI.CreateSlots(__instance, ArmorType.Amulet, 2);
+
+        // Register custom slots in Items list and _slots array
+        foreach (var gearSlot in GearSlots)
+        {
+            while (__instance.Items.Count <= gearSlot.slotNumber)
+            {
+                __instance.Items.Add(new SlotItemData(new NormalItem(0), 0, __instance.Items.Count, null));
+            }
+
+            __instance.Items[gearSlot.slotNumber] = new SlotItemData(new NormalItem(0), 0, gearSlot.slotNumber, gearSlot);
+            gearSlot.inventory = __instance;
+        }
+
+        // Add to _slots array so SetupItemIcon can find them
+        __instance._slots = __instance._slots.Concat(GearSlots.Where(s => !__instance._slots.Contains(s))).ToArray();
+        __instance.maxSlots = __instance._slots.Length;
+
+        // Restore saved items into custom slots and create their icons
+        var savedItems = SingletonBehaviour<GameSave>.Instance?.CurrentSave?.characterData?.Items;
+        if (savedItems != null)
+        {
+            foreach (var kvp in savedItems)
+            {
+                if (kvp.Key < Const.NewRingSlotOne || kvp.Key > Const.NewAmuletSlotTwo) continue;
+                if (kvp.Value?.Item == null || kvp.Value.Item.ID() == 0) continue;
+                if (!PSS.Database.ValidID(kvp.Value.Item.ID())) continue;
+
+                __instance.Items[kvp.Key].item = kvp.Value.Item;
+                __instance.Items[kvp.Key].id = kvp.Value.Item.ID();
+                __instance.Items[kvp.Key].amount = kvp.Value.Amount;
+                __instance.SetupItemIcon(kvp.Key);
+            }
+        }
 
         var characterPanelSlots = GameObject.Find(Const.CharacterPanelSlotsPath);
         if (characterPanelSlots != null)
@@ -82,8 +127,6 @@ public static class Patches
     [HarmonyPatch(typeof(Inventory), nameof(Inventory.SwapItems))]
     private static void Inventory_SwapItems(ref Inventory __instance, ref int slot1)
     {
-        //TODO: Come back when main issue is fixed
-        return;
         if (!Plugin.UseAdjustedEquipping.Value)
         {
             Utils.Log("Adjusted equipping disabled. Skipping slot swapping logic.");
@@ -130,9 +173,8 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.GetStat))]
     public static void PlayerInventory_GetStat(ref PlayerInventory __instance, StatType stat, ref float __result)
     {
-        //TODO: Come back when main issue is fixed
-        return;
         if (Plugin.MakeSlotsStorageOnly.Value) return;
+        if (__instance.Items.Count <= Const.NewAmuletSlotTwo) return;
         __result += __instance.GetStatValueFromSlot(ArmorType.Ring, Const.NewRingSlotOne, 2, stat);
         __result += __instance.GetStatValueFromSlot(ArmorType.Ring, Const.NewRingSlotTwo, 3, stat);
         __result += __instance.GetStatValueFromSlot(ArmorType.Keepsake, Const.NewKeepsakeSlotOne, 1, stat);
@@ -153,8 +195,6 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.Awake))]
     public static void PlayerInventory_Awake(ref PlayerInventory __instance)
     {
-        // //TODO: Come back when main issue is fixed
-        // return;
         if (UI.ActionAttached) return;
         UI.ActionAttached = true;
 
@@ -185,9 +225,7 @@ public static class Patches
     [HarmonyPatch(typeof(PlayerInventory), nameof(PlayerInventory.LateUpdate))]
     private static void PlayerInventory_EquipNonVisualArmor(ref PlayerInventory __instance)
     {
-        //TODO: Come back when main issue is fixed
-        return;
-        if (!UI.SlotsCreated) return;
+        if (__instance.Items.Count <= Const.NewAmuletSlotTwo) return;
         __instance.EquipNonVisualArmor(Const.NewRingSlotOne, ArmorType.Ring, 2);
         __instance.EquipNonVisualArmor(Const.NewRingSlotTwo, ArmorType.Ring, 3);
         __instance.EquipNonVisualArmor(Const.NewKeepsakeSlotOne, ArmorType.Keepsake, 1);

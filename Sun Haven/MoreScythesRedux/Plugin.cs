@@ -17,12 +17,6 @@ public class Plugin : BaseUnityPlugin
         {
             try
             {
-                Database.GetData<ItemData>(ItemHandler.OriginalScytheId, null);
-                Database.GetData<ItemData>(ItemHandler.AdamantScytheId, null);
-                Database.GetData<ItemData>(ItemHandler.MithrilScytheId, null);
-                Database.GetData<ItemData>(ItemHandler.SuniteScytheId, null);
-                Database.GetData<ItemData>(ItemHandler.GloriteScytheId, null);
-
                 ItemHandler.CreateScytheItems();
             }
             catch (Exception e)

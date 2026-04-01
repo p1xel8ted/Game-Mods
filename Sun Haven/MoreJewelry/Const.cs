@@ -4,7 +4,7 @@ namespace MoreJewelry;
 public static class Const
 {
     internal const string EncyclopediaPanelPath = "Player(Clone)/UI_Inventory/Inventory/Encylopedia/Encylopedia Panels/Sorting Panel";
-    internal const string AmorSlotTen = "Player(Clone)/UI_Inventory/Inventory/Items/Slots/CharacterPanel/Slots/ArmorSlot (10)/";
+    internal const string AmorSlotTen = "Player(Clone)/UI_Inventory/Inventory/Items/Slots/CharacterPanel/Slots/ArmorSlot (10)";
     internal const string AmorSlotEleven = "Player(Clone)/UI_Inventory/Inventory/Items/Slots/CharacterPanel/Slots/ArmorSlot (11)";
     internal const string PlayerItemsPath = "Player(Clone)/UI_Inventory/Inventory/Items/";
     
@@ -38,11 +38,11 @@ public static class Const
     internal const int MainKeepsakeSlot = 60;
     internal const int MainAmuletSlot = 61;
 
-    internal const int NewRingSlotOne = 65;
-    internal const int NewRingSlotTwo = 66;
-    internal const int NewKeepsakeSlotOne = 67;
-    internal const int NewKeepsakeSlotTwo = 68;
-    internal const int NewAmuletSlotOne = 69;
-    internal const int NewAmuletSlotTwo = 70;
+    internal const int NewRingSlotOne = 66;
+    internal const int NewRingSlotTwo = 67;
+    internal const int NewKeepsakeSlotOne = 68;
+    internal const int NewKeepsakeSlotTwo = 69;
+    internal const int NewAmuletSlotOne = 70;
+    internal const int NewAmuletSlotTwo = 71;
 
 }

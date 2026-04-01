@@ -282,139 +282,78 @@ public static class UI
     /// </remarks>
     internal static void UpdateNavigationElements()
     {
-        //TODO: Come back after main issue is fixed
-        return;
-        if (Patches.GearSlots.Count != 6)
-        {
-            return;
-        }
+        if (Patches.GearSlots.Count != 6) return;
 
         Utils.Log("Updating navigation elements.");
 
-        // Initialize NavigationElements for GearSlots
-        var gearSlotNavs = new NavigationElement[6];
+        var gearSelectables = new Selectable[6];
         for (var i = 0; i < Patches.GearSlots.Count; i++)
         {
-            gearSlotNavs[i] = Patches.GearSlots[i].gameObject.GetComponent<NavigationElement>() ?? Patches.GearSlots[i].gameObject.AddComponent<NavigationElement>();
+            gearSelectables[i] = Patches.GearSlots[i].gameObject.GetComponent<Selectable>() ?? Patches.GearSlots[i].gameObject.AddComponent<Selectable>();
+            gearSelectables[i].transition = Selectable.Transition.None;
         }
 
-        var originalKeepsakeSlot = GameObject.Find(Const.AmorSlotTen).GetComponent<NavigationElement>();
-        if (originalKeepsakeSlot == null)
+        var keepsakeGo = GameObject.Find(Const.AmorSlotTen);
+        var amuletGo = GameObject.Find(Const.AmorSlotEleven);
+        if (keepsakeGo == null || amuletGo == null)
         {
-            Plugin.LOG.LogError("Unable to locate original keepsake slot. Skipping navigation element update. Please report this.");
+            Plugin.LOG.LogError("Unable to locate original keepsake/amulet slots. Skipping navigation update.");
             return;
         }
 
-        var originalAmuletSlot = GameObject.Find(Const.AmorSlotEleven).GetComponent<NavigationElement>();
-        if (originalAmuletSlot == null)
+        var keepsakeSelectable = keepsakeGo.GetComponent<Selectable>() ?? keepsakeGo.AddComponent<Selectable>();
+        var amuletSelectable = amuletGo.GetComponent<Selectable>() ?? amuletGo.AddComponent<Selectable>();
+
+        var leftArrowSelectable = LeftArrowInstance.GetComponent<Selectable>() ?? LeftArrowInstance.AddComponent<Selectable>();
+        var rightArrowSelectable = RightArrowInstance.GetComponent<Selectable>() ?? RightArrowInstance.AddComponent<Selectable>();
+
+        // Arrow navigation: left arrow → gear slots, right arrow → original slots
+        SetExplicitNav(leftArrowSelectable, right: keepsakeSelectable, left: gearSelectables[3]);
+        SetExplicitNav(rightArrowSelectable, right: keepsakeSelectable, left: gearSelectables[3]);
+
+        // Gear slots laid out as:
+        // 0  1
+        // 2  3
+        // 4  5
+        var rightNeighbor = Plugin.ShowPanelToggle.Value && !Plugin.IgnoreToggleWithController.Value
+            ? (GearPanel.activeSelf ? rightArrowSelectable : leftArrowSelectable)
+            : keepsakeSelectable;
+
+        SetExplicitNav(gearSelectables[0], right: gearSelectables[1], down: gearSelectables[2]);
+        SetExplicitNav(gearSelectables[1], right: rightNeighbor, down: gearSelectables[3], left: gearSelectables[0]);
+        SetExplicitNav(gearSelectables[2], right: gearSelectables[3], down: gearSelectables[4], up: gearSelectables[0]);
+        SetExplicitNav(gearSelectables[3], right: rightNeighbor, down: gearSelectables[5], left: gearSelectables[2], up: gearSelectables[1]);
+        SetExplicitNav(gearSelectables[4], right: gearSelectables[5], up: gearSelectables[2]);
+        SetExplicitNav(gearSelectables[5], right: rightNeighbor, left: gearSelectables[4], up: gearSelectables[3]);
+
+        // Wire original slots back to gear panel
+        if (Plugin.ShowPanelToggle.Value && !Plugin.IgnoreToggleWithController.Value)
         {
-            Plugin.LOG.LogError("Unable to locate original amulet slot. Skipping navigation element update. Please report this.");
-            return;
-        }
-
-        var leftArrowNav = LeftArrowInstance.GetComponents<NavigationElement>();
-        var rightArrowNav = RightArrowInstance.GetComponents<NavigationElement>();
-        UpdateArrowNavigation(leftArrowNav, originalKeepsakeSlot, gearSlotNavs[3]);
-        UpdateArrowNavigation(rightArrowNav, originalKeepsakeSlot, gearSlotNavs[3]);
-
-        // Update navigation for each gear slot
-        UpdateGearSlotNavigation(gearSlotNavs, originalKeepsakeSlot, rightArrowNav);
-
-        if (Plugin.ShowPanelToggle.Value)
-        {
-            // if (Plugin.IgnoreToggleWithController.Value)
-            // {
-            //     originalKeepsakeSlot.left = gearSlotNavs[3];
-            //     originalAmuletSlot.left = gearSlotNavs[5];
-            // }
-            // else
-            // {
-            //     originalKeepsakeSlot.left = GearPanel.activeSelf ? rightArrowNav[0] : leftArrowNav[0];
-            //     originalAmuletSlot.left = GearPanel.activeSelf ? rightArrowNav[0] : leftArrowNav[0];
-            // }
+            SetSelectableLeft(keepsakeSelectable, GearPanel.activeSelf ? rightArrowSelectable : leftArrowSelectable);
+            SetSelectableLeft(amuletSelectable, GearPanel.activeSelf ? rightArrowSelectable : leftArrowSelectable);
         }
         else
         {
-            // originalKeepsakeSlot.left = gearSlotNavs[3];
-            // originalAmuletSlot.left = gearSlotNavs[5];
+            SetSelectableLeft(keepsakeSelectable, gearSelectables[3]);
+            SetSelectableLeft(amuletSelectable, gearSelectables[5]);
         }
     }
 
-    /// <summary>
-    /// Updates the navigation settings for arrow elements.
-    /// </summary>
-    /// <param name="arrowNavs">A collection of navigation elements representing arrows.</param>
-    /// <param name="right">The navigation element to be assigned as the right neighbor.</param>
-    /// <param name="left">The navigation element to be assigned as the left neighbor.</param>
-    /// <remarks>
-    /// Iterates through each arrow navigation element in <paramref name="arrowNavs"/> and sets its right and left neighbors
-    /// to the specified <paramref name="right"/> and <paramref name="left"/> navigation elements, respectively.
-    /// </remarks>
-    private static void UpdateArrowNavigation(IEnumerable<NavigationElement> arrowNavs, NavigationElement right, NavigationElement left)
+    private static void SetExplicitNav(Selectable selectable, Selectable right = null, Selectable down = null, Selectable left = null, Selectable up = null)
     {
-        // foreach (var arrow in arrowNavs)
-        // {
-        //     arrow.right = right;
-        //     arrow.left = left;
-        // }
+        var nav = new Navigation { mode = Navigation.Mode.Explicit };
+        if (right != null) nav.selectOnRight = right;
+        if (down != null) nav.selectOnDown = down;
+        if (left != null) nav.selectOnLeft = left;
+        if (up != null) nav.selectOnUp = up;
+        selectable.navigation = nav;
     }
 
-    /// <summary>
-    /// Updates the navigation settings for gear slots based on the current configuration.
-    /// </summary>
-    /// <param name="gearSlotNavs">A list of navigation elements for the gear slots.</param>
-    /// <param name="originalArmorSlot">The original armor slot navigation element.</param>
-    /// <param name="rightArrowNav">A list of navigation elements for the right arrow.</param>
-    /// <remarks>
-    /// This method sets up custom navigation for each gear slot. The navigation is dependent on the state of 
-    /// <see cref="Plugin.ShowPanelToggle"/> and <see cref="Plugin.IgnoreToggleWithController"/>.
-    /// <para>Navigation is assigned in a grid pattern, considering the provided lists of navigation elements.</para>
-    /// Assumes that <paramref name="gearSlotNavs"/>, <paramref name="originalArmorSlot"/>, and <paramref name="rightArrowNav"/> are correctly initialized.
-    /// </remarks>
-    private static void UpdateGearSlotNavigation(IReadOnlyList<NavigationElement> gearSlotNavs, NavigationElement originalArmorSlot, IReadOnlyList<NavigationElement> rightArrowNav)
+    private static void SetSelectableLeft(Selectable selectable, Selectable left)
     {
-        //0  1
-        //2  3
-        //4  5
-        // Assign navigation for gear slots
-        gearSlotNavs[0].SetNavigation(gearSlotNavs[1], gearSlotNavs[2], null, null);
-        gearSlotNavs[1].SetNavigation(Plugin.ShowPanelToggle.Value ? Plugin.IgnoreToggleWithController.Value ? originalArmorSlot : rightArrowNav[0] : originalArmorSlot, gearSlotNavs[3], gearSlotNavs[0], null);
-        gearSlotNavs[2].SetNavigation(gearSlotNavs[3], gearSlotNavs[4], null, gearSlotNavs[0]);
-        gearSlotNavs[3].SetNavigation(Plugin.ShowPanelToggle.Value ? Plugin.IgnoreToggleWithController.Value ? originalArmorSlot : rightArrowNav[0] : originalArmorSlot, gearSlotNavs[5], gearSlotNavs[2], gearSlotNavs[1]);
-        gearSlotNavs[4].SetNavigation(gearSlotNavs[5], null, null, gearSlotNavs[2]);
-        gearSlotNavs[5].SetNavigation(Plugin.ShowPanelToggle.Value ? Plugin.IgnoreToggleWithController.Value ? originalArmorSlot : rightArrowNav[0] : originalArmorSlot, null, gearSlotNavs[4], gearSlotNavs[3]);
-    }
-
-    /// <summary>
-    /// Sets the navigation properties for a navigation element.
-    /// </summary>
-    /// <param name="navElement">The navigation element to update.</param>
-    /// <param name="right">The navigation element to the right.</param>
-    /// <param name="down">The navigation element below.</param>
-    /// <param name="left">The navigation element to the left.</param>
-    /// <param name="up">The navigation element above.</param>
-    /// <remarks>
-    /// Adjusts the navigation based on the active state of the gift panel. If the gift panel (found using <see cref="Const.GiftPanelPath"/>)
-    /// is active, the navigation element is set to find left and right elements dynamically. Otherwise, it uses the provided navigation elements.
-    /// <para>Assumes that the gift panel's active state correctly reflects whether dynamic finding of left and right elements is needed.</para>
-    /// </remarks>
-    private static void SetNavigation(this NavigationElement navElement, NavigationElement right, NavigationElement down, NavigationElement left, NavigationElement up)
-    {
-        // var giftPanel = GameObject.Find(Const.GiftPanelPath);
-        // if (giftPanel != null && giftPanel.activeSelf)
-        // {
-        //     navElement.findLeftElement = true;
-        //     navElement.findRightElement = true;
-        // }
-        // else
-        // {
-        //     navElement.findLeftElement = false;
-        //     navElement.findRightElement = false;
-        // }
-        // navElement.right = right;
-        // navElement.down = down;
-        // navElement.left = left;
-        // navElement.up = up;
+        var nav = selectable.navigation;
+        nav.selectOnLeft = left;
+        selectable.navigation = nav;
     }
 
 
@@ -478,6 +417,13 @@ public static class UI
     /// <para>Uses <see cref="GetOrCreateGridContainer"/> to ensure there is a container for the new slots.</para>
     /// <para>Relies on <see cref="Plugin.LOG"/> for logging errors.</para>
     /// </remarks>
+    private static readonly int[] CustomSlotNumbers =
+    [
+        Const.NewRingSlotOne, Const.NewRingSlotTwo,
+        Const.NewKeepsakeSlotOne, Const.NewKeepsakeSlotTwo,
+        Const.NewAmuletSlotOne, Const.NewAmuletSlotTwo
+    ];
+
     public static void CreateSlots(Inventory inventory, ArmorType armorType, int count)
     {
         var templateSlot = inventory._slots.FirstOrDefault(slot => slot.acceptableArmorType == armorType);
@@ -488,7 +434,6 @@ public static class UI
         }
 
         var gridContainer = GetOrCreateGridContainer();
-      
 
         for (var i = 1; i <= count; i++)
         {
@@ -498,11 +443,19 @@ public static class UI
                 Plugin.LOG.LogError($"Failed to instantiate {armorType}Slot ({i}). Please report this.");
                 continue;
             }
-            
+
+            // Destroy cloned ItemIcon children — they carry stale references to the
+            // original slot and corrupt the global CurrentItemIcon drag/drop state.
+            // The game creates fresh ItemIcons when items are placed in slots.
+            foreach (var itemIcon in newSlot.GetComponentsInChildren<ItemIcon>(true))
+            {
+                Object.DestroyImmediate(itemIcon.gameObject);
+            }
+
+            var slotIndex = Patches.GearSlots.Count;
             newSlot.name = $"{armorType}Slot ({i})";
+            newSlot.slotNumber = slotIndex < CustomSlotNumbers.Length ? CustomSlotNumbers[slotIndex] : 66 + slotIndex;
             Patches.GearSlots.Add(newSlot);
-            inventory._slots = inventory._slots.Append([newSlot]).ToArray();
-            inventory.maxSlots = inventory._slots.Length;
         }
     }
 
