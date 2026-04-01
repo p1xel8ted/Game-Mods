@@ -62,6 +62,14 @@
         <PackageReference Include="Resource.Embedder" Version="2.2.0" />
     </ItemGroup>
 
+    <!-- Release-Upload Configuration (inherits Release settings) -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release-Upload'">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <!-- NexusMods Upload Target -->
+    <Import Project="upload.target" Condition="Exists('upload.target')" />
+
     <!-- Game/Unity Assemblies (wildcard from stripped libs) -->
     <ItemGroup>
         <Reference Include="$(StrippedLibs)\*.dll">

@@ -4,6 +4,7 @@
         <Version>0.2.8</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
+        <NexusGroupId>114961</NexusGroupId>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

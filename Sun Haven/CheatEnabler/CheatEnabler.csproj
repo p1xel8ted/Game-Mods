@@ -4,6 +4,7 @@
         <Version>0.3.7</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <FileVersion>$(Version)</FileVersion>
+        <NexusGroupId>123220</NexusGroupId>
     </PropertyGroup>
 
     <Import Project="..\zip.target"/>

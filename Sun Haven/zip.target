@@ -13,12 +13,15 @@
               <PluginDir>$(MSBuildProjectDirectory)\temp</PluginDir>
         </PropertyGroup>
         <MakeDir Directories="$(TempDir)" />
-        <MakeDir Directories="$(SolutionDir)\AAA_Releases" />
+        <MakeDir Directories="$(MSBuildProjectDirectory)\..\AAA_Releases" />
         <Exec Command="xcopy /V &quot;$(OutputPath)&quot; &quot;$(TempDir)&quot; /E /I /Y" />
         <Exec Command="del &quot;$(TempDir)\*.zip&quot; &quot;$(TempDir)\*.json&quot; &quot;$(TempDir)\*.pdb&quot;" />
-        <ZipDirectory Condition="'$(Configuration)'=='Release'" Overwrite="true"
+        <Copy Condition="Exists('$(MSBuildProjectDirectory)\CHANGELOG.md')"
+              SourceFiles="$(MSBuildProjectDirectory)\CHANGELOG.md"
+              DestinationFolder="$(TempDir)" />
+        <ZipDirectory Condition="'$(Configuration)'=='Release' OR '$(Configuration)'=='Release-Upload'" Overwrite="true"
                 SourceDirectory="temp"
-                DestinationFile="$(SolutionDir)\AAA_Releases\$(MSBuildProjectName)_v$(Version)_BepInEx.zip" />
+                DestinationFile="$(MSBuildProjectDirectory)\..\AAA_Releases\$(MSBuildProjectName)_v$(Version)_BepInEx.zip" />
         <RemoveDir Directories="$(MSBuildProjectDirectory)\temp" />
     </Target>
 </Project>

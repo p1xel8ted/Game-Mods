@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.morejewelry";
     private const string PluginName = "More Jewelry!";
-    private const string PluginVersion = "0.1.2";
+    private const string PluginVersion = "0.1.3";
 
     /// <summary>
     /// Gets the logging source for the plugin.

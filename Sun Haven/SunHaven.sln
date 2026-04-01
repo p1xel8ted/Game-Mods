@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoreJewelry", "MoreJewelry\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharacterEditRedux", "CharacterEditRedux\CharacterEditRedux.csproj", "{060B202F-EC5A-43D4-957A-1F86DF52EB28}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "needs_fixing", "needs_fixing", "{4A2FDED9-89A7-4E7D-9F4E-126B56204D68}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoreTheMerrier", "MoreTheMerrier\MoreTheMerrier.csproj", "{A73D03D5-DCF3-4D7C-A776-BCA3A4297324}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seedify", "Seedify\Seedify.csproj", "{99ECB1E0-647B-45DC-BE2F-4236655395A3}"
@@ -35,6 +33,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Release-Upload|Any CPU = Release-Upload|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F7754A48-0055-46E9-9037-9F765087B414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -89,11 +88,36 @@ Global
 		{99ECB1E0-647B-45DC-BE2F-4236655395A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99ECB1E0-647B-45DC-BE2F-4236655395A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99ECB1E0-647B-45DC-BE2F-4236655395A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7754A48-0055-46E9-9037-9F765087B414}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{F7754A48-0055-46E9-9037-9F765087B414}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{82AA2AD4-8264-4400-ACE3-401CE26764A5}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{82AA2AD4-8264-4400-ACE3-401CE26764A5}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{CCB1B95A-1593-4B13-BEFC-EE95040FFE71}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{CCB1B95A-1593-4B13-BEFC-EE95040FFE71}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{56CFC0AD-5AF0-47C4-9F30-9743B8C7A9B4}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{56CFC0AD-5AF0-47C4-9F30-9743B8C7A9B4}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{977FB946-2A30-43D8-AE7C-DE76E5C2BBC7}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{977FB946-2A30-43D8-AE7C-DE76E5C2BBC7}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{F18B025C-BA42-45A8-AB8D-2F0467A42944}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{F18B025C-BA42-45A8-AB8D-2F0467A42944}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{0FB260D3-92C5-43D5-B234-6BDBA793EF9C}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{0FB260D3-92C5-43D5-B234-6BDBA793EF9C}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{15756077-200B-421B-8116-1C8021293792}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{15756077-200B-421B-8116-1C8021293792}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{991BBE68-47C9-4495-8551-0DDE7F265602}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{991BBE68-47C9-4495-8551-0DDE7F265602}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{060B202F-EC5A-43D4-957A-1F86DF52EB28}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{060B202F-EC5A-43D4-957A-1F86DF52EB28}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{A73D03D5-DCF3-4D7C-A776-BCA3A4297324}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{A73D03D5-DCF3-4D7C-A776-BCA3A4297324}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
+		{99ECB1E0-647B-45DC-BE2F-4236655395A3}.Release-Upload|Any CPU.ActiveCfg = Release-Upload|Any CPU
+		{99ECB1E0-647B-45DC-BE2F-4236655395A3}.Release-Upload|Any CPU.Build.0 = Release-Upload|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C99E48B8-0C5B-4E9F-9CAF-3AD9943A3562} = {4A2FDED9-89A7-4E7D-9F4E-126B56204D68}
 	EndGlobalSection
 EndGlobal
