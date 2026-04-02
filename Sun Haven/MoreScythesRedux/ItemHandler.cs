@@ -52,8 +52,8 @@ public static class ItemHandler
                     return;
                 }
                 
-                // Object.DontDestroyOnLoad(useItem);
-                // Object.DontDestroyOnLoad(item);
+                Object.DontDestroyOnLoad(useItem);
+                Object.DontDestroyOnLoad(item);
 
                 item.useItem = useItem;
                 var weaponComponent = useItem.gameObject.GetComponent<Weapon>();

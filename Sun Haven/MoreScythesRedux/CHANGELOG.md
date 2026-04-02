@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.8
+
+- Fixed custom scythe icons appearing blurry/low-resolution in the crafting UI and inventory
+- Fixed an issue where custom scythes could stop working after transitioning between areas
+
 ## 0.1.7
 
 - Custom scythes now properly require the correct skill level to use
