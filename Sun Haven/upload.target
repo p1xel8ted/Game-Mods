@@ -12,13 +12,12 @@
       <ReleasesDir>$(MSBuildProjectDirectory)\..\AAA_Releases</ReleasesDir>
       <ZipFile>$(ReleasesDir)\$(MSBuildProjectName)_v$(Version)_BepInEx.zip</ZipFile>
       <UploadScript>$(MSBuildProjectDirectory)\..\nexus-upload.ps1</UploadScript>
-      <ChangelogFile>$(MSBuildProjectDirectory)\CHANGELOG.md</ChangelogFile>
     </PropertyGroup>
 
     <Error Condition="!Exists('$(ZipFile)')" Text="Release zip not found: $(ZipFile)" />
     <Error Condition="!Exists('$(UploadScript)')" Text="Upload script not found: $(UploadScript)" />
 
-    <Exec Command="pwsh -NoProfile -ExecutionPolicy Bypass -File &quot;$(UploadScript)&quot; -ApiKey &quot;$(NexusModsApiKey)&quot; -GroupId &quot;$(NexusGroupId)&quot; -ZipFile &quot;$(ZipFile)&quot; -ModName &quot;$(MSBuildProjectName)&quot; -Version &quot;$(Version)&quot; -ChangelogFile &quot;$(ChangelogFile)&quot;" />
+    <Exec Command="pwsh -NoProfile -ExecutionPolicy Bypass -File &quot;$(UploadScript)&quot; -ApiKey &quot;$(NexusModsApiKey)&quot; -GroupId &quot;$(NexusGroupId)&quot; -ZipFile &quot;$(ZipFile)&quot; -ModName &quot;$(MSBuildProjectName)&quot; -Version &quot;$(Version)&quot;" ConsoleToMsBuild="false" StandardOutputImportance="high" StandardErrorImportance="high" />
 
   </Target>
 

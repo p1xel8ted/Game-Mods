@@ -158,6 +158,13 @@ public static class MassActionEffects
     {
         if (follower?.Brain == null) return;
 
+        // Safety: don't pet sleeping followers (animation conflict can cause softlock)
+        if (!IsAvailable(follower.Brain))
+        {
+            Plugin.WriteLog($"[MassEffect] Skipping pet for {follower.Brain.Info.Name} — follower is unavailable");
+            return;
+        }
+
         follower.FacePosition(PlayerFarming.Instance.transform.position);
         follower.SetBodyAnimation("pet-dog", true);
         follower.AddBodyAnimation("idle", true, 0f);
@@ -373,7 +380,14 @@ public static class MassActionEffects
     /// </summary>
     public static bool IsAvailable(FollowerBrain brain)
     {
-        return brain.CurrentTaskType is not (FollowerTaskType.Sleep or FollowerTaskType.SleepBedRest or FollowerTaskType.Mating);
+        if (brain.CurrentTaskType is FollowerTaskType.Sleep or FollowerTaskType.SleepBedRest or FollowerTaskType.Mating)
+            return false;
+
+        // Defensive: also check actual task object type for transition edge cases
+        if (brain.CurrentTask is FollowerTask_Sleep or FollowerTask_SleepBedRest)
+            return false;
+
+        return true;
     }
 
     /// <summary>

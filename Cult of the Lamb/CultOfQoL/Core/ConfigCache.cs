@@ -59,5 +59,6 @@ internal static class ConfigCache
         public const string ResourceChestDepositSounds = nameof(ResourceChestDepositSounds);
         public const string ResourceChestCollectSounds = nameof(ResourceChestCollectSounds);
         public const string KnucklebonesSpeedMultiplier = nameof(KnucklebonesSpeedMultiplier);
+        public const string RitualSermonSpeedMultiplier = nameof(RitualSermonSpeedMultiplier);
     }
 }

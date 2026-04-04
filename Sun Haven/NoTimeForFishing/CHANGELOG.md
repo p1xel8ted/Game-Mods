@@ -2,6 +2,7 @@
 
 ## 0.1.2
 
+- Fixed player getting stuck in a forward-facing pose after fishing
 - Improved fish attraction speed reliability
 - Fixed bobber attraction radius not applying correctly on first cast
 - Disabling the fish catch popup now works in all languages, not just English

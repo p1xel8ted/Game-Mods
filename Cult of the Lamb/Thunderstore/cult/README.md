@@ -21,7 +21,7 @@
 - Prevent game over when at zero followers
 
 ### Rituals
-- Fast rituals and sermons
+- Fast rituals and sermons (adjustable speed multiplier, 1.5x to 10x)
 - Reverse Ritual of Enrichment nerf (coins scale with follower level)
 - Customise ritual cooldowns
 - Customise ritual costs (increase or decrease material requirements)

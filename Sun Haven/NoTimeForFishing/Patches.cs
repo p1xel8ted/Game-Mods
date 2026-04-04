@@ -269,6 +269,15 @@ public static class Patches
                             rod.SendFishingState(3);
                             rod.CancelFishingAnimation();
                             rod._canUseFishingRod = true;
+
+                            // Reset animation state that would normally be handled by
+                            // Attack() -> AttackAnimationRoutine -> FinishAttackAnimation()
+                            // Without this, the player can get stuck in a forward-facing pose
+                            rod.player.overrideFacingDirection = false;
+                            rod._attacking = false;
+                            rod._canAttack = true;
+                            rod.player.moveSpeedMultipliers.Remove(rod.speedFloatRef);
+                            rod.player.jumpMultipliers.Remove(rod.jumpFloatRef);
                         }, false);
 
                     return false;

@@ -1054,3 +1054,9 @@ AAA_Release*/
 
 # Unity lock files
 _ul
+
+# Serena AI tool
+.serena/
+
+# Decompiled game assemblies (reference only, not for version control)
+**/decompiled_assembly/

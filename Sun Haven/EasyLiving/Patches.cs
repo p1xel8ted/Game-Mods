@@ -304,6 +304,8 @@ public static class Patches
 
     internal static void UpdateMainMenu()
     {
+        if (!MainMenuController.Instance || !MainMenuController.Instance.PCHomeMenu) return;
+
         UpdateDlcData();
 
         UpdateLogo();

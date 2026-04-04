@@ -64,9 +64,7 @@ public partial class Plugin
    // internal static ConfigEntry<bool> TripleMagnetRange { get; private set; }
    // internal static ConfigEntry<bool> UseCustomMagnetRange { get; private set; }
     internal static ConfigEntry<float> MagnetRangeMultiplier { get; private set; }
-    internal static ConfigEntry<float> ResourceDropMultiplier { get; private set; }
-    internal static ConfigEntry<int> ResourceDropSpawnCap { get; private set; }
-    internal static ConfigEntry<bool> ResourceDropMultiplierBlackSouls { get; private set; }
+
 
     private static ConfigEntry<bool> MainMenuGlitch { get; set; }
 
@@ -95,6 +93,7 @@ public partial class Plugin
     internal static ConfigEntry<bool> DisableGameOver { get; private set; }
 
     internal static ConfigEntry<bool> FastRitualSermons { get; private set; }
+    internal static ConfigEntry<float> RitualSermonSpeedMultiplier { get; private set; }
 
     internal static ConfigEntry<bool> TurnOffSpeakersAtNight { get; private set; }
     internal static ConfigEntry<bool> ThriceMultiplyTarotCardLuck { get; private set; }

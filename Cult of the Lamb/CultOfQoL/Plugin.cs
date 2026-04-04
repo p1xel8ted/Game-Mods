@@ -12,7 +12,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.cotl.CultOfQoLCollection";
     internal const string PluginName = "The Cult of QoL Collection";
-    private const string PluginVer = "2.4.3";
+    private const string PluginVer = "2.4.4";
 
     private const string RestartGameMessage = "You must restart the game for these changes to take effect, as in totally exit to desktop and restart the game.\n\n** indicates a restart is required if the setting is changed.";
 
@@ -276,22 +276,7 @@ public partial class Plugin : BaseUnityPlugin
         };
 
         // ── Loot ──
-        ResourceDropMultiplier = _configInstance.Bind(LootSection, "Resource Drop Multiplier", 1.0f, new ConfigDescription("Multiply the quantity of dropped resources (wood, stone, gold, food, etc.). Set to 1 for default game behavior.", new AcceptableValueRange<float>(1f, 10f), new ConfigurationManagerAttributes
-        {
-            Order = 6
-        }));
-        ResourceDropMultiplier.SettingChanged += (_, _) =>
-        {
-            ResourceDropMultiplier.Value = Mathf.Round(ResourceDropMultiplier.Value * 4) / 4;
-        };
-        ResourceDropSpawnCap = _configInstance.Bind(LootSection, "Resource Drop Spawn Cap", 30, new ConfigDescription("Maximum number of physical pickups to spawn per drop event. Extra resources above this cap are added directly to your inventory. Lower values improve performance with high multipliers.", new AcceptableValueRange<int>(1, 100), new ConfigurationManagerAttributes
-        {
-            Order = 5, DispName = "    └ Spawn Cap"
-        }));
-        ResourceDropMultiplierBlackSouls = _configInstance.Bind(LootSection, "Multiply Black Souls", false, new ConfigDescription("Also apply the resource multiplier to Black Souls (spirit ammo). Off by default since black souls already have their own tarot-based multiplier.", null, new ConfigurationManagerAttributes
-        {
-            Order = 4, DispName = "    └ Multiply Black Souls"
-        }));
+
         AllLootMagnets = _configInstance.Bind(LootSection, "All Loot Magnets", false, new ConfigDescription("All loot is magnetized to you.", null, new ConfigurationManagerAttributes
         {
             Order = 3
@@ -631,6 +616,24 @@ public partial class Plugin : BaseUnityPlugin
             if (FastRitualSermons.Value) return;
             RitualSermonSpeed.RitualRunning = false;
             GameManager.SetTimeScale(1);
+        };
+        RitualSermonSpeedMultiplier = _configInstance.Bind(
+            RitualSection,
+            "Ritual & Sermon Speed Multiplier",
+            5.0f,
+            new ConfigDescription(
+                "How fast rituals and sermons play when Fast Rituals & Sermons is enabled.\n" +
+                "- 2.0 = Twice as fast\n" +
+                "- 5.0 = Five times as fast (default)\n" +
+                "- 10.0 = Ten times as fast (may cause visual glitches)",
+                new AcceptableValueRange<float>(1.5f, 10f),
+                new ConfigurationManagerAttributes { Order = 4, DispName = "    └ Speed Multiplier" }
+            )
+        );
+        RitualSermonSpeedMultiplier.SettingChanged += (_, _) =>
+        {
+            RitualSermonSpeedMultiplier.Value = Mathf.Round(RitualSermonSpeedMultiplier.Value * 2) / 2;
+            ConfigCache.MarkDirty(ConfigCache.Keys.RitualSermonSpeedMultiplier);
         };
         ReverseEnrichmentNerf = _configInstance.Bind(RitualSection, "Reverse Enrichment Nerf", false, new ConfigDescription("Reverts the nerf to the Ritual of Enrichment. Coins scale with follower level (level * 20 per follower).", null, new ConfigurationManagerAttributes
         {

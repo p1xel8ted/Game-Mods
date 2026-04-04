@@ -1,0 +1,10 @@
+<Project>
+    <PropertyGroup>
+        <!-- Path to your Fabledom game installation -->
+        <GamePath>F:\Games\steamapps\common\Fabledom</GamePath>
+        <BepInExPath>$(GamePath)\BepInEx</BepInExPath>
+        <BepInExCorePath>$(BepInExPath)\core</BepInExCorePath>
+        <BepInExPluginsPath>$(BepInExPath)\plugins</BepInExPluginsPath>
+        <StrippedLibs>$(MSBuildProjectDirectory)\..\libs</StrippedLibs>
+    </PropertyGroup>
+</Project>

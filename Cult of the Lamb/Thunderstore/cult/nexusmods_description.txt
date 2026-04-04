@@ -26,7 +26,7 @@
 
 [size=3][b]Rituals[/b][/size]
 [list]
-[*][size=3]Fast rituals and sermons[/size]
+[*][size=3]Fast rituals and sermons (adjustable speed multiplier, 1.5x to 10x)[/size]
 [*][size=3]Reverse Ritual of Enrichment nerf (coins scale with follower level)[/size]
 [*][size=3]Customise ritual cooldowns[/size]
 [*][size=3]Customise ritual costs (increase or decrease material requirements)[/size]

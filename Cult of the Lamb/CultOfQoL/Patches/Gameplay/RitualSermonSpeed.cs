@@ -1,10 +1,16 @@
-﻿namespace CultOfQoL.Patches.Gameplay;
+﻿using CultOfQoL.Core;
+
+namespace CultOfQoL.Patches.Gameplay;
 
 [Harmony]
 [HarmonyWrapSafe]
 public static class RitualSermonSpeed
 {
     internal static bool RitualRunning { get; set; }
+
+    private static float SpeedMultiplier => ConfigCache.GetCachedValue(
+        ConfigCache.Keys.RitualSermonSpeedMultiplier,
+        () => Plugin.RitualSermonSpeedMultiplier.Value);
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Interaction_TempleAltar), nameof(Interaction_TempleAltar.DoRitual))] // rituals
@@ -85,6 +91,6 @@ public static class RitualSermonSpeed
     {
         if (!RitualRunning || !Plugin.FastRitualSermons.Value) return;
 
-        GameManager.SetTimeScale(10); //set this too fast and stuff starts to break...
+        GameManager.SetTimeScale(SpeedMultiplier);
     }
 }

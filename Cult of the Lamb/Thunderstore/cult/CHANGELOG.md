@@ -1,3 +1,11 @@
+### 2.4.4 - 08/03/2026
+
+**New Features:**
+* Added "Ritual & Sermon Speed Multiplier" slider (1.5x-10x, default 5x) — customise how fast rituals and sermons play when "Fast Rituals & Sermons" is enabled, instead of the previous fixed speed.
+
+**Fixes:**
+* Fixed mass pet potentially softlocking the game when interacting with sleeping followers.
+
 ### 2.4.3 - 27/02/2026
 
 **New Features:**
