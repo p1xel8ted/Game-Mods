@@ -59,7 +59,7 @@
     <!-- Common Packages -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
-        <PackageReference Include="Resource.Embedder" Version="2.2.0" />
+        <PackageReference Include="Resource.Embedder" Version="2.3.1" />
     </ItemGroup>
 
     <!-- Release-Upload Configuration (inherits Release settings) -->

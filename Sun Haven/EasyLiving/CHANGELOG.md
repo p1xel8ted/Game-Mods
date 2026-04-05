@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- Fixed a crash that could occur on the main menu when certain settings were changed during startup
+
 ## 0.2.1
 
 - Fixed a black screen that could occur during game startup

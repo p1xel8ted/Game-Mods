@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.sunhaven.morejewelry";
     private const string PluginName = "More Jewelry!";
-    private const string PluginVersion = "0.1.3";
+    private const string PluginVersion = "0.1.4";
 
     /// <summary>
     /// Gets the logging source for the plugin.
@@ -70,13 +70,9 @@ public class Plugin : BaseUnityPlugin
         ShowTooltips = Config.Bind("01. General", "Show Tooltips", true, new ConfigDescription("Show tooltips.", null, new ConfigurationManagerAttributes {Order = 2}));
         ShowTooltips.SettingChanged += (_, _) =>
         {
-            if (UI.LeftArrowPopup != null)
+            if (UI.ToggleArrowPopup != null)
             {
-                UI.LeftArrowPopup.enabled = ShowTooltips.Value;
-            }
-            if (UI.RightArrowPopup != null)
-            {
-                UI.RightArrowPopup.enabled = ShowTooltips.Value;
+                UI.ToggleArrowPopup.enabled = ShowTooltips.Value;
             }
         };
         IgnoreToggleWithController = Config.Bind("01. General", "Ignore Toggle With Controller", false, new ConfigDescription("Ignore toggle with controller.", null, new ConfigurationManagerAttributes {Order = 3}));

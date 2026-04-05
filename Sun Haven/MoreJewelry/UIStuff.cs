@@ -45,6 +45,7 @@ public class CustomUI : MonoBehaviour
         var viewportImage = viewport.AddComponent<Image>();
         viewportImage.rectTransform.sizeDelta = new Vector2(100, 155);
         viewportImage.color = new Color(0, 0, 0, 0); // Transparent color for the viewport image
+        viewportImage.raycastTarget = false;
 
         //var mask = viewport.AddComponent<Mask>();
         // mask.showMaskGraphic = false;
@@ -88,9 +89,10 @@ public class CustomUI : MonoBehaviour
         var go = new GameObject("Background");
         var bg = go.AddComponent<Image>();
         bg.sprite = bgSprite;
+        bg.raycastTarget = false;
         bg.gameObject.layer = LayerMask.NameToLayer("Player");
         var transform = bg.rectTransform;
-        transform.SetParent(GameObject.Find(Const.PlayerInventoryPath).transform);
+        transform.SetParent(UI.InventoryTransform);
         transform.localScale = Vector3.one;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -109,6 +111,7 @@ public class CustomUI : MonoBehaviour
 
         var title = new GameObject("Title").AddComponent<Image>();
         title.sprite = titleSprite;
+        title.raycastTarget = false;
         title.gameObject.layer = LayerMask.NameToLayer("Player");
         title.transform.SetParent(parent);
         title.preserveAspect = true;
@@ -133,6 +136,7 @@ public class CustomUI : MonoBehaviour
         titleText.fontSizeMin = 10f;
         titleText.fontSize = 18f;
         titleText.text = name;
+        titleText.raycastTarget = false;
         return titleText;
     }
 

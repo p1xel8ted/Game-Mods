@@ -12,7 +12,7 @@ public static class Utils
     /// </summary>
     internal static void UpdatePlayerPref()
     {
-        PlayerPrefs.SetInt(Const.PlayerPrefKey, !UI.LeftArrowInstance.activeSelf ? 1 : 0);
+        PlayerPrefs.SetInt(Const.PlayerPrefKey, UI.GearPanel != null && UI.GearPanel.activeSelf ? 1 : 0);
     }
 
     /// <summary>
@@ -26,6 +26,9 @@ public static class Utils
         Log("Resetting mod as user has returned to the main menu.");
         UI.SlotsCreated = false;
         UI.ActionAttached = false;
+        UI.OriginalKeepsakeSlot = null;
+        UI.OriginalAmuletSlot = null;
+        UI.InventoryTransform = null;
         Patches.GearSlots.Clear();
         Object.DestroyImmediate(UI.GearPanel);
     }

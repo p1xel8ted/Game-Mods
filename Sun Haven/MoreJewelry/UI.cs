@@ -16,22 +16,9 @@ public static class UI
     /// <summary>
     /// Gets or privately sets the instance of the left arrow GameObject.
     /// </summary>
-    internal static GameObject LeftArrowInstance { get; private set; }
+    internal static GameObject ToggleArrowInstance { get; private set; }
 
-    /// <summary>
-    /// Gets or sets the Button component associated with the LeftArrowInstance.
-    /// </summary>
-    private static Button LeftArrowInstanceButton { get; set; }
-
-    /// <summary>
-    /// Gets or sets the instance of the right arrow GameObject.
-    /// </summary>
-    private static GameObject RightArrowInstance { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Button component associated with the RightArrowInstance.
-    /// </summary>
-    private static Button RightArrowInstanceButton { get; set; }
+    private static Button ToggleArrowButton { get; set; }
 
     /// <summary>
     /// Gets or privately sets the instance of the GearPanel GameObject.
@@ -48,38 +35,30 @@ public static class UI
     /// </summary>
     internal static bool ActionAttached { get; set; }
 
-    /// <summary>
-    /// Gets or privately sets the Popup component associated with the LeftArrowInstance.
-    /// </summary>
-    internal static Popup LeftArrowPopup { get; private set; }
+    internal static GameObject OriginalKeepsakeSlot { get; set; }
+    internal static GameObject OriginalAmuletSlot { get; set; }
+    internal static Transform InventoryTransform { get; set; }
 
     /// <summary>
-    /// Gets or privately sets the Popup component associated with the RightArrowInstance.
+    /// Gets or privately sets the Popup component associated with the controller-safe toggle arrow.
     /// </summary>
-    internal static Popup RightArrowPopup { get; private set; }
+    internal static Popup ToggleArrowPopup { get; private set; }
 
 
     /// <summary>
-    /// Sets up a button with specific behavior on click. When the button is clicked, it shows one GameObject and hides another.
-    /// Additionally, it toggles the visibility of the GearPanel based on the state of the LeftArrowInstance and updates player preferences and navigation elements.
+    /// Sets up the persistent toggle button used to show and hide the jewelry panel.
     /// </summary>
-    /// <param name="button">The button to set up.</param>
-    /// <param name="buttonToShow">The GameObject to show when the button is clicked.</param>
-    /// <param name="buttonToHide">The GameObject to hide when the button is clicked.</param>
-    /// <remarks>
-    /// This method removes all existing listeners from the button's onClick event before adding the new behavior.
-    /// It assumes that GearPanel and LeftArrowInstance are accessible within the scope of the method.
-    /// Calls <see cref="Utils.UpdatePlayerPref"/> to update player preferences and <see cref="UpdateNavigationElements"/> to update navigation elements.
-    /// </remarks>
-    private static void SetupButton(Button button, GameObject buttonToShow, GameObject buttonToHide)
+    /// <param name="button">The button to configure.</param>
+    private static void SetupButton(Button button)
     {
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() =>
         {
-            buttonToShow.SetActive(true);
-            buttonToHide.SetActive(false);
-            GearPanel.SetActive(!LeftArrowInstance.activeSelf);
+            var panelVisible = !GearPanel.activeSelf;
+            GearPanel.SetActive(panelVisible);
+            UpdateToggleArrowVisual(panelVisible);
             Utils.UpdatePlayerPref();
+            RefreshPanelLayout();
             UpdateNavigationElements();
         });
     }
@@ -207,45 +186,57 @@ public static class UI
     /// <item><description>Sets up button functionality using <see cref="SetupButton"/>.</description></item>
     /// </list>
     /// Logs an error using <see cref="Plugin.LOG"/> if the original left or right arrows are not found.
-    /// Assumes that the parent GameObject is found using <see cref="Const.PlayerItemsPath"/>.
+    /// Assumes that the parent is found dynamically via <see cref="InventoryTransform"/>.
     /// </remarks>
     private static void CreateToggleArrows()
     {
-        var leftArrow = GameObject.Find(Const.LeftArrowPath);
-        var rightArrow = GameObject.Find(Const.RightArrowPath);
+        if (InventoryTransform == null)
+        {
+            Plugin.LOG.LogError("Inventory transform not cached. Cannot create toggle arrows.");
+            return;
+        }
+
+        var leftArrow = InventoryTransform.FindFirstChildByName("LeftArrow")?.gameObject;
+        var rightArrow = InventoryTransform.FindFirstChildByName("RightArrow")?.gameObject;
         if (leftArrow == null || rightArrow == null)
         {
             Plugin.LOG.LogError("Left or right arrow not found. Please report this.");
             return;
         }
 
-        var parent = GameObject.Find(Const.PlayerItemsPath);
+        var parent = InventoryTransform.FindFirstChildByName("Items")?.gameObject;
+        if (parent == null)
+        {
+            Plugin.LOG.LogError("Items parent not found. Cannot create toggle arrows.");
+            return;
+        }
 
-        //create new instances of the arrows and attach them to the parent
-        LeftArrowInstance = Object.Instantiate(leftArrow, parent.transform);
-        RightArrowInstance = Object.Instantiate(rightArrow, parent.transform);
+        // Keep a single arrow GameObject alive so controller selection never points
+        // at an inactive button after toggling the panel.
+        ToggleArrowInstance = Object.Instantiate(leftArrow, parent.transform);
+        ToggleArrowButton = ToggleArrowInstance.GetComponent<Button>();
 
-        LeftArrowInstanceButton = LeftArrowInstance.GetComponent<Button>();
-        RightArrowInstanceButton = RightArrowInstance.GetComponent<Button>();
+        // Fix duplicate PSS.UI.Selectable components from the cloned template.
+        // Keep only one — multiple Selectables on the same GameObject confuse the input system.
+        var pssSelectables = ToggleArrowInstance.GetComponents<PSS.UI.Selectable>();
+        for (var i = 1; i < pssSelectables.Length; i++)
+        {
+            Object.DestroyImmediate(pssSelectables[i]);
+        }
+
+        // Add NavigationElement so the game's controller system (MouseVisualManager) tracks this element.
+        ToggleArrowInstance.TryAddComponent<NavigationElement>();
 
         CreatePopups();
 
-        LeftArrowInstance.SetActive(true);
-        RightArrowInstance.SetActive(false);
-
         //set the position of the arrows to the bottom left of the parent
-        LeftArrowInstance.transform.localPosition = Const.ArrowPosition;
-        RightArrowInstance.transform.localPosition = Const.ArrowPosition;
+        ToggleArrowInstance.transform.localPosition = Const.ArrowPosition;
 
         //set the name of the arrows
-        LeftArrowInstance.name = Const.MoreJewelryLeftArrow;
-        RightArrowInstance.name = Const.MoreJewelryRightArrow;
+        ToggleArrowInstance.name = Const.MoreJewelryToggleArrow;
 
-        SetupButton(LeftArrowInstanceButton, RightArrowInstance, LeftArrowInstance);
-        SetupButton(RightArrowInstanceButton, LeftArrowInstance, RightArrowInstance);
-
-        LeftArrowInstance.SetActive(false);
-        RightArrowInstance.SetActive(true);
+        SetupButton(ToggleArrowButton);
+        UpdateToggleArrowVisual(PlayerPrefs.GetInt(Const.PlayerPrefKey, 1) == 1);
     }
 
     /// <summary>
@@ -256,12 +247,11 @@ public static class UI
     /// It relies on the <see cref="CreatePopup"/> method for creating each popup.
     /// <para>The content and titles for the popups are retrieved using <see cref="Utils.GetLeftArrowPopupContent"/>, 
     /// <see cref="Utils.GetRightArrowPopupContent"/>, and <see cref="Utils.GetTitle"/>.</para>
-    /// <para>Assumes that <see cref="LeftArrowInstance"/> and <see cref="RightArrowInstance"/> are already instantiated.</para>
+    /// <para>Assumes that <see cref="ToggleArrowInstance"/> is already instantiated.</para>
     /// </remarks>
     private static void CreatePopups()
     {
-        LeftArrowPopup = CreatePopup(LeftArrowInstance, $"{LeftArrowInstance.name}Popup", Utils.GetLeftArrowPopupContent(), Utils.GetTitle());
-        RightArrowPopup = CreatePopup(RightArrowInstance, $"{RightArrowInstance.name}Popup", Utils.GetRightArrowPopupContent(), Utils.GetTitle());
+        ToggleArrowPopup = CreatePopup(ToggleArrowInstance, $"{ToggleArrowInstance.name}Popup", GetToggleArrowPopupContent(), Utils.GetTitle());
     }
 
     /// <summary>
@@ -291,51 +281,56 @@ public static class UI
         {
             gearSelectables[i] = Patches.GearSlots[i].gameObject.GetComponent<Selectable>() ?? Patches.GearSlots[i].gameObject.AddComponent<Selectable>();
             gearSelectables[i].transition = Selectable.Transition.None;
+            gearSelectables[i].interactable = true;
         }
 
-        var keepsakeGo = GameObject.Find(Const.AmorSlotTen);
-        var amuletGo = GameObject.Find(Const.AmorSlotEleven);
-        if (keepsakeGo == null || amuletGo == null)
+        if (OriginalKeepsakeSlot == null || OriginalAmuletSlot == null)
         {
-            Plugin.LOG.LogError("Unable to locate original keepsake/amulet slots. Skipping navigation update.");
+            Plugin.LOG.LogError("Original keepsake/amulet slot references not cached. Skipping navigation update.");
             return;
         }
 
-        var keepsakeSelectable = keepsakeGo.GetComponent<Selectable>() ?? keepsakeGo.AddComponent<Selectable>();
-        var amuletSelectable = amuletGo.GetComponent<Selectable>() ?? amuletGo.AddComponent<Selectable>();
+        var keepsakeSelectable = OriginalKeepsakeSlot.GetComponent<Selectable>() ?? OriginalKeepsakeSlot.AddComponent<Selectable>();
+        var amuletSelectable = OriginalAmuletSlot.GetComponent<Selectable>() ?? OriginalAmuletSlot.AddComponent<Selectable>();
 
-        var leftArrowSelectable = LeftArrowInstance.GetComponent<Selectable>() ?? LeftArrowInstance.AddComponent<Selectable>();
-        var rightArrowSelectable = RightArrowInstance.GetComponent<Selectable>() ?? RightArrowInstance.AddComponent<Selectable>();
+        Selectable arrowSelectable = null;
+        if (ToggleArrowInstance != null)
+        {
+            arrowSelectable = ToggleArrowInstance.GetComponent<Selectable>() ?? ToggleArrowInstance.AddComponent<Selectable>();
+            arrowSelectable.transition = Selectable.Transition.None;
+        }
 
         // Arrow navigation: left arrow → gear slots, right arrow → original slots
-        SetExplicitNav(leftArrowSelectable, right: keepsakeSelectable, left: gearSelectables[3]);
-        SetExplicitNav(rightArrowSelectable, right: keepsakeSelectable, left: gearSelectables[3]);
+        if (arrowSelectable != null)
+        {
+            SetExplicitNav(arrowSelectable, right: keepsakeSelectable, left: gearSelectables[3]);
+        }
 
         // Gear slots laid out as:
         // 0  1
         // 2  3
         // 4  5
         var rightNeighbor = Plugin.ShowPanelToggle.Value && !Plugin.IgnoreToggleWithController.Value
-            ? (GearPanel.activeSelf ? rightArrowSelectable : leftArrowSelectable)
+            ? arrowSelectable ?? keepsakeSelectable
             : keepsakeSelectable;
 
-        SetExplicitNav(gearSelectables[0], right: gearSelectables[1], down: gearSelectables[2]);
+        SetExplicitNav(gearSelectables[0], right: gearSelectables[1], down: gearSelectables[2], left: keepsakeSelectable);
         SetExplicitNav(gearSelectables[1], right: rightNeighbor, down: gearSelectables[3], left: gearSelectables[0]);
-        SetExplicitNav(gearSelectables[2], right: gearSelectables[3], down: gearSelectables[4], up: gearSelectables[0]);
+        SetExplicitNav(gearSelectables[2], right: gearSelectables[3], down: gearSelectables[4], up: gearSelectables[0], left: amuletSelectable);
         SetExplicitNav(gearSelectables[3], right: rightNeighbor, down: gearSelectables[5], left: gearSelectables[2], up: gearSelectables[1]);
-        SetExplicitNav(gearSelectables[4], right: gearSelectables[5], up: gearSelectables[2]);
+        SetExplicitNav(gearSelectables[4], right: gearSelectables[5], up: gearSelectables[2], left: keepsakeSelectable);
         SetExplicitNav(gearSelectables[5], right: rightNeighbor, left: gearSelectables[4], up: gearSelectables[3]);
 
         // Wire original slots back to gear panel
-        if (Plugin.ShowPanelToggle.Value && !Plugin.IgnoreToggleWithController.Value)
+        if (Plugin.ShowPanelToggle.Value && !Plugin.IgnoreToggleWithController.Value && arrowSelectable != null)
         {
-            SetSelectableLeft(keepsakeSelectable, GearPanel.activeSelf ? rightArrowSelectable : leftArrowSelectable);
-            SetSelectableLeft(amuletSelectable, GearPanel.activeSelf ? rightArrowSelectable : leftArrowSelectable);
+            SetSelectableLeft(keepsakeSelectable, arrowSelectable);
+            SetSelectableLeft(amuletSelectable, arrowSelectable);
         }
         else
         {
-            SetSelectableLeft(keepsakeSelectable, gearSelectables[3]);
-            SetSelectableLeft(amuletSelectable, gearSelectables[5]);
+            SetSelectableLeft(keepsakeSelectable, gearSelectables[1]);
+            SetSelectableLeft(amuletSelectable, gearSelectables[3]);
         }
     }
 
@@ -356,6 +351,57 @@ public static class UI
         selectable.navigation = nav;
     }
 
+    private static string GetToggleArrowPopupContent()
+    {
+        return GearPanel != null && GearPanel.activeSelf
+            ? Utils.GetRightArrowPopupContent()
+            : Utils.GetLeftArrowPopupContent();
+    }
+
+    private static void UpdateToggleArrowVisual(bool panelVisible)
+    {
+        if (ToggleArrowInstance != null)
+        {
+            ToggleArrowInstance.SetActive(Plugin.ShowPanelToggle.Value);
+        }
+
+        if (ToggleArrowInstance != null)
+        {
+            // Left arrow = 270° Z, Right arrow = 90° Z (same sprite, different rotation)
+            var zRotation = panelVisible ? 90f : 270f;
+            ToggleArrowInstance.transform.localEulerAngles = new Vector3(0f, 0f, zRotation);
+        }
+
+        if (ToggleArrowPopup != null)
+        {
+            ToggleArrowPopup.text = Utils.GetTitle();
+            ToggleArrowPopup.description = GetToggleArrowPopupContent();
+            ToggleArrowPopup.enabled = Plugin.ShowTooltips.Value;
+        }
+    }
+
+    private static void RefreshPanelLayout()
+    {
+        Canvas.ForceUpdateCanvases();
+
+        if (GearPanel != null && GearPanel.TryGetComponent<RectTransform>(out var gearPanelRect))
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(gearPanelRect);
+        }
+
+        if (GearPanel?.transform.Find(Const.GridContainerViewportContent) is RectTransform contentRect)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        }
+
+        if (GearPanel?.transform.Find("SlotGridContainer/Viewport") is RectTransform viewportRect)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
+        }
+
+        Canvas.ForceUpdateCanvases();
+    }
+
 
     /// <summary>
     /// Updates the visibility of the panel and arrow instances based on the current settings.
@@ -368,39 +414,28 @@ public static class UI
     /// The left and right arrow instances are toggled accordingly.</para>
     /// <para>Uses <see cref="Utils.Log"/> for logging and <see cref="PlayerPrefs.SetInt"/> and <see cref="PlayerPrefs.GetInt"/> for storing and retrieving visibility state.</para>
     /// <para>Relies on <see cref="Const.PlayerPrefKey"/> for the PlayerPrefs key.</para>
-    /// Assumes that <see cref="LeftArrowInstance"/>, <see cref="RightArrowInstance"/>, and <see cref="GearPanel"/> are already instantiated and accessible.
+    /// Assumes that <see cref="ToggleArrowInstance"/> and <see cref="GearPanel"/> are already instantiated and accessible.
     /// </remarks>
     internal static void UpdatePanelVisibility()
     {
         //toggle is false, so we need to ensure the panel is visible and in the shown location
         if (!Plugin.ShowPanelToggle.Value)
         {
-            if (LeftArrowInstanceButton != null)
-            {
-                LeftArrowInstanceButton.onClick.Invoke();
-            }
-
             Utils.Log("ShowPanelToggle is false. Setting panel to visible & hiding toggle button.");
             PlayerPrefs.SetInt(Const.PlayerPrefKey, 0);
-            LeftArrowInstance.SetActive(false);
-            RightArrowInstance.SetActive(false);
+            if (GearPanel != null) GearPanel.SetActive(true);
+            if (ToggleArrowInstance != null) ToggleArrowInstance.SetActive(false);
         }
         else
         {
             Utils.Log("ShowPanelToggle is true. Setting panel based on settings. Showing toggle button.");
             var panelVisible = PlayerPrefs.GetInt(Const.PlayerPrefKey, 1) == 1;
             GearPanel.SetActive(panelVisible);
-            if (panelVisible)
-            {
-                if (LeftArrowInstance != null) LeftArrowInstance.SetActive(false);
-                if (RightArrowInstance != null) RightArrowInstance.SetActive(true);
-            }
-            else
-            {
-                if (LeftArrowInstance != null) LeftArrowInstance.SetActive(true);
-                if (RightArrowInstance != null) RightArrowInstance.SetActive(false);
-            }
+            UpdateToggleArrowVisual(panelVisible);
         }
+
+        RefreshPanelLayout();
+        UpdatePopupText();
     }
 
     /// <summary>
@@ -452,11 +487,19 @@ public static class UI
                 Object.DestroyImmediate(itemIcon.gameObject);
             }
 
+            // The template slot's Selectable.interactable may be false (set by ItemIcon when
+            // an item occupies the slot). DestroyImmediate above skips ItemIcon's cleanup that
+            // would reset it to true. Empty slots need interactable=true so controller can reach them.
+            var slotSelectable = newSlot.GetComponent<Selectable>();
+            if (slotSelectable != null) slotSelectable.interactable = true;
+
             var slotIndex = Patches.GearSlots.Count;
             newSlot.name = $"{armorType}Slot ({i})";
             newSlot.slotNumber = slotIndex < CustomSlotNumbers.Length ? CustomSlotNumbers[slotIndex] : 66 + slotIndex;
             Patches.GearSlots.Add(newSlot);
         }
+
+        RefreshPanelLayout();
     }
 
     /// <summary>
@@ -510,11 +553,9 @@ public static class UI
     /// </remarks>
     public static void UpdatePopupText()
     {
-        if (LeftArrowPopup == null || RightArrowPopup == null) return;
-        LeftArrowPopup.text = Utils.GetTitle();
-        RightArrowPopup.text = Utils.GetTitle();
-        LeftArrowPopup.description = Utils.GetLeftArrowPopupContent();
-        RightArrowPopup.description = Utils.GetRightArrowPopupContent();
+        if (ToggleArrowPopup == null) return;
+        ToggleArrowPopup.text = Utils.GetTitle();
+        ToggleArrowPopup.description = GetToggleArrowPopupContent();
     }
 
     /// <summary>

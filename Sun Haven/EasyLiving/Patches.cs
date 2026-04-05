@@ -284,6 +284,8 @@ public static class Patches
         _installedDlcCount = 0;
         _totalDlcCount = 0;
 
+        if (!MainMenuController.Instance || !MainMenuController.Instance.PCHomeMenu) return;
+
         var scroller = MainMenuController.Instance.PCHomeMenu.transform.FindFirstChildByName("DLC_Scroller");
         // var scroller = GameObject.Find("Canvas_Home/[HomeMenu]/[PCHomeMenu]/DLCBox/DLC_Scroller");
         if (!scroller) return;

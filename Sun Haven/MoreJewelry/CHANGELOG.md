@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4
+
+- Fixed controller support for the jewelry pouch — picking up, placing, and navigating items now works correctly
+- Fixed the toggle arrow becoming unresponsive after pressing it with a controller
+
 ## 0.1.3
 
 - Updated for game version 3.0.2b

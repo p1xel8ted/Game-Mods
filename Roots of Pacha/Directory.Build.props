@@ -1,49 +1,90 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <!--User Configuration-->
-  <Import Condition=" Exists('Directory.Build.props.user') " Project="Directory.Build.props.user" />
+    <!-- User Configuration -->
+    <Import Project="$(MSBuildThisFileDirectory)Directory.Build.props.user" Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.props.user')" />
+    <Import Project="Environment.props" Condition="Exists('Environment.props')" />
 
-  <!--Base Settings-->
-  <PropertyGroup>
-   <Description>$(MSBuildProjectName)</Description>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-       <IsPackable>false</IsPackable>
-           <Authors>p1xel8ted</Authors>
-    <Company>$(Authors)</Company>
-    <Product>$(MSBuildProjectName)</Product>
-    <PackageId>$(MSBuildProjectName)</PackageId>
-  </PropertyGroup>
+    <!-- Suppress MSBuild Warnings -->
+    <PropertyGroup>
+        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+        <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
+    </PropertyGroup>
 
-  <!--Default all references to CopyLocal False.-->
-  <ItemDefinitionGroup>
-    <Reference><Private>False</Private></Reference>
-    <ProjectReference><Private>False</Private></ProjectReference>
-    <PackageReference><Private>False</Private></PackageReference>
-  </ItemDefinitionGroup>
+    <!-- Base Settings -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Deterministic>true</Deterministic>
+        <IsPackable>false</IsPackable>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>F:\Games\steamapps\common\Roots of Pacha\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
-  </PropertyGroup>
+    <!-- Debug Settings -->
+    <PropertyGroup>
+        <DebugType>embedded</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <EmbedAllSources>true</EmbedAllSources>
+        <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
+    </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>F:\Games\steamapps\common\Roots of Pacha\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
-  </PropertyGroup>
+    <!-- Project Metadata -->
+    <PropertyGroup>
+        <Authors>p1xel8ted</Authors>
+        <Company>$(Authors)</Company>
+        <Product>$(MSBuildProjectName)</Product>
+        <Description>$(MSBuildProjectName)</Description>
+        <PackageId>$(MSBuildProjectName)</PackageId>
+    </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
-  </ItemGroup>
-  
+    <!-- Output -->
+    <PropertyGroup>
+        <OutputPath>$(BepInExPluginsPath)\$(MSBuildProjectName)</OutputPath>
+    </PropertyGroup>
+
+    <!-- Default All References to CopyLocal False -->
+    <ItemDefinitionGroup>
+        <Reference>
+            <Private>False</Private>
+        </Reference>
+        <ProjectReference>
+            <Private>False</Private>
+        </ProjectReference>
+        <PackageReference>
+            <Private>False</Private>
+        </PackageReference>
+    </ItemDefinitionGroup>
+
+    <!-- Common Packages -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
-        <PackageReference Include="Resource.Embedder" Version="2.2.0"/>
-                <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all">
-            <PrivateAssets>all</PrivateAssets>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="Resource.Embedder" Version="2.3.1" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <!-- .NET Framework Reference Assemblies (conditional) -->
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!-- Release-Upload Configuration (inherits Release settings) -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release-Upload'">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <!-- Game/Unity Assemblies (wildcard from stripped libs) -->
+    <ItemGroup>
+        <Reference Include="$(StrippedLibs)\*.dll" Publicize="true">
+            <HintPath>$(StrippedLibs)\%(Filename)%(Extension)</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <!-- Shared Source Files (GlobalUsings.cs excluded - each project has its own) -->
+    <ItemGroup>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
     </ItemGroup>
 
 </Project>

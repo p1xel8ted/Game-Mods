@@ -10,6 +10,7 @@ global using BepInEx.Configuration;
 global using BepInEx.Logging;
 global using HarmonyLib;
 global using UnityEngine;
+global using UnityEngine.EventSystems;
 global using Wish;
 global using System.Collections.Generic;
 global using System.Linq;
