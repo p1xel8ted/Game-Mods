@@ -1065,5 +1065,11 @@ _ul
 **/upload.target
 **/NexusGroupIDS.csv
 
+# Decompiled game code, work summaries, audit docs, user reports
+**/game_code/
+**/work_summaries/
+**/mod-audit.md
+**/reports/
+
 # Decompiled game assemblies (reference only, not for version control)
 **/decompiled_assembly/
