@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.2.6</Version>
+        <Version>2.2.7</Version>
+        <NexusGroupId>512143</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\GYKHelper\StartupLogger.cs" Link="StartupLogger.cs"/>
+        <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
     </ItemGroup>
 </Project>

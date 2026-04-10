@@ -31,7 +31,8 @@ public static class Patches
         }
 
         if (!(UnityEngine.Time.time > Time + RegenDelay)) return;
-        if (Player.energy < Save.max_energy)
+
+        if (EnergyRegen > 0 && Player.energy < Save.max_energy)
         {
             Player.energy += EnergyRegen;
             if (ShowRegenUpdates)
@@ -43,7 +44,8 @@ public static class Patches
                 Player.energy = Save.max_energy;
             }
         }
-        else if (Player.hp < Save.max_hp)
+
+        if (LifeRegen > 0 && Player.hp < Save.max_hp)
         {
             Player.hp += LifeRegen;
             if (ShowRegenUpdates)
@@ -55,6 +57,7 @@ public static class Patches
                 Player.hp = Save.max_hp;
             }
         }
+
         Time = UnityEngine.Time.time;
     }
 }

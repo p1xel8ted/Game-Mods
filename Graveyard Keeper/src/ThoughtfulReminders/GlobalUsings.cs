@@ -2,4 +2,4 @@
 
 global using System;
 global using BepInEx.Configuration;
-global using GYKHelper;
+global using Shared;

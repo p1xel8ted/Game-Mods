@@ -1,11 +1,11 @@
-﻿namespace GiveMeMoar;
+namespace GiveMeMoar;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.givememoar";
     private const string PluginName = "Give Me Moar!";
-    private const string PluginVer = "1.2.10";
+    private const string PluginVer = "1.2.11";
     
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static ConfigEntry<bool> MultiplySticks { get; private set; }

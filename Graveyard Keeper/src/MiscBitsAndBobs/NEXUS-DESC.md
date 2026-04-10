@@ -1,0 +1,46 @@
+[size=4][b]Support[/b][/size]
+
+[size=3]Continued development, testing, &amp; managing user reports all take time; any support is greatly appreciated! If you can't donate and enjoy the mod, please consider endorsing the mod (thumbs up 'Endorse' button up the top)![/size]
+
+[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
+
+[size=4][b]Discord[/b][/size]
+
+[size=3][url=https://discord.gg/Dy5ApMYYY8]https://discord.gg/Dy5ApMYYY8[/url][/size]
+
+[size=4][b]What - This list may not be everything.[/b][/size]
+
+[list]
+[*][size=3]I put Misc tweaks here and there in my other mods, but I felt they didn't fit the theme of those mods, so I created this instead.[/size]
+[*][size=3]Enable the Halloween event permanently or on its normal schedule. It appeared to be only enabled for Halloween 2018 in the game code.[/size]
+[*][size=3]Remove the "Credits" button from the main menu. [/size]
+[*][size=3]Condense the XP RGB bar when you have them into the 1000s. i.e. instead of 12450, it will say 12.4K - [b]NOTE - (you need to restart the game if changing saves; otherwise, the XP hud won't draw)[/b][/size]
+[*][size=3]Turn the music down when using the GUI.[/size]
+[*][size=3]Disable letterboxing around in-game cinematics (i.e. church sermon)[/size]
+[*][size=3]Disable the intro cartoon movie on a new game[/size]
+[*][size=3]KitsuneKitoMode (Discord user request), which makes the entry-level wooden grave fence drop one blue orb when added to a grave[/size]
+[*][size=3]Lessen footprint impact.[/size]
+[*][size=3]Modify player and porter speed. Don't use in conjunction with other speed mods.[/size]
+[*][size=3]Remove prayers on use. I feel it was originally intended to be a single-use item; otherwise, why make them craftable, or the priest guy sell them? [/size]
+[*][size=3]It can make zombies burnable in the pyre[s] and crematoriums[/s].[/size]
+[*][size=3]You can add coal to the player's tavern oven.[/size]
+[/list]
+
+[size=4][b]Configuration[/b][/size]
+
+[size=3]If you installed the required [url=https://www.nexusmods.com/graveyardkeeper/mods/79]Graveyard Keeper BepInEx 5 Pack[/url] and this mod is configurable, press F1 in-game to open the config interface.[/size]
+
+[size=4][b]Requirements[/b][/size]
+
+[list]
+[*][url=https://www.nexusmods.com/graveyardkeeper/mods/79][size=3]Graveyard Keeper BepInEx 5 Pack at Graveyard Keeper Nexus - Mods and community (nexusmods.com)[/size][/url]
+[/list]
+[size=4][b]Installation[/b][/size]
+
+[size=3]Installation using Vortex is the recommended installation method. If you wish to install manually, extract the contents of the mod archive into:
+
+[code]...&#92;steamapps&#92;common&#92;Graveyard Keeper&#92;BepInEx[/code][/size]
+
+[size=4][b]Source[/b][/size]
+
+[size=3][url=https://github.com/p1xel8ted/Game-Mods/tree/main/Graveyard%20Keeper/src/MiscBitsAndBobs]GitHub[/url][/size]

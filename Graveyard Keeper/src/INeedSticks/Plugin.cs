@@ -1,11 +1,11 @@
-﻿namespace INeedSticks;
+namespace INeedSticks;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.ineedsticks";
     private const string PluginName = "I Neeeed Sticks!";
-    private const string PluginVer = "1.6.6";
+    private const string PluginVer = "1.6.7";
     private static CraftDefinition _newItem;
     private const string WoodenStick = "wooden_stick";
     private static ManualLogSource Log { get; set; }
@@ -14,7 +14,7 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        GYKHelper.StartupLogger.PrintModLoaded(PluginName, Log);
+        Shared.StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     internal static void OnGameBalanceLoad()

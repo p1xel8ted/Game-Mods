@@ -1,11 +1,11 @@
-﻿namespace FasterCraftReloaded;
+namespace FasterCraftReloaded;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.fastercraftreloaded";
     private const string PluginName = "FasterCraft Reloaded";
-    private const string PluginVer = "1.4.8";
+    private const string PluginVer = "1.4.9";
     
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static ConfigEntry<bool> IncreaseBuildAndDestroySpeed { get; private set; }

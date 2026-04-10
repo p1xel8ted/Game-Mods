@@ -9,7 +9,7 @@ global using System.Threading;
 global using BepInEx;
 global using BepInEx.Configuration;
 global using BepInEx.Logging;
-global using GYKHelper;
+global using Shared;
 global using HarmonyLib;
 global using NodeCanvas.BehaviourTrees;
 global using UnityEngine;

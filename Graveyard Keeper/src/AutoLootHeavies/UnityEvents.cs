@@ -6,11 +6,16 @@ public partial class Plugin
 
     private void Update()
     {
-        if (!MainGame.game_started) return;
+        if (!MainGame.game_started)
+        {
+            InitialFullUpdate = false;
+            return;
+        }
 
         if (!InitialFullUpdate)
         {
             InitialFullUpdate = true;
+            SortedStockpiles.Clear();
             MainGame.me.StartCoroutine(RunFullUpdate());
         }
 

@@ -87,8 +87,28 @@ public static class Patches
     public static void OrganEnhancerGUI_Open(OrganEnhancerGUI __instance)
     {
         __instance._multi_inventory = MainGame.me.player.GetMultiInventory(exceptions: null, force_world_zone: "",
-            player_mi: MultiInventory.PlayerMultiInventory.IncludePlayer, include_toolbelt: true,
-            include_bags: true, sortWGOS: true);
+            player_mi: MultiInventory.PlayerMultiInventory.IncludePlayer, include_toolbelt: false,
+            include_bags: false, sortWGOS: false);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldMap), nameof(WorldMap.OnAddNewWGO), typeof(WorldGameObject))]
+    public static void WorldMap_OnAddNewWGO(WorldGameObject wgo)
+    {
+        if (wgo.data.inventory_size > 0)
+        {
+            Fields.InventoriesLoaded = false;
+        }
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldMap), nameof(WorldMap.OnDestroyWGO), typeof(WorldGameObject))]
+    public static void WorldMap_OnDestroyWGO(WorldGameObject wgo)
+    {
+        if (wgo.data.inventory_size > 0)
+        {
+            Fields.InventoriesLoaded = false;
+        }
     }
 
     [HarmonyPrefix]
@@ -116,8 +136,6 @@ public static class Patches
         if (Fields.AlwaysSkipInventories.Any(skipItem => objId.Contains(skipItem) || objDefId.Contains(skipItem) || worldZoneId.Contains(skipItem))) return true;
 
         if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return true;
-
-        if (Plugin.ExcludeQuarryFromSharedInventory.Value && isQuarry) return true;
 
         if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return true;
 
@@ -194,18 +212,9 @@ public static class Patches
     {
         Fields.InventoriesLoaded = false;
         Fields.GameBalanceAlreadyRun = false;
-        MainGame.game_started = false;
         Fields.DropsCleaned = false;
         Fields.DebugMessageShown = false;
     }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(InGameMenuGUI), nameof(InGameMenuGUI.OnPressedSaveAndExit))]
-    public static void InGameMenuGUI_OnPressedSaveAndExit()
-    {
-        ResetFlags();
-    }
-
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SaveSlotsMenuGUI), nameof(SaveSlotsMenuGUI.Open))]
@@ -237,8 +246,6 @@ public static class Patches
         Fields.ZombieWorker = isZombie;
 
         if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return;
-
-        if (Plugin.ExcludeQuarryFromSharedInventory.Value && isQuarry) return;
 
         if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return;
 
@@ -302,11 +309,7 @@ public static class Patches
         if (tools.Any())
         {
             multi_inventory.all.RemoveAll(a => tools.Contains(a));
-            // BUG 2 FIX: guard against duplicate insertion
-            if (!multi_inventory.all.Contains(tools[0]))
-            {
-                multi_inventory.AddInventory(tools[0], 1);
-            }
+            multi_inventory.AddInventory(tools[0], 1);
         }
 
         if (Plugin.DontShowEmptyRowsInInventory.Value)

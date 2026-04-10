@@ -139,7 +139,7 @@ public partial class Plugin
         _shippingBox.data.inventory.Clear();
         var money = Trading.FormatMoney(earnings, true);
 
-        if (EnableGerry.Value)
+        if (EnableGerry.Value && !GUIElements.me.dialog.is_shown && !EnvironmentEngine.me.IsTimeStopped())
         {
             StartGerryRoutine(earnings);
         }

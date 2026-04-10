@@ -1,11 +1,11 @@
-﻿namespace QueueEverything;
+namespace QueueEverything;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.queueeverything";
     private const string PluginName = "Queue Everything!*";
-    private const string PluginVer = "2.1.8";
+    private const string PluginVer = "2.1.9";
 
     private static ConfigEntry<bool> HalfFireRequirements { get; set; }
     private static ConfigEntry<bool> AutoMaxMultiQualCrafts { get; set; }
@@ -67,7 +67,7 @@ public partial class Plugin : BaseUnityPlugin
 
         foreach (var wgo in MainGame.me.world.GetComponentsInChildren<WorldGameObject>(true))
         {
-            if (wgo != null && wgo.components.craft.is_crafting && !wgo.has_linked_worker)
+            if (wgo != null && wgo.components.craft.is_crafting && !wgo.has_linked_worker && wgo.linked_worker == null)
             {
                 CurrentlyCrafting.Add(wgo);
             }

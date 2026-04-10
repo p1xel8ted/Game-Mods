@@ -67,8 +67,6 @@ public static class Helpers
 
     internal static void GameBalancePostfix()
     {
-        if (AlreadyRun) return;
-        AlreadyRun = true;
         Plugin.Log.LogInfo($"Running SeedEqualizer GameBalanceLoad as GameBalance has been loaded.");
         foreach (var craft in GameBalance.me.objs_data.Where(a => a.drop_items.Count > 0 && a.drop_items.Exists(b => b.id.Contains("seed"))))
         {

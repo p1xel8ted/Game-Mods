@@ -18,6 +18,7 @@ public static class Patches
     public static void SmartWeatherState_Update(SmartWeatherState __instance)
     {
         if (!MainGame.game_started || !__instance || IntroPlaying) return;
+        if (MainGame.me.player != null && MainGame.me.player.components.character.player_controlled_by_script) return;
         switch (__instance.type)
         {
             case SmartWeatherState.WeatherType.Fog:

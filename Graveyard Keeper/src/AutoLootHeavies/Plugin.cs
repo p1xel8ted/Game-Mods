@@ -1,11 +1,11 @@
-﻿namespace AutoLootHeavies;
+namespace AutoLootHeavies;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.autolootheavies";
     private const string PluginName = "Auto-Loot Heavies!";
-    private const string PluginVer = "3.5.0";
+    private const string PluginVer = "3.5.1";
 
     private static ManualLogSource Log { get; set; }
 

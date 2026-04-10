@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.4.8</Version>
+        <Version>1.4.9</Version>
+        <NexusGroupId>677521</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\GYKHelper\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
-        <Compile Include="..\GYKHelper\StartupLogger.cs" Link="StartupLogger.cs"/>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
+        <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
     </ItemGroup>
 </Project>

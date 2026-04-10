@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+
+    <!-- User Configuration (git-ignored local paths + NexusMods API key) -->
+    <Import Project="Environment.props" Condition="Exists('Environment.props')" />
+
+    <!-- NexusMods Upload Target (reads NexusGroupId from csproj + NexusModsApiKey from Environment.props) -->
+    <Import Project="upload.target" Condition="Exists('upload.target')" />
+
     <PropertyGroup>
         <Description>$(MSBuildProjectName)</Description>
         <TargetFramework>net481</TargetFramework>
@@ -18,7 +25,7 @@
         <DebugType>embedded</DebugType>
         <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
         <Deterministic>true</Deterministic>
-        <OutputPath>G:\SteamLibrary\steamapps\common\Graveyard Keeper\BepInEx\plugins\$(MSBuildProjectName)</OutputPath>
+        <OutputPath>$(BepInExPluginsPath)\$(MSBuildProjectName)</OutputPath>
     </PropertyGroup>
 
     <ItemDefinitionGroup>

@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.savenow";
     private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.6";
+    private const string PluginVer = "2.5.7";
 
     private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<int> SaveInterval { get; set; }
@@ -43,11 +43,11 @@ public partial class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes {Order = 19}));
 
         SaveOnNewDay = Config.Bind("01. Saving", "Save On New Day", true,
-            new ConfigDescription("Save the game when a new day starts.", null,
+            new ConfigDescription("Save the game when a new day starts. This is independent of the Auto Save timer.", null,
                 new ConfigurationManagerAttributes {Order = 18}));
 
         AutoSaveConfig = Config.Bind("01. Saving", "Auto Save", true,
-            new ConfigDescription("Enable or disable automatic saving.", null,
+            new ConfigDescription("Enable or disable the automatic save timer. Note: 'Save On New Day' is a separate feature.", null,
                 new ConfigurationManagerAttributes {Order = 17}));
         AutoSaveConfig.SettingChanged += (_, _) =>
         {

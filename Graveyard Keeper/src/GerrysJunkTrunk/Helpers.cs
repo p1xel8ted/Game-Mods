@@ -91,6 +91,10 @@ public partial class Plugin
         else
         {
             var singleItemCost = selectedItem.definition.GetPrice(totalCount);
+            if (singleItemCost > selectedItem.definition.base_price)
+            {
+                singleItemCost = selectedItem.definition.base_price;
+            }
             totalSalePrice += singleItemCost * totalCount;
             WriteLog(
                 $"Item: {selectedItem.id}, Single item cost: {singleItemCost}, total item count: {totalCount}, total item cost: {totalCount * singleItemCost}");
@@ -158,6 +162,11 @@ public partial class Plugin
                     });
                 });
             });
+        });
+
+        GJTimer.AddTimer(20f, delegate
+        {
+            HideCinematic();
         });
     }
 

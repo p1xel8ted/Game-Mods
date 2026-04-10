@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.economyreloaded";
     private const string PluginName = "Economy Reloaded";
-    private const string PluginVer = "1.3.7";
+    private const string PluginVer = "1.3.8";
     internal static ManualLogSource Log { get; private set; }
 
     internal static ConfigEntry<bool> Inflation { get; private set; }

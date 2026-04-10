@@ -30,7 +30,7 @@ namespace CustomTextures
                 new ConfigDescription("When enabled, exports all sprites encountered via SpriteAtlas as PNG files to a _dump folder inside the CustomTextures folder. Disable after collecting sprites."));
             LoadCustomTextures();
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-            GYKHelper.StartupLogger.PrintModLoaded(PluginName, Log);
+            Shared.StartupLogger.PrintModLoaded(PluginName, Log);
         }
 
         private static void LoadCustomTextures()

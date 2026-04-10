@@ -1,4 +1,4 @@
-﻿namespace BeamMeUpGerry;
+namespace BeamMeUpGerry;
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.1.1";
+    private const string PluginVer = "3.1.2";
 
     internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }

@@ -10,6 +10,6 @@ global using AppleTreesEnhanced.lang;
 global using BepInEx;
 global using BepInEx.Configuration;
 global using BepInEx.Logging;
-global using GYKHelper;
+global using Shared;
 global using HarmonyLib;
 global using Random = UnityEngine.Random;

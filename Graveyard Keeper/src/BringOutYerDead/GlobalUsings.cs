@@ -8,5 +8,5 @@ global using BepInEx;
 global using BepInEx.Configuration;
 global using BepInEx.Logging;
 global using BringOutYerDead.lang;
-global using GYKHelper;
+global using Shared;
 global using HarmonyLib;

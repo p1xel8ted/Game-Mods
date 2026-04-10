@@ -111,35 +111,34 @@ public partial class Plugin
                     {
                         sameItemHandled = true;
                         var totalNeeded = __instance.current_craft.needs.Sum(n => n.value);
+
                         var gMaxCrafts = gStarItem / totalNeeded;
                         var sMaxCrafts = sStarItem / totalNeeded;
                         var bMaxCrafts = bStarItem / totalNeeded;
+                        var totalAvailable = bStarItem + sStarItem + gStarItem;
+                        var mixedMaxCrafts = totalAvailable / totalNeeded;
 
                         int maxCrafts;
-                        string qualitySuffix;
 
                         if (AutoSelectHighestQualRecipe.Value)
                         {
-                            if (gMaxCrafts > 0) { maxCrafts = gMaxCrafts; qualitySuffix = ":3"; }
-                            else if (sMaxCrafts > 0) { maxCrafts = sMaxCrafts; qualitySuffix = ":2"; }
-                            else { maxCrafts = bMaxCrafts; qualitySuffix = ":1"; }
+                            if (gMaxCrafts > 0) { maxCrafts = gMaxCrafts; }
+                            else if (sMaxCrafts > 0) { maxCrafts = sMaxCrafts; }
+                            else if (bMaxCrafts > 0) { maxCrafts = bMaxCrafts; }
+                            else { maxCrafts = mixedMaxCrafts; }
                         }
                         else
                         {
-                            maxCrafts = bMaxCrafts; qualitySuffix = ":1";
-                            if (sMaxCrafts > maxCrafts) { maxCrafts = sMaxCrafts; qualitySuffix = ":2"; }
-                            if (gMaxCrafts > maxCrafts) { maxCrafts = gMaxCrafts; qualitySuffix = ":3"; }
+                            maxCrafts = mixedMaxCrafts;
                         }
 
                         if (maxCrafts > 0)
-                            craftable.Add(maxCrafts);
-                        else
-                            notCraftable.Add(0);
-
-                        for (var j = 0; j < __instance._multiquality_ids.Count; j++)
                         {
-                            if (!string.IsNullOrWhiteSpace(__instance._multiquality_ids[j]))
-                                __instance._multiquality_ids[j] = itemID + qualitySuffix;
+                            craftable.Add(maxCrafts);
+                        }
+                        else
+                        {
+                            notCraftable.Add(0);
                         }
                     }
                 }
@@ -264,7 +263,9 @@ public partial class Plugin
         {
             if (!MainGame.game_started || !MakeEverythingAuto.Value) return;
 
-            foreach (var wgo in CurrentlyCrafting.Where(wgo => wgo != null && wgo.components.craft.is_crafting && !wgo.has_linked_worker))
+            CurrentlyCrafting.RemoveAll(wgo => wgo == null || !wgo.components.craft.is_crafting || wgo.has_linked_worker || wgo.linked_worker != null);
+
+            foreach (var wgo in CurrentlyCrafting)
             {
                 wgo.OnWorkAction();
             }

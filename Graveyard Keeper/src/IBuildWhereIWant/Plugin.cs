@@ -1,11 +1,11 @@
-﻿namespace IBuildWhereIWant;
+namespace IBuildWhereIWant;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.ibuildwhereiwant";
     private const string PluginName = "I Build Where I Want!";
-    private const string PluginVer = "1.7.7";
+    private const string PluginVer = "1.7.8";
     
     private static ManualLogSource Log { get; set; }
     private static ConfigEntry<bool> Grid { get;set; }

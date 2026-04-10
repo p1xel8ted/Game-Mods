@@ -275,13 +275,13 @@ public static class Helpers
 
         if (UnusualMaps.TryGetValue(location.zone, out var zone1))
         {
-            var removeUnusualZone = !MainGame.me.save.known_world_zones.Exists(a => a.Equals(zone1));
+            var removeUnusualZone = !MainGame.me.save.known_world_zones.Exists(a => a.Contains(zone1));
             Plugin.Log.LogInfo($"[RemoveZone-UnusualMap] - {removeUnusualZone} - {location.zone} -> {zone1}");
             return removeUnusualZone;
         }
 
         var zone = location.zone.Replace(Constants.ZonePartial, string.Empty);
-        var removeZone = !MainGame.me.save.known_world_zones.Exists(a => a.Equals(zone));
+        var removeZone = !MainGame.me.save.known_world_zones.Exists(a => a.Contains(zone));
         Plugin.Log.LogInfo($"[RemoveZone-KnownZones] - {removeZone} - {location.zone} -> {zone}");
         return removeZone;
     }

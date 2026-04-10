@@ -2,7 +2,7 @@ namespace GerrysJunkTrunk;
 
 public partial class Plugin
 {
-    private const float FullPriceModifier = 0.90f;
+    private const float FullPriceModifier = 0.70f;
     private const float PityPrice = 0.10f;
     private const int LargeInvSize = 20;
     private const int LargeMaxItemCount = 100;

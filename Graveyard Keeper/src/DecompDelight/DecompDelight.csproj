@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.3</Version>
+        <Version>0.1.4</Version>
+        <NexusGroupId>975694</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\GYKHelper\StartupLogger.cs" Link="StartupLogger.cs"/>
+        <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Remove="screenshots\**" />

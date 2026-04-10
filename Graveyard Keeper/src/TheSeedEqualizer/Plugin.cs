@@ -1,11 +1,11 @@
-﻿namespace TheSeedEqualizer;
+namespace TheSeedEqualizer;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.theseedequalizer";
     private const string PluginName = "The Seed Equalizer!";
-    private const string PluginVer = "1.3.8";
+    private const string PluginVer = "1.3.9";
 
     internal static ManualLogSource Log { get; private set; }
 

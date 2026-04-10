@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.5</Version>
+        <Version>0.1.6</Version>
+        <NexusGroupId>978619</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\GYKHelper\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
-        <Compile Include="..\GYKHelper\StartupLogger.cs" Link="StartupLogger.cs"/>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
+        <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
     </ItemGroup>
     <ItemGroup>
         <Reference Include="Rewired_Core">

@@ -17,7 +17,7 @@ public class Plugin : BaseUnityPlugin
     {
         LOG = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        GYKHelper.StartupLogger.PrintModLoaded(PluginName, LOG);
+        Shared.StartupLogger.PrintModLoaded(PluginName, LOG);
     }
 
     [HarmonyPostfix]

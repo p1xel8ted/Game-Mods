@@ -17,9 +17,13 @@ public partial class Plugin
         List<Item> insert = [item];
         var itemId = item.id;
 
+        SortedStockpiles.RemoveAll(pile => pile.Wgo == null);
+
         WriteLog($"Refreshing and re-sorting stockpile distances.");
         foreach (var pile in SortedStockpiles)
+        {
             pile.DistanceFromPlayer = Vector3.Distance(MainGame.me.player_pos, pile.Wgo.pos3);
+        }
 
         SortedStockpiles.Sort((x, y) => x.DistanceFromPlayer.CompareTo(y.DistanceFromPlayer));
 

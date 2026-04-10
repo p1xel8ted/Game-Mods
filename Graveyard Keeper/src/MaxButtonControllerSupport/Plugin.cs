@@ -1,11 +1,11 @@
-﻿namespace MaxButtonControllerSupport;
+namespace MaxButtonControllerSupport;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.maxbuttoncontrollersupport";
     private const string PluginName = "Max Button Controller Support";
-    private const string PluginVer = "1.3.8";
+    private const string PluginVer = "1.3.9";
 
     private static ManualLogSource Log { get; set; }
 
@@ -14,7 +14,7 @@ public partial class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        GYKHelper.StartupLogger.PrintModLoaded(PluginName, Log);
+        Shared.StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void Update()

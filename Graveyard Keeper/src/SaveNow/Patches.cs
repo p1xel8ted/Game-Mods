@@ -42,7 +42,7 @@ public partial class Plugin
     {
         SortSaveGames(ref slot_datas);
 
-        if (slot_datas.Count > MaximumSavesVisible.Value)
+        if (MaximumSavesVisible.Value > 0 && slot_datas.Count > MaximumSavesVisible.Value)
         {
             Resize(slot_datas, MaximumSavesVisible.Value);
         }

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Threading;
 using BepInEx;
 using BepInEx.Logging;
@@ -12,7 +12,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.thoughtfulreminders";
     private const string PluginName = "Thoughtful Reminders";
-    private const string PluginVer = "2.2.8";
+    private const string PluginVer = "2.2.9";
 
     private static int PrevDayOfWeek { get; set; }
 

@@ -1,4 +1,4 @@
-﻿namespace KeepersCandles;
+namespace KeepersCandles;
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.keeperscandles";
     private const string PluginName = "Keeper's Candles!";
-    private const string PluginVer = "0.1.5";
+    private const string PluginVer = "0.1.6";
     private const string Souls = "souls";
     private const string Candelabrum = "candelabrum";
     private const string Column = "column";

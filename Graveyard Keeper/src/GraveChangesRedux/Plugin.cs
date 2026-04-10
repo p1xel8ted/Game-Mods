@@ -1,4 +1,4 @@
-﻿namespace GraveChangesRedux;
+namespace GraveChangesRedux;
 
 [Harmony]
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gravechangesredux";
     private const string PluginName = "Grave Changes Redux";
-    private const string PluginVer = "0.1.3";
+    private const string PluginVer = "0.1.4";
 
     private const float MaxQualityValue = 30f;
     private static readonly SmartExpression MaxQualityExpression = SmartExpression.ParseExpression("30");
@@ -28,6 +28,28 @@ public class Plugin : BaseUnityPlugin
         LOG = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         StartupLogger.PrintModLoaded(PluginName, LOG);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.quality), MethodType.Getter)]
+    public static void WorldGameObject_quality(WorldGameObject __instance, ref float __result)
+    {
+        if (!ModifyGraves.Value) return;
+        if (__instance.obj_def == null || __instance._data == null) return;
+        if (__instance.obj_def.quality_type != ObjectDefinition.QualityType.Grave) return;
+
+        var body = __instance.GetBodyFromInventory();
+        if (body == null) return;
+
+        body.GetBodySkulls(out var negative, out _, out _);
+
+        var inventoryQuality = Mathf.Floor(__instance._data.GetInventoryQuality(null)) - negative;
+        if (inventoryQuality < 0)
+        {
+            inventoryQuality = 0;
+        }
+
+        __result = inventoryQuality;
     }
 
     [HarmonyPostfix]

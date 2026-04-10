@@ -211,6 +211,8 @@ public static class LocationLists
 
                     if (!string.IsNullOrWhiteSpace(location.zone))
                     {
+                        location.customZone = true;
+
                         var exists = AllLocations.Any(a => a.zone.Equals(location.zone, StringComparison.OrdinalIgnoreCase));
                         if (exists)
                         {

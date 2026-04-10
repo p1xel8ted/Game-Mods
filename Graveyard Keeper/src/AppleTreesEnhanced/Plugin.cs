@@ -1,11 +1,11 @@
-﻿namespace AppleTreesEnhanced;
+namespace AppleTreesEnhanced;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.appletreesenhanced";
     private const string PluginName = "Apple Tree's Enhanced!";
-    private const string PluginVer = "2.7.9";
+    private const string PluginVer = "2.7.10";
     private static ManualLogSource Log { get; set; }
  
     private static ConfigEntry<bool> Debug { get; set; }

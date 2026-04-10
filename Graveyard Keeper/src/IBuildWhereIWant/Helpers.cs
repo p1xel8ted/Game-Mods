@@ -73,17 +73,20 @@ public partial class Plugin
                          .Where(b => !b.id.Contains("refugee"))
                          .Where(d => MainGame.me.save.IsCraftVisible(d))
                          .Where(e => !CraftDictionary.TryGetValue(GJL.L(e.GetNameNonLocalized()), out _)))
-
             {
                 var itemName = GJL.L(objectCraftDefinition.GetNameNonLocalized());
                 CraftDictionary.Add(itemName, objectCraftDefinition.id);
             }
 
+            CraftsInventory = new CraftsInventory();
 
             var craftList = CraftDictionary.ToList();
             craftList.Sort((pair1, pair2) => string.CompareOrdinal(pair1.Key, pair2.Key));
 
-            craftList.ForEach(craft => { CraftsInventory.AddCraft(craft.Value); });
+            foreach (var craft in craftList)
+            {
+                CraftsInventory.AddCraft(craft.Value);
+            }
         }
 
         CraftAnywhere = true;

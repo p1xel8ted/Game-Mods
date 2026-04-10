@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.getouttamyway";
     private const string PluginName = "Get Outta My Way!";
-    private const string PluginVer = "0.1.2";
+    private const string PluginVer = "0.1.3";
     private const string Donkey = "donkey";
     private const string NpcPrefix = "[wgo] ";
     private static ManualLogSource LOG { get; set; }
@@ -19,7 +19,7 @@ public class Plugin : BaseUnityPlugin
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         SceneManager.sceneLoaded += (_, _) => GameStartedPlaying();
-        GYKHelper.StartupLogger.PrintModLoaded(PluginName, LOG);
+        Shared.StartupLogger.PrintModLoaded(PluginName, LOG);
     }
 
     internal static void GameStartedPlaying()

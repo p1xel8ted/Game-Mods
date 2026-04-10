@@ -164,8 +164,8 @@ public static class Patches
         var maxEnergy = MainGame.me.save.max_energy;
         var maxHealth = MainGame.me.save.max_hp;
         
-        MainGame.me.player.energy += 0.25f;
-        MainGame.me.player.hp += 0.25f;
+        MainGame.me.player.energy += 1.5f * Time.deltaTime;
+        MainGame.me.player.hp += 1.5f * Time.deltaTime;
 
         if (MainGame.me.player.energy > maxEnergy)
         {

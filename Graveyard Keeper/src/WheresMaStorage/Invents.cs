@@ -231,8 +231,6 @@ public static class Invents
 
         if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return orig;
 
-        if (Plugin.ExcludeQuarryFromSharedInventory.Value && isQuarry) return orig;
-
         if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return orig;
 
         if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie) return orig;

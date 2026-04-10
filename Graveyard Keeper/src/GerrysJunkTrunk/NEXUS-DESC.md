@@ -1,0 +1,42 @@
+[size=4][b]Support[/b][/size]
+
+[size=3]Continued development, testing, &amp; managing user reports all take time; any support is greatly appreciated! If you can't donate and enjoy the mod, please consider endorsing the mod (thumbs up 'Endorse' button up the top)![/size]
+
+[url=https://ko-fi.com/p1xel8ted][img]https://ko-fi.com/img/githubbutton_sm.svg[/img][/url]
+
+[size=4][b]Discord[/b][/size]
+
+[size=3][url=https://discord.gg/Dy5ApMYYY8]https://discord.gg/Dy5ApMYYY8[/url][/size]
+
+[size=4][b]What[/b]
+
+[/size][list]
+[*][size=3]A buildable trunk (once unlocked) that enables Gerry to sell the items in it for you.[/size]
+[*][size=3]Gerry takes a hefty cut that can be lessened to a point as you progress. You will always make more selling directly to the vendor.[/size]
+[*][size=3]The trunk has three progressions tied to various perks/techs:[/size]
+[size=3]- Stage 1 (Woodworking) - Initial unlock with ten slots and a maximum of 50 of each item.
+- Stage 2 (Engineer) - Upgraded to 20 slots and a maximum of 50 of each item.
+- Stage 3 (Jeweler) - Gerry takes less profits and a maximum of 100 of each item.[/size][*][size=3]Once items go in the trunk, they cannot be taken out.[/size]
+[*][size=3]Gerry does his vendor run at the stroke of midnight.[/size]
+[*][size=3]You can only build one of the trunks.[/size]
+[/list]
+
+[youtube]kLx1i9hRgEs[/youtube]
+[size=4][b]Configuration[/b][/size]
+
+[size=3]If you installed the required [url=https://www.nexusmods.com/graveyardkeeper/mods/79]Graveyard Keeper BepInEx 5 Pack[/url] and this mod is configurable, press F1 in-game to open the config interface.[/size]
+
+[size=4][b]Requirements[/b][/size]
+
+[list]
+[*][url=https://www.nexusmods.com/graveyardkeeper/mods/79][size=3]Graveyard Keeper BepInEx 5 Pack at Graveyard Keeper Nexus - Mods and community (nexusmods.com)[/size][/url]
+[/list]
+[size=4][b]Installation[/b][/size]
+
+[size=3]Installation using Vortex is the recommended installation method. If you wish to install manually, extract the contents of the mod archive into:
+
+[code]...&#92;steamapps&#92;common&#92;Graveyard Keeper&#92;BepInEx[/code][/size]
+
+[size=4][b]Source[/b][/size]
+
+[size=3][url=https://github.com/p1xel8ted/Game-Mods/tree/main/Graveyard%20Keeper/src/GerrysJunkTrunk]GitHub[/url][/size]

@@ -225,6 +225,8 @@ public partial class Plugin
         var sw = new Stopwatch();
         sw.Start();
 
+        SortedStockpiles.Clear();
+
         var allObjects = WorldMap._objs;
         Objects = allObjects!
             .Where(x => x.obj_id.Contains(Constants.ItemObjectId.Timber) || x.obj_id.Contains(Constants.ItemObjectId.Ore) ||

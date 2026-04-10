@@ -1,11 +1,11 @@
-﻿namespace LongerDays;
+namespace LongerDays;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.longerdays";
     private const string PluginName = "Longer Days";
-    private const string PluginVer = "1.6.7";
+    private const string PluginVer = "1.6.8";
 
     internal const float MadnessSeconds = 1350f;
     internal const float EvenLongerSeconds = 1125f;

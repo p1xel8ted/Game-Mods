@@ -3,7 +3,7 @@
     <Version>0.1.2</Version>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\GYKHelper\StartupLogger.cs" Link="StartupLogger.cs"/>
+    <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
   </ItemGroup>
 <ItemGroup>
     <Reference Include="Accessibility">
