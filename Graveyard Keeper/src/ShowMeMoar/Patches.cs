@@ -68,6 +68,15 @@ public static class Patches
     }
 
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSettings), nameof(GameSettings.ApplyScreenMode))]
+    public static void GameSettings_ApplyScreenMode()
+    {
+        if (!Plugin.BorderlessWindowed.Value) return;
+
+        Screen.SetResolution(Screen.width, Screen.height, FullScreenMode.FullScreenWindow);
+    }
+
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(ResolutionConfig), nameof(ResolutionConfig.GetResolutionConfigOrNull))]
     public static void ResolutionConfig_GetResolutionConfigOrNull(int width, int height, ref ResolutionConfig __result)
     {

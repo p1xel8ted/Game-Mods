@@ -118,7 +118,9 @@ public partial class Plugin
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.Interact))]
     public static void WorldGameObject_Interact(WorldGameObject __instance)
     {
-        if (__instance.obj_def.interaction_type is not ObjectDefinition.InteractionType.None)
+        if (__instance.obj_def.interaction_type is not ObjectDefinition.InteractionType.None
+            and not ObjectDefinition.InteractionType.Craft
+            and not ObjectDefinition.InteractionType.Builder)
         {
             CraftAnywhere = false;
         }

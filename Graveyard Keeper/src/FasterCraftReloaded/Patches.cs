@@ -24,6 +24,7 @@ public static class Patches
     public static void WorldGameObject_DoAction(WorldGameObject other_obj, ref float delta_time)
     {
         if (!Plugin.IncreaseBuildAndDestroySpeed.Value) return;
+        if (other_obj == null || !other_obj.is_player) return;
 
         Helpers.Log($"[WorldGameObject.DoAction]: WGO: {other_obj.obj_id}");
         delta_time *= Plugin.BuildAndDestroySpeed.Value;

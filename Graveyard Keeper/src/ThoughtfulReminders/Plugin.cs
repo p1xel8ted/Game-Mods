@@ -15,6 +15,7 @@ public class Plugin : BaseUnityPlugin
     private const string PluginVer = "2.2.9";
 
     private static int PrevDayOfWeek { get; set; }
+    private static bool PendingReminder { get; set; }
 
     internal static ConfigEntry<bool> SpeechBubblesConfig { get; private set; }
     private static ConfigEntry<bool> DaysOnlyConfig { get; set; }
@@ -39,10 +40,15 @@ public class Plugin : BaseUnityPlugin
 
         if (!Application.isFocused) return;
 
-        if (PrevDayOfWeek == newDayOfWeek) return;
+        if (PrevDayOfWeek != newDayOfWeek)
+        {
+            PendingReminder = true;
+        }
 
-        var timeOfDay = TimeOfDay.me == null ? 0f : TimeOfDay.me.GetTimeK();
-        if (timeOfDay is <= 0.22f or >= 0.25f) return;
+        if (!PendingReminder) return;
+
+        if (MainGame.me.player.components.character.player_controlled_by_script) return;
+        if (EnvironmentEngine.me.IsTimeStopped()) return;
 
         Helpers.SetUICulture();
 
@@ -116,5 +122,6 @@ public class Plugin : BaseUnityPlugin
         }
 
         PrevDayOfWeek = newDayOfWeek;
+        PendingReminder = false;
     }
 }

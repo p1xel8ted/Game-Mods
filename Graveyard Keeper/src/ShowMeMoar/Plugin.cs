@@ -22,6 +22,7 @@ public class Plugin : BaseUnityPlugin
 
     internal static ConfigEntry<bool> RemoveFog { get; private set; }
 
+    internal static ConfigEntry<bool> BorderlessWindowed { get; private set; }
     internal static ConfigEntry<bool> SetVsyncLimitToMaxRefreshRate { get; private set; }
     internal static ConfigEntry<bool> ColorCorrection { get; private set; }
     private static GameObject Icons { get; set; }
@@ -109,7 +110,9 @@ public class Plugin : BaseUnityPlugin
         ColorCorrection = Config.Bind("7. Color Correction", "Color Correction", true, new ConfigDescription("Enable or disable color correction.", null, new ConfigurationManagerAttributes {Order = 0}));
         ColorCorrection.SettingChanged += (_, _) => UpdateCC();
 
-        SetVsyncLimitToMaxRefreshRate = Config.Bind("8. Vsync", "Set Vsync Limit To Max Refresh Rate", true, new ConfigDescription("Set Vsync limit to the maximum refresh rate of the monitor. Game default is 60fps with VSYNC enabled.", null, new ConfigurationManagerAttributes {Order = 0}));
+        BorderlessWindowed = Config.Bind("8. Display", "Borderless Windowed", false, new ConfigDescription("Run the game in borderless windowed mode instead of fullscreen. Restart required.", null, new ConfigurationManagerAttributes {Order = 1}));
+
+        SetVsyncLimitToMaxRefreshRate = Config.Bind("8. Display", "Set Vsync Limit To Max Refresh Rate", true, new ConfigDescription("Set Vsync limit to the maximum refresh rate of the monitor. Game default is 60fps with VSYNC enabled.", null, new ConfigurationManagerAttributes {Order = 0}));
         SceneManager.sceneLoaded += (_, _) => UpdateCC();
     }
 

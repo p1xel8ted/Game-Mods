@@ -14,6 +14,7 @@ public partial class Plugin : BaseUnityPlugin
     private static ConfigEntry<bool> SermonOverAndOver { get; set; }
     private static ConfigEntry<bool> NotifyOnPrayerLoss { get; set; }
     private static ConfigEntry<bool> AlternateMode { get; set; }
+    internal static ConfigEntry<bool> NoLossOnDailySermons { get; private set; }
     private static ConfigEntry<bool> RandomlyUpgradeBasicPrayer { get; set; }
     private static ConfigEntry<bool> SpeedUpSermon { get; set; }
     private static ConfigEntry<int> SermonSpeed { get; set; }
@@ -35,6 +36,8 @@ public partial class Plugin : BaseUnityPlugin
 
 
         AlternateMode = Config.Bind("02. Mode", "Alternate Mode", true, new ConfigDescription("Chance to lower item level instead of chance to lose it on prayer.", null, new ConfigurationManagerAttributes {Order = 603}));
+
+        NoLossOnDailySermons = Config.Bind("02. Mode", "No Loss On Daily Sermons", false, new ConfigDescription("When enabled, daily sermons will never lose or downgrade prayer items. Only applies when Everyday Is Sermon Day is enabled.", null, new ConfigurationManagerAttributes {Order = 602}));
 
         NotifyOnPrayerLoss = Config.Bind("03. Notifications", "Notify On Prayer Loss", true, new ConfigDescription("Display notifications when prayer items are lost.", null, new ConfigurationManagerAttributes {Order = 602}));
 

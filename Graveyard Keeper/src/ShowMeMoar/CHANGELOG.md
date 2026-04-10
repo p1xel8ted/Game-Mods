@@ -2,6 +2,7 @@
 
 ## 0.1.9
 
+- Added borderless windowed mode option
 - Added ultrawide fog fix for displays wider than 2880px
 - Mod is now standalone — no longer requires GYK Helper
 

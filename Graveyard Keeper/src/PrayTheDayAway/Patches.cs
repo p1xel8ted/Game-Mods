@@ -34,6 +34,8 @@ public partial class Plugin
         {
             MainGame.me.player.SetParam("prayed_this_week", 0f);
 
+            if (EverydayIsSermonDay.Value && NoLossOnDailySermons.Value) return;
+
             if (AlternateMode.Value)
             {
                 LowerCraftLevel(playerInv, item);
