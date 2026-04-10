@@ -1058,5 +1058,12 @@ _ul
 # Serena AI tool
 .serena/
 
+# NexusMods upload tooling (contains API keys via Environment.props)
+**/nexus-upload.ps1
+**/nexus-pull.ps1
+**/publish.bat
+**/upload.target
+**/NexusGroupIDS.csv
+
 # Decompiled game assemblies (reference only, not for version control)
 **/decompiled_assembly/
