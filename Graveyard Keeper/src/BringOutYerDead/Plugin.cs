@@ -5,15 +5,15 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.bringoutyerdead";
     private const string PluginName = "Bring Out Yer Dead!";
-    private const string PluginVer = "0.2.2";
+    private const string PluginVer = "0.2.3";
 
     internal static ConfigEntry<bool> Debug;
     internal static ManualLogSource Log { get; private set; }
 
-    private static ConfigEntry<bool> MorningDelivery { get; set; }
-    private static ConfigEntry<bool> DayDelivery { get; set; }
-    private static ConfigEntry<bool> NightDelivery { get; set; }
-    private static ConfigEntry<bool> EveningDelivery { get; set; }
+    internal static ConfigEntry<bool> MorningDelivery { get; set; }
+    internal static ConfigEntry<bool> DayDelivery { get; set; }
+    internal static ConfigEntry<bool> NightDelivery { get; set; }
+    internal static ConfigEntry<bool> EveningDelivery { get; set; }
     internal static ConfigEntry<int> DonkeySpeed { get; private set; }
 
     internal static ConfigEntry<bool> InternalMorningDelivery { get; private set; }
@@ -21,15 +21,15 @@ public partial class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> InternalEveningDelivery { get; private set; }
     internal static ConfigEntry<bool> InternalNightDelivery { get; private set; }
     internal static ConfigEntry<bool> InternalDonkeySpawned { get; private set; }
-    private static ConfigEntry<bool> InternalTutMessageShown { get;  set; }
+    internal static ConfigEntry<bool> InternalTutMessageShown { get;  set; }
 
     private void Awake()
     {
         Log = Logger;
         InitConfiguration();
         InitInternalConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()

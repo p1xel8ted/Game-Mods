@@ -5,10 +5,10 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.showmemoar";
     private const string PluginName = "Show Me Moar!";
-    private const string PluginVer = "0.1.9";
+    private const string PluginVer = "0.1.10";
     internal static ConfigEntry<bool> Ultrawide { get; private set; }
-    private static ConfigEntry<KeyboardShortcut> ZoomIn { get; set; }
-    private static ConfigEntry<KeyboardShortcut> ZoomOut { get; set; }
+    internal static ConfigEntry<KeyboardShortcut> ZoomIn { get; private set; }
+    internal static ConfigEntry<KeyboardShortcut> ZoomOut { get; private set; }
 
     internal const float NativeAspect = 16f / 9f;
     internal static float CurrentAspect => (float) Display.main.systemWidth / Display.main.systemHeight;
@@ -17,7 +17,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> HudScale { get; private set; }
     internal static ConfigEntry<float> HorizontalHudPosition { get; private set; }
     internal static ConfigEntry<float> VerticalHudPosition { get; private set; }
-    private static ConfigEntry<float> Zoom { get; set; }
+    internal static ConfigEntry<float> Zoom { get; private set; }
     private static ConfigEntry<float> CraftIconAboveStations { get; set; }
 
     internal static ConfigEntry<bool> RemoveFog { get; private set; }
@@ -43,7 +43,6 @@ public class Plugin : BaseUnityPlugin
         };
         InitConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     internal static void OnGameStartedPlaying()
@@ -118,27 +117,10 @@ public class Plugin : BaseUnityPlugin
 
     internal static void UpdateCC()
     {
-        Time.fixedDeltaTime = 1f / 180f;
-        Plugin.Log.LogInfo($"Fixed Delta in FPS: {1f / Time.fixedDeltaTime}");
         var cc = Resources.FindObjectsOfTypeAll<AmplifyColorEffect>();
         foreach (var c in cc)
         {
             c.enabled = ColorCorrection.Value;
-        }
-    }
-
-    private void Update()
-    {
-        if (!MainGame.game_started) return;
-
-        if (ZoomIn.Value.IsPressed())
-        {
-            Zoom.Value -= 5f;
-        }
-
-        if (ZoomOut.Value.IsPressed())
-        {
-            Zoom.Value += 5f;
         }
     }
 

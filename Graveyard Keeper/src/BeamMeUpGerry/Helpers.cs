@@ -225,13 +225,19 @@ public static class Helpers
     {
         if (!Plugin.RestrictToFoundLocations.Value)
         {
-            Plugin.Log.LogInfo($"[RemoveZone] {location.zone} - RestrictToFoundLocations is false. Not removing.");
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone] {location.zone} - RestrictToFoundLocations is false. Not removing.");
+            }
             return false;
         }
 
         if (location.customZone)
         {
-            Plugin.Log.LogInfo($"[RemoveZone] {location.zone} is a custom location. Not removing.");
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone] {location.zone} is a custom location. Not removing.");
+            }
             return false;
         }
 
@@ -251,7 +257,10 @@ public static class Helpers
                 remove = false;
             }
 
-            Plugin.Log.LogInfo($"[RemoveZone-Farmer] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Farmer?: {knowsFarmer}");
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone-Farmer] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Farmer?: {knowsFarmer}");
+            }
             return remove;
         }
 
@@ -269,20 +278,29 @@ public static class Helpers
                 remove = false;
             }
 
-            Plugin.Log.LogInfo($"[RemoveZone-Miller] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Miller?: {knowsMiller}");
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone-Miller] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Miller?: {knowsMiller}");
+            }
             return remove;
         }
 
         if (UnusualMaps.TryGetValue(location.zone, out var zone1))
         {
             var removeUnusualZone = !MainGame.me.save.known_world_zones.Exists(a => a.Contains(zone1));
-            Plugin.Log.LogInfo($"[RemoveZone-UnusualMap] - {removeUnusualZone} - {location.zone} -> {zone1}");
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"[RemoveZone-UnusualMap] - {removeUnusualZone} - {location.zone} -> {zone1}");
+            }
             return removeUnusualZone;
         }
 
         var zone = location.zone.Replace(Constants.ZonePartial, string.Empty);
         var removeZone = !MainGame.me.save.known_world_zones.Exists(a => a.Contains(zone));
-        Plugin.Log.LogInfo($"[RemoveZone-KnownZones] - {removeZone} - {location.zone} -> {zone}");
+        if (Plugin.DebugEnabled.Value)
+        {
+            Plugin.Log.LogInfo($"[RemoveZone-KnownZones] - {removeZone} - {location.zone} -> {zone}");
+        }
         return removeZone;
     }
 
@@ -371,7 +389,6 @@ public static class Helpers
 
         if (onComplete == null) yield break;
 
-        Plugin.Log.LogWarning("Invoking onComplete");
         onComplete.Invoke();
     }
 

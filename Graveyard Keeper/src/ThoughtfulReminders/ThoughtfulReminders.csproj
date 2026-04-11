@@ -1,10 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.2.9</Version>
+        <Version>2.2.10</Version>
         <NexusGroupId>529420</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs" />
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
+        <Compile Include="..\Shared\Localisation.cs" Link="Localisation.cs"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="lang\*.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>

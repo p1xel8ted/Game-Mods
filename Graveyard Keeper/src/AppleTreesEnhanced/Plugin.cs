@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.appletreesenhanced";
     private const string PluginName = "Apple Tree's Enhanced!";
-    private const string PluginVer = "2.7.10";
+    private const string PluginVer = "2.7.11";
     private static ManualLogSource Log { get; set; }
  
     private static ConfigEntry<bool> Debug { get; set; }
@@ -15,8 +15,8 @@ public partial class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()

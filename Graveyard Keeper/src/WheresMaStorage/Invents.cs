@@ -131,7 +131,7 @@ public static class Invents
 
         if (string.IsNullOrEmpty(subNameSplit[0]))
         {
-            objId = Helpers.GetLocalizedString(strings.Player);
+            objId = Lang.Get("Player");
             isPlayer = true;
         }
         else
@@ -178,9 +178,9 @@ public static class Invents
 
         string GetWorldZoneLabel(string zone)
         {
-            if (string.IsNullOrEmpty(zone)) return Helpers.GetLocalizedString(strings.Wilderness);
+            if (string.IsNullOrEmpty(zone)) return Lang.Get("Wilderness");
             var wzId = WorldZone.GetZoneByID(zone, false);
-            return wzId != null ? GJL.L("zone_" + wzId.id) : Helpers.GetLocalizedString(strings.Wilderness);
+            return wzId != null ? GJL.L("zone_" + wzId.id) : Lang.Get("Wilderness");
         }
     }
 

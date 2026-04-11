@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.givememoar";
     private const string PluginName = "Give Me Moar!";
-    private const string PluginVer = "1.2.11";
+    private const string PluginVer = "1.2.12";
     
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static ConfigEntry<bool> MultiplySticks { get; private set; }
@@ -27,7 +27,6 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
         InitConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()

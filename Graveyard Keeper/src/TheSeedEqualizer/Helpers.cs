@@ -8,7 +8,10 @@ public static class Helpers
     {
         foreach (var output in obj.drop_items.Where(a => a.id.Contains("seed")))
         {
-            Plugin.Log.LogInfo($"Initial craft def: {obj.id}");
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"Initial craft def: {obj.id}");
+            }
             string craft;
             if (output.id.EndsWith(":3"))
             {
@@ -30,19 +33,27 @@ public static class Helpers
             craft = craft.Replace("hamp", "cannabis");
             craft = $"garden_{craft}";
 
-            Plugin.Log.LogInfo($"CraftDef for {output.id}: {craft}");
-
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"CraftDef for {output.id}: {craft}");
+            }
 
             var craftDef = GameBalance.me.GetDataOrNull<CraftDefinition>(craft);
 
             if (craftDef != null)
             {
-                Plugin.Log.LogInfo($"Found corresponding craft, setting min_value of {output.id} to {craftDef.needs[0].value}");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Found corresponding craft, setting min_value of {output.id} to {craftDef.needs[0].value}");
+                }
                 output.min_value = SmartExpression.ParseExpression(craftDef.needs[0].value.ToString(CultureInfo.InvariantCulture));
             }
             else
             {
-                Plugin.Log.LogInfo($"Did not find corresponding craft, setting min_value of {output.id} to 4.");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Did not find corresponding craft, setting min_value of {output.id} to 4.");
+                }
                 output.min_value = SmartExpression.ParseExpression(4.ToString(CultureInfo.InvariantCulture));
             }
 
@@ -72,7 +83,10 @@ public static class Helpers
         {
             if (Plugin.ModifyPlayerGardens.Value && craft.id.StartsWith("garden") && craft.id.EndsWith("ready"))
             {
-                Plugin.Log.LogInfo($"Modifying Player Garden Seed Output in ObjData: {craft.id}");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Modifying Player Garden Seed Output in ObjData: {craft.id}");
+                }
                 ModifyOutput(craft);
             }
         }
@@ -81,25 +95,37 @@ public static class Helpers
         {
             if (craft.id.Contains("grow_desk_planting") && Plugin.ModifyZombieGardens.Value)
             {
-                Plugin.Log.LogInfo($"Modifying Zombie Garden Seed Output: {craft.id}");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Modifying Zombie Garden Seed Output: {craft.id}");
+                }
                 ModifyOutput(craft);
             }
 
             if (craft.id.Contains("grow_vineyard_planting") && Plugin.ModifyZombieVineyards.Value)
             {
-                Plugin.Log.LogInfo($"Modifying Zombie Vineyard Seed Output: {craft.id}");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Modifying Zombie Vineyard Seed Output: {craft.id}");
+                }
                 ModifyOutput(craft);
             }
 
             if (craft.id.StartsWith("refugee_garden") && Plugin.ModifyRefugeeGardens.Value)
             {
-                Plugin.Log.LogInfo($"Modifying Refugee Seed Output: {craft.id}");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Modifying Refugee Seed Output: {craft.id}");
+                }
                 ModifyOutput(craft);
             }
 
             if (craft.id.Contains("grow_vineyard_planting") && Plugin.AddWasteToZombieVineyards.Value && !craft.output.Exists(a => a.id == "crop_waste"))
             {
-                Plugin.Log.LogInfo($"Adding Crop Waste To Zombie Vineyard Output: {craft.id}");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Adding Crop Waste To Zombie Vineyard Output: {craft.id}");
+                }
                 var item = new Item("crop_waste", 3)
                 {
                     min_value = SmartExpression.ParseExpression("3"),
@@ -111,7 +137,10 @@ public static class Helpers
 
             if (craft.id.Contains("grow_desk_planting") && Plugin.AddWasteToZombieGardens.Value && !craft.output.Exists(a => a.id == "crop_waste"))
             {
-                Plugin.Log.LogInfo($"Adding Crop Waste To Zombie Garden Output: {craft.id}");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Adding Crop Waste To Zombie Garden Output: {craft.id}");
+                }
                 var item = new Item("crop_waste", 3)
                 {
                     min_value = SmartExpression.ParseExpression("3"),

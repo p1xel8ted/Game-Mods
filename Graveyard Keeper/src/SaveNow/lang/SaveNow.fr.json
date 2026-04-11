@@ -1,0 +1,11 @@
+{
+  "AutoSave": "Sauvegarde automatique",
+  "Rush": "Quelle montée d'adrénaline ! Ça m'a chaque fois !",
+  "SaveAreYouSureMenu": "Êtes-vous sûr de vouloir revenir au menu principal",
+  "SaveAreYouSureDesktop": "Êtes-vous sûr de vouloir quitter vers le bureau",
+  "SaveProgressSaved": "La progression et l'emplacement actuel seront enregistrés",
+  "ExitButtonText": "Quitter vers le bureau",
+  "SaveProgressNotSaved": "La progression et l'emplacement actuel ne seront pas enregistrés",
+  "SaveMessage": "Partie sauvegardée",
+  "CantSaveHere": "Impossible de sauvegarder ici, patron !"
+}

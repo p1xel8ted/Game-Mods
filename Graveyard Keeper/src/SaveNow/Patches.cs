@@ -1,6 +1,6 @@
 namespace SaveNow;
 
-[HarmonyPatch]
+[Harmony]
 public partial class Plugin
 {
     private static Vector3 Pos { get; set; }
@@ -10,19 +10,13 @@ public partial class Plugin
     private static bool CanSave { get; set; }
     private static string CurrentSave { get; set; }
     private static readonly Dictionary<string, Vector3> SaveLocationsDictionary = new();
-    internal static bool IsInDungeon { get; set; }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.Interact))]
-    public static void WorldGameObject_Interact_Prefix(WorldGameObject __instance)
-    {
-        IsInDungeon = __instance.obj_id.ToLowerInvariant().Contains("dungeon_enter");
-    }
+    private static bool IsInDungeon => MainGame.me && MainGame.me.dungeon_root && MainGame.me.dungeon_root.dungeon_is_loaded_now;
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
     {
+        Log.LogInfo("[SaveNow] Player spawned — restoring location and starting timers");
         RestoreLocation();
     }
 
@@ -30,6 +24,7 @@ public partial class Plugin
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
     public static void EnvironmentEngine_OnEndOfDay()
     {
+        Log.LogInfo($"[SaveNow] End of day triggered. SaveOnNewDay={SaveOnNewDay.Value}");
         if (SaveOnNewDay.Value)
         {
             PerformNewDaySave();
@@ -73,29 +68,19 @@ public partial class Plugin
         }
     }
 
-    [HarmonyPatch(typeof(BaseMenuGUI), nameof(BaseMenuGUI.SetControllsActive))]
-    [HarmonyReversePatch]
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void BaseMenuGUI_SetControllsActive(BaseMenuGUI instance, bool active)
-    {
-        WriteLog("BaseMenuGUI_SetControllsActive: Setting controls active to " + active);
-    }
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(InGameMenuGUI), nameof(InGameMenuGUI.OnPressedSaveAndExit))]
     public static bool InGameMenuGUI_OnPressedSaveAndExit(InGameMenuGUI __instance)
     {
         if (!ExitToDesktop.Value && !SaveOnExit.Value)
         {
-            WriteLog("Exit to desktop and save on exit are both disabled. Letting original method run.");
             return true;
         }
 
-        if (!TutorialDone()) return true;
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
 
         __instance._stored_focus = null;
-        BaseMenuGUI_SetControllsActive(__instance, false);
+        __instance.SetControllsActive(false);
         __instance.OnClosePressed();
 
         var messageText = CreateMessageText();
@@ -107,18 +92,17 @@ public partial class Plugin
             SaveAndExit(gui);
         }, null, delegate
         {
-            WriteLog("Save Cancelled");
-            BaseMenuGUI_SetControllsActive(gui, true);
+            gui.SetControllsActive(true);
         });
 
         return false;
 
         string CreateMessageText()
         {
-            var baseMessage = ExitToDesktop.Value ? strings.SaveAreYouSureDesktop : strings.SaveAreYouSureMenu;
+            var baseMessage = ExitToDesktop.Value ? Lang.Get("SaveAreYouSureDesktop") : Lang.Get("SaveAreYouSureMenu");
             var progressMessage = !SaveOnExit.Value || IsInDungeon
-                ? strings.SaveProgressNotSaved
-                : strings.SaveProgressSaved;
+                ? Lang.Get("SaveProgressNotSaved")
+                : Lang.Get("SaveProgressSaved");
 
             return $"{baseMessage}?\n\n{progressMessage}.";
         }
@@ -169,7 +153,29 @@ public partial class Plugin
     public static void InGameMenuGUI_Open(InGameMenuGUI __instance)
     {
         if (__instance == null || !ExitToDesktop.Value) return;
-        __instance.label_save_and_exit.text = strings.ExitButtonText;
+        Lang.Reload();
+        __instance.label_save_and_exit.text = Lang.Get("ExitButtonText");
+    }
+    
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!MainGame.game_started) return;
+
+        if (ManualSaveKeyBind.Value.IsUp())
+        {
+            Log.LogInfo("[SaveNow] Manual save triggered via keyboard keybind");
+            MainGame.me.StartCoroutine(PerformManualSave());
+            return;
+        }
+
+        if (EnableManualSaveControllerButton.Value && LazyInput.gamepad_active &&
+            ReInput.players.GetPlayer(0).GetButtonDown(ManualSaveControllerButton.Value))
+        {
+            Log.LogInfo("[SaveNow] Manual save triggered via controller button");
+            MainGame.me.StartCoroutine(PerformManualSave());
+        }
     }
 
     [HarmonyPostfix]

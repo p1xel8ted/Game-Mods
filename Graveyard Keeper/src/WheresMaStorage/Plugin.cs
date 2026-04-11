@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmastorage";
     private const string PluginName = "Where's Ma' Storage!";
-    private const string PluginVer = "2.1.10";
+    private const string PluginVer = "2.1.11";
 
     internal static ManualLogSource Log { get; private set; }
     internal static ConfigEntry<bool> ModifyInventorySize { get; private set; }
@@ -45,8 +45,8 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
 

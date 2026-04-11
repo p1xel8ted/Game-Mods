@@ -1,0 +1,8 @@
+{
+  "Content": "看起来您已经安装了 Sprint Reloaded。不幸的是 Misc. Bits & Bobs 和 Sprint Reloaded 在修改玩家速度时编辑相同的值并且彼此不兼容。Misc. Bits & Bobs 的玩家方面将被禁用。搬运工的速度应该不受影响。",
+  "Title": "检测到模组不兼容",
+  "EvictConfirmText": "驱逐所有访客时，游戏可能看起来像是卡住了。它并没有崩溃。是否继续？",
+  "EvictYes": "是",
+  "EvictNo": "否",
+  "EvictButton": "驱逐教堂访客"
+}

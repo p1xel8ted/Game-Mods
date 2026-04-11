@@ -12,9 +12,6 @@ public partial class Plugin
         ItemDefinition.ItemType.GraveCoverReq
     ];
 
-    private static CultureInfo GameCulture => CultureInfo.GetCultureInfo(
-        GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
     private static void WriteLog(string message, bool error = false)
     {
         if (error)
@@ -116,14 +113,14 @@ public partial class Plugin
 
     private static void ShowIntroMessage()
     {
-        GUIElements.me.dialog.OpenOK(strings.Message1, null,
-            $"{strings.Message2}\n{strings.Message3}\n{strings.Message4}\n{strings.Message5}\n{strings.Message6}\n{strings.Message7}",
-            true, strings.Message8);
+        GUIElements.me.dialog.OpenOK(Lang.Get("Message1"), null,
+            $"{Lang.Get("Message2")}\n{Lang.Get("Message3")}\n{Lang.Get("Message4")}\n{Lang.Get("Message5")}\n{Lang.Get("Message6")}\n{Lang.Get("Message7")}",
+            true, Lang.Get("Message8"));
     }
 
     private static void StartGerryRoutine(float num)
     {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
         var noSales = num <= 0;
         var money = Trading.FormatMoney(num, true);
         var gerry = SpawnGerry(_shippingBox.transform, _shippingBox.pos3);
@@ -131,7 +128,7 @@ public partial class Plugin
         GJTimer.AddTimer(2f,
             delegate
             {
-                gerry.Say(noSales ? strings.Nothing : strings.WorkWork, delegate
+                gerry.Say(noSales ? Lang.Get("Nothing") : Lang.Get("WorkWork"), delegate
                 {
                     DestroyGerryWithDelay(gerry, 1f);
                 });
@@ -155,7 +152,7 @@ public partial class Plugin
 
                     GJTimer.AddTimer(2f, delegate
                     {
-                        gerry2.Say(strings.Bye, delegate
+                        gerry2.Say(Lang.Get("Bye"), delegate
                         {
                             DestroyGerryWithDelay(gerry2, 1f);
                         });

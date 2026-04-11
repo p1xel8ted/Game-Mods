@@ -5,6 +5,19 @@ public partial class Plugin
 {
     private const string RefugeeZoneId = "refugee";
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!CanOpenCraftAnywhere()) return;
+
+        if (LazyInput.gamepad_active && ReInput.players.GetPlayer(0).GetButtonDown(MenuControllerButton.Value) ||
+            MenuKeyBind.Value.IsUp())
+        {
+            OpenCraftAnywhere();
+        }
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BuildGrid), nameof(BuildGrid.ShowBuildGrid))]
     public static void BuildGrid_ShowBuildGrid(ref bool show)
@@ -133,8 +146,8 @@ public partial class Plugin
         if (BuildDeskClone == null) return;
         if (__instance != BuildDeskClone) return;
         if (MainGame.me.player.GetMyWorldZoneId().Contains(RefugeeZoneId)) return;
-        SetUICulture();
-        __result.header = strings.Header;
-        __result.descr = strings.Description;
+        Lang.Reload();
+        __result.header = Lang.Get("Header");
+        __result.descr = Lang.Get("Description");
     }
 }

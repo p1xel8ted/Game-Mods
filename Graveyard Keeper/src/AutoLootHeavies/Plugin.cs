@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.autolootheavies";
     private const string PluginName = "Auto-Loot Heavies!";
-    private const string PluginVer = "3.5.1";
+    private const string PluginVer = "3.5.2";
 
     private static ManualLogSource Log { get; set; }
 
@@ -23,6 +23,7 @@ public partial class Plugin : BaseUnityPlugin
     private static ConfigEntry<KeyboardShortcut> SetTimberLocationKeybind { get;  set; }
     private static ConfigEntry<KeyboardShortcut> SetOreLocationKeybind { get;  set; }
     private static ConfigEntry<KeyboardShortcut> SetStoneLocationKeybind { get;  set; }
+    private static ConfigEntry<KeyboardShortcut> TeleportToggleKeybind { get;  set; }
 
 
 
@@ -30,8 +31,8 @@ public partial class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
       
     }
 
@@ -47,6 +48,7 @@ public partial class Plugin : BaseUnityPlugin
         SetTimberLocationKeybind = Config.Bind("3. Keybinds", "Set Timber Location Keybind", new KeyboardShortcut(KeyCode.Alpha7), new ConfigDescription("Define the keybind for setting the Timber Location", null, new ConfigurationManagerAttributes {Order = 4}));
         SetOreLocationKeybind = Config.Bind("3. Keybinds", "Set Ore Location Keybind", new KeyboardShortcut(KeyCode.Alpha8), new ConfigDescription("Define the keybind for setting the Ore Location", null, new ConfigurationManagerAttributes {Order = 3}));
         SetStoneLocationKeybind = Config.Bind("3. Keybinds", "Set Stone Location Keybind", new KeyboardShortcut(KeyCode.Alpha9), new ConfigDescription("Define the keybind for setting the Stone Location", null, new ConfigurationManagerAttributes {Order = 2}));
+        TeleportToggleKeybind = Config.Bind("3. Keybinds", "Toggle Teleport Keybind", new KeyboardShortcut(KeyCode.Alpha6), new ConfigDescription("Define the keybind for toggling teleport to dump site when all stockpiles are full", null, new ConfigurationManagerAttributes {Order = 1}));
 
         Debug = Config.Bind("4. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 1}));
     }

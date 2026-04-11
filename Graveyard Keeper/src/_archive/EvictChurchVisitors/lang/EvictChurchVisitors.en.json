@@ -1,0 +1,6 @@
+{
+  "ConfirmText": "The game may appear to hang while all the visitors are evicted. It has not crashed. Continue?",
+  "Yes": "Yes",
+  "No": "No",
+  "EvictButton": "Evict Church Visitors"
+}

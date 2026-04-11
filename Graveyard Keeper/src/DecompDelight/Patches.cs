@@ -26,9 +26,9 @@ internal static class Patches
 
         ElementMaps.ItemElementCache[itemId] = element;
 
-        if (element is ElementMaps.Element.None)
+        if (element is ElementMaps.Element.None && Plugin.Debug.Value)
         {
-            Plugin.LOG.LogError($"Decompose output for '{itemId}' is '{decomposeOutput}' -> Element: {element}");
+            Plugin.LOG.LogInfo($"Decompose output for '{itemId}' is '{decomposeOutput}' -> Element: {element}");
         }
 
         Utils.AddToTooltip(__result, element);

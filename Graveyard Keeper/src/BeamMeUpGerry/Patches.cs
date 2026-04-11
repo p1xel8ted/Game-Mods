@@ -125,7 +125,6 @@ public static class Patches
         {
             if (__instance.GetGrayedCooldownPercent() != 0)
             {
-                Debug.LogError("Can't use item '" + __instance.id + "' because of cooldown");
                 __result = new GameRes();
             }
 
@@ -161,6 +160,60 @@ public static class Patches
 
 
         return false;
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!Helpers.IsUpdateConditionsMet()) return;
+
+        Plugin.CachedPlayer ??= ReInput.players.GetPlayer(0);
+
+        if (Plugin.EnableCustomLocations.Value && !Helpers.IsInDungeon)
+        {
+            if (Plugin.SaveCustomLocationKeybind.Value.IsUp() || LazyInput.gamepad_active && Plugin.CachedPlayer.GetButtonDown(Plugin.SaveCustomLocationControllerButton.Value))
+            {
+                MainGame.me.StartCoroutine(Helpers.LogPosition(Plugin.InitConfiguration));
+                if (!Plugin.CustomLocationMessage.Value)
+                {
+                    GUIElements.me.dialog.OpenOK("Beam Me Up Gerry!", null, "You have just saved your first custom location! Please ensure you open the saved file (Locations folder) and change the 'zone' name to something proper!", true, string.Empty);
+                    Plugin.CustomLocationMessage.Value = true;
+                }
+            }
+
+            if (Plugin.ReloadCustomLocationsKeybind.Value.IsUp())
+            {
+                Plugin.UpdateLists();
+            }
+        }
+
+        var shouldHandleTeleport = LazyInput.gamepad_active && Plugin.CachedPlayer.GetButtonDown(Plugin.TeleportMenuControllerButton.Value) || Plugin.TeleportMenuKeyBind.Value.IsUp();
+
+        if (!shouldHandleTeleport || Helpers.PlayerDisabled() || Helpers.InTutorial()) return;
+
+        Plugin.CachedHearthstone ??= Helpers.GetHearthstone();
+
+        if (Plugin.CachedHearthstone != null)
+        {
+            if (Helpers.IsInDungeon)
+            {
+                Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.CantUseHere), Vector3.zero);
+            }
+            else
+            {
+                if (Plugin.EnableListExpansion.Value)
+                {
+                    LocationLists.CreatePages();
+                }
+
+                Plugin.CachedHearthstone.UseItem(MainGame.me.player);
+            }
+        }
+        else
+        {
+            Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.WhereIsIt), Vector3.zero);
+        }
     }
 
     [HarmonyPostfix]

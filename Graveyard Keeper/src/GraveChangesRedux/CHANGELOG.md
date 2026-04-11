@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 | 11 April 2026
+
+- Added startup logging to help diagnose mod and game environment issues
+
 ## 0.1.4
 
 - Fixed grave items not reaching full quality due to the game's body skull cap being applied on top of modified quality

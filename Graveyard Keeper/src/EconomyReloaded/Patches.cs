@@ -53,7 +53,7 @@ public static class Patches
             itemDef.is_static_cost = BackedUpIsStaticCost[itemDef.id];
         }
 
-        Plugin.Log.LogWarning($"Restored {BackedUpIsStaticCost.Count} items to their original is_static_cost value.");
+        Plugin.Log.LogInfo($"Restored {BackedUpIsStaticCost.Count} items to their original is_static_cost value.");
     }
 
     private static void MakeIsStaticCost()
@@ -64,7 +64,7 @@ public static class Patches
             itemDef.is_static_cost = true;
         }
 
-        Plugin.Log.LogWarning($"Set {BackedUpIsStaticCost.Count} items to is_static_cost = true.");
+        Plugin.Log.LogInfo($"Set {BackedUpIsStaticCost.Count} items to is_static_cost = true.");
     }
 
     [HarmonyPostfix]

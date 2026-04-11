@@ -1,0 +1,11 @@
+{
+  "AutoSave": "Guardado automático",
+  "Rush": "¡Qué prisa! ¡Me atrapa cada vez!",
+  "SaveAreYouSureMenu": "¿Estás seguro de que quieres volver al menú principal?",
+  "SaveAreYouSureDesktop": "¿Estás seguro de que quieres salir al escritorio?",
+  "SaveProgressSaved": "El progreso y la ubicación actual se guardarán",
+  "ExitButtonText": "Salir al escritorio",
+  "SaveProgressNotSaved": "El progreso y la ubicación actual no se guardarán",
+  "SaveMessage": "Partida guardada",
+  "CantSaveHere": "¡No se puede guardar aquí, jefe!"
+}

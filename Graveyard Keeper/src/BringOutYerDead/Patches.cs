@@ -10,6 +10,157 @@ public static class Patches
     private static bool _strikeDone;
     internal static LogicData Ld;
     
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!MainGame.game_started) return;
+        if (MainGame.paused) return;
+
+        if (!Helpers.TutorialDone() && !Plugin.InternalTutMessageShown.Value)
+        {
+            Plugin.InternalTutMessageShown.Value = true;
+            Helpers.Log("Need to complete all 'tutorial' quests first, up to and including the repair the sword quest.");
+            return;
+        }
+
+        if (Plugin.Donkey == null)
+        {
+            Plugin.Donkey = WorldMap.GetWorldGameObjectByCustomTag("donkey", true);
+        }
+
+        if (Plugin.Donkey != null)
+        {
+            var dataGetParam = Plugin.Donkey.data.GetParam("speed");
+            var getParam = Plugin.Donkey.GetParam("speed");
+
+            _strikeDone = Plugin.Donkey.GetParam("strike_completed") > 0f;
+
+            if (dataGetParam < Plugin.DonkeySpeed.Value || getParam < Plugin.DonkeySpeed.Value)
+            {
+                Helpers.Log($"TDU: Donkey old speeds: DataGetParam: {dataGetParam}, GetParam: {getParam}");
+                Plugin.Donkey.components.character.SetSpeed(Plugin.DonkeySpeed.Value);
+                Helpers.Log($"TDU: Donkey new speeds: DataGetParam: {dataGetParam}, GetParam: {getParam}");
+            }
+
+            if (!_strikeDone)
+            {
+                Helpers.Log($"Must complete the donkey strike first! Pay him 10 carrots, grease his wheels etc.");
+                return;
+            }
+        }
+        else
+        {
+            Helpers.Log($"Donkey is null!?!?!");
+            return;
+        }
+
+        if (MainGame.me.save.day_of_week == 1)
+        {
+            if (!Plugin.PrideDayLogged)
+            {
+                Helpers.Log($"Pride day! Skipping donkey as he doesnt come anyway when asked if its Pride day!");
+                Plugin.PrideDayLogged = true;
+            }
+
+            return;
+        }
+
+        switch (TimeOfDay.me.time_of_day_enum)
+        {
+            case TimeOfDay.TimeOfDayEnum.Night:
+                if (!Plugin.NightDelivery.Value)
+                {
+                    Helpers.Log("Night delivery is disabled in config!");
+                    break;
+                }
+
+                if (!Plugin.InternalNightDelivery.Value)
+                {
+                    if (ForceDonkey(Plugin.Donkey))
+                    {
+                        Helpers.Log($"It's night! Beginning night time delivery!");
+                        Plugin.InternalNightDelivery.Value = true;
+                    }
+                    else
+                    {
+                        Plugin.InternalNightDelivery.Value = false;
+                        Helpers.Log($"It's night! But we failed to force the donkey to deliver!");
+                    }
+                }
+
+                break;
+            case TimeOfDay.TimeOfDayEnum.Morning:
+                if (!Plugin.MorningDelivery.Value)
+                {
+                    Helpers.Log("Morning delivery is disabled in config!");
+                    break;
+                }
+
+                if (!Plugin.InternalMorningDelivery.Value)
+                {
+                    Helpers.Log($"It's morning! Beginning morning delivery!");
+                    if (ForceDonkey(Plugin.Donkey))
+                    {
+                        Plugin.InternalMorningDelivery.Value = true;
+                    }
+                    else
+                    {
+                        Plugin.InternalMorningDelivery.Value = false;
+                        Helpers.Log($"It's morning! But we failed to force the donkey to deliver!");
+                    }
+                }
+
+                break;
+            case TimeOfDay.TimeOfDayEnum.Day:
+                if (!Plugin.DayDelivery.Value)
+                {
+                    Helpers.Log("Day delivery is disabled in config!");
+                    return;
+                }
+
+                if (!Plugin.InternalDayDelivery.Value)
+                {
+                    Helpers.Log($"It's Day! Beginning midday delivery!");
+                    if (ForceDonkey(Plugin.Donkey))
+                    {
+                        Plugin.InternalDayDelivery.Value = true;
+                    }
+                    else
+                    {
+                        Plugin.InternalDayDelivery.Value = false;
+                        Helpers.Log($"It's midday! But we failed to force the donkey to deliver!");
+                    }
+                }
+
+                break;
+            case TimeOfDay.TimeOfDayEnum.Evening:
+                if (!Plugin.EveningDelivery.Value)
+                {
+                    Helpers.Log("Evening delivery is disabled in config!");
+                    return;
+                }
+
+                if (!Plugin.InternalEveningDelivery.Value)
+                {
+                    if (ForceDonkey(Plugin.Donkey))
+                    {
+                        Helpers.Log($"It's evening! Beginning evening delivery!");
+                        Plugin.InternalEveningDelivery.Value = true;
+                    }
+                    else
+                    {
+                        Plugin.InternalEveningDelivery.Value = false;
+                        Helpers.Log($"It's evening! But we failed to force the donkey to deliver!");
+                    }
+                }
+
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
     public static void EnvironmentEngine_OnEndOfDay()
@@ -116,8 +267,8 @@ public static class Patches
 
         if (_carrotCount <= 0)
         {
-            Helpers.SetUICulture();
-            MainGame.me.player.Say(strings.CarrotMessage, null, false, SpeechBubbleGUI.SpeechBubbleType.Think, SmartSpeechEngine.VoiceID.None, true);
+            Lang.Reload();
+            MainGame.me.player.Say(Lang.Get("CarrotMessage"), null, false, SpeechBubbleGUI.SpeechBubbleType.Think, SmartSpeechEngine.VoiceID.None, true);
         }
 
         Helpers.Log($"Current session delivery count: {_deliveryCount}!");

@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.1.2";
+    private const string PluginVer = "3.1.3";
 
     internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }
@@ -17,22 +17,22 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> CinematicEffect { get; private set; }
     internal static ConfigEntry<bool> EnablePreviousPageChoices { get; private set; }
     internal static ConfigEntry<bool> PreviousPageChoiceAtTop { get; private set; }
-    private static ConfigEntry<KeyboardShortcut> TeleportMenuKeyBind { get; set; }
-    private static ConfigEntry<string> TeleportMenuControllerButton { get; set; }
+    internal static ConfigEntry<KeyboardShortcut> TeleportMenuKeyBind { get; set; }
+    internal static ConfigEntry<string> TeleportMenuControllerButton { get; set; }
     internal static ConfigEntry<int> LocationsPerPage { get; private set; }
     internal static ConfigEntry<bool> SortAlphabetically { get; private set; }
-    private static ConfigEntry<bool> EnableCustomLocations { get; set; }
+    internal static ConfigEntry<bool> EnableCustomLocations { get; set; }
     internal static ConfigEntry<bool> RestrictToFoundLocations { get; set; }
     internal static ConfigEntry<bool> OpenNewLocationFileOnSave { get; private set; }
-    private static ConfigEntry<bool> CustomLocationMessage { get; set; }
-    private static ConfigEntry<KeyboardShortcut> SaveCustomLocationKeybind { get; set; }
-    private static ConfigEntry<KeyboardShortcut> ReloadCustomLocationsKeybind { get; set; }
-    private static ConfigEntry<string> SaveCustomLocationControllerButton { get; set; }
+    internal static ConfigEntry<bool> CustomLocationMessage { get; set; }
+    internal static ConfigEntry<KeyboardShortcut> SaveCustomLocationKeybind { get; set; }
+    internal static ConfigEntry<KeyboardShortcut> ReloadCustomLocationsKeybind { get; set; }
+    internal static ConfigEntry<string> SaveCustomLocationControllerButton { get; set; }
 
     internal static ManualLogSource Log { get; private set; }
 
     internal static Player CachedPlayer { get; set; }
-    private Item CachedHearthstone { get; set; }
+    internal static Item CachedHearthstone { get; set; }
 
     private static ConfigFile ConfigInstance { get; set; }
 
@@ -43,70 +43,6 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         InitInternalConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
-    }
-
-    private void OnDestroy()
-    {
-        Log.LogError($"Plugin {PluginName} is unloading!");
-    }
-
-    private void OnDisable()
-    {
-        Log.LogError($"Plugin {PluginName} is being disabled!");
-    }
-
-    private void Update()
-    {
-        if (!Helpers.IsUpdateConditionsMet()) return;
-
-        CachedPlayer ??= ReInput.players.GetPlayer(0);
-
-        if (EnableCustomLocations.Value && !Helpers.IsInDungeon)
-        {
-            if (SaveCustomLocationKeybind.Value.IsUp() || LazyInput.gamepad_active && CachedPlayer.GetButtonDown(SaveCustomLocationControllerButton.Value))
-            {
-                StartCoroutine(Helpers.LogPosition(InitConfiguration));
-                if (!CustomLocationMessage.Value)
-                {
-                    GUIElements.me.dialog.OpenOK("Beam Me Up Gerry!", null, "You have just saved your first custom location! Please ensure you open the saved file (Locations folder) and change the 'zone' name to something proper!", true, string.Empty);
-                    CustomLocationMessage.Value = true;
-                }
-            }
-
-            if (ReloadCustomLocationsKeybind.Value.IsUp())
-            {
-                UpdateLists();
-            }
-        }
-
-        var shouldHandleTeleport = LazyInput.gamepad_active && CachedPlayer.GetButtonDown(TeleportMenuControllerButton.Value) || TeleportMenuKeyBind.Value.IsUp();
-
-        if (!shouldHandleTeleport || Helpers.PlayerDisabled() || Helpers.InTutorial()) return;
-
-
-        CachedHearthstone ??= Helpers.GetHearthstone();
-
-        if (CachedHearthstone != null)
-        {
-            if (Helpers.IsInDungeon)
-            {
-                Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.CantUseHere), Vector3.zero);
-            }
-            else
-            {
-                if (EnableListExpansion.Value)
-                {
-                    LocationLists.CreatePages();
-                }
-
-                CachedHearthstone.UseItem(MainGame.me.player);
-            }
-        }
-        else
-        {
-            Helpers.SpawnGerry(Language.GetTranslation(Language.Terms.WhereIsIt), Vector3.zero);
-        }
     }
 
     private void InitInternalConfiguration()
@@ -200,8 +136,6 @@ public class Plugin : BaseUnityPlugin
 
         foreach (var location in LocationLists.AllLocations.OrderByDescending(a => Helpers.RemoveCharacters(a.zone)))
         {
-            Plugin.Log.LogWarning($"Creating config entry for {location.zone}");
-
             var key = Helpers.RemoveCharacters(location.zone);
             var configEntry = ConfigInstance.Bind("5. Locations", key, true, $"Toggle visibility of {key} in the menu.");
             location.enabled = configEntry.Value;

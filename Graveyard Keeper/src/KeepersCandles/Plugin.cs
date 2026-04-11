@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.keeperscandles";
     private const string PluginName = "Keeper's Candles!";
-    private const string PluginVer = "0.1.6";
+    private const string PluginVer = "0.1.7";
     private const string Souls = "souls";
     private const string Candelabrum = "candelabrum";
     private const string Column = "column";
@@ -14,6 +14,7 @@ public class Plugin : BaseUnityPlugin
     
     private static readonly List<GameObject> ChurchColumnsList = [];
     private static ManualLogSource LOG { get; set; }
+    private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<float> ExtinguishDistance { get; set; }
     private static ConfigEntry<KeyboardShortcut> ExtinguishKeyBind { get; set; }
     private static ConfigEntry<string> ExtinguishControllerButton { get; set; }
@@ -24,6 +25,7 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         LOG = Logger;
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 21}));
         SceneManager.sceneLoaded += (_, _) => OnGameBalanceLoaded();
 
         ExtinguishDistance = Config.Bind("01. Distance", "Extinguish Distance", 1f, new ConfigDescription("Distance in units to extinguish a candle.", new AcceptableValueRange<float>(1, 5), new ConfigurationManagerAttributes {Order = 19}));
@@ -43,10 +45,11 @@ public class Plugin : BaseUnityPlugin
         ExtinguishControllerButton = Config.Bind("03. Keybinds", "Extinguish Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.DUp), new ConfigDescription("Select the controller button used to extinguish a candle.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 17}));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, LOG);
     }
 
-    private void Update()
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
     {
         if (!CanFindCandles()) return;
 
@@ -205,7 +208,10 @@ public class Plugin : BaseUnityPlugin
             var postfix = split.Last();
             var underscoreCount = postfix.Count(c => c == '_');
             if (underscoreCount < 2) continue;
-            LOG.LogInfo($"Correcting '{wgo.obj_id}' crafting status.");
+            if (Debug.Value)
+            {
+                LOG.LogInfo($"Correcting '{wgo.obj_id}' crafting status.");
+            }
             wgo.components.craft.is_crafting = true;
         }
     }

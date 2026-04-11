@@ -10,7 +10,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.newgameatbottom";
     private const string PluginName = "New Game at Bottom!";
-    private const string PluginVer = "2.2.7";
+    private const string PluginVer = "2.2.8";
 
     private static ManualLogSource Log { get; set; }
 
@@ -18,6 +18,5 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        Shared.StartupLogger.PrintModLoaded(PluginName, Log);
     }
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.10 | 11 April 2026
+
+- Removed unnecessary background processing that could affect performance
+- Fixed hotkeys and input features not working for some users
+- Improved compatibility across different BepInEx versions
+
 ## 0.1.9
 
 - Added borderless windowed mode option

@@ -1,6 +1,4 @@
-﻿using MonoMod.Utils;
-
-namespace GYKHelper;
+﻿namespace GYKHelper;
 
 [HarmonyPatch]
 public static class Patches

@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.queueeverything";
     private const string PluginName = "Queue Everything!*";
-    private const string PluginVer = "2.1.9";
+    private const string PluginVer = "2.1.10";
 
     private static ConfigEntry<bool> HalfFireRequirements { get; set; }
     private static ConfigEntry<bool> AutoMaxMultiQualCrafts { get; set; }
@@ -25,7 +25,6 @@ public partial class Plugin : BaseUnityPlugin
         Log = Logger;
         InitConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()
@@ -59,20 +58,4 @@ public partial class Plugin : BaseUnityPlugin
         Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 6}));
     }
 
-    private void Update()
-    {
-        if (!MainGame.game_started) return;
-        if (!MakeEverythingAuto.Value) return;
-        if (CraftsStarted) return;
-
-        foreach (var wgo in MainGame.me.world.GetComponentsInChildren<WorldGameObject>(true))
-        {
-            if (wgo != null && wgo.components.craft.is_crafting && !wgo.has_linked_worker && wgo.linked_worker == null)
-            {
-                CurrentlyCrafting.Add(wgo);
-            }
-        }
-
-        CraftsStarted = true;
-    }
 }

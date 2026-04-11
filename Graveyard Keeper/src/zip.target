@@ -2,8 +2,8 @@
     <Target Name="ZipOutputPath" AfterTargets="Build">
         <PropertyGroup>
             <StagingDir>$(TEMP)\GYK_staging\$(MSBuildProjectName)</StagingDir>
-            <PluginDir>$(StagingDir)\plugins</PluginDir>
-            <ReleasesDir>$(SolutionDir)\AAA_Releases</ReleasesDir>
+            <PluginDir>$(StagingDir)\plugins\$(MSBuildProjectName)</PluginDir>
+            <ReleasesDir>$(MSBuildThisFileDirectory)AAA_Releases</ReleasesDir>
         </PropertyGroup>
 
         <RemoveDir Directories="$(StagingDir)" />
@@ -12,7 +12,7 @@
 
         <ItemGroup>
             <OutputFiles Include="$(OutputPath)\**\*.*"
-                         Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.json;$(OutputPath)\**\*.pdb" />
+                         Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.pdb;$(OutputPath)\**\*.deps.json;$(OutputPath)\SaveBackup\**\*.*;$(OutputPath)\_dump\**\*.*" />
         </ItemGroup>
 
         <Copy SourceFiles="@(OutputFiles)"

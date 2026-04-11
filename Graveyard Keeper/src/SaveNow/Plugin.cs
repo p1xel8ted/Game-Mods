@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.savenow";
     private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.7";
+    private const string PluginVer = "2.5.8";
 
     private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<int> SaveInterval { get; set; }
@@ -32,8 +32,8 @@ public partial class Plugin : BaseUnityPlugin
         Log = Logger;
         InitConfiguration();
         UpdateSaveData();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()
@@ -129,37 +129,32 @@ public partial class Plugin : BaseUnityPlugin
         LoadSaveLocations();
     }
 
-    private void Update()
-    {
-        if (!MainGame.game_started || !TutorialDone()) return;
-
-        if (ManualSaveKeyBind.Value.IsUp() ||
-            EnableManualSaveControllerButton.Value && LazyInput.gamepad_active &&
-            ReInput.players.GetPlayer(0).GetButtonDown(ManualSaveControllerButton.Value))
-        {
-            StartCoroutine(PerformManualSave());
-        }
-    }
-
     private static void SaveCallback(SaveSlotData slot)
     {
+        Log.LogInfo($"[SaveNow] SaveCallback fired: slot='{slot.filename_no_extension}'");
         SaveLocation(false, slot.filename_no_extension);
         GUIElements.me.ShowSavingStatus(false);
     }
 
     private static void PerformNewDaySave()
     {
+        Log.LogInfo("[SaveNow] New day save starting");
         MainGame.me.StartCoroutine(PerformNewDaySaveIE());
     }
 
     private static IEnumerator PerformNewDaySaveIE()
     {
-        if (!TutorialDone()) yield break;
+        if (!CanSave)
+        {
+            Log.LogInfo("[SaveNow] New day save skipped: player controlled by script");
+            yield break;
+        }
 
         if (IsInDungeon)
         {
-            Thread.CurrentThread.CurrentUICulture = GameCulture;
-            SpawnGerry(strings.CantSaveHere);
+            Log.LogInfo("[SaveNow] New day save skipped: in dungeon");
+            Lang.Reload();
+            SpawnGerry(Lang.Get("CantSaveHere"));
             yield break;
         }
 
@@ -167,7 +162,12 @@ public partial class Plugin : BaseUnityPlugin
         {
             var date = DateTime.Now.ToString("ddmmyyhhmmss");
             var newSlot = $"newdaysave.{date}".Trim();
+            Log.LogInfo($"[SaveNow] New day saving to new slot '{newSlot}'");
             MainGame.me.save_slot.filename_no_extension = newSlot;
+        }
+        else
+        {
+            Log.LogInfo($"[SaveNow] New day saving to existing slot '{MainGame.me.save_slot.filename_no_extension}'");
         }
 
         GUIElements.me.ShowSavingStatus(true);
@@ -176,15 +176,27 @@ public partial class Plugin : BaseUnityPlugin
 
     private static IEnumerator PerformManualSave()
     {
-        if (!TutorialDone()) yield break;
-        if (EnvironmentEngine.me.IsTimeStopped()) yield break;
-        if (!Application.isFocused) yield break;
-        if (!CanSave) yield break;
+        if (EnvironmentEngine.me.IsTimeStopped())
+        {
+            Log.LogInfo("[SaveNow] Manual save skipped: time is stopped");
+            yield break;
+        }
+        if (!Application.isFocused)
+        {
+            Log.LogInfo("[SaveNow] Manual save skipped: application not focused");
+            yield break;
+        }
+        if (!CanSave)
+        {
+            Log.LogInfo("[SaveNow] Manual save skipped: player controlled by script");
+            yield break;
+        }
 
         if (IsInDungeon)
         {
-            Thread.CurrentThread.CurrentUICulture = GameCulture;
-            SpawnGerry(strings.CantSaveHere);
+            Log.LogInfo("[SaveNow] Manual save skipped: in dungeon");
+            Lang.Reload();
+            SpawnGerry(Lang.Get("CantSaveHere"));
             yield break;
         }
 
@@ -192,7 +204,12 @@ public partial class Plugin : BaseUnityPlugin
         {
             var date = DateTime.Now.ToString("ddmmyyhhmmss");
             var newSlot = $"manualsave.{date}".Trim();
+            Log.LogInfo($"[SaveNow] Manual saving to new slot '{newSlot}'");
             MainGame.me.save_slot.filename_no_extension = newSlot;
+        }
+        else
+        {
+            Log.LogInfo($"[SaveNow] Manual saving to existing slot '{MainGame.me.save_slot.filename_no_extension}'");
         }
 
         GUIElements.me.ShowSavingStatus(true);

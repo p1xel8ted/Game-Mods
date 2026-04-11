@@ -7,7 +7,10 @@ public static class Patches
     {
         if (!Helpers.UnlockedStageOne())
         {
-            Plugin.Log.LogMessage($"Haven't unlocked the necessary tech yet!");
+            if (Plugin.Debug.Value)
+            {
+                Plugin.Log.LogInfo("Haven't unlocked the necessary tech yet!");
+            }
             return;
         }
         
@@ -77,10 +80,13 @@ public static class Patches
     {
         if (!Helpers.UnlockedStageOne())
         {
-            Plugin.Log.LogMessage($"Haven't unlocked the necessary tech yet!");
+            if (Plugin.Debug.Value)
+            {
+                Plugin.Log.LogInfo("Haven't unlocked the necessary tech yet!");
+            }
             return;
         }
-        
+
         if (!__instance.obj_id.ToLowerInvariant().StartsWith("garden") || !__instance.obj_id.ToLowerInvariant().EndsWith("ready")) return;
         
         var objects = Helpers.FindNearbyObjectsByVector(__instance);
@@ -106,15 +112,15 @@ public static class Patches
     {
         if (__instance == null) return;
 
-        Helpers.SetUICulture();
         if (!LazyInput.gamepad_active) return;
+        Lang.Reload();
         var component = __instance.GetComponent<Tooltip>();
 
         if (__instance.tech_id.ToLowerInvariant().Contains(Helpers.ControllerUnlockTechTooltip.ToLowerInvariant()))
         {
             component.AddData(new BubbleWidgetSeparatorData());
-            component.AddData(new BubbleWidgetTextData(strings.Stage1Header, UITextStyles.TextStyle.HintTitle));
-            component.AddData(new BubbleWidgetTextData(strings.Stage1Des, UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Header"), UITextStyles.TextStyle.HintTitle));
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Des"), UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
         }
     }
 
@@ -125,14 +131,14 @@ public static class Patches
     {
         if (__instance == null) return;
 
-        Helpers.SetUICulture();
         if (LazyInput.gamepad_active) return;
+        Lang.Reload();
         var name = __instance.GetData().name;
         if (name.ToLowerInvariant().Contains(Helpers.MouseUnlockTechTooltip.ToLowerInvariant()))
         {
             tooltip.AddData(new BubbleWidgetBlankSeparatorData());
-            tooltip.AddData(new BubbleWidgetTextData(Environment.NewLine + strings.Stage1Header, UITextStyles.TextStyle.HintTitle, NGUIText.Alignment.Left));
-            tooltip.AddData(new BubbleWidgetTextData(strings.Stage1Des, UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
+            tooltip.AddData(new BubbleWidgetTextData(Environment.NewLine + Lang.Get("Stage1Header"), UITextStyles.TextStyle.HintTitle, NGUIText.Alignment.Left));
+            tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Des"), UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
         }
     }
 }

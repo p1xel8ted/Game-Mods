@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.ineedsticks";
     private const string PluginName = "I Neeeed Sticks!";
-    private const string PluginVer = "1.6.7";
+    private const string PluginVer = "1.6.8";
     private static CraftDefinition _newItem;
     private const string WoodenStick = "wooden_stick";
     private static ManualLogSource Log { get; set; }
@@ -13,8 +13,8 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = Logger;
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        Shared.StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     internal static void OnGameBalanceLoad()
@@ -84,7 +84,7 @@ public class Plugin : BaseUnityPlugin
         newCd.difficulty = cd.difficulty;
         newCd.linked_perks = cd.linked_perks;
         newCd.linked_buffs = cd.linked_buffs;
-        newCd.custom_name = "Wooden stick";
+        newCd.custom_name = Lang.Get("WoodenStickName");
         newCd.tab_id = cd.tab_id;
         newCd.buff = cd.buff;
         newCd.needs_quality = cd.needs_quality;

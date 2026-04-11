@@ -1,0 +1,8 @@
+{
+  "Content": "Parece que você instalou o Sprint Reloaded. Infelizmente Misc. Bits & Bobs e Sprint Reloaded editam os mesmos valores ao modificar a velocidade do jogador e são incompatíveis entre si. O lado do jogador de Misc. Bits & Bobs será desativado. A velocidade do porteiro não deve ser afetada.",
+  "Title": "Incompatibilidade de mod detectada",
+  "EvictConfirmText": "O jogo pode parecer travado enquanto todos os visitantes são expulsos. Ele não travou. Continuar?",
+  "EvictYes": "Sim",
+  "EvictNo": "Não",
+  "EvictButton": "Expulsar visitantes da igreja"
+}

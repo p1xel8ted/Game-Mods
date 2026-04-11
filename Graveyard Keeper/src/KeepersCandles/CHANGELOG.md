@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7 | 11 April 2026
+
+- Fixed hotkeys and input features not working for some users
+- Improved compatibility across different BepInEx versions
+
 ## 0.1.6
 
 - Mod is now standalone — no longer requires GYK Helper

@@ -1,0 +1,8 @@
+{
+  "Content": "Es sieht so aus, als ob Sie Sprint Reloaded installiert haben. Leider bearbeiten Misc. Bits & Bobs und Sprint Reloaded beim Ändern der Spielergeschwindigkeit dieselben Werte und sind nicht miteinander kompatibel. Die Spielerseite von Misc. Bits & Bobs wird deaktiviert. Die Porter-Geschwindigkeit sollte nicht beeinträchtigt werden.",
+  "Title": "Mod-Inkompatibilität erkannt",
+  "EvictConfirmText": "Das Spiel scheint möglicherweise einzufrieren, während alle Besucher vertrieben werden. Es ist nicht abgestürzt. Fortfahren?",
+  "EvictYes": "Ja",
+  "EvictNo": "Nein",
+  "EvictButton": "Kirchenbesucher vertreiben"
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.3 | 11 April 2026
+
+- Main menu now shows "BepInEx Modded" in the version text
+- Fixed hotkeys and input features not working for some users
+- Improved compatibility across different BepInEx versions
+
 ## 3.1.2
 
 - Fixed custom teleport locations not appearing after loading from JSON files

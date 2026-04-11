@@ -22,8 +22,11 @@
             var exists = KnownRecipes.Find(r => r.CraftString == recipe.CraftString);
             if (exists == null)
             {
-                KnownRecipes.Add(recipe); 
-                Plugin.LOG.LogInfo($"Added recipe: [{recipe.Ingredient1}, {recipe.Ingredient2}, {recipe.Ingredient3}] -> {recipe.Result}");
+                KnownRecipes.Add(recipe);
+                if (Plugin.Debug.Value)
+                {
+                    Plugin.LOG.LogInfo($"Added recipe: [{recipe.Ingredient1}, {recipe.Ingredient2}, {recipe.Ingredient3}] -> {recipe.Result}");
+                }
             }
             SaveRecipesToFile();
         }

@@ -132,7 +132,10 @@ public static class Patches
     public static void MainMenuGUI_Open_Postfix()
     {
         Helpers.Sprint = Harmony.HasAnyPatches("mugen.GraveyardKeeper.SprintReloaded");
-        Plugin.Log.LogInfo($"[MBB]: Sprint Detected via Harmony: {Helpers.Sprint}");
+        if (Plugin.Debug.Value)
+        {
+            Plugin.Log.LogInfo($"[MBB]: Sprint Detected via Harmony: {Helpers.Sprint}");
+        }
     }
 
     [HarmonyFinalizer]
@@ -278,7 +281,10 @@ public static class Patches
             {
                 if (item != __instance._selected_item) continue;
                 inv.data.RemoveItemNoCheck(item, 1);
-                Plugin.Log.LogMessage($"Removed 1x {__instance._selected_item.id} from {inv._obj_id}.");
+                if (Plugin.Debug.Value)
+                {
+                    Plugin.Log.LogInfo($"Removed 1x {__instance._selected_item.id} from {inv._obj_id}.");
+                }
                 return;
             }
         }
@@ -289,11 +295,114 @@ public static class Patches
     [HarmonyPatch(typeof(LeaveTrailComponent), nameof(LeaveTrailComponent.LeaveTrail))]
     public static void LeaveTrailComponent_LeaveTrail(LeaveTrailComponent __instance)
     {
-        if (!Plugin.LessenFootprintImpactConfig.Value) return;
-        var byType = __instance._trail_definition.GetByType(__instance._trail_type);
-        if (LeaveTrailComponent._all_trails.Count <= 0) return;
-        var trailObject = LeaveTrailComponent._all_trails[LeaveTrailComponent._all_trails.Count - 1];
-        trailObject.SetColor(byType.color, __instance._dirty_amount * 0.5f);
+        if (Plugin.LessenFootprintImpactConfig.Value)
+        {
+            var byType = __instance._trail_definition.GetByType(__instance._trail_type);
+            if (LeaveTrailComponent._all_trails.Count > 0)
+            {
+                var trailObject = LeaveTrailComponent._all_trails[LeaveTrailComponent._all_trails.Count - 1];
+                trailObject.SetColor(byType.color, __instance._dirty_amount * 0.5f);
+            }
+        }
+
+        var max = Plugin.MaxFootprintsConfig.Value;
+        if (max > 0 && LeaveTrailComponent._all_trails.Count > max)
+        {
+            var oldest = LeaveTrailComponent._all_trails.First();
+            LeaveTrailComponent.OnTrailObjectDestroyed(oldest);
+            if (!oldest.GetComponent<SpriteRenderer>().isVisible)
+            {
+                UnityEngine.Object.Destroy(oldest.gameObject);
+            }
+            else
+            {
+                oldest._degrading = false;
+                oldest.gameObject.AddComponent<DestroyWhenInvisible>();
+            }
+        }
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(TrailObject), nameof(TrailObject.Update))]
+    public static IEnumerable<CodeInstruction> TrailObject_Update(IEnumerable<CodeInstruction> codes)
+    {
+        var colorGetter = AccessTools.PropertyGetter(typeof(SpriteRenderer), nameof(SpriteRenderer.color));
+        var setAlphaMethod = AccessTools.Method(typeof(ExtentionTools), nameof(ExtentionTools.SetAlpha));
+
+        var matcher = new CodeMatcher(codes);
+
+        // Replace the three fade speed constants with configurable delegates
+        matcher.Start()
+            .SearchForward(i => i.LoadsConstant(0.1f))
+            .Set(Transpilers.EmitDelegate(() => Plugin.FootprintFadeOutsideConfig.Value).opcode,
+                 Transpilers.EmitDelegate(() => Plugin.FootprintFadeOutsideConfig.Value).operand);
+
+        matcher.SearchForward(i => i.LoadsConstant(2.5f))
+            .Set(Transpilers.EmitDelegate(() => Plugin.FootprintFadeInsideConfig.Value).opcode,
+                 Transpilers.EmitDelegate(() => Plugin.FootprintFadeInsideConfig.Value).operand);
+
+        matcher.SearchForward(i => i.LoadsConstant(10f))
+            .Set(Transpilers.EmitDelegate(() => Plugin.FootprintFadeRainConfig.Value).opcode,
+                 Transpilers.EmitDelegate(() => Plugin.FootprintFadeRainConfig.Value).operand);
+
+        // Fix the alpha bug: spr.color.SetAlpha() modifies a copy, never applies back
+        matcher.SearchForward(i => i.Calls(colorGetter))
+            .RemoveInstruction()
+            .SearchForward(i => i.Calls(setAlphaMethod))
+            .SetInstruction(Transpilers.EmitDelegate<Action<SpriteRenderer, float>>((spr, alpha) =>
+            {
+                if (!Plugin.FixFootprintFadingConfig.Value)
+                {
+                    spr.color.SetAlpha(alpha);
+                    return;
+                }
+                var color = spr.color;
+                color.a = alpha;
+                spr.color = color;
+            }));
+
+        return matcher.InstructionEnumeration();
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerComponent), nameof(PlayerComponent.InitLocalPlayer))]
+    public static void PlayerComponent_InitLocalPlayer(PlayerComponent __instance)
+    {
+        if (!Plugin.FixPlayerJudderConfig.Value) return;
+        __instance.wgo.GetComponent<Rigidbody2D>().interpolation = RigidbodyInterpolation2D.Interpolate;
+    }
+
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(RoundAndSortComponent), nameof(RoundAndSortComponent.DoUpdateStuff))]
+    public static IEnumerable<CodeInstruction> RoundAndSortComponent_DoUpdateStuff(IEnumerable<CodeInstruction> codes)
+    {
+        var positionSetter = AccessTools.PropertySetter(typeof(Transform), nameof(Transform.position));
+
+        foreach (var code in codes)
+        {
+            if (code.Calls(positionSetter))
+            {
+                yield return new CodeInstruction(OpCodes.Ldarg_0);
+                yield return CodeInstruction.Call(typeof(Patches), nameof(PositionWrapper));
+            }
+            else
+            {
+                yield return code;
+            }
+        }
+    }
+
+    private static void PositionWrapper(Transform transform, Vector3 position, RoundAndSortComponent roundSort)
+    {
+        if (Plugin.FixPlayerJudderConfig.Value && (roundSort._world_part?.parent?.is_player ?? false))
+        {
+            var tf = transform.GetComponentInChildren<SortingGroup>().transform;
+            tf.position = new Vector3(tf.position.x, tf.position.y, position.z);
+        }
+        else
+        {
+            transform.position = position;
+        }
     }
 
 

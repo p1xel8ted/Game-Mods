@@ -9,14 +9,6 @@ public static class Helpers
         "goto_tavern_tech", "goto_tavern_2", "player_repairs_sword_before", "player_repairs_sword"
     ];
 
-    private static CultureInfo GameCulture =>
-        CultureInfo.GetCultureInfo(GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
-    internal static void SetUICulture()
-    {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
-    }
-
     internal static bool TutorialDone()
     {
         if (!MainGame.game_started) return false;

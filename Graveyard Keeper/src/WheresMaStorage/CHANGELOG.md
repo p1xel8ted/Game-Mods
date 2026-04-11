@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.11 | 11 April 2026
+
+- Translations are now loaded from editable JSON files in the lang folder
+- Users can modify or contribute translations by editing the JSON files — do not rename or move them
+- Fixed several translation errors across multiple languages
+- Main menu now shows "BepInEx Modded" in the version text
+- Improved compatibility across different BepInEx versions
+
 ## 2.1.10
 
 - Fixed game freezing when cancelling the exit-to-menu dialog

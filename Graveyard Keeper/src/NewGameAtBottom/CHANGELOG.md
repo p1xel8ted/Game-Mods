@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.8 | 11 April 2026
+
+- Added startup logging to help diagnose mod and game environment issues
+
 ## 2.2.7
 
 - Improved reliability of New Game slot positioning

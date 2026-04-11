@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.2.7</Version>
+        <Version>2.2.8</Version>
         <NexusGroupId>503179</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

@@ -3,6 +3,25 @@
 [HarmonyPatch]
 public partial class Plugin
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!MainGame.game_started) return;
+        if (!MakeEverythingAuto.Value) return;
+        if (CraftsStarted) return;
+
+        foreach (var wgo in MainGame.me.world.GetComponentsInChildren<WorldGameObject>(true))
+        {
+            if (wgo != null && wgo.components.craft.is_crafting && !wgo.has_linked_worker && wgo.linked_worker == null)
+            {
+                CurrentlyCrafting.Add(wgo);
+            }
+        }
+
+        CraftsStarted = true;
+    }
+
     [HarmonyAfter("p1xel8ted.gyk.fastercraftreloaded")]
     [HarmonyPostfix, HarmonyPatch(typeof(MainMenuGUI), nameof(MainMenuGUI.Open))]
     public static void MainMenuGUI_Open()

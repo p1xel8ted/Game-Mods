@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gravechangesredux";
     private const string PluginName = "Grave Changes Redux";
-    private const string PluginVer = "0.1.4";
+    private const string PluginVer = "0.1.5";
 
     private const float MaxQualityValue = 30f;
     private static readonly SmartExpression MaxQualityExpression = SmartExpression.ParseExpression("30");
@@ -16,18 +16,19 @@ public class Plugin : BaseUnityPlugin
 
     private static readonly string[] SkipThese = ["grave_empty", "_place", "place_", "grave_corp", "grave_exhume", "grave_ground"];
     private static ManualLogSource LOG { get; set; }
+    private static ConfigEntry<bool> DebugEnabled { get; set; }
     private static ConfigEntry<bool> ModifyGraves { get; set; }
     private static ConfigEntry<bool> ModifyObjects { get; set; }
 
     private void Awake()
     {
+        DebugEnabled = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 0}));
         ModifyGraves = Config.Bind("01. Changes", "Modify Graves", true, new ConfigDescription("Max out the quality of grave items.", null, new ConfigurationManagerAttributes {Order = 2}));
         ModifyGraves.SettingChanged += (_, _) => GameBalanceLoad();
         ModifyObjects = Config.Bind("01. Changes", "Modify Decorations", false, new ConfigDescription("Max out the quality of decorative items.", null, new ConfigurationManagerAttributes {Order = 1}));
         ModifyObjects.SettingChanged += (_, _) => GameBalanceLoad();
         LOG = Logger;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, LOG);
     }
 
     [HarmonyPostfix]
@@ -60,7 +61,10 @@ public class Plugin : BaseUnityPlugin
         {
             if (SkipThese.Any(a => itemDef.id.Contains(a)))
             {
-                LOG.LogInfo($"ITEM: Skipping {itemDef.id} - {itemDef.quality}");
+                if (DebugEnabled.Value)
+                {
+                    LOG.LogInfo($"ITEM: Skipping {itemDef.id} - {itemDef.quality}");
+                }
                 continue;
             }
 
@@ -69,7 +73,10 @@ public class Plugin : BaseUnityPlugin
             if (ModifyGraves.Value)
             {
                 itemDef.quality = MaxQualityValue;
-                LOG.LogInfo($"ITEM: Set quality of {itemDef.id} to {MaxQualityValue}");
+                if (DebugEnabled.Value)
+                {
+                    LOG.LogInfo($"ITEM: Set quality of {itemDef.id} to {MaxQualityValue}");
+                }
             }
             else
             {
@@ -81,7 +88,10 @@ public class Plugin : BaseUnityPlugin
         {
             if (SkipThese.Any(a => objDef.id.Contains(a)))
             {
-                LOG.LogInfo($"OBJECT: Skipping {objDef.id} - {objDef.quality.GetRawExpressionString()}");
+                if (DebugEnabled.Value)
+                {
+                    LOG.LogInfo($"OBJECT: Skipping {objDef.id} - {objDef.quality.GetRawExpressionString()}");
+                }
                 continue;
             }
 
@@ -90,7 +100,10 @@ public class Plugin : BaseUnityPlugin
             if (ModifyObjects.Value)
             {
                 objDef.quality = MaxQualityExpression;
-                LOG.LogInfo($"OBJECT: Set quality of {objDef.id} to {MaxQualityValue}");
+                if (DebugEnabled.Value)
+                {
+                    LOG.LogInfo($"OBJECT: Set quality of {objDef.id} to {MaxQualityValue}");
+                }
             }
             else
             {

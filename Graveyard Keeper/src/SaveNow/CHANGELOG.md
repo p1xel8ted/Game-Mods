@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.5.8 | 11 April 2026
+
+- Fixed save key and auto-save not working for players early in the game
+- Fixed exit menu freeze when pressing "No" on the save confirmation dialog
+- Fixed dungeon detection not always working correctly
+- Save key now works regardless of BepInEx HideManagerGameObject setting
+- Translations are now loaded from editable JSON files in the lang folder
+- Users can modify or contribute translations by editing the JSON files — do not rename or move them
+- Fixed several translation errors across multiple languages
+- Main menu now shows "BepInEx Modded" in the version text
+- Improved compatibility across different BepInEx versions
+
 ## 2.5.7
 
 - Clarified that Auto Save and Save On New Day are independent settings

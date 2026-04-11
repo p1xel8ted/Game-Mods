@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.longerdays";
     private const string PluginName = "Longer Days";
-    private const string PluginVer = "1.6.8";
+    private const string PluginVer = "1.6.9";
 
     internal const float MadnessSeconds = 1350f;
     internal const float EvenLongerSeconds = 1125f;
@@ -23,7 +23,6 @@ public class Plugin : BaseUnityPlugin
         DayLength = Config.Bind("01. Day Length", "Day Length", 675f, new ConfigDescription($"Set the length of a day", new AcceptableValueList<float>(675f, 900f, 1125f, 1350f), new ConfigurationManagerAttributes {Order = 1, CustomDrawer = LengthSlider}));
         Seconds = DayLength.Value;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private static void LengthSlider(ConfigEntryBase entry)

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 | 11 April 2026
+
+- Added startup logging to help diagnose mod and game environment issues
+
 ## 0.1.4
 
 - Mod is now standalone — no longer requires GYK Helper

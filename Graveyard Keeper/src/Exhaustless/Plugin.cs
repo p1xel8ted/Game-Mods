@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.exhaustless";
     private const string PluginName = "Exhaust-less!";
-    private const string PluginVer = "3.5.1";
+    private const string PluginVer = "3.5.2";
 
     internal static ConfigEntry<bool> MakeToolsLastLonger { get;private set; }
     internal static ConfigEntry<bool> SpendHalfGratitude { get; private set; }
@@ -26,8 +26,8 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()

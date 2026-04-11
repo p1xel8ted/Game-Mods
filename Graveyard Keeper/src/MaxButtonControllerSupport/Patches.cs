@@ -4,6 +4,15 @@
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public partial class Plugin
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!IsUpdateConditionsMet()) return;
+
+        HandleGamepadInput();
+    }
+
     internal const string VendorGui = "VendorGUI";
     private const string InventoryGui = "InventoryGUI";
     private const string ChestGui = "ChestGUI";

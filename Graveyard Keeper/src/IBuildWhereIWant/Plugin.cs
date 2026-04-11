@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.ibuildwhereiwant";
     private const string PluginName = "I Build Where I Want!";
-    private const string PluginVer = "1.7.8";
+    private const string PluginVer = "1.7.9";
     
     private static ManualLogSource Log { get; set; }
     private static ConfigEntry<bool> Grid { get;set; }
@@ -19,8 +19,8 @@ public partial class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
-        Harmony.CreateAndPatchAll(  Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
     }
 
     private void InitConfiguration()
@@ -39,17 +39,6 @@ public partial class Plugin : BaseUnityPlugin
         Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging for troubleshooting purposes.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 599}));
     }
     
-    private void Update()
-    {
-        if (!CanOpenCraftAnywhere()) return;
-
-        if (LazyInput.gamepad_active && ReInput.players.GetPlayer(0).GetButtonDown(MenuControllerButton.Value) ||
-            MenuKeyBind.Value.IsUp())
-        {
-            OpenCraftAnywhere();
-        }
-    }
-
     private static bool CanOpenCraftAnywhere()
     {
         return MainGame.game_started && !MainGame.me.player.is_dead && !MainGame.me.player.IsDisabled() &&

@@ -16,14 +16,6 @@ public partial class Plugin
 
     internal static bool CraftAnywhere { get; set; }
 
-    private static CultureInfo GameCulture =>
-        CultureInfo.GetCultureInfo(GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
-    private static void SetUICulture()
-    {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
-    }
-
     private static void OpenCraftAnywhere()
     {
         if (MainGame.me.player.GetMyWorldZoneId().Contains("refugee")) return;

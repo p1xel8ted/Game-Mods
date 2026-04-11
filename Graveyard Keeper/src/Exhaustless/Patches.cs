@@ -58,8 +58,9 @@ public static class Patches
         if (replacement == null) return;
 
         MainGame.me.player.EquipItem(replacement, -1, playerInv.is_bag ? playerInv : null);
+        Lang.Reload();
         MainGame.me.player.Say(
-            $"{strings.LuckyHadAnotherPartOne} {replacement.definition.GetItemName()} {strings.LuckyHadAnotherPartTwo}",
+            $"{Lang.Get("LuckyHadAnotherPartOne")} {replacement.definition.GetItemName()} {Lang.Get("LuckyHadAnotherPartTwo")}",
             null, false,
             SpeechBubbleGUI.SpeechBubbleType.Think,
             SmartSpeechEngine.VoiceID.None, true);

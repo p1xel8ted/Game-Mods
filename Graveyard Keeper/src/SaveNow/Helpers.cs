@@ -4,9 +4,6 @@ public partial class Plugin
 {
     private const string ModGerryTag = "mod_gerry";
 
-    private static CultureInfo GameCulture => CultureInfo.GetCultureInfo(
-        GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
     private static readonly string[] TutorialQuests =
     [
         "start",
@@ -185,8 +182,7 @@ public partial class Plugin
 
     private static bool SaveLocation(bool menuExit, string saveSlot)
     {
-        if (!TutorialDone()) return true;
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
 
         Pos = MainGame.me.player.pos3;
         CurrentSave = MainGame.me.save_slot.filename_no_extension;
@@ -201,11 +197,11 @@ public partial class Plugin
         {
             if (NewFileOnAutoSave.Value || NewFileOnNewDaySave.Value || NewFileOnManualSave.Value)
             {
-                ShowMessage(strings.SaveMessage + ": " + saveSlot);
+                ShowMessage(Lang.Get("SaveMessage") + ": " + saveSlot);
             }
             else
             {
-                ShowMessage(strings.SaveMessage);
+                ShowMessage(Lang.Get("SaveMessage"));
             }
         }
 
@@ -222,12 +218,11 @@ public partial class Plugin
     {
         LoadSaveLocations();
 
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
-
+        var slot = MainGame.me.save_slot.filename_no_extension;
         var homeVector = new Vector3(2841, -6396, -1332);
-        var foundLocation =
-            SaveLocationsDictionary.TryGetValue(MainGame.me.save_slot.filename_no_extension, out var posVector3);
+        var foundLocation = SaveLocationsDictionary.TryGetValue(slot, out var posVector3);
         var pos = foundLocation ? posVector3 : homeVector;
+        Log.LogInfo($"[SaveNow] RestoreLocation: slot='{slot}', found={foundLocation}, pos={pos}");
         MainGame.me.player.PlaceAtPos(pos);
 
         StartTimer();
@@ -257,10 +252,14 @@ public partial class Plugin
         KillTimers();
         if (AutoSaveConfig.Value)
         {
+            Log.LogInfo($"[SaveNow] Starting auto-save timer: interval={SaveInterval.Value}s");
             var timer = GJTimer.AddTimer(SaveInterval.Value, AutoSave);
             timer.name = "AutoSaveTimer";
             Timers.Add(timer);
-            WriteLog($"Timer '{timer.name}' started");
+        }
+        else
+        {
+            Log.LogInfo("[SaveNow] Auto-save is disabled, no timer started");
         }
     }
 
@@ -268,6 +267,7 @@ public partial class Plugin
 
     private static void AutoSave()
     {
+        Log.LogInfo("[SaveNow] Auto-save timer fired");
         if (AutoSaveCoroutine != null)
         {
             MainGame.me.StopCoroutine(AutoSaveCoroutine);
@@ -279,16 +279,30 @@ public partial class Plugin
 
     private static IEnumerator AutoSaveIE()
     {
-        if (!TutorialDone()) yield break;
-        if (EnvironmentEngine.me.IsTimeStopped()) yield break;
-        if (!Application.isFocused) yield break;
-        if (!CanSave) yield break;
+        if (EnvironmentEngine.me.IsTimeStopped())
+        {
+            Log.LogInfo("[SaveNow] Auto-save skipped: time is stopped");
+            yield break;
+        }
+        if (!Application.isFocused)
+        {
+            Log.LogInfo("[SaveNow] Auto-save skipped: application not focused");
+            yield break;
+        }
+        if (!CanSave)
+        {
+            Log.LogInfo("[SaveNow] Auto-save skipped: player controlled by script");
+            yield break;
+        }
         if (!NewFileOnAutoSave.Value)
         {
+            var slot = MainGame.me.save_slot.filename_no_extension;
+            Log.LogInfo($"[SaveNow] Auto-saving to existing slot '{slot}'");
             PlatformSpecific.SaveGame(MainGame.me.save_slot, MainGame.me.save,
                 delegate
                 {
-                    SaveLocation(false, MainGame.me.save_slot.filename_no_extension);
+                    Log.LogInfo($"[SaveNow] Auto-save complete: '{slot}'");
+                    SaveLocation(false, slot);
                 });
         }
         else
@@ -296,11 +310,13 @@ public partial class Plugin
             GUIElements.me.ShowSavingStatus(true);
             var date = DateTime.Now.ToString("ddmmyyhhmmss");
             var newSlot = $"autosave.{date}".Trim();
+            Log.LogInfo($"[SaveNow] Auto-saving to new slot '{newSlot}'");
 
             MainGame.me.save_slot.filename_no_extension = newSlot;
             PlatformSpecific.SaveGame(MainGame.me.save_slot, MainGame.me.save,
                 delegate
                 {
+                    Log.LogInfo($"[SaveNow] Auto-save complete: '{newSlot}'");
                     SaveLocation(false, newSlot);
                     GUIElements.me.ShowSavingStatus(false);
                 });

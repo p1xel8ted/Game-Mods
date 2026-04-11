@@ -5,10 +5,11 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.theseedequalizer";
     private const string PluginName = "The Seed Equalizer!";
-    private const string PluginVer = "1.3.9";
+    private const string PluginVer = "1.3.10";
 
     internal static ManualLogSource Log { get; private set; }
 
+    internal static ConfigEntry<bool> DebugEnabled { get; private set; }
     internal static ConfigEntry<bool> ModifyZombieGardens { get; private set; }
     internal static ConfigEntry<bool> ModifyZombieVineyards { get; private set; }
     internal static ConfigEntry<bool> ModifyPlayerGardens { get; private set; }
@@ -23,11 +24,12 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
         InitConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()
     {
+        DebugEnabled = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 21}));
+
         ModifyZombieGardens = Config.Bind("01. Zombie Gardens", "Modify Zombie Gardens", true, new ConfigDescription("Enable or disable modifying zombie gardens", null, new ConfigurationManagerAttributes {Order = 20}));
         ModifyZombieVineyards = Config.Bind("01. Zombie Gardens", "Modify Zombie Vineyards", true, new ConfigDescription("Enable or disable modifying zombie vineyards", null, new ConfigurationManagerAttributes {Order = 19}));
         ModifyPlayerGardens = Config.Bind("02. Player Gardens", "Modify Player Gardens", false, new ConfigDescription("Enable or disable modifying player gardens", null, new ConfigurationManagerAttributes {Order = 18}));

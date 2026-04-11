@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmapoints";
     private const string PluginName = "Where's Ma' Points!";
-    private const string PluginVer = "0.3.2";
+    private const string PluginVer = "0.3.3";
 
     internal static ConfigEntry<bool> ShowPointGainAboveKeeper { get; private set; }
     internal static ConfigEntry<bool> StillPlayCollectAudio { get; private set; }
@@ -17,7 +17,6 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
         InitConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()

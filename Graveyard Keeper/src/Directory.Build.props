@@ -22,7 +22,7 @@
         <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
         <NoWarn>Publicizer001,CS1591</NoWarn>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <DebugType>embedded</DebugType>
+        <DebugType>portable</DebugType>
         <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
         <Deterministic>true</Deterministic>
         <OutputPath>$(BepInExPluginsPath)\$(MSBuildProjectName)</OutputPath>
@@ -58,6 +58,17 @@
         <Reference Include="MonoMod.Utils">
             <HintPath>..\..\libs\bepinex\MonoMod.Utils.dll</HintPath>
         </Reference>
+    </ItemGroup>
+
+    <!-- Include NEXUS-DESC.md and CHANGELOG.md in project for editing in IDE -->
+    <ItemGroup>
+        <None Include="NEXUS-DESC.bbcode" Condition="Exists('NEXUS-DESC.bbcode')" />
+        <None Include="CHANGELOG.md" Condition="Exists('CHANGELOG.md')" />
+    </ItemGroup>
+
+    <!-- Shared source files (exclude CustomTextures which has its own references) -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' != 'CustomTextures'">
+        <Compile Include="..\Shared\MainMenuPatch.cs" Link="MainMenuPatch.cs"/>
     </ItemGroup>
 
     <!-- Common game/Unity references (exclude CustomTextures which has its own extensive set) -->

@@ -3,6 +3,63 @@ namespace GerrysJunkTrunk;
 [HarmonyPatch]
 public partial class Plugin
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!MainGame.game_started) return;
+
+        _techCount = MainGame.me.save.unlocked_techs.Count;
+        if (_techCount > _oldTechCount)
+        {
+            _oldTechCount = _techCount;
+            CheckShippingBox();
+        }
+
+        if (InternalShowIntroMessage.Value)
+        {
+            ShowIntroMessage();
+            InternalShowIntroMessage.Value = false;
+        }
+
+        if (!UnlockedShippingBox()) return;
+        var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+        if (InternalShippingBoxBuilt.Value && _shippingBox == null)
+        {
+            _shippingBox = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true)
+                .FirstOrDefault(x => string.Equals(x.custom_tag, ShippingBoxTag));
+            if (_shippingBox == null)
+            {
+                if (Debug.Value)
+                {
+                    Log.LogInfo("Update: No Shipping Box Found!");
+                }
+                InternalShippingBoxBuilt.Value = false;
+                sbCraft.hidden = false;
+            }
+            else
+            {
+                if (Debug.Value)
+                {
+                    Log.LogInfo($"Update: Found Shipping Box at {_shippingBox.pos3}");
+                }
+                InternalShippingBoxBuilt.Value = true;
+                _shippingBox.data.drop_zone_id = ShippingBoxTag;
+
+                var invSize = SmallInvSize;
+                if (UnlockedShippingBoxExpansion())
+                {
+                    invSize = LargeInvSize;
+                }
+
+                _shippingBox.data.SetInventorySize(invSize);
+
+
+                sbCraft.hidden = true;
+            }
+        }
+    }
+
     //should never need these, but will stop a 2nd being built
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.CanBuild))]
@@ -91,7 +148,7 @@ public partial class Plugin
     public static void InventoryPanelGUI_OnItemOver_Prefix(InventoryPanelGUI __instance,
         BaseItemCellGUI item_gui)
     {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
 
         if (!ShowItemPriceTooltips.Value || !UnlockedShippingBox() || __instance == null || item_gui == null ||
             AlreadyDone.Contains(item_gui) || item_gui.id_empty)
@@ -105,7 +162,7 @@ public partial class Plugin
                 tooltip.tooltip.AddData(new BubbleWidgetSeparatorData());
 
                 tooltip.tooltip.AddData(new BubbleWidgetTextData(
-                    strings.GerrysPrice,
+                    Lang.Get("GerrysPrice"),
                     UITextStyles.TextStyle.Usual, NGUIText.Alignment.Left));
                 tooltip.tooltip.AddData(new BubbleWidgetSeparatorData());
                 tooltip.tooltip.AddData(new BubbleWidgetTextData(
@@ -129,7 +186,7 @@ public partial class Plugin
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
     private static void EnvironmentEngine_OnEndOfDay()
     {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
 
         if (!UnlockedShippingBox() || !InternalShippingBoxBuilt.Value || _shippingBox == null) return;
 
@@ -207,7 +264,7 @@ public partial class Plugin
         newCd.difficulty = cd.difficulty;
         newCd.linked_perks = cd.linked_perks;
         newCd.linked_buffs = cd.linked_buffs;
-        newCd.custom_name = strings.Header;
+        newCd.custom_name = Lang.Get("Header");
         newCd.tab_id = cd.tab_id;
         newCd.buff = cd.buff;
         newCd.needs_quality = cd.needs_quality;
@@ -241,7 +298,7 @@ public partial class Plugin
     {
         if (!UnlockedShippingBox()) return;
         if (__instance == null) return;
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
         var isChest = __instance.name.ToLowerInvariant().Contains("chest");
         var isPlayer = __instance.name.ToLowerInvariant().Contains("player");
         if (_usingShippingBox && isChest && !isPlayer)
@@ -249,7 +306,7 @@ public partial class Plugin
             foreach (var inventoryWidget in __instance._widgets)
             {
                 var tier = GetTrunkTier();
-                inventoryWidget.header_label.text = $"{strings.Header} (T{tier})";
+                inventoryWidget.header_label.text = $"{Lang.Get("Header")} (T{tier})";
                 inventoryWidget.dont_show_empty_rows = true;
                 inventoryWidget.SetInactiveStateToEmptyCells();
             }
@@ -263,7 +320,7 @@ public partial class Plugin
     {
         if (!UnlockedShippingBox()) return;
         if (__instance == null) return;
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
         var isChest = __instance.name.ToLowerInvariant().Contains("chest");
         var isPlayer = __instance.name.ToLowerInvariant().Contains("player");
         if (_usingShippingBox && isChest && !isPlayer)
@@ -271,7 +328,7 @@ public partial class Plugin
             foreach (var inventoryWidget in __instance._widgets)
             {
                 var tier = GetTrunkTier();
-                inventoryWidget.header_label.text = $"{strings.Header} (T{tier})";
+                inventoryWidget.header_label.text = $"{Lang.Get("Header")} (T{tier})";
                 inventoryWidget.dont_show_empty_rows = true;
                 inventoryWidget.SetInactiveStateToEmptyCells();
             }
@@ -287,29 +344,29 @@ public partial class Plugin
     {
         if (__instance == null) return;
 
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
         var component = __instance.GetComponent<Tooltip>();
         if (__instance.tech_id.ToLowerInvariant().Contains("Wood processing".ToLowerInvariant()))
         {
             component.AddData(new BubbleWidgetSeparatorData());
-            component.AddData(new BubbleWidgetTextData(strings.Stage1Header, UITextStyles.TextStyle.HintTitle));
-            component.AddData(new BubbleWidgetTextData(strings.Stage1Des, UITextStyles.TextStyle.TinyDescription,
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Header"), UITextStyles.TextStyle.HintTitle));
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Des"), UITextStyles.TextStyle.TinyDescription,
                 NGUIText.Alignment.Left));
         }
 
         if (__instance.tech_id.ToLowerInvariant().Contains("Engineer".ToLowerInvariant()))
         {
             component.AddData(new BubbleWidgetSeparatorData());
-            component.AddData(new BubbleWidgetTextData(strings.Stage2Header, UITextStyles.TextStyle.HintTitle));
-            component.AddData(new BubbleWidgetTextData(strings.Stage2Des, UITextStyles.TextStyle.TinyDescription,
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage2Header"), UITextStyles.TextStyle.HintTitle));
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage2Des"), UITextStyles.TextStyle.TinyDescription,
                 NGUIText.Alignment.Left));
         }
 
         if (__instance.tech_id.ToLowerInvariant().Contains("Best friend".ToLowerInvariant()))
         {
             component.AddData(new BubbleWidgetSeparatorData());
-            component.AddData(new BubbleWidgetTextData(strings.Stage3Header, UITextStyles.TextStyle.HintTitle));
-            component.AddData(new BubbleWidgetTextData(strings.Stage3Des, UITextStyles.TextStyle.TinyDescription,
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage3Header"), UITextStyles.TextStyle.HintTitle));
+            component.AddData(new BubbleWidgetTextData(Lang.Get("Stage3Des"), UITextStyles.TextStyle.TinyDescription,
                 NGUIText.Alignment.Left));
         }
     }
@@ -320,34 +377,34 @@ public partial class Plugin
     {
         if (__instance == null) return;
 
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
         if (LazyInput.gamepad_active) return;
         var name = __instance.GetData().name;
 
         if (name.ToLowerInvariant().Contains("Wooden plank".ToLowerInvariant()))
         {
             tooltip.AddData(new BubbleWidgetBlankSeparatorData());
-            tooltip.AddData(new BubbleWidgetTextData(strings.Stage1Header, UITextStyles.TextStyle.HintTitle,
+            tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Header"), UITextStyles.TextStyle.HintTitle,
                 NGUIText.Alignment.Left));
-            tooltip.AddData(new BubbleWidgetTextData(strings.Stage1Des, UITextStyles.TextStyle.TinyDescription,
+            tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Des"), UITextStyles.TextStyle.TinyDescription,
                 NGUIText.Alignment.Left));
         }
 
         if (name.ToLowerInvariant().Contains("Engineer".ToLowerInvariant()))
         {
             tooltip.AddData(new BubbleWidgetBlankSeparatorData());
-            tooltip.AddData(new BubbleWidgetTextData(strings.Stage2Header, UITextStyles.TextStyle.HintTitle,
+            tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage2Header"), UITextStyles.TextStyle.HintTitle,
                 NGUIText.Alignment.Left));
-            tooltip.AddData(new BubbleWidgetTextData(strings.Stage2Des, UITextStyles.TextStyle.TinyDescription,
+            tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage2Des"), UITextStyles.TextStyle.TinyDescription,
                 NGUIText.Alignment.Left));
         }
 
         if (name.ToLowerInvariant().Contains("Jeweler".ToLowerInvariant()))
         {
             tooltip.AddData(new BubbleWidgetBlankSeparatorData());
-            tooltip.AddData(new BubbleWidgetTextData(strings.Stage3Header, UITextStyles.TextStyle.HintTitle,
+            tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage3Header"), UITextStyles.TextStyle.HintTitle,
                 NGUIText.Alignment.Left));
-            tooltip.AddData(new BubbleWidgetTextData(strings.Stage3Des, UITextStyles.TextStyle.TinyDescription,
+            tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage3Des"), UITextStyles.TextStyle.TinyDescription,
                 NGUIText.Alignment.Left));
         }
     }

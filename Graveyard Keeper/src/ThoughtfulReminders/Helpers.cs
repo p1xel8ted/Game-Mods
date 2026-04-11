@@ -1,19 +1,7 @@
-﻿using System.Globalization;
-using System.Threading;
-using UnityEngine;
-
-namespace ThoughtfulReminders;
+﻿namespace ThoughtfulReminders;
 
 public static class Helpers
 {
-    private static CultureInfo GameCulture =>
-        CultureInfo.GetCultureInfo(GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
-    internal static void SetUICulture()
-    {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
-    }
-
     internal static void SayMessage(string msg)
     {
         if (GJL.IsEastern())

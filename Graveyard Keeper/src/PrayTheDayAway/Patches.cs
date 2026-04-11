@@ -53,17 +53,18 @@ public partial class Plugin
         if (CheatModeConfig.Value) return;
         if (NotifyOnPrayerLoss.Value && LostPrayerItem)
         {
+            Lang.Reload();
             List<string> lostAnother =
             [
-                GetLocalizedString(strings.M1),
-                GetLocalizedString(strings.M2),
-                GetLocalizedString(strings.M3),
-                GetLocalizedString(strings.M4),
-                GetLocalizedString(strings.M5),
-                GetLocalizedString(strings.M6),
-                GetLocalizedString(strings.M7),
-                GetLocalizedString(strings.M8),
-                GetLocalizedString(strings.M9)
+                Lang.Get("M1"),
+                Lang.Get("M2"),
+                Lang.Get("M3"),
+                Lang.Get("M4"),
+                Lang.Get("M5"),
+                Lang.Get("M6"),
+                Lang.Get("M7"),
+                Lang.Get("M8"),
+                Lang.Get("M9")
             ];
 
             var msg = lostAnother.RandomElement();

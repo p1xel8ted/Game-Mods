@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.praythedayaway";
     private const string PluginName = "Pray The Day Away!";
-    private const string PluginVer = "0.3.4";
+    private const string PluginVer = "0.3.5";
 
     private static ConfigEntry<bool> Debug { get; set; }
     private static ManualLogSource Log { get; set; }
@@ -24,8 +24,8 @@ public partial class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()

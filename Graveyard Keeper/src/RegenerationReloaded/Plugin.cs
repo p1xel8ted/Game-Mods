@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.regenerationreloaded";
     private const string PluginName = "Regeneration Reloaded";
-    private const string PluginVer = "1.1.9";
+    private const string PluginVer = "1.1.10";
 
     private static ManualLogSource Log { get; set; }
     internal static ConfigEntry<bool> ShowRegenUpdates { get; private set; }
@@ -18,7 +18,6 @@ public class Plugin : BaseUnityPlugin
         Log = Logger;
         InitConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitConfiguration()

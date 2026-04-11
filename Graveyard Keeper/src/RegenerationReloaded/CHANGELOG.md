@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.10 | 11 April 2026
+
+- Added startup logging to help diagnose mod and game environment issues
+
 ## 1.1.9
 
 - Health and energy now regenerate independently instead of energy needing to fill first

@@ -5,8 +5,9 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.decompdelight";
     private const string PluginName = "Decomp Delight!";
-    private const string PluginVer = "0.1.4";
+    private const string PluginVer = "0.1.5";
     internal static ManualLogSource LOG { get; private set; }
+    internal static ConfigEntry<bool> Debug { get; private set; }
 
     private static ConfigEntry<Color> SlowingColor { get; set; }
     private static ConfigEntry<Color> AccelerationColor { get; set; }
@@ -47,6 +48,8 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         LOG = Logger;
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false,
+            new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 1}));
         SlowingColor = Config.Bind("Colors", "Slowing", new Color(0.478f, 0.235f, 0.043f), "Color for Slowing element");
         AccelerationColor = Config.Bind("Colors", "Acceleration", new Color(0.035f, 0.157f, 0.384f), "Color for Acceleration element");
         HealthColor = Config.Bind("Colors", "Health", new Color(0.145f, 0.322f, 0.004f), "Color for Health element");
@@ -66,7 +69,6 @@ public class Plugin : BaseUnityPlugin
         AlcoholColor = Config.Bind("Colors", "Alcohol", new Color(0.404f, 0.404f, 0.004f), "Color for Alcohol element");
         
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        Shared.StartupLogger.PrintModLoaded(PluginName, LOG);
     }
 
 }

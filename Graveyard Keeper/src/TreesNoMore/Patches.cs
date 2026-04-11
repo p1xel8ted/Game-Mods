@@ -35,7 +35,10 @@ public static class Patches
             var treeExists = Plugin.Trees.Any(x => Vector3.Distance(x.location, tree.pos3) <= Plugin.TreeSearchDistance.Value);
             if (treeExists)
             {
-                Plugin.Log.LogWarning($"Found existing tree at {tree.pos3} that should be removed.");
+                if (Plugin.DebugEnabled.Value)
+                {
+                    Plugin.Log.LogInfo($"Found existing tree at {tree.pos3} that should be removed.");
+                }
                 // Add the tree to the treesToDestroy list instead of destroying it immediately.
                 treesToDestroy.Add(tree);
             }
@@ -49,7 +52,7 @@ public static class Patches
         }
 
         sw.Stop();
-        Plugin.Log.LogWarning($"Search N Destroyed {Plugin.Trees.Count} trees in {sw.ElapsedMilliseconds}ms");
+        Plugin.Log.LogInfo($"Search N Destroyed {Plugin.Trees.Count} trees in {sw.ElapsedMilliseconds}ms");
         WorldMap.RescanWGOsList();
     }
 
@@ -75,7 +78,10 @@ public static class Patches
 
     private static void HandleStump(WorldGameObject instance, Vector3 instancePos, ref WorldObjectPart prefab)
     {
-        Plugin.Log.LogWarning($"Stump spawn at {instancePos}");
+        if (Plugin.DebugEnabled.Value)
+        {
+            Plugin.Log.LogInfo($"Stump spawn at {instancePos}");
+        }
 
         var tree = new Tree(instance.obj_id, instancePos);
         Plugin.Trees.Add(tree);
@@ -86,7 +92,10 @@ public static class Patches
             prefab = null;
         }
 
-        Plugin.Log.LogWarning($"Tree at {instancePos} added to list");
+        if (Plugin.DebugEnabled.Value)
+        {
+            Plugin.Log.LogInfo($"Tree at {instancePos} added to list");
+        }
     }
 
     private static bool IsValidTree(string prefabName)
@@ -100,7 +109,10 @@ public static class Patches
 
         if (!treeExists && MainGame.game_started)
         {
-            Plugin.Log.LogWarning($"Tree at {instancePos} added to list");
+            if (Plugin.DebugEnabled.Value)
+            {
+                Plugin.Log.LogInfo($"Tree at {instancePos} added to list");
+            }
             var tree = new Tree(instance.obj_id, instancePos);
             Plugin.Trees.Add(tree);
             Plugin.SaveTrees();

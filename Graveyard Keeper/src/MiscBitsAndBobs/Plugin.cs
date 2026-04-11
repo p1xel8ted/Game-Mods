@@ -7,7 +7,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.miscbitsandbobs";
     private const string PluginName = "Misc. Bits & Bobs";
-    private const string PluginVer = "2.3.1";
+    private const string PluginVer = "2.3.2";
 
     internal static ConfigEntry<bool> Debug { get; set; }
     internal static ConfigEntry<bool> QuietMusicInGuiConfig { get; private set; }
@@ -29,6 +29,12 @@ public class Plugin : BaseUnityPlugin
     
     private static ConfigEntry<bool> MuteWhenRunningInBackgroundConfig { get; set; }
     internal static ConfigEntry<bool> OldEnglishThrowback { get; private set; }
+    internal static ConfigEntry<bool> FixPlayerJudderConfig { get; private set; }
+    internal static ConfigEntry<int> MaxFootprintsConfig { get; private set; }
+    internal static ConfigEntry<float> FootprintFadeOutsideConfig { get; private set; }
+    internal static ConfigEntry<float> FootprintFadeInsideConfig { get; private set; }
+    internal static ConfigEntry<float> FootprintFadeRainConfig { get; private set; }
+    internal static ConfigEntry<bool> FixFootprintFadingConfig { get; private set; }
     
     internal static ManualLogSource Log { get; private set; }
 
@@ -37,10 +43,10 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
         Application.focusChanged += ApplicationOnFocusChanged;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
     private static void ApplicationOnFocusChanged(bool value)
     {
@@ -99,5 +105,103 @@ public class Plugin : BaseUnityPlugin
         KitsuneKitoModeConfig = Config.Bind("06. Misc", "KitsuneKito Mode", false, new ConfigDescription("Discord user request. Drops a blue xp point when adding a basic fence to a grave.", null, new ConfigurationManagerAttributes {Order = 14}));
         OldEnglishThrowback = Config.Bind("06. Misc", "Old English Throwback", false, new ConfigDescription("Discord user request. Modifies a sermon sentence.", null, new ConfigurationManagerAttributes {Order = 13}));
         Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 12}));
+
+        FixPlayerJudderConfig = Config.Bind("07. Fixes", "Fix Player Judder", true, new ConfigDescription("Smooths out player movement by enabling physics interpolation and preventing grid-snapping.", null, new ConfigurationManagerAttributes {Order = 11}));
+        FixPlayerJudderConfig.SettingChanged += (_, _) =>
+        {
+            if (!MainGame.game_started) return;
+            var rb = MainGame.me.player?.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.interpolation = FixPlayerJudderConfig.Value
+                    ? RigidbodyInterpolation2D.Interpolate
+                    : RigidbodyInterpolation2D.None;
+            }
+        };
+
+        MaxFootprintsConfig = Config.Bind("08. Footprints", "Max Footprints", 1000, new ConfigDescription("Maximum number of footprints allowed before the oldest are removed. Set to 0 to disable the cap.", new AcceptableValueRange<int>(0, 10000), new ConfigurationManagerAttributes {Order = 10}));
+        FootprintFadeOutsideConfig = Config.Bind("08. Footprints", "Fade Speed Outside", 1f, new ConfigDescription("How fast footprints fade when outside. Higher values = faster fading. Game default is 0.1.", new AcceptableValueRange<float>(0.1f, 100f), new ConfigurationManagerAttributes {Order = 9}));
+        FootprintFadeInsideConfig = Config.Bind("08. Footprints", "Fade Speed Inside", 2.5f, new ConfigDescription("How fast footprints fade when inside. Game default is 2.5.", new AcceptableValueRange<float>(0.1f, 100f), new ConfigurationManagerAttributes {Order = 8}));
+        FootprintFadeRainConfig = Config.Bind("08. Footprints", "Fade Speed Rain", 10f, new ConfigDescription("How fast footprints fade in the rain. Game default is 10.", new AcceptableValueRange<float>(0.1f, 100f), new ConfigurationManagerAttributes {Order = 7}));
+        FixFootprintFadingConfig = Config.Bind("08. Footprints", "Fix Footprint Fading", true, new ConfigDescription("Fixes a game bug where footprints pop out of existence instead of fading smoothly.", null, new ConfigurationManagerAttributes {Order = 6}));
+
+        Config.Bind("09. Church", "Evict All Church Visitors", true,
+            new ConfigDescription("Force any stuck church visitors to vacate the premise.", null,
+                new ConfigurationManagerAttributes {Order = 5, HideDefaultButton = true, CustomDrawer = EvictVisitorsButton}));
+    }
+
+    private static bool _showEvictConfirmation;
+
+    private static void EvictVisitorsButton(ConfigEntryBase entry)
+    {
+        if (_showEvictConfirmation)
+        {
+            Lang.Reload();
+            GUILayout.Label(Lang.Get("EvictConfirmText"));
+            GUILayout.BeginHorizontal();
+            {
+                if (GUILayout.Button(Lang.Get("EvictYes"), GUILayout.ExpandWidth(true)))
+                {
+                    EvictVisitors();
+                    _showEvictConfirmation = false;
+                }
+                if (GUILayout.Button(Lang.Get("EvictNo"), GUILayout.ExpandWidth(true)))
+                {
+                    _showEvictConfirmation = false;
+                }
+            }
+            GUILayout.EndHorizontal();
+        }
+        else
+        {
+            if (GUILayout.Button(Lang.Get("EvictButton"), GUILayout.ExpandWidth(true)))
+            {
+                _showEvictConfirmation = true;
+            }
+        }
+    }
+
+    private static void EvictVisitors()
+    {
+        var churchVisitors = WorldMap._objs.FindAll(a => a.obj_id.Contains("npc_church_visitor"));
+        if (churchVisitors.Count == 0)
+        {
+            Log.LogWarning("No church visitors to evict.");
+            return;
+        }
+
+        Log.LogInfo($"Evicting {churchVisitors.Count} church visitors.");
+
+        var zones = new List<WorldZone>();
+
+        foreach (var visitor in churchVisitors.Where(visitor => visitor.obj_def.IsNPC()))
+        {
+            zones.Add(visitor._zone);
+
+            if (visitor.is_removed) continue;
+
+            visitor.components.craft.enabled = false;
+            visitor.components.timer.enabled = false;
+            visitor.components.hp.enabled = false;
+            ChunkManager.OnDestroyObject(visitor);
+            if (visitor._bubble != null)
+            {
+                InteractionBubbleGUI.RemoveBubble(visitor.unique_id, true);
+                visitor._bubble = null;
+            }
+
+            visitor.UnlinkWithSpawnerIfExists();
+            visitor.is_removed = true;
+            UnityEngine.Object.Destroy(visitor.gameObject);
+            if (!visitor._was_ever_active)
+            {
+                visitor.OnDestroy();
+            }
+        }
+
+        foreach (var zone in zones.Distinct())
+        {
+            zone.Recalculate();
+        }
     }
 }

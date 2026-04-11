@@ -5,7 +5,7 @@ public partial class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gerrysjunktrunk";
     private const string PluginName = "Gerry's Junk Trunk";
-    private const string PluginVer = "1.9.2";
+    private const string PluginVer = "1.9.3";
 
     private static ConfigEntry<bool> Debug { get; set; }
     internal static ManualLogSource Log { get; set; }
@@ -20,8 +20,8 @@ public partial class Plugin : BaseUnityPlugin
         Log = Logger;
         InitInternalConfiguration();
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
-        StartupLogger.PrintModLoaded(PluginName, Log);
     }
 
     private void InitInternalConfiguration()

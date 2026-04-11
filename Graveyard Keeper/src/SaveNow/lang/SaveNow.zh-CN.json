@@ -1,0 +1,11 @@
+{
+  "AutoSave": "自动保存",
+  "Rush": "多么着急！每次都找我！",
+  "SaveAreYouSureMenu": "您确定要返回主菜单吗",
+  "SaveAreYouSureDesktop": "您确定要退出到桌面吗",
+  "SaveProgressSaved": "进度和当前位置将被保存",
+  "ExitButtonText": "退出到桌面",
+  "SaveProgressNotSaved": "不会保存进度和当前位置",
+  "SaveMessage": "游戏储存完成。",
+  "CantSaveHere": "不能保存在这里，老板！"
+}

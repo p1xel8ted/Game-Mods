@@ -15,14 +15,11 @@ public static class Helpers
         Constants.OutputItems.Bee, Constants.OutputItems.Wax, Constants.OutputItems.Honey
     ];
 
-    private static CultureInfo GameCulture =>
-        CultureInfo.GetCultureInfo(GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
     private static void ShowMessage(WorldGameObject obj, string message)
     {
         if (!Plugin.ShowHarvestReadyMessages.Value) return;
 
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
+        Lang.Reload();
         var newObjPos = obj.pos3;
 
         if (obj.obj_id.Contains("berry")) newObjPos.y += 100f;
@@ -63,7 +60,7 @@ public static class Helpers
         wgo.ReplaceWithObject(Constants.HarvestGrowing.BeeHouse, true);
         wgo.GetComponent<ChunkedGameObject>().Init(true);
         wgo.TryStartCraft(Constants.HarvestSpawner.BeeHouse);
-        ShowMessage(wgo, strings.HoneyReady);
+        ShowMessage(wgo, Lang.Get("HoneyReady"));
     }
 
     private static void ProcessDropAndRespawn(WorldGameObject wgo, string replaceString, string craftString, string harvestItem, string message, int rand)
@@ -116,14 +113,14 @@ public static class Helpers
                 if (o.obj_id == Constants.HarvestGrowing.GardenAppleTree) return;
                 ProcessDropAndRespawn(o, Constants.HarvestGrowing.GardenAppleTree,
                     Constants.HarvestSpawner.GardenAppleTree, Constants.HarvestItem.AppleTree,
-                    GetLocalizedString(strings.ApplesReady), rand);
+                    Lang.Get("ApplesReady"), rand);
             });
         }
         else
         {
             ProcessDropAndRespawn(wgo, Constants.HarvestGrowing.GardenAppleTree,
                 Constants.HarvestSpawner.GardenAppleTree, Constants.HarvestItem.AppleTree,
-                GetLocalizedString(strings.ApplesReady), rand);
+                Lang.Get("ApplesReady"), rand);
         }
     }
 
@@ -142,14 +139,14 @@ public static class Helpers
                 if (o.obj_id == Constants.HarvestGrowing.GardenBerryBush) return;
                 ProcessDropAndRespawn(o, Constants.HarvestGrowing.GardenBerryBush,
                     Constants.HarvestSpawner.GardenBerryBush, Constants.HarvestItem.BerryBush,
-                    GetLocalizedString(strings.BerriesReady), rand);
+                    Lang.Get("BerriesReady"), rand);
             });
         }
         else
         {
             ProcessDropAndRespawn(wgo, Constants.HarvestGrowing.GardenBerryBush,
                 Constants.HarvestSpawner.GardenBerryBush, Constants.HarvestItem.BerryBush,
-                GetLocalizedString(strings.BerriesReady), rand);
+                Lang.Get("BerriesReady"), rand);
         }
     }
 
@@ -173,14 +170,14 @@ public static class Helpers
                 if (o.obj_id == Constants.HarvestGrowing.WorldBerryBush1) return;
                 ProcessDropAndRespawn(o, Constants.HarvestGrowing.WorldBerryBush1,
                     Constants.HarvestSpawner.WorldBerryBush1, Constants.HarvestItem.BerryBush,
-                    GetLocalizedString(strings.BerriesReady), rand);
+                    Lang.Get("BerriesReady"), rand);
             });
         }
         else
         {
             ProcessDropAndRespawn(wgo, Constants.HarvestGrowing.WorldBerryBush1,
                 Constants.HarvestSpawner.WorldBerryBush1, Constants.HarvestItem.BerryBush,
-                GetLocalizedString(strings.BerriesReady), rand);
+                Lang.Get("BerriesReady"), rand);
         }
     }
 
@@ -199,23 +196,16 @@ public static class Helpers
                 if (o.obj_id == Constants.HarvestGrowing.WorldBerryBush2) return;
                 ProcessDropAndRespawn(o, Constants.HarvestGrowing.WorldBerryBush2,
                     Constants.HarvestSpawner.WorldBerryBush2, Constants.HarvestItem.BerryBush,
-                    GetLocalizedString(strings.BerriesReady), rand);
+                    Lang.Get("BerriesReady"), rand);
             });
         }
         else
         {
             ProcessDropAndRespawn(wgo, Constants.HarvestGrowing.WorldBerryBush2,
                 Constants.HarvestSpawner.WorldBerryBush2, Constants.HarvestItem.BerryBush,
-                GetLocalizedString(strings.BerriesReady), rand);
+                Lang.Get("BerriesReady"), rand);
         }
     }
-
-    private static string GetLocalizedString(string content)
-    {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
-        return content;
-    }
-
 
     internal static void ProcessBerryBush3(WorldGameObject wgo)
     {
@@ -232,14 +222,14 @@ public static class Helpers
                 if (o.obj_id == Constants.HarvestGrowing.WorldBerryBush3) return;
                 ProcessDropAndRespawn(o, Constants.HarvestGrowing.WorldBerryBush3,
                     Constants.HarvestSpawner.WorldBerryBush3, Constants.HarvestItem.BerryBush,
-                    GetLocalizedString(strings.BerriesReady), rand);
+                    Lang.Get("BerriesReady"), rand);
             });
         }
         else
         {
             ProcessDropAndRespawn(wgo, Constants.HarvestGrowing.WorldBerryBush3,
                 Constants.HarvestSpawner.WorldBerryBush3, Constants.HarvestItem.BerryBush,
-                GetLocalizedString(strings.BerriesReady), rand);
+                Lang.Get("BerriesReady"), rand);
         }
     }
 

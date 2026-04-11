@@ -5,14 +5,6 @@ public static class Helpers
     internal const string ControllerUnlockTechTooltip = "Gardening";
     internal const string MouseUnlockTechTooltip = "Perk: Farmer";
 
-    internal static CultureInfo GameCulture =>
-        CultureInfo.GetCultureInfo(GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
-    internal static void SetUICulture()
-    {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
-    }
-
     internal static List<WorldGameObject> FindNearbyObjectsByVector(WorldGameObject obj)
     {
         var origX = Math.Abs(obj.pos3.x);

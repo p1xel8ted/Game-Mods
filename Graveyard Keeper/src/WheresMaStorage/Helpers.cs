@@ -6,9 +6,6 @@ public static class Helpers
     internal static readonly Dictionary<string, int> OriginalInventorySizes = new();
     private static readonly Dictionary<string, int> OriginalStackSizes = new();
 
-    private static CultureInfo GameCulture => CultureInfo.GetCultureInfo(
-        GameSettings.me.language.Replace('_', '-').ToLower(CultureInfo.InvariantCulture).Trim());
-
     internal static void RunWmsTasks()
     {
         Plugin.Log.LogInfo("Running WMS Tasks as the Player has spawned in or a new chest/craft has been built.");
@@ -284,14 +281,11 @@ public static class Helpers
 
         watch.Stop();
 
-        Plugin.Log.LogInfo($"CollectDrops Complete! Completed in {watch.ElapsedMilliseconds}ms");
+        if (Plugin.Debug.Value)
+        {
+            Plugin.Log.LogInfo($"CollectDrops Complete! Completed in {watch.ElapsedMilliseconds}ms");
+        }
         Fields.InventoriesLoaded = false; // force a refresh just in case
-    }
-
-    internal static string GetLocalizedString(string content)
-    {
-        Thread.CurrentThread.CurrentUICulture = GameCulture;
-        return content;
     }
 
     internal static void Log(string message, bool error = false)

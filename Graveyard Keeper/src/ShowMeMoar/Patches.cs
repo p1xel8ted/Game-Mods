@@ -9,6 +9,23 @@ public static class Patches
     private static bool IntroPlaying { get; set; }
 
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
+    public static void MainGame_Update()
+    {
+        if (!MainGame.game_started) return;
+
+        if (Plugin.ZoomIn.Value.IsPressed())
+        {
+            Plugin.Zoom.Value -= 5f;
+        }
+
+        if (Plugin.ZoomOut.Value.IsPressed())
+        {
+            Plugin.Zoom.Value += 5f;
+        }
+    }
+
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
     {
