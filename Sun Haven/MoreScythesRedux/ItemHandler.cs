@@ -76,11 +76,15 @@ public static class ItemHandler
                 Database.Instance.validIDs.Add(item.id);
 
                 var node = Database.Instance.lruList.AddFirst(new Database.CacheItem(item.id, item));
-                if (!Database.Instance.cache.ContainsKey(item.GetType()))
+                foreach (var cacheType in new[] { typeof(ItemData), item.GetType() })
                 {
-                    Database.Instance.cache[item.GetType()] = new Dictionary<object, LinkedListNode<Database.CacheItem>>();
+                    if (!Database.Instance.cache.TryGetValue(cacheType, out var typeCache))
+                    {
+                        typeCache = new Dictionary<object, LinkedListNode<Database.CacheItem>>();
+                        Database.Instance.cache[cacheType] = typeCache;
+                    }
+                    typeCache[item.id] = node;
                 }
-                Database.Instance.cache[item.GetType()][item.id] = node;
 
                 var originalSellInfo = Utils.GetItemSellInfo(data.id);
                 var itemSellInfo = new ItemSellInfo

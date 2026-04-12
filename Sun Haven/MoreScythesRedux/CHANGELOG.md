@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.9
+
+- Fixed custom scythes failing to load in the crafting UI on recent game versions (Addressables "No Location found" errors); icons and recipes now display correctly again
+
 ## 0.1.8
 
 - Fixed custom scythe icons appearing blurry/low-resolution in the crafting UI and inventory
