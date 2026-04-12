@@ -1,8 +1,9 @@
 {
   "Content": "Il semble que Sprint Reloaded soit installé. Malheureusement Misc. Bits & Bobs et Sprint Reloaded modifient les mêmes valeurs lors de la modification de la vitesse du joueur et sont incompatibles entre eux. Le côté joueur de Misc. Bits & Bobs sera désactivé. La vitesse du porteur ne devrait pas être affectée.",
-  "Title": "Incompatibilité de module détectée",
+  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
+  "EvictButton": "Expulser les visiteurs de l'église",
   "EvictConfirmText": "Le jeu peut sembler se figer pendant l'expulsion de tous les visiteurs. Il n'a pas planté. Continuer ?",
-  "EvictYes": "Oui",
   "EvictNo": "Non",
-  "EvictButton": "Expulser les visiteurs de l'église"
+  "EvictYes": "Oui",
+  "Title": "Incompatibilité de module détectée"
 }

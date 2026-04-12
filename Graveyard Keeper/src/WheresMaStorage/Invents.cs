@@ -4,6 +4,8 @@ public static class Invents
 {
     internal static IEnumerator LoadInventories(Action callback = null)
     {
+        if (Plugin.DebugEnabled) Helpers.Log("[LoadInventories] start");
+
         Fields.Mi = new MultiInventory();
 
         var playerInventory = new Inventory(MainGame.me.player);
@@ -21,26 +23,45 @@ public static class Invents
         var zones = WorldZone._all_zones;
         var watch = Stopwatch.StartNew();
 
+        var zonesVisited = 0;
+        var zonesSkipped = 0;
+        var invsAdded = 0;
+
         foreach (var zone in zones)
         {
             // BUG 1 FIX: was a.Contains(zone.id) — backwards. Now zone.id.Contains(a) so "refugees_camp".Contains("refugees") = true
-            if (Fields.AlwaysSkipZones.Any(a => zone.id.ToLowerInvariant().Contains(a))) continue;
+            if (Fields.AlwaysSkipZones.Any(a => zone.id.ToLowerInvariant().Contains(a)))
+            {
+                zonesSkipped++;
+                continue;
+            }
 
             //if it's in a zone we haven't seen, skip
-            if (!MainGame.me.save.known_world_zones.Exists(a => string.Equals(a, zone.id))) continue;
+            if (!MainGame.me.save.known_world_zones.Exists(a => string.Equals(a, zone.id)))
+            {
+                zonesSkipped++;
+                continue;
+            }
 
             var worldZoneMulti = zone.GetMultiInventory(player_mi: MultiInventory.PlayerMultiInventory.ExcludePlayer, sortWGOS: true);
-            if (worldZoneMulti == null) continue;
+            if (worldZoneMulti == null)
+            {
+                zonesSkipped++;
+                continue;
+            }
 
+            zonesVisited++;
             foreach (var inv in worldZoneMulti.Where(inv => !Fields.AlwaysSkipZones.Any(inv._obj_id.ToLowerInvariant().Contains)))
             {
                 inv.data.sub_name = string.IsNullOrEmpty(inv._obj_id) ? $"Unknown#{zone.id}" : $"{inv._obj_id}#{zone.id}";
 
                 Fields.Mi.AddInventory(inv);
+                invsAdded++;
             }
         }
 
         //adds bags to the inventory
+        var bagsAdded = 0;
         for (var i = 0; i < Fields.Mi.all.Count; i++)
         {
             var inventoriesToAdd = Fields.Mi.all[i].data.inventory
@@ -51,11 +72,13 @@ public static class Invents
             foreach (var inv in inventoriesToAdd)
             {
                 Fields.Mi.AddInventory(inv, i + 1);
+                bagsAdded++;
             }
         }
 
         watch.Stop();
         Fields.InventoriesLoaded = true;
+        if (Plugin.DebugEnabled) Helpers.Log($"[LoadInventories] done: zones visited={zonesVisited} skipped={zonesSkipped}, inventories={invsAdded} (+{bagsAdded} bags), total Mi={Fields.Mi.all.Count} in {watch.ElapsedMilliseconds}ms");
         callback?.Invoke();
         yield return true;
     }
@@ -63,6 +86,8 @@ public static class Invents
 
     internal static IEnumerator LoadWildernessInventories(Action callback = null)
     {
+        if (Plugin.DebugEnabled) Helpers.Log("[LoadWilderness] start");
+
         var wgos = WorldMap._objs
             .Where(a => a.data.inventory_size > 0 && string.IsNullOrEmpty(a.GetMyWorldZoneId()))
             .ToList();
@@ -114,6 +139,7 @@ public static class Invents
         }
 
         watch.Stop();
+        if (Plugin.DebugEnabled) Helpers.Log($"[LoadWilderness] done: wgos scanned={wgos.Count}, inventories={Fields.WildernessInventories.Count} (multi={Fields.WildernessMultiInventories.Count}) in {watch.ElapsedMilliseconds}ms");
         callback?.Invoke();
         yield break;
     }
@@ -187,32 +213,55 @@ public static class Invents
     internal static MultiInventory GetMiInventory(string requester, string zone)
     {
         var requesterInQuarry = zone.Contains("stone_workyard") || zone.Contains("marble_deposit");
+        var requesterInZombieMill = zone.Contains("zombie_mill");
+
         if (requester.Contains("refugee_builddesk") || requester.Contains("storage_builddesk") || requesterInQuarry)
         {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMiInventory] triggering reload (requester={requester} zone={zone})");
             MainGame.me.StartCoroutine(LoadInventories());
             MainGame.me.StartCoroutine(LoadWildernessInventories());
         }
 
+        var wildAdded = 0;
         foreach (var inv in Fields.WildernessInventories.Where(inv => !Fields.Mi.all.Contains(inv)))
         {
             Fields.Mi.AddInventory(inv);
+            wildAdded++;
         }
 
         var tempList = Fields.Mi.all.ToList();
+        var quarryRemoved = 0;
         if (Plugin.ExcludeQuarryFromSharedInventory.Value && !requesterInQuarry)
         {
             foreach (var inv in tempList.Where(inv => inv.data.sub_name.Contains("stone_workyard") || inv.data.sub_name.Contains("marble_deposit")))
             {
                 Fields.Mi.all.Remove(inv);
+                quarryRemoved++;
             }
         }
+
+        var zombieMillRemoved = 0;
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && !requesterInZombieMill)
+        {
+            foreach (var inv in tempList.Where(inv => inv.data.sub_name.Contains("zombie_mill")))
+            {
+                Fields.Mi.all.Remove(inv);
+                zombieMillRemoved++;
+            }
+        }
+
+        if (Plugin.DebugEnabled) Helpers.Log($"[GetMiInventory] returning Mi (size={Fields.Mi.all.Count}): +{wildAdded} wilderness, -{quarryRemoved} quarry, -{zombieMillRemoved} zombie-mill (requester={requester} zone={zone})");
         return Fields.Mi;
     }
 
     // This method gets inserted into the CraftReally method using the transpiler below, overwriting any inventory the game sets during crafting
     public static MultiInventory GetMi(CraftDefinition craft, MultiInventory orig, WorldGameObject otherGameObject)
     {
-        if (!Plugin.SharedInventory.Value) return orig;
+        if (!Plugin.SharedInventory.Value)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] SharedInventory disabled, returning orig for craft={craft?.id} obj={otherGameObject?.obj_id}");
+            return orig;
+        }
 
         var objId = otherGameObject.obj_id;
         var worldZoneId = otherGameObject.GetMyWorldZoneId();
@@ -227,28 +276,45 @@ public static class Invents
         var isZombie = objId.Contains("zombie") || linkedWorkerObjId.Contains("zombie");
         Fields.ZombieWorker = isZombie;
 
-        if (Fields.AlwaysSkipZones.Any(a => objId.Contains(a) || worldZoneId.Contains(a))) return orig;
+        if (Fields.AlwaysSkipZones.Any(a => objId.Contains(a) || worldZoneId.Contains(a)))
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] skip (AlwaysSkipZones match) obj={objId} zone={worldZoneId}");
+            return orig;
+        }
 
-        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return orig;
+        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] skip (well exclusion) obj={objId}");
+            return orig;
+        }
 
-        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return orig;
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] skip (zombie mill exclusion) obj={objId} zone={worldZoneId}");
+            return orig;
+        }
 
-        if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie) return orig;
-
+        if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] skip (zombie, shared disallowed) obj={objId} linkedWorker={linkedWorkerObjId}");
+            return orig;
+        }
 
         if (objId.Contains("storage_builddesk"))
         {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] storage_builddesk interaction → triggering LoadInventories");
             MainGame.me.StartCoroutine(LoadInventories());
         }
-
 
         var isSpecialObject = isZombie || objId.StartsWith("mf_") || Fields.GratitudeCraft;
 
         if (isPlayer && craft.id.Length > 0 || isSpecialObject)
         {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] injecting shared multi (isPlayer={isPlayer},special={isSpecialObject},gratitude={Fields.GratitudeCraft}) craft={craft.id} obj={objId} zone={worldZoneId}");
             return GetMiInventory($"{objId}", otherGameObject.GetMyWorldZoneId());
         }
 
+        if (Plugin.DebugEnabled) Helpers.Log($"[GetMi] no-match, returning orig craft={craft.id} obj={objId} zone={worldZoneId}");
         return orig;
     }
 

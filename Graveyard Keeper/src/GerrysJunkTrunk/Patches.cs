@@ -1,7 +1,7 @@
 namespace GerrysJunkTrunk;
 
-[HarmonyPatch]
-public partial class Plugin
+[Harmony]
+public static class Patches
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
@@ -9,65 +9,63 @@ public partial class Plugin
     {
         if (!MainGame.game_started) return;
 
-        _techCount = MainGame.me.save.unlocked_techs.Count;
-        if (_techCount > _oldTechCount)
+        Plugin._techCount = MainGame.me.save.unlocked_techs.Count;
+        if (Plugin._techCount > Plugin._oldTechCount)
         {
-            _oldTechCount = _techCount;
-            CheckShippingBox();
+            Plugin._oldTechCount = Plugin._techCount;
+            Plugin.CheckShippingBox();
         }
 
-        if (InternalShowIntroMessage.Value)
+        if (Plugin.InternalShowIntroMessage.Value)
         {
-            ShowIntroMessage();
-            InternalShowIntroMessage.Value = false;
+            Plugin.ShowIntroMessage();
+            Plugin.InternalShowIntroMessage.Value = false;
         }
 
-        if (!UnlockedShippingBox()) return;
-        var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
-        if (InternalShippingBoxBuilt.Value && _shippingBox == null)
+        if (!Plugin.UnlockedShippingBox()) return;
+        var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(Plugin.ShippingBoxId);
+        if (Plugin.InternalShippingBoxBuilt.Value && Plugin._shippingBox == null)
         {
-            _shippingBox = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true)
-                .FirstOrDefault(x => string.Equals(x.custom_tag, ShippingBoxTag));
-            if (_shippingBox == null)
+            Plugin._shippingBox = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true)
+                .FirstOrDefault(x => string.Equals(x.custom_tag, Plugin.ShippingBoxTag));
+            if (Plugin._shippingBox == null)
             {
-                if (Debug.Value)
+                if (Plugin.DebugEnabled)
                 {
-                    Log.LogInfo("Update: No Shipping Box Found!");
+                    Plugin.Log.LogInfo("Update: No Shipping Box Found!");
                 }
-                InternalShippingBoxBuilt.Value = false;
+                Plugin.InternalShippingBoxBuilt.Value = false;
                 sbCraft.hidden = false;
             }
             else
             {
-                if (Debug.Value)
+                if (Plugin.DebugEnabled)
                 {
-                    Log.LogInfo($"Update: Found Shipping Box at {_shippingBox.pos3}");
+                    Plugin.Log.LogInfo($"Update: Found Shipping Box at {Plugin._shippingBox.pos3}");
                 }
-                InternalShippingBoxBuilt.Value = true;
-                _shippingBox.data.drop_zone_id = ShippingBoxTag;
+                Plugin.InternalShippingBoxBuilt.Value = true;
+                Plugin._shippingBox.data.drop_zone_id = Plugin.ShippingBoxTag;
 
-                var invSize = SmallInvSize;
-                if (UnlockedShippingBoxExpansion())
+                var invSize = Plugin.SmallInvSize;
+                if (Plugin.UnlockedShippingBoxExpansion())
                 {
-                    invSize = LargeInvSize;
+                    invSize = Plugin.LargeInvSize;
                 }
 
-                _shippingBox.data.SetInventorySize(invSize);
-
+                Plugin._shippingBox.data.SetInventorySize(invSize);
 
                 sbCraft.hidden = true;
             }
         }
     }
 
-    //should never need these, but will stop a 2nd being built
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.CanBuild))]
     public static void BuildModeLogics_CanBuild(ref bool __result, CraftDefinition cd)
     {
-        if (InternalShippingBoxBuilt.Value && _shippingBox != null)
+        if (Plugin.InternalShippingBoxBuilt.Value && Plugin._shippingBox != null)
         {
-            if (cd.id.Contains(ShippingItem))
+            if (cd.id.Contains(Plugin.ShippingItem))
             {
                 __result = false;
             }
@@ -78,16 +76,16 @@ public partial class Plugin
     [HarmonyPatch(typeof(InventoryPanelGUI), nameof(InventoryPanelGUI.Open))]
     public static void InventoryPanelGUI_Open()
     {
-        AlreadyDone.Clear();
+        Plugin.AlreadyDone.Clear();
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.OnBuildCraftSelected))]
     public static void BuildModeLogics_OnBuildCraftSelected(ref ObjectCraftDefinition cd)
     {
-        if (cd.id.Contains(ShippingItem))
+        if (cd.id.Contains(Plugin.ShippingItem))
         {
-            _shippingBuild = true;
+            Plugin._shippingBuild = true;
             var ocd = GameBalance.me.GetData<ObjectCraftDefinition>("mf_wood_builddesk:p:mf_box_stuff_place");
             cd = ocd;
         }
@@ -97,7 +95,7 @@ public partial class Plugin
     [HarmonyPatch(typeof(ChestGUI), nameof(ChestGUI.Hide))]
     public static void ChestGUI_Hide(ChestGUI __instance)
     {
-        ClearGerryFlag(__instance);
+        Plugin.ClearGerryFlag(__instance);
     }
 
     [HarmonyPostfix]
@@ -106,16 +104,16 @@ public partial class Plugin
         typeof(bool))]
     public static void ChestGUI_MoveItem(ChestGUI __instance)
     {
-        if (__instance == null || !_usingShippingBox) return;
+        if (__instance == null || !Plugin._usingShippingBox) return;
 
-        UpdateItemStates(__instance);
+        Plugin.UpdateItemStates(__instance);
     }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(ChestGUI), nameof(ChestGUI.OnPressedBack))]
     public static void ChestGUI_OnPressedBack(ChestGUI __instance)
     {
-        ClearGerryFlag(__instance);
+        Plugin.ClearGerryFlag(__instance);
     }
 
     [HarmonyPostfix]
@@ -123,22 +121,21 @@ public partial class Plugin
     [HarmonyPatch(typeof(ChestGUI), nameof(ChestGUI.Open))]
     public static void ChestGUI_Open(ChestGUI __instance)
     {
-        if (__instance == null || !_usingShippingBox) return;
+        if (__instance == null || !Plugin._usingShippingBox) return;
 
-        var maxItemCount = UnlockedFullPrice() ? LargeMaxItemCount : SmallMaxItemCount;
+        var maxItemCount = Plugin.UnlockedFullPrice() ? Plugin.LargeMaxItemCount : Plugin.SmallMaxItemCount;
 
-        // Combined loops for player_panel and chest_panel
-        foreach (var panel in new[] {__instance.player_panel, __instance.chest_panel})
+        foreach (var panel in new[] { __instance.player_panel, __instance.chest_panel })
         {
             foreach (var item in panel.multi_inventory.all[0].data.inventory
                          .Where(item => item.definition.stack_count > 1))
             {
-                TryAdd(StackSizeBackups, item.id, item.definition.stack_count);
+                Plugin.TryAdd(Plugin.StackSizeBackups, item.id, item.definition.stack_count);
                 item.definition.stack_count = maxItemCount;
             }
         }
 
-        UpdateItemStates(__instance);
+        Plugin.UpdateItemStates(__instance);
     }
 
     [HarmonyPrefix]
@@ -150,15 +147,15 @@ public partial class Plugin
     {
         Lang.Reload();
 
-        if (!ShowItemPriceTooltips.Value || !UnlockedShippingBox() || __instance == null || item_gui == null ||
-            AlreadyDone.Contains(item_gui) || item_gui.id_empty)
+        if (!Plugin.ShowItemPriceTooltips.Value || !Plugin.UnlockedShippingBox() || __instance == null || item_gui == null ||
+            Plugin.AlreadyDone.Contains(item_gui) || item_gui.id_empty)
             return;
 
-        foreach (var tooltip in new[] {item_gui.x1, item_gui.x2})
+        foreach (var tooltip in new[] { item_gui.x1, item_gui.x2 })
         {
             if (tooltip != null && tooltip.tooltip != null && tooltip.tooltip.has_info)
             {
-                var itemEarnings = GetItemEarnings(item_gui.item);
+                var itemEarnings = Plugin.GetItemEarnings(item_gui.item);
                 tooltip.tooltip.AddData(new BubbleWidgetSeparatorData());
 
                 tooltip.tooltip.AddData(new BubbleWidgetTextData(
@@ -171,15 +168,7 @@ public partial class Plugin
             }
         }
 
-        AlreadyDone.Add(item_gui);
-    }
-
-    [HarmonyFinalizer]
-    [HarmonyPatch(typeof(InventoryPanelGUI), nameof(InventoryPanelGUI.OnItemOver), typeof(InventoryWidget),
-        typeof(BaseItemCellGUI))]
-    private static Exception InventoryPanelGUI_OnItemOver_Finalizer()
-    {
-        return null;
+        Plugin.AlreadyDone.Add(item_gui);
     }
 
     [HarmonyPostfix]
@@ -188,21 +177,21 @@ public partial class Plugin
     {
         Lang.Reload();
 
-        if (!UnlockedShippingBox() || !InternalShippingBoxBuilt.Value || _shippingBox == null) return;
+        if (!Plugin.UnlockedShippingBox() || !Plugin.InternalShippingBoxBuilt.Value || Plugin._shippingBox == null) return;
 
-        var earnings = GetBoxEarnings(_shippingBox);
+        var earnings = Plugin.GetBoxEarnings(Plugin._shippingBox);
 
         MainGame.me.player.data.money += earnings;
-        _shippingBox.data.inventory.Clear();
+        Plugin._shippingBox.data.inventory.Clear();
         var money = Trading.FormatMoney(earnings, true);
 
-        if (EnableGerry.Value && !GUIElements.me.dialog.is_shown && !EnvironmentEngine.me.IsTimeStopped())
+        if (Plugin.EnableGerry.Value && !GUIElements.me.dialog.is_shown && !EnvironmentEngine.me.IsTimeStopped())
         {
-            StartGerryRoutine(earnings);
+            Plugin.StartGerryRoutine(earnings);
         }
         else
         {
-            PlayCoinsSoundAndShowMessage(earnings, money);
+            Plugin.PlayCoinsSoundAndShowMessage(earnings, money);
         }
     }
 
@@ -210,7 +199,7 @@ public partial class Plugin
     [HarmonyPatch(typeof(GameBalance), nameof(GameBalance.LoadGameBalance))]
     private static void GameBalance_LoadGameBalance()
     {
-        if (GameBalance.me.craft_data.Exists(a => a == NewItem)) return;
+        if (GameBalance.me.craft_data.Exists(a => a == Plugin.NewItem)) return;
 
         var newCd = new ObjectCraftDefinition();
         var cd = GameBalance.me.GetData<ObjectCraftDefinition>("mf_wood_builddesk:p:mf_box_stuff_place");
@@ -281,14 +270,14 @@ public partial class Plugin
         newCd.store_last_craft_slot = cd.store_last_craft_slot;
         newCd.hide_quality_icon = cd.hide_quality_icon;
         newCd.enqueue_type = cd.enqueue_type;
-        newCd.id = ShippingBoxId;
+        newCd.id = Plugin.ShippingBoxId;
 
-        NewItem = newCd;
+        Plugin.SetNewItem(newCd);
 
-        GameBalance.me.craft_data.Add(NewItem);
-        GameBalance.me.craft_obj_data.Add(NewItem);
-        GameBalance.me.AddDataUniversal(NewItem);
-        GameBalance.me.AddData(NewItem);
+        GameBalance.me.craft_data.Add(Plugin.NewItem);
+        GameBalance.me.craft_obj_data.Add(Plugin.NewItem);
+        GameBalance.me.AddDataUniversal(Plugin.NewItem);
+        GameBalance.me.AddData(Plugin.NewItem);
     }
 
     [HarmonyPostfix]
@@ -296,16 +285,16 @@ public partial class Plugin
     [HarmonyPatch(typeof(InventoryPanelGUI), nameof(InventoryPanelGUI.DoOpening))]
     public static void InventoryPanelGUI_DoOpening(InventoryPanelGUI __instance)
     {
-        if (!UnlockedShippingBox()) return;
+        if (!Plugin.UnlockedShippingBox()) return;
         if (__instance == null) return;
         Lang.Reload();
         var isChest = __instance.name.ToLowerInvariant().Contains("chest");
         var isPlayer = __instance.name.ToLowerInvariant().Contains("player");
-        if (_usingShippingBox && isChest && !isPlayer)
+        if (Plugin._usingShippingBox && isChest && !isPlayer)
         {
             foreach (var inventoryWidget in __instance._widgets)
             {
-                var tier = GetTrunkTier();
+                var tier = Plugin.GetTrunkTier();
                 inventoryWidget.header_label.text = $"{Lang.Get("Header")} (T{tier})";
                 inventoryWidget.dont_show_empty_rows = true;
                 inventoryWidget.SetInactiveStateToEmptyCells();
@@ -318,22 +307,22 @@ public partial class Plugin
     [HarmonyPatch(typeof(InventoryPanelGUI), nameof(InventoryPanelGUI.Redraw))]
     public static void InventoryPanelGUI_Redraw(InventoryPanelGUI __instance)
     {
-        if (!UnlockedShippingBox()) return;
+        if (!Plugin.UnlockedShippingBox()) return;
         if (__instance == null) return;
         Lang.Reload();
         var isChest = __instance.name.ToLowerInvariant().Contains("chest");
         var isPlayer = __instance.name.ToLowerInvariant().Contains("player");
-        if (_usingShippingBox && isChest && !isPlayer)
+        if (Plugin._usingShippingBox && isChest && !isPlayer)
         {
             foreach (var inventoryWidget in __instance._widgets)
             {
-                var tier = GetTrunkTier();
+                var tier = Plugin.GetTrunkTier();
                 inventoryWidget.header_label.text = $"{Lang.Get("Header")} (T{tier})";
                 inventoryWidget.dont_show_empty_rows = true;
                 inventoryWidget.SetInactiveStateToEmptyCells();
             }
 
-            var money = GetBoxEarnings(_shippingBox);
+            var money = Plugin.GetBoxEarnings(Plugin._shippingBox);
             __instance.money_label.text = Trading.FormatMoney(money, true);
         }
     }
@@ -413,14 +402,14 @@ public partial class Plugin
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.DestroyMe))]
     public static void WorldGameObject_DestroyMe(WorldGameObject __instance)
     {
-        if (!UnlockedShippingBox()) return;
+        if (!Plugin.UnlockedShippingBox()) return;
         if (__instance == null) return;
-        if (string.Equals(__instance.custom_tag, ShippingBoxTag))
+        if (string.Equals(__instance.custom_tag, Plugin.ShippingBoxTag))
         {
-            WriteLog($"Removed Shipping Box!");
-            _shippingBox = null;
-            InternalShippingBoxBuilt.Value = false;
-            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[DestroyMe] shipping box removed at {__instance.pos3}");
+            Plugin._shippingBox = null;
+            Plugin.InternalShippingBoxBuilt.Value = false;
+            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(Plugin.ShippingBoxId);
             sbCraft.hidden = false;
         }
     }
@@ -429,53 +418,46 @@ public partial class Plugin
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.Interact))]
     private static void WorldGameObject_Interact(WorldGameObject __instance, WorldGameObject other_obj)
     {
-        if (!UnlockedShippingBox() || __instance == null ||
-            !string.Equals(__instance.custom_tag, ShippingBoxTag)) return;
+        if (!Plugin.UnlockedShippingBox() || __instance == null ||
+            !string.Equals(__instance.custom_tag, Plugin.ShippingBoxTag)) return;
 
-        WriteLog($"Found Shipping Box! {__instance.data.drop_zone_id}, Other: {other_obj.obj_id}");
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[Interact] shipping box interaction: drop_zone={__instance.data.drop_zone_id}, other={other_obj.obj_id}");
 
-        _interactedObject = __instance;
-        _usingShippingBox = true;
-        __instance.data.drop_zone_id = ShippingBoxTag;
-        __instance.custom_tag = ShippingBoxTag;
+        Plugin._interactedObject = __instance;
+        Plugin._usingShippingBox = true;
+        __instance.data.drop_zone_id = Plugin.ShippingBoxTag;
+        __instance.custom_tag = Plugin.ShippingBoxTag;
 
-        var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+        var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(Plugin.ShippingBoxId);
         sbCraft.hidden = true;
 
-        var invSize = UnlockedShippingBoxExpansion() ? LargeInvSize : SmallInvSize;
+        var invSize = Plugin.UnlockedShippingBoxExpansion() ? Plugin.LargeInvSize : Plugin.SmallInvSize;
         __instance.data.SetInventorySize(invSize);
-        __instance.data.money = GetBoxEarnings(__instance);
+        __instance.data.money = Plugin.GetBoxEarnings(__instance);
 
-        _shippingBox = __instance;
-    }
-
-    [HarmonyFinalizer]
-    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.Interact))]
-    private static Exception Finalizer()
-    {
-        return null;
+        Plugin._shippingBox = __instance;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.ReplaceWithObject))]
     public static void WorldGameObject_ReplaceWithObject(WorldGameObject __instance, string new_obj_id)
     {
-        if (!UnlockedShippingBox() || __instance == null ||
-            InternalShippingBoxBuilt.Value && _shippingBox != null) return;
+        if (!Plugin.UnlockedShippingBox() || __instance == null ||
+            Plugin.InternalShippingBoxBuilt.Value && Plugin._shippingBox != null) return;
 
-        if (string.Equals(new_obj_id, "mf_box_stuff") && _shippingBuild)
+        if (string.Equals(new_obj_id, "mf_box_stuff") && Plugin._shippingBuild)
         {
-            WriteLog($"Built Shipping Box!");
-            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[ReplaceWithObject] shipping box built at {__instance.pos3}");
+            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(Plugin.ShippingBoxId);
             sbCraft.hidden = true;
-            __instance.custom_tag = ShippingBoxTag;
+            __instance.custom_tag = Plugin.ShippingBoxTag;
 
-            _shippingBuild = false;
-            _shippingBox = __instance;
+            Plugin._shippingBuild = false;
+            Plugin._shippingBox = __instance;
 
-            InternalShippingBoxBuilt.Value = true;
+            Plugin.InternalShippingBoxBuilt.Value = true;
 
-            UpdateShippingBox(sbCraft, __instance);
+            Plugin.UpdateShippingBox(sbCraft, __instance);
         }
     }
 
@@ -484,34 +466,39 @@ public partial class Plugin
     public static void WorldZone_GetZoneWGOs(List<WorldGameObject> __result)
     {
         if (__result == null) return;
-        if (_interactedObject != null &&
-            _interactedObject.obj_def.interaction_type == ObjectDefinition.InteractionType.Builder) return;
+        if (Plugin._interactedObject != null &&
+            Plugin._interactedObject.obj_def.interaction_type == ObjectDefinition.InteractionType.Builder) return;
 
-        var count = __result.RemoveAll(a => a.custom_tag == ShippingBoxTag || a.data.drop_zone_id == ShippingBoxTag);
+        var count = __result.RemoveAll(a => a.custom_tag == Plugin.ShippingBoxTag || a.data.drop_zone_id == Plugin.ShippingBoxTag);
         if (count > 0)
         {
-            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(Plugin.ShippingBoxId);
             sbCraft.hidden = true;
 
-            WriteLog($"[WorldZone.GetZoneWGOs] Removed Shipping Box From WorldMap Objects");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[WorldZone.GetZoneWGOs] Removed Shipping Box From WorldMap Objects");
         }
 
-        _interactedObject = null;
+        Plugin._interactedObject = null;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     private static void FindJunkTrunk()
     {
-        var trunks = WorldMap.GetWorldGameObjectsByCustomTag(ShippingBoxTag);
+        Plugin.ShowDebugWarningOnce();
+        var trunks = WorldMap.GetWorldGameObjectsByCustomTag(Plugin.ShippingBoxTag);
         if (trunks.Count > 0)
         {
-            _shippingBox = trunks[0];
-            InternalShippingBoxBuilt.Value = true;
-            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(ShippingBoxId);
+            Plugin._shippingBox = trunks[0];
+            Plugin.InternalShippingBoxBuilt.Value = true;
+            var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(Plugin.ShippingBoxId);
             sbCraft.hidden = true;
 
-            WriteLog($"Found Shipping Box!");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[FindJunkTrunk] found existing shipping box at {Plugin._shippingBox.pos3} on save load");
+        }
+        else if (Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog("[FindJunkTrunk] no shipping box in save");
         }
     }
 }

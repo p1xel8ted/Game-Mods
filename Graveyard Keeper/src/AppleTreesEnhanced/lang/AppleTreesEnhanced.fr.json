@@ -1,5 +1,6 @@
 {
   "ApplesReady": "Récolte des pommes prête !",
   "BerriesReady": "Récolte des baies prête !",
+  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
   "HoneyReady": "Récolte de miel prête !"
 }

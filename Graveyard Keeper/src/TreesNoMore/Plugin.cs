@@ -5,13 +5,15 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.treesnomore";
     private const string PluginName = "Trees, No More!";
-    private const string PluginVer = "2.5.9";
+    private const string PluginVer = "2.5.10";
     private static bool ShowConfirmationDialog { get; set; }
     internal static ManualLogSource Log { get; private set; }
 
     internal static List<Tree> Trees { get; private set; } = [];
 
-    internal static ConfigEntry<bool> DebugEnabled { get; private set; }
+    internal static ConfigEntry<bool> Debug { get; private set; }
+    internal static bool DebugEnabled;
+    internal static bool DebugDialogShown;
     internal static ConfigEntry<int> TreeSearchDistance { get; private set; }
     internal static ConfigEntry<bool> InstantStumpRemoval { get; private set; }
     private static string FilePath => Path.Combine(Application.persistentDataPath, $"{MainGame.me.save_slot.filename_no_extension}_trees.json");
@@ -19,6 +21,7 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = Logger;
+        LogHelper.Log = Logger;
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         InitConfiguration();
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
@@ -27,7 +30,9 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
-        DebugEnabled = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 3}));
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {Order = 3}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
         TreeSearchDistance = Config.Bind("01. Trees", "Tree Search Distance", 2, new ConfigDescription("The allowable distance to check if a tree shouldn't exist on load. The default value of 2 seems to work well. Setting this too large may cause trees surrounding the intended tree to also be removed.", null, new ConfigurationManagerAttributes {Order = 2}));
 
@@ -65,6 +70,14 @@ public class Plugin : BaseUnityPlugin
                 ShowConfirmationDialog = true;
             }
         }
+    }
+
+    internal static void ShowDebugWarningOnce()
+    {
+        if (!DebugEnabled || DebugDialogShown) return;
+        DebugDialogShown = true;
+        Lang.Reload();
+        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     internal static bool LoadTrees()

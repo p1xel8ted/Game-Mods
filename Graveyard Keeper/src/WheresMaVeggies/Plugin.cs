@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmaveggies";
     private const string PluginName = "Where's Ma' Veggies!";
-    private const string PluginVer = "0.1.7";
+    private const string PluginVer = "0.1.8";
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static ManualLogSource Log { get; private set; }
     

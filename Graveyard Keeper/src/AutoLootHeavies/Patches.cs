@@ -1,55 +1,54 @@
-﻿namespace AutoLootHeavies;
+namespace AutoLootHeavies;
 
-[HarmonyPatch]
+[Harmony]
 [HarmonyPriority(1)]
-public partial class Plugin
+public static class Patches
 {
-
     [HarmonyPrefix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(BaseCharacterComponent), nameof(BaseCharacterComponent.DropOverheadItem))]
     public static bool BaseCharacterComponent_DropOverheadItem_Postfix(BaseCharacterComponent __instance)
     {
-        if (!__instance.wgo.is_player || !__instance.has_overhead || !OverheadItemIsHeavy(__instance.overhead_item))
+        if (!__instance.wgo.is_player || !__instance.has_overhead || !Plugin.OverheadItemIsHeavy(__instance.overhead_item))
             return true;
         var item = __instance.overhead_item;
-        
+
         List<Item> insert = [item];
         var itemId = item.id;
 
-        SortedStockpiles.RemoveAll(pile => pile.Wgo == null);
+        Plugin.SortedStockpiles.RemoveAll(pile => pile.Wgo == null);
 
-        WriteLog($"Refreshing and re-sorting stockpile distances.");
-        foreach (var pile in SortedStockpiles)
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[DropOverhead] {itemId}: refresh + sort ({Plugin.SortedStockpiles.Count} stockpiles)");
+        foreach (var pile in Plugin.SortedStockpiles)
         {
             pile.DistanceFromPlayer = Vector3.Distance(MainGame.me.player_pos, pile.Wgo.pos3);
         }
 
-        SortedStockpiles.Sort((x, y) => x.DistanceFromPlayer.CompareTo(y.DistanceFromPlayer));
+        Plugin.SortedStockpiles.Sort((x, y) => x.DistanceFromPlayer.CompareTo(y.DistanceFromPlayer));
 
         var itemDumped = false;
-        foreach (var stockpile in SortedStockpiles)
+        foreach (var stockpile in Plugin.SortedStockpiles)
         {
-            WriteLog($"Trying to insert {itemId} into {stockpile.Wgo}, {stockpile.DistanceFromPlayer} units away.");
-            var success = TryPutToInventoryAndNull(__instance, stockpile.Wgo, insert);
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[DropOverhead] try {itemId} → {stockpile.Wgo.obj_id} @ {stockpile.DistanceFromPlayer:F1}");
+            var success = Plugin.TryPutToInventoryAndNull(__instance, stockpile.Wgo, insert);
             if (!success) continue;
             itemDumped = true;
-            WriteLog($"Successfully inserted {itemId} into {stockpile.Wgo}, {stockpile.DistanceFromPlayer} units away.");
-            ShowLootAddedIcon(item);
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[DropOverhead] inserted {itemId} → {stockpile.Wgo.obj_id} @ {stockpile.DistanceFromPlayer:F1}");
+            Plugin.ShowLootAddedIcon(item);
             break;
         }
 
         if (__instance.overhead_item != null || !itemDumped)
         {
-            if (TeleportToDumpSiteWhenAllStockPilesFull.Value)
+            if (Plugin.TeleportToDumpSiteWhenAllStockPilesFull.Value)
             {
-                TeleportItem(__instance, __instance.overhead_item);
-                WriteLog($"Teleporting {itemId} to dump site.");
+                Plugin.TeleportItem(__instance, __instance.overhead_item);
+                if (Plugin.DebugEnabled) Plugin.WriteLog($"[DropOverhead] fallback → teleport {itemId} to dump site");
             }
             else
             {
-                DropObjectAndNull(__instance, __instance.overhead_item);
-                WriteLog($"Dropping object due to teleportation being disabled.");
+                Plugin.DropObjectAndNull(__instance, __instance.overhead_item);
+                if (Plugin.DebugEnabled) Plugin.WriteLog($"[DropOverhead] fallback → drop {itemId} (teleport disabled)");
             }
         }
 
@@ -57,46 +56,36 @@ public partial class Plugin
     }
 
 
-    // [HarmonyPostfix]
     [HarmonyPrefix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(BaseCharacterComponent), nameof(BaseCharacterComponent.SetOverheadItem))]
     public static void BaseCharacterComponent_SetOverheadItem(BaseCharacterComponent __instance, Item item)
     {
-        if (__instance.wgo.is_player && item != null && OverheadItemIsHeavy(item))
+        if (__instance.wgo.is_player && item != null && Plugin.OverheadItemIsHeavy(item))
         {
-            MainGame.me.StartCoroutine(RunFullUpdate());
-            // UpdateStockpiles();
+            MainGame.me.StartCoroutine(Plugin.RunFullUpdate());
         }
     }
 
-    private static bool StockpileIsValid(WorldGameObject wgo)
-    {
-        return wgo.obj_id.Contains(Constants.ItemObjectId.Timber) ||
-               wgo.obj_id.Contains(Constants.ItemObjectId.Ore) ||
-               wgo.obj_id.Contains(Constants.ItemObjectId.Stone);
-    }
-
-    
     [HarmonyPostfix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(WorldMap), nameof(WorldMap.OnAddNewWGO), typeof(WorldGameObject))]
     public static void WorldGameObject_OnAddNewWGOt(WorldGameObject wgo)
     {
-        if (StockpileIsValid(wgo))
+        if (Plugin.StockpileIsValid(wgo))
         {
-            AddStockpile(wgo);
+            Plugin.AddStockpile(wgo);
         }
     }
-    
+
     [HarmonyPostfix]
     [HarmonyPriority(1)]
     [HarmonyPatch(typeof(WorldMap), nameof(WorldMap.OnDestroyWGO), typeof(WorldGameObject))]
     public static void WorldGameObject_OnDestroyWGO(WorldGameObject wgo)
     {
-        if (StockpileIsValid(wgo))
+        if (Plugin.StockpileIsValid(wgo))
         {
-            RemoveStockpile(wgo);
+            Plugin.RemoveStockpile(wgo);
         }
     }
 
@@ -104,7 +93,14 @@ public partial class Plugin
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.Interact))]
     public static void WorldGameObject_Interact_Postfix(WorldGameObject __instance)
     {
-        WorldGameObjectInteract(__instance);
+        Plugin.WorldGameObjectInteract(__instance);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
+    public static void GameSave_GlobalEventsCheck_DebugWarning()
+    {
+        Plugin.ShowDebugWarningOnce();
     }
 
     [HarmonyPostfix]
@@ -113,17 +109,17 @@ public partial class Plugin
     {
         if (!MainGame.game_started)
         {
-            InitialFullUpdate = false;
+            Plugin.InitialFullUpdate = false;
             return;
         }
 
-        if (!InitialFullUpdate)
+        if (!Plugin.InitialFullUpdate)
         {
-            InitialFullUpdate = true;
-            SortedStockpiles.Clear();
-            MainGame.me.StartCoroutine(RunFullUpdate());
+            Plugin.InitialFullUpdate = true;
+            Plugin.SortedStockpiles.Clear();
+            MainGame.me.StartCoroutine(Plugin.RunFullUpdate());
         }
 
-        CheckKeybinds();
+        Plugin.CheckKeybinds();
     }
 }

@@ -1,11 +1,12 @@
 {
   "AutoSave": "Salvataggio automatico",
-  "Rush": "Che emozione! Mi prende ogni volta!",
-  "SaveAreYouSureMenu": "Sei sicuro di voler tornare al menu principale",
-  "SaveAreYouSureDesktop": "Sei sicuro di voler uscire sul desktop",
-  "SaveProgressSaved": "L'avanzamento e la posizione corrente verranno salvati",
+  "CantSaveHere": "Non posso salvare qui, capo!",
+  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico.",
   "ExitButtonText": "Esci sul desktop",
-  "SaveProgressNotSaved": "L'avanzamento e la posizione corrente non verranno salvati",
+  "Rush": "Che emozione! Mi prende ogni volta!",
+  "SaveAreYouSureDesktop": "Sei sicuro di voler uscire sul desktop",
+  "SaveAreYouSureMenu": "Sei sicuro di voler tornare al menu principale",
   "SaveMessage": "Gioco salvato.",
-  "CantSaveHere": "Non posso salvare qui, capo!"
+  "SaveProgressNotSaved": "L'avanzamento e la posizione corrente non verranno salvati",
+  "SaveProgressSaved": "L'avanzamento e la posizione corrente verranno salvati"
 }

@@ -1,16 +1,15 @@
-﻿namespace PrayTheDayAway;
+namespace PrayTheDayAway;
 
-[HarmonyPatch]
-public partial class Plugin
+[Harmony]
+public static class Patches
 {
     private static bool LostPrayerItem { get; set; }
-
-    private static Item PrayerItem{ get; set; }
-    private static bool ShowPrayerItem{ get; set; }
+    private static Item PrayerItem { get; set; }
+    private static bool ShowPrayerItem { get; set; }
 
     private static void ProcessCraftDoodad(Item selectedItem)
     {
-        if (CheatModeConfig.Value) return;
+        if (Plugin.CheatModeConfig.Value) return;
         var playerInv = MainGame.me.player.GetMultiInventory(exceptions: null, force_world_zone: "",
             player_mi: MultiInventory.PlayerMultiInventory.IncludePlayer, include_toolbelt: true,
             include_bags: true, sortWGOS: true);
@@ -18,25 +17,25 @@ public partial class Plugin
 
         if (item == null)
         {
-            WriteLog($"Unable to find item {selectedItem.id} in player inventory");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Unable to find item {selectedItem.id} in player inventory");
             return;
         }
 
         ShowPrayerItem = false;
         PrayerItem = null;
 
-        if (RandomlyUpgradeBasicPrayer.Value && item.id == "b_empty")
+        if (Plugin.RandomlyUpgradeBasicPrayer.Value && item.id == "b_empty")
         {
             UpgradePrayer(playerInv, item);
         }
 
-        if (SermonOverAndOver.Value || EverydayIsSermonDay.Value)
+        if (Plugin.SermonOverAndOver.Value || Plugin.EverydayIsSermonDay.Value)
         {
             MainGame.me.player.SetParam("prayed_this_week", 0f);
 
-            if (EverydayIsSermonDay.Value && NoLossOnDailySermons.Value) return;
+            if (Plugin.EverydayIsSermonDay.Value && Plugin.NoLossOnDailySermons.Value) return;
 
-            if (AlternateMode.Value)
+            if (Plugin.AlternateMode.Value)
             {
                 LowerCraftLevel(playerInv, item);
                 return;
@@ -50,8 +49,8 @@ public partial class Plugin
     [HarmonyPatch(typeof(PrayCraftGUI), nameof(PrayCraftGUI.OnFinishedPrayBuffAnimation))]
     public static void PrayCraftGUI_OnFinishedPrayBuffAnimation()
     {
-        if (CheatModeConfig.Value) return;
-        if (NotifyOnPrayerLoss.Value && LostPrayerItem)
+        if (Plugin.CheatModeConfig.Value) return;
+        if (Plugin.NotifyOnPrayerLoss.Value && LostPrayerItem)
         {
             Lang.Reload();
             List<string> lostAnother =
@@ -80,7 +79,7 @@ public partial class Plugin
     [HarmonyPatch(typeof(PrayCraftGUI), nameof(PrayCraftGUI.OnMiddlePrayBuffAnimation))]
     public static void PrayCraftGUI_OnMiddlePrayBuffAnimation()
     {
-        if (CheatModeConfig.Value) return;
+        if (Plugin.CheatModeConfig.Value) return;
         if (PrayerItem != null && ShowPrayerItem)
         {
             var originalSize = PrayerItem.definition.item_size;
@@ -91,14 +90,21 @@ public partial class Plugin
         }
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
+    public static void GameSave_GlobalEventsCheck_DebugWarning()
+    {
+        Plugin.ShowDebugWarningOnce();
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
     public static void EnvironmentEngine_OnEndOfDay()
     {
-        if (CheatModeConfig.Value) return;
-        if (EverydayIsSermonDay.Value)
+        if (Plugin.CheatModeConfig.Value) return;
+        if (Plugin.EverydayIsSermonDay.Value)
         {
-            WriteLog($"EnvironmentEngine_OnEndOfDay: EverydayIsSermonDay = true - New day, new sermon!");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"EnvironmentEngine_OnEndOfDay: EverydayIsSermonDay = true - New day, new sermon!");
             MainGame.me.player.SetParam("prayed_this_week", 0f);
         }
     }
@@ -107,54 +113,53 @@ public partial class Plugin
     [HarmonyPatch(typeof(Stats), nameof(Stats.DesignEvent), typeof(string))]
     public static void Stats_DesignEvent(string event_name)
     {
-        if (CheatModeConfig.Value) return;
-        if (EverydayIsSermonDay.Value && event_name == "day")
+        if (Plugin.CheatModeConfig.Value) return;
+        if (Plugin.EverydayIsSermonDay.Value && event_name == "day")
         {
-            WriteLog($"Stats.DesignEvent: EverydayIsSermonDay = true - New day, new sermon!");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Stats.DesignEvent: EverydayIsSermonDay = true - New day, new sermon!");
             MainGame.me.player.SetParam("prayed_this_week", 0f);
         }
     }
 
     private static void RemovePrayCraft(MultiInventory inventory, Item item)
     {
-        if (CheatModeConfig.Value) return;
+        if (Plugin.CheatModeConfig.Value) return;
         if (item.id == "b_empty") return;
         LostPrayerItem = false;
-        WriteLog($"RemovePrayCraft: {item.id}");
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"RemovePrayCraft: {item.id}");
         float roll = Random.Range(0, 101);
         var remove = false;
         if (item.id.EndsWith(":3"))
         {
-            WriteLog($"Gold prayer item: 20% chance to lose it. Rolled {roll}/100.");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Gold prayer item: 20% chance to lose it. Rolled {roll}/100.");
             remove = roll <= 20;
-            //20% chance of loss
         }
 
         if (item.id.EndsWith(":2"))
         {
-            WriteLog($"Silver prayer item: 40% chance to lose it. Rolled {roll}/100.");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Silver prayer item: 40% chance to lose it. Rolled {roll}/100.");
             remove = roll <= 40;
         }
 
         if (item.id.EndsWith(":1"))
         {
-            WriteLog($"Bronze prayer item: 60% chance to lose it. Rolled {roll}/100.");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Bronze prayer item: 60% chance to lose it. Rolled {roll}/100.");
             remove = roll <= 60;
         }
 
         if (remove)
         {
             LostPrayerItem = true;
-            WriteLog($"Removed 1x {item.id}.");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Removed 1x {item.id}.");
             inventory.RemoveItem(item, 1);
         }
     }
 
     private static void UpgradePrayer(MultiInventory inventory, Item item)
     {
-        if (CheatModeConfig.Value) return;
+        if (Plugin.CheatModeConfig.Value) return;
         if (item.id != "b_empty") return;
-        WriteLog($"PrayItem: {item.id}, ItemDef: {item.definition.id}, LinkedCraft: {item.definition.linked_craft.id}");
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"PrayItem: {item.id}, ItemDef: {item.definition.id}, LinkedCraft: {item.definition.linked_craft.id}");
         var faithItems = GameBalance.me.items_data
             .Where(a => a.type == ItemDefinition.ItemType.Preach)
             .Where(b => MainGame.me.save.unlocked_crafts.Contains(b.id.Split(':')[0]))
@@ -166,12 +171,12 @@ public partial class Plugin
         ShowPrayerItem = true;
         inventory.AddItem(PrayerItem);
 
-        WriteLog($"UpgradePrayer: Removing 1x {item.id} and adding 1x {newItem}.");
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"UpgradePrayer: Removing 1x {item.id} and adding 1x {newItem}.");
     }
 
     private static void LowerCraftLevel(MultiInventory inventory, Item item)
     {
-        if (CheatModeConfig.Value) return;
+        if (Plugin.CheatModeConfig.Value) return;
         if (item.id == "b_empty") return;
         var oldItemSplit = item.id.Split(':');
         var oldItemName = oldItemSplit[0];
@@ -182,20 +187,19 @@ public partial class Plugin
         var downgrade = false;
         if (item.id.EndsWith(":3"))
         {
-            WriteLog($"Gold prayer item: 20% chance to downgrade it. Rolled {roll}/100.");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Gold prayer item: 20% chance to downgrade it. Rolled {roll}/100.");
             downgrade = roll <= 20;
-            //20% chance of downgrade
         }
 
         if (item.id.EndsWith(":2"))
         {
-            WriteLog($"Silver prayer item: 40% chance to downgrade it. Rolled {roll}/100.");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Silver prayer item: 40% chance to downgrade it. Rolled {roll}/100.");
             downgrade = roll <= 40;
         }
 
         if (item.id.EndsWith(":1"))
         {
-            WriteLog($"Bronze prayer item: 60% chance to downgrade it. Rolled {roll}/100.");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Bronze prayer item: 60% chance to downgrade it. Rolled {roll}/100.");
             downgrade = roll <= 60;
         }
 
@@ -206,7 +210,7 @@ public partial class Plugin
             case > 1:
                 var newItemLevel = oldItemLevelInt - 1;
                 var newItem = oldItemName + ":" + newItemLevel;
-                WriteLog($"LowerCraftLevel: Removing 1x {item.id} and adding 1x {newItem}.");
+                if (Plugin.DebugEnabled) Plugin.WriteLog($"LowerCraftLevel: Removing 1x {item.id} and adding 1x {newItem}.");
                 inventory.RemoveItem(item, 1);
                 PrayerItem = new Item(newItem, 1);
                 ShowPrayerItem = true;
@@ -214,7 +218,7 @@ public partial class Plugin
 
                 break;
             case 1:
-                WriteLog($"LowerCraftLevel: Removing 1x {item.id} and adding 1x b_empty.");
+                if (Plugin.DebugEnabled) Plugin.WriteLog($"LowerCraftLevel: Removing 1x {item.id} and adding 1x b_empty.");
                 inventory.RemoveItem(item, 1);
                 PrayerItem = new Item("b_empty", 1);
                 ShowPrayerItem = true;
@@ -227,8 +231,8 @@ public partial class Plugin
     [HarmonyPatch(typeof(CustomScript), nameof(CustomScript.TerminateMe))]
     public static void CustomScript_TerminateMe(CustomScript __instance)
     {
-        if (__instance == null ||string.IsNullOrEmpty(__instance.script_name)) return;
-        if (Time.timeScale >1 && __instance.script_name.ToLowerInvariant().Equals("pray"))
+        if (__instance == null || string.IsNullOrEmpty(__instance.script_name)) return;
+        if (Time.timeScale > 1 && __instance.script_name.ToLowerInvariant().Equals("pray"))
         {
             Time.timeScale = 1f;
         }
@@ -241,8 +245,8 @@ public partial class Plugin
     public static void PrayCraftGUI_OnPrayButtonPressed(PrayCraftGUI __instance)
     {
         if (__instance == null) return;
-        WriteLog($"Selected sermon item is {__instance._selected_item?.id}.");
-        if (CheatModeConfig.Value)
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"Selected sermon item is {__instance._selected_item?.id}.");
+        if (Plugin.CheatModeConfig.Value)
         {
             MainGame.me.player.SetParam("prayed_this_week", 0f);
             GoFast();
@@ -252,13 +256,11 @@ public partial class Plugin
         GoFast();
     }
 
-  
-
     private static void GoFast()
     {
-        if (!SpeedUpSermon.Value) return;
-        WriteLog($"goFast is true, setting timescale to {SermonSpeed.Value}. Original value is {Time.timeScale}");
-        Time.timeScale = SermonSpeed.Value;
+        if (!Plugin.SpeedUpSermon.Value) return;
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"goFast is true, setting timescale to {Plugin.SermonSpeed.Value}. Original value is {Time.timeScale}");
+        Time.timeScale = Plugin.SermonSpeed.Value;
     }
 
     [HarmonyPrefix]
@@ -267,34 +269,32 @@ public partial class Plugin
     {
         if (!__instance.obj_id.Contains("church_pulpit"))
         {
-            WriteLog($"Not the pulpit, bailing!");
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"Not the pulpit, bailing!");
             return true;
         }
 
-        if (!CheatModeConfig.Value)
+        if (!Plugin.CheatModeConfig.Value)
         {
-            if (!EverydayIsSermonDay.Value)
+            if (!Plugin.EverydayIsSermonDay.Value)
             {
-                WriteLog("EverydayIsSermonDay = false, bailing!");
+                if (Plugin.DebugEnabled) Plugin.WriteLog("EverydayIsSermonDay = false, bailing!");
                 return true;
             }
 
-            if (EverydayIsSermonDay.Value && !SermonOverAndOver.Value &&
+            if (Plugin.EverydayIsSermonDay.Value && !Plugin.SermonOverAndOver.Value &&
                 MainGame.me.player.GetParam("prayed_this_week") >= 1)
             {
-                WriteLog(
-                    "EverydayIsSermonDay = true, SermonOverAndOver = false, AlreadyPrayedThisWeek = true - bailing!");
+                if (Plugin.DebugEnabled) Plugin.WriteLog("EverydayIsSermonDay = true, SermonOverAndOver = false, AlreadyPrayedThisWeek = true - bailing!");
                 return true;
             }
         }
 
-        WriteLog($"All good, running the sermon!");
-        // __instance.components.craft.Interact(MainGame.me.player, -1);
-        if (CheatModeConfig.Value)
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"All good, running the sermon!");
+        if (Plugin.CheatModeConfig.Value)
         {
             MainGame.me.player.SetParam("prayed_this_week", 0f);
         }
-        
+
         GUIElements.me.pray_craft.Open(__instance);
         return false;
     }

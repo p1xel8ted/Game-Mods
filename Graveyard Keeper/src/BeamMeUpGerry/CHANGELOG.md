@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.4 | 12 April 2026
+
+- Enabling Debug logging now shows a one-time in-game dialog warning you it's on, so you don't forget it's enabled
+- Fixed non-English translations not loading — the mod was showing English regardless of your game language
+- Language changes in the game options are now picked up immediately without needing to restart
+
 ## 3.1.3 | 11 April 2026
 
 - Main menu now shows "BepInEx Modded" in the version text

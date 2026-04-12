@@ -1,6 +1,7 @@
 {
   "Bye": "Do widzenia.",
   "ConfigMessage": "Konfiguracja została ponownie załadowana!",
+  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
   "For": "dla",
   "GerrysPrice": "Cena Gerry'ego",
   "Header": "Śmieciowy kufer Gerry'ego",

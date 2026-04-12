@@ -1,5 +1,6 @@
 {
   "ApplesReady": "Zbiory jabłek gotowe!",
   "BerriesReady": "Zbiór jagód gotowy!",
+  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
   "HoneyReady": "Zbiór miodu gotowy!"
 }

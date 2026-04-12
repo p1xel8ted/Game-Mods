@@ -1,6 +1,7 @@
 {
   "Bye": "안녕히 계세요.",
   "ConfigMessage": "구성이 다시 로드되었습니다!",
+  "DebugWarning": "디버그 모드가 켜져 있습니다. 특별한 목적이 없다면 켜 두지 않는 것을 권장합니다.",
   "For": "~을 위한",
   "GerrysPrice": "게리의 가격",
   "Header": "Gerry의 정크 트렁크",

@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.thoughtfulreminders";
     private const string PluginName = "Thoughtful Reminders";
-    private const string PluginVer = "2.2.10";
+    private const string PluginVer = "2.2.11";
 
     internal static ConfigEntry<bool> SpeechBubblesConfig { get; private set; }
     internal static ConfigEntry<bool> DaysOnlyConfig { get; private set; }

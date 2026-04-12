@@ -1,11 +1,12 @@
 {
   "AutoSave": "Auto Save",
-  "Rush": "What a rush! Gets me every time!",
-  "SaveAreYouSureMenu": "Are you sure you want to return to the main menu",
-  "SaveAreYouSureDesktop": "Are you sure you want to exit to desktop",
-  "SaveProgressSaved": "Progress and current location will be saved",
+  "CantSaveHere": "Can't save here, boss!",
+  "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it.",
   "ExitButtonText": "Exit to desktop",
-  "SaveProgressNotSaved": "Progress and current location will not be saved",
+  "Rush": "What a rush! Gets me every time!",
+  "SaveAreYouSureDesktop": "Are you sure you want to exit to desktop",
+  "SaveAreYouSureMenu": "Are you sure you want to return to the main menu",
   "SaveMessage": "Game saved!",
-  "CantSaveHere": "Can't save here, boss!"
+  "SaveProgressNotSaved": "Progress and current location will not be saved",
+  "SaveProgressSaved": "Progress and current location will be saved"
 }

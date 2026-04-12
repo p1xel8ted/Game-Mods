@@ -1,6 +1,7 @@
 {
   "ConfirmText": "Tem certeza de que deseja redefinir todas as árvores?",
-  "Yes": "Sim",
+  "DebugWarning": "Observe que o modo de depuração está ativado. Não é recomendado deixá-lo ativado a menos que você tenha um propósito para isso.",
   "No": "Não",
-  "ResetButton": "Redefinir árvores"
+  "ResetButton": "Redefinir árvores",
+  "Yes": "Sim"
 }

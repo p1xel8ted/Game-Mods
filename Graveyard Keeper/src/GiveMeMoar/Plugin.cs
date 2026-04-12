@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.givememoar";
     private const string PluginName = "Give Me Moar!";
-    private const string PluginVer = "1.2.12";
+    private const string PluginVer = "1.2.13";
     
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static ConfigEntry<bool> MultiplySticks { get; private set; }
@@ -32,6 +32,8 @@ public class Plugin : BaseUnityPlugin
     private void InitConfiguration()
     {
 
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {Order = 7}));
+
         BlueTechPointMultiplier = Config.Bind("01. Multipliers", "Blue Tech Point Multiplier", 1f, new ConfigDescription("Adjust the multiplier for blue tech points", new AcceptableValueRange<float>(1f, 50f), new ConfigurationManagerAttributes {Order = 17}));
 
         DonationMultiplier = Config.Bind("01. Multipliers", "Donation Multiplier", 1f, new ConfigDescription("Adjust the multiplier for donations", new AcceptableValueRange<float>(1f, 50f), new ConfigurationManagerAttributes {Order = 16}));
@@ -51,7 +53,5 @@ public class Plugin : BaseUnityPlugin
         SinShardMultiplier = Config.Bind("01. Multipliers", "Sin Shard Multiplier", 1f, new ConfigDescription("Adjust the multiplier for sin shards", new AcceptableValueRange<float>(1f, 50f), new ConfigurationManagerAttributes {Order = 9}));
 
         MultiplySticks = Config.Bind("3. Miscellaneous", "Multiply Sticks", false, new ConfigDescription("Sticks get multiplied endlessly when used in the garden. Enable this to exclude them.", null, new ConfigurationManagerAttributes {Order = 8}));
-
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 7}));
     }
 }

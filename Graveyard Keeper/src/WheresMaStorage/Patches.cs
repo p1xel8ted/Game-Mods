@@ -39,6 +39,15 @@ public static class Patches
         Fields.IsSoulBox = __instance.obj_id.ToLowerInvariant().Contains("soul_container");
         Fields.IsChurchPulpit = __instance.obj_id.ToLowerInvariant().Contains("pulpit");
 
+        if (Plugin.DebugEnabled)
+        {
+            Helpers.Log($"[Interact] obj={__instance.obj_id} zone={__instance.GetMyWorldZoneId()} " +
+                        $"type={__instance.obj_def.interaction_type} " +
+                        $"flags={{Vendor={Fields.IsVendor},Craft={Fields.IsCraft},Chest={Fields.IsChest}," +
+                        $"Barman={Fields.IsBarman},TavernCellar={Fields.IsTavernCellarRack},Writer={Fields.IsWritersTable}," +
+                        $"SoulBox={Fields.IsSoulBox},Pulpit={Fields.IsChurchPulpit}}}");
+        }
+
         if (__instance.obj_def.inventory_size > 0)
         {
             __instance.data.sub_name = __instance.obj_id.Length <= 0
@@ -54,6 +63,7 @@ public static class Patches
     {
         if (BaseGUI.all_guis_closed)
         {
+            if (Plugin.DebugEnabled) Helpers.Log("[ResetFlags] BaseGUI.Hide (all GUIs closed) → resetting interaction flags");
             Helpers.ResetInteractionFlags();
         }
     }
@@ -72,6 +82,7 @@ public static class Patches
     public static void SleepGUI_Open()
     {
         Fields.InventoriesLoaded = false;
+        if (Plugin.DebugEnabled) Helpers.Log("[ResetFlags] SleepGUI.Open → InventoriesLoaded=false");
     }
 
 
@@ -80,6 +91,7 @@ public static class Patches
     public static void WaitingGUI_Open()
     {
         Fields.InventoriesLoaded = false;
+        if (Plugin.DebugEnabled) Helpers.Log("[ResetFlags] WaitingGUI.Open → InventoriesLoaded=false");
     }
 
     [HarmonyPostfix]
@@ -97,6 +109,7 @@ public static class Patches
     {
         if (wgo.data.inventory_size > 0)
         {
+            if (Plugin.DebugEnabled) Helpers.Log($"[Invalidate] OnAddNewWGO obj={wgo.obj_id} (inventory_size={wgo.data.inventory_size}) → InventoriesLoaded=false");
             Fields.InventoriesLoaded = false;
         }
     }
@@ -107,6 +120,7 @@ public static class Patches
     {
         if (wgo.data.inventory_size > 0)
         {
+            if (Plugin.DebugEnabled) Helpers.Log($"[Invalidate] OnDestroyWGO obj={wgo.obj_id} → InventoriesLoaded=false");
             Fields.InventoriesLoaded = false;
         }
     }
@@ -124,7 +138,11 @@ public static class Patches
         bool include_bags = false
     )
     {
-        if (!Plugin.SharedInventory.Value) return true;
+        if (!Plugin.SharedInventory.Value)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] SharedInventory disabled, passing through for obj={__instance.obj_id}");
+            return true;
+        }
 
         var objId = __instance.obj_id;
         var objDefId = __instance.obj_def.id;
@@ -133,16 +151,32 @@ public static class Patches
         var isWell = objId.Contains("well");
         var isZombieMill = worldZoneId.Contains("zombie_mill");
 
-        if (Fields.AlwaysSkipInventories.Any(skipItem => objId.Contains(skipItem) || objDefId.Contains(skipItem) || worldZoneId.Contains(skipItem))) return true;
+        if (Fields.AlwaysSkipInventories.Any(skipItem => objId.Contains(skipItem) || objDefId.Contains(skipItem) || worldZoneId.Contains(skipItem)))
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] skip (AlwaysSkipInventories match) obj={objId} zone={worldZoneId}");
+            return true;
+        }
 
-        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return true;
+        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] skip (well exclusion) obj={objId}");
+            return true;
+        }
 
-        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return true;
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] skip (zombie mill exclusion) obj={objId} zone={worldZoneId}");
+            return true;
+        }
 
         var isZombieWorker = __instance.has_linked_worker && __instance.linked_worker.obj_id.Contains("zombie") || objDefId.Contains("zombie");
         Fields.ZombieWorker = isZombieWorker;
 
-        if (isZombieWorker && !Plugin.AllowZombiesAccessToSharedInventory.Value) return true;
+        if (isZombieWorker && !Plugin.AllowZombiesAccessToSharedInventory.Value)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] skip (zombie worker, shared disallowed) obj={objId}");
+            return true;
+        }
 
         var proceed = objId.Contains("church_pulpit") ||
                       Fields.IsCraft ||
@@ -153,7 +187,11 @@ public static class Patches
                       __instance.is_player ||
                       objId.StartsWith("mf_");
 
-        if (!proceed) return true;
+        if (!proceed)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] no-proceed (no match) obj={objId} zone={worldZoneId}");
+            return true;
+        }
 
         var inv = new MultiInventory();
         inv.SetInventories(Invents.GetMiInventory(objId, worldZoneId).all);
@@ -161,6 +199,7 @@ public static class Patches
         Fields.Mi = inv;
         __result = inv;
 
+        if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] injected shared multi ({inv.all.Count} inventories) for obj={objId} zone={worldZoneId}");
         return false;
     }
 
@@ -202,6 +241,7 @@ public static class Patches
         ref bool start_by_player)
     {
         Fields.GratitudeCraft = for_gratitude_points;
+        if (Plugin.DebugEnabled) Helpers.Log($"[CraftReally] craft={craft?.id} gratitude={for_gratitude_points}");
         if (Fields.GratitudeCraft)
         {
             start_by_player = false;
@@ -220,6 +260,7 @@ public static class Patches
     [HarmonyPatch(typeof(SaveSlotsMenuGUI), nameof(SaveSlotsMenuGUI.Open))]
     public static void SaveSlotsMenuGUI_Open()
     {
+        if (Plugin.DebugEnabled) Helpers.Log("[ResetFlags] SaveSlotsMenuGUI.Open → clearing inventory/gamebalance/drops flags");
         ResetFlags();
     }
 
@@ -228,7 +269,11 @@ public static class Patches
     [HarmonyPatch(typeof(BaseCraftGUI), nameof(BaseCraftGUI.multi_inventory), MethodType.Getter)]
     public static void BaseCraftGUI_multi_inventory(BaseCraftGUI __instance, ref MultiInventory __result)
     {
-        if (!Plugin.SharedInventory.Value) return;
+        if (!Plugin.SharedInventory.Value)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log("[BaseCraftGUI] SharedInventory disabled, passing through");
+            return;
+        }
 
         var crafteryWGO = __instance.GetCrafteryWGO();
         var crafteryObjId = crafteryWGO.obj_id;
@@ -236,7 +281,11 @@ public static class Patches
         var instanceName = __instance.name;
         var crafteryWzId = crafteryWGO.GetMyWorldZoneId();
 
-        if (Fields.AlwaysSkipInventories.Any(a => crafteryObjId.Contains(a) || crafteryObjDefId.Contains(a) || crafteryWzId.Contains(a))) return;
+        if (Fields.AlwaysSkipInventories.Any(a => crafteryObjId.Contains(a) || crafteryObjDefId.Contains(a) || crafteryWzId.Contains(a)))
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] skip (AlwaysSkipInventories match) obj={crafteryObjId} zone={crafteryWzId}");
+            return;
+        }
 
         var isQuarry = crafteryWzId.Contains("stone_workyard") || crafteryWzId.Contains("marble_deposit");
         var isWell = crafteryObjId.Contains("well") || crafteryObjDefId.Contains("well");
@@ -245,13 +294,26 @@ public static class Patches
         var isZombie = crafteryObjId.Contains("zombie") || crafteryObjDefId.Contains("zombie");
         Fields.ZombieWorker = isZombie;
 
-        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell) return;
+        if (Plugin.ExcludeWellsFromSharedInventory.Value && isWell)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] skip (well exclusion) obj={crafteryObjId}");
+            return;
+        }
 
-        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill) return;
+        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && isZombieMill)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] skip (zombie mill exclusion) obj={crafteryObjId} zone={crafteryWzId}");
+            return;
+        }
 
-        if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie) return;
+        if (!Plugin.AllowZombiesAccessToSharedInventory.Value && isZombie)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] skip (zombie, shared disallowed) obj={crafteryObjId}");
+            return;
+        }
 
         __result = Invents.GetMiInventory($"[BaseCraftGUI.multi_inventory (Getter)]: {instanceName}, Craftery: {crafteryObjId}", crafteryWGO.GetMyWorldZoneId());
+        if (Plugin.DebugEnabled) Helpers.Log($"[BaseCraftGUI] injected shared multi ({__result.all.Count} inventories) panel={instanceName} obj={crafteryObjId} zone={crafteryWzId}");
     }
 
 
@@ -263,6 +325,7 @@ public static class Patches
                 or ObjectDefinition.InteractionType.Builder or ObjectDefinition.InteractionType.Craft ||
             __instance.obj_id.StartsWith("mf_"))
         {
+            if (Plugin.DebugEnabled) Helpers.Log($"[Invalidate] ReplaceWithObject obj={__instance.obj_id} type={__instance.obj_def.interaction_type} → InventoriesLoaded=false");
             Fields.InventoriesLoaded = false;
         }
     }
@@ -298,9 +361,23 @@ public static class Patches
         ref MultiInventory multi_inventory)
     {
         if (GUIElements.me.pray_craft.gameObject.activeSelf ||
-            GUIElements.me.pray_craft.gameObject.activeInHierarchy) return;
+            GUIElements.me.pray_craft.gameObject.activeInHierarchy)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] skip (pray_craft active) panel={__instance.name}");
+            return;
+        }
 
-        if (__instance.name.ToLowerInvariant().Contains(Fields.Vendor)) return;
+        if (__instance.GetComponentInParent<VendorGUI>() != null)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] skip (VendorGUI parent detected) panel={__instance.name}");
+            return;
+        }
+
+        if (__instance.name.ToLowerInvariant().Contains(Fields.Vendor))
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] skip (panel name contains 'vendor') panel={__instance.name}");
+            return;
+        }
 
         var tools = multi_inventory.all
             .Where(a => a.name == "Tools" || a.data.id is "Tools" or "Toolbelt")
@@ -317,9 +394,17 @@ public static class Patches
             __instance.dont_show_empty_rows = true;
         }
 
-        if (Fields.IsCraft || Fields.IsVendor || Fields.IsChurchPulpit) return;
+        if (Fields.IsCraft || Fields.IsVendor || Fields.IsChurchPulpit)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] skip (flag match Craft={Fields.IsCraft}/Vendor={Fields.IsVendor}/Pulpit={Fields.IsChurchPulpit}) panel={__instance.name}");
+            return;
+        }
 
-        if (MainGame.me.player.GetMyWorldZoneId().Contains("refugee")) return;
+        if (MainGame.me.player.GetMyWorldZoneId().Contains("refugee"))
+        {
+            if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] skip (player in refugee zone) panel={__instance.name}");
+            return;
+        }
 
         if (Plugin.ShowOnlyPersonalInventory.Value ||
             Fields.IsBarman ||
@@ -328,7 +413,11 @@ public static class Patches
             Fields.IsChest ||
             Fields.IsWritersTable)
         {
-            if (__instance.name.Contains("bag")) return;
+            if (__instance.name.Contains("bag"))
+            {
+                if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] skip (bag panel) panel={__instance.name}");
+                return;
+            }
 
             var onlyMineInventory = new MultiInventory();
             var bagCount = multi_inventory.all[0].data.inventory.Count(item => item.is_bag);
@@ -342,6 +431,7 @@ public static class Patches
                     onlyMineInventory.AddInventory(multi_inventory.all[i + 1]);
                 }
             }
+            if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] replaced multi (ShowOnly={Plugin.ShowOnlyPersonalInventory.Value},Barman={Fields.IsBarman},TavernCellar={Fields.IsTavernCellarRack},SoulBox={Fields.IsSoulBox},Chest={Fields.IsChest},Writer={Fields.IsWritersTable}) panel={__instance.name} ({multi_inventory.all.Count} → {onlyMineInventory.all.Count} inventories, {bagCount} bags)");
             multi_inventory = onlyMineInventory;
         }
     }
@@ -352,11 +442,14 @@ public static class Patches
     {
         var panelNameLower = __instance.name.ToLowerInvariant();
         var isChestPanel = panelNameLower.Contains(Fields.Chest);
-        var isVendorPanel = panelNameLower.Contains(Fields.Vendor);
+        var isVendorPanel = panelNameLower.Contains(Fields.Vendor) ||
+                            __instance.GetComponentInParent<VendorGUI>() != null;
         var isPlayerPanel = panelNameLower.Contains(Fields.Player) ||
                             panelNameLower.Contains(Fields.Multi) && Fields.CurrentWgoInteraction == null;
 
         var isResourcePanelProbably = !isChestPanel && !isVendorPanel && !isPlayerPanel;
+
+        if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Postfix] panel={__instance.name} classified: chest={isChestPanel} vendor={isVendorPanel} player={isPlayerPanel} resource={isResourcePanelProbably}");
 
         foreach (var a in __instance._separators)
         {
@@ -556,6 +649,7 @@ public static class Patches
                 or ObjectDefinition.InteractionType.Builder or ObjectDefinition.InteractionType.Craft ||
             __instance.obj_id.StartsWith("mf_"))
         {
+            if (Plugin.DebugEnabled) Helpers.Log($"[Invalidate] DestroyMe obj={__instance.obj_id} type={__instance.obj_def.interaction_type} → InventoriesLoaded=false");
             Fields.InventoriesLoaded = false;
         }
     }

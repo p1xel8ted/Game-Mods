@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.5.8</Version>
-<!--        <NexusGroupId>495841</NexusGroupId>-->
+        <Version>2.5.9</Version>
+        <NexusGroupId>495841</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
@@ -15,5 +15,8 @@
         <Reference Include="Rewired_Core">
             <HintPath>..\..\libs\Rewired_Core.dll</HintPath>
         </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\LogHelper.cs" Link="LogHelper.cs"/>
     </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.3.5</Version>
+        <Version>0.3.6</Version>
         <NexusGroupId>790978</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
@@ -10,5 +10,8 @@
     </ItemGroup>
     <ItemGroup>
         <Content Include="lang\*.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\LogHelper.cs" Link="LogHelper.cs"/>
     </ItemGroup>
 </Project>

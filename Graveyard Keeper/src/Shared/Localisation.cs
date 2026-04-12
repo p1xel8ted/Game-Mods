@@ -9,6 +9,7 @@ internal static class Lang
     private static Dictionary<string, string> _fallback = new();
     private static string _langDir;
     private static string _prefix;
+    private static string _currentLang;
     private static ManualLogSource _log;
 
     internal static void Init(System.Reflection.Assembly modAssembly, ManualLogSource log)
@@ -35,11 +36,19 @@ internal static class Lang
     {
         var lang = GameSettings._cur_lng;
         if (string.IsNullOrEmpty(lang)) lang = "en";
+        if (_currentLang == lang) return;
+        _currentLang = lang;
         _translations = lang == "en" ? _fallback : LoadFile(lang);
     }
 
     internal static string Get(string key)
     {
+        // BepInEx plugins Awake() before the game assigns GameSettings._cur_lng,
+        // so re-check on first lookup (and on any mid-game language change).
+        var current = GameSettings._cur_lng;
+        if (string.IsNullOrEmpty(current)) current = "en";
+        if (_currentLang != current) Reload();
+
         if (_translations.TryGetValue(key, out var value)) return value;
         if (_fallback.TryGetValue(key, out var fallback)) return fallback;
         _log?.LogWarning($"[Lang] Missing key: {key}");

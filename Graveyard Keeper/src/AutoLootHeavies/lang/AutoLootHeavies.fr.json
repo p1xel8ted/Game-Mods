@@ -1,5 +1,6 @@
 {
-  "DumpTimber": "Déposez du bois ici !",
+  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
   "DumpOre": "Déchargez le minerai ici !",
-  "DumpStone": "Déchargez la pierre et le marbre ici !"
+  "DumpStone": "Déchargez la pierre et le marbre ici !",
+  "DumpTimber": "Déposez du bois ici !"
 }

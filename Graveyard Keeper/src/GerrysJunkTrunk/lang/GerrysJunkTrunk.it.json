@@ -1,6 +1,7 @@
 {
   "Bye": "Addio.",
   "ConfigMessage": "Configurazione ricaricata!",
+  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico.",
   "For": "per",
   "GerrysPrice": "Il prezzo di Gerry",
   "Header": "Il baule spazzatura di Gerry",

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.7.12 | 12 April 2026
+
+- Fixed non-English translations not loading — the mod was showing English regardless of your game language
+- Language changes in the game options are now picked up immediately without needing to restart
+- Enabling Debug logging now shows a one-time in-game dialog warning you it's on, so you don't forget it's enabled
+
 ## 2.7.11 | 11 April 2026
 
 - Translations are now loaded from editable JSON files in the lang folder

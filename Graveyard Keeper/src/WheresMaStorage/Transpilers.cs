@@ -45,7 +45,7 @@ public static class Transpilers
                 if (codes[i].opcode == OpCodes.Ldfld && codes[i].operand.ToString().Contains("item_needs") && codes[i - 1].opcode == OpCodes.Ldarg_1)
                 {
                     insertIndex = i;
-                    Helpers.Log($"[CraftReally]: Found insert index! {i}");
+                    if (Plugin.DebugEnabled) Helpers.Log($"[CraftReally]: Found insert index! {i}");
                     break;
                 }
 
@@ -63,7 +63,7 @@ public static class Transpilers
             if (insertIndex != -1)
             {
                 codes.InsertRange(insertIndex, newCodes);
-                Helpers.Log($"[CraftReally]: Inserted range into {insertIndex}");
+                if (Plugin.DebugEnabled) Helpers.Log($"[CraftReally]: Inserted range into {insertIndex}");
             }
             else
             {

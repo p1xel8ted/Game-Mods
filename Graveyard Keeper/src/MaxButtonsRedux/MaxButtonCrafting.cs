@@ -1,4 +1,4 @@
-﻿namespace MaxButtonControllerSupport;
+﻿namespace MaxButtonsRedux;
 
 public static class MaxButtonCrafting
 {

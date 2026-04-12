@@ -1,3 +1,4 @@
 {
-  "CarrotMessage": "Blimey ! Je n'ai plus de carottes pour l'âne ! !"
+  "CarrotMessage": "Blimey ! Je n'ai plus de carottes pour l'âne ! !",
+  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin."
 }

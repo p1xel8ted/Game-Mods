@@ -1,5 +1,3 @@
-using UnityEngine.SceneManagement;
-
 namespace MiscBitsAndBobs;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
@@ -7,9 +5,11 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.miscbitsandbobs";
     private const string PluginName = "Misc. Bits & Bobs";
-    private const string PluginVer = "2.3.2";
+    private const string PluginVer = "2.3.3";
 
     internal static ConfigEntry<bool> Debug { get; set; }
+    internal static bool DebugEnabled;
+    internal static bool DebugDialogShown;
     internal static ConfigEntry<bool> QuietMusicInGuiConfig { get; private set; }
     internal static ConfigEntry<bool> CondenseXpBarConfig { get; private set; }
     internal static ConfigEntry<bool> ModifyPlayerMovementSpeedConfig { get; private set; }
@@ -25,66 +25,27 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> RemovePrayerOnUseConfig { get; private set; }
     internal static ConfigEntry<bool> AddCoalToTavernOvenConfig { get; private set; }
     internal static ConfigEntry<bool> AddZombiesToPyreAndCrematoriumConfig { get; private set; }
-    private static ConfigEntry<bool> KeepGamingRunningInBackgroundConfig { get; set; }
-    
-    private static ConfigEntry<bool> MuteWhenRunningInBackgroundConfig { get; set; }
     internal static ConfigEntry<bool> OldEnglishThrowback { get; private set; }
-    internal static ConfigEntry<bool> FixPlayerJudderConfig { get; private set; }
-    internal static ConfigEntry<int> MaxFootprintsConfig { get; private set; }
-    internal static ConfigEntry<float> FootprintFadeOutsideConfig { get; private set; }
-    internal static ConfigEntry<float> FootprintFadeInsideConfig { get; private set; }
-    internal static ConfigEntry<float> FootprintFadeRainConfig { get; private set; }
-    internal static ConfigEntry<bool> FixFootprintFadingConfig { get; private set; }
-    
+
+
     internal static ManualLogSource Log { get; private set; }
 
 
     private void Awake()
     {
         Log = Logger;
+        LogHelper.Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        SceneManager.sceneLoaded += SceneManagerOnSceneLoaded;
-        Application.focusChanged += ApplicationOnFocusChanged;
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
     }
-    private static void ApplicationOnFocusChanged(bool value)
-    {
-        Application.runInBackground = KeepGamingRunningInBackgroundConfig.Value;
-        if (MuteWhenRunningInBackgroundConfig.Value)
-        {
-            AudioListener.volume = Application.isFocused ? 1 : 0;
-        }
-        else
-        {
-            AudioListener.volume = 1;
-        }
-    }
-    private static void SceneManagerOnSceneLoaded(Scene __arg0, LoadSceneMode __arg1)
-    {
-        ApplicationOnFocusChanged(true);
-    }
-    
+
     private void InitConfiguration()
     {
-        KeepGamingRunningInBackgroundConfig = Config.Bind("01. General", "Keep Game Running In Background", true, new ConfigDescription("Keep the game running when it is in the background.", null, new ConfigurationManagerAttributes {Order = 30}));
-        KeepGamingRunningInBackgroundConfig.SettingChanged += (_, _) =>
-        {
-            Application.runInBackground = KeepGamingRunningInBackgroundConfig.Value;
-        };
-        
-        MuteWhenRunningInBackgroundConfig = Config.Bind("01. General", "Mute When Running In Background", true, new ConfigDescription("Mute the game when it is in the background.", null, new ConfigurationManagerAttributes {Order = 31}));
-        MuteWhenRunningInBackgroundConfig.SettingChanged += (_, _) =>
-        {
-            if (MuteWhenRunningInBackgroundConfig.Value)
-            {
-                AudioListener.volume = Application.isFocused ? 1 : 0;
-            }
-            else
-            {
-                AudioListener.volume = 1;
-            }
-        };
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {Order = 12}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+
         QuietMusicInGuiConfig = Config.Bind("02. Audio", "Quiet Music In GUI", true, new ConfigDescription("Lower the music volume when in-game menus are open.", null, new ConfigurationManagerAttributes {Order = 29}));
 
         CondenseXpBarConfig = Config.Bind("03. UI", "Condense XP Bar", true, new ConfigDescription("Reduce the size of the XP bar in the user interface.", null, new ConfigurationManagerAttributes {Order = 28}));
@@ -104,26 +65,6 @@ public class Plugin : BaseUnityPlugin
         PorterMovementSpeedConfig = Config.Bind("05. Movement", "Porter Movement Speed", 1.0f, new ConfigDescription("Set the porter's movement speed.", new AcceptableValueRange<float>(1.0f, 100f), new ConfigurationManagerAttributes {Order = 15}));
         KitsuneKitoModeConfig = Config.Bind("06. Misc", "KitsuneKito Mode", false, new ConfigDescription("Discord user request. Drops a blue xp point when adding a basic fence to a grave.", null, new ConfigurationManagerAttributes {Order = 14}));
         OldEnglishThrowback = Config.Bind("06. Misc", "Old English Throwback", false, new ConfigDescription("Discord user request. Modifies a sermon sentence.", null, new ConfigurationManagerAttributes {Order = 13}));
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 12}));
-
-        FixPlayerJudderConfig = Config.Bind("07. Fixes", "Fix Player Judder", true, new ConfigDescription("Smooths out player movement by enabling physics interpolation and preventing grid-snapping.", null, new ConfigurationManagerAttributes {Order = 11}));
-        FixPlayerJudderConfig.SettingChanged += (_, _) =>
-        {
-            if (!MainGame.game_started) return;
-            var rb = MainGame.me.player?.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.interpolation = FixPlayerJudderConfig.Value
-                    ? RigidbodyInterpolation2D.Interpolate
-                    : RigidbodyInterpolation2D.None;
-            }
-        };
-
-        MaxFootprintsConfig = Config.Bind("08. Footprints", "Max Footprints", 1000, new ConfigDescription("Maximum number of footprints allowed before the oldest are removed. Set to 0 to disable the cap.", new AcceptableValueRange<int>(0, 10000), new ConfigurationManagerAttributes {Order = 10}));
-        FootprintFadeOutsideConfig = Config.Bind("08. Footprints", "Fade Speed Outside", 1f, new ConfigDescription("How fast footprints fade when outside. Higher values = faster fading. Game default is 0.1.", new AcceptableValueRange<float>(0.1f, 100f), new ConfigurationManagerAttributes {Order = 9}));
-        FootprintFadeInsideConfig = Config.Bind("08. Footprints", "Fade Speed Inside", 2.5f, new ConfigDescription("How fast footprints fade when inside. Game default is 2.5.", new AcceptableValueRange<float>(0.1f, 100f), new ConfigurationManagerAttributes {Order = 8}));
-        FootprintFadeRainConfig = Config.Bind("08. Footprints", "Fade Speed Rain", 10f, new ConfigDescription("How fast footprints fade in the rain. Game default is 10.", new AcceptableValueRange<float>(0.1f, 100f), new ConfigurationManagerAttributes {Order = 7}));
-        FixFootprintFadingConfig = Config.Bind("08. Footprints", "Fix Footprint Fading", true, new ConfigDescription("Fixes a game bug where footprints pop out of existence instead of fading smoothly.", null, new ConfigurationManagerAttributes {Order = 6}));
 
         Config.Bind("09. Church", "Evict All Church Visitors", true,
             new ConfigDescription("Force any stuck church visitors to vacate the premise.", null,
@@ -159,6 +100,14 @@ public class Plugin : BaseUnityPlugin
                 _showEvictConfirmation = true;
             }
         }
+    }
+
+    internal static void ShowDebugWarningOnce()
+    {
+        if (!DebugEnabled || DebugDialogShown) return;
+        DebugDialogShown = true;
+        Lang.Reload();
+        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     private static void EvictVisitors()

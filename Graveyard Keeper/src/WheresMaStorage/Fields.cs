@@ -39,6 +39,11 @@ public static class Fields
         "book", "chapter", "ink", "pen"
     ];
 
+    internal static readonly string[] SinShardItems =
+    [
+        "sin_shard", "sin_shard_body_part"
+    ];
+
     internal static readonly string[] StockpileWidgetsPartials =
     [
         "mf_stones", "mf_ore", "mf_timber"

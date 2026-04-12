@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.7 | 12 April 2026
+
+- The Advanced section's Debug Logging option is now always visible (was hidden by default)
+
 ## 0.1.6 | 12 April 2026
 
 - Fixed grave quality ignoring the corpse's white skulls — the cross and fence no longer stack to an inflated total of 60 on bodies that shouldn't support it

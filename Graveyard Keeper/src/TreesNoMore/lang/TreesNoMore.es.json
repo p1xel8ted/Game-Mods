@@ -1,6 +1,7 @@
 {
   "ConfirmText": "¿Estás seguro de que quieres restablecer todos los árboles?",
-  "Yes": "Sí",
+  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello.",
   "No": "No",
-  "ResetButton": "Restablecer árboles"
+  "ResetButton": "Restablecer árboles",
+  "Yes": "Sí"
 }

@@ -1,5 +1,6 @@
 {
-  "DumpTimber": "Zrzuć tutaj drewno!",
+  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
   "DumpOre": "Wysyp rudę tutaj!",
-  "DumpStone": "Zrzuć tutaj kamień i marmur!"
+  "DumpStone": "Zrzuć tutaj kamień i marmur!",
+  "DumpTimber": "Zrzuć tutaj drewno!"
 }

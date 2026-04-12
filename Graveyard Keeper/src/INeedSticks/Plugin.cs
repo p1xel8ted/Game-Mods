@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.ineedsticks";
     private const string PluginName = "I Neeeed Sticks!";
-    private const string PluginVer = "1.6.8";
+    private const string PluginVer = "1.6.9";
     private static CraftDefinition _newItem;
     private const string WoodenStick = "wooden_stick";
     private static ManualLogSource Log { get; set; }

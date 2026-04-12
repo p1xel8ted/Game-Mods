@@ -1,6 +1,7 @@
 {
   "Bye": "Au revoir.",
   "ConfigMessage": "Configuration rechargée !",
+  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
   "For": "pour",
   "GerrysPrice": "Le prix de Gerry",
   "Header": "Malle à déchets de Gerry",

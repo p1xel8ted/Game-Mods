@@ -1,19 +1,30 @@
 namespace AppleTreesEnhanced;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-public partial class Plugin : BaseUnityPlugin
+public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.appletreesenhanced";
     private const string PluginName = "Apple Tree's Enhanced!";
-    private const string PluginVer = "2.7.11";
-    private static ManualLogSource Log { get; set; }
- 
-    private static ConfigEntry<bool> Debug { get; set; }
+    private const string PluginVer = "2.7.12";
+    internal static ManualLogSource Log { get; private set; }
+
+    internal static ConfigEntry<bool> Debug { get; private set; }
+    internal static bool DebugEnabled;
+    internal static bool DebugDialogShown;
+
+    internal static ConfigEntry<bool> IncludeGardenBerryBushes { get; private set; }
+    internal static ConfigEntry<bool> IncludeGardenTrees { get; private set; }
+    internal static ConfigEntry<bool> IncludeWorldBerryBushes { get; private set; }
+    internal static ConfigEntry<bool> ShowHarvestReadyMessages { get; private set; }
+    internal static ConfigEntry<bool> RealisticHarvest { get; private set; }
+    internal static ConfigEntry<bool> IncludeGardenBeeHives { get; private set; }
+    internal static ConfigEntry<bool> BeeKeeperBuyback { get; private set; }
 
 
     private void Awake()
     {
         Log = Logger;
+        LogHelper.Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
@@ -33,6 +44,16 @@ public partial class Plugin : BaseUnityPlugin
         BeeKeeperBuyback = Config.Bind("4. Economy", "Bee Keeper Buyback", false, new ConfigDescription("Allow beekeeper to buy back bees", null, new ConfigurationManagerAttributes {Order = 3}));
 
         Debug = Config.Bind("5. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 2}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+    }
+
+    internal static void ShowDebugWarningOnce()
+    {
+        if (!DebugEnabled || DebugDialogShown) return;
+        DebugDialogShown = true;
+        Lang.Reload();
+        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     internal static void CleanUpTrees()
@@ -47,7 +68,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void ProcessDudBees()
     {
-        var dudBees = FindObjectsOfType<WorldGameObject>(true)
+        var dudBees = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true)
             .Where(a => a.obj_id == Helpers.Constants.HarvestGrowing.BeeHouse).Where(b => b.progress <= 0)
             .Where(Helpers.IsPlayerBeeHive);
 
@@ -57,7 +78,7 @@ public partial class Plugin : BaseUnityPlugin
             dudBeesCount++;
             Helpers.ProcessBeeRespawn(dudBee);
 
-            if (Debug.Value)
+            if (DebugEnabled)
             {
                 Log.LogMessage($"Fixed DudBee {dudBeesCount}");
             }
@@ -66,7 +87,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void ProcessDudTrees()
     {
-        var dudTrees = FindObjectsOfType<WorldGameObject>(true)
+        var dudTrees = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true)
             .Where(a => a.obj_id == Helpers.Constants.HarvestGrowing.GardenAppleTree).Where(b => b.progress <= 0);
 
         var dudTreeCount = 0;
@@ -76,7 +97,7 @@ public partial class Plugin : BaseUnityPlugin
             Helpers.ProcessRespawn(dudTree, Helpers.Constants.HarvestGrowing.GardenAppleTree,
                 Helpers.Constants.HarvestSpawner.GardenAppleTree);
 
-            if (Debug.Value)
+            if (DebugEnabled)
             {
                 Log.LogMessage($"Fixed DudGardenTree {dudTreeCount}");
             }
@@ -85,7 +106,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void ProcessDudBushes()
     {
-        var dudBushes = FindObjectsOfType<WorldGameObject>(true)
+        var dudBushes = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true)
             .Where(a => a.obj_id == Helpers.Constants.HarvestGrowing.GardenBerryBush).Where(b => b.progress <= 0);
 
         var dudBushCount = 0;
@@ -95,7 +116,7 @@ public partial class Plugin : BaseUnityPlugin
             Helpers.ProcessRespawn(dudBush, Helpers.Constants.HarvestGrowing.GardenBerryBush,
                 Helpers.Constants.HarvestSpawner.GardenBerryBush);
 
-            if (Debug.Value)
+            if (DebugEnabled)
             {
                 Log.LogMessage($"Fixed DudGardenBush {dudBushCount}");
             }
@@ -104,11 +125,11 @@ public partial class Plugin : BaseUnityPlugin
 
     private static void ProcessReadyObjects()
     {
-        var readyBees = FindObjectsOfType<WorldGameObject>(true).Where(a => a.obj_id == Helpers.Constants.HarvestReady.BeeHouse)
+        var readyBees = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true).Where(a => a.obj_id == Helpers.Constants.HarvestReady.BeeHouse)
             .Where(Helpers.IsPlayerBeeHive);
-        var readyGardenTrees = FindObjectsOfType<WorldGameObject>(true).Where(a => a.obj_id == Helpers.Constants.HarvestReady.GardenAppleTree);
-        var readyGardenBushes = FindObjectsOfType<WorldGameObject>(true).Where(a => a.obj_id == Helpers.Constants.HarvestReady.GardenBerryBush);
-        var readyWorldBushes = FindObjectsOfType<WorldGameObject>(true).Where(a => Helpers.WorldReadyHarvests.Contains(a.obj_id));
+        var readyGardenTrees = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true).Where(a => a.obj_id == Helpers.Constants.HarvestReady.GardenAppleTree);
+        var readyGardenBushes = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true).Where(a => a.obj_id == Helpers.Constants.HarvestReady.GardenBerryBush);
+        var readyWorldBushes = UnityEngine.Object.FindObjectsOfType<WorldGameObject>(true).Where(a => Helpers.WorldReadyHarvests.Contains(a.obj_id));
 
         foreach (var item in readyBees)
         {

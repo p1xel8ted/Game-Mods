@@ -1,28 +1,31 @@
 namespace PrayTheDayAway;
 
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
-public partial class Plugin : BaseUnityPlugin
+public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.praythedayaway";
     private const string PluginName = "Pray The Day Away!";
-    private const string PluginVer = "0.3.5";
+    private const string PluginVer = "0.3.6";
 
-    private static ConfigEntry<bool> Debug { get; set; }
-    private static ManualLogSource Log { get; set; }
+    internal static ConfigEntry<bool> Debug { get; private set; }
+    internal static bool DebugEnabled;
+    internal static bool DebugDialogShown;
+    internal static ManualLogSource Log { get; private set; }
 
-    private static ConfigEntry<bool> EverydayIsSermonDay { get; set; }
-    private static ConfigEntry<bool> SermonOverAndOver { get; set; }
-    private static ConfigEntry<bool> NotifyOnPrayerLoss { get; set; }
-    private static ConfigEntry<bool> AlternateMode { get; set; }
+    internal static ConfigEntry<bool> EverydayIsSermonDay { get; private set; }
+    internal static ConfigEntry<bool> SermonOverAndOver { get; private set; }
+    internal static ConfigEntry<bool> NotifyOnPrayerLoss { get; private set; }
+    internal static ConfigEntry<bool> AlternateMode { get; private set; }
     internal static ConfigEntry<bool> NoLossOnDailySermons { get; private set; }
-    private static ConfigEntry<bool> RandomlyUpgradeBasicPrayer { get; set; }
-    private static ConfigEntry<bool> SpeedUpSermon { get; set; }
-    private static ConfigEntry<int> SermonSpeed { get; set; }
-    private static ConfigEntry<bool> CheatModeConfig { get; set; }
+    internal static ConfigEntry<bool> RandomlyUpgradeBasicPrayer { get; private set; }
+    internal static ConfigEntry<bool> SpeedUpSermon { get; private set; }
+    internal static ConfigEntry<int> SermonSpeed { get; private set; }
+    internal static ConfigEntry<bool> CheatModeConfig { get; private set; }
 
     private void Awake()
     {
         Log = Logger;
+        LogHelper.Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
@@ -30,6 +33,10 @@ public partial class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {Order = 597}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+
         EverydayIsSermonDay = Config.Bind("01. General", "Everyday Is Sermon Day", true, new ConfigDescription("Allow sermons to be held every day.", null, new ConfigurationManagerAttributes {Order = 606}));
 
         SermonOverAndOver = Config.Bind("01. General", "Sermon Over And Over", false, new ConfigDescription("Allow sermons to be repeated without limitation.", null, new ConfigurationManagerAttributes {Order = 605}));
@@ -48,7 +55,25 @@ public partial class Plugin : BaseUnityPlugin
 
 
         CheatModeConfig = Config.Bind("05. Cheats", "Cheat Mode", false, new ConfigDescription("Allow sermons to be repeated without limitation. Other settings do no function when this is enabled.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 598}));
+    }
 
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {Order = 597}));
+    internal static void ShowDebugWarningOnce()
+    {
+        if (!DebugEnabled || DebugDialogShown) return;
+        DebugDialogShown = true;
+        Lang.Reload();
+        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+    }
+
+    internal static void WriteLog(string message, bool error = false)
+    {
+        if (error)
+        {
+            LogHelper.Error(message);
+        }
+        else
+        {
+            LogHelper.Info(message);
+        }
     }
 }

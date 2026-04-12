@@ -1,11 +1,12 @@
 {
   "AutoSave": "自動保存",
-  "Rush": "なんてスリル！毎回やられる！",
-  "SaveAreYouSureMenu": "メインメニューに戻りますか？",
-  "SaveAreYouSureDesktop": "デスクトップを終了してもよろしいですか",
-  "SaveProgressSaved": "進捗状況と現在地が保存されます",
+  "CantSaveHere": "ここでは保存できません、ボス！",
+  "DebugWarning": "デバッグモードがオンになっています。目的がない限り、オフのままにすることをおすすめします。",
   "ExitButtonText": "デスクトップに戻る",
-  "SaveProgressNotSaved": "進行状況と現在地は保存されません",
+  "Rush": "なんてスリル！毎回やられる！",
+  "SaveAreYouSureDesktop": "デスクトップを終了してもよろしいですか",
+  "SaveAreYouSureMenu": "メインメニューに戻りますか？",
   "SaveMessage": "ゲームを保存しました",
-  "CantSaveHere": "ここでは保存できません、ボス！"
+  "SaveProgressNotSaved": "進行状況と現在地は保存されません",
+  "SaveProgressSaved": "進捗状況と現在地が保存されます"
 }

@@ -13,6 +13,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
     {
+        Plugin.ShowDebugWarningOnce();
         UpdateZoneUpdaters();
     }
 
@@ -143,7 +144,7 @@ public static class Patches
         var gameRes = new GameRes(__instance.definition.params_on_use);
         __result = gameRes;
 
-        if (Plugin.DebugEnabled.Value)
+        if (Plugin.DebugEnabled)
         {
             for (var index = 0; index < LocationLists.Locations.Count; index++)
             {

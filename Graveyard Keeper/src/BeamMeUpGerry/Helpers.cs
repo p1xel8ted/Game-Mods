@@ -37,10 +37,7 @@ public static class Helpers
 
     internal static void Log(string message)
     {
-        if (Plugin.DebugEnabled.Value)
-        {
-            Plugin.Log.LogInfo(message);
-        }
+        LogHelper.Info(message);
     }
 
     internal static Item GetHearthstone()
@@ -71,7 +68,7 @@ public static class Helpers
         var dynamicFee = (float)Math.Max(minimumFee, Math.Min(maximumFee, Math.Round(0.1f * playerMoney / 100f, 2)));
 
         // Logging for debugging or information purposes
-        Log($"[Fee]: {Trading.FormatMoney(dynamicFee, true)}\nMoney: {Trading.FormatMoney(playerMoney, true)}, Minimum: {Trading.FormatMoney(minimumFee, true)}");
+        if (Plugin.DebugEnabled) Log($"[Fee]: {Trading.FormatMoney(dynamicFee, true)}\nMoney: {Trading.FormatMoney(playerMoney, true)}, Minimum: {Trading.FormatMoney(minimumFee, true)}");
 
         return dynamicFee;
     }
@@ -225,7 +222,7 @@ public static class Helpers
     {
         if (!Plugin.RestrictToFoundLocations.Value)
         {
-            if (Plugin.DebugEnabled.Value)
+            if (Plugin.DebugEnabled)
             {
                 Plugin.Log.LogInfo($"[RemoveZone] {location.zone} - RestrictToFoundLocations is false. Not removing.");
             }
@@ -234,7 +231,7 @@ public static class Helpers
 
         if (location.customZone)
         {
-            if (Plugin.DebugEnabled.Value)
+            if (Plugin.DebugEnabled)
             {
                 Plugin.Log.LogInfo($"[RemoveZone] {location.zone} is a custom location. Not removing.");
             }
@@ -257,7 +254,7 @@ public static class Helpers
                 remove = false;
             }
 
-            if (Plugin.DebugEnabled.Value)
+            if (Plugin.DebugEnabled)
             {
                 Plugin.Log.LogInfo($"[RemoveZone-Farmer] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Farmer?: {knowsFarmer}");
             }
@@ -278,7 +275,7 @@ public static class Helpers
                 remove = false;
             }
 
-            if (Plugin.DebugEnabled.Value)
+            if (Plugin.DebugEnabled)
             {
                 Plugin.Log.LogInfo($"[RemoveZone-Miller] - {remove} - {location.zone} - Seen Wheat Land?: {wheatExists}, Talked to Miller?: {knowsMiller}");
             }
@@ -288,7 +285,7 @@ public static class Helpers
         if (UnusualMaps.TryGetValue(location.zone, out var zone1))
         {
             var removeUnusualZone = !MainGame.me.save.known_world_zones.Exists(a => a.Contains(zone1));
-            if (Plugin.DebugEnabled.Value)
+            if (Plugin.DebugEnabled)
             {
                 Plugin.Log.LogInfo($"[RemoveZone-UnusualMap] - {removeUnusualZone} - {location.zone} -> {zone1}");
             }
@@ -297,7 +294,7 @@ public static class Helpers
 
         var zone = location.zone.Replace(Constants.ZonePartial, string.Empty);
         var removeZone = !MainGame.me.save.known_world_zones.Exists(a => a.Contains(zone));
-        if (Plugin.DebugEnabled.Value)
+        if (Plugin.DebugEnabled)
         {
             Plugin.Log.LogInfo($"[RemoveZone-KnownZones] - {removeZone} - {location.zone} -> {zone}");
         }
@@ -307,7 +304,7 @@ public static class Helpers
     internal static void UpdateEnvironmentPreset(Location location)
     {
         EnvironmentEngine.me.SetEngineGlobalState(location.state);
-        Log($"[ApplyCurrentEnvironmentPreset, id] = {location.preset}");
+        if (Plugin.DebugEnabled) Log($"[ApplyCurrentEnvironmentPreset, id] = {location.preset}");
         var environmentPreset = EnvironmentPreset.Load(location.preset);
         EnvironmentEngine.me.ApplyEnvironmentPreset(environmentPreset);
     }

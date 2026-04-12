@@ -7,6 +7,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
     {
+        Plugin.ShowDebugWarningOnce();
         DestroyTrees();
     }
 
@@ -35,7 +36,7 @@ public static class Patches
             var treeExists = Plugin.Trees.Any(x => Vector3.Distance(x.location, tree.pos3) <= Plugin.TreeSearchDistance.Value);
             if (treeExists)
             {
-                if (Plugin.DebugEnabled.Value)
+                if (Plugin.DebugEnabled)
                 {
                     Plugin.Log.LogInfo($"Found existing tree at {tree.pos3} that should be removed.");
                 }
@@ -78,7 +79,7 @@ public static class Patches
 
     private static void HandleStump(WorldGameObject instance, Vector3 instancePos, ref WorldObjectPart prefab)
     {
-        if (Plugin.DebugEnabled.Value)
+        if (Plugin.DebugEnabled)
         {
             Plugin.Log.LogInfo($"Stump spawn at {instancePos}");
         }
@@ -92,7 +93,7 @@ public static class Patches
             prefab = null;
         }
 
-        if (Plugin.DebugEnabled.Value)
+        if (Plugin.DebugEnabled)
         {
             Plugin.Log.LogInfo($"Tree at {instancePos} added to list");
         }
@@ -109,7 +110,7 @@ public static class Patches
 
         if (!treeExists && MainGame.game_started)
         {
-            if (Plugin.DebugEnabled.Value)
+            if (Plugin.DebugEnabled)
             {
                 Plugin.Log.LogInfo($"Tree at {instancePos} added to list");
             }
@@ -120,11 +121,4 @@ public static class Patches
         }
     }
 
-
-    [HarmonyFinalizer]
-    [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.SmartInstantiate))]
-    public static Exception WorldGameObject_SmartInstantiate_Finalizer()
-    {
-        return null;
-    }
 }

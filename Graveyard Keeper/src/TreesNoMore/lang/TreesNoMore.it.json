@@ -1,6 +1,7 @@
 {
   "ConfirmText": "Sei sicuro di voler ripristinare tutti gli alberi?",
-  "Yes": "Sì",
+  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico.",
   "No": "No",
-  "ResetButton": "Ripristina alberi"
+  "ResetButton": "Ripristina alberi",
+  "Yes": "Sì"
 }

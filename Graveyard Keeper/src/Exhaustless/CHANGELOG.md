@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.3 | 12 April 2026
+
+- Fixed non-English translations not loading — the mod was showing English regardless of your game language
+- Language changes in the game options are now picked up immediately without needing to restart
+
 ## 3.5.2 | 11 April 2026
 
 - Translations are now loaded from editable JSON files in the lang folder

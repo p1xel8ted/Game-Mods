@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Version>0.1.0</Version>
+        <NexusGroupId>7296647</NexusGroupId>
+    </PropertyGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\ui_btn_arrow_left.png" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="UnityEngine.ImageConversionModule">
+            <HintPath>..\..\libs\UnityEngine.ImageConversionModule.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>
+

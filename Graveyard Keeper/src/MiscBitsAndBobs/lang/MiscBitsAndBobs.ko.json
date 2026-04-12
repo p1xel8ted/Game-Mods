@@ -1,8 +1,9 @@
 {
   "Content": "Sprint Reloaded가 설치된 것 같습니다. 불행히도 Misc. Bits & Bobs 및 Sprint Reloaded는 플레이어 속도를 수정할 때 동일한 값을 편집하며 서로 호환되지 않습니다. Misc. Bits & Bobs의 플레이어 측이 비활성화됩니다. 포터 속도는 영향을 받지 않아야 합니다.",
-  "Title": "모드 비호환성 감지됨",
+  "DebugWarning": "디버그 모드가 켜져 있습니다. 특별한 목적이 없다면 켜 두지 않는 것을 권장합니다.",
+  "EvictButton": "교회 방문자 퇴거",
   "EvictConfirmText": "모든 방문자를 퇴거시키는 동안 게임이 멈춘 것처럼 보일 수 있습니다. 충돌한 것이 아닙니다. 계속하시겠습니까?",
-  "EvictYes": "예",
   "EvictNo": "아니오",
-  "EvictButton": "교회 방문자 퇴거"
+  "EvictYes": "예",
+  "Title": "모드 비호환성 감지됨"
 }

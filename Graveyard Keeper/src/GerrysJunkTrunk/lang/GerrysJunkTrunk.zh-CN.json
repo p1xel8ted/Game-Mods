@@ -1,6 +1,7 @@
 {
   "Bye": "再见。",
   "ConfigMessage": "配置重新加载！",
+  "DebugWarning": "请注意，调试模式已开启。除非有特定目的，否则不建议保持开启状态。",
   "For": "为了",
   "GerrysPrice": "格瑞价格：",
   "Header": "格里的垃圾箱",

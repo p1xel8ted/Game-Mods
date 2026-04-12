@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gravechangesredux";
     private const string PluginName = "Grave Changes Redux";
-    private const string PluginVer = "0.1.6";
+    private const string PluginVer = "0.1.7";
 
     private const float MaxQualityValue = 30f;
     private static readonly SmartExpression MaxQualityExpression = SmartExpression.ParseExpression("30");
@@ -22,7 +22,7 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        DebugEnabled = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 0}));
+        DebugEnabled = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {Order = 0}));
         ModifyGraves = Config.Bind("01. Changes", "Modify Graves", true, new ConfigDescription("Max out the quality of grave items.", null, new ConfigurationManagerAttributes {Order = 2}));
         ModifyGraves.SettingChanged += (_, _) => GameBalanceLoad();
         ModifyObjects = Config.Bind("01. Changes", "Modify Decorations", false, new ConfigDescription("Max out the quality of decorative items.", null, new ConfigurationManagerAttributes {Order = 1}));

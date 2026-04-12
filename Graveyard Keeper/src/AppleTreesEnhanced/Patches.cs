@@ -53,6 +53,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     private static void GameSave_GlobalEventsCheck()
     {
+        Plugin.ShowDebugWarningOnce();
         Plugin.CleanUpTrees();
     }
 }

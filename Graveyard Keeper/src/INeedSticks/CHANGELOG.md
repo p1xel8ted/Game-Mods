@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.9 | 12 April 2026
+
+- Fixed non-English translations not loading — the mod was showing English regardless of your game language
+- Language changes in the game options are now picked up immediately without needing to restart
+
 ## 1.6.8 | 11 April 2026
 
 - Added translations for 11 languages (de, es, fr, it, ja, ko, pl, pt-BR, ru, zh-CN)

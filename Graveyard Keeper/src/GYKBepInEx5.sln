@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMeMoar", "ShowMeMoar\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LongerDays", "LongerDays\LongerDays.csproj", "{5AF8AD84-645B-4D0D-BFBA-EC6336122982}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxButtonControllerSupport", "MaxButtonControllerSupport\MaxButtonControllerSupport.csproj", "{6CD78860-00B3-49C4-AC38-17737A05EBE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaxButtonsRedux", "MaxButtonsRedux\MaxButtonsRedux.csproj", "{6CD78860-00B3-49C4-AC38-17737A05EBE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiscBitsAndBobs", "MiscBitsAndBobs\MiscBitsAndBobs.csproj", "{9CDDFFBA-7D6F-424C-BCE4-46829B6A4641}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueueEverything", "QueueEverything\QueueEverything.csproj", "{4C9223FA-83D8-4CE4-85B4-4B80AF53A98D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegenerationReloaded", "RegenerationReloaded\RegenerationReloaded.csproj", "{57BC3DEE-B5DB-4639-91CE-87C29E439A76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestInPatches", "RestInPatches\RestInPatches.csproj", "{4A131A02-8375-44E5-BAE8-5CD6BB6740F2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaveNow", "SaveNow\SaveNow.csproj", "{35C8A859-13C4-47E9-B7BC-B14A70EFE937}"
 EndProject
@@ -182,6 +184,10 @@ Global
 		{57BC3DEE-B5DB-4639-91CE-87C29E439A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57BC3DEE-B5DB-4639-91CE-87C29E439A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57BC3DEE-B5DB-4639-91CE-87C29E439A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A131A02-8375-44E5-BAE8-5CD6BB6740F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A131A02-8375-44E5-BAE8-5CD6BB6740F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A131A02-8375-44E5-BAE8-5CD6BB6740F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A131A02-8375-44E5-BAE8-5CD6BB6740F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35C8A859-13C4-47E9-B7BC-B14A70EFE937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35C8A859-13C4-47E9-B7BC-B14A70EFE937}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35C8A859-13C4-47E9-B7BC-B14A70EFE937}.Release|Any CPU.ActiveCfg = Release|Any CPU

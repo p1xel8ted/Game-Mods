@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.5.10 | 12 April 2026
+
+- Fixed non-English translations not loading — the mod was showing English regardless of your game language
+- Language changes in the game options are now picked up immediately without needing to restart
+- The Advanced section's Debug Logging option is now always visible (was hidden by default)
+- Enabling Debug logging now shows a one-time in-game dialog warning you it's on, so you don't forget it's enabled
+
 ## 2.5.9 | 11 April 2026
 
 - Added translations for 11 languages (de, es, fr, it, ja, ko, pl, pt-BR, ru, zh-CN)

@@ -11,9 +11,10 @@ public static class Helpers
         Plugin.Log.LogInfo("Running WMS Tasks as the Player has spawned in or a new chest/craft has been built.");
         if (!MainGame.game_started) return;
 
-        if (Plugin.Debug.Value && !Fields.DebugMessageShown)
+        if (Plugin.DebugEnabled && !Fields.DebugMessageShown)
         {
-            GUIElements.me.dialog.OpenOK("Where's Ma Storage!", null, "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it.", true, string.Empty);
+            Lang.Reload();
+            GUIElements.me.dialog.OpenOK("Where's Ma Storage!", null, Lang.Get("DebugWarning"), true, string.Empty);
             Fields.DebugMessageShown = true;
         }
 
@@ -40,26 +41,26 @@ public static class Helpers
         UpdateStackSizes();
 
         watch.Stop();
-        Log($"WMS Modifications Loaded! Completed in {watch.ElapsedMilliseconds}ms");
+        if (Plugin.DebugEnabled) Log($"WMS Modifications Loaded! Completed in {watch.ElapsedMilliseconds}ms");
     }
 
     private static void BackupOriginalData()
     {
         foreach (var itemDefinition in GameBalance.me.items_data)
         {
-            Log($"Backing up stack size for: {itemDefinition.id}, {itemDefinition.stack_count}");
+            if (Plugin.DebugEnabled) Log($"Backing up stack size for: {itemDefinition.id}, {itemDefinition.stack_count}");
             OriginalStackSizes.TryAdd(itemDefinition.id, itemDefinition.stack_count);
         }
 
         foreach (var objectDefinition in GameBalance.me.objs_data)
         {
-            Log($"Backing up inventory size for: {objectDefinition.id}, {objectDefinition.inventory_size}");
+            if (Plugin.DebugEnabled) Log($"Backing up inventory size for: {objectDefinition.id}, {objectDefinition.inventory_size}");
             OriginalInventorySizes.TryAdd(objectDefinition.id, objectDefinition.inventory_size);
         }
 
         foreach (var itemDefinition in GameBalance.me.items_data.Where(a => a.is_tool))
         {
-            Log($"Backing up hand tool destroy for: {itemDefinition.id}, {itemDefinition.player_cant_throw_out}");
+            if (Plugin.DebugEnabled) Log($"Backing up hand tool destroy for: {itemDefinition.id}, {itemDefinition.player_cant_throw_out}");
             OriginalHandToolDestroy.TryAdd(itemDefinition.id, itemDefinition.player_cant_throw_out);
         }
     }
@@ -71,11 +72,11 @@ public static class Helpers
 
         foreach (var id in GameBalance.me.items_data.Where(id => id.stack_count is > 1 and <= 999))
         {
-            if (id.is_tool || id.IsWeapon() || id.IsEquipment() || id.type == ItemDefinition.ItemType.Preach || Fields.PenPaperInkItems.Contains(id.id) || Fields.ChiselItems.Contains(id.id) || Fields.GraveItems.Contains(id.type)) continue;
+            if (id.is_tool || id.IsWeapon() || id.IsEquipment() || id.type == ItemDefinition.ItemType.Preach || Fields.PenPaperInkItems.Contains(id.id) || Fields.ChiselItems.Contains(id.id) || Fields.GraveItems.Contains(id.type) || Fields.SinShardItems.Contains(id.id)) continue;
             if (!OriginalStackSizes.TryGetValue(id.id, out var originalSize)) continue;
 
             var newSize = Mathf.Min(originalSize + Plugin.StackSizeForStackables.Value, 999);
-            Log($"Modifying stack size for: {id.id}, {id.stack_count} -> {newSize}");
+            if (Plugin.DebugEnabled) Log($"Modifying stack size for: {id.id}, {id.stack_count} -> {newSize}");
             id.stack_count = newSize;
         }
 
@@ -84,7 +85,7 @@ public static class Helpers
             foreach (var item in GameBalance.me.items_data.Where(item => item.IsEquipment() && !item.is_tool))
             {
                 item.stack_count = Mathf.Min(item.stack_count + Plugin.StackSizeForStackables.Value, 999);
-                Log($"EquipmentStacking: Modifying stack size for: {item.id}, {item.stack_count}");
+                if (Plugin.DebugEnabled) Log($"EquipmentStacking: Modifying stack size for: {item.id}, {item.stack_count}");
             }
         }
 
@@ -93,7 +94,7 @@ public static class Helpers
             foreach (var item in GameBalance.me.items_data.Where(item => item.IsWeapon()))
             {
                 item.stack_count = Mathf.Min(item.stack_count + Plugin.StackSizeForStackables.Value, 999);
-                Log($"WeaponStacking: Modifying stack size for: {item.id}, {item.stack_count}");
+                if (Plugin.DebugEnabled) Log($"WeaponStacking: Modifying stack size for: {item.id}, {item.stack_count}");
             }
         }
 
@@ -103,7 +104,7 @@ public static class Helpers
             foreach (var item in GameBalance.me.items_data.Where(item => item.is_tool && !item.IsWeapon()))
             {
                 item.stack_count = Mathf.Min(item.stack_count + Plugin.StackSizeForStackables.Value, 999);
-                Log($"ToolStacking: Modifying stack size for: {item.id}, {item.stack_count}");
+                if (Plugin.DebugEnabled) Log($"ToolStacking: Modifying stack size for: {item.id}, {item.stack_count}");
             }
         }
 
@@ -112,7 +113,7 @@ public static class Helpers
             foreach (var item in GameBalance.me.items_data.Where(item => item.type == ItemDefinition.ItemType.Preach))
             {
                 item.stack_count = Mathf.Min(item.stack_count + Plugin.StackSizeForStackables.Value, 999);
-                Log($"PrayerStacking: Modifying stack size for: {item.id}, {item.stack_count}");
+                if (Plugin.DebugEnabled) Log($"PrayerStacking: Modifying stack size for: {item.id}, {item.stack_count}");
             }
         }
 
@@ -121,7 +122,7 @@ public static class Helpers
             foreach (var item in GameBalance.me.items_data.Where(item => Fields.PenPaperInkItems.Any(item.id.Contains)))
             {
                 item.stack_count = Mathf.Min(item.stack_count + Plugin.StackSizeForStackables.Value, 999);
-                Log($"PenPaperInkStacking: Modifying stack size for: {item.id}, {item.stack_count}");
+                if (Plugin.DebugEnabled) Log($"PenPaperInkStacking: Modifying stack size for: {item.id}, {item.stack_count}");
             }
         }
 
@@ -130,7 +131,7 @@ public static class Helpers
             foreach (var item in GameBalance.me.items_data.Where(item => Fields.ChiselItems.Any(item.id.Contains)))
             {
                 item.stack_count = Mathf.Min(item.stack_count + Plugin.StackSizeForStackables.Value, 999);
-                Log($"ChiselStacking: Modifying stack size for: {item.id}, {item.stack_count}");
+                if (Plugin.DebugEnabled) Log($"ChiselStacking: Modifying stack size for: {item.id}, {item.stack_count}");
             }
         }
 
@@ -139,7 +140,7 @@ public static class Helpers
             foreach (var item in GameBalance.me.items_data.Where(item => Fields.GraveItems.Contains(item.type)))
             {
                 item.stack_count = Mathf.Min(item.stack_count + Plugin.StackSizeForStackables.Value, 999);
-                Log($"GraveItemStacking: Modifying stack size for: {item.id}, {item.stack_count}");
+                if (Plugin.DebugEnabled) Log($"GraveItemStacking: Modifying stack size for: {item.id}, {item.stack_count}");
             }
         }
     }
@@ -150,7 +151,7 @@ public static class Helpers
         {
             if (!OriginalStackSizes.TryGetValue(id.id, out var originalSize)) continue;
 
-            Log($"Restoring stack size for: {id.id}, {id.stack_count} -> {originalSize}");
+            if (Plugin.DebugEnabled) Log($"Restoring stack size for: {id.id}, {id.stack_count} -> {originalSize}");
             id.stack_count = originalSize;
         }
     }
@@ -161,7 +162,7 @@ public static class Helpers
         {
             if (!OriginalHandToolDestroy.TryGetValue(itemDef.id, out var originalValue)) continue;
 
-            Log($"Restoring hand tool destroy for: {itemDef.id}, {itemDef.player_cant_throw_out} -> {originalValue}");
+            if (Plugin.DebugEnabled) Log($"Restoring hand tool destroy for: {itemDef.id}, {itemDef.player_cant_throw_out} -> {originalValue}");
             itemDef.player_cant_throw_out = originalValue;
         }
     }
@@ -170,7 +171,7 @@ public static class Helpers
     {
         if (MainGame.me.player && MainGame.game_started)
         {
-            Log("Restoring Player Inventory Size to 20");
+            if (Plugin.DebugEnabled) Log("Restoring Player Inventory Size to 20");
             MainGame.me.player.data.SetInventorySize(20);
         }
 
@@ -178,7 +179,7 @@ public static class Helpers
         {
             if (!OriginalInventorySizes.TryGetValue(od.id, out var originalSize)) continue;
 
-            Log($"Restoring Inventory Size for: {od.id}, {od.inventory_size} -> {originalSize}");
+            if (Plugin.DebugEnabled) Log($"Restoring Inventory Size for: {od.id}, {od.inventory_size} -> {originalSize}");
             od.inventory_size = originalSize;
         }
     }
@@ -190,7 +191,7 @@ public static class Helpers
 
         foreach (var itemDef in GameBalance.me.items_data.Where(a => a.is_tool))
         {
-            Log($"Modifying hand tool destroy for: {itemDef.id}");
+            if (Plugin.DebugEnabled) Log($"Modifying hand tool destroy for: {itemDef.id}");
             itemDef.player_cant_throw_out = false;
         }
     }
@@ -202,7 +203,7 @@ public static class Helpers
 
         if (MainGame.me.player && MainGame.game_started)
         {
-            Log($"Modifying Player Inventory Size from 20 to {Fields.PlayerInventorySize}");
+            if (Plugin.DebugEnabled) Log($"Modifying Player Inventory Size from 20 to {Fields.PlayerInventorySize}");
             MainGame.me.player.data.SetInventorySize(Fields.PlayerInventorySize);
         }
 
@@ -211,7 +212,7 @@ public static class Helpers
             if (!OriginalInventorySizes.TryGetValue(od.id, out var originalSize)) continue;
 
             od.inventory_size = originalSize + Plugin.AdditionalInventorySpace.Value;
-            Log($"Modifying Inventory Size for: {od.id}, {originalSize} -> {od.inventory_size}");
+            if (Plugin.DebugEnabled) Log($"Modifying Inventory Size for: {od.id}, {originalSize} -> {od.inventory_size}");
         }
     }
 
@@ -236,7 +237,7 @@ public static class Helpers
 
             if (drop.is_collected)
             {
-                Log($"Drop already collected: {drop.res.id}");
+                if (Plugin.DebugEnabled) Log($"Drop already collected: {drop.res.id}");
                 continue;
             }
 
@@ -245,14 +246,14 @@ public static class Helpers
             {
                 drop.UnsuccessfullPickup(player);
                 cantCollectList.Add(drop);
-                Log($"Can't collect: {drop.res.id}. Not enough space.");
+                if (Plugin.DebugEnabled) Log($"Can't collect: {drop.res.id}. Not enough space.");
                 continue;
             }
 
             if (drop.res.value == amount)
             {
                 drop.CollectDrop(player);
-                Log($"Collected: {drop.res.id}, Qty: {amount}");
+                if (Plugin.DebugEnabled) Log($"Collected: {drop.res.id}, Qty: {amount}");
                 continue;
             }
 
@@ -260,7 +261,7 @@ public static class Helpers
             drop.RedrawStackCounter();
             player.data.AddItem(drop.res.id, amount);
             cantCollectList.Add(drop);
-            Log($"Partially Collected: {drop.res.id}, Qty: {amount}");
+            if (Plugin.DebugEnabled) Log($"Partially Collected: {drop.res.id}, Qty: {amount}");
         }
 
         foreach (var drop in cantCollectList)
@@ -268,20 +269,20 @@ public static class Helpers
             drop.transform.position = new Vector3(3708.6f, 214.6f, 0.0f);
             drop.DoTryMerging();
             drop.UpdateMe();
-            Log($"Moving {drop.res.id} next to the meditation spot.");
+            if (Plugin.DebugEnabled) Log($"Moving {drop.res.id} next to the meditation spot.");
         }
 
         foreach (var tp in TechPointDrop.all)
         {
             tp.Collect();
-            Log($"Attempting to collect TP: {tp.type}");
+            if (Plugin.DebugEnabled) Log($"Attempting to collect TP: {tp.type}");
         }
 
         Fields.DropsCleaned = true;
 
         watch.Stop();
 
-        if (Plugin.Debug.Value)
+        if (Plugin.DebugEnabled)
         {
             Plugin.Log.LogInfo($"CollectDrops Complete! Completed in {watch.ElapsedMilliseconds}ms");
         }
@@ -292,11 +293,11 @@ public static class Helpers
     {
         if (error)
         {
-            Plugin.Log.LogError(message);
+            LogHelper.Error(message);
         }
-        else if (Plugin.Debug.Value)
+        else
         {
-            Plugin.Log.LogInfo(message);
+            LogHelper.Info(message);
         }
     }
 
@@ -309,6 +310,7 @@ public static class Helpers
 
     internal static void ResetInteractionFlags()
     {
+        if (Plugin.DebugEnabled) Log("[ResetFlags] clearing all interaction flags and CurrentWgoInteraction");
         Fields.CurrentWgoInteraction = null;
         Fields.IsVendor = false;
         Fields.IsCraft = false;

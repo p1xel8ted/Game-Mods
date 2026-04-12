@@ -1,33 +1,25 @@
 namespace SaveNow;
 
 [Harmony]
-public partial class Plugin
+public static class Patches
 {
-    private static Vector3 Pos { get; set; }
-    private static string DataPath { get; set; }
-    private static string SavePath { get; set; }
-
-    private static bool CanSave { get; set; }
-    private static string CurrentSave { get; set; }
-    private static readonly Dictionary<string, Vector3> SaveLocationsDictionary = new();
-    private static bool IsInDungeon => MainGame.me && MainGame.me.dungeon_root && MainGame.me.dungeon_root.dungeon_is_loaded_now;
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
     {
-        Log.LogInfo("[SaveNow] Player spawned — restoring location and starting timers");
-        RestoreLocation();
+        if (Plugin.DebugEnabled) Plugin.WriteLog("[SaveNow] Player spawned — restoring location and starting timers");
+        Plugin.ShowDebugWarningOnce();
+        Plugin.RestoreLocation();
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
     public static void EnvironmentEngine_OnEndOfDay()
     {
-        Log.LogInfo($"[SaveNow] End of day triggered. SaveOnNewDay={SaveOnNewDay.Value}");
-        if (SaveOnNewDay.Value)
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[SaveNow] End of day triggered. SaveOnNewDay={Plugin.SaveOnNewDay.Value}");
+        if (Plugin.SaveOnNewDay.Value)
         {
-            PerformNewDaySave();
+            Plugin.PerformNewDaySave();
         }
     }
 
@@ -35,11 +27,17 @@ public partial class Plugin
     [HarmonyPatch(typeof(SaveSlotsMenuGUI), nameof(SaveSlotsMenuGUI.RedrawSlots))]
     public static void SaveSlotsMenuGUI_RedrawSlots(ref List<SaveSlotData> slot_datas, ref bool focus_on_first)
     {
+        var originalCount = slot_datas.Count;
         SortSaveGames(ref slot_datas);
 
-        if (MaximumSavesVisible.Value > 0 && slot_datas.Count > MaximumSavesVisible.Value)
+        if (Plugin.MaximumSavesVisible.Value > 0 && slot_datas.Count > Plugin.MaximumSavesVisible.Value)
         {
-            Resize(slot_datas, MaximumSavesVisible.Value);
+            Plugin.Resize(slot_datas, Plugin.MaximumSavesVisible.Value);
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[RedrawSlots] resized: {originalCount} → {slot_datas.Count} (cap={Plugin.MaximumSavesVisible.Value})");
+        }
+        else if (Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog($"[RedrawSlots] no resize (count={originalCount}, cap={Plugin.MaximumSavesVisible.Value})");
         }
 
         focus_on_first = true;
@@ -60,11 +58,12 @@ public partial class Plugin
             sortedList.Add((lastModified, save));
         }
 
-        if (SortByLastModified.Value)
+        if (Plugin.SortByLastModified.Value)
         {
-            saveGames = AscendingSort.Value
+            saveGames = Plugin.AscendingSort.Value
                 ? sortedList.OrderBy(e => e.lastModified).Select(e => e.data).ToList()
                 : sortedList.OrderByDescending(e => e.lastModified).Select(e => e.data).ToList();
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[SortSaveGames] sorted by time ({(Plugin.AscendingSort.Value ? "asc" : "desc")}), {sortedList.Count} entries");
         }
     }
 
@@ -72,10 +71,13 @@ public partial class Plugin
     [HarmonyPatch(typeof(InGameMenuGUI), nameof(InGameMenuGUI.OnPressedSaveAndExit))]
     public static bool InGameMenuGUI_OnPressedSaveAndExit(InGameMenuGUI __instance)
     {
-        if (!ExitToDesktop.Value && !SaveOnExit.Value)
+        if (!Plugin.ExitToDesktop.Value && !Plugin.SaveOnExit.Value)
         {
+            if (Plugin.DebugEnabled) Plugin.WriteLog("[SaveAndExit] skip (ExitToDesktop=false, SaveOnExit=false)");
             return true;
         }
+
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[SaveAndExit] intercepting (ExitToDesktop={Plugin.ExitToDesktop.Value}, SaveOnExit={Plugin.SaveOnExit.Value}, InDungeon={Plugin.IsInDungeon})");
 
         Lang.Reload();
 
@@ -99,8 +101,8 @@ public partial class Plugin
 
         string CreateMessageText()
         {
-            var baseMessage = ExitToDesktop.Value ? Lang.Get("SaveAreYouSureDesktop") : Lang.Get("SaveAreYouSureMenu");
-            var progressMessage = !SaveOnExit.Value || IsInDungeon
+            var baseMessage = Plugin.ExitToDesktop.Value ? Lang.Get("SaveAreYouSureDesktop") : Lang.Get("SaveAreYouSureMenu");
+            var progressMessage = !Plugin.SaveOnExit.Value || Plugin.IsInDungeon
                 ? Lang.Get("SaveProgressNotSaved")
                 : Lang.Get("SaveProgressSaved");
 
@@ -109,13 +111,13 @@ public partial class Plugin
 
         void SaveAndExit(InGameMenuGUI instance)
         {
-            if (!SaveOnExit.Value || IsInDungeon)
+            if (!Plugin.SaveOnExit.Value || Plugin.IsInDungeon)
             {
                 PerformExit(instance);
             }
             else
             {
-                if (SaveLocation(true, MainGame.me.save_slot.filename_no_extension))
+                if (Plugin.SaveLocation(true, MainGame.me.save_slot.filename_no_extension))
                 {
                     PlatformSpecific.SaveGame(MainGame.me.save_slot, MainGame.me.save,
                         delegate
@@ -128,7 +130,7 @@ public partial class Plugin
 
         void PerformExit(InGameMenuGUI instance)
         {
-            if (ExitToDesktop.Value)
+            if (Plugin.ExitToDesktop.Value)
             {
                 GC.Collect();
                 Resources.UnloadUnusedAssets();
@@ -145,43 +147,51 @@ public partial class Plugin
     [HarmonyPatch(typeof(SleepGUI), nameof(SleepGUI.WakeUp))]
     public static void SleepGUI_WakeUp()
     {
-        SaveLocation(false, MainGame.me.save_slot.filename_no_extension);
+        if (Plugin.DebugEnabled) Plugin.WriteLog("[SleepGUI.WakeUp] persisting player location");
+        Plugin.SaveLocation(false, MainGame.me.save_slot.filename_no_extension);
     }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(InGameMenuGUI), nameof(InGameMenuGUI.Open))]
     public static void InGameMenuGUI_Open(InGameMenuGUI __instance)
     {
-        if (__instance == null || !ExitToDesktop.Value) return;
+        if (__instance == null || !Plugin.ExitToDesktop.Value) return;
         Lang.Reload();
         __instance.label_save_and_exit.text = Lang.Get("ExitButtonText");
     }
-    
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
     public static void MainGame_Update()
     {
         if (!MainGame.game_started) return;
 
-        if (ManualSaveKeyBind.Value.IsUp())
+        if (Plugin.ManualSaveKeyBind.Value.IsUp())
         {
-            Log.LogInfo("[SaveNow] Manual save triggered via keyboard keybind");
-            MainGame.me.StartCoroutine(PerformManualSave());
+            if (Plugin.DebugEnabled) Plugin.WriteLog("[SaveNow] Manual save triggered via keyboard keybind");
+            MainGame.me.StartCoroutine(Plugin.PerformManualSave());
             return;
         }
 
-        if (EnableManualSaveControllerButton.Value && LazyInput.gamepad_active &&
-            ReInput.players.GetPlayer(0).GetButtonDown(ManualSaveControllerButton.Value))
+        if (Plugin.EnableManualSaveControllerButton.Value && LazyInput.gamepad_active &&
+            ReInput.players.GetPlayer(0).GetButtonDown(Plugin.ManualSaveControllerButton.Value))
         {
-            Log.LogInfo("[SaveNow] Manual save triggered via controller button");
-            MainGame.me.StartCoroutine(PerformManualSave());
+            if (Plugin.DebugEnabled) Plugin.WriteLog("[SaveNow] Manual save triggered via controller button");
+            MainGame.me.StartCoroutine(Plugin.PerformManualSave());
         }
     }
 
+    private static bool _prevCanSave = true;
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MovementComponent), nameof(MovementComponent.UpdateMovement), null)]
     public static void MovementComponent_UpdateMovement(MovementComponent __instance)
     {
-        CanSave = !__instance.player_controlled_by_script;
+        var next = !__instance.player_controlled_by_script;
+        if (next != _prevCanSave)
+        {
+            _prevCanSave = next;
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[CanSave] transition → {next} (player_controlled_by_script={__instance.player_controlled_by_script})");
+        }
+        Plugin.CanSave = next;
     }
 }

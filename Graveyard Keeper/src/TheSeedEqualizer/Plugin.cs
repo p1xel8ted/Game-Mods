@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.theseedequalizer";
     private const string PluginName = "The Seed Equalizer!";
-    private const string PluginVer = "1.3.10";
+    private const string PluginVer = "1.3.11";
 
     internal static ManualLogSource Log { get; private set; }
 
@@ -28,7 +28,7 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
-        DebugEnabled = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 21}));
+        DebugEnabled = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {Order = 21}));
 
         ModifyZombieGardens = Config.Bind("01. Zombie Gardens", "Modify Zombie Gardens", true, new ConfigDescription("Enable or disable modifying zombie gardens", null, new ConfigurationManagerAttributes {Order = 20}));
         ModifyZombieVineyards = Config.Bind("01. Zombie Gardens", "Modify Zombie Vineyards", true, new ConfigDescription("Enable or disable modifying zombie vineyards", null, new ConfigurationManagerAttributes {Order = 19}));

@@ -1,6 +1,7 @@
 {
   "ConfirmText": "Sind Sie sicher, dass Sie alle Bäume zurücksetzen möchten?",
-  "Yes": "Ja",
+  "DebugWarning": "Bitte beachten Sie, dass der Debug-Modus aktiviert ist. Es wird nicht empfohlen, diesen eingeschaltet zu lassen, es sei denn, Sie haben einen Zweck dafür.",
   "No": "Nein",
-  "ResetButton": "Bäume zurücksetzen"
+  "ResetButton": "Bäume zurücksetzen",
+  "Yes": "Ja"
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6 | 12 April 2026
+
+- The Advanced section's Debug Logging option is now always visible (was hidden by default)
+
 ## 0.1.5 | 11 April 2026
 
 - Added startup logging to help diagnose mod and game environment issues

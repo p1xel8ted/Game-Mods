@@ -1,11 +1,12 @@
 {
   "AutoSave": "Guardado automático",
-  "Rush": "¡Qué prisa! ¡Me atrapa cada vez!",
-  "SaveAreYouSureMenu": "¿Estás seguro de que quieres volver al menú principal?",
-  "SaveAreYouSureDesktop": "¿Estás seguro de que quieres salir al escritorio?",
-  "SaveProgressSaved": "El progreso y la ubicación actual se guardarán",
+  "CantSaveHere": "¡No se puede guardar aquí, jefe!",
+  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello.",
   "ExitButtonText": "Salir al escritorio",
-  "SaveProgressNotSaved": "El progreso y la ubicación actual no se guardarán",
+  "Rush": "¡Qué prisa! ¡Me atrapa cada vez!",
+  "SaveAreYouSureDesktop": "¿Estás seguro de que quieres salir al escritorio?",
+  "SaveAreYouSureMenu": "¿Estás seguro de que quieres volver al menú principal?",
   "SaveMessage": "Partida guardada",
-  "CantSaveHere": "¡No se puede guardar aquí, jefe!"
+  "SaveProgressNotSaved": "El progreso y la ubicación actual no se guardarán",
+  "SaveProgressSaved": "El progreso y la ubicación actual se guardarán"
 }

@@ -6,7 +6,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.keeperscandles";
     private const string PluginName = "Keeper's Candles!";
-    private const string PluginVer = "0.1.7";
+    private const string PluginVer = "0.1.8";
     private const string Souls = "souls";
     private const string Candelabrum = "candelabrum";
     private const string Column = "column";
@@ -25,7 +25,7 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         LOG = Logger;
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 21}));
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {Order = 21}));
         SceneManager.sceneLoaded += (_, _) => OnGameBalanceLoaded();
 
         ExtinguishDistance = Config.Bind("01. Distance", "Extinguish Distance", 1f, new ConfigDescription("Distance in units to extinguish a candle.", new AcceptableValueRange<float>(1, 5), new ConfigurationManagerAttributes {Order = 19}));

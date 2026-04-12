@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.5.9</Version>
+        <Version>2.5.10</Version>
         <NexusGroupId>522169</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
@@ -15,5 +15,8 @@
         <Reference Include="Newtonsoft.Json">
             <HintPath>..\..\libs\Newtonsoft.Json.dll</HintPath>
         </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Shared\LogHelper.cs" Link="LogHelper.cs"/>
     </ItemGroup>
 </Project>

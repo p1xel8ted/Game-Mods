@@ -1,11 +1,12 @@
 {
   "AutoSave": "Automatyczne zapisywanie",
-  "Rush": "Co za pośpiech! Dopada mnie za każdym razem!",
-  "SaveAreYouSureMenu": "Czy na pewno chcesz wrócić do menu głównego?",
-  "SaveAreYouSureDesktop": "Czy na pewno chcesz wyjść na pulpit?",
-  "SaveProgressSaved": "Postęp i aktualna lokalizacja zostaną zapisane",
+  "CantSaveHere": "Nie mogę tu zapisać, szefie!",
+  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
   "ExitButtonText": "Wyjdź na pulpit",
-  "SaveProgressNotSaved": "Postęp i aktualna lokalizacja nie zostaną zapisane",
+  "Rush": "Co za pośpiech! Dopada mnie za każdym razem!",
+  "SaveAreYouSureDesktop": "Czy na pewno chcesz wyjść na pulpit?",
+  "SaveAreYouSureMenu": "Czy na pewno chcesz wrócić do menu głównego?",
   "SaveMessage": "Zapisano",
-  "CantSaveHere": "Nie mogę tu zapisać, szefie!"
+  "SaveProgressNotSaved": "Postęp i aktualna lokalizacja nie zostaną zapisane",
+  "SaveProgressSaved": "Postęp i aktualna lokalizacja zostaną zapisane"
 }

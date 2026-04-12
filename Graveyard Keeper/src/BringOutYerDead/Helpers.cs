@@ -1,4 +1,4 @@
-﻿namespace BringOutYerDead;
+namespace BringOutYerDead;
 
 public static class Helpers
 {
@@ -25,16 +25,11 @@ public static class Helpers
     {
         if (error)
         {
-            Plugin.Log.LogError($"{message}");
+            LogHelper.Error(message);
         }
         else
         {
-            if (Plugin.Debug.Value)
-            {
-                Plugin.Log.LogInfo($"{message}");
-            }
+            LogHelper.Info(message);
         }
     }
-    
-    
 }

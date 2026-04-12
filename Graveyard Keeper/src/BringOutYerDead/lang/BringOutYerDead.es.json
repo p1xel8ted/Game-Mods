@@ -1,3 +1,4 @@
 {
-  "CarrotMessage": "¡Se me acabaron las zanahorias por el burro!"
+  "CarrotMessage": "¡Se me acabaron las zanahorias por el burro!",
+  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello."
 }

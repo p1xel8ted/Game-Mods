@@ -50,7 +50,7 @@ public static class LocationLists
 
     internal static void LogData()
     {
-        if (Plugin.DebugEnabled.Value && MainGame.me && MainGame.me.save != null)
+        if (Plugin.DebugEnabled && MainGame.me && MainGame.me.save != null)
         {
             Plugin.Log.LogInfo("|---------- Players Known NPC:Start ----------|");
             foreach (var z in MainGame.me.save.known_npcs.npcs)

@@ -1,8 +1,9 @@
 {
   "Content": "Wygląda na to, że masz zainstalowany Sprint Reloaded. Niestety Misc. Bits & Bobs i Sprint Reloaded edytują te same wartości podczas modyfikowania szybkości gracza i są ze sobą niezgodne. Strona gracza w Misc. Bits & Bobs zostanie wyłączona. Prędkość Portera powinna pozostać nienaruszona.",
-  "Title": "Wykryto niezgodność modów",
+  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
+  "EvictButton": "Wyrzuć odwiedzających kościół",
   "EvictConfirmText": "Gra może wyglądać na zawieszoną podczas wyrzucania wszystkich odwiedzających. Nie uległa awarii. Kontynuować?",
-  "EvictYes": "Tak",
   "EvictNo": "Nie",
-  "EvictButton": "Wyrzuć odwiedzających kościół"
+  "EvictYes": "Tak",
+  "Title": "Wykryto niezgodność modów"
 }

@@ -6,9 +6,11 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
     private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.1.3";
+    private const string PluginVer = "3.1.4";
 
-    internal static ConfigEntry<bool> DebugEnabled { get; private set; }
+    internal static ConfigEntry<bool> Debug { get; private set; }
+    internal static bool DebugEnabled;
+    internal static bool DebugDialogShown;
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }
     internal static ConfigEntry<bool> EnableListExpansion { get; private set; }
     internal static ConfigEntry<bool> GerryAppears { get; private set; }
@@ -40,8 +42,10 @@ public class Plugin : BaseUnityPlugin
     {
         ConfigInstance = Config;
         Log = Logger;
+        LogHelper.Log = Logger;
         InitConfiguration();
         InitInternalConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
     }
 
@@ -89,11 +93,21 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
+    internal static void ShowDebugWarningOnce()
+    {
+        if (!DebugEnabled || DebugDialogShown) return;
+        DebugDialogShown = true;
+        Lang.Reload();
+        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+    }
+
     internal static void InitConfiguration()
     {
         LocationLists.LoadCustomZones();
 
-        DebugEnabled = ConfigInstance.Bind("00. Debug", "Debug", false, new ConfigDescription("Toggle debug logging", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 803}));
+        Debug = ConfigInstance.Bind("00. Debug", "Debug", false, new ConfigDescription("Toggle debug logging", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 803}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
         IncreaseMenuAnimationSpeed = ConfigInstance.Bind("01. Features", "Increase Menu Animation Speed", true, new ConfigDescription("Toggle increased menu animation speed", null, new ConfigurationManagerAttributes {Order = 801}));
         EnableListExpansion = ConfigInstance.Bind("01. Features", "Enable List Expansion", true, new ConfigDescription("Toggle list expansion functionality", null, new ConfigurationManagerAttributes {Order = 799}));
         GerryAppears = ConfigInstance.Bind("01. Features", "Gerry Appears", false, new ConfigDescription("Toggle Gerry's presence", null, new ConfigurationManagerAttributes {Order = 798}));

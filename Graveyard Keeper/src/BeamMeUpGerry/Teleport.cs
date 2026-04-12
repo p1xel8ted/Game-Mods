@@ -4,7 +4,7 @@ public static class Teleport
 {
     internal static void TryTeleport(Location chosenLocation)
     {
-        Helpers.Log($"[TryTeleport] {chosenLocation.zone}");
+        if (Plugin.DebugEnabled) Helpers.Log($"[TryTeleport] {chosenLocation.zone}");
         var targetPosition = GetTeleportPosition(chosenLocation);
         if (targetPosition == Vector2.zero) return;
 
@@ -18,13 +18,13 @@ public static class Teleport
     private static void LogTeleportationDetails(Location chosenLocation, Vector2 targetPosition)
     {
         var logMessage = $"Teleporting to {chosenLocation.zone} at {targetPosition}";
-        Helpers.Log(logMessage);
+        if (Plugin.DebugEnabled) Helpers.Log(logMessage);
     }
 
     private static Vector2 GetTeleportPosition(Location chosenLocation)
     {
         // Log the initial information about the chosen location
-        Helpers.Log($"[GetTeleportPosition] {chosenLocation.zone} {chosenLocation.teleportPoint} {chosenLocation.coords}");
+        if (Plugin.DebugEnabled) Helpers.Log($"[GetTeleportPosition] {chosenLocation.zone} {chosenLocation.teleportPoint} {chosenLocation.coords}");
 
         // If a teleport point is specified and valid, return its position
         if (!chosenLocation.teleportPoint.IsNullOrWhiteSpace())
@@ -32,7 +32,7 @@ public static class Teleport
             var worldGameObject = WorldMap.GetWorldGameObjectByCustomTag(chosenLocation.teleportPoint);
             if (worldGameObject != null)
             {
-                Helpers.Log($"[GetTeleportPosition] {worldGameObject.name} - {worldGameObject.grid_pos}");
+                if (Plugin.DebugEnabled) Helpers.Log($"[GetTeleportPosition] {worldGameObject.name} - {worldGameObject.grid_pos}");
                 return worldGameObject.grid_pos;
             }
         }
@@ -40,12 +40,12 @@ public static class Teleport
         // If the chosen location has valid coordinates, return them
         if (chosenLocation.coords != Vector2.zero)
         {
-            Helpers.Log($"[GetTeleportPosition] {chosenLocation.coords}");
+            if (Plugin.DebugEnabled) Helpers.Log($"[GetTeleportPosition] {chosenLocation.coords}");
             return chosenLocation.coords;
         }
 
         // As a fallback, use the player's current position
-        Helpers.Log("[GetTeleportPosition] No valid grid position found. Using player's current position.");
+        if (Plugin.DebugEnabled) Helpers.Log("[GetTeleportPosition] No valid grid position found. Using player's current position.");
         return MainGame.me.player.grid_pos;
     }
 

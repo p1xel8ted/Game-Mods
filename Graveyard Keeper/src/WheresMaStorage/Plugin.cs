@@ -5,9 +5,10 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmastorage";
     private const string PluginName = "Where's Ma' Storage!";
-    private const string PluginVer = "2.1.11";
+    private const string PluginVer = "2.1.12";
 
     internal static ManualLogSource Log { get; private set; }
+    internal static bool DebugEnabled;
     internal static ConfigEntry<bool> ModifyInventorySize { get; private set; }
     internal static ConfigEntry<bool> EnableGraveItemStacking { get; private set; }
     internal static ConfigEntry<bool> EnablePenPaperInkStacking { get; private set; }
@@ -44,6 +45,7 @@ public class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Log = Logger;
+        LogHelper.Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
@@ -52,7 +54,9 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 49}));
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging.", null, new ConfigurationManagerAttributes {Order = 49}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
         SharedInventory = Config.Bind("3. Inventory", "Shared Inventory", true, new ConfigDescription("Enable or disable shared inventory when crafting.", null, new ConfigurationManagerAttributes {Order = 48}));
         AllowZombiesAccessToSharedInventory = Config.Bind("3. Inventory", "Allow Zombies Access To Shared Inventory", false, new ConfigDescription("Enable or disable allowing zombies access to shared inventory.", null, new ConfigurationManagerAttributes {Order = 47}));

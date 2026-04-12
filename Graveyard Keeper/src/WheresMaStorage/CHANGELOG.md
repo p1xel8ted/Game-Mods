@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.12 | 12 April 2026
+
+- Fixed merchants showing empty trade tabs after installing the mod
+- Fixed the "Exclude Zombie Mill From Shared Inventory" option not actually hiding zombie mill items from crafting elsewhere
+- Fixed sin shards stacking to 999 on soul containers, which was breaking gratitude point crafting
+- Fixed non-English translations not loading — the mod was showing English regardless of your game language
+- Language changes in the game options are now picked up immediately without needing to restart
+- The Advanced section's Debug Logging option is now always visible (was hidden by default)
+- Enabling Debug logging now shows a one-time in-game dialog warning you it's on, so you don't forget it's enabled
+
 ## 2.1.11 | 11 April 2026
 
 - Translations are now loaded from editable JSON files in the lang folder
