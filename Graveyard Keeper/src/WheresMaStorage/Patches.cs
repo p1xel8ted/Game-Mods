@@ -658,8 +658,9 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.InitPlayersInventory))]
     public static void GameSave_InitPlayersInventory(GameSave __instance)
     {
-        __instance._inventory.inventory_size = Fields.PlayerInventorySize;
-        __instance._inventory.SetInventorySize(Fields.PlayerInventorySize);
+        var size = Plugin.ModifyInventorySize.Value ? Fields.PlayerInventorySize : 20;
+        __instance._inventory.inventory_size = size;
+        __instance._inventory.SetInventorySize(size);
     }
 
 

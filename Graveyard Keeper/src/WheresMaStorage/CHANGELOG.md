@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.13 | 12 April 2026
+
+- Fixed the +20 inventory slots option not being respected — disabling it now correctly keeps your player inventory at 20 slots, even after loading a save
+- If you had previously enabled +20 slots, disabling the option and loading your save now properly restores the standard 20-slot inventory
+
 ## 2.1.12 | 12 April 2026
 
 - Fixed merchants showing empty trade tabs after installing the mod

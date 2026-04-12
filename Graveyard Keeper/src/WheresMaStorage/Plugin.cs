@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.wheresmastorage";
     private const string PluginName = "Where's Ma' Storage!";
-    private const string PluginVer = "2.1.12";
+    private const string PluginVer = "2.1.13";
 
     internal static ManualLogSource Log { get; private set; }
     internal static bool DebugEnabled;
