@@ -1,5 +1,5 @@
 const path = require('path');
-const { fs, util } = require('vortex-api');
+const { fs, util, log } = require('vortex-api');
 
 const STEAM_ID = '1313140';
 const GOG_ID = '2034949552';
@@ -32,7 +32,7 @@ function setup(discovery) {
       .then(() => fs.ensureDirWritableAsync(pluginsPath))
       .catch(err => {
         // Log the error to the Vortex logger
-        util.logger.error(`Failed to set up BepInEx plugins directory at ${pluginsPath}: ${err.message}`);
+        log('error', `Failed to set up BepInEx plugins directory at ${pluginsPath}: ${err.message}`);
         // Optionally, rethrow the error to prevent further setup if needed
         throw err;
       });
