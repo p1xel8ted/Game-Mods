@@ -1,7 +1,7 @@
 {
   "name": "Graveyard Keeper Vortex Extension",
   "author": "p1xel8ted",
-  "version": "1.1.0",
-  "description": "Vortex support for Graveyard Keeper - supports Steam and GOG versions, and automatic downloading of the Graveyard Keeper BepInEx pack.",
+  "version": "1.1.2",
+  "description": "Vortex support for Graveyard Keeper with one-click BepInEx install, clean per-mod folders, and automatic handling for plugins, patchers, saves, and resource swaps. Steam and GOG.",
   "type": "game"
 }

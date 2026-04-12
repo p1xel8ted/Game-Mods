@@ -1,0 +1,57 @@
+[size=4][b]What it does[/b][/size]
+
+[size=3]Adds full Vortex support for Graveyard Keeper so you can install, enable, and organise your mods the same way you do for any other game in Vortex. No manual file copying, no guessing where things go.[/size]
+
+[size=4][b]Features[/b][/size]
+
+[size=3][list]
+[*][b]Automatic game detection.[/b] Finds your Steam or GOG install without any configuration.
+[*][b]One-click BepInEx install.[/b] A dedicated [i]Install BepInEx[/i] button sits on the Mods tab toolbar. Click it once and the curated BepInEx pack is downloaded straight from NexusMods and set up for you. If you forget, Vortex will gently remind you the next time you open the Graveyard Keeper page.
+[*][b]Smart folder organisation.[/b] Every mod you install goes into its own clearly-named subfolder instead of being dumped together. No more guessing which DLL belongs to which mod.
+[*][b]Automatic mod type detection.[/b] The extension recognises the different kinds of Graveyard Keeper content and puts each one where it belongs:
+[list]
+[*][b]BepInEx plugins[/b] go to [i]BepInEx\plugins\ModName\[/i]
+[*][b]BepInEx patchers[/b] go to [i]BepInEx\patchers\ModName\[/i]
+[*][b]Save games[/b] go to your save folder (works on Windows, macOS, and Linux)
+[*][b]Resource replacements[/b] such as [i]resources.assets[/i] swaps go to [i]Graveyard Keeper_Data[/i]
+[/list]
+[*][b]Open Save Games Folder shortcut.[/b] A new entry in the [i]Open...[/i] dropdown takes you straight to your save folder so you can back up or swap saves without digging through [i]AppData\LocalLow[/i].
+[/list][/size]
+
+[size=4][b]First-time setup[/b][/size]
+
+[size=3][list=1]
+[*]Install this extension in Vortex (Extensions tab, drag-and-drop the archive, or use Nexus).
+[*]Restart Vortex when prompted.
+[*]Add Graveyard Keeper as a managed game.
+[*]Click the [i]Install BepInEx[/i] button on the Mods tab, or click [i]Install[/i] on the notification that appears.
+[*]Wait for the download and install to finish, then install your mods and deploy as usual.
+[/list][/size]
+
+[size=4][b]Upgrading from version 1.1.1 or earlier[/b][/size]
+
+[size=3]If you already had this extension running before, Vortex was previously downloading BepInEx on its own. With this update, you are in charge of that step, which removes the download loop some users ran into. A few housekeeping steps will get everything lined up cleanly:[/size]
+
+[size=3][list=1]
+[*]In Vortex, go to the Mods tab and uninstall any old BepInEx pack entry (usually called something like [i]BepInEx - GYK - Windows-Wine-Proton[/i]).
+[*]Purge all mods (Mods tab, three-dot menu, Purge Mods).
+[*]Delete the old BepInEx wrapper folder inside your Graveyard Keeper game directory if you see one (it will have a name starting with a number followed by [i]BepInEx[/i], for example [i]01. BepInEx - Windows-Wine-Proton-...[/i]). The real [i]BepInEx[/i] folder next to [i]Graveyard Keeper.exe[/i] is correct and should stay.
+[*]Click [i]Install BepInEx[/i]. The extension will download and install the curated pack cleanly.
+[*]Reinstall your plugin mods so they get sorted into proper subfolders. (Old installs stay where they were put previously until you reinstall them.)
+[*]Deploy.
+[/list][/size]
+
+[size=3]If the [i]Install BepInEx[/i] prompt keeps appearing even though BepInEx is installed, it means Vortex is still tracking the old pack. Uninstalling the old pack entry (step 1) fixes it.[/size]
+
+[size=4][b]Supported stores[/b][/size]
+
+[size=3]Steam and GOG, both auto-detected.[/size]
+
+[size=4][b]Thanks[/b][/size]
+
+[size=3]The BepInEx pack this extension installs is maintained separately here:
+[url=https://www.nexusmods.com/graveyardkeeper/mods/79]Graveyard Keeper BepInEx 5 Pack[/url][/size]
+
+[size=4][b]Reporting issues[/b][/size]
+
+[size=3]If something goes wrong, please include your Vortex log (Help, then View Logs) in your bug report. Screenshots of the Mods tab and the BepInEx folder on disk also help a lot.[/size]
