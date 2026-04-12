@@ -2,6 +2,7 @@
 
 ## 2.3.3 | 12 April 2026
 
+- Moved some features out into Rip In Patches
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language
 - Language changes in the game options are now picked up immediately without needing to restart
 - The Advanced section now appears at the top of the settings list instead of the bottom, and its Debug Logging option is always visible (was hidden by default)
