@@ -56,15 +56,11 @@ public static class Patches
     }
 
 
-    [HarmonyPrefix]
-    [HarmonyPriority(1)]
-    [HarmonyPatch(typeof(BaseCharacterComponent), nameof(BaseCharacterComponent.SetOverheadItem))]
-    public static void BaseCharacterComponent_SetOverheadItem(BaseCharacterComponent __instance, Item item)
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldZone), nameof(WorldZone.OnPlayerEnter))]
+    public static void WorldZone_OnPlayerEnter_Postfix()
     {
-        if (__instance.wgo.is_player && item != null && Plugin.OverheadItemIsHeavy(item))
-        {
-            MainGame.me.StartCoroutine(Plugin.RunFullUpdate());
-        }
+        Plugin.StartScan();
     }
 
     [HarmonyPostfix]
@@ -117,7 +113,7 @@ public static class Patches
         {
             Plugin.InitialFullUpdate = true;
             Plugin.SortedStockpiles.Clear();
-            MainGame.me.StartCoroutine(Plugin.RunFullUpdate());
+            Plugin.StartScan();
         }
 
         Plugin.CheckKeybinds();

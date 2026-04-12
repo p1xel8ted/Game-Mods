@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.5.4 | 12 April 2026
+
+- Fixed brief stutters that could happen while rapidly chopping wood or mining stone
+- Added an advanced performance option to fine-tune smoothness if you still notice hitches on an older PC
+
 ## 3.5.3 | 12 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

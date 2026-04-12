@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.autolootheavies";
     private const string PluginName = "Auto-Loot Heavies!";
-    private const string PluginVer = "3.5.3";
+    private const string PluginVer = "3.5.4";
 
     private const float EnergyRequirement = 3f;
 
@@ -13,7 +13,7 @@ public class Plugin : BaseUnityPlugin
 
     internal static List<Stockpile> SortedStockpiles { get; } = [];
     internal static float LastBubbleTime { get; set; }
-    internal static List<WorldGameObject> Objects { get; set; }
+    internal static Coroutine ActiveScan { get; set; }
     internal static ConfigEntry<bool> TeleportToDumpSiteWhenAllStockPilesFull { get; private set; }
     internal static ConfigEntry<Vector3> DesignatedTimberLocation { get; private set; }
     internal static ConfigEntry<Vector3> DesignatedOreLocation { get; private set; }
@@ -22,6 +22,8 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static bool DebugDialogShown;
+    internal static ConfigEntry<int> ScanChunkSize { get; private set; }
+    internal static int CachedScanChunkSize;
     internal static ConfigEntry<KeyboardShortcut> SetTimberLocationKeybind { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> SetOreLocationKeybind { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> SetStoneLocationKeybind { get; private set; }
@@ -55,6 +57,14 @@ public class Plugin : BaseUnityPlugin
         Debug = Config.Bind("4. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 1}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+
+        ScanChunkSize = Config.Bind("4. Advanced", "Performance Smoothness", 250,
+            new ConfigDescription(
+                "If you notice brief hitches when entering a new area on an older PC, try lowering this. Lower = smoother but the mod takes slightly longer to notice newly-built stockpiles. Higher = faster catch-up but can cause a small hitch on slow hardware. Leave at the default if everything feels smooth.",
+                new AcceptableValueRange<int>(50, 2000),
+                new ConfigurationManagerAttributes {IsAdvanced = true, Order = 2}));
+        CachedScanChunkSize = ScanChunkSize.Value;
+        ScanChunkSize.SettingChanged += (_, _) => CachedScanChunkSize = ScanChunkSize.Value;
     }
 
     internal static void ShowDebugWarningOnce()
@@ -271,41 +281,64 @@ public class Plugin : BaseUnityPlugin
             Constants.ItemDefinitionId.Marble;
     }
 
+    internal static void StartScan()
+    {
+        if (!MainGame.game_started) return;
+        if (ActiveScan != null) MainGame.me.StopCoroutine(ActiveScan);
+        ActiveScan = MainGame.me.StartCoroutine(RunFullUpdate());
+    }
+
     internal static IEnumerator RunFullUpdate()
     {
-        if (!MainGame.game_started) yield break;
+        if (!MainGame.game_started)
+        {
+            ActiveScan = null;
+            yield break;
+        }
 
         var sw = new Stopwatch();
         sw.Start();
 
+        var snapshot = WorldMap._objs;
+        var count = snapshot.Count;
+        var fresh = new List<Stockpile>(SortedStockpiles.Count);
+        var chunkSize = CachedScanChunkSize;
+
+        if (DebugEnabled) WriteLog($"[ALH]: Scanning {count} world objects for stockpiles (chunk size {chunkSize}).");
+
+        for (var i = 0; i < count; i++)
+        {
+            var wgo = snapshot[i];
+            if (wgo != null && StockpileIsValid(wgo) && wgo.data.inventory_size > 0 && !wgo.obj_id.Contains("decor"))
+            {
+                fresh.Add(new Stockpile(GetLocation(wgo), GetStockpileType(wgo), GetDistance(wgo), wgo));
+            }
+
+            if ((i + 1) % chunkSize == 0) yield return null;
+        }
+
+        foreach (var existing in SortedStockpiles)
+        {
+            if (existing.Wgo == null) continue;
+            var alreadyIn = false;
+            foreach (var f in fresh)
+            {
+                if (f.Wgo != existing.Wgo) continue;
+                alreadyIn = true;
+                break;
+            }
+            if (!alreadyIn) fresh.Add(existing);
+        }
+
+        fresh.Sort((x, y) => x.DistanceFromPlayer.CompareTo(y.DistanceFromPlayer));
+
         SortedStockpiles.Clear();
-
-        var allObjects = WorldMap._objs;
-        Objects = allObjects!
-            .Where(x => x.obj_id.Contains(Constants.ItemObjectId.Timber) || x.obj_id.Contains(Constants.ItemObjectId.Ore) ||
-                        x.obj_id.Contains(Constants.ItemObjectId.Stone))
-            .Where(x => x.data.inventory_size > 0)
-            .ToList();
-
-        if (Plugin.DebugEnabled) WriteLog($"[ALH]: Scanning world for stockpiles.");
-        Objects.RemoveAll(a => a.obj_id.Contains("decor"));
-
-        foreach (var obj in Objects)
-        {
-            if (Plugin.DebugEnabled) WriteLog($"Found stockpile: location: {GetLocation(obj)}, type: {GetStockpileType(obj)}, distance: {GetDistance(obj)}");
-        }
-
-        if (Plugin.DebugEnabled) WriteLog($"[ALH]: Updating stockpiles distance, type etc and sorting by distance to player.");
-
-        foreach (var stockpile in Objects.Where(a => a != null))
-        {
-            if (Plugin.DebugEnabled) WriteLog(AddStockpile(stockpile) ? $"Added stockpile: location: {GetLocation(stockpile)}, type: {GetStockpileType(stockpile)}, distance: {GetDistance(stockpile)}" : $"Stockpile already exists in list - updating distance from player.");
-        }
-
-        SortedStockpiles.Sort((x, y) => x.DistanceFromPlayer.CompareTo(y.DistanceFromPlayer));
+        SortedStockpiles.AddRange(fresh);
 
         sw.Stop();
-        if (Plugin.DebugEnabled) WriteLog($"Scanning, updating, and sorting stockpiles took {sw.ElapsedMilliseconds}ms");
+        if (DebugEnabled) WriteLog($"[ALH]: Scan complete — {fresh.Count} stockpiles, {sw.ElapsedMilliseconds}ms wall time.");
+
+        ActiveScan = null;
     }
 
     internal static void ShowMessage(string msg, Vector3 pos)
