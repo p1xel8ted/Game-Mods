@@ -57,7 +57,7 @@ public static class Fields
 
     internal static bool GameBalanceAlreadyRun { get; set; }
     internal static bool GratitudeCraft { get; set; }
-    internal static int PlayerInventorySize => 20 + Plugin.AdditionalInventorySpace.Value;
+    internal static bool ShrinkDialogOpen { get; set; }
     internal static MultiInventory Mi { get; set; } = new();
     internal static bool UsingBag { get; set; }
     internal static bool ZombieWorker { get; set; }
@@ -72,6 +72,13 @@ public static class Fields
 
     internal static bool InventoriesLoaded { get; set; }
     public static bool DropsCleaned { get; set; }
+
+    // Debounce flags drained once per frame in Plugin.Update. SettingChanged fires
+    // synchronously on every slider tick during a drag, so the heavy Update*() helpers
+    // would run hundreds of times mid-frame without these.
+    internal static bool InventorySizesDirty { get; set; }
+    internal static bool StackSizesDirty { get; set; }
+    internal static bool ToolDestroyDirty { get; set; }
 
     // Interaction state (replaces CrossModFields.Is* / CurrentWgoInteraction)
     internal static WorldGameObject CurrentWgoInteraction { get; set; }

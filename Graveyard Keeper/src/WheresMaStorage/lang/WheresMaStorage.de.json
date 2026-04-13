@@ -1,5 +1,8 @@
 {
   "DebugWarning": "Bitte beachten Sie, dass der Debug-Modus aktiviert ist. Es wird nicht empfohlen, diesen eingeschaltet zu lassen, es sei denn, Sie haben einen Zweck dafür.",
   "Player": "Spieler",
-  "Wilderness": "Wildnis"
+  "Wilderness": "Wildnis",
+  "ShrinkConfirmPlayer": "Wenn die Inventargröße verkleinert wird, fallen {0} Gegenstände aus deinem Inventar auf den Boden neben dir.\n\nFortfahren?",
+  "ShrinkConfirmChests": "Wenn die Inventargröße verkleinert wird, fallen {0} Gegenstände aus {1} Truhe(n) in der Welt heraus, jeweils am Standort der Truhe.\n\nFortfahren?",
+  "ShrinkConfirmBoth": "Wenn die Inventargröße verkleinert wird, fallen folgende Gegenstände heraus:\n• {0} aus deinem Inventar\n• {1} aus {2} Truhe(n) in der Welt\n\nFortfahren?"
 }

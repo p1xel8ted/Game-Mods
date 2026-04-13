@@ -1,5 +1,8 @@
 {
   "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it.",
   "Player": "Player",
-  "Wilderness": "Wilderness"
+  "Wilderness": "Wilderness",
+  "ShrinkConfirmPlayer": "Reducing the inventory size will drop {0} item(s) from your inventory on the ground next to you.\n\nContinue?",
+  "ShrinkConfirmChests": "Reducing the inventory size will drop {0} item(s) from {1} chest(s) across the world, at each chest's location.\n\nContinue?",
+  "ShrinkConfirmBoth": "Reducing the inventory size will drop:\n• {0} item(s) from your inventory\n• {1} item(s) from {2} chest(s) across the world\n\nContinue?"
 }

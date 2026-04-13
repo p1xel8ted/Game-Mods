@@ -193,10 +193,7 @@ public static class Patches
             return true;
         }
 
-        var inv = new MultiInventory();
-        inv.SetInventories(Invents.GetMiInventory(objId, worldZoneId).all);
-
-        Fields.Mi = inv;
+        var inv = Invents.GetMiInventory(objId, worldZoneId);
         __result = inv;
 
         if (Plugin.DebugEnabled) Helpers.Log($"[GetMultiInventory] injected shared multi ({inv.all.Count} inventories) for obj={objId} zone={worldZoneId}");
@@ -379,6 +376,17 @@ public static class Patches
             return;
         }
 
+        // Universal "show hidden items" safety net. Widen-only — never shrinks. Recovers items
+        // hidden by any prior bug or other mod that wrote a too-small inventory_size.
+        foreach (var inv in multi_inventory.all)
+        {
+            if (inv?.data?.inventory == null) continue;
+            if (inv.data.inventory.Count > inv.data.inventory_size)
+            {
+                inv.data.SetInventorySize(inv.data.inventory.Count);
+            }
+        }
+
         var tools = multi_inventory.all
             .Where(a => a.name == "Tools" || a.data.id is "Tools" or "Toolbelt")
             .ToList();
@@ -389,10 +397,7 @@ public static class Patches
             multi_inventory.AddInventory(tools[0], 1);
         }
 
-        if (Plugin.DontShowEmptyRowsInInventory.Value)
-        {
-            __instance.dont_show_empty_rows = true;
-        }
+        __instance.dont_show_empty_rows = Plugin.DontShowEmptyRowsInInventory.Value;
 
         if (Fields.IsCraft || Fields.IsVendor || Fields.IsChurchPulpit)
         {
@@ -658,9 +663,13 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.InitPlayersInventory))]
     public static void GameSave_InitPlayersInventory(GameSave __instance)
     {
-        var size = Plugin.ModifyInventorySize.Value ? Fields.PlayerInventorySize : 20;
-        __instance._inventory.inventory_size = size;
-        __instance._inventory.SetInventorySize(size);
+        // Fires on NEW GAME setup before MainGame.me.player is fully wired, so route through
+        // the helper which falls back to PlayerVanillaFallback when OriginalInventorySizes
+        // doesn't yet have an entry. Clamp to current item count for safety even though new game
+        // inventory should be empty.
+        var requested = Helpers.GetRequestedPlayerInventorySize();
+        var clamped = Math.Max(requested, __instance._inventory.inventory.Count);
+        __instance._inventory.SetInventorySize(clamped);
     }
 
 
@@ -668,18 +677,23 @@ public static class Patches
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.InitNewObject))]
     public static void WorldGameObject_InitNewObject(WorldGameObject __instance)
     {
+        if (__instance.is_player)
+        {
+            // Don't TryAdd for the player — its data.inventory_size at this moment is the SAVED value
+            // (already WMS-modified by a previous session), not the game's true vanilla 20.
+            // Helpers.GetRequestedSize special-cases is_player and uses the hardcoded PlayerVanillaSize.
+            Helpers.ApplyPlayerInventorySize();
+            return;
+        }
+
         Helpers.OriginalInventorySizes.TryAdd(__instance.obj_def.id, __instance.data.inventory_size);
 
         if (!Plugin.ModifyInventorySize.Value) return;
-
-        if (__instance.is_player)
-        {
-            __instance.data.SetInventorySize(Fields.PlayerInventorySize);
-        }
-
         if (!string.Equals(__instance.obj_id, Fields.NpcBarman)) return;
         if (!Helpers.OriginalInventorySizes.TryGetValue(__instance.obj_def.id, out var originalSize)) return;
 
-        __instance.data.SetInventorySize(originalSize + Plugin.AdditionalInventorySpace.Value);
+        var requested = originalSize + Plugin.AdditionalContainerInventorySpace.Value;
+        var clamped = Math.Max(requested, __instance.data.inventory.Count);
+        __instance.data.SetInventorySize(clamped);
     }
 }

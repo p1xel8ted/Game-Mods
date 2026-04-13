@@ -169,11 +169,10 @@ public static class Helpers
 
     private static void RestoreInventorySizes()
     {
-        if (MainGame.me.player && MainGame.game_started)
-        {
-            if (Plugin.DebugEnabled) Log("Restoring Player Inventory Size to 20");
-            MainGame.me.player.data.SetInventorySize(20);
-        }
+        // Player size is owned by ApplyPlayerInventorySize() — never write a hard 20 here, since the
+        // backed-up vanilla value lives in OriginalInventorySizes and the live inventory may have
+        // more items than the vanilla size (those would otherwise be hidden until the next frame).
+        ApplyPlayerInventorySize();
 
         foreach (var od in GameBalance.me.objs_data.Where(a => a.interaction_type == ObjectDefinition.InteractionType.Chest))
         {
@@ -199,26 +198,300 @@ public static class Helpers
     internal static void UpdateInventorySizes()
     {
         RestoreInventorySizes();
+
+        // Player live size goes through ApplyPlayerInventorySize so we never write below current item count.
+        ApplyPlayerInventorySize();
+
         if (!Plugin.ModifyInventorySize.Value) return;
 
-        if (MainGame.me.player && MainGame.game_started)
-        {
-            if (Plugin.DebugEnabled) Log($"Modifying Player Inventory Size from 20 to {Fields.PlayerInventorySize}");
-            MainGame.me.player.data.SetInventorySize(Fields.PlayerInventorySize);
-        }
-
+        // Chest TYPE definitions only — per-instance writes happen via ApplyShrinkPlan when the user
+        // actively shrinks. Bumping od here means newly-spawned chests get the bigger size, and the
+        // game's AddToInventory auto-grow (WorldGameObject.cs:658-659) lifts existing chests on next add.
         foreach (var od in GameBalance.me.objs_data.Where(od => od.interaction_type == ObjectDefinition.InteractionType.Chest && IsValidStorage(od.inventory_size)))
         {
             if (!OriginalInventorySizes.TryGetValue(od.id, out var originalSize)) continue;
 
-            od.inventory_size = originalSize + Plugin.AdditionalInventorySpace.Value;
+            od.inventory_size = originalSize + Plugin.AdditionalContainerInventorySpace.Value;
             if (Plugin.DebugEnabled) Log($"Modifying Inventory Size for: {od.id}, {originalSize} -> {od.inventory_size}");
         }
     }
 
-    private static bool IsValidStorage(int size)
+    internal static bool IsValidStorage(int size)
     {
         return size is 20 or 25 or 5;
+    }
+
+    // ---- Inventory-size helpers (no hardcoded sizes; everything sourced from OriginalInventorySizes) ----
+
+    // Player vanilla size is HARDCODED by the game (GameSave.InitPlayersInventory at game_code/GameSave.cs:271
+    // calls SetInventorySize(20) unconditionally). We don't rely on OriginalInventorySizes for the player
+    // because the WorldGameObject_InitNewObject postfix backs up data.inventory_size at WGO init time —
+    // for a saved player that already has a WMS-modified size baked in, the backup would capture 40 (or
+    // whatever the save had) instead of the true vanilla 20.
+    internal const int PlayerVanillaSize = 20;
+
+    internal static int GetVanillaSizeForWgo(WorldGameObject wgo)
+    {
+        if (wgo == null) return 0;
+        if (wgo.is_player) return PlayerVanillaSize;
+        if (wgo.obj_def?.id != null && OriginalInventorySizes.TryGetValue(wgo.obj_def.id, out var orig))
+        {
+            return orig;
+        }
+        return 0;
+    }
+
+    // Returns the size this WGO's data.inventory_size SHOULD be right now per current WMS settings.
+    // Returns null for WGOs WMS does not manage (no backup, or chest with non-IsValidStorage vanilla size).
+    // Player and containers each have their own slider so the two can diverge.
+    internal static int? GetRequestedSize(WorldGameObject wgo)
+    {
+        if (wgo == null) return null;
+
+        if (wgo.is_player)
+        {
+            // Always use the hardcoded vanilla (see PlayerVanillaSize note above).
+            return Plugin.ModifyInventorySize.Value
+                ? PlayerVanillaSize + Plugin.AdditionalPlayerInventorySpace.Value
+                : PlayerVanillaSize;
+        }
+
+        if (wgo.obj_def?.id == null) return null;
+        if (!OriginalInventorySizes.TryGetValue(wgo.obj_def.id, out var originalSize)) return null;
+
+        // Non-player: only types whose vanilla size matches IsValidStorage are managed.
+        if (!IsValidStorage(originalSize)) return null;
+        return Plugin.ModifyInventorySize.Value
+            ? originalSize + Plugin.AdditionalContainerInventorySpace.Value
+            : originalSize;
+    }
+
+    internal static int GetRequestedPlayerInventorySize()
+    {
+        return Plugin.ModifyInventorySize.Value
+            ? PlayerVanillaSize + Plugin.AdditionalPlayerInventorySpace.Value
+            : PlayerVanillaSize;
+    }
+
+    // Used by load/refresh paths and per-frame in Plugin.Update. Never loses items —
+    // widens size up to inventory.Count if the requested value would hide some.
+    internal static void ApplyPlayerInventorySize()
+    {
+        if (!MainGame.game_started || MainGame.me.player == null) return;
+        var data = MainGame.me.player.data;
+        if (data?.inventory == null) return;
+        var requested = GetRequestedPlayerInventorySize();
+        var clamped = Math.Max(requested, data.inventory.Count);
+        if (data.inventory_size != clamped)
+        {
+            data.SetInventorySize(clamped);
+        }
+    }
+
+    // Snapshot of what would happen on a user-initiated shrink. Built once when the
+    // settings dirty flag drains; fed to the dialog and to ApplyShrinkPlan / SnapConfigToCurrentSizes.
+    internal class ShrinkPlan
+    {
+        public int PlayerOverflow;
+        public int PlayerCount;
+        public int PlayerRequested;
+        public int TotalChestOverflow;
+        public List<(WorldGameObject Wgo, int Overflow)> ChestOverflows = [];
+        public List<(WorldGameObject Wgo, int RequestedSize)> ContainersToShrink = [];
+        public bool HasOverflow => PlayerOverflow > 0 || TotalChestOverflow > 0;
+    }
+
+    internal static ShrinkPlan PlanShrink()
+    {
+        // Despite the legacy name, this plan covers BOTH directions: chests/players whose current
+        // size is below the requested size (grow) and those above (shrink). Overflow is only ever
+        // possible on the shrink side (count > requested). The dialog only fires when there's
+        // overflow; pure grows and shrinks-that-fit apply silently in ApplyShrinkPlan.
+        var plan = new ShrinkPlan();
+        if (WorldMap._objs == null) return plan;
+
+        foreach (var wgo in WorldMap._objs)
+        {
+            if (wgo == null) continue;
+            var requested = GetRequestedSize(wgo);
+            if (requested == null) continue;
+            var data = wgo.data;
+            if (data?.inventory == null) continue;
+            if (data.inventory_size == requested.Value) continue; // already at target — nothing to do
+
+            plan.ContainersToShrink.Add((wgo, requested.Value));
+            var overflow = data.inventory.Count - requested.Value;
+            if (overflow <= 0) continue;
+
+            if (wgo.is_player)
+            {
+                plan.PlayerOverflow = overflow;
+                plan.PlayerCount = data.inventory.Count;
+                plan.PlayerRequested = requested.Value;
+            }
+            else
+            {
+                plan.ChestOverflows.Add((wgo, overflow));
+                plan.TotalChestOverflow += overflow;
+            }
+        }
+        return plan;
+    }
+
+    internal static void ApplyShrinkPlan(ShrinkPlan plan)
+    {
+        // Player first (so its drops appear at the player's feet before anything else).
+        if (plan.PlayerOverflow > 0 && MainGame.me.player != null)
+        {
+            var data = MainGame.me.player.data;
+            var overflow = data.inventory.Skip(plan.PlayerRequested).ToList();
+            Log($"Inventory shrink: ejecting {overflow.Count} item(s) from player onto the ground.");
+            foreach (var item in overflow)
+            {
+                MainGame.me.player.DropItem(item);
+                data.inventory.Remove(item);
+            }
+            if (data.inventory_size != plan.PlayerRequested) data.SetInventorySize(plan.PlayerRequested);
+        }
+
+        // Each container.
+        foreach (var (wgo, requestedSize) in plan.ContainersToShrink)
+        {
+            if (wgo == null || wgo.is_player) continue; // player handled above
+            var data = wgo.data;
+            if (data?.inventory == null) continue;
+            if (data.inventory.Count > requestedSize)
+            {
+                var overflow = data.inventory.Skip(requestedSize).ToList();
+                Log($"Inventory shrink: ejecting {overflow.Count} item(s) from {wgo.obj_id} at zone '{wgo.GetMyWorldZoneId()}'.");
+                foreach (var item in overflow)
+                {
+                    wgo.DropItem(item);
+                    data.inventory.Remove(item);
+                }
+            }
+            if (data.inventory_size != requestedSize) data.SetInventorySize(requestedSize);
+        }
+    }
+
+    internal static void SnapConfigToCurrentSizes(ShrinkPlan plan)
+    {
+        // Find the minimum slider value per side that would cover its overflow.
+        // Player and container sliders are independent, so compute each separately
+        // and only nudge the slider(s) that actually have an overflow on that side.
+        var playerNeeded = 0;
+        if (plan.PlayerOverflow > 0 && MainGame.me.player != null)
+        {
+            var playerVanilla = GetVanillaSizeForWgo(MainGame.me.player);
+            playerNeeded = MainGame.me.player.data.inventory.Count - playerVanilla;
+        }
+
+        var containerNeeded = 0;
+        foreach (var (wgo, _) in plan.ChestOverflows)
+        {
+            if (wgo?.obj_def?.id == null) continue;
+            if (!OriginalInventorySizes.TryGetValue(wgo.obj_def.id, out var orig)) continue;
+            containerNeeded = Math.Max(containerNeeded, wgo.data.inventory.Count - orig);
+        }
+
+        // Clamp each to the slider's AcceptableValueRange<int>(0, 500).
+        playerNeeded = Math.Max(0, Math.Min(500, playerNeeded));
+        containerNeeded = Math.Max(0, Math.Min(500, containerNeeded));
+
+        // Force ModifyInventorySize on if it was the toggle that triggered the prompt.
+        if (!Plugin.ModifyInventorySize.Value)
+        {
+            Plugin.ModifyInventorySize.Value = true;
+        }
+        if (plan.PlayerOverflow > 0 && Plugin.AdditionalPlayerInventorySpace.Value != playerNeeded)
+        {
+            Plugin.AdditionalPlayerInventorySpace.Value = playerNeeded;
+        }
+        if (plan.TotalChestOverflow > 0 && Plugin.AdditionalContainerInventorySpace.Value != containerNeeded)
+        {
+            Plugin.AdditionalContainerInventorySpace.Value = containerNeeded;
+        }
+        // SettingChanged will fire and re-flip InventorySizesDirty; the next drain sees no overflow
+        // (because we just sized the slider(s) to cover everything) and applies silently. No loop.
+    }
+
+    // Called from Plugin.Update when InventorySizesDirty drains. Returns once it's done,
+    // either after applying silently or after opening the confirmation dialog.
+    internal static void HandleInventorySizesDirty()
+    {
+        if (Fields.ShrinkDialogOpen) return; // dialog already open; let user answer first
+
+        var plan = PlanShrink();
+        if (!plan.HasOverflow)
+        {
+            // Nothing would be hidden — apply the new sizes silently.
+            ApplyShrinkPlan(plan);
+            return;
+        }
+
+        Fields.ShrinkDialogOpen = true;
+        Lang.Reload();
+        HideConfigurationManagerWindow();
+        var message = BuildShrinkMessage(plan);
+        GUIElements.me.dialog.OpenYesNo(
+            message,
+            delegate_1: () =>
+            {
+                Fields.ShrinkDialogOpen = false;
+                ApplyShrinkPlan(plan);
+            },
+            delegate_2: () =>
+            {
+                Fields.ShrinkDialogOpen = false;
+                SnapConfigToCurrentSizes(plan);
+            });
+    }
+
+    private static string BuildShrinkMessage(ShrinkPlan plan)
+    {
+        if (plan.PlayerOverflow > 0 && plan.TotalChestOverflow > 0)
+        {
+            return string.Format(Lang.Get("ShrinkConfirmBoth"),
+                plan.PlayerOverflow, plan.TotalChestOverflow, plan.ChestOverflows.Count);
+        }
+        if (plan.PlayerOverflow > 0)
+        {
+            return string.Format(Lang.Get("ShrinkConfirmPlayer"), plan.PlayerOverflow);
+        }
+        return string.Format(Lang.Get("ShrinkConfirmChests"),
+            plan.TotalChestOverflow, plan.ChestOverflows.Count);
+    }
+
+    // Soft-dependency hook for BepInEx ConfigurationManager. We can't reference its DLL directly
+    // because users may not have it installed; CM exposes a public bool DisplayingWindow property
+    // we can flip to false via reflection. Lookup is lazy because plugin load order isn't
+    // guaranteed — at WMS Awake time CM may not yet have populated its Instance.
+    private const string CmGuid = "com.bepis.bepinex.configurationmanager";
+    private static object _cmInstance;
+    private static PropertyInfo _cmDisplayingWindow;
+
+    internal static void HideConfigurationManagerWindow()
+    {
+        EnsureCmCached();
+        if (_cmInstance == null || _cmDisplayingWindow == null) return;
+        try
+        {
+            _cmDisplayingWindow.SetValue(_cmInstance, false);
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[CM] Could not hide window: {ex.Message}");
+        }
+    }
+
+    private static void EnsureCmCached()
+    {
+        if (_cmDisplayingWindow != null) return;
+        if (!BepInEx.Bootstrap.Chainloader.PluginInfos.TryGetValue(CmGuid, out var info)) return;
+        if (info?.Instance == null) return;
+        _cmInstance = info.Instance;
+        _cmDisplayingWindow = info.Instance.GetType()
+            .GetProperty("DisplayingWindow", BindingFlags.Instance | BindingFlags.Public);
     }
 
     private static void CollectDrops()

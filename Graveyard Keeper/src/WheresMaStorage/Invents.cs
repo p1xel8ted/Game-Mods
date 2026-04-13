@@ -10,7 +10,7 @@ public static class Invents
 
         var playerInventory = new Inventory(MainGame.me.player);
         Fields.Mi.AddInventory(playerInventory, 0);
-        playerInventory.data.SetInventorySize(Fields.PlayerInventorySize);
+        Helpers.ApplyPlayerInventorySize();
 
         var toolbelt = new Item
         {
@@ -78,7 +78,7 @@ public static class Invents
 
         watch.Stop();
         Fields.InventoriesLoaded = true;
-        if (Plugin.DebugEnabled) Helpers.Log($"[LoadInventories] done: zones visited={zonesVisited} skipped={zonesSkipped}, inventories={invsAdded} (+{bagsAdded} bags), total Mi={Fields.Mi.all.Count} in {watch.ElapsedMilliseconds}ms");
+        Helpers.Log($"[LoadInventories] done: zones visited={zonesVisited} skipped={zonesSkipped}, inventories={invsAdded} (+{bagsAdded} bags), total Mi={Fields.Mi.all.Count} in {watch.ElapsedMilliseconds}ms");
         callback?.Invoke();
         yield return true;
     }
@@ -97,7 +97,8 @@ public static class Invents
         Fields.WildernessInventories.Clear();
 
         var excludedInventories = Fields.ExcludeTheseWildernessInventories;
-        var additionalInventorySpace = Plugin.AdditionalInventorySpace.Value;
+        // Wilderness inventories are containers (chests/racks), so they use the container slider.
+        var additionalInventorySpace = Plugin.AdditionalContainerInventorySpace.Value;
         var modifyInventorySize = Plugin.ModifyInventorySize.Value;
 
         foreach (var wgo in wgos)
@@ -139,7 +140,7 @@ public static class Invents
         }
 
         watch.Stop();
-        if (Plugin.DebugEnabled) Helpers.Log($"[LoadWilderness] done: wgos scanned={wgos.Count}, inventories={Fields.WildernessInventories.Count} (multi={Fields.WildernessMultiInventories.Count}) in {watch.ElapsedMilliseconds}ms");
+        Helpers.Log($"[LoadWilderness] done: wgos scanned={wgos.Count}, inventories={Fields.WildernessInventories.Count} (multi={Fields.WildernessMultiInventories.Count}) in {watch.ElapsedMilliseconds}ms");
         callback?.Invoke();
         yield break;
     }
@@ -222,6 +223,9 @@ public static class Invents
             MainGame.me.StartCoroutine(LoadWildernessInventories());
         }
 
+        // Lazy-merge wilderness into the shared cache. LoadWildernessInventories runs
+        // concurrently with LoadInventories so wilderness may arrive after the first build.
+        // This is idempotent (Contains check) and strictly additive — safe to mutate Fields.Mi.
         var wildAdded = 0;
         foreach (var inv in Fields.WildernessInventories.Where(inv => !Fields.Mi.all.Contains(inv)))
         {
@@ -229,29 +233,33 @@ public static class Invents
             wildAdded++;
         }
 
-        var tempList = Fields.Mi.all.ToList();
-        var quarryRemoved = 0;
-        if (Plugin.ExcludeQuarryFromSharedInventory.Value && !requesterInQuarry)
+        // Build a per-requester filtered view. Do NOT mutate Fields.Mi for exclusions —
+        // doing so would permanently drop quarry/zombie-mill entries from the shared cache,
+        // so a later quarry crafter would lose access to its own zone's containers until
+        // the next full LoadInventories rebuild.
+        var view = new MultiInventory();
+        var quarryFiltered = 0;
+        var zombieMillFiltered = 0;
+        var excludeQuarry = Plugin.ExcludeQuarryFromSharedInventory.Value && !requesterInQuarry;
+        var excludeZombieMill = Plugin.ExcludeZombieMillFromSharedInventory.Value && !requesterInZombieMill;
+        foreach (var inv in Fields.Mi.all)
         {
-            foreach (var inv in tempList.Where(inv => inv.data.sub_name.Contains("stone_workyard") || inv.data.sub_name.Contains("marble_deposit")))
+            var subName = inv.data.sub_name ?? string.Empty;
+            if (excludeQuarry && (subName.Contains("stone_workyard") || subName.Contains("marble_deposit")))
             {
-                Fields.Mi.all.Remove(inv);
-                quarryRemoved++;
+                quarryFiltered++;
+                continue;
             }
+            if (excludeZombieMill && subName.Contains("zombie_mill"))
+            {
+                zombieMillFiltered++;
+                continue;
+            }
+            view.AddInventory(inv);
         }
 
-        var zombieMillRemoved = 0;
-        if (Plugin.ExcludeZombieMillFromSharedInventory.Value && !requesterInZombieMill)
-        {
-            foreach (var inv in tempList.Where(inv => inv.data.sub_name.Contains("zombie_mill")))
-            {
-                Fields.Mi.all.Remove(inv);
-                zombieMillRemoved++;
-            }
-        }
-
-        if (Plugin.DebugEnabled) Helpers.Log($"[GetMiInventory] returning Mi (size={Fields.Mi.all.Count}): +{wildAdded} wilderness, -{quarryRemoved} quarry, -{zombieMillRemoved} zombie-mill (requester={requester} zone={zone})");
-        return Fields.Mi;
+        if (Plugin.DebugEnabled) Helpers.Log($"[GetMiInventory] returning view (size={view.all.Count} from cache={Fields.Mi.all.Count}): +{wildAdded} wilderness, -{quarryFiltered} quarry, -{zombieMillFiltered} zombie-mill (requester={requester} zone={zone})");
+        return view;
     }
 
     // This method gets inserted into the CraftReally method using the transpiler below, overwriting any inventory the game sets during crafting

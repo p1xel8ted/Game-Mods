@@ -1,5 +1,8 @@
 {
   "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin.",
   "Player": "Joueur",
-  "Wilderness": "Région sauvage"
+  "Wilderness": "Région sauvage",
+  "ShrinkConfirmPlayer": "Réduire la taille de l'inventaire fera tomber {0} objet(s) de votre inventaire sur le sol à côté de vous.\n\nContinuer ?",
+  "ShrinkConfirmChests": "Réduire la taille de l'inventaire fera tomber {0} objet(s) de {1} coffre(s) à travers le monde, à l'emplacement de chaque coffre.\n\nContinuer ?",
+  "ShrinkConfirmBoth": "Réduire la taille de l'inventaire fera tomber :\n• {0} objet(s) de votre inventaire\n• {1} objet(s) de {2} coffre(s) à travers le monde\n\nContinuer ?"
 }
