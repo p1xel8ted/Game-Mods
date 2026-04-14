@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.9.5 | 14 April 2026
+
+- Fixed the HUD and your character controls staying gone after Gerry's midnight visit if something interrupted him (sleeping, loading a save, etc.) — they now always come back
+- Camera no longer keeps following the spot where Gerry was after he's left
+- Fixed a rare case where backing out of placing a shipping box and then building a regular wooden storage right after could tag that storage as your shipping box by mistake
+- Added a Cinematic Mode toggle in the Gerry settings: turn it off if you'd rather Gerry's midnight visit happen in the background while you keep playing, instead of pausing the game and hiding the HUD
+
 ## 1.9.4 | 12 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

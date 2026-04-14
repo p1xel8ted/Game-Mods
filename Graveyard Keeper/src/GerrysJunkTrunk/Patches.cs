@@ -9,6 +9,18 @@ public static class Patches
     {
         if (!MainGame.game_started) return;
 
+        // Cinematic watchdog. The 20s GJTimer safety-net inside StartGerryRoutine can be
+        // destroyed by scene unloads, paused indefinitely by Time.timeScale=0, or skipped
+        // entirely if a Say callback never fires. If _cinematicPlaying gets stranded true,
+        // HUD/control stay disabled forever (or until fast-travel coincidentally re-enables
+        // them via the load sequence). Force a recovery once we exceed the routine's
+        // expected upper bound.
+        if (Plugin._cinematicPlaying && Time.time - Plugin._cinematicStartedAt > Plugin.CinematicMaxDurationSeconds)
+        {
+            if (Plugin.DebugEnabled) Plugin.WriteLog($"[Watchdog] cinematic exceeded {Plugin.CinematicMaxDurationSeconds}s — forcing HideCinematic()");
+            Plugin.HideCinematic();
+        }
+
         Plugin._techCount = MainGame.me.save.unlocked_techs.Count;
         if (Plugin._techCount > Plugin._oldTechCount)
         {
@@ -88,6 +100,22 @@ public static class Patches
             Plugin._shippingBuild = true;
             var ocd = GameBalance.me.GetData<ObjectCraftDefinition>("mf_wood_builddesk:p:mf_box_stuff_place");
             cd = ocd;
+        }
+    }
+
+    // ExitBuildMode fires on both successful placement and cancel. In the success path
+    // ReplaceWithObject has already cleared _shippingBuild, so this is a no-op. In the
+    // cancel path (player selects shipping box, sees the floating preview, escapes out)
+    // ReplaceWithObject never fires and the flag would otherwise leak true — meaning the
+    // next regular mf_box_stuff placed would be falsely tagged as the shipping box.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainGame), nameof(MainGame.ExitBuildMode))]
+    public static void MainGame_ExitBuildMode()
+    {
+        if (Plugin._shippingBuild)
+        {
+            if (Plugin.DebugEnabled) Plugin.WriteLog("[ExitBuildMode] cleared stale _shippingBuild flag");
+            Plugin._shippingBuild = false;
         }
     }
 
@@ -486,6 +514,16 @@ public static class Patches
     private static void FindJunkTrunk()
     {
         Plugin.ShowDebugWarningOnce();
+
+        // _cinematicPlaying is a static; if a previous play session ended (save-load) mid-
+        // cinematic the flag persists and the next ShowCinematic returns early forever.
+        // Force a recovery on every load so HUD/control are guaranteed restored.
+        if (Plugin._cinematicPlaying)
+        {
+            if (Plugin.DebugEnabled) Plugin.WriteLog("[FindJunkTrunk] _cinematicPlaying=true on load → forcing HideCinematic()");
+            Plugin.HideCinematic();
+        }
+
         var trunks = WorldMap.GetWorldGameObjectsByCustomTag(Plugin.ShippingBoxTag);
         if (trunks.Count > 0)
         {

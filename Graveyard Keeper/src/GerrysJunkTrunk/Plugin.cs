@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gerrysjunktrunk";
     private const string PluginName = "Gerry's Junk Trunk";
-    private const string PluginVer = "1.9.4";
+    private const string PluginVer = "1.9.5";
 
     internal const float FullPriceModifier = 0.70f;
     internal const float PityPrice = 0.10f;
@@ -28,6 +28,13 @@ public class Plugin : BaseUnityPlugin
     internal static bool _shippingBuild;
     internal static bool _usingShippingBox;
     internal static bool _cinematicPlaying;
+    internal static Transform _cinematicCameraTarget;
+    internal static float _cinematicStartedAt;
+
+    // Watchdog upper bound for the gerry routine. Routine is hard-capped at 20s by the
+    // existing safety-net timer; anything past 25s means the timer chain broke (sleep,
+    // save-load, scene unload, NPC dialog stomp) and HUD/control are stranded.
+    internal const float CinematicMaxDurationSeconds = 25f;
 
     internal static readonly List<BaseItemCellGUI> AlreadyDone = [];
     internal static ObjectCraftDefinition NewItem { get; private set; }
@@ -38,6 +45,7 @@ public class Plugin : BaseUnityPlugin
     internal static ManualLogSource Log { get; set; }
     internal static ConfigEntry<bool> ShowSoldMessagesOnPlayer { get; private set; }
     internal static ConfigEntry<bool> EnableGerry { get; private set; }
+    internal static ConfigEntry<bool> CinematicMode { get; private set; }
     internal static ConfigEntry<bool> ShowItemPriceTooltips { get; private set; }
     internal static ConfigEntry<bool> InternalShippingBoxBuilt { get; private set; }
     internal static ConfigEntry<bool> InternalShowIntroMessage { get; private set; }
@@ -87,6 +95,20 @@ public class Plugin : BaseUnityPlugin
         EnableGerry = Config.Bind("01. Gerry", "Gerry", true,
             new ConfigDescription("Toggle Gerry", null, new ConfigurationManagerAttributes {Order = 6}));
 
+        CinematicMode = Config.Bind("01. Gerry", "Cinematic Mode", true,
+            new ConfigDescription("When on, the camera focuses on Gerry and you can't move during his visit. When off, Gerry still appears and speaks but the game keeps running normally around you.", null,
+                new ConfigurationManagerAttributes {Order = 5, DispName = "    \u2514 Cinematic Mode"}));
+        CinematicMode.SettingChanged += (_, _) =>
+        {
+            // Toggling off mid-cinematic should restore the HUD straight away — the user
+            // is most likely flipping it precisely because they're staring at a gone HUD.
+            if (!CinematicMode.Value && _cinematicPlaying)
+            {
+                if (DebugEnabled) WriteLog("[CinematicMode] toggled off mid-cinematic — restoring HUD now");
+                HideCinematic();
+            }
+        };
+
         ShowSoldMessagesOnPlayer = Config.Bind("02. Messages", "Show Sold Messages On Player", true,
             new ConfigDescription("Display messages on the player when items are sold", null,
                 new ConfigurationManagerAttributes {Order = 5}));
@@ -119,7 +141,14 @@ public class Plugin : BaseUnityPlugin
     internal static void ShowCinematic(Transform transform)
     {
         if (_cinematicPlaying) return;
+        // Cinematic Mode off: Gerry still spawns and speaks, but the game keeps running
+        // around the player — no HUD hide, no player freeze, no camera takeover. The
+        // _cinematicPlaying flag stays false so HideCinematic also skips, and the watchdog
+        // never fires (nothing to recover).
+        if (!CinematicMode.Value) return;
         _cinematicPlaying = true;
+        _cinematicCameraTarget = transform;
+        _cinematicStartedAt = Time.time;
         GS.AddCameraTarget(transform);
         GS.SetPlayerEnable(false, true);
     }
@@ -128,6 +157,11 @@ public class Plugin : BaseUnityPlugin
     {
         if (!_cinematicPlaying) return;
         _cinematicPlaying = false;
+        if (_cinematicCameraTarget != null)
+        {
+            GS.RemoveCameraTarget(_cinematicCameraTarget);
+            _cinematicCameraTarget = null;
+        }
         GS.AddCameraTarget(MainGame.me.player.transform);
         GS.SetPlayerEnable(true, true);
     }
