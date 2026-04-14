@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.5.10 | 14 April 2026
+
+- Fixed auto-save filenames colliding: two autosaves on the same day could silently overwrite each other. New saves use a correct date format; existing saves are unaffected
+- Save list now sorts every time. Previously it silently did nothing unless you flipped a toggle, which is why autosaves crowded out your latest manual save
+- Sort mode (Game Time or Real Time) and direction (Descending or Ascending) are now dropdowns instead of two confusingly-named toggles
+- Added "Pin Last Played To Top" — keeps the save you most recently loaded or saved at the top regardless of sort. Off by default
+- Default Maximum Saves Visible raised from 3 to 20
+- Save Interval is now a 1-60 minute slider instead of raw seconds
+- New File On Auto Save now defaults to off, so your save list no longer fills up with a new file every 10 minutes
+- Settings menu reorganised with nested sub-options and rewritten descriptions. Existing values are preserved
+
 ## 2.5.9 | 12 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

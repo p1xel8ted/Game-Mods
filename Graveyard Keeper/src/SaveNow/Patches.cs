@@ -29,6 +29,7 @@ public static class Patches
     {
         var originalCount = slot_datas.Count;
         SortSaveGames(ref slot_datas);
+        ApplyLastPlayedPin(slot_datas);
 
         if (Plugin.MaximumSavesVisible.Value > 0 && slot_datas.Count > Plugin.MaximumSavesVisible.Value)
         {
@@ -45,26 +46,57 @@ public static class Patches
 
     private static void SortSaveGames(ref List<SaveSlotData> saveGames)
     {
-        var path = PlatformSpecific.GetSaveFolder();
-        var files = Directory.GetFiles(path, "*.dat", SearchOption.TopDirectoryOnly);
+        if (saveGames.Count <= 1) return;
 
-        var sortedList = new List<(DateTime lastModified, SaveSlotData data)>();
+        string[] files = null;
+        var ascending = Plugin.SortDirection.Value == SaveSortDirection.Ascending;
 
-        foreach (var save in saveGames)
+        var keyed = saveGames.Select(s => (key: SortKey(s, ref files), data: s));
+
+        saveGames = ascending
+            ? keyed.OrderBy(e => e.key).Select(e => e.data).ToList()
+            : keyed.OrderByDescending(e => e.key).Select(e => e.data).ToList();
+
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[SortSaveGames] mode={Plugin.SortMode.Value}, direction={Plugin.SortDirection.Value}, {saveGames.Count} entries");
+    }
+
+    private static DateTime SortKey(SaveSlotData slot, ref string[] files)
+    {
+        switch (Plugin.SortMode.Value)
         {
-            var saveFile = files.FirstOrDefault(f => f.Contains(save.filename_no_extension));
-            if (saveFile == null) continue;
-            var lastModified = File.GetLastWriteTime(saveFile);
-            sortedList.Add((lastModified, save));
+            case SaveSortMode.GameTime:
+                return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(slot.game_time);
+            case SaveSortMode.RealTime:
+            default:
+                if (!string.IsNullOrEmpty(slot.real_time) &&
+                    DateTime.TryParseExact(slot.real_time,
+                        "HH:mm, dd MMM yyyy",
+                        CultureInfo.CurrentCulture,
+                        DateTimeStyles.None,
+                        out var dt))
+                {
+                    return dt;
+                }
+                files ??= Directory.GetFiles(PlatformSpecific.GetSaveFolder(), "*.dat", SearchOption.TopDirectoryOnly);
+                var match = files.FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == slot.filename_no_extension);
+                return match != null ? File.GetLastWriteTime(match) : DateTime.MinValue;
         }
+    }
 
-        if (Plugin.SortByLastModified.Value)
-        {
-            saveGames = Plugin.AscendingSort.Value
-                ? sortedList.OrderBy(e => e.lastModified).Select(e => e.data).ToList()
-                : sortedList.OrderByDescending(e => e.lastModified).Select(e => e.data).ToList();
-            if (Plugin.DebugEnabled) Plugin.WriteLog($"[SortSaveGames] sorted by time ({(Plugin.AscendingSort.Value ? "asc" : "desc")}), {sortedList.Count} entries");
-        }
+    private static void ApplyLastPlayedPin(List<SaveSlotData> slots)
+    {
+        if (!Plugin.PinLastPlayedToTop.Value) return;
+
+        var target = Plugin.LastPlayedSlot.Value;
+        if (string.IsNullOrEmpty(target)) return;
+
+        var idx = slots.FindIndex(s => s.filename_no_extension == target);
+        if (idx <= 0) return;
+
+        var slot = slots[idx];
+        slots.RemoveAt(idx);
+        slots.Insert(0, slot);
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[PinLastPlayed] '{target}' moved to top");
     }
 
     [HarmonyPrefix]

@@ -1,13 +1,48 @@
 namespace SaveNow;
 
+public enum SaveSortMode
+{
+    RealTime,
+    GameTime
+}
+
+public enum SaveSortDirection
+{
+    Descending,
+    Ascending
+}
+
 [BepInPlugin(PluginGuid, PluginName, PluginVer)]
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.savenow";
     private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.9";
+    private const string PluginVer = "2.5.10";
 
     private const string ModGerryTag = "mod_gerry";
+
+    // Section names. New scheme: ── Foo ── (alphabetical sort in CM).
+    // Legacy section names get rewritten to these by MigrateRenamedSections() on first launch
+    // of the new version, so existing user customisations are preserved.
+    private const string AdvancedSection      = "── 1. Advanced ──";
+    private const string SavingSection        = "── 2. Saving ──";
+    private const string UISection            = "── 3. UI ──";
+    private const string ControlsSection      = "── 4. Controls ──";
+    private const string NotificationsSection = "── 5. Notifications ──";
+    private const string ExitingSection       = "── 6. Exiting ──";
+
+    // Migrates the 2.5.9 section names to the current "── N. Name ──" form so existing
+    // user values survive the rename. Idempotent — once migrated there are no old
+    // headers left for the next launch to match.
+    private static readonly Dictionary<string, string> SectionRenames = new()
+    {
+        ["00. Advanced"]      = AdvancedSection,
+        ["01. Saving"]        = SavingSection,
+        ["02. Notifications"] = NotificationsSection,
+        ["03. Exiting"]       = ExitingSection,
+        ["04. UI"]            = UISection,
+        ["05. Controls"]      = ControlsSection,
+    };
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
@@ -23,8 +58,10 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> SaveOnExit { get; private set; }
     internal static ConfigEntry<bool> SaveOnNewDay { get; private set; }
     internal static ConfigEntry<int> MaximumSavesVisible { get; private set; }
-    internal static ConfigEntry<bool> SortByLastModified { get; private set; }
-    internal static ConfigEntry<bool> AscendingSort { get; private set; }
+    internal static ConfigEntry<SaveSortMode> SortMode { get; private set; }
+    internal static ConfigEntry<SaveSortDirection> SortDirection { get; private set; }
+    internal static ConfigEntry<bool> PinLastPlayedToTop { get; private set; }
+    internal static ConfigEntry<string> LastPlayedSlot { get; private set; }
     internal static ConfigEntry<bool> EnableManualSaveControllerButton { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ManualSaveKeyBind { get; private set; }
     internal static ConfigEntry<string> ManualSaveControllerButton { get; private set; }
@@ -67,31 +104,74 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         LogHelper.Log = Logger;
+        MigrateRenamedSections();
         InitConfiguration();
         UpdateSaveData();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
     }
 
+    // Rewrites old "[01. Saving]" style headers to "[── Saving ──]" in the .cfg file
+    // so existing user values survive the section rename. Idempotent — re-running on an
+    // already-migrated file is a no-op (no old headers left to find).
+    private void MigrateRenamedSections()
+    {
+        var path = Config.ConfigFilePath;
+        if (!File.Exists(path)) return;
+
+        string content;
+        try
+        {
+            content = File.ReadAllText(path);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            return;
+        }
+
+        var renamed = 0;
+        foreach (var kv in SectionRenames)
+        {
+            var oldHeader = $"[{kv.Key}]";
+            var newHeader = $"[{kv.Value}]";
+            if (!content.Contains(oldHeader)) continue;
+            content = content.Replace(oldHeader, newHeader);
+            renamed++;
+        }
+        if (renamed == 0) return;
+
+        try
+        {
+            File.WriteAllText(path, content);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            return;
+        }
+
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Config.Reload();
+    }
+
     private void InitConfiguration()
     {
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false,
-            new ConfigDescription("Enable or disable debug logging.", null,
-                new ConfigurationManagerAttributes {Order = 3}));
+        // ── 1. Advanced ──
+        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
+            new ConfigDescription("Write detailed diagnostic info to the BepInEx log. Turn on before reporting bugs.", null,
+                new ConfigurationManagerAttributes {Order = 100}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        SaveInterval = Config.Bind("01. Saving", "Save Interval", 600,
-            new ConfigDescription("Interval between automatic saves in seconds.", null,
-                new ConfigurationManagerAttributes {Order = 19}));
+        LastPlayedSlot = Config.Bind(AdvancedSection, "Last Played Slot", string.Empty,
+            new ConfigDescription("Internal: tracks the last save you played so it can be pinned to the top of the list.", null,
+                new ConfigurationManagerAttributes {Browsable = false, IsAdvanced = true, HideDefaultButton = true, ReadOnly = true}));
 
-        SaveOnNewDay = Config.Bind("01. Saving", "Save On New Day", true,
-            new ConfigDescription("Save the game when a new day starts. This is independent of the Auto Save timer.", null,
-                new ConfigurationManagerAttributes {Order = 18}));
-
-        AutoSaveConfig = Config.Bind("01. Saving", "Auto Save", true,
-            new ConfigDescription("Enable or disable the automatic save timer. Note: 'Save On New Day' is a separate feature.", null,
-                new ConfigurationManagerAttributes {Order = 17}));
+        // ── 2. Saving ──
+        AutoSaveConfig = Config.Bind(SavingSection, "Auto Save", true,
+            new ConfigDescription("Save your game automatically on a timer while you play.", null,
+                new ConfigurationManagerAttributes {Order = 100}));
         AutoSaveConfig.SettingChanged += (_, _) =>
         {
             KillTimers();
@@ -101,58 +181,77 @@ public class Plugin : BaseUnityPlugin
             }
         };
 
-        NewFileOnAutoSave = Config.Bind("01. Saving", "New File On Auto Save", true,
-            new ConfigDescription("Create a new save file for each auto save.", null,
-                new ConfigurationManagerAttributes {Order = 16}));
+        SaveInterval = Config.Bind(SavingSection, "Save Interval (Minutes)", 10,
+            new ConfigDescription("Minutes between automatic saves.",
+                new AcceptableValueRange<int>(1, 60),
+                new ConfigurationManagerAttributes {Order = 99, ShowRangeAsPercent = false, DispName = "    └ Save Interval (Minutes)"}));
 
-        NewFileOnManualSave = Config.Bind("01. Saving", "New File On Manual Save", true,
-            new ConfigDescription("Create a new save file for each manual save.", null,
-                new ConfigurationManagerAttributes {Order = 15}));
+        NewFileOnAutoSave = Config.Bind(SavingSection, "New File On Auto Save", false,
+            new ConfigDescription("On: every auto save creates a new file. Off: a single auto save file is reused each time.", null,
+                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ New File On Auto Save"}));
 
-        NewFileOnNewDaySave = Config.Bind("01. Saving", "New File On New Day Save", true,
-            new ConfigDescription("Create a new save file for each new day.", null,
-                new ConfigurationManagerAttributes {Order = 14}));
+        SaveOnNewDay = Config.Bind(SavingSection, "Save On New Day", true,
+            new ConfigDescription("Save at the start of every in-game day. Runs independently of the Auto Save timer.", null,
+                new ConfigurationManagerAttributes {Order = 90}));
 
-        BackupSavesOnSave = Config.Bind("01. Saving", "Backup Saves On Save", true,
-            new ConfigDescription("Backup saves when saving the game.", null,
-                new ConfigurationManagerAttributes {Order = 13}));
+        NewFileOnNewDaySave = Config.Bind(SavingSection, "New File On New Day Save", true,
+            new ConfigDescription("On: each new-day save gets its own file. Off: a single new-day save file is reused.", null,
+                new ConfigurationManagerAttributes {Order = 89, DispName = "    └ New File On New Day Save"}));
 
-        SaveGameNotificationText = Config.Bind("02. Notifications", "Save Game Notification Text", false,
-            new ConfigDescription("Disable save game notification text.", null,
-                new ConfigurationManagerAttributes {Order = 12}));
+        NewFileOnManualSave = Config.Bind(SavingSection, "New File On Manual Save", true,
+            new ConfigDescription("On: each manual save creates a new file. Off: your manual save overwrites the currently loaded slot.", null,
+                new ConfigurationManagerAttributes {Order = 80}));
 
-        ExitToDesktop = Config.Bind("03. Exiting", "Exit To Desktop", false,
-            new ConfigDescription("Enable or disable exit to desktop.", null,
-                new ConfigurationManagerAttributes {Order = 11}));
+        BackupSavesOnSave = Config.Bind(SavingSection, "Backup Saves On Save", true,
+            new ConfigDescription("Copy your save files to a backup folder inside the mod's plugin directory every time the game saves.", null,
+                new ConfigurationManagerAttributes {Order = 70}));
 
-        SaveOnExit = Config.Bind("03. Exiting", "Save On Exit", true,
-            new ConfigDescription("Save the game when exiting.", null,
-                new ConfigurationManagerAttributes {Order = 10}));
+        // ── 3. UI ──
+        MaximumSavesVisible = Config.Bind(UISection, "Maximum Saves Visible", 20,
+            new ConfigDescription("How many saves to show in the Load Game list. 0 = unlimited.",
+                new AcceptableValueRange<int>(0, 100),
+                new ConfigurationManagerAttributes {Order = 100, ShowRangeAsPercent = false}));
 
-        MaximumSavesVisible = Config.Bind("04. UI", "Maximum Saves Visible", 3,
-            new ConfigDescription("Maximum number of save files visible in the UI.", null,
-                new ConfigurationManagerAttributes {Order = 9}));
+        SortMode = Config.Bind(UISection, "Sort Mode", SaveSortMode.GameTime,
+            new ConfigDescription("How the Load Game list is ordered. Game Time uses how many in-game days have passed. Real Time uses the clock time when you saved.", null,
+                new ConfigurationManagerAttributes {Order = 90}));
 
-        SortByLastModified = Config.Bind("04. UI", "Sort By Real Time", false,
-            new ConfigDescription("Sort save files by real time instead of in-game time.", null,
-                new ConfigurationManagerAttributes {Order = 8}));
+        SortDirection = Config.Bind(UISection, "Sort Direction", SaveSortDirection.Descending,
+            new ConfigDescription("Descending puts newest or most-progressed saves at the top. Ascending puts oldest at the top.", null,
+                new ConfigurationManagerAttributes {Order = 89}));
 
-        AscendingSort = Config.Bind("04. UI", "Ascending Sort", false,
-            new ConfigDescription("Sort save files in ascending order.", null,
-                new ConfigurationManagerAttributes {Order = 7}));
+        PinLastPlayedToTop = Config.Bind(UISection, "Pin Last Played To Top", false,
+            new ConfigDescription("Float the save you most recently loaded or saved to the top of the list, regardless of sort.", null,
+                new ConfigurationManagerAttributes {Order = 80}));
 
-        ManualSaveKeyBind = Config.Bind("05. Controls", "Manual Save Key Bind", new KeyboardShortcut(KeyCode.K),
-            new ConfigDescription("Key bind for manually saving the game.", null,
-                new ConfigurationManagerAttributes {Order = 6}));
+        // ── 4. Controls ──
+        ManualSaveKeyBind = Config.Bind(ControlsSection, "Manual Save Key Bind", new KeyboardShortcut(KeyCode.K),
+            new ConfigDescription("Keyboard shortcut to save your game instantly.", null,
+                new ConfigurationManagerAttributes {Order = 100}));
 
-        EnableManualSaveControllerButton = Config.Bind("05. Controls", "Enable Manual Save Controller Button", false,
-            new ConfigDescription("Enable or disable the manual save controller button.", null,
-                new ConfigurationManagerAttributes {Order = 5}));
-        ManualSaveControllerButton = Config.Bind("05. Controls", "Manual Save Controller Button",
+        EnableManualSaveControllerButton = Config.Bind(ControlsSection, "Enable Manual Save Controller Button", false,
+            new ConfigDescription("Allow saving instantly with a controller button.", null,
+                new ConfigurationManagerAttributes {Order = 90}));
+
+        ManualSaveControllerButton = Config.Bind(ControlsSection, "Manual Save Controller Button",
             Enum.GetName(typeof(GamePadButton), GamePadButton.LT),
-            new ConfigDescription("Controller button for manually saving the game.",
+            new ConfigDescription("Controller button used to trigger a manual save.",
                 new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
-                new ConfigurationManagerAttributes {Order = 4}));
+                new ConfigurationManagerAttributes {Order = 89, DispName = "    └ Manual Save Controller Button"}));
+
+        // ── 5. Notifications ──
+        SaveGameNotificationText = Config.Bind(NotificationsSection, "Save Game Notification Text", false,
+            new ConfigDescription("Show a small 'Saved' message above your character every time the game saves.", null,
+                new ConfigurationManagerAttributes {Order = 100}));
+
+        // ── 6. Exiting ──
+        SaveOnExit = Config.Bind(ExitingSection, "Save On Exit", true,
+            new ConfigDescription("Save your game when you use the Save and Exit button.", null,
+                new ConfigurationManagerAttributes {Order = 100}));
+
+        ExitToDesktop = Config.Bind(ExitingSection, "Exit To Desktop", false,
+            new ConfigDescription("Make the Save and Exit button quit to desktop instead of returning to the main menu.", null,
+                new ConfigurationManagerAttributes {Order = 90}));
     }
 
     private static void UpdateSaveData()
@@ -171,6 +270,7 @@ public class Plugin : BaseUnityPlugin
     internal static void SaveCallback(SaveSlotData slot)
     {
         if (Plugin.DebugEnabled) WriteLog($"[SaveNow] SaveCallback fired: slot='{slot.filename_no_extension}'");
+        LastPlayedSlot.Value = slot.filename_no_extension;
         SaveLocation(false, slot.filename_no_extension);
         GUIElements.me.ShowSavingStatus(false);
     }
@@ -185,13 +285,13 @@ public class Plugin : BaseUnityPlugin
     {
         if (!CanSave)
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] New day save skipped: player controlled by script");
+            WriteLog("[SaveNow] New day save skipped: player controlled by script");
             yield break;
         }
 
         if (IsInDungeon)
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] New day save skipped: in dungeon");
+            WriteLog("[SaveNow] New day save skipped: in dungeon");
             Lang.Reload();
             SpawnGerry(Lang.Get("CantSaveHere"));
             yield break;
@@ -199,7 +299,7 @@ public class Plugin : BaseUnityPlugin
 
         if (NewFileOnNewDaySave.Value)
         {
-            var date = DateTime.Now.ToString("ddmmyyhhmmss");
+            var date = DateTime.Now.ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
             var newSlot = $"newdaysave.{date}".Trim();
             if (Plugin.DebugEnabled) WriteLog($"[SaveNow] New day saving to new slot '{newSlot}'");
             MainGame.me.save_slot.filename_no_extension = newSlot;
@@ -217,23 +317,23 @@ public class Plugin : BaseUnityPlugin
     {
         if (EnvironmentEngine.me.IsTimeStopped())
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] Manual save skipped: time is stopped");
+            WriteLog("[SaveNow] Manual save skipped: time is stopped");
             yield break;
         }
         if (!Application.isFocused)
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] Manual save skipped: application not focused");
+            WriteLog("[SaveNow] Manual save skipped: application not focused");
             yield break;
         }
         if (!CanSave)
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] Manual save skipped: player controlled by script");
+            WriteLog("[SaveNow] Manual save skipped: player controlled by script");
             yield break;
         }
 
         if (IsInDungeon)
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] Manual save skipped: in dungeon");
+            WriteLog("[SaveNow] Manual save skipped: in dungeon");
             Lang.Reload();
             SpawnGerry(Lang.Get("CantSaveHere"));
             yield break;
@@ -241,7 +341,7 @@ public class Plugin : BaseUnityPlugin
 
         if (NewFileOnManualSave.Value)
         {
-            var date = DateTime.Now.ToString("ddmmyyhhmmss");
+            var date = DateTime.Now.ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
             var newSlot = $"manualsave.{date}".Trim();
             if (Plugin.DebugEnabled) WriteLog($"[SaveNow] Manual saving to new slot '{newSlot}'");
             MainGame.me.save_slot.filename_no_extension = newSlot;
@@ -454,6 +554,7 @@ public class Plugin : BaseUnityPlugin
         LoadSaveLocations();
 
         var slot = MainGame.me.save_slot.filename_no_extension;
+        LastPlayedSlot.Value = slot;
         var homeVector = new Vector3(2841, -6396, -1332);
         var foundLocation = SaveLocationsDictionary.TryGetValue(slot, out var posVector3);
         var pos = foundLocation ? posVector3 : homeVector;
@@ -485,8 +586,9 @@ public class Plugin : BaseUnityPlugin
         KillTimers();
         if (AutoSaveConfig.Value)
         {
-            if (Plugin.DebugEnabled) WriteLog($"[SaveNow] Starting auto-save timer: interval={SaveInterval.Value}s");
-            var timer = GJTimer.AddTimer(SaveInterval.Value, AutoSave);
+            var intervalSeconds = SaveInterval.Value * 60;
+            if (Plugin.DebugEnabled) WriteLog($"[SaveNow] Starting auto-save timer: interval={SaveInterval.Value}min ({intervalSeconds}s)");
+            var timer = GJTimer.AddTimer(intervalSeconds, AutoSave);
             timer.name = "AutoSaveTimer";
             Timers.Add(timer);
         }
@@ -512,17 +614,17 @@ public class Plugin : BaseUnityPlugin
     {
         if (EnvironmentEngine.me.IsTimeStopped())
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] Auto-save skipped: time is stopped");
+            WriteLog("[SaveNow] Auto-save skipped: time is stopped");
             yield break;
         }
         if (!Application.isFocused)
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] Auto-save skipped: application not focused");
+            WriteLog("[SaveNow] Auto-save skipped: application not focused");
             yield break;
         }
         if (!CanSave)
         {
-            if (Plugin.DebugEnabled) WriteLog("[SaveNow] Auto-save skipped: player controlled by script");
+            WriteLog("[SaveNow] Auto-save skipped: player controlled by script");
             yield break;
         }
         if (!NewFileOnAutoSave.Value)
@@ -539,7 +641,7 @@ public class Plugin : BaseUnityPlugin
         else
         {
             GUIElements.me.ShowSavingStatus(true);
-            var date = DateTime.Now.ToString("ddmmyyhhmmss");
+            var date = DateTime.Now.ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
             var newSlot = $"autosave.{date}".Trim();
             if (Plugin.DebugEnabled) WriteLog($"[SaveNow] Auto-saving to new slot '{newSlot}'");
 
