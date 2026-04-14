@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.treesnomore";
     private const string PluginName = "Trees, No More!";
-    private const string PluginVer = "2.5.10";
+    private const string PluginVer = "2.5.11";
     private static bool ShowConfirmationDialog { get; set; }
     internal static ManualLogSource Log { get; private set; }
 
@@ -87,7 +87,7 @@ public class Plugin : BaseUnityPlugin
         if (!File.Exists(FilePath)) return false;
         var jsonString = File.ReadAllText(FilePath);
         Trees = JsonConvert.DeserializeObject<List<Tree>>(jsonString);
-        Log.LogInfo($"Loaded {Trees.Count} trees from {FilePath}");
+        if (DebugEnabled) Log.LogInfo($"Loaded {Trees.Count} trees from {FilePath}");
         return true;
     }
 
@@ -96,7 +96,7 @@ public class Plugin : BaseUnityPlugin
         if (MainGame.me.save_slot.linked_save == null) return;
         var seen = new HashSet<Vector3>();
         var count = Trees.RemoveAll(x => !seen.Add(x.location));
-        if (count > 0)
+        if (count > 0 && DebugEnabled)
         {
             Log.LogInfo($"Removed {count} duplicate trees");
         }
@@ -107,7 +107,7 @@ public class Plugin : BaseUnityPlugin
         });
 
         File.WriteAllText(FilePath, jsonString);
-        Log.LogInfo($"Saved {Trees.Count} trees to {FilePath}");
+        if (DebugEnabled) Log.LogInfo($"Saved {Trees.Count} trees to {FilePath}");
     }
 
 }

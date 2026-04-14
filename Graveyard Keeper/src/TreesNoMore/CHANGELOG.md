@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.5.11 | 13 April 2026
+
+- Fixed a bug where every time a chopped stump was re-rendered (entering/leaving zones, save reloads), the mod would add a duplicate entry for the same stump, write the entire tracking file to disk, and log a noisy "Saved/Removed duplicate" pair. The mod now skips stumps it already knows about
+- The "Loaded N trees", "Saved N trees", and "Removed N duplicate trees" log lines are now only emitted when Debug Logging is enabled — the regular log stays clean
+
 ## 2.5.10 | 12 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

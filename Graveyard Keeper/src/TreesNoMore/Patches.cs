@@ -84,18 +84,26 @@ public static class Patches
             Plugin.Log.LogInfo($"Stump spawn at {instancePos}");
         }
 
-        var tree = new Tree(instance.obj_id, instancePos);
-        Plugin.Trees.Add(tree);
-        Plugin.SaveTrees();
+        // SmartInstantiate can fire repeatedly for the same stump (zone enter/exit, save reload).
+        // Without this dedup check, every re-fire appended a duplicate Tree entry, which SaveTrees
+        // would then strip and log — producing pages of "Saved/Removed" spam plus a full JSON write
+        // to disk per re-fire. Mirrors the same check already in HandleTree.
+        var alreadyTracked = Plugin.Trees.Any(tree => Vector3.Distance(tree.location, instancePos) <= Plugin.TreeSearchDistance.Value);
+        if (!alreadyTracked)
+        {
+            var tree = new Tree(instance.obj_id, instancePos);
+            Plugin.Trees.Add(tree);
+            Plugin.SaveTrees();
+
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.Log.LogInfo($"Tree at {instancePos} added to list");
+            }
+        }
 
         if (Plugin.InstantStumpRemoval.Value)
         {
             prefab = null;
-        }
-
-        if (Plugin.DebugEnabled)
-        {
-            Plugin.Log.LogInfo($"Tree at {instancePos} added to list");
         }
     }
 
