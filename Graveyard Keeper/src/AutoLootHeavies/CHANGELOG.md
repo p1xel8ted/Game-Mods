@@ -4,6 +4,7 @@
 
 - Fixed brief stutters that could happen while rapidly chopping wood or mining stone
 - Added an advanced performance option to fine-tune smoothness if you still notice hitches on an older PC
+- Fixed dropped logs/ore/stone landing at the dump site instead of in your nearby stockpile when Debug Logging was off
 
 ## 3.5.3 | 12 April 2026
 
