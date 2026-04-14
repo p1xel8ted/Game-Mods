@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.5 | 13 April 2026
+
+- Fixed the mod sometimes never activating on saves where the donkey was clearly already delivering bodies. The mod now reliably takes over after the donkey makes its first delivery
+
 ## 0.2.4 | 12 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

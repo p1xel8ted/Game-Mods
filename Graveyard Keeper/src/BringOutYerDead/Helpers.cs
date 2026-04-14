@@ -2,23 +2,18 @@ namespace BringOutYerDead;
 
 public static class Helpers
 {
-    private static readonly string[] Quests =
-    [
-        "start", "start2", "start3", "start4", "start5", "start6", "start7", "start8",
-        "start_place_body_on_table_place_grave", "goto_bishop", "goto_tavern_start",
-        "goto_tavern_tech", "goto_tavern_2", "player_repairs_sword_before", "player_repairs_sword"
-    ];
-
+    // Returns true once the game's natural donkey delivery LogicData has Executed at least once.
+    // Replaces a fragile 15-quest IsQuestSucced check that drifted out of sync on some saves
+    // (users with the carrot box already unlocked could still report TutorialDone == false).
+    // LogicData._started flips true inside Execute() (game_code/Assembly-CSharp/LogicData.cs:89)
+    // and persists across saves via [SerializeField], so this is a definitive ground-truth signal
+    // for "the donkey has begun delivering bodies, BOYD can safely take over the cadence".
     internal static bool TutorialDone()
     {
         if (!MainGame.game_started) return false;
-        var completed = true;
-        foreach (var q in Quests)
-        {
-            completed = MainGame.me.save.quests.IsQuestSucced(q);
-            if (!completed) break;
-        }
-        return !MainGame.me.save.IsInTutorial() && completed;
+        if (MainGame.me?.save?.game_logics == null) return false;
+        var donkeyLogic = MainGame.me.save.game_logics.GetLogicByID("donkey");
+        return donkeyLogic != null && donkeyLogic._started;
     }
 
     internal static void Log(string message, bool error = false)

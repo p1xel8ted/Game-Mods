@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.bringoutyerdead";
     private const string PluginName = "Bring Out Yer Dead!";
-    private const string PluginVer = "0.2.4";
+    private const string PluginVer = "0.2.5";
 
     internal static ConfigEntry<bool> Debug;
     internal static bool DebugEnabled;
