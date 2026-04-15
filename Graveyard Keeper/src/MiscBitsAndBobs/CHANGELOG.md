@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.4 | 15 April 2026
+
+- Fixed "Remove Cinematic Letterboxing" not working
+
 ## 2.3.3 | 12 April 2026
 
 - Moved some features out into Rip In Patches

@@ -69,7 +69,7 @@ public static class Patches
     [HarmonyPatch(typeof(CameraTools), nameof(CameraTools.TweenLetterbox))]
     public static void CameraTools_TweenLetterbox(ref bool show)
     {
-        if (show && !Plugin.CinematicLetterboxingConfig.Value)
+        if (show && Plugin.CinematicLetterboxingConfig.Value)
         {
             show = false;
         }

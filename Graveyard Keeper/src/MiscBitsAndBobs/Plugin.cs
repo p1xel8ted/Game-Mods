@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.miscbitsandbobs";
     private const string PluginName = "Misc. Bits & Bobs";
-    private const string PluginVer = "2.3.3";
+    private const string PluginVer = "2.3.4";
 
     internal static ConfigEntry<bool> Debug { get; set; }
     internal static bool DebugEnabled;
