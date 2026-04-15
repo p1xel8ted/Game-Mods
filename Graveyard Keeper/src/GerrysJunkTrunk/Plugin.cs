@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.gerrysjunktrunk";
     private const string PluginName = "Gerry's Junk Trunk";
-    private const string PluginVer = "1.9.5";
+    private const string PluginVer = "1.9.6";
 
     internal const float FullPriceModifier = 0.70f;
     internal const float PityPrice = 0.10f;

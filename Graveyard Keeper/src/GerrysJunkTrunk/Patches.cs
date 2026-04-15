@@ -103,20 +103,23 @@ public static class Patches
         }
     }
 
-    // ExitBuildMode fires on both successful placement and cancel. In the success path
-    // ReplaceWithObject has already cleared _shippingBuild, so this is a no-op. In the
-    // cancel path (player selects shipping box, sees the floating preview, escapes out)
-    // ReplaceWithObject never fires and the flag would otherwise leak true — meaning the
-    // next regular mf_box_stuff placed would be falsely tagged as the shipping box.
+    // Tag the floating placeholder's custom_tag directly so the marker travels with the
+    // wobj through placement (StopCurrentFloating keeps the gameObject alive) and craft
+    // completion (ReplaceWithObject changes obj_id but leaves custom_tag untouched). If
+    // the player cancels without placing, StopCurrentFloating destroys the gameObject and
+    // the tag disappears with it — no leaked flag to falsely tag the next wooden storage.
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(MainGame), nameof(MainGame.ExitBuildMode))]
-    public static void MainGame_ExitBuildMode()
+    [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.OnBuildCraftSelected))]
+    public static void BuildModeLogics_OnBuildCraftSelected_Postfix()
     {
-        if (Plugin._shippingBuild)
-        {
-            if (Plugin.DebugEnabled) Plugin.WriteLog("[ExitBuildMode] cleared stale _shippingBuild flag");
-            Plugin._shippingBuild = false;
-        }
+        if (!Plugin._shippingBuild) return;
+        Plugin._shippingBuild = false;
+
+        var floating = FloatingWorldGameObject.cur_floating;
+        if (floating == null || floating.wobj == null) return;
+
+        floating.wobj.custom_tag = Plugin.ShippingBoxTag;
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[OnBuildCraftSelected.Postfix] tagged floating shipping box placeholder");
     }
 
     [HarmonyPrefix]
@@ -473,16 +476,13 @@ public static class Patches
         if (!Plugin.UnlockedShippingBox() || __instance == null ||
             Plugin.InternalShippingBoxBuilt.Value && Plugin._shippingBox != null) return;
 
-        if (string.Equals(new_obj_id, "mf_box_stuff") && Plugin._shippingBuild)
+        if (string.Equals(new_obj_id, "mf_box_stuff") && string.Equals(__instance.custom_tag, Plugin.ShippingBoxTag))
         {
             if (Plugin.DebugEnabled) Plugin.WriteLog($"[ReplaceWithObject] shipping box built at {__instance.pos3}");
             var sbCraft = GameBalance.me.GetData<ObjectCraftDefinition>(Plugin.ShippingBoxId);
             sbCraft.hidden = true;
-            __instance.custom_tag = Plugin.ShippingBoxTag;
 
-            Plugin._shippingBuild = false;
             Plugin._shippingBox = __instance;
-
             Plugin.InternalShippingBoxBuilt.Value = true;
 
             Plugin.UpdateShippingBox(sbCraft, __instance);
