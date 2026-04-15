@@ -15,7 +15,30 @@ public static class Patches
     public static void MainGame_Update()
     {
         if (!MainGame.game_started) return;
-        if (!Plugin.MakeEverythingAuto.Value) return;
+
+        if (CraftComponentPatches.PendingReapply && Plugin.CcAlreadyRun)
+        {
+            CraftComponentPatches.PendingReapply = false;
+            try
+            {
+                CraftComponentPatches.ApplyCraftMutations();
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.LogError($"[MainGame.Update] deferred ApplyCraftMutations failed: {ex}");
+            }
+
+            if (!Plugin.AnyAutoCraftCategoryEnabled())
+            {
+                if (Plugin.DebugEnabled && Plugin.CurrentlyCrafting.Count > 0)
+                {
+                    Plugin.WriteLog($"[MainGame.Update] auto-craft fully disabled; clearing {Plugin.CurrentlyCrafting.Count} in-flight craftery tracker entries.");
+                }
+                Plugin.CurrentlyCrafting.Clear();
+            }
+        }
+
+        if (!Plugin.AnyAutoCraftCategoryEnabled()) return;
         if (Plugin.CraftsStarted) return;
 
         foreach (var wgo in MainGame.me.world.GetComponentsInChildren<WorldGameObject>(true))
@@ -25,6 +48,8 @@ public static class Patches
                 Plugin.CurrentlyCrafting.Add(wgo);
             }
         }
+
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[MainGame.Update] initial scan found {Plugin.CurrentlyCrafting.Count} in-flight unmanned crafteries.");
 
         Plugin.CraftsStarted = true;
     }
@@ -214,83 +239,283 @@ public static class Patches
 [HarmonyPatch(typeof(CraftComponent))]
 public static class CraftComponentPatches
 {
+    private sealed class CraftSnapshot
+    {
+        public bool IsAuto;
+        public CraftDefinition.EnqueueType EnqueueType;
+        public SmartExpression Energy;
+        public SmartExpression CraftTime;
+        public bool ForceMultiCraft;
+        public bool DisableMultiCraft;
+        public Dictionary<int, int> FireNeedValues;
+        public Dictionary<int, int> ResearchOutputValues;
+
+        public bool IsUnsafe;
+        public CraftCategory Category;
+        public SmartExpression CachedAutoCraftTime;
+    }
+
+    private static readonly Dictionary<string, CraftSnapshot> Snapshots = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> WarnedUncategorized = new(StringComparer.Ordinal);
+    private static readonly SmartExpression ZeroEnergyExpr = SmartExpression.ParseExpression("0");
+
+    internal static bool PendingReapply;
+
     [HarmonyPostfix, HarmonyPatch(nameof(CraftComponent.FillCraftsList))]
     public static void FillCraftsList_Postfix()
     {
         if (Plugin.CcAlreadyRun) return;
         Plugin.CcAlreadyRun = true;
 
+        CaptureSnapshots();
+        ApplyCraftMutations();
+    }
+
+    private static void CaptureSnapshots()
+    {
+        Snapshots.Clear();
         foreach (var craft in GameBalance.me.craft_data)
         {
-            AdjustFireRequirements(craft);
-            ApplyForcedMultiCraft(craft);
-            MakeCraftAuto(craft);
+            if (craft == null || string.IsNullOrEmpty(craft.id))
+            {
+                continue;
+            }
+
+            var snap = new CraftSnapshot
+            {
+                IsAuto = craft.is_auto,
+                EnqueueType = craft.enqueue_type,
+                Energy = craft.energy,
+                CraftTime = craft.craft_time,
+                ForceMultiCraft = craft.force_multi_craft,
+                DisableMultiCraft = craft.disable_multi_craft,
+                FireNeedValues = null,
+                ResearchOutputValues = null,
+                IsUnsafe = Plugin.IsUnsafeDefinition(craft),
+                Category = CraftCategories.Classify(craft.craft_in),
+                CachedAutoCraftTime = null,
+            };
+
+            for (var i = 0; i < craft.needs_from_wgo.Count; i++)
+            {
+                if (craft.needs_from_wgo[i].id != "fire") continue;
+                snap.FireNeedValues ??= new Dictionary<int, int>();
+                snap.FireNeedValues[i] = craft.needs_from_wgo[i].value;
+            }
+
+            for (var i = 0; i < craft.output.Count; i++)
+            {
+                var id = craft.output[i].id;
+                if (id is not ("r" or "g" or "b")) continue;
+                snap.ResearchOutputValues ??= new Dictionary<int, int>();
+                snap.ResearchOutputValues[i] = craft.output[i].value;
+            }
+
+            Snapshots[craft.id] = snap;
+        }
+
+        if (Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog($"[Snapshots] captured {Snapshots.Count} craft definitions");
         }
     }
 
-    private static void AdjustFireRequirements(CraftDefinition craft)
+    internal static void ApplyCraftMutations()
     {
-        if (!Plugin.HalfFireRequirements.Value) return;
+        if (!Plugin.CcAlreadyRun) return;
 
+        var startTicks = Stopwatch.GetTimestamp();
+
+        var converted = 0;
+        var skippedAutoAlready = 0;
+        var skippedUnsafe = 0;
+        var skippedCategoryOff = 0;
+        var halved = 0;
+        var fireAdjusted = 0;
+        var forcedMulti = 0;
+
+        foreach (var craft in GameBalance.me.craft_data)
+        {
+            if (craft == null || !Snapshots.TryGetValue(craft.id, out var snap))
+            {
+                continue;
+            }
+
+            RestoreFromSnapshot(craft, snap);
+
+            if (TryAdjustFireRequirements(craft))
+            {
+                fireAdjusted++;
+            }
+
+            if (TryApplyForcedMultiCraft(craft, snap))
+            {
+                forcedMulti++;
+            }
+
+            var result = TryMakeCraftAuto(craft, snap);
+            switch (result)
+            {
+                case AutoResult.Converted: converted++; break;
+                case AutoResult.AlreadyAuto: skippedAutoAlready++; break;
+                case AutoResult.Unsafe: skippedUnsafe++; break;
+                case AutoResult.CategoryDisabled: skippedCategoryOff++; break;
+            }
+
+            if (result == AutoResult.Converted && TryAdjustCraftOutput(craft))
+            {
+                halved++;
+            }
+        }
+
+        var elapsedMs = (Stopwatch.GetTimestamp() - startTicks) * 1000.0 / Stopwatch.Frequency;
+        Plugin.Log.LogInfo(
+            $"[ApplyCraftMutations] elapsed={elapsedMs:F2}ms converted={converted} halved={halved} fireAdjusted={fireAdjusted} forcedMulti={forcedMulti} skipped(alreadyAuto={skippedAutoAlready}, unsafe={skippedUnsafe}, categoryOff={skippedCategoryOff})");
+    }
+
+    private enum AutoResult { Converted, AlreadyAuto, Unsafe, CategoryDisabled }
+
+    private static void RestoreFromSnapshot(CraftDefinition craft, CraftSnapshot snap)
+    {
+        craft.is_auto = snap.IsAuto;
+        craft.enqueue_type = snap.EnqueueType;
+        craft.energy = snap.Energy;
+        craft.craft_time = snap.CraftTime;
+        craft.force_multi_craft = snap.ForceMultiCraft;
+        craft.disable_multi_craft = snap.DisableMultiCraft;
+
+        if (snap.FireNeedValues != null)
+        {
+            foreach (var kv in snap.FireNeedValues)
+            {
+                if (kv.Key < craft.needs_from_wgo.Count)
+                {
+                    craft.needs_from_wgo[kv.Key].value = kv.Value;
+                }
+            }
+        }
+
+        if (snap.ResearchOutputValues != null)
+        {
+            foreach (var kv in snap.ResearchOutputValues)
+            {
+                if (kv.Key < craft.output.Count)
+                {
+                    craft.output[kv.Key].value = kv.Value;
+                }
+            }
+        }
+    }
+
+    private static bool TryAdjustFireRequirements(CraftDefinition craft)
+    {
+        if (!Plugin.HalfFireRequirements.Value) return false;
+
+        var touched = false;
         foreach (var item in craft.needs_from_wgo.Where(item => item.id == "fire"))
         {
             item.value = Mathf.CeilToInt(item.value / 2f);
+            touched = true;
         }
+
+        return touched;
     }
 
-    private static void ApplyForcedMultiCraft(CraftDefinition craft)
+    private static bool TryApplyForcedMultiCraft(CraftDefinition craft, CraftSnapshot snap)
     {
-        if (!Plugin.ForceMultiCraft.Value || craft.is_auto || Plugin.IsUnsafeDefinition(craft)) return;
+        if (!Plugin.ForceMultiCraft.Value || snap.IsAuto || snap.IsUnsafe) return false;
 
         craft.force_multi_craft = true;
         craft.disable_multi_craft = false;
+        return true;
     }
 
-    private static void MakeCraftAuto(CraftDefinition craft)
+    private static AutoResult TryMakeCraftAuto(CraftDefinition craft, CraftSnapshot snap)
     {
-        if (craft.is_auto || !Plugin.MakeEverythingAuto.Value || Plugin.IsUnsafeDefinition(craft) || ShouldExcludeCraftFromAuto(craft)) return;
+        if (snap.IsAuto) return AutoResult.AlreadyAuto;
+        if (snap.IsUnsafe) return AutoResult.Unsafe;
 
-        var craftEnergyTime = craft.energy.EvaluateFloat(MainGame.me.player);
-        craftEnergyTime *= 1.50f;
-        craftEnergyTime = Mathf.CeilToInt(craftEnergyTime);
+        WarnIfUncategorized(craft, snap);
 
-        craft.craft_time = SmartExpression.ParseExpression(craftEnergyTime.ToString(CultureInfo.InvariantCulture));
-        craft.energy = SmartExpression.ParseExpression("0");
+        if (!Plugin.IsCategoryEnabled(snap.Category))
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.WriteLog($"[MakeCraftAuto] skip '{craft.id}' (category={snap.Category} disabled)");
+            }
+            return AutoResult.CategoryDisabled;
+        }
+
+        if (snap.CachedAutoCraftTime == null)
+        {
+            var craftEnergyTime = snap.Energy.EvaluateFloat(MainGame.me.player);
+            craftEnergyTime *= 1.50f;
+            craftEnergyTime = Mathf.CeilToInt(craftEnergyTime);
+            snap.CachedAutoCraftTime = SmartExpression.ParseExpression(craftEnergyTime.ToString(CultureInfo.InvariantCulture));
+        }
+
+        craft.craft_time = snap.CachedAutoCraftTime;
+        craft.energy = ZeroEnergyExpr;
         craft.is_auto = true;
         craft.enqueue_type = CraftDefinition.EnqueueType.CanEnqueue;
 
-        AdjustCraftOutput(craft);
-    }
-
-    private static bool ShouldExcludeCraftFromAuto(CraftDefinition craft)
-    {
-        if (!Plugin.MakeHandTasksAuto.Value)
+        if (Plugin.DebugEnabled)
         {
-            return craft.craft_in.Any(craftIn =>
-                craftIn.Contains("grave") ||
-                craftIn.Contains("mf_preparation") ||
-                craftIn.Contains("cooking_table") && !craft.craft_in.Any(craftIn => craftIn.Contains("refugee")));
+            Plugin.WriteLog($"[MakeCraftAuto] convert '{craft.id}' (category={snap.Category})");
         }
 
-        return false;
+        return AutoResult.Converted;
     }
 
-    private static void AdjustCraftOutput(CraftDefinition craft)
+    private static void WarnIfUncategorized(CraftDefinition craft, CraftSnapshot snap)
     {
-        craft.output.ForEach(output =>
+        if (snap.Category != CraftCategory.Misc) return;
+        if (craft.craft_in == null || craft.craft_in.Count == 0) return;
+
+        foreach (var craftIn in craft.craft_in)
         {
-            if (output.id is not ("r" or "g" or "b")) return;
+            if (string.IsNullOrEmpty(craftIn) || !WarnedUncategorized.Add(craftIn))
+            {
+                continue;
+            }
+
+            Plugin.Log.LogWarning($"[QueueEverything] Uncategorized hand craftery: '{craftIn}' (sample craft: '{craft.id}'). Falling back to 'Misc'. If this should be in a named category, tell p1xel8ted.");
+        }
+    }
+
+    private static bool TryAdjustCraftOutput(CraftDefinition craft)
+    {
+        if (!Plugin.HalfCraftOutputs.Value) return false;
+
+        var touched = false;
+        foreach (var output in craft.output)
+        {
+            if (output.id is not ("r" or "g" or "b")) continue;
             output.value /= 2;
             output.value = output.value < 1 ? 1 : Mathf.CeilToInt(output.value);
-        });
+            touched = true;
+        }
+
+        if (touched && Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog($"[AdjustCraftOutput] halved r/g/b outputs on '{craft.id}'");
+        }
+
+        return touched;
     }
 
     [HarmonyPrefix, HarmonyPatch(nameof(CraftComponent.CraftReally))]
     public static void CraftReally_Prefix()
     {
-        if (!MainGame.game_started || !Plugin.MakeEverythingAuto.Value) return;
+        if (!MainGame.game_started || !Plugin.AnyAutoCraftCategoryEnabled()) return;
 
+        var beforeCount = Plugin.CurrentlyCrafting.Count;
         Plugin.CurrentlyCrafting.RemoveAll(wgo => wgo == null || !wgo.components.craft.is_crafting || wgo.has_linked_worker || wgo.linked_worker != null);
+
+        if (Plugin.DebugEnabled && Plugin.CurrentlyCrafting.Count > 0)
+        {
+            Plugin.WriteLog($"[CraftReally] pumping {Plugin.CurrentlyCrafting.Count} in-flight crafteries (pruned {beforeCount - Plugin.CurrentlyCrafting.Count}).");
+        }
 
         foreach (var wgo in Plugin.CurrentlyCrafting)
         {
@@ -469,9 +694,10 @@ public static class CraftItemGUIPatches
     [HarmonyPostfix, HarmonyPatch(nameof(CraftItemGUI.OnCraftPressed))]
     public static void OnCraftPressed_Postfix(WorldGameObject __state)
     {
-        if (!Plugin.MakeEverythingAuto.Value || __state == null || __state.linked_worker != null || __state.has_linked_worker) return;
+        if (!Plugin.AnyAutoCraftCategoryEnabled() || __state == null || __state.linked_worker != null || __state.has_linked_worker) return;
 
         Plugin.CurrentlyCrafting.Add(__state);
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[OnCraftPressed] tracking new auto-craft on '{__state.obj_id}' (total tracked: {Plugin.CurrentlyCrafting.Count})");
         __state.OnWorkAction();
     }
 
