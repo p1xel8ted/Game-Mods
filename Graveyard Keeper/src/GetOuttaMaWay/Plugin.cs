@@ -5,17 +5,44 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.getouttamyway";
     private const string PluginName = "Get Outta My Way!";
-    private const string PluginVer = "0.1.4";
+    private const string PluginVer = "0.1.5";
     private const string Donkey = "donkey";
     private const string NpcPrefix = "[wgo] ";
-    private static ManualLogSource LOG { get; set; }
+    internal static ManualLogSource LOG { get; private set; }
+    internal static bool DebugEnabled;
+    private static ConfigEntry<bool> Debug { get; set; }
     private static ConfigEntry<bool> NpcCollision { get; set; }
+    internal static ConfigEntry<bool> DropHeaviesAwayFromPlayer { get; private set; }
+    internal static ConfigEntry<bool> HeavyCollisionGracePeriod { get; private set; }
+    internal static ConfigEntry<float> GracePeriodSeconds { get; private set; }
 
     private void Awake()
     {
         LOG = Logger;
-        NpcCollision = Config.Bind("01. General", "NPC", false, "Toggle NPC collision on or off. When disabled, NPCs will no longer block your path.");
+
+        Debug = Config.Bind("00. Advanced", "Debug Logging", false,
+            new ConfigDescription("Write detailed diagnostic info to the BepInEx log. Turn on before reporting bugs.", null,
+                new ConfigurationManagerAttributes {Order = 100}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+
+        NpcCollision = Config.Bind("01. General", "NPC", false,
+            new ConfigDescription("Toggle NPC collision on or off. When disabled, NPCs will no longer block your path.", null,
+                new ConfigurationManagerAttributes {Order = 100}));
         NpcCollision.SettingChanged += (_, _) => GameStartedPlaying();
+
+        DropHeaviesAwayFromPlayer = Config.Bind("01. General", "Drop Heavies Away From Player", true,
+            new ConfigDescription("Logs, stones, and mined blocks land next to the tree or rock instead of flying at your feet.", null,
+                new ConfigurationManagerAttributes {Order = 90}));
+
+        HeavyCollisionGracePeriod = Config.Bind("01. General", "Heavy Drop Grace Period", true,
+            new ConfigDescription("A freshly-dropped log, stone, or block can't push you for a short moment after it lands. You can still push them around afterwards.", null,
+                new ConfigurationManagerAttributes {Order = 80}));
+
+        GracePeriodSeconds = Config.Bind("01. General", "Grace Period Seconds", 1.5f,
+            new ConfigDescription("Seconds before a freshly-dropped log, stone, or block can push you again.",
+                new AcceptableValueRange<float>(0.25f, 5f),
+                new ConfigurationManagerAttributes {Order = 79, ShowRangeAsPercent = false, DispName = "    └ Grace Period Seconds"}));
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         SceneManager.sceneLoaded += (_, _) => GameStartedPlaying();

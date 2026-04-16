@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.13 | 16 April 2026
+
+- Fixed Chinese translations not loading
+
 ## 2.7.12 | 12 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

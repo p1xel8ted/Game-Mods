@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.13 | 16 April 2026
+
+- Fixed Chinese translations not loading
+- Added extra background logging to help track down a reported issue with placing new graves at the graveyard build desk. No gameplay changes — if you've hit the issue, the next time it happens your `BepInEx/LogOutput.log` will contain enough detail (lines tagged `[QE-Diag]`) for the mod author to identify and fix the cause in the next update.
+
 ## 2.1.12 | 15 April 2026
 
 - Setting changes now apply immediately — no more restarting the game to turn features on or off.

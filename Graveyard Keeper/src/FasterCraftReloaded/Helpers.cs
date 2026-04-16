@@ -6,14 +6,11 @@ public static class Helpers
     {
         if (error)
         {
-            Plugin.Log.LogError($"{message}");
+            LogHelper.Error(message);
         }
-        else
+        else if (Plugin.DebugEnabled)
         {
-            if (Plugin.Debug.Value)
-            {
-                Plugin.Log.LogInfo($"{message}");
-            }
+            LogHelper.Info(message);
         }
     }
 }

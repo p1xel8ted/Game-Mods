@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.6 | 16 April 2026
+
+- Fixed Chinese translations not loading
+- Debug Logging is no longer hidden behind the Advanced filter
+- Settings pane tidied up with clearer section names and fuller descriptions
+- Debug log output is less spammy and more useful for bug reports
+
 ## 0.2.5 | 13 April 2026
 
 - Fixed the mod sometimes never activating on saves where the donkey was clearly already delivering bodies. The mod now reliably takes over after the donkey makes its first delivery

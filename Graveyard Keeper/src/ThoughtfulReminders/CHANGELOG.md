@@ -1,9 +1,12 @@
 # Changelog
 
-## 2.2.11 | 12 April 2026
+## 2.2.11 | 16 April 2026
 
+- Fixed Chinese translations not loading
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language
 - Language changes in the game options are now picked up immediately without needing to restart
+- Tidied up the settings menu with clearer descriptions and grouped the options into Advanced and Reminders sections
+- Improved debug logging for easier bug reports — with a one-time reminder so you don't leave it on by accident
 
 ## 2.2.10 | 11 April 2026
 

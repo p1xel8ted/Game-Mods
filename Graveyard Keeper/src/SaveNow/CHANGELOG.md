@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.5.12 | 16 April 2026
+
+- Fixed Chinese translations not loading
+
+## 2.5.11 | 15 April 2026
+
+- Fixed controller selection landing on the New Game button when opening the load/save menu. Focus now jumps to your most recent save, so you no longer have to scroll past every save to find it
+
 ## 2.5.10 | 14 April 2026
 
 - Fixed auto-save filenames colliding: two autosaves on the same day could silently overwrite each other. New saves use a correct date format; existing saves are unaffected

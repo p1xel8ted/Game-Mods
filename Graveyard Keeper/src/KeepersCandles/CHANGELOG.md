@@ -2,7 +2,13 @@
 
 ## 0.1.8 | 12 April 2026
 
+- Fixed Chinese translations not loading
 - The Advanced section's Debug Logging option is now always visible (was hidden by default)
+- Tidied up the settings menu with clearer, player-friendly descriptions and a new section layout (Advanced / Candles / Church / Controls)
+- Existing settings are migrated automatically — your keybinds, distance, and column toggle are preserved
+- Translations are now loaded from JSON files in the mod's `lang/` folder, so they're easier to fix up or contribute to
+- Improved debug logging so a log file is enough to diagnose issues — turn on Debug Logging before reporting a bug
+- A one-time reminder now pops up in-game when Debug Logging is left on, so it doesn't stay on forever by accident
 
 ## 0.1.7 | 11 April 2026
 

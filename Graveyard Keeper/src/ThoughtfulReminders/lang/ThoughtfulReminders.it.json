@@ -12,5 +12,6 @@
   "dLust": "Giorno della lussuria...",
   "dPride": "Giorno dell'orgoglio...",
   "dSloth": "giorno dell'accidia...",
-  "dWrath": "giorno dell'ira..."
+  "dWrath": "giorno dell'ira...",
+  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico."
 }

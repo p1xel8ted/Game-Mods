@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.5 | 16 April 2026
+
+- Fixed Chinese translations not loading
+
 ## 3.5.4 | 12 April 2026
 
 - Fixed brief stutters that could happen while rapidly chopping wood or mining stone

@@ -44,6 +44,32 @@ public static class Patches
         focus_on_first = true;
     }
 
+    [HarmonyPostfix]
+    [HarmonyPriority(Priority.Low)]
+    [HarmonyPatch(typeof(SaveSlotsMenuGUI), nameof(SaveSlotsMenuGUI.RedrawSlots))]
+    public static void SaveSlotsMenuGUI_RedrawSlots_Postfix(SaveSlotsMenuGUI __instance, bool focus_on_first)
+    {
+        if (!focus_on_first) return;
+        if (!BaseGUI.for_gamepad || !__instance.is_shown) return;
+        if (__instance._slots == null || __instance._slots.Count <= 1) return;
+
+        SaveSlotGUI firstRealSave = null;
+        foreach (var slot in __instance._slots)
+        {
+            if (slot != null && slot._data != null)
+            {
+                firstRealSave = slot;
+                break;
+            }
+        }
+        if (firstRealSave == null || firstRealSave._gamepad_item == null) return;
+
+        __instance.gamepad_controller.ReinitItems(false);
+        __instance.gamepad_controller.SetFocusedItem(firstRealSave._gamepad_item);
+
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"[RedrawSlots.Postfix] re-focused gamepad on first save (slot_count={__instance._slots.Count})");
+    }
+
     private static void SortSaveGames(ref List<SaveSlotData> saveGames)
     {
         if (saveGames.Count <= 1) return;

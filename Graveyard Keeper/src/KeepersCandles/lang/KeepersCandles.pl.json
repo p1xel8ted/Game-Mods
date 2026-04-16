@@ -1,0 +1,5 @@
+{
+  "TooFar": "W pobliżu jest zapalona świeca, ale nie mogę jej dosięgnąć. Muszę się zbliżyć.",
+  "NoneFound": "W pobliżu nie znaleziono zapalonych świec.",
+  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód."
+}

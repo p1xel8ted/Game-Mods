@@ -12,5 +12,6 @@
   "dLust": "Jour de luxure...",
   "dPride": "Jour de fierté...",
   "dSloth": "Jour de paresse...",
-  "dWrath": "Jour de la colère..."
+  "dWrath": "Jour de la colère...",
+  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin."
 }

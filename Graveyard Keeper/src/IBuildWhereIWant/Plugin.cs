@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.ibuildwhereiwant";
     private const string PluginName = "I Build Where I Want!";
-    private const string PluginVer = "1.7.10";
+    private const string PluginVer = "1.7.11";
 
     private const string Zone = "mf_wood";
     private const string BuildDeskConst = "buildanywhere_desk";

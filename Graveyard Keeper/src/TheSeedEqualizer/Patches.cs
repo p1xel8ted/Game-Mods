@@ -1,8 +1,15 @@
-﻿namespace TheSeedEqualizer;
+namespace TheSeedEqualizer;
 
 [Harmony]
 public static class Patches
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
+    public static void GameSave_GlobalEventsCheck_DebugWarning()
+    {
+        Plugin.ShowDebugWarningOnce();
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GameBalance), nameof(GameBalance.LoadGameBalance))]
     public static void GameBalance_LoadGameBalance()
@@ -17,13 +24,35 @@ public static class Patches
     public static void CraftComponent_ReallyUpdateComponent(CraftComponent __instance, ref float delta_time)
     {
         if (__instance?.current_craft == null) return;
-        if (!Plugin.BoostGrowSpeedWhenRaining.Value) return;
-        if (!EnvironmentEngine.me.is_rainy) return;
-
-        string[] refugee = ["garden", "planting", "refugee", "grow"];
-        if (refugee.All(a => __instance.current_craft.id.Contains(a)) || __instance.current_craft.id.Contains("vineyard") || __instance.current_craft.id.StartsWith("garden") && __instance.current_craft.id.EndsWith("growing"))
+        if (!Plugin.BoostGrowSpeedWhenRaining.Value)
         {
+            return;
+        }
+        if (!EnvironmentEngine.me.is_rainy)
+        {
+            return;
+        }
+
+        var craftId = __instance.current_craft.id;
+        string[] refugee = ["garden", "planting", "refugee", "grow"];
+        var isRefugeePlanting = refugee.All(craftId.Contains);
+        var isVineyard = craftId.Contains("vineyard");
+        var isPlayerGarden = craftId.StartsWith("garden") && craftId.EndsWith("growing");
+
+        if (isRefugeePlanting || isVineyard || isPlayerGarden)
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[RainBoost] doubling delta_time for craft '{craftId}' (refugee={isRefugeePlanting}, vineyard={isVineyard}, playerGarden={isPlayerGarden}, before={delta_time:F3})");
+            }
             delta_time *= 2f;
+        }
+        else
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[RainBoost] skip craft '{craftId}': not a recognised garden/vineyard/refugee planting craft");
+            }
         }
     }
 }

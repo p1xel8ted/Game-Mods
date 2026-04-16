@@ -3,17 +3,29 @@
 [Harmony]
 public static class Patches
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
+    public static void GameSave_GlobalEventsCheck_DebugWarning()
+    {
+        Plugin.ShowDebugWarningOnce();
+    }
+
     private static void MyDoPreZero(WorldGameObject wgo)
     {
-        if (!Helpers.UnlockedStageOne())
+        if (!Helpers.IsReady())
         {
-            if (Plugin.Debug.Value)
+            if (Plugin.DebugEnabled)
             {
-                Plugin.Log.LogInfo("Haven't unlocked the necessary tech yet!");
+                Plugin.WriteLog($"[MyDoPreZero] skip '{wgo.obj_id}': Farmer perk required but not yet unlocked.");
             }
             return;
         }
-        
+
+        if (Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog($"[MyDoPreZero] harvesting neighbour '{wgo.obj_id}' at ({wgo.pos3.x:F0}, {wgo.pos3.y:F0}).");
+        }
+
         if (wgo.is_player || wgo.obj_def.type == ObjectDefinition.ObjType.Mob)
         {
             var character = wgo.components.character;
@@ -78,30 +90,48 @@ public static class Patches
     [HarmonyPatch(typeof(WorldGameObject), nameof(WorldGameObject.DoPreZeroHPActivity))]
     public static void WorldGameObject_DoPreZeroHPActivity(WorldGameObject __instance)
     {
-        if (!Helpers.UnlockedStageOne())
+        if (!Helpers.IsReady())
         {
-            if (Plugin.Debug.Value)
+            if (Plugin.DebugEnabled)
             {
-                Plugin.Log.LogInfo("Haven't unlocked the necessary tech yet!");
+                Plugin.WriteLog($"[DoPreZeroHPActivity] skip '{__instance.obj_id}': Farmer perk required but not yet unlocked.");
             }
             return;
         }
 
-        if (!__instance.obj_id.ToLowerInvariant().StartsWith("garden") || !__instance.obj_id.ToLowerInvariant().EndsWith("ready")) return;
-        
-        var objects = Helpers.FindNearbyObjectsByVector(__instance);
-
-        if (objects == null)
+        var lowerId = __instance.obj_id.ToLowerInvariant();
+        if (!lowerId.StartsWith("garden") || !lowerId.EndsWith("ready"))
         {
+            return;
+        }
+
+        if (Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog($"[DoPreZeroHPActivity] seed '{__instance.obj_id}' harvested — scanning for same-crop neighbours.");
+        }
+
+        var objects = Helpers.FindNearbyObjectsByVector(__instance);
+        if (objects == null || objects.Count == 0)
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.WriteLog($"[DoPreZeroHPActivity] no neighbours matched '{__instance.obj_id}' within range.");
+            }
             return;
         }
 
         objects.Sort((a, b) => a.pos3.x.CompareTo(b.pos3.x));
 
-        var o = __instance;
-        foreach (var obj in objects.Where(obj => obj != o))
+        var harvested = 0;
+        foreach (var obj in objects.Where(obj => obj != __instance))
         {
             MyDoPreZero(obj);
+            harvested++;
+        }
+
+        if (Plugin.DebugEnabled)
+        {
+            Plugin.WriteLog($"[DoPreZeroHPActivity] cascade finished — {harvested} neighbour(s) harvested alongside seed '{__instance.obj_id}'.");
         }
     }
 
@@ -121,6 +151,10 @@ public static class Patches
             component.AddData(new BubbleWidgetSeparatorData());
             component.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Header"), UITextStyles.TextStyle.HintTitle));
             component.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Des"), UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.WriteLog($"[Tooltip/Gamepad] appended mass-harvest blurb to tech '{__instance.tech_id}'.");
+            }
         }
     }
 
@@ -139,6 +173,10 @@ public static class Patches
             tooltip.AddData(new BubbleWidgetBlankSeparatorData());
             tooltip.AddData(new BubbleWidgetTextData(Environment.NewLine + Lang.Get("Stage1Header"), UITextStyles.TextStyle.HintTitle, NGUIText.Alignment.Left));
             tooltip.AddData(new BubbleWidgetTextData(Lang.Get("Stage1Des"), UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
+            if (Plugin.DebugEnabled)
+            {
+                Plugin.WriteLog($"[Tooltip/Mouse] appended mass-harvest blurb to tech '{name}'.");
+            }
         }
     }
 }

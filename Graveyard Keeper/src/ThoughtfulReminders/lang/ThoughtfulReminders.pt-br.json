@@ -12,5 +12,6 @@
   "dLust": "Dia da luxúria...",
   "dPride": "Dia de Orgulho...",
   "dSloth": "Dia de preguiça...",
-  "dWrath": "Dia de ira..."
+  "dWrath": "Dia de ira...",
+  "DebugWarning": "Observe que o modo de depuração está ativado. Não é recomendado deixá-lo ativado a menos que você tenha um propósito para isso."
 }

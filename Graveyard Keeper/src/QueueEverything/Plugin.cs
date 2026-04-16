@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.queueeverything";
     private const string PluginName = "Queue Everything!*";
-    private const string PluginVer = "2.1.12";
+    private const string PluginVer = "2.1.13";
 
     private const string AdvancedSection    = "── Advanced ──";
     private const string AutoCraftSection   = "── Auto-Craft ──";

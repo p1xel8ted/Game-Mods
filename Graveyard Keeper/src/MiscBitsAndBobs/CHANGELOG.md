@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.5 | 16 April 2026
+
+- Fixed Chinese translations not loading
+- Tidied up the settings menu — every toggle now has a plain-English description that explains what it actually does, and dependent sliders (player/porter speed) now show underneath their parent toggle with a tree indent
+- Reordered the sections into a clearer layout: Advanced, Audio, UI, Gameplay, Movement, Church, Misc. Your existing settings are migrated automatically
+- Improved debug logging for easier bug reports — when Debug Logging is on, the log now records each decision the mod makes (letterbox suppression, intro skip, prayer removal, tavern oven fuel changes, zombie pyre inputs, Halloween event scheduling, sermon line substitution, Sprint Reloaded detection, and church visitor eviction steps)
+- Logging only runs when Debug Logging is on, so there's no performance cost when it's off
+
 ## 2.3.4 | 15 April 2026
 
 - Fixed "Remove Cinematic Letterboxing" not working

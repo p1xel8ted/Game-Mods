@@ -2,7 +2,13 @@
 
 ## 1.3.11 | 12 April 2026
 
+- Fixed Chinese translations not loading
 - The Advanced section's Debug Logging option is now always visible (was hidden by default)
+- Tidied up the settings menu: clearer, player-facing descriptions on every option and logical grouping into Advanced, Player Gardens, Zombie Gardens, Refugee Gardens, Waste, and All Gardens sections
+- Your existing settings carry over automatically — the old "01. / 02. / 03." section headers are rewritten on first launch so nothing is lost
+- Improved debug logging for easier bug reports: every decision point now records what the mod did (which gardens were modified, how many seeds were added, which crafts got crop waste, why a craft was skipped)
+- When debug logging is on, a one-time on-screen reminder now appears at the start of your day so you don't forget you left it enabled
+- Added translations for the debug reminder in English, German, Spanish, French, Italian, Japanese, Korean, Polish, Brazilian Portuguese, Russian, and Simplified Chinese
 
 ## 1.3.10 | 11 April 2026
 

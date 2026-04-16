@@ -16,6 +16,18 @@ public static class Helpers
         return donkeyLogic != null && donkeyLogic._started;
     }
 
+    // Gives the human-readable reason the last TutorialDone() call returned whatever it did —
+    // only meant for diagnostic logging so we can tell phase-gate regressions apart from
+    // save-state weirdness in user-submitted BepInEx logs.
+    internal static string TutorialDoneReason()
+    {
+        if (!MainGame.game_started) return "MainGame.game_started==false";
+        if (MainGame.me?.save?.game_logics == null) return "save.game_logics==null";
+        var donkeyLogic = MainGame.me.save.game_logics.GetLogicByID("donkey");
+        if (donkeyLogic == null) return "no LogicData with id='donkey' in save";
+        return donkeyLogic._started ? "donkey LogicData._started==true" : "donkey LogicData._started==false (vanilla delivery hasn't fired yet)";
+    }
+
     internal static void Log(string message, bool error = false)
     {
         if (error)

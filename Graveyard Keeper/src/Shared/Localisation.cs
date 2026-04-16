@@ -7,6 +7,12 @@ internal static class Lang
 {
     private static Dictionary<string, string> _translations = new();
     private static Dictionary<string, string> _fallback = new();
+    // normalized lang code ("pt_br", "zh_cn", "en") → absolute file path on disk.
+    // Lets us match a user's file regardless of how they cased it or whether they
+    // used `-` or `_` as the separator — the game's _cur_lng is normalized the
+    // same way before lookup, so all four permutations of e.g. "pt-br" resolve
+    // to the same file.
+    private static Dictionary<string, string> _langFiles = new();
     private static string _langDir;
     private static string _prefix;
     private static string _currentLang;
@@ -18,12 +24,9 @@ internal static class Lang
         _langDir = Path.Combine(Path.GetDirectoryName(modAssembly.Location)!, "lang");
         _prefix = modAssembly.GetName().Name;
 
-        if (!Directory.Exists(_langDir))
-        {
-            _log?.LogWarning($"[Lang] Lang directory not found: {_langDir}");
-        }
+        IndexLangFiles();
 
-        _fallback = LoadFile("en");
+        _fallback = LoadLang("en");
         if (_fallback.Count == 0)
         {
             _log?.LogWarning($"[Lang] No English fallback loaded — translations will return raw keys");
@@ -38,7 +41,7 @@ internal static class Lang
         if (string.IsNullOrEmpty(lang)) lang = "en";
         if (_currentLang == lang) return;
         _currentLang = lang;
-        _translations = lang == "en" ? _fallback : LoadFile(lang);
+        _translations = Normalize(lang) == "en" ? _fallback : LoadLang(lang);
     }
 
     internal static string Get(string key)
@@ -55,14 +58,43 @@ internal static class Lang
         return key;
     }
 
-    private static Dictionary<string, string> LoadFile(string lang)
+    // Scan the lang dir once; build the normalized-code → path table. Called once at
+    // Init so a mid-session file drop won't be picked up, matching the previous
+    // behaviour. Duplicate normalized keys (e.g. both pt-br.json and pt_BR.json on
+    // a case-sensitive FS) keep the first one found and log a warning.
+    private static void IndexLangFiles()
     {
-        var path = Path.Combine(_langDir, $"{_prefix}.{lang}.json");
-        if (!File.Exists(path))
+        _langFiles.Clear();
+        if (!Directory.Exists(_langDir))
         {
-            if (lang != "en")
+            _log?.LogWarning($"[Lang] Lang directory not found: {_langDir}");
+            return;
+        }
+
+        foreach (var path in Directory.GetFiles(_langDir, $"{_prefix}.*.json"))
+        {
+            var name = Path.GetFileNameWithoutExtension(path);
+            var prefix = _prefix + ".";
+            if (!name.StartsWith(prefix)) continue;
+            var code = name.Substring(prefix.Length);
+            var key = Normalize(code);
+            if (_langFiles.ContainsKey(key))
             {
-                _log?.LogInfo($"[Lang] No translation file for '{lang}', falling back to English");
+                _log?.LogWarning($"[Lang] Duplicate lang file for '{key}': keeping {Path.GetFileName(_langFiles[key])}, ignoring {Path.GetFileName(path)}");
+                continue;
+            }
+            _langFiles[key] = path;
+        }
+    }
+
+    private static Dictionary<string, string> LoadLang(string lang)
+    {
+        var key = Normalize(lang);
+        if (!_langFiles.TryGetValue(key, out var path))
+        {
+            if (key != "en")
+            {
+                _log?.LogInfo($"[Lang] No translation file for '{lang}' (normalized '{key}'), falling back to English");
             }
             return new Dictionary<string, string>();
         }
@@ -79,7 +111,7 @@ internal static class Lang
                 var keyStart = json.IndexOf('"', i);
                 if (keyStart < 0) break;
                 var keyEnd = json.IndexOf('"', keyStart + 1);
-                var key = json.Substring(keyStart + 1, keyEnd - keyStart - 1);
+                var jsonKey = json.Substring(keyStart + 1, keyEnd - keyStart - 1);
 
                 var valStart = json.IndexOf('"', keyEnd + 1);
                 var valEnd = FindUnescapedQuote(json, valStart + 1);
@@ -88,18 +120,23 @@ internal static class Lang
                     .Replace("\\\\", "\\")
                     .Replace("\\n", "\n");
 
-                dict[key] = val;
+                dict[jsonKey] = val;
                 i = valEnd + 1;
             }
 
-            _log?.LogInfo($"[Lang] Loaded {dict.Count} keys from {_prefix}.{lang}.json");
+            _log?.LogInfo($"[Lang] Loaded {dict.Count} keys from {Path.GetFileName(path)}");
             return dict;
         }
         catch (System.Exception ex)
         {
-            _log?.LogError($"[Lang] Failed to read {_prefix}.{lang}.json: {ex.Message}");
+            _log?.LogError($"[Lang] Failed to read {Path.GetFileName(path)}: {ex.Message}");
             return new Dictionary<string, string>();
         }
+    }
+
+    private static string Normalize(string code)
+    {
+        return string.IsNullOrEmpty(code) ? "en" : code.ToLowerInvariant().Replace('-', '_');
     }
 
     private static int FindUnescapedQuote(string s, int start)

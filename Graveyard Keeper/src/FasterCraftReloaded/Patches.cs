@@ -1,4 +1,4 @@
-﻿namespace FasterCraftReloaded;
+namespace FasterCraftReloaded;
 
 [Harmony]
 [HarmonyBefore("p1xel8ted.gyk.queueeverything")]
@@ -9,12 +9,35 @@ public static class Patches
         "zombie", "refugee", "bee", "tree", "berry", "bush", "pump", "compost", "peat", "slime", "candelabrum", "incense", "garden", "planting"
     ];
 
+    // De-spam trackers: log once per (wgo/craft/branch) change, not once per frame.
+    // Reset during a session only when the state actually changes.
+    private static string _lastBuildRemoveKey;
+    private static string _lastPlayerDoActionKey;
+    private static string _lastCraftDoActionKey;
+    private static string _lastReallyUpdateKey;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
+    public static void GameSave_GlobalEventsCheck_DebugWarning()
+    {
+        Plugin.ShowDebugWarningOnce();
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.ProcessRemovingCraft))]
     public static void BuildModeLogics_ProcessRemovingCraft(WorldGameObject wgo, ref float delta_time)
     {
         if (!Plugin.IncreaseBuildAndDestroySpeed.Value) return;
-        Helpers.Log($"[BuildModeHelpers.Logics.ProcessRemovingCraft]: WGO: {wgo.obj_id}");
+
+        if (Plugin.DebugEnabled)
+        {
+            var key = wgo?.obj_id ?? "null";
+            if (key != _lastBuildRemoveKey)
+            {
+                Helpers.Log($"[Destroy] Applying x{Plugin.BuildAndDestroySpeed.Value} to removal of {key}");
+                _lastBuildRemoveKey = key;
+            }
+        }
 
         delta_time *= Plugin.BuildAndDestroySpeed.Value;
     }
@@ -26,7 +49,16 @@ public static class Patches
         if (!Plugin.IncreaseBuildAndDestroySpeed.Value) return;
         if (other_obj == null || !other_obj.is_player) return;
 
-        Helpers.Log($"[WorldGameObject.DoAction]: WGO: {other_obj.obj_id}");
+        if (Plugin.DebugEnabled)
+        {
+            var key = other_obj.obj_id;
+            if (key != _lastPlayerDoActionKey)
+            {
+                Helpers.Log($"[Build] Applying x{Plugin.BuildAndDestroySpeed.Value} to player action on {key}");
+                _lastPlayerDoActionKey = key;
+            }
+        }
+
         delta_time *= Plugin.BuildAndDestroySpeed.Value;
     }
 
@@ -35,18 +67,49 @@ public static class Patches
     [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.DoAction))]
     public static void CraftComponent_DoAction(CraftComponent __instance, ref float delta_time)
     {
-        // if (__instance?.current_craft == null) return;
         if (__instance.other_obj == null) return;
         if (!__instance.other_obj.is_player) return;
 
-        if (Exclude.Any(__instance.wgo.obj_id.ToLowerInvariant().Contains))
+        var wgoId = __instance.wgo.obj_id;
+        var craftId = __instance.current_craft?.id;
+
+        if (craftId != null && craftId.Contains(":r:"))
         {
-            Helpers.Log($"[ModifyCraftSpeed - REJECTED]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            if (Plugin.DebugEnabled)
+            {
+                var key = $"{wgoId}|{craftId}|repair-skip";
+                if (key != _lastCraftDoActionKey)
+                {
+                    Helpers.Log($"[RepairSkip] {wgoId} craft={craftId} — multiplier not applied (protects repair energy cost)");
+                    _lastCraftDoActionKey = key;
+                }
+            }
             return;
         }
 
-        Helpers.Log(
-            $"[CC.DoAction]: WGO: {__instance.wgo.obj_id}, WgoIsPlayer: {__instance.wgo.is_player}, Craft: {__instance.current_craft.id}, OtherObj: {__instance.other_obj.obj_id}, OtherWgoIsPlayer: {__instance.other_obj.is_player}");
+        if (Exclude.Any(wgoId.ToLowerInvariant().Contains))
+        {
+            if (Plugin.DebugEnabled)
+            {
+                var key = $"{wgoId}|{craftId}|excluded";
+                if (key != _lastCraftDoActionKey)
+                {
+                    Helpers.Log($"[Excluded] {wgoId} craft={craftId} — workbench matches Exclude list, no speed change");
+                    _lastCraftDoActionKey = key;
+                }
+            }
+            return;
+        }
+
+        if (Plugin.DebugEnabled)
+        {
+            var key = $"{wgoId}|{craftId}|craft-x{Plugin.CraftSpeedMultiplier.Value}";
+            if (key != _lastCraftDoActionKey)
+            {
+                Helpers.Log($"[Craft] {wgoId} craft={craftId} — applying x{Plugin.CraftSpeedMultiplier.Value}");
+                _lastCraftDoActionKey = key;
+            }
+        }
 
         delta_time *= Plugin.CraftSpeedMultiplier.Value;
     }
@@ -60,65 +123,92 @@ public static class Patches
     {
         if (__instance?.current_craft == null) return;
 
-        Helpers.Log($"[CraftComponent.ReallyUpdateComponent]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+        var wgoId = __instance.wgo.obj_id;
+        var craftId = __instance.current_craft.id;
 
-        if (Plugin.ModifyCompostSpeed.Value && __instance.wgo.obj_id.Contains("compost_heap"))
+        if (craftId != null && craftId.Contains(":r:"))
+        {
+            LogReallyUpdate(wgoId, craftId, "repair-skip",
+                $"[RepairSkip] {wgoId} craft={craftId} — multiplier not applied (protects repair energy cost)");
+            return;
+        }
+
+        if (Plugin.ModifyCompostSpeed.Value && wgoId.Contains("compost_heap"))
         {
             delta_time *= Plugin.CompostSpeedMultiplier.Value;
-            Helpers.Log($"[ModifyCompostSpeed]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, $"compost-x{Plugin.CompostSpeedMultiplier.Value}",
+                $"[Compost] {wgoId} craft={craftId} — applying x{Plugin.CompostSpeedMultiplier.Value}");
             return;
         }
 
-        if (Plugin.ModifyZombieMinesSpeed.Value && (__instance.wgo.obj_id.StartsWith("zombie_mine_") || __instance.wgo.obj_id.StartsWith("mine_zombie_")))
+        if (Plugin.ModifyZombieMinesSpeed.Value && (wgoId.StartsWith("zombie_mine_") || wgoId.StartsWith("mine_zombie_")))
         {
             delta_time *= Plugin.ZombieMinesSpeedMultiplier.Value;
-            Helpers.Log($"[ModifyZombieMinesSpeed]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, $"zmine-x{Plugin.ZombieMinesSpeedMultiplier.Value}",
+                $"[ZombieMine] {wgoId} craft={craftId} — applying x{Plugin.ZombieMinesSpeedMultiplier.Value}");
             return;
         }
 
-        if (Plugin.ModifyZombieSawmillSpeed.Value && __instance.wgo.obj_id.StartsWith("zombie_sawmill_"))
+        if (Plugin.ModifyZombieSawmillSpeed.Value && wgoId.StartsWith("zombie_sawmill_"))
         {
             delta_time *= Plugin.ZombieSawmillSpeedMultiplier.Value;
-            Helpers.Log($"[ZombieSawmillSpeedMultiplier]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, $"zsawmill-x{Plugin.ZombieSawmillSpeedMultiplier.Value}",
+                $"[ZombieSawmill] {wgoId} craft={craftId} — applying x{Plugin.ZombieSawmillSpeedMultiplier.Value}");
             return;
         }
 
-        if (Plugin.ModifyPlayerGardenSpeed.Value && __instance.wgo.obj_id.StartsWith("garden_"))
+        if (Plugin.ModifyPlayerGardenSpeed.Value && wgoId.StartsWith("garden_"))
         {
             delta_time *= Plugin.PlayerGardenSpeedMultiplier.Value;
-            Helpers.Log($"[ModifyPlayerGardenSpeed]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, $"pgarden-x{Plugin.PlayerGardenSpeedMultiplier.Value}",
+                $"[PlayerGarden] {wgoId} craft={craftId} — applying x{Plugin.PlayerGardenSpeedMultiplier.Value}");
             return;
         }
 
-        if (Plugin.ModifyRefugeeGardenSpeed.Value && __instance.wgo.obj_id.StartsWith("refugee_camp_garden_"))
+        if (Plugin.ModifyRefugeeGardenSpeed.Value && wgoId.StartsWith("refugee_camp_garden_"))
         {
             delta_time *= Plugin.RefugeeGardenSpeedMultiplier.Value;
-            Helpers.Log($"[ModifyRefugeeGardenSpeed]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, $"rgarden-x{Plugin.RefugeeGardenSpeedMultiplier.Value}",
+                $"[RefugeeGarden] {wgoId} craft={craftId} — applying x{Plugin.RefugeeGardenSpeedMultiplier.Value}");
             return;
         }
 
-        if (Plugin.ModifyZombieGardenSpeed.Value && __instance.wgo.obj_id.Contains("zombie_garden_"))
+        if (Plugin.ModifyZombieGardenSpeed.Value && wgoId.Contains("zombie_garden_"))
         {
             delta_time *= Plugin.ZombieGardenSpeedMultiplier.Value;
-            Helpers.Log($"[ModifyZombieGardenSpeed]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, $"zgarden-x{Plugin.ZombieGardenSpeedMultiplier.Value}",
+                $"[ZombieGarden] {wgoId} craft={craftId} — applying x{Plugin.ZombieGardenSpeedMultiplier.Value}");
             return;
         }
 
-        if (Plugin.ModifyZombieVineyardSpeed.Value && __instance.wgo.obj_id.Contains("zombie_vineyard_"))
+        if (Plugin.ModifyZombieVineyardSpeed.Value && wgoId.Contains("zombie_vineyard_"))
         {
             delta_time *= Plugin.ZombieVineyardSpeedMultiplier.Value;
-            Helpers.Log($"[ModifyZombieVineyardSpeed]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, $"zvineyard-x{Plugin.ZombieVineyardSpeedMultiplier.Value}",
+                $"[ZombieVineyard] {wgoId} craft={craftId} — applying x{Plugin.ZombieVineyardSpeedMultiplier.Value}");
             return;
         }
 
-        if (Exclude.Any(__instance.wgo.obj_id.ToLowerInvariant().Contains))
+        if (Exclude.Any(wgoId.ToLowerInvariant().Contains))
         {
-            Helpers.Log($"[ModifyCraftSpeed - REJECTED]: WGO: {__instance.wgo.obj_id}, Craft: {__instance.current_craft.id}");
+            LogReallyUpdate(wgoId, craftId, "excluded",
+                $"[Excluded] {wgoId} craft={craftId} — workbench matches Exclude list, no speed change");
             return;
         }
 
-        Helpers.Log(
-            $"[CC.ReallyUpdateComponent]: WGO: {__instance.wgo.obj_id}, WgoIsPlayer: {__instance.wgo.is_player}, Craft: {__instance.current_craft.id}");
         delta_time *= Plugin.CraftSpeedMultiplier.Value;
+        LogReallyUpdate(wgoId, craftId, $"craft-x{Plugin.CraftSpeedMultiplier.Value}",
+            $"[Craft] {wgoId} craft={craftId} — applying x{Plugin.CraftSpeedMultiplier.Value}");
+    }
+
+    // Shared de-spam helper for CraftComponent_ReallyUpdateComponent: skips the formatted log
+    // call unless (wgo, craft, branch) has changed since the last tick through this patch.
+    private static void LogReallyUpdate(string wgoId, string craftId, string branch, string message)
+    {
+        if (!Plugin.DebugEnabled) return;
+        var key = $"{wgoId}|{craftId}|{branch}";
+        if (key == _lastReallyUpdateKey) return;
+        _lastReallyUpdateKey = key;
+        Helpers.Log(message);
     }
 }

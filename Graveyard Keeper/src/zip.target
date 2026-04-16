@@ -11,8 +11,11 @@
         <MakeDir Directories="$(ReleasesDir)" />
 
         <ItemGroup>
+            <!-- *.vortex_backup / *.vortex_new are leftovers Vortex writes into the plugin dir when it deploys
+                 or rolls back a previous version. They live alongside the real files (including inside lang/)
+                 and would otherwise get scooped up by the glob below. -->
             <OutputFiles Include="$(OutputPath)\**\*.*"
-                         Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.pdb;$(OutputPath)\**\*.deps.json;$(OutputPath)\SaveBackup\**\*.*;$(OutputPath)\_dump\**\*.*" />
+                         Exclude="$(OutputPath)\**\*.zip;$(OutputPath)\**\*.pdb;$(OutputPath)\**\*.deps.json;$(OutputPath)\**\*.vortex_backup;$(OutputPath)\**\*.vortex_new;$(OutputPath)\SaveBackup\**\*.*;$(OutputPath)\_dump\**\*.*" />
         </ItemGroup>
 
         <Copy SourceFiles="@(OutputFiles)"

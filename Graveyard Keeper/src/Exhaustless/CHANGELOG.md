@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.5.4 | 16 April 2026
+
+- Fixed Chinese translations not loading
+
 ## 3.5.3 | 12 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

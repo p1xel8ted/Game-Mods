@@ -12,5 +12,6 @@
   "dLust": "Day of Lust...",
   "dPride": "Day of Pride...",
   "dSloth": "Day of Sloth...",
-  "dWrath": "Day of Wrath..."
+  "dWrath": "Day of Wrath...",
+  "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it."
 }

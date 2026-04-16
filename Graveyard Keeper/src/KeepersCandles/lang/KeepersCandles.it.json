@@ -1,0 +1,5 @@
+{
+  "TooFar": "C'è una candela accesa nelle vicinanze, ma non riesco a raggiungerla. Dovrò avvicinarmi.",
+  "NoneFound": "Nessuna candela accesa trovata nelle vicinanze.",
+  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico."
+}

@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.restinpatches";
     private const string PluginName = "Rest In Patches";
-    private const string PluginVer = "0.1.0";
+    private const string PluginVer = "0.1.1";
 
     private static ManualLogSource Log { get; set; }
     internal static Sprite ArrowLeftSprite { get; private set; }

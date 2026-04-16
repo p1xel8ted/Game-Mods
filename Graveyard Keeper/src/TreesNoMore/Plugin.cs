@@ -4,8 +4,28 @@ namespace TreesNoMore;
 public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.treesnomore";
-    private const string PluginName = "Trees, No More!";
-    private const string PluginVer = "2.5.11";
+    internal const string PluginName = "Trees, No More!";
+    private const string PluginVer = "2.5.12";
+
+    // Section names. Numbered "── N. Name ──" so BepInEx ConfigurationManager renders them
+    // in this exact order (CM uses Config.Bind call order, not alphabetic). Advanced renders
+    // first because Debug is the very first Config.Bind call below.
+    private const string AdvancedSection = "── 1. Advanced ──";
+    private const string TreesSection    = "── 2. Trees ──";
+    private const string StumpsSection   = "── 3. Stumps ──";
+    private const string ResetSection    = "── 4. Reset ──";
+
+    // Maps the legacy 2.5.11-and-earlier section names to the new "── N. Name ──" form so
+    // existing user values survive the rename. Idempotent — once migrated there are no old
+    // headers left for the next launch to match.
+    private static readonly Dictionary<string, string> SectionRenames = new()
+    {
+        ["00. Advanced"] = AdvancedSection,
+        ["01. Trees"]    = TreesSection,
+        ["02. Stumps"]   = StumpsSection,
+        ["03. Reset"]    = ResetSection,
+    };
+
     private static bool ShowConfirmationDialog { get; set; }
     internal static ManualLogSource Log { get; private set; }
 
@@ -22,23 +42,87 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         LogHelper.Log = Logger;
-        Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        MigrateRenamedSections();
         InitConfiguration();
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
         Application.quitting += SaveTrees;
     }
 
+    // Rewrites legacy "[00. Advanced]" style headers to "[── 1. Advanced ──]" in the .cfg
+    // file so existing user values survive the section rename. Idempotent.
+    private void MigrateRenamedSections()
+    {
+        var path = Config.ConfigFilePath;
+        if (!File.Exists(path)) return;
+
+        string content;
+        try
+        {
+            content = File.ReadAllText(path);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            return;
+        }
+
+        var renamed = 0;
+        foreach (var kv in SectionRenames)
+        {
+            var oldHeader = $"[{kv.Key}]";
+            var newHeader = $"[{kv.Value}]";
+            if (!content.Contains(oldHeader)) continue;
+            content = content.Replace(oldHeader, newHeader);
+            renamed++;
+        }
+        if (renamed == 0) return;
+
+        try
+        {
+            File.WriteAllText(path, content);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            return;
+        }
+
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── N. Name ──' style. Existing user values preserved.");
+        Config.Reload();
+    }
+
     private void InitConfiguration()
     {
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off.", null, new ConfigurationManagerAttributes {Order = 3}));
+        // ── 1. Advanced ──
+        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
+            new ConfigDescription(
+                "Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug so the log has the context I need to help.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        TreeSearchDistance = Config.Bind("01. Trees", "Tree Search Distance", 2, new ConfigDescription("The allowable distance to check if a tree shouldn't exist on load. The default value of 2 seems to work well. Setting this too large may cause trees surrounding the intended tree to also be removed.", null, new ConfigurationManagerAttributes {Order = 2}));
+        // ── 2. Trees ──
+        TreeSearchDistance = Config.Bind(TreesSection, "Tree Search Distance", 2,
+            new ConfigDescription(
+                "How far around a remembered tree to look when deciding whether the world copy should be removed. Default 2 catches the same tree without grabbing its neighbours. Raise it only if felled trees re-spawn after a reload; values that are too high will start removing trees you never chopped.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
 
-        InstantStumpRemoval = Config.Bind("02. Stumps", "Instant Stump Removal", true, new ConfigDescription("Instantly remove stumps when chopping down trees.", null, new ConfigurationManagerAttributes {Order = 1}));
+        // ── 3. Stumps ──
+        InstantStumpRemoval = Config.Bind(StumpsSection, "Instant Stump Removal", true,
+            new ConfigDescription(
+                "On: stumps disappear the moment a tree falls — no second 'mine the stump' step. Off: stumps stay in the world until you remove them yourself with the right tool.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
 
-        Config.Bind("03. Reset", "Reset Trees", true, new ConfigDescription("All felled trees will be restored on restart.", null, new ConfigurationManagerAttributes {HideDefaultButton = true, Order = 0, CustomDrawer = RestoreTrees}));
+        // ── 4. Reset ──
+        Config.Bind(ResetSection, "Reset Trees", true,
+            new ConfigDescription(
+                "Restore every felled tree on the next game launch. The mod's record of which trees you've chopped is wiped, so on next load the world spawns them all back. Useful if you want a fresh map or accidentally tracked the wrong objects.",
+                null,
+                new ConfigurationManagerAttributes {HideDefaultButton = true, Order = 100, CustomDrawer = RestoreTrees}));
     }
 
     private static void RestoreTrees(ConfigEntryBase entry)
@@ -50,7 +134,7 @@ public class Plugin : BaseUnityPlugin
             {
                 if (GUILayout.Button(Lang.Get("Yes"), GUILayout.ExpandWidth(true)))
                 {
-                    Log.LogWarning("All felled trees will be restored on restart.");
+                    if (Plugin.DebugEnabled) Helpers.Log($"[Reset] User confirmed — clearing {Trees.Count} tracked tree(s) and deleting {FilePath}");
                     Trees.Clear();
                     File.Delete(FilePath);
                     ShowConfirmationDialog = false;
@@ -72,33 +156,37 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
-
     internal static bool LoadTrees()
     {
-        if (MainGame.me.save_slot.linked_save == null) return false;
+        if (MainGame.me.save_slot.linked_save == null)
+        {
+            if (DebugEnabled) Helpers.Log("[LoadTrees] save_slot.linked_save is null — nothing to load");
+            return false;
+        }
 
-        if (!File.Exists(FilePath)) return false;
+        if (!File.Exists(FilePath))
+        {
+            if (DebugEnabled) Helpers.Log($"[LoadTrees] no state file at {FilePath} — starting with empty tracked-tree list");
+            return false;
+        }
         var jsonString = File.ReadAllText(FilePath);
         Trees = JsonConvert.DeserializeObject<List<Tree>>(jsonString);
-        if (DebugEnabled) Log.LogInfo($"Loaded {Trees.Count} trees from {FilePath}");
+        if (DebugEnabled) Helpers.Log($"[LoadTrees] loaded {Trees.Count} tracked tree(s) from {FilePath}");
         return true;
     }
 
     internal static void SaveTrees()
     {
-        if (MainGame.me.save_slot.linked_save == null) return;
+        if (MainGame.me.save_slot.linked_save == null)
+        {
+            if (DebugEnabled) Helpers.Log("[SaveTrees] save_slot.linked_save is null — skipping save");
+            return;
+        }
         var seen = new HashSet<Vector3>();
         var count = Trees.RemoveAll(x => !seen.Add(x.location));
         if (count > 0 && DebugEnabled)
         {
-            Log.LogInfo($"Removed {count} duplicate trees");
+            Helpers.Log($"[SaveTrees] removed {count} duplicate tree entry/entries before write");
         }
         var jsonString = JsonConvert.SerializeObject(Trees, new JsonSerializerSettings
         {
@@ -107,7 +195,7 @@ public class Plugin : BaseUnityPlugin
         });
 
         File.WriteAllText(FilePath, jsonString);
-        if (DebugEnabled) Log.LogInfo($"Saved {Trees.Count} trees to {FilePath}");
+        if (DebugEnabled) Helpers.Log($"[SaveTrees] wrote {Trees.Count} tracked tree(s) to {FilePath}");
     }
 
 }

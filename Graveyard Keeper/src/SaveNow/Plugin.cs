@@ -17,7 +17,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.savenow";
     private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.10";
+    private const string PluginVer = "2.5.12";
 
     private const string ModGerryTag = "mod_gerry";
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 | 16 April 2026
+
+- Fixes the mouse cursor sometimes vanishing and refusing to come back until you sleep or restart the game. Mostly reported on Linux.
+
 ## 0.1.0 | 12 April 2026
 
 - First release.

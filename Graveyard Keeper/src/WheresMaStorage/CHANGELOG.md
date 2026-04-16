@@ -2,6 +2,7 @@
 
 ## 2.1.14 | 13 April 2026
 
+- Fixed Chinese translations not loading
 ### Inventory size
 
 - The single Additional Inventory Space slider has been split into two — one for your player inventory and one for chests, racks, and other containers. Want a tight player carry but huge chests? Now you can. Your existing slider value is migrated to both sliders on first launch

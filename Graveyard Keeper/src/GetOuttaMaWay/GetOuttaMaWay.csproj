@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.4</Version>
+        <Version>0.1.5</Version>
         <NexusGroupId>980515</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="..\Shared\ConfigurationManagerAttributes.cs" Link="ConfigurationManagerAttributes.cs"/>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
     </ItemGroup>
 </Project>

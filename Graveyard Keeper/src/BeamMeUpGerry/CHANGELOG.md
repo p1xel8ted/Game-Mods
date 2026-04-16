@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.5 | 16 April 2026
+
+- Fixed Chinese translations not loading
+
 ## 3.1.4 | 12 April 2026
 
 - Enabling Debug logging now shows a one-time in-game dialog warning you it's on, so you don't forget it's enabled

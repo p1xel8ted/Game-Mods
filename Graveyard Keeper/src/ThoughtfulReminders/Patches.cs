@@ -7,6 +7,13 @@ public static class Patches
     private static bool PendingReminder { get; set; }
 
     [HarmonyPostfix]
+    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
+    public static void GameSave_GlobalEventsCheck_DebugWarning()
+    {
+        Helpers.ShowDebugWarningOnce();
+    }
+
+    [HarmonyPostfix]
     [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
     public static void MainGame_Update()
     {
@@ -14,23 +21,54 @@ public static class Patches
 
         var newDayOfWeek = MainGame.me.save.day_of_week;
 
-        if (MainGame.me.player.is_dead) return;
+        if (MainGame.me.player.is_dead)
+        {
+            if (Plugin.DebugEnabled && PendingReminder)
+            {
+                Helpers.Log($"[Update] reminder suppressed — player is dead (day {newDayOfWeek}).");
+            }
+            return;
+        }
 
         if (!Application.isFocused) return;
 
         if (PrevDayOfWeek != newDayOfWeek)
         {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[Update] day changed {PrevDayOfWeek} → {newDayOfWeek} — queueing reminder.");
+            }
             PendingReminder = true;
         }
 
         if (!PendingReminder) return;
 
-        if (MainGame.me.player.components.character.player_controlled_by_script) return;
-        if (EnvironmentEngine.me.IsTimeStopped()) return;
+        if (MainGame.me.player.components.character.player_controlled_by_script)
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[Update] reminder held back — player is scripted (cutscene/dialog). Will retry next frame.");
+            }
+            return;
+        }
+        if (EnvironmentEngine.me.IsTimeStopped())
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[Update] reminder held back — time is stopped (paused/menu). Will retry next frame.");
+            }
+            return;
+        }
 
         Lang.Reload();
 
-        if (Plugin.DaysOnlyConfig.Value || !Plugin.EnableEventMessages.Value)
+        var daysOnly = Plugin.DaysOnlyConfig.Value || !Plugin.EnableEventMessages.Value;
+        if (Plugin.DebugEnabled)
+        {
+            Helpers.Log($"[Update] firing reminder — day={newDayOfWeek}, daysOnly={daysOnly} (DaysOnlyConfig={Plugin.DaysOnlyConfig.Value}, EnableEventMessages={Plugin.EnableEventMessages.Value}).");
+        }
+
+        if (daysOnly)
         {
             switch (newDayOfWeek)
             {
@@ -59,6 +97,10 @@ public static class Patches
                     break;
 
                 default:
+                    if (Plugin.DebugEnabled)
+                    {
+                        Helpers.Log($"[Update] unexpected day_of_week {newDayOfWeek} — falling back to 'default' translation key.");
+                    }
                     Helpers.SayMessage(Lang.Get("default"));
                     break;
             }
@@ -72,7 +114,12 @@ public static class Patches
                     break;
 
                 case 1:
-                    Helpers.SayMessage(MainGame.me.save.unlocked_perks.Contains("p_preacher")
+                    var hasPreacher = MainGame.me.save.unlocked_perks.Contains("p_preacher");
+                    if (Plugin.DebugEnabled)
+                    {
+                        Helpers.Log($"[Update] Pride day — preacher perk={hasPreacher}, picking {(hasPreacher ? "dhPrideSermon" : "dhPride")}.");
+                    }
+                    Helpers.SayMessage(hasPreacher
                         ? Lang.Get("dhPrideSermon")
                         : Lang.Get("dhPride"));
                     break;
@@ -94,6 +141,10 @@ public static class Patches
                     break;
 
                 default:
+                    if (Plugin.DebugEnabled)
+                    {
+                        Helpers.Log($"[Update] unexpected day_of_week {newDayOfWeek} — falling back to 'default' translation key.");
+                    }
                     Helpers.SayMessage(Lang.Get("default"));
                     break;
             }
@@ -101,5 +152,10 @@ public static class Patches
 
         PrevDayOfWeek = newDayOfWeek;
         PendingReminder = false;
+
+        if (Plugin.DebugEnabled)
+        {
+            Helpers.Log($"[Update] reminder delivered — PrevDayOfWeek={PrevDayOfWeek}, queue cleared.");
+        }
     }
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.5.12 | 16 April 2026
+
+- Fixed Chinese translations not loading
+- Settings menu reorganised into clearer sections with full player-facing descriptions on every option; existing setting values are migrated automatically
+- Debug log output is more useful for bug reports — every step the mod takes is now traceable when Debug Logging is on
+
 ## 2.5.11 | 13 April 2026
 
 - Fixed a bug where every time a chopped stump was re-rendered (entering/leaving zones, save reloads), the mod would add a duplicate entry for the same stump, write the entire tracking file to disk, and log a noisy "Saved/Removed duplicate" pair. The mod now skips stumps it already knows about

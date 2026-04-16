@@ -1,4 +1,4 @@
-﻿namespace GiveMeMoar;
+namespace GiveMeMoar;
 
 public static class Helpers
 {
@@ -6,14 +6,19 @@ public static class Helpers
     {
         if (error)
         {
-            Plugin.Log.LogError($"{message}");
+            LogHelper.Error(message);
         }
         else
         {
-            if (Plugin.Debug.Value)
-            {
-                Plugin.Log.LogInfo($"{message}");
-            }
+            LogHelper.Info(message);
         }
+    }
+
+    internal static void ShowDebugWarningOnce()
+    {
+        if (!Plugin.DebugEnabled || Plugin.DebugDialogShown) return;
+        Plugin.DebugDialogShown = true;
+        Lang.Reload();
+        GUIElements.me.dialog.OpenOK("Give Me Moar!", null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 }

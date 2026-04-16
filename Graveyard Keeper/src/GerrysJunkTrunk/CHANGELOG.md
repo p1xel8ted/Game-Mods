@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.7 | 16 April 2026
+
+- Fixed Chinese translations not loading
+
 ## 1.9.6 | 15 April 2026
 
 - Fixed newly-built trunks not working as a shipping box — they stored items like a normal storage, didn't sell anything at midnight, and the craft stayed available so you could build multiple. Caused by yesterday's 1.9.5 fix clearing the build marker too early

@@ -1,9 +1,16 @@
 # Changelog
 
-## 0.1.8 | 12 April 2026
+## 0.1.9 | 16 April 2026
+
+- Fixed Chinese translations not loading
+
+## 0.1.8 | 16 April 2026
 
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language
 - Language changes in the game options are now picked up immediately without needing to restart
+- New "Require Farmer Perk" toggle — turn it off to use mass-harvest without unlocking the Farmer perk first
+- Tidied up the settings menu with clearer descriptions
+- Improved debug logging for easier bug reports
 
 ## 0.1.7 | 11 April 2026
 

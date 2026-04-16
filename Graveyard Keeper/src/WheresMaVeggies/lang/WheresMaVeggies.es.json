@@ -1,4 +1,5 @@
 {
   "Stage1Header": "Recolección mejorada",
-  "Stage1Des": "Mejora tus habilidades de jardinería para cosechar automáticamente las parcelas que rodean la parcela en la que estás trabajando."
+  "Stage1Des": "Mejora tus habilidades de jardinería para cosechar automáticamente las parcelas que rodean la parcela en la que estás trabajando.",
+  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello."
 }

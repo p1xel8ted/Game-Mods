@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.appletreesenhanced";
     private const string PluginName = "Apple Tree's Enhanced!";
-    private const string PluginVer = "2.7.12";
+    private const string PluginVer = "2.7.13";
     internal static ManualLogSource Log { get; private set; }
 
     internal static ConfigEntry<bool> Debug { get; private set; }

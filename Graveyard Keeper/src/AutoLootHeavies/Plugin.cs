@@ -5,7 +5,7 @@ public class Plugin : BaseUnityPlugin
 {
     private const string PluginGuid = "p1xel8ted.gyk.autolootheavies";
     private const string PluginName = "Auto-Loot Heavies!";
-    private const string PluginVer = "3.5.4";
+    private const string PluginVer = "3.5.5";
 
     private const float EnergyRequirement = 3f;
 
