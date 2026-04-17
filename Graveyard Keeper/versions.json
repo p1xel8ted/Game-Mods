@@ -1,0 +1,368 @@
+{
+  "schema": 1,
+  "generated_at": "2026-04-17T04:50:12Z",
+  "generated_by": "gyk-update-manifest.yml@ab449c51",
+  "game_domain": "graveyardkeeper",
+  "mods": [
+    {
+      "plugin_guid": "p1xel8ted.gyk.addstraighttotable",
+      "nexus_mod_id": 49,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/49",
+      "latest_version": "2.4.10",
+      "latest_file_id": 957,
+      "latest_file_name": "Add Straight To Table",
+      "uploaded_unix": 1775987777,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.alchemyresearchredux",
+      "nexus_mod_id": 90,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/90",
+      "latest_version": "0.1.4",
+      "latest_file_id": 958,
+      "latest_file_name": "Alchemy Research Redux",
+      "uploaded_unix": 1775987864,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.appletreesenhanced",
+      "nexus_mod_id": 54,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/54",
+      "latest_version": "2.7.12",
+      "latest_file_id": 959,
+      "latest_file_name": "Apple Trees Enhanced",
+      "uploaded_unix": 1775987952,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.autolootheavies",
+      "nexus_mod_id": 51,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/51",
+      "latest_version": "3.5.4",
+      "latest_file_id": 978,
+      "latest_file_name": "Auto-Loot Heavies",
+      "uploaded_unix": 1776001906,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.beammeupgerryrewrite",
+      "nexus_mod_id": 61,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/61",
+      "latest_version": "3.1.4",
+      "latest_file_id": 961,
+      "latest_file_name": "Beam Me Up Gerry",
+      "uploaded_unix": 1775988123,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.bringoutyerdead",
+      "nexus_mod_id": 73,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/73",
+      "latest_version": "0.2.5",
+      "latest_file_id": 1007,
+      "latest_file_name": "Bring Out Yer Dead",
+      "uploaded_unix": 1776160378,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.decompdelight",
+      "nexus_mod_id": 86,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/86",
+      "latest_version": "0.1.6",
+      "latest_file_id": 963,
+      "latest_file_name": "Decomp Delight",
+      "uploaded_unix": 1775988285,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.economyreloaded",
+      "nexus_mod_id": 67,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/67",
+      "latest_version": "1.3.9",
+      "latest_file_id": 964,
+      "latest_file_name": "Economy Reloaded",
+      "uploaded_unix": 1775988368,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.exhaustless",
+      "nexus_mod_id": 42,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/42",
+      "latest_version": "3.5.3",
+      "latest_file_id": 965,
+      "latest_file_name": "Exhaust-less",
+      "uploaded_unix": 1775988451,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.fastercraftreloaded",
+      "nexus_mod_id": 65,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/65",
+      "latest_version": "1.4.10",
+      "latest_file_id": 966,
+      "latest_file_name": "FasterCraft Reloaded",
+      "uploaded_unix": 1775988533,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.fogbegone",
+      "nexus_mod_id": 46,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/46",
+      "latest_version": "3.4.11",
+      "latest_file_id": 1008,
+      "latest_file_name": "Fog Be Gone",
+      "uploaded_unix": 1776161205,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.gerrysjunktrunk",
+      "nexus_mod_id": 64,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/64",
+      "latest_version": "1.9.6",
+      "latest_file_id": 1020,
+      "latest_file_name": "Gerry's Junk Trunk",
+      "uploaded_unix": 1776248937,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.getouttamyway",
+      "nexus_mod_id": 88,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/88",
+      "latest_version": "0.1.4",
+      "latest_file_id": 969,
+      "latest_file_name": "Get Outta Ma Way",
+      "uploaded_unix": 1775988779,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.givememoar",
+      "nexus_mod_id": 70,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/70",
+      "latest_version": "1.2.13",
+      "latest_file_id": 970,
+      "latest_file_name": "Give Me Moar",
+      "uploaded_unix": 1775988860,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.gravechangesredux",
+      "nexus_mod_id": 89,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/89",
+      "latest_version": "0.1.7",
+      "latest_file_id": 971,
+      "latest_file_name": "Grave Changes Redux",
+      "uploaded_unix": 1775988941,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.ibuildwhereiwant",
+      "nexus_mod_id": 60,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/60",
+      "latest_version": "1.7.10",
+      "latest_file_id": 972,
+      "latest_file_name": "I Build Where I Want",
+      "uploaded_unix": 1775989022,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.ineedsticks",
+      "nexus_mod_id": 56,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/56",
+      "latest_version": "1.6.9",
+      "latest_file_id": 973,
+      "latest_file_name": "I Neeeed Sticks",
+      "uploaded_unix": 1775989104,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.keeperscandles",
+      "nexus_mod_id": 87,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/87",
+      "latest_version": "0.1.7",
+      "latest_file_id": 926,
+      "latest_file_name": "KeepersCandles",
+      "uploaded_unix": 1775910144,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.longerdays",
+      "nexus_mod_id": 53,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/53",
+      "latest_version": "1.6.9",
+      "latest_file_id": 927,
+      "latest_file_name": "LongerDays",
+      "uploaded_unix": 1775910229,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.maxbuttonsredux",
+      "nexus_mod_id": 59,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/59",
+      "latest_version": "1.3.11",
+      "latest_file_id": 955,
+      "latest_file_name": "Max Buttons Redux",
+      "uploaded_unix": 1775984574,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.miscbitsandbobs",
+      "nexus_mod_id": 55,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/55",
+      "latest_version": "2.3.4",
+      "latest_file_id": 1021,
+      "latest_file_name": "Misc. Bits and Bobs",
+      "uploaded_unix": 1776249489,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.newgameatbottom",
+      "nexus_mod_id": 43,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/43",
+      "latest_version": "2.2.8",
+      "latest_file_id": 930,
+      "latest_file_name": "NewGameAtBottom",
+      "uploaded_unix": 1775910566,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.nointros",
+      "nexus_mod_id": 47,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/47",
+      "latest_version": "2.2.8",
+      "latest_file_id": 931,
+      "latest_file_name": "NoIntros",
+      "uploaded_unix": 1775910648,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.notimeforfishing",
+      "nexus_mod_id": 44,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/44",
+      "latest_version": "3.2.8",
+      "latest_file_id": 932,
+      "latest_file_name": "NoTimeForFishing",
+      "uploaded_unix": 1775910729,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.praythedayaway",
+      "nexus_mod_id": 72,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/72",
+      "latest_version": "0.3.5",
+      "latest_file_id": 939,
+      "latest_file_name": "PrayTheDayAway",
+      "uploaded_unix": 1775957499,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.queueeverything",
+      "nexus_mod_id": 57,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/57",
+      "latest_version": "2.1.12",
+      "latest_file_id": 1022,
+      "latest_file_name": "Queue Everything",
+      "uploaded_unix": 1776251638,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.regenerationreloaded",
+      "nexus_mod_id": 66,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/66",
+      "latest_version": "1.1.10",
+      "latest_file_id": 941,
+      "latest_file_name": "RegenerationReloaded",
+      "uploaded_unix": 1775957677,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.restinpatches",
+      "nexus_mod_id": 125,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/125",
+      "latest_version": "0.1.0",
+      "latest_file_id": 956,
+      "latest_file_name": "Rest In Patches",
+      "uploaded_unix": 1775984603,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.savenow",
+      "nexus_mod_id": 41,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/41",
+      "latest_version": "2.5.11",
+      "latest_file_id": 1010,
+      "latest_file_name": "Save Now",
+      "uploaded_unix": 1776170807,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.showmemoar",
+      "nexus_mod_id": 81,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/81",
+      "latest_version": "0.1.10",
+      "latest_file_id": 975,
+      "latest_file_name": "Show Me Moar",
+      "uploaded_unix": 1775998513,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.theseedequalizer",
+      "nexus_mod_id": 58,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/58",
+      "latest_version": "1.3.10",
+      "latest_file_id": 943,
+      "latest_file_name": "TheSeedEqualizer",
+      "uploaded_unix": 1775957845,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.thoughtfulreminders",
+      "nexus_mod_id": 52,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/52",
+      "latest_version": "2.2.10",
+      "latest_file_id": 944,
+      "latest_file_name": "ThoughtfulReminders",
+      "uploaded_unix": 1775957931,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.treesnomore",
+      "nexus_mod_id": 50,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/50",
+      "latest_version": "2.5.11",
+      "latest_file_id": 1011,
+      "latest_file_name": "Trees No More",
+      "uploaded_unix": 1776170895,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.wheresmapoints",
+      "nexus_mod_id": 71,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/71",
+      "latest_version": "0.3.3",
+      "latest_file_id": 946,
+      "latest_file_name": "WheresMaPoints",
+      "uploaded_unix": 1775958099,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.wheresmastorage",
+      "nexus_mod_id": 62,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/62",
+      "latest_version": "2.1.13",
+      "latest_file_id": 979,
+      "latest_file_name": "Where's Ma Storage",
+      "uploaded_unix": 1776002268,
+      "status": "ok"
+    },
+    {
+      "plugin_guid": "p1xel8ted.gyk.wheresmaveggies",
+      "nexus_mod_id": 76,
+      "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/76",
+      "latest_version": "0.1.8",
+      "latest_file_id": 1024,
+      "latest_file_name": "Wheres Ma Veggies",
+      "uploaded_unix": 1776334384,
+      "status": "ok"
+    }
+  ]
+}
