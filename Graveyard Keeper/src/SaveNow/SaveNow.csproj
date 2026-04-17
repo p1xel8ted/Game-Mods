@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.5.13</Version>
         <BepInExPluginGuid>p1xel8ted.gyk.savenow</BepInExPluginGuid>
         <BepInExPluginName>Save Now!</BepInExPluginName>
         <NexusGroupId>495841</NexusGroupId>
