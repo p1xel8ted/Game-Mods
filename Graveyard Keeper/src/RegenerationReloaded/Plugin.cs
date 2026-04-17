@@ -1,23 +1,21 @@
 namespace RegenerationReloaded;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.regenerationreloaded";
-    private const string PluginName = "Regeneration Reloaded";
-    private const string PluginVer = "1.1.10";
-
     private static ManualLogSource Log { get; set; }
     internal static ConfigEntry<bool> ShowRegenUpdates { get; private set; }
     internal static ConfigEntry<float> LifeRegen { get; private set; }
     internal static ConfigEntry<float> EnergyRegen { get; private set; }
     internal static ConfigEntry<float> RegenDelay { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
         Log = Logger;
         InitConfiguration();
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
@@ -30,6 +28,11 @@ public class Plugin : BaseUnityPlugin
         EnergyRegen.SettingChanged += (_, _) => { Patches.EnergyRegen = EnergyRegen.Value; };
         RegenDelay = Config.Bind("01. Regeneration", "Regeneration Delay", 5f, new ConfigDescription("Set the delay in seconds between each regeneration tick.", new AcceptableValueRange<float>(0f, 10f), new ConfigurationManagerAttributes {Order = 1}));
         RegenDelay.SettingChanged += (_, _) => { Patches.RegenDelay = RegenDelay.Value; };
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+            null,
+            new ConfigurationManagerAttributes { Order = 0 }));
     }
     
 }

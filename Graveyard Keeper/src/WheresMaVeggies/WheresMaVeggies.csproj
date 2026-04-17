@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.9</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.wheresmaveggies</BepInExPluginGuid>
+        <BepInExPluginName>Where's Ma' Veggies!</BepInExPluginName>
         <NexusGroupId>867271</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

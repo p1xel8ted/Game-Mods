@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.2.8</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.newgameatbottom</BepInExPluginGuid>
+        <BepInExPluginName>New Game at Bottom!</BepInExPluginName>
         <NexusGroupId>503179</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

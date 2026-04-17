@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.4.11</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.fastercraftreloaded</BepInExPluginGuid>
+        <BepInExPluginName>FasterCraft Reloaded</BepInExPluginName>
         <NexusGroupId>677521</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

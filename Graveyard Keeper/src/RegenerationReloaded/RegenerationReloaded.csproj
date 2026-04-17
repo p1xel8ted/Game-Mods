@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.1.10</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.regenerationreloaded</BepInExPluginGuid>
+        <BepInExPluginName>Regeneration Reloaded</BepInExPluginName>
         <NexusGroupId>702055</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

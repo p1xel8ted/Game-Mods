@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.3.3</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.wheresmapoints</BepInExPluginGuid>
+        <BepInExPluginName>Where's Ma' Points!</BepInExPluginName>
         <NexusGroupId>768523</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

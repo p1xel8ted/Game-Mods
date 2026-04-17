@@ -1,20 +1,18 @@
 namespace WheresMaVeggies;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.wheresmaveggies";
-    private const string PluginName = "Where's Ma' Veggies!";
-    private const string PluginVer = "0.1.9";
-
     private const string AdvancedSection = "── 1. Advanced ──";
     private const string HarvestSection  = "── 2. Harvest ──";
+    private const string UpdatesSection  = "── 3. Updates ──";
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static bool DebugDialogShown;
 
     internal static ConfigEntry<bool> RequireFarmerPerk { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static ManualLogSource Log { get; private set; }
 
@@ -33,8 +31,15 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription("On: nearby garden plots only mass-harvest after you've unlocked the Farmer perk in the tech tree. This matches the mod's original behaviour. Off: every harvest immediately reaps neighbouring plots of the same crop, even before the perk is unlocked — useful if you want the convenience from day one.", null,
                 new ConfigurationManagerAttributes {Order = 100}));
 
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
+
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     internal static void WriteLog(string message, bool error = false)
@@ -54,6 +59,6 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 }
