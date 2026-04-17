@@ -1,16 +1,13 @@
 namespace GiveMeMoar;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.givememoar";
-    private const string PluginName = "Give Me Moar!";
-    private const string PluginVer = "1.2.14";
-
     private const string AdvancedSection    = "── 1. Advanced ──";
     private const string MultipliersSection = "── 2. Multipliers ──";
     private const string CategoriesSection  = "── 3. Categories ──";
     private const string CraftingSection    = "── 4. Crafting ──";
+    private const string UpdatesSection     = "── 5. Updates ──";
 
     // Maps legacy section headers (from shipped versions) to current headers. Applied once on
     // first launch so existing user values survive the rename. Idempotent.
@@ -61,6 +58,8 @@ public class Plugin : BaseUnityPlugin
     // on SettingChanged so the hot path doesn't re-parse the string on every craft.
     internal static Dictionary<string, float> CraftStationOverrideMap { get; private set; } = new();
 
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
+
     internal static ManualLogSource Log { get; private set; }
 
     private void Awake()
@@ -70,7 +69,8 @@ public class Plugin : BaseUnityPlugin
         MigrateRenamedSections();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     // Rewrites legacy "[01. Multipliers]" style headers to the current "── N. Name ──" style
@@ -277,6 +277,13 @@ public class Plugin : BaseUnityPlugin
         CraftExcludeProgressionCrafts.SettingChanged += OnCraftOutputSettingChanged;
 
         RebuildCraftStationOverrideMap();
+
+        // ── 5. Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
     }
 
     private static void OnCraftOutputSettingChanged(object sender, EventArgs e)

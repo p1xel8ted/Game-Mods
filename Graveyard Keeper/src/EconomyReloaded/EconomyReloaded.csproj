@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.3.9</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.economyreloaded</BepInExPluginGuid>
+        <BepInExPluginName>Economy Reloaded</BepInExPluginName>
         <NexusGroupId>704890</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

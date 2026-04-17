@@ -1,13 +1,9 @@
 namespace GraveChangesRedux;
 
 [Harmony]
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.gravechangesredux";
-    private const string PluginName = "Grave Changes Redux";
-    private const string PluginVer = "0.1.7";
-
     private const float MaxQualityValue = 30f;
     private static readonly SmartExpression MaxQualityExpression = SmartExpression.ParseExpression("30");
 
@@ -19,6 +15,7 @@ public class Plugin : BaseUnityPlugin
     private static ConfigEntry<bool> DebugEnabled { get; set; }
     private static ConfigEntry<bool> ModifyGraves { get; set; }
     private static ConfigEntry<bool> ModifyObjects { get; set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
@@ -27,8 +24,15 @@ public class Plugin : BaseUnityPlugin
         ModifyGraves.SettingChanged += (_, _) => GameBalanceLoad();
         ModifyObjects = Config.Bind("01. Changes", "Modify Decorations", false, new ConfigDescription("Max out the quality of decorative items.", null, new ConfigurationManagerAttributes {Order = 1}));
         ModifyObjects.SettingChanged += (_, _) => GameBalanceLoad();
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+            null,
+            new ConfigurationManagerAttributes { Order = 0 }));
+
         LOG = Logger;
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     [HarmonyPostfix]

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.3.11</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.maxbuttonsredux</BepInExPluginGuid>
+        <BepInExPluginName>Max Buttons Redux</BepInExPluginName>
         <NexusGroupId>602659</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>3.2.8</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.notimeforfishing</BepInExPluginGuid>
+        <BepInExPluginName>No Time For Fishing!</BepInExPluginName>
         <NexusGroupId>508429</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

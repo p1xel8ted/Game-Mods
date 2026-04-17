@@ -1,8 +1,9 @@
 # Changelog
 
-## 1.2.14 | 16 April 2026
+## 1.2.14 | 17 April 2026
 
 - Fixed Chinese translations not loading
+- Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - Tidied up the settings menu: sections now use the matching "── N. Name ──" style used by my other mods, multipliers are ordered by impact (Resource at the top), and every description has been rewritten to explain what on/off actually does in-game
 - Your existing multiplier values carry over automatically — the old section names are rewritten on first launch so nothing resets
 - Fixed the "Multiply Sticks" toggle so it finally matches its name: on means sticks get multiplied, off means sticks stay at vanilla drops. Default is now on, so sticks get multiplied out of the box like every other resource

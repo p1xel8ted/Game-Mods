@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.7</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.gravechangesredux</BepInExPluginGuid>
+        <BepInExPluginName>Grave Changes Redux</BepInExPluginName>
         <NexusGroupId>983692</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
