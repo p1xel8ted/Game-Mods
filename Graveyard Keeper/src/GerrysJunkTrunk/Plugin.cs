@@ -1,12 +1,8 @@
 namespace GerrysJunkTrunk;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.gerrysjunktrunk";
-    private const string PluginName = "Gerry's Junk Trunk";
-    private const string PluginVer = "1.9.7";
-
     internal const float FullPriceModifier = 0.70f;
     internal const float PityPrice = 0.10f;
     internal const int LargeInvSize = 20;
@@ -49,6 +45,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> ShowItemPriceTooltips { get; private set; }
     internal static ConfigEntry<bool> InternalShippingBoxBuilt { get; private set; }
     internal static ConfigEntry<bool> InternalShowIntroMessage { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static readonly ItemDefinition.ItemType[] ExcludeItems =
     [
@@ -69,7 +66,8 @@ public class Plugin : BaseUnityPlugin
         InitInternalConfiguration();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitInternalConfiguration()
@@ -116,6 +114,11 @@ public class Plugin : BaseUnityPlugin
         ShowItemPriceTooltips = Config.Bind("03. Price Tooltips", "Show Item Price Tooltips", true,
             new ConfigDescription("Display tooltips with item prices in the user interface", null,
                 new ConfigurationManagerAttributes {Order = 2}));
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+            null,
+            new ConfigurationManagerAttributes { Order = 0 }));
     }
 
     internal static void WriteLog(string message, bool error = false)
@@ -135,7 +138,7 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     internal static void ShowCinematic(Transform transform)

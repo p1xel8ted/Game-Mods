@@ -1,17 +1,14 @@
 namespace RestInPatches;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.restinpatches";
-    private const string PluginName = "Rest In Patches";
-    private const string PluginVer = "0.1.1";
-
     private static ManualLogSource Log { get; set; }
     internal static Sprite ArrowLeftSprite { get; private set; }
     private static ConfigEntry<bool> KeepRunningInBackground { get; set; }
     private static ConfigEntry<bool> MuteWhenUnfocused { get; set; }
     internal static ConfigEntry<int> MaxFootprints { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
@@ -26,7 +23,8 @@ public class Plugin : BaseUnityPlugin
         SceneManager.sceneLoaded += OnSceneLoaded;
         Application.focusChanged += OnFocusChanged;
 
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
@@ -48,6 +46,9 @@ public class Plugin : BaseUnityPlugin
         MaxFootprints = Config.Bind("02. Footprints", "Max Footprints", 1000,
             new ConfigDescription("Maximum number of footprints kept in the world before the oldest are removed. 0 disables the cap.",
                 new AcceptableValueRange<int>(0, 10000)));
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.");
     }
 
     private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)

@@ -1,14 +1,11 @@
 namespace ThoughtfulReminders;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.thoughtfulreminders";
-    private const string PluginName = "Thoughtful Reminders";
-    private const string PluginVer = "2.2.11";
-
     private const string AdvancedSection  = "── 1. Advanced ──";
     private const string RemindersSection = "── 2. Reminders ──";
+    private const string UpdatesSection   = "── 3. Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
@@ -22,6 +19,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> EnableEventMessages { get; private set; }
     internal static ConfigEntry<bool> DaysOnlyConfig { get; private set; }
     internal static ConfigEntry<bool> SpeechBubblesConfig { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static ManualLogSource Log { get; private set; }
 
@@ -32,7 +30,8 @@ public class Plugin : BaseUnityPlugin
         MigrateRenamedSections();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     // Rewrites the legacy "[01. General]" header to the new "[── 2. Reminders ──]" form on
@@ -100,5 +99,12 @@ public class Plugin : BaseUnityPlugin
         SpeechBubblesConfig = Config.Bind(RemindersSection, "Speech Bubbles", true,
             new ConfigDescription("How reminders are displayed on screen. On: your character says the reminder in a thought-style speech bubble. Off: the reminder floats above your head as a small red label instead.", null,
                 new ConfigurationManagerAttributes {Order = 90}));
+
+        // ── 3. Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
     }
 }

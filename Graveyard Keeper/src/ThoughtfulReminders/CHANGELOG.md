@@ -1,8 +1,9 @@
 # Changelog
 
-## 2.2.11 | 16 April 2026
+## 2.2.11 | 17 April 2026
 
 - Fixed Chinese translations not loading
+- Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language
 - Language changes in the game options are now picked up immediately without needing to restart
 - Tidied up the settings menu with clearer descriptions and grouped the options into Advanced and Reminders sections

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.7.11</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.ibuildwhereiwant</BepInExPluginGuid>
+        <BepInExPluginName>I Build Where I Want!</BepInExPluginName>
         <NexusGroupId>609505</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.2.11</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.thoughtfulreminders</BepInExPluginGuid>
+        <BepInExPluginName>Thoughtful Reminders</BepInExPluginName>
         <NexusGroupId>529420</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

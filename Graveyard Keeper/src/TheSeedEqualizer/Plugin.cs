@@ -1,12 +1,8 @@
 namespace TheSeedEqualizer;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.theseedequalizer";
-    private const string PluginName = "The Seed Equalizer!";
-    private const string PluginVer = "1.3.11";
-
     // Section names. Sections render in CM in the order their first Config.Bind call runs,
     // so Advanced is bound first. Legacy "0X. Name" headers get rewritten to these by
     // MigrateRenamedSections() on first launch so existing user customisations are preserved.
@@ -16,6 +12,7 @@ public class Plugin : BaseUnityPlugin
     private const string RefugeeGardensSection = "── 4. Refugee Gardens ──";
     private const string WasteSection          = "── 5. Waste ──";
     private const string AllGardensSection     = "── 6. All Gardens ──";
+    private const string UpdatesSection        = "── 7. Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
@@ -41,6 +38,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> AddWasteToZombieVineyards { get; private set; }
     internal static ConfigEntry<bool> BoostPotentialSeedOutput { get; private set; }
     internal static ConfigEntry<bool> BoostGrowSpeedWhenRaining { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
@@ -49,7 +47,8 @@ public class Plugin : BaseUnityPlugin
         MigrateRenamedSections();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     // Rewrites old "[0X. Name]" headers to the "[── N. Name ──]" form so existing
@@ -141,6 +140,13 @@ public class Plugin : BaseUnityPlugin
         BoostGrowSpeedWhenRaining = Config.Bind(AllGardensSection, "Boost Grow Speed When Raining", true,
             new ConfigDescription("On: garden, vineyard and refugee planting crafts grow twice as fast while it's raining. Off: rain has no effect on garden growth speed.", null,
                 new ConfigurationManagerAttributes {Order = 99}));
+
+        // ── 7. Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
     }
 
     internal static void ShowDebugWarningOnce()
@@ -148,6 +154,6 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 }

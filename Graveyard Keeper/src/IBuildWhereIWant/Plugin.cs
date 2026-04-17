@@ -1,12 +1,8 @@
 namespace IBuildWhereIWant;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.ibuildwhereiwant";
-    private const string PluginName = "I Build Where I Want!";
-    private const string PluginVer = "1.7.11";
-
     private const string Zone = "mf_wood";
     private const string BuildDeskConst = "buildanywhere_desk";
 
@@ -19,6 +15,7 @@ public class Plugin : BaseUnityPlugin
     internal static bool DebugDialogShown;
     internal static ConfigEntry<KeyboardShortcut> MenuKeyBind { get; private set; }
     internal static ConfigEntry<string> MenuControllerButton { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static WorldGameObject BuildDesk { get; set; }
     internal static WorldGameObject BuildDeskClone { get; set; }
@@ -35,7 +32,8 @@ public class Plugin : BaseUnityPlugin
         LogHelper.Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
@@ -53,6 +51,11 @@ public class Plugin : BaseUnityPlugin
         MenuKeyBind = Config.Bind("03. Keybinds", "Menu Key Bind", new KeyboardShortcut(KeyCode.Q), new ConfigDescription("Define the key used to open the mod menu.", null, new ConfigurationManagerAttributes {Order = 601}));
 
         MenuControllerButton = Config.Bind("04. Controller", "Menu Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.LB), new ConfigDescription("Select the controller button used to open the mod menu.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 600}));
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+            null,
+            new ConfigurationManagerAttributes { Order = 0 }));
     }
 
     internal static bool CanOpenCraftAnywhere()
@@ -153,6 +156,6 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 }

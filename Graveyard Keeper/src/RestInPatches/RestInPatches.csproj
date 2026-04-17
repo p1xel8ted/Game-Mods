@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.1</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.restinpatches</BepInExPluginGuid>
+        <BepInExPluginName>Rest In Patches</BepInExPluginName>
         <NexusGroupId>7296647</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
@@ -12,4 +13,3 @@
         </Reference>
     </ItemGroup>
 </Project>
-

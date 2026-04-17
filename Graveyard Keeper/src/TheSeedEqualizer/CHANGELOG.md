@@ -1,8 +1,9 @@
 # Changelog
 
-## 1.3.11 | 12 April 2026
+## 1.3.11 | 17 April 2026
 
 - Fixed Chinese translations not loading
+- Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - The Advanced section's Debug Logging option is now always visible (was hidden by default)
 - Tidied up the settings menu: clearer, player-facing descriptions on every option and logical grouping into Advanced, Player Gardens, Zombie Gardens, Refugee Gardens, Waste, and All Gardens sections
 - Your existing settings carry over automatically — the old "01. / 02. / 03." section headers are rewritten on first launch so nothing is lost

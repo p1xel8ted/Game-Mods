@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.9.7</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.gerrysjunktrunk</BepInExPluginGuid>
+        <BepInExPluginName>Gerry's Junk Trunk</BepInExPluginName>
         <NexusGroupId>669136</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
