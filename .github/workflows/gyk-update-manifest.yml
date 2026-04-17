@@ -1,0 +1,198 @@
+name: GYK — Update version manifest
+
+on:
+  schedule:
+    # Every 12 hours at 04:17 and 16:17 UTC (offset from top-of-hour for cron reliability)
+    - cron: '17 4,16 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-manifest:
+    runs-on: ubuntu-latest
+    env:
+      NEXUS_API_KEY: ${{ secrets.NEXUS_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build manifest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          if ([string]::IsNullOrEmpty($env:NEXUS_API_KEY)) {
+            throw "NEXUS_API_KEY secret is not set"
+          }
+
+          $csvPath = 'Graveyard Keeper/NexusGroupIDS.csv'
+          $outPath = 'Graveyard Keeper/versions.json'
+          $domain  = 'graveyardkeeper'
+
+          if (-not (Test-Path $csvPath)) { throw "CSV not found at $csvPath" }
+
+          $headers = @{
+            apikey       = $env:NEXUS_API_KEY
+            'User-Agent' = 'gyk-update-manifest-action/1.0'
+          }
+
+          function Invoke-NexusGet {
+            param([string]$Url)
+            for ($attempt = 1; $attempt -le 2; $attempt++) {
+              try {
+                return Invoke-RestMethod -Uri $Url -Headers $headers -ErrorAction Stop
+              }
+              catch {
+                $code = $null
+                if ($_.Exception.Response) { $code = [int]$_.Exception.Response.StatusCode }
+                if ($code -eq 401) {
+                  throw "Auth failed (401) — NEXUS_API_KEY invalid or expired"
+                }
+                if ($code -eq 404) {
+                  return [pscustomobject]@{ __status = 'not_found' }
+                }
+                if ($code -eq 429 -and $attempt -eq 1) {
+                  Write-Host "  429 rate-limited — sleeping 60s before retry"
+                  Start-Sleep -Seconds 60
+                  continue
+                }
+                if ($code -eq 429) {
+                  return [pscustomobject]@{ __status = 'rate_limited' }
+                }
+                Write-Host "  error ${code}: $($_.Exception.Message)"
+                return [pscustomobject]@{ __status = 'error' }
+              }
+            }
+          }
+
+          $rows       = Import-Csv $csvPath
+          $total      = $rows.Count
+          $errorCount = 0
+          $entries    = @()
+
+          foreach ($row in $rows) {
+            $modId       = $row.NexusID
+            $guid        = $row.PluginGuid
+            $displayName = $row.Mod
+
+            if ([string]::IsNullOrEmpty($guid)) {
+              Write-Host "• SKIP $displayName (no PluginGuid in CSV)"
+              continue
+            }
+
+            Write-Host "• $displayName (Nexus $modId, guid $guid)"
+
+            $url = "https://api.nexusmods.com/v1/games/$domain/mods/$modId/files.json"
+            $modUrl = "https://www.nexusmods.com/$domain/mods/$modId"
+            $result = Invoke-NexusGet $url
+
+            if ($result.PSObject.Properties.Match('__status').Count -gt 0) {
+              $status = $result.__status
+              if ($status -eq 'error') { $errorCount++ }
+              $entries += [pscustomobject]@{
+                plugin_guid      = $guid
+                nexus_mod_id     = [int]$modId
+                nexus_url        = $modUrl
+                latest_version   = ''
+                latest_file_id   = 0
+                latest_file_name = ''
+                uploaded_unix    = 0
+                status           = $status
+              }
+              Write-Host "  status: $status"
+              Start-Sleep -Seconds 1
+              continue
+            }
+
+            $mainFiles = @($result.files | Where-Object { $_.category_name -eq 'MAIN' } | Sort-Object uploaded_timestamp -Descending)
+            if ($mainFiles.Count -eq 0) {
+              $entries += [pscustomobject]@{
+                plugin_guid      = $guid
+                nexus_mod_id     = [int]$modId
+                nexus_url        = $modUrl
+                latest_version   = ''
+                latest_file_id   = 0
+                latest_file_name = ''
+                uploaded_unix    = 0
+                status           = 'not_found'
+              }
+              Write-Host "  no MAIN files"
+              Start-Sleep -Seconds 1
+              continue
+            }
+
+            $latest = $mainFiles[0]
+            $entries += [pscustomobject]@{
+              plugin_guid      = $guid
+              nexus_mod_id     = [int]$modId
+              nexus_url        = $modUrl
+              latest_version   = "$($latest.version)"
+              latest_file_id   = [int]$latest.file_id
+              latest_file_name = "$($latest.name)"
+              uploaded_unix    = [long]$latest.uploaded_timestamp
+              status           = 'ok'
+            }
+            Write-Host "  latest MAIN: v$($latest.version) (file $($latest.file_id))"
+            Start-Sleep -Seconds 1
+          }
+
+          # Abort on catastrophic error rate to preserve last-good manifest
+          if ($total -gt 0) {
+            $errRate = $errorCount / $total
+            if ($errRate -gt 0.30) {
+              throw "Too many errors: $errorCount of $total ($([int]($errRate * 100))%) — aborting to preserve last-good manifest"
+            }
+          }
+
+          # Compare only the mods array to decide if anything meaningful changed
+          $sortedNew = $entries | Sort-Object plugin_guid
+          $newModsJson = $sortedNew | ConvertTo-Json -Depth 6 -Compress
+          $oldModsJson = ''
+          if (Test-Path $outPath) {
+            try {
+              $old = Get-Content $outPath -Raw | ConvertFrom-Json
+              if ($old -and $old.mods) {
+                $oldModsJson = $old.mods | Sort-Object plugin_guid | ConvertTo-Json -Depth 6 -Compress
+              }
+            } catch {
+              Write-Host "  (could not parse existing manifest — treating as changed)"
+            }
+          }
+
+          if ($newModsJson -eq $oldModsJson) {
+            Write-Host ""
+            Write-Host "✓ No version changes — skipping write"
+            exit 0
+          }
+
+          $sha      = if ($env:GITHUB_SHA) { $env:GITHUB_SHA.Substring(0, [Math]::Min(8, $env:GITHUB_SHA.Length)) } else { 'local' }
+          $manifest = [pscustomobject]@{
+            schema       = 1
+            generated_at = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+            generated_by = "gyk-update-manifest.yml@$sha"
+            game_domain  = $domain
+            mods         = $sortedNew
+          }
+
+          $outDir = Split-Path $outPath -Parent
+          if (-not (Test-Path $outDir)) { New-Item -ItemType Directory -Path $outDir | Out-Null }
+
+          $json = $manifest | ConvertTo-Json -Depth 6
+          [System.IO.File]::WriteAllText($outPath, $json, [System.Text.UTF8Encoding]::new($false))
+
+          Write-Host ""
+          Write-Host "✓ Wrote $outPath ($($entries.Count) entries, $errorCount errors)"
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "gyk-update-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "Graveyard Keeper/versions.json"
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore(gyk): update version manifest"
+            git push
+          fi

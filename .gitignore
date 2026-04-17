@@ -1061,9 +1061,13 @@ _ul
 # NexusMods upload tooling (contains API keys via Environment.props)
 **/nexus-upload.ps1
 **/nexus-pull.ps1
+**/nexus-version.bat
 **/publish.bat
 **/upload.target
 **/NexusGroupIDS.csv
+
+# Allow GYK mapping CSV (read by update-notifier GitHub Action; contains no secrets)
+!Graveyard Keeper/NexusGroupIDS.csv
 
 # Decompiled game code, work summaries, audit docs, user reports
 **/game_code/

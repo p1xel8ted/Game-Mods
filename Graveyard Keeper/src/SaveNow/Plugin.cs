@@ -12,13 +12,9 @@ public enum SaveSortDirection
     Ascending
 }
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.savenow";
-    private const string PluginName = "Save Now!";
-    private const string PluginVer = "2.5.12";
-
     private const string ModGerryTag = "mod_gerry";
 
     // Section names. New scheme: ── Foo ── (alphabetical sort in CM).
@@ -30,6 +26,7 @@ public class Plugin : BaseUnityPlugin
     private const string ControlsSection      = "── 4. Controls ──";
     private const string NotificationsSection = "── 5. Notifications ──";
     private const string ExitingSection       = "── 6. Exiting ──";
+    private const string UpdatesSection       = "── 7. Updates ──";
 
     // Migrates the 2.5.9 section names to the current "── N. Name ──" form so existing
     // user values survive the rename. Idempotent — once migrated there are no old
@@ -65,6 +62,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> EnableManualSaveControllerButton { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ManualSaveKeyBind { get; private set; }
     internal static ConfigEntry<string> ManualSaveControllerButton { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static ManualLogSource Log { get; private set; }
 
@@ -74,7 +72,24 @@ public class Plugin : BaseUnityPlugin
     internal static bool CanSave { get; set; }
     internal static string CurrentSave { get; set; }
     internal static readonly Dictionary<string, Vector3> SaveLocationsDictionary = new();
-    internal static bool IsInDungeon => MainGame.me && MainGame.me.dungeon_root && MainGame.me.dungeon_root.dungeon_is_loaded_now;
+    internal static bool IsInDungeon
+    {
+        get
+        {
+            if (!MainGame.me || !MainGame.me.dungeon_root) return false;
+            if (!MainGame.me.dungeon_root.dungeon_is_loaded_now) return false;
+
+            // A teleport stone moves the player out via Flow_TeleportToWGO, which never
+            // calls DestroyTiles() — the one place dungeon_is_loaded_now is ever cleared.
+            // So the flag can stay true after the player is back on the surface.
+            // Surface zones live under world_root; dungeons have no WorldZone. If the
+            // player has a current_zone, they're physically outside the dungeon.
+            var pc = MainGame.me.player_component;
+            if (pc != null && pc.current_zone != null) return false;
+
+            return true;
+        }
+    }
 
     private static readonly string[] TutorialQuests =
     [
@@ -108,7 +123,8 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         UpdateSaveData();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     // Rewrites old "[01. Saving]" style headers to "[── Saving ──]" in the .cfg file
@@ -252,6 +268,15 @@ public class Plugin : BaseUnityPlugin
         ExitToDesktop = Config.Bind(ExitingSection, "Exit To Desktop", false,
             new ConfigDescription("Make the Save and Exit button quit to desktop instead of returning to the main menu.", null,
                 new ConfigurationManagerAttributes {Order = 90}));
+
+        // ── 7. Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Once per session at the main menu, check NexusMods for a newer version of this mod and show a quiet notification in the top-right corner if one is available. " +
+                "The check fetches a single small JSON file from GitHub (no Nexus login, no API key, no user identifier) and takes under a second. " +
+                "Uncheck to disable. Default: on.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
     }
 
     private static void UpdateSaveData()
@@ -454,7 +479,7 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     private static void WriteSavesToFile()

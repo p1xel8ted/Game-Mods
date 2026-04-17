@@ -42,6 +42,7 @@
 
     <ItemGroup>
         <PackageReference Include="Resource.Embedder" Version="2.3.1" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" PrivateAssets="all" />
     </ItemGroup>
 
     <!-- BepInEx framework references -->
@@ -69,6 +70,8 @@
     <!-- Shared source files (exclude CustomTextures which has its own references) -->
     <ItemGroup Condition="'$(MSBuildProjectName)' != 'CustomTextures'">
         <Compile Include="..\Shared\MainMenuPatch.cs" Link="MainMenuPatch.cs"/>
+        <Compile Include="..\Shared\UpdateChecker.cs" Link="UpdateChecker.cs"/>
+        <Compile Include="..\Shared\UpdateCheckerUI.cs" Link="UpdateCheckerUI.cs"/>
     </ItemGroup>
 
     <!-- Common game/Unity references (exclude CustomTextures which has its own extensive set) -->

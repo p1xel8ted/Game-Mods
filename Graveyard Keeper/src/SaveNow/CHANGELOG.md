@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.5.13 | 17 April 2026
+
+- Fixed saving staying blocked after using a teleport stone to leave a dungeon
+- Added a quiet update notification on the main menu showing which mods in this collection have newer versions on Nexus. Click an entry to open its Nexus page. Opt-out via the new "Check for Updates" setting
+
 ## 2.5.12 | 16 April 2026
 
 - Fixed Chinese translations not loading
