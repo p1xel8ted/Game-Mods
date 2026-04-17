@@ -1,8 +1,9 @@
 # Changelog
 
-## 2.3.5 | 16 April 2026
+## 2.3.5 | 17 April 2026
 
 - Fixed Chinese translations not loading
+- Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - Tidied up the settings menu — every toggle now has a plain-English description that explains what it actually does, and dependent sliders (player/porter speed) now show underneath their parent toggle with a tree indent
 - Reordered the sections into a clearer layout: Advanced, Audio, UI, Gameplay, Movement, Church, Misc. Your existing settings are migrated automatically
 - Improved debug logging for easier bug reports — when Debug Logging is on, the log now records each decision the mod makes (letterbox suppression, intro skip, prayer removal, tavern oven fuel changes, zombie pyre inputs, Halloween event scheduling, sermon line substitution, Sprint Reloaded detection, and church visitor eviction steps)

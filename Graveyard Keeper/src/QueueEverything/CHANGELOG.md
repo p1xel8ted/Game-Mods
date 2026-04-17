@@ -1,9 +1,10 @@
 # Changelog
 
-## 2.1.13 | 16 April 2026
+## 2.1.13 | 17 April 2026
 
 - Fixed Chinese translations not loading
-- Added extra background logging to help track down a reported issue with placing new graves at the graveyard build desk. No gameplay changes — if you've hit the issue, the next time it happens your `BepInEx/LogOutput.log` will contain enough detail (lines tagged `[QE-Diag]`) for the mod author to identify and fix the cause in the next update.
+- Fixed graves, garden beds, and other build-menu items becoming unplaceable when Auto Max Normal Crafts or Auto Max Multi-Quality Crafts was enabled
+- Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 
 ## 2.1.12 | 15 April 2026
 

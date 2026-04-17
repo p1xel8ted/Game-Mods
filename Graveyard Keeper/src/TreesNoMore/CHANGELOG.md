@@ -1,8 +1,9 @@
 # Changelog
 
-## 2.5.12 | 16 April 2026
+## 2.5.12 | 17 April 2026
 
 - Fixed Chinese translations not loading
+- Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - Settings menu reorganised into clearer sections with full player-facing descriptions on every option; existing setting values are migrated automatically
 - Debug log output is more useful for bug reports — every step the mod takes is now traceable when Debug Logging is on
 

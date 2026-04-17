@@ -1,12 +1,8 @@
 namespace MiscBitsAndBobs;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.miscbitsandbobs";
-    internal const string PluginName = "Misc. Bits & Bobs";
-    private const string PluginVer = "2.3.5";
-
     // Section names. New scheme: ── N. Name ── (rendered in Config.Bind call order by
     // ConfigurationManager, so Advanced stays at the top). Legacy section names get
     // rewritten to these by MigrateRenamedSections() on first launch so existing user
@@ -18,6 +14,7 @@ public class Plugin : BaseUnityPlugin
     private const string MovementSection = "── 5. Movement ──";
     private const string ChurchSection   = "── 6. Church ──";
     private const string MiscSection     = "── 7. Misc ──";
+    private const string UpdatesSection  = "── 8. Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
@@ -49,6 +46,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> AddCoalToTavernOvenConfig { get; private set; }
     internal static ConfigEntry<bool> AddZombiesToPyreAndCrematoriumConfig { get; private set; }
     internal static ConfigEntry<bool> OldEnglishThrowback { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static ManualLogSource Log { get; private set; }
 
@@ -60,7 +58,8 @@ public class Plugin : BaseUnityPlugin
         MigrateRenamedSections();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     // Rewrites old "[04. Gameplay]" style headers to "[── 4. Gameplay ──]" in the .cfg
@@ -191,6 +190,13 @@ public class Plugin : BaseUnityPlugin
         OldEnglishThrowback = Config.Bind(MiscSection, "Old English Throwback", false,
             new ConfigDescription("A Discord-requested tweak: changes the sermon line 'Our church is great!' to 'Our church great!' in English. Has no effect in other languages.", null,
                 new ConfigurationManagerAttributes {Order = 99}));
+
+        // ── 8. Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
     }
 
     private static bool _showEvictConfirmation;

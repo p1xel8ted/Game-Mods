@@ -14,7 +14,7 @@ public static class Helpers
         {
             Plugin.DebugDialogShown = true;
             Lang.Reload();
-            GUIElements.me.dialog.OpenOK(Plugin.PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+            GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
         }
 
         if (!_sprintMsgShown && Sprint && Plugin.ModifyPlayerMovementSpeedConfig.Value)

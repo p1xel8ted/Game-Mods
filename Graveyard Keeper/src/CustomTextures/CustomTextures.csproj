@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>0.1.2</Version>
+    <BepInExPluginGuid>p1xel8ted.gyk.customtextures</BepInExPluginGuid>
+    <BepInExPluginName>Custom Textures</BepInExPluginName>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>

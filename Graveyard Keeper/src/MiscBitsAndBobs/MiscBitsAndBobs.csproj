@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.3.5</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.miscbitsandbobs</BepInExPluginGuid>
+        <BepInExPluginName>Misc. Bits &amp; Bobs</BepInExPluginName>
         <NexusGroupId>564013</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

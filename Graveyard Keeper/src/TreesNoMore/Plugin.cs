@@ -1,12 +1,8 @@
 namespace TreesNoMore;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.treesnomore";
-    internal const string PluginName = "Trees, No More!";
-    private const string PluginVer = "2.5.12";
-
     // Section names. Numbered "── N. Name ──" so BepInEx ConfigurationManager renders them
     // in this exact order (CM uses Config.Bind call order, not alphabetic). Advanced renders
     // first because Debug is the very first Config.Bind call below.
@@ -14,6 +10,7 @@ public class Plugin : BaseUnityPlugin
     private const string TreesSection    = "── 2. Trees ──";
     private const string StumpsSection   = "── 3. Stumps ──";
     private const string ResetSection    = "── 4. Reset ──";
+    private const string UpdatesSection  = "── 5. Updates ──";
 
     // Maps the legacy 2.5.11-and-earlier section names to the new "── N. Name ──" form so
     // existing user values survive the rename. Idempotent — once migrated there are no old
@@ -36,6 +33,7 @@ public class Plugin : BaseUnityPlugin
     internal static bool DebugDialogShown;
     internal static ConfigEntry<int> TreeSearchDistance { get; private set; }
     internal static ConfigEntry<bool> InstantStumpRemoval { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
     private static string FilePath => Path.Combine(Application.persistentDataPath, $"{MainGame.me.save_slot.filename_no_extension}_trees.json");
 
     private void Awake()
@@ -45,7 +43,8 @@ public class Plugin : BaseUnityPlugin
         MigrateRenamedSections();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         Application.quitting += SaveTrees;
     }
 
@@ -123,6 +122,13 @@ public class Plugin : BaseUnityPlugin
                 "Restore every felled tree on the next game launch. The mod's record of which trees you've chopped is wiped, so on next load the world spawns them all back. Useful if you want a fresh map or accidentally tracked the wrong objects.",
                 null,
                 new ConfigurationManagerAttributes {HideDefaultButton = true, Order = 100, CustomDrawer = RestoreTrees}));
+
+        // ── 5. Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
     }
 
     private static void RestoreTrees(ConfigEntryBase entry)

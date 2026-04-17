@@ -9,13 +9,9 @@ using UnityEngine;
 
 namespace CustomTextures
 {
-    [BepInPlugin(PluginGuid, PluginName, PluginVer)]
+    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
     {
-        private const string PluginGuid = "p1xel8ted.gyk.customtextures";
-        private const string PluginName = "Custom Textures";
-        private const string PluginVer = "0.1.2";
-
         internal static ManualLogSource Log { get; private set; }
         internal static ConfigEntry<bool> Debug { get; private set; }
         internal static ConfigEntry<bool> DumpSprites { get; private set; }
@@ -31,7 +27,7 @@ namespace CustomTextures
             DumpSprites = Config.Bind("01. General", "Dump Sprites", false,
                 new ConfigDescription("When enabled, exports all sprites encountered via SpriteAtlas as PNG files to a _dump folder inside the CustomTextures folder. Disable after collecting sprites."));
             LoadCustomTextures();
-            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         }
 
         private static void LoadCustomTextures()

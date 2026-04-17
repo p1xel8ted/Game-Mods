@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.1.13</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.queueeverything</BepInExPluginGuid>
+        <BepInExPluginName>Queue Everything!*</BepInExPluginName>
         <NexusGroupId>571549</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

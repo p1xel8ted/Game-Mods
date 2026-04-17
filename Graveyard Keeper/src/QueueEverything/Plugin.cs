@@ -1,16 +1,13 @@
 namespace QueueEverything;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.queueeverything";
-    private const string PluginName = "Queue Everything!*";
-    private const string PluginVer = "2.1.13";
-
     private const string AdvancedSection    = "── Advanced ──";
     private const string AutoCraftSection   = "── Auto-Craft ──";
     private const string BalanceSection     = "── Balance ──";
     private const string ConvenienceSection = "── Convenience ──";
+    private const string UpdatesSection     = "── Updates ──";
 
     internal static ConfigEntry<bool> EnableAutoCraft { get; private set; }
     internal static Dictionary<CraftCategory, ConfigEntry<bool>> CategoryToggles { get; } = new();
@@ -28,6 +25,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static bool DebugDialogShown;
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
     internal static ManualLogSource Log { get; private set; }
 
     internal static readonly List<WorldGameObject> CurrentlyCrafting = [];
@@ -78,7 +76,8 @@ public class Plugin : BaseUnityPlugin
         LogHelper.Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
@@ -150,6 +149,12 @@ public class Plugin : BaseUnityPlugin
         {
             entry.SettingChanged += OnCraftSettingChanged;
         }
+
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 0}));
         return;
 
         void BindCategory(CraftCategory category, string label, string description, int order)
@@ -242,6 +247,6 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 }
