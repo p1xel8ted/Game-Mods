@@ -272,9 +272,7 @@ public class Plugin : BaseUnityPlugin
         // ── 7. Updates ──
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
             new ConfigDescription(
-                "Once per session at the main menu, check NexusMods for a newer version of this mod and show a quiet notification in the top-right corner if one is available. " +
-                "The check fetches a single small JSON file from GitHub (no Nexus login, no API key, no user identifier) and takes under a second. " +
-                "Uncheck to disable. Default: on.",
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
                 null,
                 new ConfigurationManagerAttributes {Order = 100}));
     }

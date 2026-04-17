@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.6.10</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.ineedsticks</BepInExPluginGuid>
+        <BepInExPluginName>I Neeeed Sticks!</BepInExPluginName>
         <NexusGroupId>570379</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

@@ -1,13 +1,11 @@
 namespace DecompDelight;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.decompdelight";
-    private const string PluginName = "Decomp Delight!";
-    private const string PluginVer = "0.1.6";
     internal static ManualLogSource LOG { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private static ConfigEntry<Color> SlowingColor { get; set; }
     private static ConfigEntry<Color> AccelerationColor { get; set; }
@@ -67,8 +65,15 @@ public class Plugin : BaseUnityPlugin
         SaltColor = Config.Bind("Colors", "Salt", new Color(0.404f, 0.404f, 0.404f), "Color for Salt element");
         AshColor = Config.Bind("Colors", "Ash", new Color(0.157f, 0.157f, 0.157f), "Color for Ash element");
         AlcoholColor = Config.Bind("Colors", "Alcohol", new Color(0.404f, 0.404f, 0.004f), "Color for Alcohol element");
-        
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes { Order = 0 }));
+
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
 }

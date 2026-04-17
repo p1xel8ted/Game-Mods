@@ -1,20 +1,21 @@
 namespace INeedSticks;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.ineedsticks";
-    private const string PluginName = "I Neeeed Sticks!";
-    private const string PluginVer = "1.6.10";
     private static CraftDefinition _newItem;
     private const string WoodenStick = "wooden_stick";
     private static ManualLogSource Log { get; set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
         Log = Logger;
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.");
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     internal static void OnGameBalanceLoad()

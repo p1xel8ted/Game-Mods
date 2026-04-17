@@ -1,12 +1,8 @@
 namespace Exhaustless;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.exhaustless";
-    private const string PluginName = "Exhaust-less!";
-    private const string PluginVer = "3.5.4";
-
     internal static ConfigEntry<bool> MakeToolsLastLonger { get;private set; }
     internal static ConfigEntry<bool> SpendHalfGratitude { get; private set; }
     internal static ConfigEntry<bool> AutoEquipNewTool { get; private set; }
@@ -20,14 +16,16 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> UnlimitedHealth { get; private set; }
     internal static ConfigEntry<bool> UnlimitedSanity { get; private set; }
     internal static ConfigEntry<int> EnergySpendBeforeSleepDebuff { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
     private static ManualLogSource Log { get; set; }
-    
+
     private void Awake()
     {
         Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
@@ -83,6 +81,11 @@ public class Plugin : BaseUnityPlugin
         };
         
         UnlimitedHealth = Config.Bind("05. Unlimited Stats", "Unlimited Health", false, new ConfigDescription("Unlimited health.", null, new ConfigurationManagerAttributes { Order = 37 }));
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+            null,
+            new ConfigurationManagerAttributes { Order = 36 }));
     }
-    
+
 }

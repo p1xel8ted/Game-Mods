@@ -1,17 +1,14 @@
 namespace FogBeGone;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.fogbegone";
-    private const string PluginName = "Fog, Be Gone!";
-    private const string PluginVer = "3.4.11";
-
     private static ManualLogSource Log { get; set; }
 
     internal static ConfigEntry<bool> DisableFog { get; private set; }
     internal static ConfigEntry<bool> DisableWind { get; private set; }
     internal static ConfigEntry<bool> DisableRain { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static bool DisableFogCached;
     internal static bool DisableWindCached;
@@ -21,7 +18,8 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         InitConfiguration();
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
@@ -43,5 +41,11 @@ public class Plugin : BaseUnityPlugin
         DisableFog.SettingChanged += (_, _) => DisableFogCached = DisableFog.Value;
         DisableWind.SettingChanged += (_, _) => DisableWindCached = DisableWind.Value;
         DisableRain.SettingChanged += (_, _) => DisableRainCached = DisableRain.Value;
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes { Order = 0 }));
     }
 }

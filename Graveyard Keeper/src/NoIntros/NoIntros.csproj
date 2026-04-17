@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.2.8</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.nointros</BepInExPluginGuid>
+        <BepInExPluginName>No Intros!</BepInExPluginName>
         <NexusGroupId>512143</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

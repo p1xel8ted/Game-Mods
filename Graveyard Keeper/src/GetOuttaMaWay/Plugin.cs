@@ -1,11 +1,8 @@
 namespace GetOuttaMaWay;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.getouttamyway";
-    private const string PluginName = "Get Outta My Way!";
-    private const string PluginVer = "0.1.5";
     private const string Donkey = "donkey";
     private const string NpcPrefix = "[wgo] ";
     internal static ManualLogSource LOG { get; private set; }
@@ -15,6 +12,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> DropHeaviesAwayFromPlayer { get; private set; }
     internal static ConfigEntry<bool> HeavyCollisionGracePeriod { get; private set; }
     internal static ConfigEntry<float> GracePeriodSeconds { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
@@ -44,7 +42,14 @@ public class Plugin : BaseUnityPlugin
                 new AcceptableValueRange<float>(0.25f, 5f),
                 new ConfigurationManagerAttributes {Order = 79, ShowRangeAsPercent = false, DispName = "    └ Grace Period Seconds"}));
 
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 0}));
+
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         SceneManager.sceneLoaded += (_, _) => GameStartedPlaying();
     }
 

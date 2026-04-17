@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.6</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.decompdelight</BepInExPluginGuid>
+        <BepInExPluginName>Decomp Delight!</BepInExPluginName>
         <NexusGroupId>975694</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
