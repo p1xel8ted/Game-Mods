@@ -1,12 +1,8 @@
 namespace WheresMaStorage;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.wheresmastorage";
-    private const string PluginName = "Where's Ma' Storage!";
-    private const string PluginVer = "2.1.14";
-
     // Section names. New scheme: ── Foo ── (alphabetical sort in CM).
     // Legacy section names get rewritten to these by MigrateRenamedSections() on first launch
     // of the new version, so existing user customisations are preserved.
@@ -15,6 +11,7 @@ public class Plugin : BaseUnityPlugin
     private const string ItemStackingSection = "── Item Stacking ──";
     private const string GameplaySection = "── Gameplay ──";
     private const string UISection = "── UI ──";
+    private const string UpdatesSection = "── Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
@@ -59,6 +56,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> HideWarehouseShopWidgets { get; private set; }
     internal static ConfigEntry<bool> CollectDropsOnGameLoad { get; private set; }
     public static ConfigEntry<bool> AllowZombiesAccessToSharedInventory { get; set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     // Hidden migration entries.
     private static ConfigEntry<int> LegacyAdditionalInventorySpace { get; set; }
@@ -73,7 +71,8 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         MigrateLegacySlider();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     // Rewrites old "[3. Inventory]" style headers to "[── Inventory ──]" in the .cfg file
@@ -305,6 +304,13 @@ public class Plugin : BaseUnityPlugin
         HideWarehouseShopWidgets = Config.Bind(UISection, "Hide Warehouse Shop Widgets", true,
             new ConfigDescription("Enable or disable hiding warehouse shop widgets", null,
                 new ConfigurationManagerAttributes {Order = 97}));
+
+        // ── Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
 
         Fields.GameBalanceAlreadyRun = false;
     }

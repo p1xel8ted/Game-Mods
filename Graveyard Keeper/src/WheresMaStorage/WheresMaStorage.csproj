@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.1.14</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.wheresmastorage</BepInExPluginGuid>
+        <BepInExPluginName>Where's Ma' Storage!</BepInExPluginName>
         <NexusGroupId>637183</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
