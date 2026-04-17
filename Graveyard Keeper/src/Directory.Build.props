@@ -74,6 +74,15 @@
         <Compile Include="..\Shared\UpdateCheckerUI.cs" Link="UpdateCheckerUI.cs"/>
     </ItemGroup>
 
+    <!-- Newtonsoft.Json is required by Shared/UpdateChecker.cs (JsonUtility can't
+         deserialize arrays of complex objects reliably). Ships with the game; same
+         DLL the game itself uses, so no runtime loading risk. -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' != 'CustomTextures'">
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>..\..\libs\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
     <!-- Common game/Unity references (exclude CustomTextures which has its own extensive set) -->
     <ItemGroup Condition="'$(MSBuildProjectName)' != 'CustomTextures'">
         <Reference Include="Assembly-CSharp">

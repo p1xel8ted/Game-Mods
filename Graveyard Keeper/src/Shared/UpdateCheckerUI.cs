@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Text;
+using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
@@ -7,8 +7,15 @@ namespace Shared;
 
 internal class UpdateLabelPositioner : MonoBehaviour
 {
-    private const float MarginX = 20f;
-    private const float MarginY = 20f;
+    // GYK's NGUI UIRoot is in Flexible mode with activeHeight = Screen.height,
+    // so widget-space localPosition maps 1:1 with screen pixels offset from the
+    // panel center. Instead of positioning at the top-right corner minus a small
+    // margin (which lands tight against pc2 banner territory), we place the
+    // label midway between center and the top-right corner — specifically at
+    // 49.5% of the half-extent. This was user-calibrated against (850, 355) at
+    // Screen 3440x1440 (activeHeight 1440) and scales proportionally to any
+    // resolution or aspect ratio.
+    private const float PositionRatio = 0.495f;
 
     private UIRoot _root;
 
@@ -16,14 +23,14 @@ internal class UpdateLabelPositioner : MonoBehaviour
     {
         if (!_root)
         {
-            _root = NGUITools.FindInParents<UIRoot>(gameObject);
+            _root = GetComponentInParent<UIRoot>();
             if (!_root) return;
         }
 
         var h = _root.activeHeight;
         var aspect = Screen.height > 0 ? (float)Screen.width / Screen.height : 16f / 9f;
         var w = h * aspect;
-        transform.localPosition = new Vector3(w / 2f - MarginX, h / 2f - MarginY, 0f);
+        transform.localPosition = new Vector3(w / 2f * PositionRatio, h / 2f * PositionRatio, 0f);
     }
 }
 
@@ -32,6 +39,8 @@ internal static class UpdateCheckerUI
 {
     private const string LabelName = "GYK_UpdateLabel";
     private const int MaxVisibleEntries = 10;
+
+    private static readonly ManualLogSource Log = BepInEx.Logging.Logger.CreateLogSource(UpdateChecker.LogSourceName);
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuGUI), nameof(MainMenuGUI.Open), typeof(bool))]
@@ -64,108 +73,93 @@ internal static class UpdateCheckerUI
             return;
         }
 
-        UILabel label;
+        // Rebuild from scratch each Render. Tiny cost (≤10 labels) and
+        // eliminates stale-child / count-mismatch edge cases.
         if (existing)
         {
-            label = existing.GetComponent<UILabel>();
-            existing.gameObject.SetActive(true);
-        }
-        else
-        {
-            label = CreateLabel(mainMenu, parent);
-            if (!label) return;
-            UIEventListener.Get(label.gameObject).onClick = OnLabelClick;
+            UnityEngine.Object.DestroyImmediate(existing.gameObject);
         }
 
-        label.text = BuildLabelText(outdated);
-        label.MakePixelPerfect();
-        NGUITools.AddWidgetCollider(label.gameObject);
+        BuildContainer(mainMenu, parent, outdated);
     }
 
-    private static UILabel CreateLabel(MainMenuGUI mainMenu, Transform parent)
+    private static void BuildContainer(MainMenuGUI mainMenu, Transform parent, List<UpdateChecker.OutdatedEntry> outdated)
     {
         var reference = mainMenu.version_txt;
-        if (!reference) return null;
+        if (!reference)
+        {
+            Log.LogWarning("version_txt missing — cannot build update label");
+            return;
+        }
 
-        var go = new GameObject(LabelName);
-        go.layer = reference.gameObject.layer;
-        go.transform.SetParent(parent, false);
+        var container = new GameObject(LabelName) { layer = reference.gameObject.layer };
+        container.transform.SetParent(parent, false);
+        container.transform.localRotation = Quaternion.identity;
+        container.transform.localScale = Vector3.one;
+        container.AddComponent<UpdateLabelPositioner>();
+
+        // Header (non-clickable).
+        var header = CreateChildLabel(container, reference, BuildHeaderText(outdated.Count), reference.depth + 1);
+        header.transform.localPosition = Vector3.zero;
+        header.MakePixelPerfect();
+
+        var lineHeight = (reference.fontSize > 0 ? reference.fontSize : 20) + 2;
+        var y = -lineHeight;
+
+        var visible = outdated.Count <= MaxVisibleEntries ? outdated.Count : MaxVisibleEntries - 1;
+        for (var i = 0; i < visible; i++)
+        {
+            var e = outdated[i];
+            var text = "[F7B000]" + e.ModName + "[-]  " + e.InstalledVersion + " \u2192 " + e.LatestVersion;
+            var entry = CreateChildLabel(container, reference, text, reference.depth + 2);
+            entry.transform.localPosition = new Vector3(0f, y, 0f);
+            entry.MakePixelPerfect();
+
+            if (!string.IsNullOrEmpty(e.NexusUrl))
+            {
+                // Whole-widget collider + closure-captured URL: the entire entry
+                // label is the click target, not just glyphs inside a [url=] span.
+                NGUITools.AddWidgetCollider(entry.gameObject);
+                var url = e.NexusUrl;
+                UIEventListener.Get(entry.gameObject).onClick = _ => Application.OpenURL(url);
+            }
+
+            y -= lineHeight;
+        }
+
+        if (outdated.Count > MaxVisibleEntries)
+        {
+            var more = CreateChildLabel(container, reference, "[707070]+ " + (outdated.Count - visible) + " more \u2014 see BepInEx log[-]", reference.depth + 2);
+            more.transform.localPosition = new Vector3(0f, y, 0f);
+            more.MakePixelPerfect();
+        }
+    }
+
+    private static UILabel CreateChildLabel(GameObject parent, UILabel reference, string text, int depth)
+    {
+        var go = new GameObject("UpdateEntry") { layer = reference.gameObject.layer };
+        go.transform.SetParent(parent.transform, false);
         go.transform.localRotation = Quaternion.identity;
         go.transform.localScale = Vector3.one;
 
         var label = go.AddComponent<UILabel>();
-        if (reference.bitmapFont)
-        {
-            label.bitmapFont = reference.bitmapFont;
-        }
-        else if (reference.trueTypeFont)
-        {
-            label.trueTypeFont = reference.trueTypeFont;
-        }
+        if (reference.bitmapFont) label.bitmapFont = reference.bitmapFont;
+        else if (reference.trueTypeFont) label.trueTypeFont = reference.trueTypeFont;
         label.fontSize = reference.fontSize;
         label.fontStyle = reference.fontStyle;
         label.pivot = UIWidget.Pivot.TopRight;
         label.alignment = NGUIText.Alignment.Right;
         label.overflowMethod = UILabel.Overflow.ResizeFreely;
-        label.multiLine = true;
+        label.multiLine = false;
         label.supportEncoding = true;
         label.color = Color.white;
-        label.depth = reference.depth + 1;
-
-        go.AddComponent<UpdateLabelPositioner>();
+        label.depth = depth;
+        label.text = text;
         return label;
     }
 
-    private static string BuildLabelText(List<UpdateChecker.OutdatedEntry> outdated)
+    private static string BuildHeaderText(int count)
     {
-        var sb = new StringBuilder();
-        var count = outdated.Count;
-        sb.Append("[FF8040]");
-        sb.Append(count);
-        sb.Append(count == 1 ? " mod update available[-]" : " mod updates available[-]");
-
-        var visible = count <= MaxVisibleEntries ? count : MaxVisibleEntries - 1;
-        for (var i = 0; i < visible; i++)
-        {
-            var e = outdated[i];
-            sb.Append('\n');
-            sb.Append("[F7B000]");
-            sb.Append(e.ModName);
-            sb.Append("[-]  ");
-            sb.Append(e.InstalledVersion);
-            sb.Append(" \u2192 ");
-            if (!string.IsNullOrEmpty(e.NexusUrl))
-            {
-                sb.Append("[url=");
-                sb.Append(e.NexusUrl);
-                sb.Append(']');
-                sb.Append(e.LatestVersion);
-                sb.Append("[/url]");
-            }
-            else
-            {
-                sb.Append(e.LatestVersion);
-            }
-        }
-
-        if (count > MaxVisibleEntries)
-        {
-            sb.Append("\n[707070]+ ");
-            sb.Append(count - visible);
-            sb.Append(" more \u2014 see BepInEx log[-]");
-        }
-
-        return sb.ToString();
-    }
-
-    private static void OnLabelClick(GameObject go)
-    {
-        var label = go ? go.GetComponent<UILabel>() : null;
-        if (!label) return;
-        var url = label.GetUrlAtPosition(UICamera.lastWorldPosition);
-        if (!string.IsNullOrEmpty(url))
-        {
-            Application.OpenURL(url);
-        }
+        return "[FF8040]" + count + (count == 1 ? " mod update available[-]" : " mod updates available[-]");
     }
 }

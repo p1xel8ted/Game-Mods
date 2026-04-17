@@ -6,6 +6,7 @@ using System.IO;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -15,38 +16,40 @@ namespace Shared;
 // Cross-DLL coordination uses a DontDestroyOnLoad sentinel GameObject whose child
 // GameObject names carry the wire format (REG|..., OUT|...). No CLR type identity
 // is required across assemblies.
+//
+// Newtonsoft.Json is the parser (shipped with the game at libs/Newtonsoft.Json.dll).
+// JsonUtility was tried first and was silently returning null for the `mods` array
+// while scalar fields on the same parent class parsed correctly — a long-standing
+// Unity quirk we don't need to reverse-engineer.
 
-// JsonUtility assigns these fields via reflection — compiler doesn't see the writes.
+// Newtonsoft assigns fields via reflection — compiler doesn't see the writes.
 #pragma warning disable CS0649
 
-[Serializable]
 internal class UpdateCheckerManifest
 {
-    public int schema;
-    public string generated_at;
-    public string generated_by;
-    public string game_domain;
-    public UpdateCheckerManifestEntry[] mods;
+    [JsonProperty("schema")]          public int Schema;
+    [JsonProperty("generated_at")]    public string GeneratedAt;
+    [JsonProperty("generated_by")]    public string GeneratedBy;
+    [JsonProperty("game_domain")]     public string GameDomain;
+    [JsonProperty("mods")]            public List<UpdateCheckerManifestEntry> Mods;
 }
 
-[Serializable]
 internal class UpdateCheckerManifestEntry
 {
-    public string plugin_guid;
-    public int nexus_mod_id;
-    public string nexus_url;
-    public string latest_version;
-    public int latest_file_id;
-    public string latest_file_name;
-    public long uploaded_unix;
-    public string status;
+    [JsonProperty("plugin_guid")]      public string PluginGuid;
+    [JsonProperty("nexus_mod_id")]     public int NexusModId;
+    [JsonProperty("nexus_url")]        public string NexusUrl;
+    [JsonProperty("latest_version")]   public string LatestVersion;
+    [JsonProperty("latest_file_id")]   public int LatestFileId;
+    [JsonProperty("latest_file_name")] public string LatestFileName;
+    [JsonProperty("uploaded_unix")]    public long UploadedUnix;
+    [JsonProperty("status")]           public string Status;
 }
 
-[Serializable]
 internal class UpdateCheckerCacheWrapper
 {
-    public string cached_at;
-    public string body;
+    [JsonProperty("cached_at")] public string CachedAt;
+    [JsonProperty("body")]      public string Body;
 }
 
 #pragma warning restore CS0649
@@ -154,11 +157,11 @@ internal static class UpdateChecker
             var path = GetCachePath();
             if (!File.Exists(path)) return false;
             var text = File.ReadAllText(path);
-            var wrapper = JsonUtility.FromJson<UpdateCheckerCacheWrapper>(text);
-            if (wrapper == null || string.IsNullOrEmpty(wrapper.body) || string.IsNullOrEmpty(wrapper.cached_at)) return false;
-            if (!DateTime.TryParse(wrapper.cached_at, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var when)) return false;
+            var wrapper = JsonConvert.DeserializeObject<UpdateCheckerCacheWrapper>(text);
+            if (wrapper == null || string.IsNullOrEmpty(wrapper.Body) || string.IsNullOrEmpty(wrapper.CachedAt)) return false;
+            if (!DateTime.TryParse(wrapper.CachedAt, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var when)) return false;
             age = DateTime.UtcNow - when.ToUniversalTime();
-            body = wrapper.body;
+            body = wrapper.Body;
             return true;
         }
         catch
@@ -181,10 +184,10 @@ internal static class UpdateChecker
             }
             var wrapper = new UpdateCheckerCacheWrapper
             {
-                cached_at = DateTime.UtcNow.ToString("o"),
-                body = body
+                CachedAt = DateTime.UtcNow.ToString("o"),
+                Body = body
             };
-            var text = JsonUtility.ToJson(wrapper);
+            var text = JsonConvert.SerializeObject(wrapper);
             var tmp = path + ".tmp";
             File.WriteAllText(tmp, text);
             if (File.Exists(path)) File.Delete(path);
@@ -208,19 +211,25 @@ internal static class UpdateChecker
     internal static Dictionary<string, UpdateCheckerManifestEntry> ParseManifest(string body)
     {
         var dict = new Dictionary<string, UpdateCheckerManifestEntry>();
+        if (string.IsNullOrEmpty(body)) return dict;
+        var log = BepInEx.Logging.Logger.CreateLogSource(LogSourceName);
         try
         {
-            var parsed = JsonUtility.FromJson<UpdateCheckerManifest>(body);
-            if (parsed?.mods == null) return dict;
-            foreach (var entry in parsed.mods)
+            var parsed = JsonConvert.DeserializeObject<UpdateCheckerManifest>(body);
+            if (parsed?.Mods == null)
             {
-                if (entry == null || string.IsNullOrEmpty(entry.plugin_guid)) continue;
-                dict[entry.plugin_guid] = entry;
+                log.LogWarning("Manifest parsed but contained no 'mods' array");
+                return dict;
+            }
+            foreach (var entry in parsed.Mods)
+            {
+                if (entry == null || string.IsNullOrEmpty(entry.PluginGuid)) continue;
+                dict[entry.PluginGuid] = entry;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // malformed JSON — return whatever we have
+            log.LogError($"Manifest parse failed: {ex.GetType().Name}: {ex.Message}");
         }
         return dict;
     }
@@ -317,26 +326,26 @@ internal class UpdateCheckerCoordinator : MonoBehaviour
                 unknown++;
                 continue;
             }
-            if (!string.Equals(entry.status, "ok", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(entry.Status, "ok", StringComparison.OrdinalIgnoreCase))
             {
                 unknown++;
                 continue;
             }
-            if (!UpdateChecker.IsNewer(installedVer, entry.latest_version))
+            if (!UpdateChecker.IsNewer(installedVer, entry.LatestVersion))
             {
                 upToDate++;
                 continue;
             }
 
-            if (!System.Version.TryParse(installedVer, out _) || !System.Version.TryParse(entry.latest_version, out _))
+            if (!System.Version.TryParse(installedVer, out _) || !System.Version.TryParse(entry.LatestVersion, out _))
             {
                 nonSemVer++;
-                Log.LogWarning($"Non-SemVer version compare for {guid}: '{installedVer}' vs '{entry.latest_version}' — string inequality fallback fired");
+                Log.LogWarning($"Non-SemVer version compare for {guid}: '{installedVer}' vs '{entry.LatestVersion}' — string inequality fallback fired");
             }
 
             outdated++;
             if (alreadyMarked.Contains(guid)) continue;
-            var outChild = new GameObject($"OUT|{guid}|{installedVer}|{entry.latest_version}|{entry.nexus_url}|{modName}");
+            var outChild = new GameObject($"OUT|{guid}|{installedVer}|{entry.LatestVersion}|{entry.NexusUrl}|{modName}");
             outChild.transform.SetParent(sentinel.transform, false);
         }
 
@@ -349,9 +358,9 @@ internal class UpdateCheckerCoordinator : MonoBehaviour
         {
             UpdateCheckerUI.RefreshIfMenuOpen();
         }
-        catch
+        catch (Exception ex)
         {
-            // UI refresh failure is non-fatal
+            Log.LogError($"RefreshIfMenuOpen threw: {ex.GetType().Name}: {ex.Message}");
         }
     }
 }
