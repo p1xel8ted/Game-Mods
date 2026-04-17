@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.2.6</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.bringoutyerdead</BepInExPluginGuid>
+        <BepInExPluginName>Bring Out Yer Dead!</BepInExPluginName>
         <NexusGroupId>845023</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

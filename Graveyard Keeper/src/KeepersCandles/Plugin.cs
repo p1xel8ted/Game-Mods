@@ -1,12 +1,8 @@
 namespace KeepersCandles;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.keeperscandles";
-    internal const string PluginName = "Keeper's Candles!";
-    private const string PluginVer = "0.1.8";
-
     internal const string Souls = "souls";
     internal const string Candelabrum = "candelabrum";
     internal const string Column = "column";
@@ -19,6 +15,7 @@ public class Plugin : BaseUnityPlugin
     private const string CandlesSection  = "── 2. Candles ──";
     private const string ChurchSection   = "── 3. Church ──";
     private const string ControlsSection = "── 4. Controls ──";
+    private const string UpdatesSection  = "── 5. Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
@@ -40,6 +37,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> ChurchColumns { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ExtinguishKeyBind { get; private set; }
     internal static ConfigEntry<string> ExtinguishControllerButton { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static Vector2 PlayerPosition => MainGame.me.player.grid_pos;
 
@@ -51,7 +49,8 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         SceneManager.sceneLoaded += (_, _) => Patches.OnGameBalanceLoaded();
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     // Rewrites old "[01. Distance]" style headers to "[── 2. Candles ──]" in the .cfg file
@@ -138,6 +137,13 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription("Controller button you press to extinguish the nearest lit candle when you're in range.",
                 new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
                 new ConfigurationManagerAttributes {Order = 99}));
+
+        // ── 5. Updates ──
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 100}));
     }
 
     internal static bool CanFindCandles()

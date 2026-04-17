@@ -1,11 +1,8 @@
 namespace ShowMeMoar;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.showmemoar";
-    private const string PluginName = "Show Me Moar!";
-    private const string PluginVer = "0.1.10";
     internal static ConfigEntry<bool> Ultrawide { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ZoomIn { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ZoomOut { get; private set; }
@@ -25,9 +22,10 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> BorderlessWindowed { get; private set; }
     internal static ConfigEntry<bool> SetVsyncLimitToMaxRefreshRate { get; private set; }
     internal static ConfigEntry<bool> ColorCorrection { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
     private static GameObject Icons { get; set; }
     internal static ManualLogSource Log { get; private set; }
-    
+
     internal static float MaxRefreshRate => Screen.resolutions.Max(a => a.refreshRate);
 
     private void Awake()
@@ -42,7 +40,8 @@ public class Plugin : BaseUnityPlugin
             if (widget != null) widget.color = new Color(0, 0, 0, 0);
         };
         InitConfiguration();
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     internal static void OnGameStartedPlaying()
@@ -112,6 +111,13 @@ public class Plugin : BaseUnityPlugin
         BorderlessWindowed = Config.Bind("8. Display", "Borderless Windowed", false, new ConfigDescription("Run the game in borderless windowed mode instead of fullscreen. Restart required.", null, new ConfigurationManagerAttributes {Order = 1}));
 
         SetVsyncLimitToMaxRefreshRate = Config.Bind("8. Display", "Set Vsync Limit To Max Refresh Rate", true, new ConfigDescription("Set Vsync limit to the maximum refresh rate of the monitor. Game default is 60fps with VSYNC enabled.", null, new ConfigurationManagerAttributes {Order = 0}));
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes { Order = 0 }));
+
         SceneManager.sceneLoaded += (_, _) => UpdateCC();
     }
 

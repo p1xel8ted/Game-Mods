@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.8</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.keeperscandles</BepInExPluginGuid>
+        <BepInExPluginName>Keeper's Candles!</BepInExPluginName>
         <NexusGroupId>978619</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

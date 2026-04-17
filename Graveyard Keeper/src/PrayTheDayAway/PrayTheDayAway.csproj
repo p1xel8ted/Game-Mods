@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.3.6</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.praythedayaway</BepInExPluginGuid>
+        <BepInExPluginName>Pray The Day Away!</BepInExPluginName>
         <NexusGroupId>790978</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

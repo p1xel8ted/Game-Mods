@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.10</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.showmemoar</BepInExPluginGuid>
+        <BepInExPluginName>Show Me Moar!</BepInExPluginName>
         <NexusGroupId>896251</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

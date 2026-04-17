@@ -1,11 +1,8 @@
 namespace AppleTreesEnhanced;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.appletreesenhanced";
-    private const string PluginName = "Apple Tree's Enhanced!";
-    private const string PluginVer = "2.7.13";
     internal static ManualLogSource Log { get; private set; }
 
     internal static ConfigEntry<bool> Debug { get; private set; }
@@ -19,6 +16,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> RealisticHarvest { get; private set; }
     internal static ConfigEntry<bool> IncludeGardenBeeHives { get; private set; }
     internal static ConfigEntry<bool> BeeKeeperBuyback { get; private set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
 
     private void Awake()
@@ -27,7 +25,8 @@ public class Plugin : BaseUnityPlugin
         LogHelper.Log = Logger;
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitConfiguration()
@@ -46,6 +45,12 @@ public class Plugin : BaseUnityPlugin
         Debug = Config.Bind("5. Advanced", "Debug Logging", false, new ConfigDescription("Toggle debug logging on or off", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 2}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+
+        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes { Order = 1 }));
     }
 
     internal static void ShowDebugWarningOnce()
@@ -53,7 +58,7 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     internal static void CleanUpTrees()

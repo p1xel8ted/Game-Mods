@@ -1,15 +1,12 @@
 namespace BringOutYerDead;
 
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.bringoutyerdead";
-    private const string PluginName = "Bring Out Yer Dead!";
-    private const string PluginVer = "0.2.6";
-
     private const string AdvancedSection       = "── Advanced ──";
     private const string DeliveryTimesSection  = "── Delivery Times ──";
     private const string DonkeySection         = "── Donkey ──";
+    private const string UpdatesSection        = "── Updates ──";
     private const string InternalSection       = "Internal (Dont Touch)";
 
     internal static ConfigEntry<bool> Debug;
@@ -32,6 +29,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> InternalNightDelivery { get; private set; }
     internal static ConfigEntry<bool> InternalDonkeySpawned { get; private set; }
     internal static ConfigEntry<bool> InternalTutMessageShown { get;  set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     private void Awake()
     {
@@ -40,10 +38,11 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         InitInternalConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         if (DebugEnabled)
         {
-            Log.LogInfo($"[Init] {PluginName} v{PluginVer} loaded. DonkeySpeed={DonkeySpeed.Value}, Morning={MorningDelivery.Value}, Day={DayDelivery.Value}, Evening={EveningDelivery.Value}, Night={NightDelivery.Value}");
+            Log.LogInfo($"[Init] {MyPluginInfo.PLUGIN_NAME} v{MyPluginInfo.PLUGIN_VERSION} loaded. DonkeySpeed={DonkeySpeed.Value}, Morning={MorningDelivery.Value}, Day={DayDelivery.Value}, Evening={EveningDelivery.Value}, Night={NightDelivery.Value}");
         }
     }
 
@@ -86,6 +85,12 @@ public class Plugin : BaseUnityPlugin
                 "How fast the donkey walks to the cemetery and back. Vanilla speed is 1; higher values shorten the round trip so each delivery finishes well within its time slot. Raise this to 10–20 if deliveries feel like they arrive too late.",
                 new AcceptableValueRange<int>(2, 20),
                 new ConfigurationManagerAttributes {Order = 2}));
+
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes {Order = 1}));
     }
 
     internal static void ShowDebugWarningOnce()
@@ -93,7 +98,7 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     private void InitInternalConfiguration()

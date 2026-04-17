@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>0.1.4</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.alchemyresearchredux</BepInExPluginGuid>
+        <BepInExPluginName>Alchemy Research Redux</BepInExPluginName>
         <NexusGroupId>1006492</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

@@ -1,13 +1,9 @@
 namespace BeamMeUpGerry;
 
 [Harmony]
-[BepInPlugin(PluginGuid, PluginName, PluginVer)]
+[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string PluginGuid = "p1xel8ted.gyk.beammeupgerryrewrite";
-    private const string PluginName = "Beam Me Up Gerry!";
-    private const string PluginVer = "3.1.5";
-
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
     internal static bool DebugDialogShown;
@@ -30,6 +26,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<KeyboardShortcut> SaveCustomLocationKeybind { get; set; }
     internal static ConfigEntry<KeyboardShortcut> ReloadCustomLocationsKeybind { get; set; }
     internal static ConfigEntry<string> SaveCustomLocationControllerButton { get; set; }
+    internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static ManualLogSource Log { get; private set; }
 
@@ -46,7 +43,8 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         InitInternalConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), PluginGuid);
+        UpdateChecker.Register(Info, CheckForUpdates);
+        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
     private void InitInternalConfiguration()
@@ -98,7 +96,7 @@ public class Plugin : BaseUnityPlugin
         if (!DebugEnabled || DebugDialogShown) return;
         DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     internal static void InitConfiguration()
@@ -136,6 +134,11 @@ public class Plugin : BaseUnityPlugin
         ReloadCustomLocationsKeybind = ConfigInstance.Bind("05. Custom Locations", "Reload Custom Locations Keybind", new KeyboardShortcut(KeyCode.X, KeyCode.LeftControl), new ConfigDescription("Set the keybind for reloading custom locations.", null, new ConfigurationManagerAttributes {Order = 790}));
         SaveCustomLocationControllerButton = ConfigInstance.Bind("05. Custom Locations", "Save Custom Location Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.None), new ConfigDescription("Set the controller button for saving custom locations.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 790}));
         OpenNewLocationFileOnSave = ConfigInstance.Bind("05. Custom Locations", "Open New Location File On Save", true, new ConfigDescription("Toggle the ability to open the new location file after saving.", null, new ConfigurationManagerAttributes {Order = 789}));
+
+        CheckForUpdates = ConfigInstance.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+            null,
+            new ConfigurationManagerAttributes { Order = 0 }));
     }
 
     internal static readonly Dictionary<string, ConfigEntry<bool>> LocationSettings = [];

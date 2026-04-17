@@ -22,6 +22,6 @@ internal static class Helpers
         if (!MainGame.game_started || GUIElements.me == null || GUIElements.me.dialog == null) return;
         Plugin.DebugDialogShown = true;
         Lang.Reload();
-        GUIElements.me.dialog.OpenOK(Plugin.PluginName, null, Lang.Get("DebugWarning"), true, string.Empty);
+        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 }

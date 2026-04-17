@@ -1,8 +1,9 @@
 # Changelog
 
-## 2.7.13 | 16 April 2026
+## 2.7.13 | 17 April 2026
 
 - Fixed Chinese translations not loading
+- Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 
 ## 2.7.12 | 12 April 2026
 

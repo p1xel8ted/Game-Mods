@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>2.7.13</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.appletreesenhanced</BepInExPluginGuid>
+        <BepInExPluginName>Apple Tree's Enhanced!</BepInExPluginName>
         <NexusGroupId>562084</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

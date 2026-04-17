@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>3.1.5</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.beammeupgerryrewrite</BepInExPluginGuid>
+        <BepInExPluginName>Beam Me Up Gerry!</BepInExPluginName>
         <NexusGroupId>617767</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>

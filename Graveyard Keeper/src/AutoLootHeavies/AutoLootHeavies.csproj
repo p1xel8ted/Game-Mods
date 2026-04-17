@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>3.5.5</Version>
+        <BepInExPluginGuid>p1xel8ted.gyk.autolootheavies</BepInExPluginGuid>
+        <BepInExPluginName>Auto-Loot Heavies!</BepInExPluginName>
         <NexusGroupId>523438</NexusGroupId>
     </PropertyGroup>
     <ItemGroup>
