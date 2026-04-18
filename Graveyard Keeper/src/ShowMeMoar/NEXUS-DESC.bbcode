@@ -9,15 +9,51 @@
 [size=3][url=https://discord.gg/Dy5ApMYYY8]https://discord.gg/Dy5ApMYYY8[/url][/size]
 
 [size=4][b]What[/b][/size]
+
+[size=3]Adds proper support for modern displays — your monitor's native resolution, higher refresh rates, zoom, HUD scaling, and fog control.[/size]
+
+[size=3][b]Resolution and refresh[/b][/size]
 [list]
-[*][size=3]Adds your main display resolution as a resolution option in the menu.[/size]
-[*][size=3]Allows zooming in and out using key binds (defaults are + and -) or an interface provided via the F1 key.[/size]
-[*][size=3]Control the main HUD scale and positioning on the X &amp; Y axis.[/size]
-[*][size=3]Games implementation of VSYNC limits FPS to 60, mod corrects this to your monitors refresh rate.[/size]
-[*][size=3]Wind effect is scaled correctly. Fog is a WIP as its quite complex (it's not just an overlay).[/size]
-[*][size=3]Option to disable Fog in the config (press F1).[/size]
-[*][size=3]Main menu artwork scaled to fit.[/size]
+[*][size=3][b]Native resolution[/b] — your main display's native resolution is added to the in-game resolution dropdown (vanilla's list is capped below modern monitors).[/size]
+[*][size=3][b]Refresh-rate cap matched to your monitor[/b] — vanilla's VSYNC caps the game at 60 FPS regardless of display. This mod raises the cap to whatever your monitor reports (144, 165, 240, etc.) so the game runs smoothly at your actual refresh rate.[/size]
+[*][size=3][b]Main menu artwork[/b] rescales to fit the chosen resolution so it's no longer stretched or letterboxed.[/size]
 [/list]
+
+[size=3][b]Camera and HUD[/b][/size]
+[list]
+[*][size=3][b]Zoom in/out[/b] — default + and − keys (rebindable), or use the in-game F1 config slider. No unlock required — zoom works anywhere.[/size]
+[*][size=3][b]HUD scale[/b] — resize the main HUD from tiny to oversized to suit your monitor.[/size]
+[*][size=3][b]HUD X/Y position[/b] — independent X and Y offsets so the HUD can be nudged to the spot that fits your layout.[/size]
+[/list]
+
+[size=3][b]Environment[/b][/size]
+[list]
+[*][size=3][b]Wind effect rescaling[/b] — scales the vanilla wind overlay correctly for non-standard resolutions.[/size]
+[*][size=3][b]Disable fog option[/b] — if fog still renders oddly at your resolution, turn it off in the F1 config. (Fog is a more complex overlay than the rest, which is why it has its own toggle.)[/size]
+[/list]
+
+[size=4][b]Troubleshooting — 4K resolution[/b][/size]
+
+[size=3]Community-contributed workaround if the game looks wrong at 4K even with Show Me Moar installed. This is a Windows-level DPI override, not a mod setting — reported working by a 4K user; not a universal fix but worth trying if you're struggling.[/size]
+
+[list]
+[*][size=3]Open the game folder ([code]...&#92;steamapps&#92;common&#92;Graveyard Keeper[/code])[/size]
+[*][size=3]Right-click [code]Graveyard Keeper.exe[/code] and select Properties[/size]
+[*][size=3]Go to the Compatibility tab[/size]
+[*][size=3]Click "Change high DPI settings"[/size]
+[*][size=3]Turn on "High DPI scaling override" and set it to "System"[/size]
+[*][size=3]Adjust the Windows zoom value (one reported working value was 143.615)[/size]
+[*][size=3]Launch the game[/size]
+[/list]
+
+[size=4][b]Other mods of mine you might like[/b][/size]
+
+[list]
+[*][size=3][url=https://www.nexusmods.com/graveyardkeeper/mods/46]Fog Be Gone[/url] — dedicated fog remover (plus optional wind/rain off). Use this instead of Show Me Moar's fog toggle if you want more control.[/size]
+[*][size=3][url=https://www.nexusmods.com/graveyardkeeper/mods/55]Misc. Bits and Bobs[/url] — "Condense XP Bar", "Remove Cinematic Letterboxing", "Hide Credits Button On Main Menu" and more — pairs with Show Me Moar for a cleaner UI.[/size]
+[*][size=3][url=https://www.nexusmods.com/graveyardkeeper/mods/125]Rest In Patches[/url] — vanilla bug fixes including player-movement judder.[/size]
+[/list]
+
 [size=4][b]Configuration[/b][/size]
 
 [size=3]If you installed the required [url=https://www.nexusmods.com/graveyardkeeper/mods/79]Graveyard Keeper BepInEx 5 Pack[/url] and this mod is configurable, press F1 in-game to open the config interface.[/size]
@@ -29,7 +65,7 @@
 [/list]
 [size=4][b]Installation[/b][/size]
 
-[size=3]Installation using Vortex is the recommended installation method. If you wish to install manually, extract the contents of the mod archive into:
+[size=3]Installation using Vortex is the recommended installation method. If you wish to install manually, extract the contents of the mod archive into:
 
 [code]...&#92;steamapps&#92;common&#92;Graveyard Keeper&#92;BepInEx[/code][/size]
 
