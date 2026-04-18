@@ -16,7 +16,6 @@ public static class Fields
     internal const string Bag = "bag";
 
     internal const string ShippingBoxTag = "shipping_box";
-    internal static bool DebugMessageShown { get; set; }
 
     internal static readonly string[] AlwaysHidePartials =
     [

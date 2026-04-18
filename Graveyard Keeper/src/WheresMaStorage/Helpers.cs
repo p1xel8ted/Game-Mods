@@ -11,13 +11,6 @@ public static class Helpers
         Plugin.Log.LogInfo("Running WMS Tasks as the Player has spawned in or a new chest/craft has been built.");
         if (!MainGame.game_started) return;
 
-        if (Plugin.DebugEnabled && !Fields.DebugMessageShown)
-        {
-            Lang.Reload();
-            GUIElements.me.dialog.OpenOK("Where's Ma Storage!", null, Lang.Get("DebugWarning"), true, string.Empty);
-            Fields.DebugMessageShown = true;
-        }
-
         MainGame.me.StartCoroutine(Invents.LoadWildernessInventories());
         MainGame.me.StartCoroutine(Invents.LoadInventories());
 
@@ -494,55 +487,42 @@ public static class Helpers
             .GetProperty("DisplayingWindow", BindingFlags.Instance | BindingFlags.Public);
     }
 
+    // Meditation spot near the graveyard gate, used as the overflow dump in CollectToInventory mode.
+    private static readonly Vector3 MeditationSpotPosition = new(3708.6f, 214.6f, 0.0f);
+
+    // Outdoor drop spot next to the Keeper's house — captured in-game via the tag-scan tool.
+    private static readonly Vector3 NearHouseDropSpot = new(4601.0f, 290.6f, 0.0f);
+
+    // Skip drops the game considers important or scripted — quest items, keys, story pieces
+    // (`player_cant_throw_out`), and items with an `run_script_after_drop` hook that may still
+    // need to fire at their original position. Moving/vacuuming these could break quests or
+    // leave the player unable to recover an item vanilla wouldn't let them drop.
+    private static bool IsProtectedDrop(DropResGameObject drop)
+    {
+        var def = drop?.res?.definition;
+        if (def == null) return false;
+        if (def.player_cant_throw_out) return true;
+        if (!string.IsNullOrEmpty(def.run_script_after_drop)) return true;
+        return false;
+    }
+
     private static void CollectDrops()
     {
         var watch = Stopwatch.StartNew();
-        var player = MainGame.me.player;
 
         WorldMap.RescanDropItemsList();
 
-        var cantCollectList = new List<DropResGameObject>();
-
         var drops = MainGame.me.world_root.GetComponentsInChildren<DropResGameObject>(true);
-        foreach (var drop in drops)
+
+        switch (Plugin.DropHandlingOnGameLoad.Value)
         {
-            if (drop.res.definition is {item_size: > 1}) continue;
-
-            if (drop.is_collected)
-            {
-                if (Plugin.DebugEnabled) Log($"Drop already collected: {drop.res.id}");
-                continue;
-            }
-
-            var amount = player.CanCollectDrop(drop);
-            if (amount == 0)
-            {
-                drop.UnsuccessfullPickup(player);
-                cantCollectList.Add(drop);
-                if (Plugin.DebugEnabled) Log($"Can't collect: {drop.res.id}. Not enough space.");
-                continue;
-            }
-
-            if (drop.res.value == amount)
-            {
-                drop.CollectDrop(player);
-                if (Plugin.DebugEnabled) Log($"Collected: {drop.res.id}, Qty: {amount}");
-                continue;
-            }
-
-            drop.res.value -= amount;
-            drop.RedrawStackCounter();
-            player.data.AddItem(drop.res.id, amount);
-            cantCollectList.Add(drop);
-            if (Plugin.DebugEnabled) Log($"Partially Collected: {drop.res.id}, Qty: {amount}");
-        }
-
-        foreach (var drop in cantCollectList)
-        {
-            drop.transform.position = new Vector3(3708.6f, 214.6f, 0.0f);
-            drop.DoTryMerging();
-            drop.UpdateMe();
-            if (Plugin.DebugEnabled) Log($"Moving {drop.res.id} next to the meditation spot.");
+            case DropHandlingMode.MoveNearKeepersHouse:
+                MoveDropsNearKeepersHouse(drops);
+                break;
+            case DropHandlingMode.CollectToInventory:
+            default:
+                CollectDropsToInventory(drops);
+                break;
         }
 
         foreach (var tp in TechPointDrop.all)
@@ -561,6 +541,136 @@ public static class Helpers
         }
         Fields.InventoriesLoaded = false; // force a refresh just in case
     }
+
+    private static void CollectDropsToInventory(DropResGameObject[] drops)
+    {
+        var player = MainGame.me.player;
+        var cantCollectList = new List<DropResGameObject>();
+
+        foreach (var drop in drops)
+        {
+            if (drop.res.definition is {item_size: > 1}) continue;
+
+            if (drop.is_collected)
+            {
+                if (Plugin.DebugEnabled) Log($"Drop already collected: {drop.res.id}");
+                continue;
+            }
+
+            if (IsProtectedDrop(drop))
+            {
+                if (Plugin.DebugEnabled) Log($"Skipping protected drop: {drop.res.id} (quest/scripted item)");
+                continue;
+            }
+
+            var amount = player.CanCollectDrop(drop);
+            if (amount == 0)
+            {
+                drop.UnsuccessfullPickup(player);
+                cantCollectList.Add(drop);
+                if (Plugin.DebugEnabled) Log($"Can't collect: {drop.res.id} from '{drop.zone_id}'. Not enough space.");
+                continue;
+            }
+
+            if (drop.res.value == amount)
+            {
+                drop.CollectDrop(player);
+                if (Plugin.DebugEnabled) Log($"Collected: {drop.res.id} from '{drop.zone_id}', Qty: {amount}");
+                continue;
+            }
+
+            drop.res.value -= amount;
+            drop.RedrawStackCounter();
+            player.data.AddItem(drop.res.id, amount);
+            cantCollectList.Add(drop);
+            if (Plugin.DebugEnabled) Log($"Partially Collected: {drop.res.id} from '{drop.zone_id}', Qty: {amount}");
+        }
+
+        foreach (var drop in cantCollectList)
+        {
+            drop.transform.position = MeditationSpotPosition;
+            drop.DoTryMerging();
+            drop.UpdateMe();
+            if (Plugin.DebugEnabled) Log($"Moving '{drop.res.id}' from '{drop.zone_id}' next to the meditation spot.");
+        }
+    }
+
+    private static void MoveDropsNearKeepersHouse(DropResGameObject[] drops)
+    {
+        // Skip drops already sitting inside the dump zone — avoids re-scattering and re-merging items
+        // the mod already relocated on a previous load.
+        var dumpZoneRadiusWorld = Plugin.NearHouseDumpZoneRadius.Value * 96f;
+        var dumpZoneRadiusSq = dumpZoneRadiusWorld * dumpZoneRadiusWorld;
+
+        foreach (var drop in drops)
+        {
+            if (drop.is_collected)
+            {
+                if (Plugin.DebugEnabled) Log($"Drop already collected: {drop.res.id} from '{drop.zone_id}'");
+                continue;
+            }
+
+            if (IsProtectedDrop(drop))
+            {
+                if (Plugin.DebugEnabled) Log($"Skipping protected drop: {drop.res.id} (quest/scripted item)");
+                continue;
+            }
+
+            var distSq = ((Vector2) drop.transform.position - (Vector2) NearHouseDropSpot).sqrMagnitude;
+            if (distSq <= dumpZoneRadiusSq)
+            {
+                if (Plugin.DebugEnabled) Log($"Skipping '{drop.res.id}' in '{drop.zone_id}' — already in the dump zone.");
+                continue;
+            }
+
+            // Small random scatter so items don't all land on the exact same pixel and z-fight.
+            var scatter = UnityEngine.Random.insideUnitCircle * 1.5f;
+            drop.transform.position = new Vector3(NearHouseDropSpot.x + scatter.x, NearHouseDropSpot.y + scatter.y, 0f);
+            drop.DoTryMerging();
+            drop.UpdateMe();
+            if (Plugin.DebugEnabled) Log($"Moving '{drop.res.id}' from '{drop.zone_id}' next to the Keeper's house.");
+        }
+    }
+
+    internal static void LogNearbyTags(float radiusTiles)
+    {
+        var player = MainGame.me?.player;
+        if (player == null)
+        {
+            Plugin.Log.LogWarning("[TagScan] Player not available.");
+            return;
+        }
+
+        var playerPos = player.pos;
+        var playerPos3 = player.pos3;
+        var radiusWorld = radiusTiles * 96f;
+        var radiusSq = radiusWorld * radiusWorld;
+
+        Plugin.Log.LogInfo($"[TagScan] Scanning {radiusTiles:F1} tiles around player pos={playerPos3} (grid={playerPos / 96f})");
+
+        var wgos = MainGame.me.world_root.GetComponentsInChildren<WorldGameObject>(true);
+        var hits = new List<(float dist, WorldGameObject wgo)>();
+        foreach (var wgo in wgos)
+        {
+            if (wgo == null) continue;
+            var distSq = (wgo.pos - playerPos).sqrMagnitude;
+            if (distSq > radiusSq) continue;
+            hits.Add((Mathf.Sqrt(distSq), wgo));
+        }
+
+        hits.Sort((a, b) => a.dist.CompareTo(b.dist));
+
+        var tagged = 0;
+        foreach (var (dist, wgo) in hits)
+        {
+            var tag = string.IsNullOrEmpty(wgo.custom_tag) ? "-" : wgo.custom_tag;
+            if (!string.IsNullOrEmpty(wgo.custom_tag)) tagged++;
+            Plugin.Log.LogInfo($"[TagScan]   {dist / 96f,5:F2}t  obj_id={wgo.obj_id,-40}  tag={tag,-30}  pos={wgo.transform.position}");
+        }
+
+        Plugin.Log.LogInfo($"[TagScan] Done. {hits.Count} WGO(s) in range, {tagged} with custom_tag.");
+    }
+
 
     internal static void Log(string message, bool error = false)
     {

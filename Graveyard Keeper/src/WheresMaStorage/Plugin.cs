@@ -35,6 +35,8 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> AllowHandToolDestroy { get; private set; }
     internal static ConfigEntry<bool> ModifyStackSize { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
+    internal static ConfigEntry<KeyboardShortcut> DebugTagScanKeybind { get; private set; }
+    internal static ConfigEntry<float> DebugTagScanRadius { get; private set; }
     internal static ConfigEntry<bool> SharedInventory { get; private set; }
     internal static ConfigEntry<bool> ExcludeWellsFromSharedInventory { get; private set; }
     internal static ConfigEntry<bool> ExcludeZombieMillFromSharedInventory { get; private set; }
@@ -55,6 +57,9 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> HideSoulWidgets { get; private set; }
     internal static ConfigEntry<bool> HideWarehouseShopWidgets { get; private set; }
     internal static ConfigEntry<bool> CollectDropsOnGameLoad { get; private set; }
+    internal static ConfigEntry<DropHandlingMode> DropHandlingOnGameLoad { get; private set; }
+    internal static ConfigEntry<int> NearHouseDumpZoneRadius { get; private set; }
+    internal static ConfigEntry<float> PlayerLootMagnetRange { get; private set; }
     public static ConfigEntry<bool> AllowZombiesAccessToSharedInventory { get; set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
@@ -72,6 +77,7 @@ public class Plugin : BaseUnityPlugin
         MigrateLegacySlider();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
@@ -147,6 +153,15 @@ public class Plugin : BaseUnityPlugin
         LegacySliderMigrated = Config.Bind(AdvancedSection, "Legacy Slider Migrated", false,
             new ConfigDescription("Internal: marks whether the old single inventory-space slider has been split into Player/Container.", null,
                 new ConfigurationManagerAttributes {Browsable = false, IsAdvanced = true, HideDefaultButton = true, ReadOnly = true}));
+
+        DebugTagScanKeybind = Config.Bind(AdvancedSection, "Debug Tag Scan Keybind", new KeyboardShortcut(KeyCode.F7),
+            new ConfigDescription("Press this key in-game to log every world object's id, custom tag, and position within the scan radius of the player. Useful for finding anchor tags (e.g. locating a good outdoor spot near your house). Output goes to the BepInEx console and LogOutput.log.", null,
+                new ConfigurationManagerAttributes {Order = 80, DispName = "    └ Tag Scan Keybind"}));
+
+        DebugTagScanRadius = Config.Bind(AdvancedSection, "Debug Tag Scan Radius", 10f,
+            new ConfigDescription("Radius (in tiles) to scan around the player when pressing the Tag Scan Keybind.",
+                new AcceptableValueRange<float>(1f, 100f),
+                new ConfigurationManagerAttributes {Order = 79, DispName = "    └ Tag Scan Radius (tiles)"}));
 
         // ── Inventory ──
         SharedInventory = Config.Bind(InventorySection, "Shared Inventory", true,
@@ -291,6 +306,24 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription("Enable or disable collecting drops on game load", null,
                 new ConfigurationManagerAttributes {Order = 99}));
 
+        DropHandlingOnGameLoad = Config.Bind(GameplaySection, "Drop Handling On Game Load", DropHandlingMode.CollectToInventory,
+            new ConfigDescription(
+                "Where scattered loot goes when you load a save. 'CollectToInventory' pulls everything straight into your pockets (anything that doesn't fit ends up by the meditation spot, same as before). 'MoveNearKeepersHouse' leaves your inventory alone and piles every loose item — small and large — next to your house so you can sort it yourself.",
+                null,
+                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ Drop Handling"}));
+
+        NearHouseDumpZoneRadius = Config.Bind(GameplaySection, "Near-House Dump Zone Radius", 8,
+            new ConfigDescription(
+                "Radius (in tiles) around the dump spot that counts as 'already placed'. Items already inside this zone are left alone on load instead of being re-scattered. Raise this if you want a larger safe area around your house where loose items won't be touched.",
+                new AcceptableValueRange<int>(1, 30),
+                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Near-House Dump Zone Radius (tiles)"}));
+
+        PlayerLootMagnetRange = Config.Bind(GameplaySection, "Player Loot Magnet Range", 1.8f,
+            new ConfigDescription(
+                "How close you have to be (in tiles) for nearby loot to fly toward you and auto-pickup. Vanilla is 1.8 tiles — crank it up to sweep up drops from further away.",
+                new AcceptableValueRange<float>(1.8f, 20f),
+                new ConfigurationManagerAttributes {Order = 95, DispName = "Player Loot Magnet Range (tiles)"}));
+
         // ── UI ──
         HideStockpileWidgets = Config.Bind(UISection, "Hide Stockpile Widgets", true,
             new ConfigDescription("Enable or disable hiding stockpile widgets", null,
@@ -319,6 +352,11 @@ public class Plugin : BaseUnityPlugin
     public void Update()
     {
         if (!MainGame.game_started) return;
+
+        if (DebugTagScanKeybind.Value.IsDown())
+        {
+            Helpers.LogNearbyTags(DebugTagScanRadius.Value);
+        }
 
         if (Fields.InventorySizesDirty && !Fields.ShrinkDialogOpen)
         {
@@ -349,4 +387,10 @@ public class Plugin : BaseUnityPlugin
         Log.LogInfo("Refreshing inventories...");
         Helpers.RunWmsTasks();
     }
+}
+
+public enum DropHandlingMode
+{
+    CollectToInventory,
+    MoveNearKeepersHouse,
 }

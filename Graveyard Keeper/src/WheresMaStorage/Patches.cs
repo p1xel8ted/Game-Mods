@@ -144,6 +144,16 @@ public static class Patches
             return true;
         }
 
+        // When opening a vendor with ShowOnlyPersonalInventory on, skip the shared-pool build entirely.
+        // Trading.cs:30 calls player.GetMultiInventory() synchronously — iterating Fields.Mi + WildernessInventories
+        // here is the source of the vendor-open stall. Vanilla returns the personal MultiInventory, which is all
+        // the user asked to see anyway.
+        if (__instance.is_player && Fields.IsVendor && Plugin.ShowOnlyPersonalInventory.Value)
+        {
+            if (Plugin.DebugEnabled) Helpers.Log("[GetMultiInventory] vendor + ShowOnlyPersonal → passing through to vanilla");
+            return true;
+        }
+
         var objId = __instance.obj_id;
         var objDefId = __instance.obj_def.id;
         var worldZoneId = __instance.GetMyWorldZoneId();
@@ -250,7 +260,6 @@ public static class Patches
         Fields.InventoriesLoaded = false;
         Fields.GameBalanceAlreadyRun = false;
         Fields.DropsCleaned = false;
-        Fields.DebugMessageShown = false;
     }
 
     [HarmonyPrefix]
@@ -499,8 +508,7 @@ public static class Patches
 
         void HideWidgets(BaseInventoryWidget a)
         {
-            if (isVendorPanel ||
-                Fields.IsBarman ||
+            if (Fields.IsBarman ||
                 Fields.IsTavernCellarRack ||
                 Fields.IsSoulBox ||
                 Fields.IsChurchPulpit) return;
@@ -533,6 +541,78 @@ public static class Patches
     public static void InventoryGUI_OpenBag()
     {
         Fields.UsingBag = true;
+    }
+
+    // Player-only magnet range override. Transpiler swaps the hardcoded 1.8² tile threshold
+    // in ProcessDropCollectorRangeCheck for a value that's player-aware — zombies/workers keep
+    // vanilla behaviour, only the player gets the extended range from config.
+    [HarmonyTranspiler]
+    [HarmonyPatch(typeof(DropResGameObject), nameof(DropResGameObject.ProcessDropCollectorRangeCheck))]
+    public static IEnumerable<CodeInstruction> DropResGameObject_ProcessDropCollectorRangeCheck(
+        IEnumerable<CodeInstruction> instructions)
+    {
+        var matcher = new CodeMatcher(instructions);
+        var vanillaThreshold = matcher.MatchForward(false,
+            new CodeMatch(i => i.opcode == OpCodes.Ldc_R8 && i.operand is double d && Math.Abs(d - 3.2399997711181641) < 1e-9));
+
+        if (!vanillaThreshold.IsValid)
+        {
+            Plugin.Log.LogWarning("[MagnetRange] Could not find vanilla 3.24 threshold in ProcessDropCollectorRangeCheck — skipping transpile.");
+            return instructions;
+        }
+
+        // Replace: ldc.r8 3.24
+        // With:    ldarg.1 (collector_wgo)  ;  ldc.r8 3.24  ;  call GetMagnetRangeSq
+        matcher
+            .RemoveInstruction()
+            .Insert(
+                new CodeInstruction(OpCodes.Ldarg_1),
+                new CodeInstruction(OpCodes.Ldc_R8, 3.2399997711181641),
+                new CodeInstruction(OpCodes.Call,
+                    AccessTools.Method(typeof(Patches), nameof(GetMagnetRangeSq))));
+
+        return matcher.InstructionEnumeration();
+    }
+
+    private static double GetMagnetRangeSq(WorldGameObject collector_wgo, double vanillaSq)
+    {
+        if (collector_wgo == null || !collector_wgo.is_player) return vanillaSq;
+        var r = Plugin.PlayerLootMagnetRange.Value;
+        return r * r;
+    }
+
+    // Bag widgets default to the bag's definitional bag_size_x (often 3), which looks out of
+    // place next to the regular 5-column inventory widgets. Force bags to the same 5-column
+    // layout and recompute the widget's height based on the new row count.
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(BagInventoryWidget), nameof(BagInventoryWidget.RecalculatWidgetSizeAndPosition))]
+    public static void BagInventoryWidget_RecalculatWidgetSizeAndPosition(BagInventoryWidget __instance)
+    {
+        const int targetColumns = 5;
+
+        if (__instance == null || __instance.inventory_table == null) return;
+        if (__instance.inventory_item?.definition == null) return;
+
+        var def = __instance.inventory_item.definition;
+        var totalSlots = def.bag_size_x * def.bag_size_y;
+        if (totalSlots <= 0) return;
+
+        var rows = Mathf.CeilToInt((float) totalSlots / targetColumns);
+
+        __instance.inventory_table.maxPerLine = targetColumns;
+
+        // Mirror the original horizontal centering formula but for the new column count.
+        var transform = __instance.inventory_table.transform;
+        var localPos = transform.localPosition;
+        transform.localPosition = new Vector3(110f - (targetColumns - 1) * 21f, localPos.y, localPos.z);
+
+        __instance.inventory_table.Reposition();
+
+        var widget = __instance.GetComponent<UIWidget>();
+        if (widget != null)
+        {
+            widget.height = 29 + rows * 42 + __instance.auto_height_offset;
+        }
     }
 
     [HarmonyPostfix]
@@ -581,7 +661,15 @@ public static class Patches
     [HarmonyPatch(typeof(InventoryPanelGUI), nameof(InventoryPanelGUI.SetGrayToNotMainWidgets))]
     public static bool InventoryPanelGUI_SetGrayToNotMainWidgets()
     {
-        return !Plugin.DisableInventoryDimming.Value;
+        // At a vendor, if the shared inventory is visible, dimming everything that isn't in the
+        // personal inventory buries most of what the player can trade — force no-dim regardless
+        // of the user's setting.
+        if (Fields.IsVendor && !Plugin.ShowOnlyPersonalInventory.Value)
+        {
+            return false;
+        }
+
+        return Plugin.DisableInventoryDimming.Value;
     }
 
     [HarmonyPostfix]

@@ -4,6 +4,15 @@
 
 - Fixed Chinese translations not loading
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
+- New option under "Collect Drops On Game Load": choose whether loose loot gets pulled straight into your pockets (old behaviour) or piled up next to your house instead, so you can sort it yourself. The pile-by-the-house mode also gathers large items that the vacuum previously skipped
+- New "Near-House Dump Zone Radius" slider (default 8 tiles) — items already piled near your house stay put on load instead of being re-shuffled every time
+- Vendor windows now open much faster when "Show Only Personal Inventory" is on
+- Vendor windows now respect the Hide Stockpile/Tavern/Soul/Warehouse Shop Widgets toggles
+- Fixed the "Inventory Dimming" toggle being inverted — ticking it now actually turns the grey-out on
+- Items outside your personal inventory are no longer dimmed at vendors when the full shared list is showing
+- New "Player Loot Magnet Range" slider — crank it up to suck in drops from further away. Vanilla is 1.8 tiles; the new range is 1.8 to 20 tiles
+- Bag widgets now lay out in the same 5-column grid as every other inventory widget, instead of squeezing into 3 columns
+- Quest items and story-critical drops are no longer scooped up or piled by the load-time loot sweep
 
 ### Inventory size
 
