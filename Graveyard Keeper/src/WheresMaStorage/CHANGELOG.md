@@ -4,6 +4,7 @@
 
 - Fixed Chinese translations not loading
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
+
 ### Inventory size
 
 - The single Additional Inventory Space slider has been split into two — one for your player inventory and one for chests, racks, and other containers. Want a tight player carry but huge chests? Now you can. Your existing slider value is migrated to both sliders on first launch
@@ -12,7 +13,8 @@
 - If you reduce a slider below the number of items in your inventory (or in any chest), you'll now see a Yes/No prompt summarising what's about to happen. Yes drops the items that no longer fit on the ground next to each affected container (your inventory items at your feet, chest items at the chest). No rolls the slider back so nothing is lost. Previously, items that no longer fit would silently disappear from view (their data was safe but hidden by the smaller slot count)
 - Saves where items were already hidden by the silent-shrink bug from previous versions will reveal them as soon as you next open the affected container
 - The BepInEx Configuration Manager window now closes automatically when the shrink prompt appears, so you can answer it without the slider overlay covering the buttons
-- Turning off Modify Inventory Size now actually keeps your player inventory at 20 slots. Previously it could snap back to the bigger size as soon as you built or destroyed a chest, or when drops were picked up on load
+- Turning off Modify Inventory Size now actually keeps your player inventory at 20 slots and it stays there. Previously it could snap back to the bigger size as soon as you built or destroyed a chest, or when drops were picked up on load
+- Turning Modify Inventory Size **on** now actually keeps your player inventory at the bigger size, too. Previously the extra slots could silently disappear mid-play — your items were still saved but hidden from view, and you couldn't pick up anything new until the mod next re-applied your slider
 - Changes to the size sliders or the master toggle now apply straight away, instead of waiting until you next interact with something
 
 ### Other fixes
@@ -24,7 +26,7 @@
 ### UI and diagnostics
 
 - The mod's settings are reorganised in Configuration Manager: parent toggles are followed by their dependent options indented with `└` underneath, and the section names use a cleaner `── Name ──` style. Your existing setting values are preserved across the rename — no config reset needed
-- The log now always records how long inventory checks take, so any hitching can be diagnosed without enabling Debug Logging first
+- The BepInEx log file now always includes how long each inventory check took. If you ever notice hitching, you can share the log without first needing to enable Debug Logging and reproduce the problem
 
 ## 2.1.13 | 12 April 2026
 
