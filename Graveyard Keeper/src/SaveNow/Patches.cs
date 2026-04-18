@@ -234,6 +234,12 @@ public static class Patches
         if (Plugin.EnableManualSaveControllerButton.Value && LazyInput.gamepad_active &&
             ReInput.players.GetPlayer(0).GetButtonDown(Plugin.ManualSaveControllerButton.Value))
         {
+            if (!BaseGUI.all_guis_closed)
+            {
+                if (Plugin.DebugEnabled) Plugin.WriteLog("[SaveNow] Manual save suppressed — GUI open (prevents LT conflict with tech tree / trade / transfer menus)");
+                return;
+            }
+
             if (Plugin.DebugEnabled) Plugin.WriteLog("[SaveNow] Manual save triggered via controller button");
             MainGame.me.StartCoroutine(Plugin.PerformManualSave());
         }
