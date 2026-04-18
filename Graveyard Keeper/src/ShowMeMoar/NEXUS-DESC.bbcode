@@ -32,9 +32,11 @@
 [*][size=3][b]Disable fog option[/b] — if fog still renders oddly at your resolution, turn it off in the F1 config. (Fog is a more complex overlay than the rest, which is why it has its own toggle.)[/size]
 [/list]
 
-[size=4][b]Troubleshooting — 4K resolution[/b][/size]
+[size=4][b]Troubleshooting — 4K / high-DPI resolution[/b][/size]
 
-[size=3]Community-contributed workaround if the game looks wrong at 4K even with Show Me Moar installed. This is a Windows-level DPI override, not a mod setting — reported working by a 4K user; not a universal fix but worth trying if you're struggling.[/size]
+[size=3][b]The mod now applies this fix for you automatically.[/b] On first launch with Windows display scaling set above 100%, Show Me Moar detects it and offers to apply the fix via a main-menu dialog. Click Yes, restart the game, done. You can apply, undo, or silence the prompt any time under the "── 9. High-DPI Fix ──" settings section (press F1 in-game).[/size]
+
+[size=3]The manual steps below still work if you prefer to do it yourself, or if the automatic fix fails for any reason (e.g. the game folder is read-only — in that case the mod applies the registry half but skips the sidecar manifest).[/size]
 
 [list]
 [*][size=3]Open the game folder ([code]...&#92;steamapps&#92;common&#92;Graveyard Keeper[/code])[/size]
@@ -42,8 +44,13 @@
 [*][size=3]Go to the Compatibility tab[/size]
 [*][size=3]Click "Change high DPI settings"[/size]
 [*][size=3]Turn on "High DPI scaling override" and set it to "System"[/size]
-[*][size=3]Adjust the Windows zoom value (one reported working value was 143.615)[/size]
 [*][size=3]Launch the game[/size]
+[/list]
+
+[size=3][b]Still not sharp after restart?[/b] A couple of extra things to try:[/size]
+[list]
+[*][size=3][b]Cache-kick Windows[/b] — open Settings → System → Display → Scale, change it one step up, then back down to your original value. This forces Windows to re-read the compatibility flag for an app that was already registered.[/size]
+[*][size=3][b]Try the mod's Zoom slider[/b] — press F1 in-game, go to the "5. Zoom" section, and nudge the Zoom value. It changes the in-game camera's orthographic size rather than DPI, but on some 4K setups this is the last bit that makes things feel right. Reset to 0 when you're done.[/size]
 [/list]
 
 [size=4][b]Other mods of mine you might like[/b][/size]

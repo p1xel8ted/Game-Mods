@@ -266,4 +266,43 @@ public static class Patches
             _animator.transform.localScale = new Vector3(0.75f + Plugin.ScaleFactor, 0.75f + Plugin.ScaleFactor, 1);
         }
     }
+
+    // One-time-per-session prompt offering the high-DPI fix when Windows scaling > 100%.
+    // Session-static so return-to-menu-from-game doesn't re-trigger; respects the
+    // "Offer the fix at startup" toggle for permanent silencing.
+    private static bool _dpiPromptShownThisSession;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainMenuGUI), nameof(MainMenuGUI.Open), typeof(bool))]
+    public static void MainMenuGUI_Open_Postfix_HighDpi()
+    {
+        if (_dpiPromptShownThisSession) return;
+        if (!Plugin.AskDpiFixAtStartup.Value) return;
+        if (!Plugin.HighDpiDetected) return;
+        if (HighDpiFix.IsRegistryFlagSet()) return; // already applied (by this mod or manually)
+
+        _dpiPromptShownThisSession = true;
+
+        var message = string.Format(Lang.Get("DpiPromptMessage"), Plugin.ScalingPercent);
+
+        try
+        {
+            GUIElements.me.dialog.OpenYesNo(
+                message,
+                () =>
+                {
+                    Plugin.ApplyDpiFix.Value = true; // triggers OnApplyDpiFixToggled → writes + shows result dialog
+                },
+                null,
+                () =>
+                {
+                    // User said No — do nothing this session. Prompt will re-appear on the next launch
+                    // unless they turn off "Offer the fix at startup".
+                });
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogWarning($"[HighDpiFix] Main-menu prompt failed: {ex.Message}");
+        }
+    }
 }

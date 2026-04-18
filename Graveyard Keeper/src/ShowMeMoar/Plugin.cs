@@ -23,6 +23,19 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> SetVsyncLimitToMaxRefreshRate { get; private set; }
     internal static ConfigEntry<bool> ColorCorrection { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
+
+    // High-DPI fix — one-liners read by HighDpiFix and the main-menu prompt.
+    internal static ConfigEntry<string> DpiDetectedStatus { get; private set; }
+    internal static ConfigEntry<string> DpiAppliedStatus { get; private set; }
+    internal static ConfigEntry<bool> ApplyDpiFix { get; private set; }
+    internal static ConfigEntry<bool> AskDpiFixAtStartup { get; private set; }
+    internal static int CurrentDpi { get; private set; }
+    internal static int ScalingPercent { get; private set; }
+    internal static HighDpiFix.Host DpiHost { get; private set; }
+    // Only offer the fix on real Windows — Wine/Proton and native Linux/macOS ignore the
+    // Windows compatibility flag, so prompting there would be user-hostile.
+    internal static bool HighDpiDetected => DpiHost == HighDpiFix.Host.Windows && CurrentDpi > 96;
+
     private static GameObject Icons { get; set; }
     internal static ManualLogSource Log { get; private set; }
 
@@ -39,9 +52,62 @@ public class Plugin : BaseUnityPlugin
             var widget = smallFont.GetComponent<UIWidget>();
             if (widget != null) widget.color = new Color(0, 0, 0, 0);
         };
+
+        // Detect the host environment first. The fix only applies on real Windows;
+        // on Wine/Proton the AppCompat flag is written into a fake registry that wine
+        // doesn't consult for DPI awareness, and on native Linux/macOS there's no .exe
+        // or registry to target in the first place.
+        DpiHost = HighDpiFix.DetectHost();
+        if (DpiHost == HighDpiFix.Host.Windows)
+        {
+            CurrentDpi = HighDpiFix.DetectDpi();
+            ScalingPercent = HighDpiFix.DpiToScalingPercent(CurrentDpi);
+            Log.LogInfo($"[HighDpiFix] Host=Windows, DPI={CurrentDpi} ({ScalingPercent}% scaling). Fix needed: {HighDpiDetected}");
+        }
+        else
+        {
+            CurrentDpi = 96;
+            ScalingPercent = 100;
+            Log.LogInfo($"[HighDpiFix] Host={DpiHost} — skipping DPI fix entirely (this is a Windows-only workaround).");
+        }
+
         InitConfiguration();
+        // Lang.Init reads GameSettings._cur_lng lazily on every Lang.Get, so it's safe to
+        // initialise here before the game has finished loading language settings.
+        Lang.Init(Assembly.GetExecutingAssembly(), Log);
+        RefreshDpiStatus();
         UpdateChecker.Register(Info, CheckForUpdates);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
+    }
+
+    // Updates the read-only status config entries visible in ConfigurationManager.
+    // Called at startup and after every Apply/Remove so users see live state.
+    internal static void RefreshDpiStatus()
+    {
+        if (DpiDetectedStatus != null)
+        {
+            DpiDetectedStatus.Value = DpiHost switch
+            {
+                HighDpiFix.Host.Windows => string.Format(
+                    Lang.Get(HighDpiDetected ? "DpiStatusWindowsFixRecommended" : "DpiStatusWindowsNoFixNeeded"),
+                    ScalingPercent, CurrentDpi),
+                HighDpiFix.Host.WineProton => Lang.Get("DpiStatusWineProton"),
+                _                          => Lang.Get("DpiStatusNativeNonWindows"),
+            };
+        }
+        if (DpiAppliedStatus != null)
+        {
+            if (DpiHost != HighDpiFix.Host.Windows)
+            {
+                DpiAppliedStatus.Value = Lang.Get("DpiAppliedNotApplicable");
+            }
+            else
+            {
+                var reg = Lang.Get(HighDpiFix.IsRegistryFlagSet() ? "DpiYes" : "DpiNo");
+                var man = Lang.Get(HighDpiFix.IsManifestPresent() ? "DpiYes" : "DpiNo");
+                DpiAppliedStatus.Value = string.Format(Lang.Get("DpiAppliedFormat"), reg, man);
+            }
+        }
     }
 
     internal static void OnGameStartedPlaying()
@@ -112,6 +178,37 @@ public class Plugin : BaseUnityPlugin
 
         SetVsyncLimitToMaxRefreshRate = Config.Bind("8. Display", "Set Vsync Limit To Max Refresh Rate", true, new ConfigDescription("Set Vsync limit to the maximum refresh rate of the monitor. Game default is 60fps with VSYNC enabled.", null, new ConfigurationManagerAttributes {Order = 0}));
 
+        // ── 9. High-DPI Fix ──
+        const string dpiSection = "── 9. High-DPI Fix ──";
+
+        DpiDetectedStatus = Config.Bind(dpiSection, "Detected display scaling", "",
+            new ConfigDescription(
+                "How Windows is scaling your display. 100% means no fix needed; anything higher (common at 4K) benefits from the fix below.",
+                null,
+                new ConfigurationManagerAttributes { Order = 100, ReadOnly = true, HideDefaultButton = true }));
+
+        DpiAppliedStatus = Config.Bind(dpiSection, "Fix status", "",
+            new ConfigDescription(
+                "Whether the Windows compatibility flag and sidecar manifest are currently in place for Graveyard Keeper.exe.",
+                null,
+                new ConfigurationManagerAttributes { Order = 99, ReadOnly = true, HideDefaultButton = true }));
+
+        ApplyDpiFix = Config.Bind(dpiSection, "Apply high-DPI fix", false,
+            new ConfigDescription(
+                "Tick to mark Graveyard Keeper as high-DPI aware so it renders sharply at 4K / scaled displays. " +
+                "Writes a Windows compatibility flag to your user registry and a sidecar manifest next to the game. " +
+                "Restart the game afterwards. Un-tick to remove both.",
+                null,
+                new ConfigurationManagerAttributes { Order = 98 }));
+        ApplyDpiFix.SettingChanged += (_, _) => OnApplyDpiFixToggled();
+
+        AskDpiFixAtStartup = Config.Bind(dpiSection, "Offer the fix at startup", true,
+            new ConfigDescription(
+                "When on, the mod will detect high-DPI scaling at startup and offer to apply the fix via a main-menu dialog. " +
+                "Turn off to silence the prompt (useful once you've decided either way).",
+                null,
+                new ConfigurationManagerAttributes { Order = 97 }));
+
         CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
             new ConfigDescription(
                 "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
@@ -119,6 +216,71 @@ public class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { Order = 0 }));
 
         SceneManager.sceneLoaded += (_, _) => UpdateCC();
+    }
+
+    // Called from the SettingChanged handler AND from the main-menu dialog Yes/No callbacks.
+    // Mirrors the toggle state to the actual Windows flag + manifest files.
+    private static bool _applyingDpiFix;
+    internal static void OnApplyDpiFixToggled()
+    {
+        if (_applyingDpiFix) return; // prevent re-entry when we write-back from the dialog path
+        _applyingDpiFix = true;
+        try
+        {
+            if (DpiHost != HighDpiFix.Host.Windows)
+            {
+                ShowDialog(Lang.Get(DpiHost == HighDpiFix.Host.WineProton
+                    ? "DpiWineProtonDialog"
+                    : "DpiNativeNonWindowsDialog"));
+                ApplyDpiFix.Value = false; // rollback — nothing was actually applied
+                return;
+            }
+
+            if (ApplyDpiFix.Value)
+            {
+                var result = HighDpiFix.Apply();
+                RefreshDpiStatus();
+                var key = result.FullSuccess
+                    ? "DpiApplyFullSuccess"
+                    : result.AnySuccess
+                        ? "DpiApplyPartialSuccess"
+                        : "DpiApplyFailed";
+                ShowDialog(Lang.Get(key));
+                if (!result.AnySuccess)
+                {
+                    ApplyDpiFix.Value = false; // rollback toggle state — nothing was applied
+                }
+            }
+            else
+            {
+                HighDpiFix.Remove();
+                RefreshDpiStatus();
+                ShowDialog(Lang.Get("DpiRemoved"));
+            }
+        }
+        finally
+        {
+            _applyingDpiFix = false;
+        }
+    }
+
+    private static void ShowDialog(string message)
+    {
+        try
+        {
+            if (GUIElements.me?.dialog != null && MainGame.game_started)
+            {
+                GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, message, true, string.Empty);
+            }
+            else
+            {
+                Log.LogInfo($"[HighDpiFix] {message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[HighDpiFix] Dialog failed: {ex.Message}. Message was: {message}");
+        }
     }
 
     internal static void UpdateCC()

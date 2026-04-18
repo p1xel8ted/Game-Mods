@@ -1,0 +1,17 @@
+{
+  "DpiPromptMessage": "Windows 디스플레이 배율이 {0}%로 설정되어 있습니다. Graveyard Keeper는 기본적으로 고해상도(High-DPI)를 지원하는 것으로 표시되어 있지 않아서, 4K 또는 다른 배율이 적용된 해상도에서 게임이 흐릿하게 보일 수 있습니다.\n\n지금 고해상도 호환성 수정을 적용하시겠습니까? 적용 후에는 게임을 다시 시작해야 합니다.\n\n(설정의 \"── 9. High-DPI Fix ──\" 섹션에서 나중에 적용, 해제하거나 이 알림을 끌 수 있습니다.)",
+  "DpiApplyFullSuccess": "고해상도 수정이 적용되었습니다. 변경 사항을 반영하려면 게임을 다시 시작하세요.",
+  "DpiApplyPartialSuccess": "레지스트리 플래그를 적용했습니다. 사이드카 manifest 파일을 작성하지 못했지만(게임 폴더가 읽기 전용일 수 있습니다) 보통 레지스트리 플래그만으로 충분합니다. 게임을 다시 시작하세요.",
+  "DpiApplyFailed": "수정을 적용하지 못했습니다. 자세한 내용은 BepInEx 로그를 확인하거나 모드의 Nexus 페이지에 있는 수동 방법을 따르세요.",
+  "DpiRemoved": "고해상도 수정이 제거되었습니다. 변경 사항을 반영하려면 게임을 다시 시작하세요.",
+  "DpiWineProtonDialog": "이 수정은 실제 Windows에서만 동작합니다. 현재 Wine 또는 Proton에서 실행 중이며, 이 환경에서는 Windows의 DPI 호환성 플래그가 무시됩니다. 대신 컴포지터의 디스플레이 배율이나 Proton 환경 변수를 사용하세요.",
+  "DpiNativeNonWindowsDialog": "이 수정은 Windows 전용입니다. Linux와 macOS에서는 운영체제가 디스플레이 배율을 직접 관리하므로 설정할 Windows 호환성 플래그가 없습니다.",
+  "DpiStatusWindowsFixRecommended": "{0}% ({1} DPI) — 수정 권장",
+  "DpiStatusWindowsNoFixNeeded": "{0}% ({1} DPI) — 수정 불필요",
+  "DpiStatusWineProton": "해당 없음 — Wine/Proton은 Windows의 DPI 플래그를 무시합니다. 컴포지터의 배율이나 Proton 환경 변수를 사용하세요.",
+  "DpiStatusNativeNonWindows": "해당 없음 — 이 수정은 Windows 전용입니다. 현재 플랫폼은 OS 수준에서 DPI 배율을 관리합니다.",
+  "DpiAppliedFormat": "레지스트리: {0}, Manifest: {1}",
+  "DpiAppliedNotApplicable": "이 플랫폼에서는 해당 없음",
+  "DpiYes": "예",
+  "DpiNo": "아니요"
+}

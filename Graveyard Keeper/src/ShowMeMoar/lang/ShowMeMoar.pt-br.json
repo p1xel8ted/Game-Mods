@@ -1,0 +1,17 @@
+{
+  "DpiPromptMessage": "A escala da tela do Windows está definida em {0}%. Graveyard Keeper não é marcado como compatível com DPI alto por padrão, o que pode deixar o jogo borrado em 4K ou outras resoluções escaladas.\n\nAplicar a correção de compatibilidade de DPI alto agora? Você precisará reiniciar o jogo depois.\n\n(Você pode aplicar, desfazer ou silenciar este aviso depois na seção \"── 9. High-DPI Fix ──\" nas configurações.)",
+  "DpiApplyFullSuccess": "Correção de DPI aplicada. Reinicie o jogo para que a mudança tenha efeito.",
+  "DpiApplyPartialSuccess": "Flag do registro aplicada. O arquivo manifest complementar não pôde ser gravado (a pasta do jogo pode estar apenas para leitura), mas a flag do registro sozinha costuma ser suficiente. Reinicie o jogo.",
+  "DpiApplyFailed": "Não foi possível aplicar a correção. Veja o log do BepInEx para detalhes ou siga os passos manuais na página Nexus do mod.",
+  "DpiRemoved": "Correção de DPI removida. Reinicie o jogo para que a mudança tenha efeito.",
+  "DpiWineProtonDialog": "Esta correção funciona apenas no Windows nativo. Você está rodando com Wine ou Proton, onde a flag de compatibilidade de DPI do Windows é ignorada. Use a escala do seu compositor ou variáveis de ambiente do Proton em vez disso.",
+  "DpiNativeNonWindowsDialog": "Esta correção funciona apenas no Windows. No Linux e macOS, o sistema operacional gerencia a escala de tela por conta própria — não há nenhuma flag de compatibilidade do Windows para definir.",
+  "DpiStatusWindowsFixRecommended": "{0}% ({1} DPI) — correção recomendada",
+  "DpiStatusWindowsNoFixNeeded": "{0}% ({1} DPI) — correção desnecessária",
+  "DpiStatusWineProton": "Não aplicável — Wine/Proton ignora a flag de DPI do Windows. Use a escala do seu compositor ou variáveis de ambiente do Proton.",
+  "DpiStatusNativeNonWindows": "Não aplicável — esta correção é exclusiva do Windows. Sua plataforma gerencia a escala de DPI pelo próprio sistema operacional.",
+  "DpiAppliedFormat": "Registro: {0}, Manifest: {1}",
+  "DpiAppliedNotApplicable": "N/D nesta plataforma",
+  "DpiYes": "Sim",
+  "DpiNo": "Não"
+}
