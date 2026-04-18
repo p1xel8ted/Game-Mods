@@ -83,11 +83,13 @@ public static class Patches
     [HarmonyPatch(typeof(CraftItemGUI), nameof(CraftItemGUI.Redraw))]
     public static void CraftItemGUI_Redraw(CraftItemGUI __instance)
     {
-        var canCraftMultiple = __instance.craft_definition.CanCraftMultiple();
         if (__instance.craft_definition is ObjectCraftDefinition)
         {
-            Plugin.Log.LogInfo($"[QE-Diag] Redraw_Prefix on ObjectCraftDefinition '{__instance.craft_definition.id}' before logic; _amount={__instance._amount}, CanCraftMultiple={canCraftMultiple}, end_script='{__instance.craft_definition.end_script}', change_wgo='{__instance.craft_definition.change_wgo}', enqueue_type={__instance.craft_definition.enqueue_type}");
+            __instance._amount = 1;
+            return;
         }
+
+        var canCraftMultiple = __instance.craft_definition.CanCraftMultiple();
         if (!canCraftMultiple)
         {
             if (Plugin.DebugEnabled) Plugin.WriteLog($"[Redraw] {__instance.craft_definition.id}: skip (CanCraftMultiple=false) → _amount=1");
@@ -271,10 +273,6 @@ public static class CraftComponentPatches
     {
         if (Plugin.CcAlreadyRun) return;
         Plugin.CcAlreadyRun = true;
-
-        var enabledCategories = string.Join(",", Plugin.CategoryToggles.Where(kv => kv.Value.Value).Select(kv => kv.Key.ToString()));
-        if (string.IsNullOrEmpty(enabledCategories)) enabledCategories = "(none)";
-        Plugin.Log.LogInfo($"[QE-Diag] First FillCraftsList. EnableAutoCraft={Plugin.EnableAutoCraft.Value}, ForceMultiCraft={Plugin.ForceMultiCraft.Value}, HalfFireRequirements={Plugin.HalfFireRequirements.Value}, HalfCraftOutputs={Plugin.HalfCraftOutputs.Value}, AutoMaxNormalCrafts={Plugin.AutoMaxNormalCrafts.Value}, AutoMaxMultiQualCrafts={Plugin.AutoMaxMultiQualCrafts.Value}, categoriesEnabled=[{enabledCategories}]");
 
         CaptureSnapshots();
         ApplyCraftMutations();
@@ -540,7 +538,8 @@ public static class CraftDefinitionPatches
     [HarmonyPostfix, HarmonyPatch(nameof(CraftDefinition.CanCraftMultiple))]
     public static void CraftDefinition_CanCraftMultiple(CraftDefinition __instance, ref bool __result)
     {
-        var origResult = __result;
+        if (__instance is ObjectCraftDefinition) return;
+
         if (!Plugin.ForceMultiCraft.Value || Plugin.IsUnsafeDefinition(__instance))
         {
             if (Plugin.DebugEnabled) Plugin.WriteLog($"[CanCraftMultiple] {__instance.id}: unsafe/force-off → {__result} (timeZero={__instance.craft_time_is_zero})");
@@ -549,11 +548,6 @@ public static class CraftDefinitionPatches
 
         if (Plugin.DebugEnabled) Plugin.WriteLog($"[CanCraftMultiple] {__instance.id}: forced → true (timeZero={__instance.craft_time_is_zero})");
         __result = true;
-
-        if (__instance is ObjectCraftDefinition)
-        {
-            Plugin.Log.LogInfo($"[QE-Diag] CanCraftMultiple FORCED true on ObjectCraftDefinition '{__instance.id}' (was {origResult}, end_script='{__instance.end_script}', change_wgo='{__instance.change_wgo}', enqueue_type={__instance.enqueue_type}, one_time={__instance.one_time_craft}, force_multi={__instance.force_multi_craft}, disable_multi={__instance.disable_multi_craft})");
-        }
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CraftDefinition.GetSpendTxt))]
@@ -679,12 +673,11 @@ public static class CraftGUIPatches
     public static void Open_Postfix()
     {
         Plugin.AlreadyRun = true;
-        var crafteryWgo = GUIElements.me.craft.GetCrafteryWGO();
-        if (crafteryWgo?.obj_def?.interaction_type == ObjectDefinition.InteractionType.Builder)
+        if (Plugin.DebugEnabled)
         {
-            Plugin.Log.LogInfo($"[QE-Diag] CraftGUI.Open on BUILD DESK '{crafteryWgo.obj_id}' (interaction_type=Builder)");
+            var crafteryWgo = GUIElements.me.craft.GetCrafteryWGO();
+            Plugin.WriteLog($"Keeper interacted with: {crafteryWgo.obj_id}.");
         }
-        if (Plugin.DebugEnabled) Plugin.WriteLog($"Keeper interacted with: {crafteryWgo.obj_id}.");
     }
 
     [HarmonyPrefix, HarmonyPatch(nameof(CraftGUI.Open))]
@@ -713,11 +706,6 @@ public static class CraftItemGUIPatches
     [HarmonyPostfix, HarmonyPatch(nameof(CraftItemGUI.OnCraftPressed))]
     public static void OnCraftPressed_Postfix(WorldGameObject __state)
     {
-        if (__state != null && __state.obj_def?.interaction_type == ObjectDefinition.InteractionType.Builder)
-        {
-            Plugin.Log.LogInfo($"[QE-Diag] OnCraftPressed_Postfix on BUILD DESK '{__state.obj_id}' (anyCategoryEnabled={Plugin.AnyAutoCraftCategoryEnabled()}, linked_worker={__state.linked_worker != null}, has_linked_worker={__state.has_linked_worker})");
-        }
-
         if (!Plugin.AnyAutoCraftCategoryEnabled() || __state == null || __state.linked_worker != null || __state.has_linked_worker) return;
 
         Plugin.CurrentlyCrafting.Add(__state);
@@ -728,26 +716,15 @@ public static class CraftItemGUIPatches
     [HarmonyPrefix, HarmonyPatch(nameof(CraftItemGUI.OnCraftPressed))]
     public static void OnCraftPressed_Prefix(CraftItemGUI __instance, ref WorldGameObject __state)
     {
-        try
-        {
-            if (Plugin.DebugEnabled) Plugin.WriteLog($"Craft: {__instance.craft_definition.id}, One time: {__instance.craft_definition.one_time_craft}");
-            if (Plugin.IsUnsafeDefinition(__instance.craft_definition)) return;
+        if (Plugin.DebugEnabled) Plugin.WriteLog($"Craft: {__instance.craft_definition.id}, One time: {__instance.craft_definition.one_time_craft}");
+        if (Plugin.IsUnsafeDefinition(__instance.craft_definition)) return;
+        if (__instance.craft_definition is ObjectCraftDefinition) return;
 
-            var crafteryWgo = GUIElements.me.craft.GetCrafteryWGO();
-            __state = crafteryWgo;
+        var crafteryWgo = GUIElements.me.craft.GetCrafteryWGO();
+        __state = crafteryWgo;
 
-            if (crafteryWgo?.obj_def?.interaction_type == ObjectDefinition.InteractionType.Builder)
-            {
-                Plugin.Log.LogInfo($"[QE-Diag] OnCraftPressed_Prefix on BUILD DESK '{crafteryWgo.obj_id}' for craft '{__instance.craft_definition.id}' (type={__instance.craft_definition.GetType().Name}, _amount={__instance._amount}, IsBuildMode={GUIElements.me.craft.IsBuildMode()})");
-            }
-
-            var time = __instance.craft_definition.craft_time.EvaluateFloat(crafteryWgo);
-            ApplyFasterCraft(ref time);
-        }
-        catch (Exception ex)
-        {
-            Plugin.Log.LogError($"[QE-Diag] OnCraftPressed_Prefix threw for craft '{__instance?.craft_definition?.id}': {ex}");
-        }
+        var time = __instance.craft_definition.craft_time.EvaluateFloat(crafteryWgo);
+        ApplyFasterCraft(ref time);
     }
 
     private static void ApplyFasterCraft(ref float time)
