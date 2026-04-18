@@ -7,13 +7,6 @@ public static class Patches
     private static bool PendingReminder { get; set; }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
-    public static void GameSave_GlobalEventsCheck_DebugWarning()
-    {
-        Helpers.ShowDebugWarningOnce();
-    }
-
-    [HarmonyPostfix]
     [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
     public static void MainGame_Update()
     {

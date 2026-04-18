@@ -43,7 +43,6 @@ public class Plugin : BaseUnityPlugin
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
     internal static ConfigEntry<int> SaveInterval { get; private set; }
     internal static ConfigEntry<bool> AutoSaveConfig { get; private set; }
     internal static ConfigEntry<bool> NewFileOnAutoSave { get; private set; }
@@ -124,6 +123,7 @@ public class Plugin : BaseUnityPlugin
         UpdateSaveData();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
@@ -472,13 +472,6 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
 
     private static void WriteSavesToFile()
     {

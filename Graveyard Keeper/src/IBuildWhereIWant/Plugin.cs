@@ -3,6 +3,22 @@ namespace IBuildWhereIWant;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
+    private const string AdvancedSection   = "── Advanced ──";
+    private const string CollisionSection  = "── Collision ──";
+    private const string DisplaySection    = "── Display ──";
+    private const string KeybindsSection   = "── Keybinds ──";
+    private const string ControllerSection = "── Controller ──";
+    private const string UpdatesSection    = "── Updates ──";
+
+    private static readonly Dictionary<string, string> SectionRenames = new()
+    {
+        ["00. Advanced"]   = AdvancedSection,
+        ["01. Collision"]  = CollisionSection,
+        ["02. Display"]    = DisplaySection,
+        ["03. Keybinds"]   = KeybindsSection,
+        ["04. Controller"] = ControllerSection,
+    };
+
     private const string Zone = "mf_wood";
     private const string BuildDeskConst = "buildanywhere_desk";
 
@@ -12,7 +28,6 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> BuildingCollision { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
     internal static ConfigEntry<KeyboardShortcut> MenuKeyBind { get; private set; }
     internal static ConfigEntry<string> MenuControllerButton { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
@@ -30,29 +45,87 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         LogHelper.Log = Logger;
+        MigrateRenamedSections();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
+    }
+
+    // Rewrites old numbered section headers to the new "── Name ──" style so existing
+    // user values survive the rename. Idempotent.
+    private void MigrateRenamedSections()
+    {
+        var path = Config.ConfigFilePath;
+        if (!File.Exists(path)) return;
+
+        string content;
+        try
+        {
+            content = File.ReadAllText(path);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            return;
+        }
+
+        var renamed = 0;
+        foreach (var kv in SectionRenames)
+        {
+            var oldHeader = $"[{kv.Key}]";
+            var newHeader = $"[{kv.Value}]";
+            if (!content.Contains(oldHeader)) continue;
+            content = content.Replace(oldHeader, newHeader);
+            renamed++;
+        }
+        if (renamed == 0) return;
+
+        try
+        {
+            File.WriteAllText(path, content);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            return;
+        }
+
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Config.Reload();
     }
 
     private void InitConfiguration()
     {
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false, new ConfigDescription("Enable or disable debug logging for troubleshooting purposes.", null, new ConfigurationManagerAttributes {Order = 599}));
+        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
+            new ConfigDescription("Write verbose build-menu diagnostics to the BepInEx console. Leave off for normal play.", null,
+                new ConfigurationManagerAttributes {Order = 599}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        BuildingCollision = Config.Bind("01. Collision", "Building Collision", true, new ConfigDescription("Toggle collision between buildings to place them closer together (or on top of each other...)", null, new ConfigurationManagerAttributes {Order = 604}));
+        BuildingCollision = Config.Bind(CollisionSection, "Building Collision", true,
+            new ConfigDescription("Enforce collision between buildings. Turn off to let placed structures overlap — useful for tight layouts, handy if you like stacking things.", null,
+                new ConfigurationManagerAttributes {Order = 604}));
 
-        Grid = Config.Bind("02. Display", "Grid", false, new ConfigDescription("Toggle the grid overlay from the building interface for a cleaner look.", null, new ConfigurationManagerAttributes {Order = 603}));
+        Grid = Config.Bind(DisplaySection, "Grid", false,
+            new ConfigDescription("Show the build-mode grid overlay while placing structures.", null,
+                new ConfigurationManagerAttributes {Order = 603}));
 
-        GreyOverlay = Config.Bind("02. Display", "Grey Overlay", false, new ConfigDescription("Toggle the grey overlay that appears when removing objects in the building interface.", null, new ConfigurationManagerAttributes {Order = 602}));
+        GreyOverlay = Config.Bind(DisplaySection, "Grey Overlay", false,
+            new ConfigDescription("Show the grey removal-mode overlay when tearing structures down.", null,
+                new ConfigurationManagerAttributes {Order = 602}));
 
-        MenuKeyBind = Config.Bind("03. Keybinds", "Menu Key Bind", new KeyboardShortcut(KeyCode.Q), new ConfigDescription("Define the key used to open the mod menu.", null, new ConfigurationManagerAttributes {Order = 601}));
+        MenuKeyBind = Config.Bind(KeybindsSection, "Menu Key Bind", new KeyboardShortcut(KeyCode.Q),
+            new ConfigDescription("Keybind for opening the build-anywhere crafts menu.", null,
+                new ConfigurationManagerAttributes {Order = 601}));
 
-        MenuControllerButton = Config.Bind("04. Controller", "Menu Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.LB), new ConfigDescription("Select the controller button used to open the mod menu.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 600}));
+        MenuControllerButton = Config.Bind(ControllerSection, "Menu Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.LB),
+            new ConfigDescription("Gamepad button for opening the build-anywhere crafts menu.",
+                new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
+                new ConfigurationManagerAttributes {Order = 600}));
 
-        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true, new ConfigDescription(
             "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
             null,
             new ConfigurationManagerAttributes { Order = 0 }));
@@ -151,11 +224,4 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
 }

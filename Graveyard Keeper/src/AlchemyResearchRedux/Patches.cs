@@ -3,7 +3,6 @@
 [Harmony]
 public static class Patches
 {
-
     private const string AlchemyWorkbench1ObjID = "mf_alchemy_craft_02";
     private const string AlchemyWorkbench2ObjID = "mf_alchemy_craft_03";
     private const string IngredientContainerResult = "ingredient container result";

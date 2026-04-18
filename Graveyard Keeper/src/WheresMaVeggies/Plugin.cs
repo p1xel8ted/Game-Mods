@@ -3,13 +3,19 @@ namespace WheresMaVeggies;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string AdvancedSection = "── 1. Advanced ──";
-    private const string HarvestSection  = "── 2. Harvest ──";
-    private const string UpdatesSection  = "── 3. Updates ──";
+    private const string AdvancedSection = "── Advanced ──";
+    private const string HarvestSection  = "── Harvest ──";
+    private const string UpdatesSection  = "── Updates ──";
+
+    private static readonly Dictionary<string, string> SectionRenames = new()
+    {
+        ["── 1. Advanced ──"] = AdvancedSection,
+        ["── 2. Harvest ──"]  = HarvestSection,
+        ["── 3. Updates ──"]  = UpdatesSection,
+    };
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
 
     internal static ConfigEntry<bool> RequireFarmerPerk { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
@@ -20,6 +26,7 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         LogHelper.Log = Logger;
+        MigrateRenamedSections();
 
         Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
             new ConfigDescription("Write detailed diagnostic info to the BepInEx log while you play. Turn this on before reporting a bug so the log has the context I need to help.", null,
@@ -39,6 +46,7 @@ public class Plugin : BaseUnityPlugin
 
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
@@ -54,11 +62,46 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static void ShowDebugWarningOnce()
+    // Rewrites old "── 1. Name ──" style headers to plain "── Name ──" so existing user
+    // values survive the rename. Idempotent.
+    private void MigrateRenamedSections()
     {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
+        var path = Config.ConfigFilePath;
+        if (!File.Exists(path)) return;
+
+        string content;
+        try
+        {
+            content = File.ReadAllText(path);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            return;
+        }
+
+        var renamed = 0;
+        foreach (var kv in SectionRenames)
+        {
+            var oldHeader = $"[{kv.Key}]";
+            var newHeader = $"[{kv.Value}]";
+            if (!content.Contains(oldHeader)) continue;
+            content = content.Replace(oldHeader, newHeader);
+            renamed++;
+        }
+        if (renamed == 0) return;
+
+        try
+        {
+            File.WriteAllText(path, content);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            return;
+        }
+
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Config.Reload();
     }
 }

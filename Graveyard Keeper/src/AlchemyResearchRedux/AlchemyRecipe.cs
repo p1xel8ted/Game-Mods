@@ -23,7 +23,7 @@
             if (exists == null)
             {
                 KnownRecipes.Add(recipe);
-                if (Plugin.Debug.Value)
+                if (Plugin.DebugEnabled)
                 {
                     Plugin.LOG.LogInfo($"Added recipe: [{recipe.Ingredient1}, {recipe.Ingredient2}, {recipe.Ingredient3}] -> {recipe.Result}");
                 }

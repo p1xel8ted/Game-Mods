@@ -12,7 +12,6 @@ public class Plugin : BaseUnityPlugin
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
 
     internal static ConfigEntry<bool> IncreaseBuildAndDestroySpeed { get; private set; }
     internal static ConfigEntry<float> BuildAndDestroySpeed { get; private set; }
@@ -42,15 +41,8 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
-    }
-
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     private void InitConfiguration()
@@ -65,7 +57,7 @@ public class Plugin : BaseUnityPlugin
 
         CraftSpeedMultiplier = Config.Bind(SpeedSection, "Craft Speed Multiplier", 2f,
             new ConfigDescription(
-                "Multiplier applied to crafting speed on most workbenches. Higher values finish crafts faster but cost the same total energy. Repair crafts are always excluded so the per-frame energy cost can't exceed your max energy pool.",
+                "Multiplier applied to crafts at regular workbenches (anvils, alchemy, cooking, study desks, etc.). Repair crafts are always excluded to protect per-frame energy cost. Gardens, composting, and zombie-worked stations are not covered by this — each has its own toggle further down.",
                 new AcceptableValueRange<float>(1f, 50f),
                 new ConfigurationManagerAttributes {Order = 100}));
 
@@ -79,7 +71,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "Multiplier for the build/destroy speed when the toggle above is on.",
                 new AcceptableValueRange<float>(2f, 10f),
-                new ConfigurationManagerAttributes {Order = 98}));
+                new ConfigurationManagerAttributes {Order = 98, DispName = "    └ Build And Destroy Speed"}));
 
         ModifyCompostSpeed = Config.Bind(CompostingSection, "Speed Up Composting", false,
             new ConfigDescription(
@@ -91,7 +83,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "How much faster compost heaps run when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99}));
+                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Composting Multiplier"}));
 
         ModifyPlayerGardenSpeed = Config.Bind(GardensSection, "Speed Up Your Garden", false,
             new ConfigDescription(
@@ -103,7 +95,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "How much faster your garden crops grow when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99}));
+                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Your Garden Multiplier"}));
 
         ModifyRefugeeGardenSpeed = Config.Bind(GardensSection, "Speed Up Refugee Garden", false,
             new ConfigDescription(
@@ -115,7 +107,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "How much faster refugee garden crops grow when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 97}));
+                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Refugee Garden Multiplier"}));
 
         ModifyZombieGardenSpeed = Config.Bind(GardensSection, "Speed Up Zombie Garden", false,
             new ConfigDescription(
@@ -127,11 +119,11 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "How much faster zombie garden crops grow when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 95}));
+                new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Zombie Garden Multiplier"}));
 
         ModifyZombieMinesSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Mines", false,
             new ConfigDescription(
-                "Speed up ore output from zombie-staffed mines.",
+                "Speed up ore output from zombie-staffed mines in the stone yard, marble deposit, and iron mine.",
                 null,
                 new ConfigurationManagerAttributes {Order = 100}));
 
@@ -139,7 +131,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "How much faster zombie mines produce ore when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 99}));
+                new ConfigurationManagerAttributes {Order = 99, DispName = "    └ Zombie Mines Multiplier"}));
 
         ModifyZombieSawmillSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Sawmill", false,
             new ConfigDescription(
@@ -151,7 +143,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "How much faster the zombie sawmill produces when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 97}));
+                new ConfigurationManagerAttributes {Order = 97, DispName = "    └ Zombie Sawmill Multiplier"}));
 
         ModifyZombieVineyardSpeed = Config.Bind(ProductionSection, "Speed Up Zombie Vineyard", false,
             new ConfigDescription(
@@ -163,7 +155,7 @@ public class Plugin : BaseUnityPlugin
             new ConfigDescription(
                 "How much faster the zombie vineyard produces when the toggle above is on.",
                 new AcceptableValueRange<float>(1f, 50f),
-                new ConfigurationManagerAttributes {Order = 95}));
+                new ConfigurationManagerAttributes {Order = 95, DispName = "    └ Zombie Vineyard Multiplier"}));
 
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
             new ConfigDescription(

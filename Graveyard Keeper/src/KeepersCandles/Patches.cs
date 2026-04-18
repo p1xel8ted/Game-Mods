@@ -230,7 +230,6 @@ public static class Patches
     public static void OnGameBalanceLoaded_Postfix()
     {
         OnGameBalanceLoaded();
-        Helpers.ShowDebugWarningOnce();
     }
 
     [HarmonyPrefix]

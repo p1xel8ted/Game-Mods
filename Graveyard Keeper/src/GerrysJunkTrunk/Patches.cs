@@ -513,8 +513,6 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     private static void FindJunkTrunk()
     {
-        Plugin.ShowDebugWarningOnce();
-
         // _cinematicPlaying is a static; if a previous play session ended (save-load) mid-
         // cinematic the flag persists and the next ShowCinematic returns early forever.
         // Force a recovery on every load so HUD/control are guaranteed restored.

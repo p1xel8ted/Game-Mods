@@ -3,6 +3,21 @@ namespace GerrysJunkTrunk;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
+    private const string AdvancedSection      = "── Advanced ──";
+    private const string GerrySection         = "── Gerry ──";
+    private const string MessagesSection      = "── Messages ──";
+    private const string PriceTooltipsSection = "── Price Tooltips ──";
+    private const string UpdatesSection       = "── Updates ──";
+
+    private static readonly Dictionary<string, string> SectionRenames = new()
+    {
+        ["00. Advanced"]          = AdvancedSection,
+        ["Internal (Dont Touch)"] = AdvancedSection,
+        ["01. Gerry"]             = GerrySection,
+        ["02. Messages"]          = MessagesSection,
+        ["03. Price Tooltips"]    = PriceTooltipsSection,
+    };
+
     internal const float FullPriceModifier = 0.70f;
     internal const float PityPrice = 0.10f;
     internal const int LargeInvSize = 20;
@@ -37,7 +52,6 @@ public class Plugin : BaseUnityPlugin
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
     internal static ManualLogSource Log { get; set; }
     internal static ConfigEntry<bool> ShowSoldMessagesOnPlayer { get; private set; }
     internal static ConfigEntry<bool> EnableGerry { get; private set; }
@@ -63,37 +77,83 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         LogHelper.Log = Logger;
+        MigrateRenamedSections();
         InitInternalConfiguration();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
+    }
+
+    // Rewrites old numbered section headers to the new "── Name ──" style on first launch so
+    // existing user values survive the rename. Idempotent.
+    private void MigrateRenamedSections()
+    {
+        var path = Config.ConfigFilePath;
+        if (!File.Exists(path)) return;
+
+        string content;
+        try
+        {
+            content = File.ReadAllText(path);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            return;
+        }
+
+        var renamed = 0;
+        foreach (var kv in SectionRenames)
+        {
+            var oldHeader = $"[{kv.Key}]";
+            var newHeader = $"[{kv.Value}]";
+            if (!content.Contains(oldHeader)) continue;
+            content = content.Replace(oldHeader, newHeader);
+            renamed++;
+        }
+        if (renamed == 0) return;
+
+        try
+        {
+            File.WriteAllText(path, content);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            return;
+        }
+
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Config.Reload();
     }
 
     private void InitInternalConfiguration()
     {
-        InternalShippingBoxBuilt = Config.Bind("Internal (Dont Touch)", "Shipping Box Built", false,
-            new ConfigDescription("Internal use.", null,
+        InternalShippingBoxBuilt = Config.Bind(AdvancedSection, "Shipping Box Built", false,
+            new ConfigDescription("Internal: tracks whether the shipping box has been built.", null,
                 new ConfigurationManagerAttributes
                     {Browsable = false, HideDefaultButton = true, IsAdvanced = true, ReadOnly = true, Order = 497}));
-        InternalShowIntroMessage = Config.Bind("Internal (Dont Touch)", "Show Intro Message", false,
-            new ConfigDescription("Internal use.", null,
+        InternalShowIntroMessage = Config.Bind(AdvancedSection, "Show Intro Message", false,
+            new ConfigDescription("Internal: tracks whether the one-time intro message has been shown.", null,
                 new ConfigurationManagerAttributes
                     {Browsable = false, HideDefaultButton = true, IsAdvanced = true, ReadOnly = true, Order = 496}));
     }
 
     private void InitConfiguration()
     {
-        Debug = Config.Bind("00. Advanced", "Debug Logging", false,
-            new ConfigDescription("Toggle debug logging on or off", null,
+        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
+            new ConfigDescription("Write verbose Gerry and shipping-box diagnostics to the BepInEx console. Leave off for normal play.", null,
                 new ConfigurationManagerAttributes {Order = 0}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
-        EnableGerry = Config.Bind("01. Gerry", "Gerry", true,
-            new ConfigDescription("Toggle Gerry", null, new ConfigurationManagerAttributes {Order = 6}));
+        EnableGerry = Config.Bind(GerrySection, "Gerry", true,
+            new ConfigDescription("Enable Gerry's buyback service — when on, items left in the shipping box are sold and Gerry arrives to deliver the coin.", null,
+                new ConfigurationManagerAttributes {Order = 6}));
 
-        CinematicMode = Config.Bind("01. Gerry", "Cinematic Mode", true,
+        CinematicMode = Config.Bind(GerrySection, "Cinematic Mode", true,
             new ConfigDescription("When on, the camera focuses on Gerry and you can't move during his visit. When off, Gerry still appears and speaks but the game keeps running normally around you.", null,
                 new ConfigurationManagerAttributes {Order = 5, DispName = "    \u2514 Cinematic Mode"}));
         CinematicMode.SettingChanged += (_, _) =>
@@ -107,15 +167,15 @@ public class Plugin : BaseUnityPlugin
             }
         };
 
-        ShowSoldMessagesOnPlayer = Config.Bind("02. Messages", "Show Sold Messages On Player", true,
-            new ConfigDescription("Display messages on the player when items are sold", null,
+        ShowSoldMessagesOnPlayer = Config.Bind(MessagesSection, "Show Sold Messages On Player", true,
+            new ConfigDescription("Show the earned-coin bubble above your character instead of above the shipping box when Gerry pays out.", null,
                 new ConfigurationManagerAttributes {Order = 5}));
 
-        ShowItemPriceTooltips = Config.Bind("03. Price Tooltips", "Show Item Price Tooltips", true,
-            new ConfigDescription("Display tooltips with item prices in the user interface", null,
+        ShowItemPriceTooltips = Config.Bind(PriceTooltipsSection, "Show Item Price Tooltips", true,
+            new ConfigDescription("Show each item's shipping-box sale price as a tooltip when hovering over it in inventories.", null,
                 new ConfigurationManagerAttributes {Order = 2}));
 
-        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true, new ConfigDescription(
             "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
             null,
             new ConfigurationManagerAttributes { Order = 0 }));
@@ -131,14 +191,6 @@ public class Plugin : BaseUnityPlugin
         {
             LogHelper.Info(message);
         }
-    }
-
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     internal static void ShowCinematic(Transform transform)

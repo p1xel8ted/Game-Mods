@@ -14,11 +14,4 @@ public static class Helpers
         }
     }
 
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!Plugin.DebugEnabled || Plugin.DebugDialogShown) return;
-        Plugin.DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK("Give Me Moar!", null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
 }

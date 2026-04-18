@@ -18,13 +18,6 @@ public static class Patches
     private static float _lastDeliveryGameTime = -1f;
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
-    public static void GameSave_GlobalEventsCheck_DebugWarning()
-    {
-        Plugin.ShowDebugWarningOnce();
-    }
-
-    [HarmonyPostfix]
     [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
     public static void MainGame_Update()
     {

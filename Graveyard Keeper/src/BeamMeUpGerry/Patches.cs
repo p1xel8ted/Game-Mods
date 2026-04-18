@@ -13,7 +13,6 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
     {
-        Plugin.ShowDebugWarningOnce();
         UpdateZoneUpdaters();
     }
 

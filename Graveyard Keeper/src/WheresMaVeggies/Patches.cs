@@ -3,13 +3,6 @@
 [Harmony]
 public static class Patches
 {
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
-    public static void GameSave_GlobalEventsCheck_DebugWarning()
-    {
-        Plugin.ShowDebugWarningOnce();
-    }
-
     private static void MyDoPreZero(WorldGameObject wgo)
     {
         if (!Helpers.IsReady())

@@ -11,7 +11,6 @@ public class Plugin : BaseUnityPlugin
 
     internal static ConfigEntry<bool> Debug;
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
     internal static ManualLogSource Log { get; private set; }
 
     internal static bool PrideDayLogged { get; set; }
@@ -39,6 +38,7 @@ public class Plugin : BaseUnityPlugin
         InitInternalConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
         if (DebugEnabled)
         {
@@ -91,14 +91,6 @@ public class Plugin : BaseUnityPlugin
                 "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
                 null,
                 new ConfigurationManagerAttributes {Order = 1}));
-    }
-
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
     }
 
     private void InitInternalConfiguration()

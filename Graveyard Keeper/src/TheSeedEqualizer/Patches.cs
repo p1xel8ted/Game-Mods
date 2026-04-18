@@ -4,13 +4,6 @@ namespace TheSeedEqualizer;
 public static class Patches
 {
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
-    public static void GameSave_GlobalEventsCheck_DebugWarning()
-    {
-        Plugin.ShowDebugWarningOnce();
-    }
-
-    [HarmonyPostfix]
     [HarmonyPatch(typeof(GameBalance), nameof(GameBalance.LoadGameBalance))]
     public static void GameBalance_LoadGameBalance()
     {

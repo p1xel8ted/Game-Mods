@@ -5,6 +5,7 @@
 - Fixed Chinese translations not loading
 - Fixed graves, garden beds, and other build-menu items becoming unplaceable when Auto Max Normal Crafts or Auto Max Multi-Quality Crafts was enabled
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
+- Rest In Patches is now a required dependency. Install it first or this mod will refuse to load
 
 ## 2.1.12 | 15 April 2026
 

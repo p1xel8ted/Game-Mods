@@ -4,9 +4,31 @@ namespace BeamMeUpGerry;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
+    private const string AdvancedSection        = "── Advanced ──";
+    private const string FeaturesSection        = "── Features ──";
+    private const string KeybindsSection        = "── Keybinds ──";
+    private const string ControllerSection      = "── Controller ──";
+    private const string LocationsSection       = "── Locations ──";
+    private const string CustomLocationsSection = "── Custom Locations ──";
+    private const string UpdatesSection         = "── Updates ──";
+
+    // Old section names get rewritten to the new "── Name ──" style on first launch so
+    // existing user customisations are preserved. Idempotent.
+    private static readonly Dictionary<string, string> SectionRenames = new()
+    {
+        ["00. Debug"]              = AdvancedSection,
+        ["Internal (Dont Touch)"]  = AdvancedSection,
+        ["Print Known"]            = AdvancedSection,
+        ["01. Features"]           = FeaturesSection,
+        ["02. Keybinds"]           = KeybindsSection,
+        ["03. Controller"]         = ControllerSection,
+        ["04. Locations"]          = LocationsSection,
+        ["5. Locations"]           = LocationsSection,
+        ["05. Custom Locations"]   = CustomLocationsSection,
+    };
+
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
     internal static ConfigEntry<bool> IncreaseMenuAnimationSpeed { get; private set; }
     internal static ConfigEntry<bool> EnableListExpansion { get; private set; }
     internal static ConfigEntry<bool> GerryAppears { get; private set; }
@@ -40,17 +62,68 @@ public class Plugin : BaseUnityPlugin
         ConfigInstance = Config;
         Log = Logger;
         LogHelper.Log = Logger;
+        MigrateRenamedSections();
         InitConfiguration();
         InitInternalConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
+    }
+
+    // Rewrites old numbered "[00. Debug]" / "[01. Features]" headers to "[── Name ──]" in the .cfg
+    // so existing user values survive the section rename. Idempotent — re-running on an
+    // already-migrated file is a no-op.
+    private void MigrateRenamedSections()
+    {
+        var path = Config.ConfigFilePath;
+        if (!File.Exists(path)) return;
+
+        string content;
+        try
+        {
+            content = File.ReadAllText(path);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            return;
+        }
+
+        var renamed = 0;
+        foreach (var kv in SectionRenames)
+        {
+            var oldHeader = $"[{kv.Key}]";
+            var newHeader = $"[{kv.Value}]";
+            if (!content.Contains(oldHeader)) continue;
+            content = content.Replace(oldHeader, newHeader);
+            renamed++;
+        }
+        if (renamed == 0) return;
+
+        try
+        {
+            File.WriteAllText(path, content);
+        }
+        catch (Exception ex)
+        {
+            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            return;
+        }
+
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Config.Reload();
     }
 
     private void InitInternalConfiguration()
     {
-        CustomLocationMessage = Config.Bind("Internal (Dont Touch)", "Custom Location Shown", false, new ConfigDescription("Internal use. Used for tracking if the custom location alert has been shown.", null, new ConfigurationManagerAttributes {Browsable = false, HideDefaultButton = true, IsAdvanced = true, ReadOnly = true, Order = 6}));
-        Config.Bind("Print Known", "Print Known", false, new ConfigDescription("Click to output known zones to log.", null, new ConfigurationManagerAttributes {CustomDrawer = PrintKnown, HideDefaultButton = true, Order = 5}));
+        CustomLocationMessage = Config.Bind(AdvancedSection, "Custom Location Shown", false,
+            new ConfigDescription("Internal: tracks whether the one-time 'Custom Locations were enabled' notice has already been shown.", null,
+                new ConfigurationManagerAttributes {Browsable = false, HideDefaultButton = true, IsAdvanced = true, ReadOnly = true, Order = 6}));
+
+        Config.Bind(AdvancedSection, "Print Known", false,
+            new ConfigDescription("Click to dump known NPCs, zones, one-time crafts, and unlocked/blacklisted phrases to the log. Handy for diagnostics.", null,
+                new ConfigurationManagerAttributes {CustomDrawer = PrintKnown, HideDefaultButton = true, Order = 5}));
     }
     private static void PrintKnown(ConfigEntryBase __obj)
     {
@@ -91,30 +164,53 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
-
     internal static void InitConfiguration()
     {
         LocationLists.LoadCustomZones();
 
-        Debug = ConfigInstance.Bind("00. Debug", "Debug", false, new ConfigDescription("Toggle debug logging", null, new ConfigurationManagerAttributes {IsAdvanced = true, Order = 803}));
+        Debug = ConfigInstance.Bind(AdvancedSection, "Debug", false,
+            new ConfigDescription("Write verbose teleport and location diagnostics to the BepInEx console. Leave off for normal play.",
+                null,
+                new ConfigurationManagerAttributes {IsAdvanced = true, Order = 803}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
-        IncreaseMenuAnimationSpeed = ConfigInstance.Bind("01. Features", "Increase Menu Animation Speed", true, new ConfigDescription("Toggle increased menu animation speed", null, new ConfigurationManagerAttributes {Order = 801}));
-        EnableListExpansion = ConfigInstance.Bind("01. Features", "Enable List Expansion", true, new ConfigDescription("Toggle list expansion functionality", null, new ConfigurationManagerAttributes {Order = 799}));
-        GerryAppears = ConfigInstance.Bind("01. Features", "Gerry Appears", false, new ConfigDescription("Toggle Gerry's presence", null, new ConfigurationManagerAttributes {Order = 798}));
-        CinematicEffect = ConfigInstance.Bind("01. Features", "Cinematic Effect", true, new ConfigDescription("Toggle cinematic effect.", null, new ConfigurationManagerAttributes {Order = 797}));
-        GerryCharges = ConfigInstance.Bind("01. Features", "Gerry Charges", false, new ConfigDescription("Toggle the cost of teleporting", null, new ConfigurationManagerAttributes {Order = 797}));
-        EnablePreviousPageChoices = ConfigInstance.Bind("01. Features", "Enable Previous Page Choices", true, new ConfigDescription("Toggle the ability to go back to the previous page", null, new ConfigurationManagerAttributes {Order = 796}));
-        PreviousPageChoiceAtTop = ConfigInstance.Bind("01. Features", "Previous Page Choice At Top", true, new ConfigDescription("Toggle the placement of the previous page choice at the top of the list", null, new ConfigurationManagerAttributes {Order = 795}));
-        TeleportMenuKeyBind = ConfigInstance.Bind("02. Keybinds", "Teleport Menu Keybind", new KeyboardShortcut(KeyCode.Z), new ConfigDescription("Set the keybind for opening the teleport menu", null, new ConfigurationManagerAttributes {Order = 796}));
-        TeleportMenuControllerButton = ConfigInstance.Bind("03. Controller", "Teleport Menu Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.RB), new ConfigDescription("Set the controller button for opening the teleport menu", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 795}));
+
+        IncreaseMenuAnimationSpeed = ConfigInstance.Bind(FeaturesSection, "Increase Menu Animation Speed", true,
+            new ConfigDescription("Speed up the teleport menu's open and close animation for snappier navigation.", null,
+                new ConfigurationManagerAttributes {Order = 801}));
+
+        EnableListExpansion = ConfigInstance.Bind(FeaturesSection, "Enable List Expansion", true,
+            new ConfigDescription("Expand the visible locations list so more locations fit on screen at once.", null,
+                new ConfigurationManagerAttributes {Order = 799}));
+
+        GerryAppears = ConfigInstance.Bind(FeaturesSection, "Gerry Appears", false,
+            new ConfigDescription("When on, Gerry appears at each teleport destination as a little story beat. Off for silent instant teleports.", null,
+                new ConfigurationManagerAttributes {Order = 798}));
+
+        CinematicEffect = ConfigInstance.Bind(FeaturesSection, "Cinematic Effect", true,
+            new ConfigDescription("Play a brief fade effect when teleporting.", null,
+                new ConfigurationManagerAttributes {Order = 797}));
+
+        GerryCharges = ConfigInstance.Bind(FeaturesSection, "Gerry Charges", false,
+            new ConfigDescription("Charge money for each non-starter teleport. Turn off to make teleports free.", null,
+                new ConfigurationManagerAttributes {Order = 796}));
+
+        EnablePreviousPageChoices = ConfigInstance.Bind(FeaturesSection, "Enable Previous Page Choices", true,
+            new ConfigDescription("Show a back-to-previous-page entry in the teleport menu.", null,
+                new ConfigurationManagerAttributes {Order = 795}));
+
+        PreviousPageChoiceAtTop = ConfigInstance.Bind(FeaturesSection, "Previous Page Choice At Top", true,
+            new ConfigDescription("Put the back-to-previous-page entry at the top of the list instead of the bottom.", null,
+                new ConfigurationManagerAttributes {Order = 794, DispName = "    └ Previous Page Choice At Top"}));
+
+        TeleportMenuKeyBind = ConfigInstance.Bind(KeybindsSection, "Teleport Menu Keybind", new KeyboardShortcut(KeyCode.Z),
+            new ConfigDescription("Keybind for opening the teleport menu.", null,
+                new ConfigurationManagerAttributes {Order = 796}));
+
+        TeleportMenuControllerButton = ConfigInstance.Bind(ControllerSection, "Teleport Menu Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.RB),
+            new ConfigDescription("Gamepad button for opening the teleport menu.",
+                new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
+                new ConfigurationManagerAttributes {Order = 795}));
 
         var maxPages = Constants.MaxPages;
         var minPages = Mathf.CeilToInt(LocationLists.AllLocations.Count / (float) Constants.MaxPages);
@@ -126,19 +222,45 @@ public class Plugin : BaseUnityPlugin
 
         Log.LogInfo($"Min Pages: {minPages} | Max Pages: {maxPages}");
 
-        LocationsPerPage = ConfigInstance.Bind("04. Locations", "Locations Per Page", 8, new ConfigDescription("Set the number of locations to display per page", new AcceptableValueRange<int>(minPages, maxPages), new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 794}));
-        SortAlphabetically = ConfigInstance.Bind("04. Locations", "Sort Alphabetically", false, new ConfigDescription("Toggle alphabetical sorting of locations", null, new ConfigurationManagerAttributes {Order = 793}));
-        RestrictToFoundLocations = ConfigInstance.Bind("04. Locations", "Restrict To Found Locations", true, new ConfigDescription("Toggle the ability to restrict locations to found locations", null, new ConfigurationManagerAttributes {Order = 792}));
-        EnableCustomLocations = ConfigInstance.Bind("05. Custom Locations", "Enable Custom Locations", false, new ConfigDescription("Toggle the ability to save & load custom locations.", null, new ConfigurationManagerAttributes {Order = 792}));
-        SaveCustomLocationKeybind = ConfigInstance.Bind("05. Custom Locations", "Save Custom Location Keybind", new KeyboardShortcut(KeyCode.X), new ConfigDescription("Set the keybind for saving custom locations.", null, new ConfigurationManagerAttributes {Order = 791}));
-        ReloadCustomLocationsKeybind = ConfigInstance.Bind("05. Custom Locations", "Reload Custom Locations Keybind", new KeyboardShortcut(KeyCode.X, KeyCode.LeftControl), new ConfigDescription("Set the keybind for reloading custom locations.", null, new ConfigurationManagerAttributes {Order = 790}));
-        SaveCustomLocationControllerButton = ConfigInstance.Bind("05. Custom Locations", "Save Custom Location Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.None), new ConfigDescription("Set the controller button for saving custom locations.", new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))), new ConfigurationManagerAttributes {Order = 790}));
-        OpenNewLocationFileOnSave = ConfigInstance.Bind("05. Custom Locations", "Open New Location File On Save", true, new ConfigDescription("Toggle the ability to open the new location file after saving.", null, new ConfigurationManagerAttributes {Order = 789}));
+        LocationsPerPage = ConfigInstance.Bind(LocationsSection, "Locations Per Page", 8,
+            new ConfigDescription("How many locations to show per page in the teleport menu.",
+                new AcceptableValueRange<int>(minPages, maxPages),
+                new ConfigurationManagerAttributes {ShowRangeAsPercent = false, Order = 794}));
 
-        CheckForUpdates = ConfigInstance.Bind("── Updates ──", "Check for Updates", true, new ConfigDescription(
-            "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
-            null,
-            new ConfigurationManagerAttributes { Order = 0 }));
+        SortAlphabetically = ConfigInstance.Bind(LocationsSection, "Sort Alphabetically", false,
+            new ConfigDescription("Sort visible locations alphabetically. Off uses the game's default order.", null,
+                new ConfigurationManagerAttributes {Order = 793}));
+
+        RestrictToFoundLocations = ConfigInstance.Bind(LocationsSection, "Restrict To Found Locations", true,
+            new ConfigDescription("Only show locations you've already discovered. Off shows every location regardless of progress.", null,
+                new ConfigurationManagerAttributes {Order = 792}));
+
+        EnableCustomLocations = ConfigInstance.Bind(CustomLocationsSection, "Enable Custom Locations", false,
+            new ConfigDescription("Allow saving and loading custom teleport points at your current position.", null,
+                new ConfigurationManagerAttributes {Order = 792}));
+
+        SaveCustomLocationKeybind = ConfigInstance.Bind(CustomLocationsSection, "Save Custom Location Keybind", new KeyboardShortcut(KeyCode.X),
+            new ConfigDescription("Keybind for saving the current spot as a custom teleport location.", null,
+                new ConfigurationManagerAttributes {Order = 791, DispName = "    └ Save Custom Location Keybind"}));
+
+        ReloadCustomLocationsKeybind = ConfigInstance.Bind(CustomLocationsSection, "Reload Custom Locations Keybind", new KeyboardShortcut(KeyCode.X, KeyCode.LeftControl),
+            new ConfigDescription("Keybind for reloading the custom locations file from disk after editing it externally.", null,
+                new ConfigurationManagerAttributes {Order = 790, DispName = "    └ Reload Custom Locations Keybind"}));
+
+        SaveCustomLocationControllerButton = ConfigInstance.Bind(CustomLocationsSection, "Save Custom Location Controller Button", Enum.GetName(typeof(GamePadButton), GamePadButton.None),
+            new ConfigDescription("Gamepad button for saving the current spot as a custom teleport location.",
+                new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
+                new ConfigurationManagerAttributes {Order = 789, DispName = "    └ Save Custom Location Controller Button"}));
+
+        OpenNewLocationFileOnSave = ConfigInstance.Bind(CustomLocationsSection, "Open New Location File On Save", true,
+            new ConfigDescription("Open the custom locations file in your text editor after saving so you can name the new entry.", null,
+                new ConfigurationManagerAttributes {Order = 788, DispName = "    └ Open New Location File On Save"}));
+
+        CheckForUpdates = ConfigInstance.Bind(UpdatesSection, "Check for Updates", true,
+            new ConfigDescription(
+                "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
+                null,
+                new ConfigurationManagerAttributes { Order = 0 }));
     }
 
     internal static readonly Dictionary<string, ConfigEntry<bool>> LocationSettings = [];
@@ -154,7 +276,7 @@ public class Plugin : BaseUnityPlugin
         foreach (var location in LocationLists.AllLocations.OrderByDescending(a => Helpers.RemoveCharacters(a.zone)))
         {
             var key = Helpers.RemoveCharacters(location.zone);
-            var configEntry = ConfigInstance.Bind("5. Locations", key, true, $"Toggle visibility of {key} in the menu.");
+            var configEntry = ConfigInstance.Bind(LocationsSection, key, true, $"Toggle visibility of {key} in the menu.");
             location.enabled = configEntry.Value;
             configEntry.SettingChanged += (_, _) =>
             {

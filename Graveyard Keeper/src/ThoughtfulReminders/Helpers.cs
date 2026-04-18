@@ -27,14 +27,6 @@ public static class Helpers
         }
     }
 
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!Plugin.DebugEnabled || Plugin.DebugDialogShown) return;
-        Plugin.DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK("Thoughtful Reminders", null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
-
     internal static void Log(string message, bool error = false)
     {
         if (error)

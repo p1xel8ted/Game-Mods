@@ -8,7 +8,6 @@ public static class Patches
     public static void GameSave_GlobalEventsCheck()
     {
         if (Plugin.DebugEnabled) Plugin.WriteLog("[SaveNow] Player spawned — restoring location and starting timers");
-        Plugin.ShowDebugWarningOnce();
         Plugin.RestoreLocation();
     }
 

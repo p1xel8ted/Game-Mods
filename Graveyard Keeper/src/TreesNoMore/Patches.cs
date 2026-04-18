@@ -7,8 +7,7 @@ public static class Patches
     [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
     public static void GameSave_GlobalEventsCheck()
     {
-        if (Plugin.DebugEnabled) Helpers.Log("[GlobalEventsCheck] postfix firing — show debug warning if needed, then destroy tracked trees");
-        Helpers.ShowDebugWarningOnce();
+        if (Plugin.DebugEnabled) Helpers.Log("[GlobalEventsCheck] postfix firing — destroy tracked trees");
         DestroyTrees();
     }
 

@@ -90,13 +90,6 @@ public static class Patches
         }
     }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
-    public static void GameSave_GlobalEventsCheck_DebugWarning()
-    {
-        Plugin.ShowDebugWarningOnce();
-    }
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(EnvironmentEngine), nameof(EnvironmentEngine.OnEndOfDay))]
     public static void EnvironmentEngine_OnEndOfDay()

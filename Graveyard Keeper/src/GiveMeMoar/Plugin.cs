@@ -23,7 +23,6 @@ public class Plugin : BaseUnityPlugin
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
 
     // ── Multipliers ──
     internal static ConfigEntry<float> ResourceMultiplier { get; private set; }
@@ -70,6 +69,7 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 

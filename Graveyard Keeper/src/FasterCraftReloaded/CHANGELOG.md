@@ -8,6 +8,9 @@
 - Debug log output is less spammy — one line per craft session instead of one per frame
 - Enabling Debug Logging now shows a one-time in-game reminder so you don't forget it's on, with translations across all 11 supported languages
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
+- Configuration Manager now indents each speed multiplier under its parent toggle, matching the rest of this mod collection
+- Clarified the Craft Speed Multiplier description so it's obvious gardens, composting, and zombie stations have their own dedicated toggles and aren't covered by the main multiplier
+- Clarified what the Speed Up Zombie Mines toggle actually covers — the stone yard, marble deposit, and iron mine. The old description mentioned the zombie mill, but that's the sawmill zone and it's covered by the Speed Up Zombie Sawmill toggle instead
 
 ## 1.4.10 | 11 April 2026
 

@@ -1,6 +1,7 @@
 namespace MaxButtonsRedux;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency("p1xel8ted.gyk.restinpatches")]
 public class Plugin : BaseUnityPlugin
 {
     internal static ManualLogSource Log { get; private set; }

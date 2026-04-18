@@ -10,13 +10,6 @@ public static class Helpers
         if (Plugin.DebugEnabled) Log("[SpawnPlayer] GlobalEventsCheck postfix fired — running spawn-time actions.");
         if (!MainGame.game_started) return;
 
-        if (Plugin.DebugEnabled && !Plugin.DebugDialogShown)
-        {
-            Plugin.DebugDialogShown = true;
-            Lang.Reload();
-            GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
-        }
-
         if (!_sprintMsgShown && Sprint && Plugin.ModifyPlayerMovementSpeedConfig.Value)
         {
             if (Plugin.DebugEnabled) Log("[SpawnPlayer] Sprint Reloaded detected with player speed override on — showing incompatibility dialog.");

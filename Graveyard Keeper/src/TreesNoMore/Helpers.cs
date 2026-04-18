@@ -14,13 +14,4 @@ public static class Helpers
         }
     }
 
-    // One-shot in-game reminder so a player who flipped on Debug Logging in a previous session
-    // is told it's still on next time they load. Mirrors WMS/QE/SaveNow patterns.
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!Plugin.DebugEnabled || Plugin.DebugDialogShown) return;
-        Plugin.DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
 }

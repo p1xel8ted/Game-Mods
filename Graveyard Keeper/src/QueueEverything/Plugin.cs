@@ -1,6 +1,7 @@
 namespace QueueEverything;
 
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInDependency("p1xel8ted.gyk.restinpatches")]
 public class Plugin : BaseUnityPlugin
 {
     private const string AdvancedSection    = "── Advanced ──";
@@ -24,7 +25,6 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> FcTimeAdjustment { get; private set; }
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
     internal static ManualLogSource Log { get; private set; }
 
@@ -77,6 +77,7 @@ public class Plugin : BaseUnityPlugin
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
@@ -242,11 +243,4 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
-    internal static void ShowDebugWarningOnce()
-    {
-        if (!DebugEnabled || DebugDialogShown) return;
-        DebugDialogShown = true;
-        Lang.Reload();
-        GUIElements.me.dialog.OpenOK(MyPluginInfo.PLUGIN_NAME, null, Lang.Get("DebugWarning"), true, string.Empty);
-    }
 }

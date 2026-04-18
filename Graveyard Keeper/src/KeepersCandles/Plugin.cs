@@ -29,7 +29,6 @@ public class Plugin : BaseUnityPlugin
 
     internal static ManualLogSource Log { get; private set; }
     internal static bool DebugEnabled;
-    internal static bool DebugDialogShown;
 
     internal static ConfigEntry<bool> Debug { get; private set; }
     internal static ConfigEntry<float> ExtinguishDistance { get; private set; }
@@ -50,6 +49,7 @@ public class Plugin : BaseUnityPlugin
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         SceneManager.sceneLoaded += (_, _) => Patches.OnGameBalanceLoaded();
         UpdateChecker.Register(Info, CheckForUpdates);
+        DebugWarningDialog.Register(MyPluginInfo.PLUGIN_NAME, () => DebugEnabled);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 

@@ -16,13 +16,6 @@ public static class Patches
     private static string _lastCraftDoActionKey;
     private static string _lastReallyUpdateKey;
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
-    public static void GameSave_GlobalEventsCheck_DebugWarning()
-    {
-        Plugin.ShowDebugWarningOnce();
-    }
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(BuildModeLogics), nameof(BuildModeLogics.ProcessRemovingCraft))]
     public static void BuildModeLogics_ProcessRemovingCraft(WorldGameObject wgo, ref float delta_time)

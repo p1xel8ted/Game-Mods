@@ -26,6 +26,13 @@ internal static class MainMenuPatch
         {
             return;
         }
+
+        var buttonBackground = __instance.transform.Find("dark back (1)");
+        if (buttonBackground && buttonBackground.gameObject.activeSelf)
+        {
+            buttonBackground.gameObject.SetActive(false);
+        }
+        
         if(versionLabel.text.Contains("Modded"))
         {
             return;

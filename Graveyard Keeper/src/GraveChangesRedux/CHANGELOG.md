@@ -3,6 +3,7 @@
 ## 0.1.8 | 18 April 2026
 
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
+- Settings pane tidied up: sections now use a cleaner `── Name ──` style and every option has a clearer description. Your existing values carry across unchanged
 
 ## 0.1.7 | 12 April 2026
 

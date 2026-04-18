@@ -88,13 +88,6 @@ public static class Patches
     private static bool _craftOutputApplied;
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameSave), nameof(GameSave.GlobalEventsCheck))]
-    public static void GameSave_GlobalEventsCheck_DebugWarning()
-    {
-        Helpers.ShowDebugWarningOnce();
-    }
-
-    [HarmonyPostfix]
     [HarmonyPatch(typeof(GameBalance), nameof(GameBalance.LoadGameBalance))]
     public static void GameBalance_LoadGameBalance_Postfix()
     {
