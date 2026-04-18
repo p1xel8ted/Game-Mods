@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.5 | 17 April 2026
+## 0.1.5 | 18 April 2026
 
 - Chopped logs, broken stones, and mined blocks now land next to the tree or rock instead of flying at your feet (toggleable in the config)
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it

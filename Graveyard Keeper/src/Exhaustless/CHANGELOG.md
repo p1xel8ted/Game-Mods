@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.5.4 | 17 April 2026
+## 3.5.4 | 18 April 2026
 
 - Fixed Chinese translations not loading
 - Added a quiet update notification on the main menu showing which mods in this collection have newer versions on Nexus. Click an entry to open its Nexus page. Opt-out via the new "Check for Updates" setting

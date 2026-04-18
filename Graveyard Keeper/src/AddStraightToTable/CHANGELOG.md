@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.4.11 | 17 April 2026
+## 2.4.11 | 18 April 2026
 
 - Added a quiet update notification on the main menu showing which mods in this collection have newer versions on Nexus. Click an entry to open its Nexus page. Opt-out via the new "Check for Updates" setting
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.1 | 17 April 2026
+## 0.1.1 | 18 April 2026
 
 - Fixes the mouse cursor sometimes vanishing and refusing to come back until you sleep or restart the game. Mostly reported on Linux.
 - Fixes timber and ore stockpiles vanishing from the world whenever another mod raises their capacity above the original 10. The pile now stays visible as "full" for any amount above the usual limit, and snaps back to showing the exact count as soon as you drop below it.
