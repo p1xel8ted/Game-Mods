@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-04-17T14:01:51Z",
-  "generated_by": "gyk-update-manifest.yml@e8361a2a",
+  "generated_at": "2026-04-19T16:27:25Z",
+  "generated_by": "gyk-update-manifest.yml@6bf8b992",
   "game_domain": "graveyardkeeper",
   "mods": [
     {
@@ -278,10 +278,10 @@
       "plugin_guid": "p1xel8ted.gyk.restinpatches",
       "nexus_mod_id": 125,
       "nexus_url": "https://www.nexusmods.com/graveyardkeeper/mods/125",
-      "latest_version": "0.1.0",
-      "latest_file_id": 956,
+      "latest_version": "0.1.1",
+      "latest_file_id": 1034,
       "latest_file_name": "Rest In Patches",
-      "uploaded_unix": 1775984603,
+      "uploaded_unix": 1776582662,
       "status": "ok"
     },
     {
