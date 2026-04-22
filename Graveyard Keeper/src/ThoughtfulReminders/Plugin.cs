@@ -3,13 +3,16 @@ namespace ThoughtfulReminders;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string AdvancedSection  = "── 1. Advanced ──";
-    private const string RemindersSection = "── 2. Reminders ──";
-    private const string UpdatesSection   = "── 3. Updates ──";
+    private const string AdvancedSection  = "── Advanced ──";
+    private const string RemindersSection = "── Reminders ──";
+    private const string UpdatesSection   = "── Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
-        ["01. General"] = RemindersSection,
+        ["01. General"]        = RemindersSection,
+        ["── 1. Advanced ──"]  = AdvancedSection,
+        ["── 2. Reminders ──"] = RemindersSection,
+        ["── 3. Updates ──"]   = UpdatesSection,
     };
 
     internal static ConfigEntry<bool> Debug { get; private set; }
@@ -18,6 +21,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> EnableEventMessages { get; private set; }
     internal static ConfigEntry<bool> DaysOnlyConfig { get; private set; }
     internal static ConfigEntry<bool> SpeechBubblesConfig { get; private set; }
+    internal static ConfigEntry<float> WakeUpDelay { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static ManualLogSource Log { get; private set; }
@@ -99,6 +103,11 @@ public class Plugin : BaseUnityPlugin
         SpeechBubblesConfig = Config.Bind(RemindersSection, "Speech Bubbles", true,
             new ConfigDescription("How reminders are displayed on screen. On: your character says the reminder in a thought-style speech bubble. Off: the reminder floats above your head as a small red label instead.", null,
                 new ConfigurationManagerAttributes {Order = 90}));
+
+        WakeUpDelay = Config.Bind(RemindersSection, "Wake-Up Delay", 2f,
+            new ConfigDescription("How long to wait (in seconds) before showing a reminder after waking up in bed. Lets the wake-up screen finish fading so the message isn't covered up. Set to 0 for instant reminders.",
+                new AcceptableValueRange<float>(0f, 10f),
+                new ConfigurationManagerAttributes {Order = 80}));
 
         // ── 3. Updates ──
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,

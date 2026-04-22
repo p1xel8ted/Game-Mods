@@ -167,8 +167,7 @@ internal static class HighDpiFix
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(LayersKeyPath, true);
-            if (key == null) return true; // nothing to remove
-            if (key.GetValue(exe) == null) return true;
+            if (key?.GetValue(exe) == null) return true;
             key.DeleteValue(exe, false);
             Plugin.Log.LogInfo($"[HighDpiFix] Removed HKCU Layers entry for {exe}");
             return true;

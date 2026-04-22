@@ -3,25 +3,33 @@ namespace TheSeedEqualizer;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    // Section names. Sections render in CM in the order their first Config.Bind call runs,
-    // so Advanced is bound first. Legacy "0X. Name" headers get rewritten to these by
+    // Section names: plain "── Name ──" style. Sections render in CM in the order their first
+    // Config.Bind call runs, so Advanced is bound first. Legacy headers (both the pre-1.3.11
+    // "0X. Name" style and the interim "── N. Name ──" form) get rewritten to these by
     // MigrateRenamedSections() on first launch so existing user customisations are preserved.
-    private const string AdvancedSection       = "── 1. Advanced ──";
-    private const string PlayerGardensSection  = "── 2. Player Gardens ──";
-    private const string ZombieGardensSection  = "── 3. Zombie Gardens ──";
-    private const string RefugeeGardensSection = "── 4. Refugee Gardens ──";
-    private const string WasteSection          = "── 5. Waste ──";
-    private const string AllGardensSection     = "── 6. All Gardens ──";
-    private const string UpdatesSection        = "── 7. Updates ──";
+    private const string AdvancedSection       = "── Advanced ──";
+    private const string PlayerGardensSection  = "── Player Gardens ──";
+    private const string ZombieGardensSection  = "── Zombie Gardens ──";
+    private const string RefugeeGardensSection = "── Refugee Gardens ──";
+    private const string WasteSection          = "── Waste ──";
+    private const string AllGardensSection     = "── All Gardens ──";
+    private const string UpdatesSection        = "── Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
-        ["00. Advanced"]        = AdvancedSection,
-        ["01. Zombie Gardens"]  = ZombieGardensSection,
-        ["02. Player Gardens"]  = PlayerGardensSection,
-        ["03. Refugee Gardens"] = RefugeeGardensSection,
-        ["04. Waste"]           = WasteSection,
-        ["05. All Gardens"]     = AllGardensSection,
+        ["00. Advanced"]             = AdvancedSection,
+        ["01. Zombie Gardens"]       = ZombieGardensSection,
+        ["02. Player Gardens"]       = PlayerGardensSection,
+        ["03. Refugee Gardens"]      = RefugeeGardensSection,
+        ["04. Waste"]                = WasteSection,
+        ["05. All Gardens"]          = AllGardensSection,
+        ["── 1. Advanced ──"]        = AdvancedSection,
+        ["── 2. Player Gardens ──"]  = PlayerGardensSection,
+        ["── 3. Zombie Gardens ──"]  = ZombieGardensSection,
+        ["── 4. Refugee Gardens ──"] = RefugeeGardensSection,
+        ["── 5. Waste ──"]           = WasteSection,
+        ["── 6. All Gardens ──"]     = AllGardensSection,
+        ["── 7. Updates ──"]         = UpdatesSection,
     };
 
     internal static ManualLogSource Log { get; private set; }

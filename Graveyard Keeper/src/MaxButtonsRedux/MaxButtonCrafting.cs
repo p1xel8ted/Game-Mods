@@ -8,7 +8,12 @@ public static class MaxButtonCrafting
         {
             return;
         }
-        
+
+        if (craftItemGUI.transform.Find($"selection frame/amount buttons/{minMaxButtonName}") != null)
+        {
+            return;
+        }
+
         var parentButtonTransform = craftItemGUI.transform.Find($"selection frame/amount buttons/{parentButtonName}");
         var parentButtonSprite = parentButtonTransform.GetComponent<UI2DSprite>();
         var parentButtonCollider = parentButtonTransform.GetComponent<BoxCollider2D>();
@@ -68,9 +73,10 @@ public static class MaxButtonCrafting
 
     internal static void SetMaximumAmount(CraftItemGUI craftItemGUI, WorldGameObject crafteryWgo)
     {
-        int maxCraftableFromWgo = 9999;
-        int maxCraftableFromInventory = 9999;
-        var multiInventory = GlobalCraftControlGUI.is_global_control_active ? GUIElements.me.craft.multi_inventory : MainGame.me.player.GetMultiInventoryForInteraction(null);
+        var maxCraftableFromWgo = 9999;
+        var multiInventory = GlobalCraftControlGUI.is_global_control_active
+            ? GUIElements.me.craft.multi_inventory
+            : MainGame.me.player.GetMultiInventoryForInteraction(null);
 
         foreach (var neededItemFromWgo in craftItemGUI.craft_definition.needs_from_wgo)
         {
@@ -84,25 +90,14 @@ public static class MaxButtonCrafting
             return;
         }
 
-        foreach (var neededItemFromCraft in craftItemGUI.current_craft.needs)
+        var info = CraftMaxCalculator.Calculate(craftItemGUI, multiInventory, autoSelectHighestQuality: false);
+        if (info.NotCraftable.Count > 0 || info.Min <= 0)
         {
-            var totalCountNeededItem = 0;
-            if (multiInventory != null)
-            {
-                totalCountNeededItem += multiInventory.GetTotalCount(neededItemFromCraft.id);
-            }
-
-            if (totalCountNeededItem == 0 || totalCountNeededItem < neededItemFromCraft.value)
-            {
-                SetAmount(craftItemGUI, 1);
-                return;
-            }
-
-            var maxCraftableFromCurrentItem = totalCountNeededItem / neededItemFromCraft.value;
-            maxCraftableFromInventory = Math.Min(maxCraftableFromInventory, maxCraftableFromCurrentItem);
+            SetAmount(craftItemGUI, 1);
+            return;
         }
 
-        int finalMaxCraftable = Math.Min(maxCraftableFromInventory, maxCraftableFromWgo);
+        var finalMaxCraftable = Math.Min(info.Min, maxCraftableFromWgo);
         finalMaxCraftable = Math.Max(finalMaxCraftable, 1);
         SetAmount(craftItemGUI, finalMaxCraftable);
     }

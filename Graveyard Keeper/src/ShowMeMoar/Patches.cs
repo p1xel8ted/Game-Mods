@@ -172,8 +172,7 @@ public static class Patches
         {
             for (var row = 0; row < 63; row++)
             {
-                var fo = UnityEngine.Object.Instantiate(prefab);
-                fo.transform.SetParent(FogObject._fog_parent, false);
+                var fo = UnityEngine.Object.Instantiate(prefab, FogObject._fog_parent, false);
                 fo.round_and_sort = fo.GetComponent<RoundAndSortComponent>();
                 fo.round_and_sort_set = fo.round_and_sort != null;
                 Fog.me.OnNewFogObjectCreated(fo);

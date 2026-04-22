@@ -1,7 +1,7 @@
 {
   "DpiPromptMessage": "Windows 显示缩放设置为 {0}%。Graveyard Keeper 默认未被标记为支持高 DPI,这可能会使游戏在 4K 或其他缩放分辨率下显示模糊。\n\n立即应用高 DPI 兼容性修复?之后你需要重新启动游戏。\n\n(你可以稍后在设置的 \"── 9. High-DPI Fix ──\" 部分应用、撤销或关闭此提示。)",
-  "DpiApplyFullSuccess": "高 DPI 修复已应用。请重新启动游戏使其生效。",
-  "DpiApplyPartialSuccess": "已应用注册表标志。未能写入辅助 manifest 文件(游戏文件夹可能只读),但仅注册表标志通常就够用了。请重新启动游戏。",
+  "DpiApplyFullSuccess": "高 DPI 修复已应用。请重新启动游戏使其生效。\n\n重新启动后,首次进入时主菜单可能仍然看起来模糊 — 打开游戏内的 设置 → 显示,把分辨率换成任意其他值,然后再切回你的原生分辨率。之后画面就会正常渲染。",
+  "DpiApplyPartialSuccess": "已应用注册表标志。未能写入辅助 manifest 文件(游戏文件夹可能只读),但仅注册表标志通常就够用了。请重新启动游戏。\n\n重新启动后,首次进入时主菜单可能仍然看起来模糊 — 打开游戏内的 设置 → 显示,把分辨率换成任意其他值,然后再切回你的原生分辨率。之后画面就会正常渲染。",
   "DpiApplyFailed": "无法应用修复。请查看 BepInEx 日志了解详情,或按照模组 Nexus 页面的手动步骤操作。",
   "DpiRemoved": "高 DPI 修复已移除。请重新启动游戏使更改生效。",
   "DpiWineProtonDialog": "此修复仅适用于真实的 Windows。你正在 Wine 或 Proton 下运行,Windows 的 DPI 兼容性标志在这里会被忽略。请改用你的合成器的显示缩放或 Proton 的环境变量。",

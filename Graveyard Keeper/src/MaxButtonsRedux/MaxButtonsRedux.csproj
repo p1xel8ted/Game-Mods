@@ -6,6 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\StartupLogger.cs" Link="StartupLogger.cs"/>
+        <Compile Include="..\Shared\CraftMaxCalculator.cs" Link="CraftMaxCalculator.cs"/>
     </ItemGroup>
     <ItemGroup>
         <Reference Include="Rewired_Core">

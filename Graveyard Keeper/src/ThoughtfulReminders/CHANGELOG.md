@@ -2,6 +2,7 @@
 
 ## 2.2.11 | 18 April 2026
 
+- Reminders now wait a couple of seconds after you wake up, so the message isn't hidden behind the sleep screen while it fades. Adjust under Wake-Up Delay, or set it to 0 for instant reminders
 - Fixed Chinese translations not loading
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - Fixed non-English translations not loading — the mod was showing English regardless of your game language

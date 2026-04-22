@@ -6,6 +6,8 @@
     </PropertyGroup>
     <ItemGroup>
         <EmbeddedResource Include="Resources\ui_btn_arrow_left.png" />
+        <EmbeddedResource Include="Resources\ui_btn_arrow_up.png" />
+        <EmbeddedResource Include="Resources\ui_btn_arrow_dn.png" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="UnityEngine.ImageConversionModule">

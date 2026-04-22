@@ -1,5 +1,7 @@
 {
   "TooFar": "Hay una vela encendida cerca, pero no puedo alcanzarla. Tendré que acercarme.",
   "NoneFound": "No se encontraron velas encendidas cerca.",
+  "TooFarIncense": "Hay un incienso encendido cerca, pero no puedo alcanzarlo. Tendré que acercarme.",
+  "NoneFoundIncense": "No se encontraron inciensos encendidos cerca.",
   "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello."
 }

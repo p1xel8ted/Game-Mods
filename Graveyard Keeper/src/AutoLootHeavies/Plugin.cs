@@ -98,6 +98,20 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
+        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
+            new ConfigDescription("Write verbose stockpile-scan and teleport diagnostics to the BepInEx console. Leave off for normal play.", null,
+                new ConfigurationManagerAttributes {Order = 2}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+
+        ScanChunkSize = Config.Bind(AdvancedSection, "Performance Smoothness", 250,
+            new ConfigDescription(
+                "If you notice brief hitches when entering a new area on an older PC, try lowering this. Lower = smoother but the mod takes slightly longer to notice newly-built stockpiles. Higher = faster catch-up but can cause a small hitch on slow hardware. Leave at the default if everything feels smooth.",
+                new AcceptableValueRange<int>(50, 2000),
+                new ConfigurationManagerAttributes {Order = 1}));
+        CachedScanChunkSize = ScanChunkSize.Value;
+        ScanChunkSize.SettingChanged += (_, _) => CachedScanChunkSize = ScanChunkSize.Value;
+
         TeleportToDumpSiteWhenAllStockPilesFull = Config.Bind(FeaturesSection, "Teleport To Dump Site When Full", true,
             new ConfigDescription("When every stockpile is full, send overflow timber/ore/stone/marble to your designated dump site instead of dropping it at your feet.", null,
                 new ConfigurationManagerAttributes {Order = 9}));
@@ -127,20 +141,6 @@ public class Plugin : BaseUnityPlugin
         TeleportToggleKeybind = Config.Bind(KeybindsSection, "Toggle Teleport Keybind", new KeyboardShortcut(KeyCode.Alpha6),
             new ConfigDescription("Keybind for quickly toggling the 'teleport to dump site when full' option on or off without opening the settings.", null,
                 new ConfigurationManagerAttributes {Order = 1}));
-
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose stockpile-scan and teleport diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {IsAdvanced = true, Order = 1}));
-        DebugEnabled = Debug.Value;
-        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
-
-        ScanChunkSize = Config.Bind(AdvancedSection, "Performance Smoothness", 250,
-            new ConfigDescription(
-                "If you notice brief hitches when entering a new area on an older PC, try lowering this. Lower = smoother but the mod takes slightly longer to notice newly-built stockpiles. Higher = faster catch-up but can cause a small hitch on slow hardware. Leave at the default if everything feels smooth.",
-                new AcceptableValueRange<int>(50, 2000),
-                new ConfigurationManagerAttributes {IsAdvanced = true, Order = 2}));
-        CachedScanChunkSize = ScanChunkSize.Value;
-        ScanChunkSize.SettingChanged += (_, _) => CachedScanChunkSize = ScanChunkSize.Value;
 
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
             new ConfigDescription(

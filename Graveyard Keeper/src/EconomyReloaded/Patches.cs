@@ -3,87 +3,166 @@ namespace EconomyReloaded;
 [Harmony]
 public static class Patches
 {
-    private static bool GameBalanceAlreadyRun { get; set; }
-    private static readonly Dictionary<string, bool> BackedUpIsStaticCost = new();
-    private static readonly HashSet<string> StaticCostItemIds = [];
+    private const string ProgressCreditKey = "er_progress_credit";
 
-    [HarmonyPostfix]
+    // Replaces the vanilla buy-price calculation so we can honour the user's
+    // Dynamic Buy Pricing toggle and Buy Price Multiplier slider in one place.
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(Trading), nameof(Trading.GetSingleItemCostInTraderInventory), typeof(Item), typeof(int))]
-    public static void Trading_GetSingleItemCostInTraderInventory(ref float __result, Item item)
+    public static bool Trading_GetSingleItemCostInTraderInventory(Trading __instance, Item item, int count_modificator, ref float __result)
     {
-        if (!Plugin.Inflation.Value)
+        if (__instance?.trader == null || item?.definition == null) return true;
+        if (!__instance.trader.CanTradeItem(item.definition))
         {
-            if (__result != 0.0)
-            {
-                __result = item.definition.base_price;
-            }
+            __result = 0f;
+            return false;
         }
-    }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Trading), nameof(Trading.GetSingleItemCostInPlayerInventory), typeof(Item), typeof(int))]
-    public static void Trading_GetSingleItemCostInPlayerInventory(ref float __result, Item item)
-    {
-        if (!Plugin.Deflation.Value)
+        float price;
+        if (Plugin.DynamicBuyPricing.Value)
         {
-            if (__result != 0.0)
-            {
-                __result = item.definition.base_price;
-            }
-        }
-    }
-
-    internal static void UpdateStaticCost()
-    {
-        if (Plugin.Inflation.Value && Plugin.Deflation.Value)
-        {
-            RestoreIsStaticCost();
+            var itemsCount = __instance.trader.inventory.GetTotalCount(item.id) + count_modificator;
+            price = __instance.trader.GetSingleItemPrice(item, itemsCount);
         }
         else
         {
-            MakeIsStaticCost();
+            price = item.definition.base_price;
         }
+
+        price *= Plugin.BuyPriceMultiplier.Value;
+        __result = Mathf.Round(price * 100f) / 100f;
+        return false;
     }
 
-    private static void RestoreIsStaticCost()
+    // Replaces the vanilla sell-price calculation. Vanilla bakes in a 0.75
+    // markdown and caps at base_price; both are now expressed through the
+    // Sell Price Multiplier so the user can freely adjust them.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Trading), nameof(Trading.GetSingleItemCostInPlayerInventory), typeof(Item), typeof(int))]
+    public static bool Trading_GetSingleItemCostInPlayerInventory(Trading __instance, Item item, int count_modificator, ref float __result)
     {
-        if (GameBalance.me == null) return;
-        foreach (var itemDef in GameBalance.me.items_data.Where(itemDef => StaticCostItemIds.Contains(itemDef.id)))
+        if (__instance?.trader == null || __instance.player_offer == null || item?.definition == null) return true;
+        if (!__instance.trader.CanTradeItem(item.definition))
         {
-            itemDef.is_static_cost = BackedUpIsStaticCost[itemDef.id];
+            __result = 0f;
+            return false;
         }
 
-        Plugin.Log.LogInfo($"Restored {BackedUpIsStaticCost.Count} items to their original is_static_cost value.");
+        var multiplier = Plugin.SellPriceMultiplier.Value;
+        float price;
+        if (Plugin.DynamicSellPricing.Value)
+        {
+            var itemsCount = __instance.trader.inventory.GetTotalCount(item.id)
+                             + __instance.player_offer.GetTotalCount(item.id)
+                             + count_modificator;
+            price = __instance.trader.GetSingleItemPrice(item, itemsCount) * multiplier;
+            var cap = item.definition.base_price * multiplier;
+            if (price > cap) price = cap;
+        }
+        else
+        {
+            price = item.definition.base_price * multiplier;
+        }
+
+        __result = Mathf.Round(price * 100f) / 100f;
+        return false;
     }
 
-    private static void MakeIsStaticCost()
+    // Capture the pre-trade balance difference between vanilla (dynamic) and mod
+    // (flat) pricing. The postfix applies this premium to the vendor's tier
+    // progression so the level-up bar keeps moving even though the player paid
+    // flat prices.
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Trading), nameof(Trading.DoAcceptOffer))]
+    public static void Trading_DoAcceptOffer_Prefix(Trading __instance, ref TradeSnapshot __state)
     {
-        if (GameBalance.me == null) return;
-        foreach (var itemDef in GameBalance.me.items_data.Where(itemDef => StaticCostItemIds.Contains(itemDef.id)))
-        {
-            itemDef.is_static_cost = true;
-        }
+        __state = null;
+        if (__instance == null) return;
 
-        Plugin.Log.LogInfo($"Set {BackedUpIsStaticCost.Count} items to is_static_cost = true.");
+        var trader = __instance.trader;
+        if (trader?.vendor_data == null || trader.inventory == null) return;
+        if (__instance.player_offer == null || trader.cur_offer == null) return;
+
+        var modBalance = __instance.GetTotalBalance();
+        var vanillaBalance = ComputeVanillaTotalBalance(__instance);
+
+        __state = new TradeSnapshot
+        {
+            CurOfferCount = trader.cur_offer.inventory.Count,
+            Premium = modBalance - vanillaBalance,
+        };
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(GameBalance), nameof(GameBalance.LoadGameBalance))]
-    public static void GameBalance_LoadGameBalance()
+    [HarmonyPatch(typeof(Trading), nameof(Trading.DoAcceptOffer))]
+    public static void Trading_DoAcceptOffer_Postfix(Trading __instance, TradeSnapshot __state)
     {
-        if (GameBalanceAlreadyRun) return;
-        GameBalanceAlreadyRun = true;
+        if (__state == null) return;
+        if (__state.Premium <= 0f) return;
+        if (__instance == null) return;
 
-        var itemsWithBasePrice = GameBalance.me.items_data.Where(itemDef => itemDef.base_price > 0).ToList();
-        BackedUpIsStaticCost.Clear();
-        StaticCostItemIds.Clear();
+        var trader = __instance.trader;
+        if (trader?.vendor_data == null || trader.cur_offer == null) return;
 
-        foreach (var itemDef in itemsWithBasePrice)
+        // DoAcceptOffer clears both offer inventories on a successful trade.
+        // If the trader offer is still populated, the trade bailed out early.
+        if (__state.CurOfferCount > 0 && trader.cur_offer.inventory.Count == __state.CurOfferCount) return;
+
+        var existing = trader.vendor_data.GetParam(ProgressCreditKey);
+        trader.vendor_data.SetParam(ProgressCreditKey, existing + __state.Premium);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Vendor), nameof(Vendor.GetTotalGoods))]
+    public static void Vendor_GetTotalGoods_Postfix(Vendor __instance, ref float __result)
+    {
+        if (__instance?.vendor_data == null) return;
+        __result += __instance.vendor_data.GetParam(ProgressCreditKey);
+    }
+
+    // Mirrors Trading.GetTotalBalance but routes through Vendor.GetSingleItemPrice
+    // (which is unpatched) to get the vanilla dynamic price. Used to compute how
+    // much the real trade diverged from vanilla so the difference can be credited
+    // to the vendor's tier-progress bar.
+    private static float ComputeVanillaTotalBalance(Trading t)
+    {
+        var trader = t.trader;
+
+        var sellValue = 0f;
+        var seenSell = new HashSet<string>();
+        foreach (Item obj in t.player_offer.inventory)
         {
-            BackedUpIsStaticCost[itemDef.id] = itemDef.is_static_cost;
-            StaticCostItemIds.Add(itemDef.id);
+            if (!seenSell.Add(obj.id)) continue;
+            var totalCount = t.player_offer.GetTotalCount(obj.id);
+            for (var i = 0; i < totalCount; i++)
+            {
+                var itemsCount = trader.inventory.GetTotalCount(obj.id) + t.player_offer.GetTotalCount(obj.id) + (-i);
+                var dynamic = trader.GetSingleItemPrice(obj, itemsCount) * 0.75f;
+                if (dynamic > obj.definition.base_price) dynamic = obj.definition.base_price;
+                sellValue += Mathf.Round(dynamic * 100f) / 100f;
+            }
         }
 
-        UpdateStaticCost();
+        var buyValue = 0f;
+        var seenBuy = new HashSet<string>();
+        foreach (Item obj in trader.cur_offer.inventory)
+        {
+            if (!seenBuy.Add(obj.id)) continue;
+            var totalCount = trader.cur_offer.GetTotalCount(obj.id);
+            for (var i = 0; i < totalCount; i++)
+            {
+                var itemsCount = trader.inventory.GetTotalCount(obj.id) + (i + 1);
+                var dynamic = trader.GetSingleItemPrice(obj, itemsCount);
+                buyValue += Mathf.Round(dynamic * 100f) / 100f;
+            }
+        }
+
+        return sellValue - buyValue;
+    }
+
+    public class TradeSnapshot
+    {
+        public int CurOfferCount;
+        public float Premium;
     }
 }

@@ -8,6 +8,21 @@ public static class Teleport
         var targetPosition = GetTeleportPosition(chosenLocation);
         if (targetPosition == Vector2.zero) return;
 
+        // Mirror the game's own Flow_TeleportToWGO: fire "tp_<area>" before the
+        // fade so any build/quest gates tied to warping into a new area unlock,
+        // even when the player teleports to a zone they haven't walked into yet.
+        var tag = chosenLocation.teleportPoint;
+        if (!tag.IsNullOrWhiteSpace())
+        {
+            var parts = tag.Split('_');
+            if (parts.Length >= 2 && parts[0] == "tp")
+            {
+                var key = "tp_" + parts[1];
+                MainGame.me.save.quests.CheckKeyQuests(key);
+                if (Plugin.DebugEnabled) Helpers.Log($"[TryTeleport] CheckKeyQuests {key}");
+            }
+        }
+
         MainGame.me.player.components.character.TeleportWithFade(targetPosition,
             middle_delegate: () => Helpers.UpdateEnvironmentPreset(chosenLocation),
             finished_delegate: () => PostPortingWork(chosenLocation));
@@ -53,6 +68,12 @@ public static class Teleport
 
     private static void PostPortingWork(Location chosenLocation)
     {
+        // Force the zone-change handshake immediately instead of waiting up to
+        // 0.5s for PlayerComponent's timer, so WorldZone.OnPlayerEnter ->
+        // GameSave.OnEnteredWorldZone -> "newzone_<id>" runs before the player
+        // can interact with objects in the destination zone.
+        MainGame.me.player_component?.UpdateZone();
+
         var gerryAppears = Plugin.GerryAppears.Value;
         var gerryCharges = Plugin.GerryCharges.Value;
 

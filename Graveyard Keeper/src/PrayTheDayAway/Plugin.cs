@@ -136,7 +136,7 @@ public class Plugin : BaseUnityPlugin
 
         CheatModeConfig = Config.Bind(CheatsSection, "Cheat Mode", false,
             new ConfigDescription("All sermons always succeed and prayer items are never consumed. Overrides every other setting.", null,
-                new ConfigurationManagerAttributes {IsAdvanced = true, Order = 598}));
+                new ConfigurationManagerAttributes {Order = 598}));
 
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
             new ConfigDescription(

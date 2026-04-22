@@ -3,28 +3,36 @@ namespace MiscBitsAndBobs;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    // Section names. New scheme: ── N. Name ── (rendered in Config.Bind call order by
-    // ConfigurationManager, so Advanced stays at the top). Legacy section names get
-    // rewritten to these by MigrateRenamedSections() on first launch so existing user
-    // customisations survive the rename.
-    private const string AdvancedSection = "── 1. Advanced ──";
-    private const string AudioSection    = "── 2. Audio ──";
-    private const string UISection       = "── 3. UI ──";
-    private const string GameplaySection = "── 4. Gameplay ──";
-    private const string MovementSection = "── 5. Movement ──";
-    private const string ChurchSection   = "── 6. Church ──";
-    private const string MiscSection     = "── 7. Misc ──";
-    private const string UpdatesSection  = "── 8. Updates ──";
+    // Section names: plain "── Name ──" style. CM renders sections in Config.Bind call order,
+    // so Advanced appears first by virtue of Debug being the first bind below. Legacy section
+    // names get rewritten to these by MigrateRenamedSections() on first launch so existing
+    // user customisations survive the rename.
+    private const string AdvancedSection = "── Advanced ──";
+    private const string AudioSection    = "── Audio ──";
+    private const string UISection       = "── UI ──";
+    private const string GameplaySection = "── Gameplay ──";
+    private const string MovementSection = "── Movement ──";
+    private const string ChurchSection   = "── Church ──";
+    private const string MiscSection     = "── Misc ──";
+    private const string UpdatesSection  = "── Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
-        ["00. Advanced"] = AdvancedSection,
-        ["02. Audio"]    = AudioSection,
-        ["03. UI"]       = UISection,
-        ["04. Gameplay"] = GameplaySection,
-        ["05. Movement"] = MovementSection,
-        ["06. Misc"]     = MiscSection,
-        ["09. Church"]   = ChurchSection,
+        ["00. Advanced"]      = AdvancedSection,
+        ["02. Audio"]         = AudioSection,
+        ["03. UI"]            = UISection,
+        ["04. Gameplay"]      = GameplaySection,
+        ["05. Movement"]      = MovementSection,
+        ["06. Misc"]          = MiscSection,
+        ["09. Church"]        = ChurchSection,
+        ["── 1. Advanced ──"] = AdvancedSection,
+        ["── 2. Audio ──"]    = AudioSection,
+        ["── 3. UI ──"]       = UISection,
+        ["── 4. Gameplay ──"] = GameplaySection,
+        ["── 5. Movement ──"] = MovementSection,
+        ["── 6. Church ──"]   = ChurchSection,
+        ["── 7. Misc ──"]     = MiscSection,
+        ["── 8. Updates ──"]  = UpdatesSection,
     };
 
     internal static ConfigEntry<bool> Debug { get; private set; }

@@ -3,6 +3,28 @@ namespace ShowMeMoar;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
+    private const string UltrawideSection       = "── Ultrawide ──";
+    private const string ScaleSection           = "── Scale ──";
+    private const string PositionsSection       = "── Positions ──";
+    private const string ZoomSection            = "── Zoom ──";
+    private const string FogSection             = "── Fog ──";
+    private const string ColorCorrectionSection = "── Color Correction ──";
+    private const string DisplaySection         = "── Display ──";
+    private const string HighDpiSection         = "── High-DPI Fix ──";
+    private const string UpdatesSection         = "── Updates ──";
+
+    private static readonly Dictionary<string, string> SectionRenames = new()
+    {
+        [UltrawideSection]         = UltrawideSection,
+        [ScaleSection]             = ScaleSection,
+        [PositionsSection]         = PositionsSection,
+        [ZoomSection]              = ZoomSection,
+        [FogSection]               = FogSection,
+        [ColorCorrectionSection]  = ColorCorrectionSection,
+        [DisplaySection]           = DisplaySection,
+        ["── 9. High-DPI Fix ──"] = HighDpiSection,
+    };
+
     internal static ConfigEntry<bool> Ultrawide { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ZoomIn { get; private set; }
     internal static ConfigEntry<KeyboardShortcut> ZoomOut { get; private set; }
@@ -71,6 +93,7 @@ public class Plugin : BaseUnityPlugin
             Log.LogInfo($"[HighDpiFix] Host={DpiHost} — skipping DPI fix entirely (this is a Windows-only workaround).");
         }
 
+        MigrateRenamedSections();
         InitConfiguration();
         // Lang.Init reads GameSettings._cur_lng lazily on every Lang.Get, so it's safe to
         // initialise here before the game has finished loading language settings.
@@ -78,6 +101,35 @@ public class Plugin : BaseUnityPlugin
         RefreshDpiStatus();
         UpdateChecker.Register(Info, CheckForUpdates);
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
+    }
+
+    // Rewrites legacy numbered section headers to the plain "── Name ──" style so existing
+    // user values survive the rename. Idempotent.
+    private void MigrateRenamedSections()
+    {
+        var path = Config.ConfigFilePath;
+        if (!File.Exists(path)) return;
+
+        string content;
+        try { content = File.ReadAllText(path); }
+        catch (Exception ex) { Log.LogWarning($"[Migration] Could not read {path}: {ex.Message}"); return; }
+
+        var renamed = 0;
+        foreach (var kv in SectionRenames)
+        {
+            var oldHeader = $"[{kv.Key}]";
+            var newHeader = $"[{kv.Value}]";
+            if (!content.Contains(oldHeader)) continue;
+            content = content.Replace(oldHeader, newHeader);
+            renamed++;
+        }
+        if (renamed == 0) return;
+
+        try { File.WriteAllText(path, content); }
+        catch (Exception ex) { Log.LogWarning($"[Migration] Could not write {path}: {ex.Message}"); return; }
+
+        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── Name ──' style. Existing user values preserved.");
+        Config.Reload();
     }
 
     // Updates the read-only status config entries visible in ConfigurationManager.
@@ -130,29 +182,29 @@ public class Plugin : BaseUnityPlugin
         var defaultZoom = Screen.currentResolution.height / 2f;
         var min = 0 - defaultZoom;
 
-        Ultrawide = Config.Bind("2. Ultrawide", "Ultrawide", ScreenIsUltrawide, new ConfigDescription("Enable or disable ultrawide support. You must restart the game after changing this setting.", null, new ConfigurationManagerAttributes {Order = 7}));
+        Ultrawide = Config.Bind(UltrawideSection, "Ultrawide", ScreenIsUltrawide, new ConfigDescription("Enable or disable ultrawide support. You must restart the game after changing this setting.", null, new ConfigurationManagerAttributes {Order = 7}));
 
-        CraftIconAboveStations = Config.Bind("3. Scale", "Interaction Bubble Scale", 1f, new ConfigDescription("Changes the scale of the icons that appear above crafting stations and interaction icons.", new AcceptableValueRange<float>(0.1f, 10f), new ConfigurationManagerAttributes {Order = 6}));
+        CraftIconAboveStations = Config.Bind(ScaleSection, "Interaction Bubble Scale", 1f, new ConfigDescription("Changes the scale of the icons that appear above crafting stations and interaction icons.", new AcceptableValueRange<float>(0.1f, 10f), new ConfigurationManagerAttributes {Order = 6}));
         CraftIconAboveStations.SettingChanged += (_, _) =>
         {
             if (!MainGame.game_started) return;
             UpdateCraftIconScale(CraftIconAboveStations.Value);
         };
-        HudScale = Config.Bind("3. Scale", "HUD Scale", 1f, new ConfigDescription("Changes the scale of the HUD.", new AcceptableValueRange<float>(0.1f, 10f), new ConfigurationManagerAttributes {Order = 5}));
+        HudScale = Config.Bind(ScaleSection, "HUD Scale", 1f, new ConfigDescription("Changes the scale of the HUD.", new AcceptableValueRange<float>(0.1f, 10f), new ConfigurationManagerAttributes {Order = 5}));
         HudScale.SettingChanged += (_, _) =>
         {
             if (!MainGame.game_started) return;
             if (Patches.HUD != null) Patches.HUD.transform.localScale = new Vector3(HudScale.Value, HudScale.Value, 1);
         };
 
-        HorizontalHudPosition = Config.Bind("4. Positions", "Horizontal HUD Position", 1f, new ConfigDescription("Changes the horizontal position of the HUD.", new AcceptableValueRange<float>(-5, 5), new ConfigurationManagerAttributes {Order = 4}));
+        HorizontalHudPosition = Config.Bind(PositionsSection, "Horizontal HUD Position", 1f, new ConfigDescription("Changes the horizontal position of the HUD.", new AcceptableValueRange<float>(-5, 5), new ConfigurationManagerAttributes {Order = 4}));
         HorizontalHudPosition.SettingChanged += (_, _) =>
         {
             if (!MainGame.game_started) return;
             if (Patches.ScreenSize != null) Patches.ScreenSize.transform.localScale = new Vector3(HorizontalHudPosition.Value, VerticalHudPosition.Value, 1);
         };
 
-        VerticalHudPosition = Config.Bind("4. Positions", "Vertical HUD Position", 1f, new ConfigDescription("Changes the vertical position of the HUD.", new AcceptableValueRange<float>(-5, 5), new ConfigurationManagerAttributes {Order = 3}));
+        VerticalHudPosition = Config.Bind(PositionsSection, "Vertical HUD Position", 1f, new ConfigDescription("Changes the vertical position of the HUD.", new AcceptableValueRange<float>(-5, 5), new ConfigurationManagerAttributes {Order = 3}));
         VerticalHudPosition.SettingChanged += (_, _) =>
         {
             if (!MainGame.game_started) return;
@@ -160,40 +212,37 @@ public class Plugin : BaseUnityPlugin
         };
 
 
-        Zoom = Config.Bind("5. Zoom", "Zoom", 0f, new ConfigDescription("Zoom", new AcceptableValueRange<float>(min + 10, defaultZoom * 2), new ConfigurationManagerAttributes {Order = 2}));
+        Zoom = Config.Bind(ZoomSection, "Zoom", 0f, new ConfigDescription("Zoom", new AcceptableValueRange<float>(min + 10, defaultZoom * 2), new ConfigurationManagerAttributes {Order = 2}));
         Zoom.SettingChanged += (_, _) =>
         {
             if (!MainGame.game_started) return;
             Camera.main!.orthographicSize = defaultZoom + Zoom.Value;
         };
 
-        ZoomIn = Config.Bind("5. Zoom", "Zoom In", new KeyboardShortcut(KeyCode.KeypadPlus), new ConfigDescription("Zoom In", null, new ConfigurationManagerAttributes {Order = 1}));
-        ZoomOut = Config.Bind("5. Zoom", "Zoom Out", new KeyboardShortcut(KeyCode.KeypadMinus), new ConfigDescription("Zoom Out", null, new ConfigurationManagerAttributes {Order = 0}));
+        ZoomIn = Config.Bind(ZoomSection, "Zoom In", new KeyboardShortcut(KeyCode.KeypadPlus), new ConfigDescription("Zoom In", null, new ConfigurationManagerAttributes {Order = 1}));
+        ZoomOut = Config.Bind(ZoomSection, "Zoom Out", new KeyboardShortcut(KeyCode.KeypadMinus), new ConfigDescription("Zoom Out", null, new ConfigurationManagerAttributes {Order = 0}));
 
-        RemoveFog = Config.Bind("6. Fog", "Remove Fog", true, new ConfigDescription("Remove fog from the game.", null, new ConfigurationManagerAttributes {Order = 0}));
-        ColorCorrection = Config.Bind("7. Color Correction", "Color Correction", true, new ConfigDescription("Enable or disable color correction.", null, new ConfigurationManagerAttributes {Order = 0}));
+        RemoveFog = Config.Bind(FogSection, "Remove Fog", true, new ConfigDescription("Remove fog from the game.", null, new ConfigurationManagerAttributes {Order = 0}));
+        ColorCorrection = Config.Bind(ColorCorrectionSection, "Color Correction", true, new ConfigDescription("Enable or disable color correction.", null, new ConfigurationManagerAttributes {Order = 0}));
         ColorCorrection.SettingChanged += (_, _) => UpdateCC();
 
-        BorderlessWindowed = Config.Bind("8. Display", "Borderless Windowed", false, new ConfigDescription("Run the game in borderless windowed mode instead of fullscreen. Restart required.", null, new ConfigurationManagerAttributes {Order = 1}));
+        BorderlessWindowed = Config.Bind(DisplaySection, "Borderless Windowed", false, new ConfigDescription("Run the game in borderless windowed mode instead of fullscreen. Restart required.", null, new ConfigurationManagerAttributes {Order = 1}));
 
-        SetVsyncLimitToMaxRefreshRate = Config.Bind("8. Display", "Set Vsync Limit To Max Refresh Rate", true, new ConfigDescription("Set Vsync limit to the maximum refresh rate of the monitor. Game default is 60fps with VSYNC enabled.", null, new ConfigurationManagerAttributes {Order = 0}));
+        SetVsyncLimitToMaxRefreshRate = Config.Bind(DisplaySection, "Set Vsync Limit To Max Refresh Rate", true, new ConfigDescription("Set Vsync limit to the maximum refresh rate of the monitor. Game default is 60fps with VSYNC enabled.", null, new ConfigurationManagerAttributes {Order = 0}));
 
-        // ── 9. High-DPI Fix ──
-        const string dpiSection = "── 9. High-DPI Fix ──";
-
-        DpiDetectedStatus = Config.Bind(dpiSection, "Detected display scaling", "",
+        DpiDetectedStatus = Config.Bind(HighDpiSection, "Detected display scaling", "",
             new ConfigDescription(
                 "How Windows is scaling your display. 100% means no fix needed; anything higher (common at 4K) benefits from the fix below.",
                 null,
                 new ConfigurationManagerAttributes { Order = 100, ReadOnly = true, HideDefaultButton = true }));
 
-        DpiAppliedStatus = Config.Bind(dpiSection, "Fix status", "",
+        DpiAppliedStatus = Config.Bind(HighDpiSection, "Fix status", "",
             new ConfigDescription(
                 "Whether the Windows compatibility flag and sidecar manifest are currently in place for Graveyard Keeper.exe.",
                 null,
                 new ConfigurationManagerAttributes { Order = 99, ReadOnly = true, HideDefaultButton = true }));
 
-        ApplyDpiFix = Config.Bind(dpiSection, "Apply high-DPI fix", false,
+        ApplyDpiFix = Config.Bind(HighDpiSection, "Apply high-DPI fix", false,
             new ConfigDescription(
                 "Tick to mark Graveyard Keeper as high-DPI aware so it renders sharply at 4K / scaled displays. " +
                 "Writes a Windows compatibility flag to your user registry and a sidecar manifest next to the game. " +
@@ -202,14 +251,14 @@ public class Plugin : BaseUnityPlugin
                 new ConfigurationManagerAttributes { Order = 98 }));
         ApplyDpiFix.SettingChanged += (_, _) => OnApplyDpiFixToggled();
 
-        AskDpiFixAtStartup = Config.Bind(dpiSection, "Offer the fix at startup", true,
+        AskDpiFixAtStartup = Config.Bind(HighDpiSection, "Offer the fix at startup", true,
             new ConfigDescription(
                 "When on, the mod will detect high-DPI scaling at startup and offer to apply the fix via a main-menu dialog. " +
                 "Turn off to silence the prompt (useful once you've decided either way).",
                 null,
                 new ConfigurationManagerAttributes { Order = 97 }));
 
-        CheckForUpdates = Config.Bind("── Updates ──", "Check for Updates", true,
+        CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
             new ConfigDescription(
                 "Show a notice on the main menu when a newer version of this mod is available on NexusMods. Click the notice to open the mod's page.",
                 null,

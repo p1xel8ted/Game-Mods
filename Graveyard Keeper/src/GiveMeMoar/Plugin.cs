@@ -3,22 +3,27 @@ namespace GiveMeMoar;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    private const string AdvancedSection    = "── 1. Advanced ──";
-    private const string MultipliersSection = "── 2. Multipliers ──";
-    private const string CategoriesSection  = "── 3. Categories ──";
-    private const string CraftingSection    = "── 4. Crafting ──";
-    private const string UpdatesSection     = "── 5. Updates ──";
+    private const string AdvancedSection    = "── Advanced ──";
+    private const string MultipliersSection = "── Multipliers ──";
+    private const string CategoriesSection  = "── Categories ──";
+    private const string CraftingSection    = "── Crafting ──";
+    private const string UpdatesSection     = "── Updates ──";
 
     // Maps legacy section headers (from shipped versions) to current headers. Applied once on
     // first launch so existing user values survive the rename. Idempotent.
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
-        ["00. Advanced"]         = AdvancedSection,
-        ["01. Multipliers"]      = MultipliersSection,
+        ["00. Advanced"]             = AdvancedSection,
+        ["01. Multipliers"]          = MultipliersSection,
         // "Multiply Sticks" used to live in Miscellaneous; it now belongs in Categories
         // alongside the new per-category toggles.
-        ["3. Miscellaneous"]     = CategoriesSection,
-        ["── 3. Miscellaneous ──"] = CategoriesSection,
+        ["3. Miscellaneous"]         = CategoriesSection,
+        ["── 3. Miscellaneous ──"]   = CategoriesSection,
+        ["── 1. Advanced ──"]        = AdvancedSection,
+        ["── 2. Multipliers ──"]     = MultipliersSection,
+        ["── 3. Categories ──"]      = CategoriesSection,
+        ["── 4. Crafting ──"]        = CraftingSection,
+        ["── 5. Updates ──"]         = UpdatesSection,
     };
 
     internal static ConfigEntry<bool> Debug { get; private set; }

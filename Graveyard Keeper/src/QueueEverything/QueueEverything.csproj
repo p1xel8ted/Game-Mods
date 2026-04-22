@@ -15,5 +15,6 @@
     <ItemGroup>
         <Compile Include="..\Shared\LogHelper.cs" Link="LogHelper.cs"/>
         <Compile Include="..\Shared\DebugWarningDialog.cs" Link="DebugWarningDialog.cs"/>
+        <Compile Include="..\Shared\CraftMaxCalculator.cs" Link="CraftMaxCalculator.cs"/>
     </ItemGroup>
 </Project>

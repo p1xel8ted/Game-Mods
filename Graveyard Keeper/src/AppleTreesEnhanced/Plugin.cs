@@ -91,6 +91,12 @@ public class Plugin : BaseUnityPlugin
 
     private void InitConfiguration()
     {
+        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
+            new ConfigDescription("Write verbose harvest and respawn diagnostics to the BepInEx console. Leave off for normal play.", null,
+                new ConfigurationManagerAttributes {Order = 2}));
+        DebugEnabled = Debug.Value;
+        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
+
         IncludeGardenBerryBushes = Config.Bind(PlayerGardenSection, "Include Garden Berry Bushes", true,
             new ConfigDescription("Apply the mod's respawn and harvest fixes to berry bushes you've planted in your garden.", null,
                 new ConfigurationManagerAttributes {Order = 9}));
@@ -115,12 +121,6 @@ public class Plugin : BaseUnityPlugin
         BeeKeeperBuyback = Config.Bind(EconomySection, "Bee Keeper Buyback", false,
             new ConfigDescription("Let the beekeeper buy bees back from you, so surplus hives are worth selling.", null,
                 new ConfigurationManagerAttributes {Order = 3}));
-
-        Debug = Config.Bind(AdvancedSection, "Debug Logging", false,
-            new ConfigDescription("Write verbose harvest and respawn diagnostics to the BepInEx console. Leave off for normal play.", null,
-                new ConfigurationManagerAttributes {IsAdvanced = true, Order = 2}));
-        DebugEnabled = Debug.Value;
-        Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
             new ConfigDescription(

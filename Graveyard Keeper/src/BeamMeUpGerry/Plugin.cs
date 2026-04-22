@@ -171,7 +171,7 @@ public class Plugin : BaseUnityPlugin
         Debug = ConfigInstance.Bind(AdvancedSection, "Debug", false,
             new ConfigDescription("Write verbose teleport and location diagnostics to the BepInEx console. Leave off for normal play.",
                 null,
-                new ConfigurationManagerAttributes {IsAdvanced = true, Order = 803}));
+                new ConfigurationManagerAttributes {Order = 803}));
         DebugEnabled = Debug.Value;
         Debug.SettingChanged += (_, _) => DebugEnabled = Debug.Value;
 

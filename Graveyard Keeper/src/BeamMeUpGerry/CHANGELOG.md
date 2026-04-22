@@ -2,6 +2,7 @@
 
 ## 3.1.5 | 18 April 2026
 
+- Fixed area-gated buildings (such as the quarry mining hut) being impossible to build after teleporting to a zone you hadn't walked into yet. Teleport now triggers the same area-discovery and area-unlock events the game fires when you arrive on foot or via a story warp
 - Fixed Chinese translations not loading
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - Settings pane tidied up: sections now use a cleaner `── Name ──` style, sub-options sit indented under their parent toggle, and every entry has a proper description. Your existing values carry across unchanged

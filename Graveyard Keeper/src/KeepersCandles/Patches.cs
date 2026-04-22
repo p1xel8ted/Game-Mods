@@ -9,70 +9,93 @@ public static class Patches
     {
         if (!Plugin.CanFindCandles()) return;
 
-        var keyUp = Plugin.ExtinguishKeyBind.Value.IsUp();
-        var gamepadDown = LazyInput.gamepad_active && ReInput.players.GetPlayer(0).GetButtonDown(Plugin.ExtinguishControllerButton.Value);
+        TryExtinguish(
+            "candle",
+            Plugin.ExtinguishCandleKeyBind.Value,
+            Plugin.ExtinguishCandleControllerButton.Value,
+            Plugin.GetCandles,
+            "TooFar",
+            "NoneFound");
+
+        TryExtinguish(
+            "incense",
+            Plugin.ExtinguishIncenseKeyBind.Value,
+            Plugin.ExtinguishIncenseControllerButton.Value,
+            Plugin.GetIncenses,
+            "TooFarIncense",
+            "NoneFoundIncense");
+    }
+
+    private static void TryExtinguish(string typeLabel, KeyboardShortcut keybind, string controllerButtonName,
+        Func<List<WorldGameObject>> getBurners, string tooFarLangKey, string noneFoundLangKey)
+    {
+        var keyUp = keybind.MainKey != KeyCode.None && keybind.IsUp();
+        var gamepadDown = LazyInput.gamepad_active
+                          && !string.IsNullOrEmpty(controllerButtonName)
+                          && controllerButtonName != nameof(GamePadButton.None)
+                          && ReInput.players.GetPlayer(0).GetButtonDown(controllerButtonName);
         if (!gamepadDown && !keyUp) return;
 
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[Extinguish] trigger: key={keyUp} gamepad={gamepadDown} zone={MainGame.me.player.GetMyWorldZoneId()}");
+            Helpers.Log($"[Extinguish:{typeLabel}] trigger: key={keyUp} gamepad={gamepadDown} zone={MainGame.me.player.GetMyWorldZoneId()}");
         }
 
-        WorldGameObject closestCandle = null;
+        WorldGameObject closest = null;
         var closestDistance = float.MaxValue;
-        var candleCount = 0;
+        var count = 0;
 
-        foreach (var candle in Plugin.GetCandles())
+        foreach (var burner in getBurners())
         {
-            candleCount++;
-            var distance = Vector3.Distance(candle.grid_pos, Plugin.PlayerPosition);
+            count++;
+            var distance = Vector3.Distance(burner.grid_pos, Plugin.PlayerPosition);
 
             if (!(distance < closestDistance)) continue;
 
             closestDistance = distance;
-            closestCandle = candle;
+            closest = burner;
         }
 
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[Extinguish] scanned {candleCount} lit candle(s) in zone; closest={(closestCandle ? closestCandle.obj_id : "none")} distance={closestDistance:F2} limit={Plugin.ExtinguishDistance.Value}");
+            Helpers.Log($"[Extinguish:{typeLabel}] scanned {count} lit {typeLabel}(s) in zone; closest={(closest ? closest.obj_id : "none")} distance={closestDistance:F2} limit={Plugin.ExtinguishDistance.Value}");
         }
 
-        if (closestCandle)
+        if (closest)
         {
             if (closestDistance <= Plugin.ExtinguishDistance.Value)
             {
-                var unlitCandle = Plugin.GetUnlitCandle(closestCandle.components.craft.last_craft_id);
-                if (unlitCandle.IsNullOrWhiteSpace())
+                var unlit = Plugin.GetUnlitCandle(closest.components.craft.last_craft_id);
+                if (unlit.IsNullOrWhiteSpace())
                 {
-                    Helpers.Log($"Could not find unlit candle for {closestCandle.obj_id}. Last craft ID: {closestCandle.components.craft.last_craft_id}. Please report this!", true);
+                    Helpers.Log($"Could not find unlit {typeLabel} for {closest.obj_id}. Last craft ID: {closest.components.craft.last_craft_id}. Please report this!", true);
                     ResetArrow();
                     return;
                 }
                 if (Plugin.DebugEnabled)
                 {
-                    Helpers.Log($"[Extinguish] extinguishing {closestCandle.obj_id} → {unlitCandle} (last_craft_id={closestCandle.components.craft.last_craft_id})");
+                    Helpers.Log($"[Extinguish:{typeLabel}] extinguishing {closest.obj_id} → {unlit} (last_craft_id={closest.components.craft.last_craft_id})");
                 }
                 ResetArrow();
-                ReplaceAndDrop(closestCandle, unlitCandle);
+                ReplaceAndDrop(closest, unlit);
             }
             else
             {
                 if (Plugin.DebugEnabled)
                 {
-                    Helpers.Log($"[Extinguish] too far — pointing arrow at {closestCandle.obj_id} ({closestDistance:F2} > {Plugin.ExtinguishDistance.Value})");
+                    Helpers.Log($"[Extinguish:{typeLabel}] too far — pointing arrow at {closest.obj_id} ({closestDistance:F2} > {Plugin.ExtinguishDistance.Value})");
                 }
-                SetArrow(closestCandle);
-                MainGame.me.player.Say(Lang.Get("TooFar"), null, false, SpeechBubbleGUI.SpeechBubbleType.Think, SmartSpeechEngine.VoiceID.None, true);
+                SetArrow(closest);
+                MainGame.me.player.Say(Lang.Get(tooFarLangKey), null, false, SpeechBubbleGUI.SpeechBubbleType.Think, SmartSpeechEngine.VoiceID.None, true);
             }
         }
         else
         {
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log("[Extinguish] no lit candles in current zone");
+                Helpers.Log($"[Extinguish:{typeLabel}] no lit {typeLabel}s in current zone");
             }
-            MainGame.me.player.Say(Lang.Get("NoneFound"), null, false, SpeechBubbleGUI.SpeechBubbleType.Think, SmartSpeechEngine.VoiceID.None, true);
+            MainGame.me.player.Say(Lang.Get(noneFoundLangKey), null, false, SpeechBubbleGUI.SpeechBubbleType.Think, SmartSpeechEngine.VoiceID.None, true);
         }
     }
 
@@ -146,7 +169,7 @@ public static class Patches
 
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log($"[OnGameBalanceLoaded] candelabrum updates — crafts={craftUpdates}, obj_defs={defUpdates}, live wgos={wgoUpdates}");
+                Helpers.Log($"[OnGameBalanceLoaded] candelabrum/incense updates — crafts={craftUpdates}, obj_defs={defUpdates}, live wgos={wgoUpdates}");
             }
 
             FixCandles();
@@ -186,7 +209,8 @@ public static class Patches
         var fixedCount = 0;
         foreach (var wgo in WorldMap._objs.Where(wgo => Plugin.ShouldProcess(wgo.obj_id) || Plugin.ShouldProcess(wgo.obj_def.id)))
         {
-            var split = wgo.obj_id.Split([Plugin.Candelabrum], StringSplitOptions.None);
+            var keyword = wgo.obj_id.Contains(Plugin.Candelabrum) ? Plugin.Candelabrum : Plugin.Incense;
+            var split = wgo.obj_id.Split([keyword], StringSplitOptions.None);
             var postfix = split.Last();
             var underscoreCount = postfix.Count(c => c == '_');
             if (underscoreCount < 2) continue;
@@ -200,7 +224,7 @@ public static class Patches
 
         if (Plugin.DebugEnabled)
         {
-            Helpers.Log($"[FixCandles] corrected {fixedCount} candelabrum(s)");
+            Helpers.Log($"[FixCandles] corrected {fixedCount} burner(s)");
         }
     }
 
@@ -236,10 +260,10 @@ public static class Patches
     [HarmonyPatch(typeof(CraftComponent), nameof(CraftComponent.ReallyUpdateComponent))]
     public static bool CraftComponent_ReallyUpdateComponent(CraftComponent __instance)
     {
-        var blocked = __instance.wgo.obj_id.Contains(Plugin.Candelabrum);
+        var blocked = Plugin.ShouldProcess(__instance.wgo.obj_id);
         if (blocked && Plugin.DebugEnabled)
         {
-            Helpers.Log($"[CraftComponent.ReallyUpdateComponent] skipping craft tick for candelabrum '{__instance.wgo.obj_id}' (keeps candle lit indefinitely)");
+            Helpers.Log($"[CraftComponent.ReallyUpdateComponent] skipping craft tick for '{__instance.wgo.obj_id}' (keeps candle/incense lit indefinitely)");
         }
         return !blocked;
     }

@@ -1,7 +1,7 @@
 {
   "DpiPromptMessage": "Windows display scaling is set to {0}%. Graveyard Keeper isn't marked high-DPI aware by default, which can make the game look blurry at 4K or other scaled resolutions.\n\nApply the high-DPI compatibility fix now? You'll need to restart the game afterwards.\n\n(You can apply, undo, or silence this prompt later under the \"── 9. High-DPI Fix ──\" section in settings.)",
-  "DpiApplyFullSuccess": "High-DPI fix applied. Please restart the game for it to take effect.",
-  "DpiApplyPartialSuccess": "Registry flag applied. The sidecar manifest couldn't be written (the game folder may be read-only), but the registry fix alone is usually enough. Restart the game.",
+  "DpiApplyFullSuccess": "High-DPI fix applied. Restart the game for it to take effect.\n\nAfter the restart, the main menu may still look blurry on first load — open the in-game Settings → Display, change the resolution to anything else, then back to your native resolution. From that point on it renders correctly.",
+  "DpiApplyPartialSuccess": "Registry flag applied. The sidecar manifest couldn't be written (the game folder may be read-only), but the registry fix alone is usually enough. Restart the game.\n\nAfter the restart, the main menu may still look blurry on first load — open the in-game Settings → Display, change the resolution to anything else, then back to your native resolution. From that point on it renders correctly.",
   "DpiApplyFailed": "Couldn't apply the fix. Check the BepInEx log for details, or follow the manual workaround from the mod's Nexus page.",
   "DpiRemoved": "High-DPI fix removed. Please restart the game for the change to take effect.",
   "DpiWineProtonDialog": "This fix only applies on real Windows. You're running under Wine or Proton, where the Windows DPI compatibility flag is ignored. Use your compositor's display scaling or Proton environment variables instead.",

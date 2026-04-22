@@ -21,7 +21,7 @@ public static class CraftArrowFixPatches
     {
         RestoreArrowsForAll(__instance);
     }
-    
+
     [HarmonyPostfix]
     [HarmonyBefore(MaxButtonGuid)]
     [HarmonyPatch(typeof(CraftGUI), nameof(CraftGUI.SwitchTab))]
@@ -32,7 +32,12 @@ public static class CraftArrowFixPatches
 
     private static void RestoreArrowsForAll(CraftGUI craftGui)
     {
-        if (Plugin.ArrowLeftSprite == null || craftGui == null)
+        if (craftGui == null)
+        {
+            return;
+        }
+
+        if (Plugin.ArrowLeftSprite == null && Plugin.ArrowUpSprite == null && Plugin.ArrowDownSprite == null)
         {
             return;
         }
@@ -45,23 +50,52 @@ public static class CraftArrowFixPatches
 
     private static void RestoreArrows(CraftItemGUI item)
     {
-        if (Plugin.ArrowLeftSprite == null || item == null)
+        if (item == null)
         {
             return;
         }
 
-        AssignIfMissing(item.btn_amount_plus);
-        AssignIfMissing(item.btn_amount_minus);
+        if (Plugin.ArrowLeftSprite != null)
+        {
+            AssignIfMissing(item.btn_amount_plus, "arrow spr", Plugin.ArrowLeftSprite);
+            AssignIfMissing(item.btn_amount_minus, "arrow spr", Plugin.ArrowLeftSprite);
+        }
+
+        if (Plugin.ArrowUpSprite != null)
+        {
+            RestoreArrSprite(item.full_detailed_go, Plugin.ArrowUpSprite);
+        }
+
+        if (Plugin.ArrowDownSprite != null)
+        {
+            RestoreArrSprite(item.multi_quality_go, Plugin.ArrowDownSprite);
+        }
     }
 
-    private static void AssignIfMissing(UIButton btn)
+    private static void RestoreArrSprite(GameObject root, Sprite sprite)
+    {
+        if (root == null)
+        {
+            return;
+        }
+
+        foreach (var spr in root.GetComponentsInChildren<UI2DSprite>(true))
+        {
+            if (spr == null || spr.sprite2D != null) continue;
+            if (!string.Equals(spr.name, "arr", StringComparison.Ordinal)) continue;
+            spr.sprite2D = sprite;
+            spr.MarkAsChanged();
+        }
+    }
+
+    private static void AssignIfMissing(UIButton btn, string childName, Sprite sprite)
     {
         if (btn == null)
         {
             return;
         }
 
-        var arrow = btn.transform.Find("arrow spr");
+        var arrow = btn.transform.Find(childName);
         if (arrow == null)
         {
             return;
@@ -73,7 +107,7 @@ public static class CraftArrowFixPatches
             return;
         }
 
-        spr.sprite2D = Plugin.ArrowLeftSprite;
+        spr.sprite2D = sprite;
         spr.MarkAsChanged();
     }
 }

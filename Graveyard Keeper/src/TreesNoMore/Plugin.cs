@@ -3,24 +3,27 @@ namespace TreesNoMore;
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Plugin : BaseUnityPlugin
 {
-    // Section names. Numbered "── N. Name ──" so BepInEx ConfigurationManager renders them
-    // in this exact order (CM uses Config.Bind call order, not alphabetic). Advanced renders
-    // first because Debug is the very first Config.Bind call below.
-    private const string AdvancedSection = "── 1. Advanced ──";
-    private const string TreesSection    = "── 2. Trees ──";
-    private const string StumpsSection   = "── 3. Stumps ──";
-    private const string ResetSection    = "── 4. Reset ──";
-    private const string UpdatesSection  = "── 5. Updates ──";
+    // Section names: plain "── Name ──" style. BepInEx CM renders sections in Config.Bind call
+    // order, so Advanced appears first by virtue of the Debug bind running first below.
+    private const string AdvancedSection = "── Advanced ──";
+    private const string TreesSection    = "── Trees ──";
+    private const string StumpsSection   = "── Stumps ──";
+    private const string ResetSection    = "── Reset ──";
+    private const string UpdatesSection  = "── Updates ──";
 
-    // Maps the legacy 2.5.11-and-earlier section names to the new "── N. Name ──" form so
-    // existing user values survive the rename. Idempotent — once migrated there are no old
-    // headers left for the next launch to match.
+    // Maps legacy section names (both the old numbered-prefix and the interim "── N. Name ──"
+    // format) to the current headers so existing user values survive the rename. Idempotent.
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
-        ["00. Advanced"] = AdvancedSection,
-        ["01. Trees"]    = TreesSection,
-        ["02. Stumps"]   = StumpsSection,
-        ["03. Reset"]    = ResetSection,
+        ["00. Advanced"]      = AdvancedSection,
+        ["01. Trees"]         = TreesSection,
+        ["02. Stumps"]        = StumpsSection,
+        ["03. Reset"]         = ResetSection,
+        ["── 1. Advanced ──"] = AdvancedSection,
+        ["── 2. Trees ──"]    = TreesSection,
+        ["── 3. Stumps ──"]   = StumpsSection,
+        ["── 4. Reset ──"]    = ResetSection,
+        ["── 5. Updates ──"]  = UpdatesSection,
     };
 
     private static bool ShowConfirmationDialog { get; set; }

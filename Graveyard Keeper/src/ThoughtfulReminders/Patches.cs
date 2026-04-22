@@ -5,6 +5,7 @@ public static class Patches
 {
     private static int PrevDayOfWeek { get; set; }
     private static bool PendingReminder { get; set; }
+    private static float QueuedAt { get; set; }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainGame), nameof(MainGame.Update))]
@@ -27,9 +28,10 @@ public static class Patches
 
         if (PrevDayOfWeek != newDayOfWeek)
         {
+            QueuedAt = Time.unscaledTime;
             if (Plugin.DebugEnabled)
             {
-                Helpers.Log($"[Update] day changed {PrevDayOfWeek} → {newDayOfWeek} — queueing reminder.");
+                Helpers.Log($"[Update] day changed {PrevDayOfWeek} → {newDayOfWeek} — queueing reminder (wake-up delay {Plugin.WakeUpDelay.Value:0.0}s).");
             }
             PendingReminder = true;
         }
@@ -49,6 +51,16 @@ public static class Patches
             if (Plugin.DebugEnabled)
             {
                 Helpers.Log($"[Update] reminder held back — time is stopped (paused/menu). Will retry next frame.");
+            }
+            return;
+        }
+
+        var waited = Time.unscaledTime - QueuedAt;
+        if (waited < Plugin.WakeUpDelay.Value)
+        {
+            if (Plugin.DebugEnabled)
+            {
+                Helpers.Log($"[Update] reminder held back — wake-up delay (waited {waited:0.00}s of {Plugin.WakeUpDelay.Value:0.0}s).");
             }
             return;
         }

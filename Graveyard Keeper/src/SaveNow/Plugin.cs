@@ -20,25 +20,32 @@ public class Plugin : BaseUnityPlugin
     // Section names. New scheme: ── Foo ── (alphabetical sort in CM).
     // Legacy section names get rewritten to these by MigrateRenamedSections() on first launch
     // of the new version, so existing user customisations are preserved.
-    private const string AdvancedSection      = "── 1. Advanced ──";
-    private const string SavingSection        = "── 2. Saving ──";
-    private const string UISection            = "── 3. UI ──";
-    private const string ControlsSection      = "── 4. Controls ──";
-    private const string NotificationsSection = "── 5. Notifications ──";
-    private const string ExitingSection       = "── 6. Exiting ──";
-    private const string UpdatesSection       = "── 7. Updates ──";
+    private const string AdvancedSection      = "── Advanced ──";
+    private const string SavingSection        = "── Saving ──";
+    private const string UISection            = "── UI ──";
+    private const string ControlsSection      = "── Controls ──";
+    private const string NotificationsSection = "── Notifications ──";
+    private const string ExitingSection       = "── Exiting ──";
+    private const string UpdatesSection       = "── Updates ──";
 
-    // Migrates the 2.5.9 section names to the current "── N. Name ──" form so existing
-    // user values survive the rename. Idempotent — once migrated there are no old
-    // headers left for the next launch to match.
+    // Migrates legacy section names (both the pre-2.5.10 numbered format and the interim
+    // "── N. Name ──" form) to the plain "── Name ──" headers so existing user values
+    // survive the rename. Idempotent.
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
-        ["00. Advanced"]      = AdvancedSection,
-        ["01. Saving"]        = SavingSection,
-        ["02. Notifications"] = NotificationsSection,
-        ["03. Exiting"]       = ExitingSection,
-        ["04. UI"]            = UISection,
-        ["05. Controls"]      = ControlsSection,
+        ["00. Advanced"]           = AdvancedSection,
+        ["01. Saving"]             = SavingSection,
+        ["02. Notifications"]      = NotificationsSection,
+        ["03. Exiting"]            = ExitingSection,
+        ["04. UI"]                 = UISection,
+        ["05. Controls"]           = ControlsSection,
+        ["── 1. Advanced ──"]      = AdvancedSection,
+        ["── 2. Saving ──"]        = SavingSection,
+        ["── 3. UI ──"]            = UISection,
+        ["── 4. Controls ──"]      = ControlsSection,
+        ["── 5. Notifications ──"] = NotificationsSection,
+        ["── 6. Exiting ──"]       = ExitingSection,
+        ["── 7. Updates ──"]       = UpdatesSection,
     };
 
     internal static ConfigEntry<bool> Debug { get; private set; }

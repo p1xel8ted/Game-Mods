@@ -1,10 +1,11 @@
 # Changelog
 
-## 0.1.1 | 18 April 2026
+## 0.1.1 | 19 April 2026
 
 - Fixes the mouse cursor sometimes vanishing and refusing to come back until you sleep or restart the game. Mostly reported on Linux.
 - Fixes timber and ore stockpiles vanishing from the world whenever another mod raises their capacity above the original 10. The pile now stays visible as "full" for any amount above the usual limit, and snaps back to showing the exact count as soon as you drop below it.
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
+- Also restores the up/down arrow glyph on the little expand/collapse toggle inside multiquality crafting recipes (same missing-asset cause as the +/- arrows).
 
 ## 0.1.0 | 12 April 2026
 

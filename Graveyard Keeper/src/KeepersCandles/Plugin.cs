@@ -5,24 +5,38 @@ public class Plugin : BaseUnityPlugin
 {
     internal const string Souls = "souls";
     internal const string Candelabrum = "candelabrum";
+    internal const string Incense = "incense";
     internal const string Column = "column";
     internal const string Church = "CHURCH";
 
-    // Section names. New scheme: ── N. Name ── (bind-order driven — Advanced first).
-    // Legacy section names get rewritten to these by MigrateRenamedSections() on first launch
-    // of the new version, so existing user customisations are preserved.
-    private const string AdvancedSection = "── 1. Advanced ──";
-    private const string CandlesSection  = "── 2. Candles ──";
-    private const string ChurchSection   = "── 3. Church ──";
-    private const string ControlsSection = "── 4. Controls ──";
-    private const string UpdatesSection  = "── 5. Updates ──";
+    // Section names: plain "── Name ──" style, rendered in CM in bind-call order (Advanced first).
+    // Legacy section names get rewritten to these by MigrateConfig() on first launch
+    // so existing user customisations are preserved.
+    private const string AdvancedSection = "── Advanced ──";
+    private const string CandlesSection  = "── Candles & Incenses ──";
+    private const string ChurchSection   = "── Church ──";
+    private const string ControlsSection = "── Controls ──";
+    private const string UpdatesSection  = "── Updates ──";
 
     private static readonly Dictionary<string, string> SectionRenames = new()
     {
-        ["00. Advanced"] = AdvancedSection,
-        ["01. Distance"] = CandlesSection,
-        ["02. Features"] = ChurchSection,
-        ["03. Keybinds"] = ControlsSection,
+        ["00. Advanced"]     = AdvancedSection,
+        ["01. Distance"]     = CandlesSection,
+        ["02. Features"]     = ChurchSection,
+        ["03. Keybinds"]     = ControlsSection,
+        ["── 1. Advanced ──"] = AdvancedSection,
+        ["── 2. Candles ──"]  = CandlesSection,
+        ["── 3. Church ──"]   = ChurchSection,
+        ["── 4. Controls ──"] = ControlsSection,
+        ["── 5. Updates ──"]  = UpdatesSection,
+    };
+
+    // Key-name renames inside [── Controls ──]. Old name on the left of a "key = value"
+    // line gets rewritten to the new name so the user's value survives the rename.
+    private static readonly Dictionary<string, string> ControlKeyRenames = new()
+    {
+        ["Extinguish Keybind"]           = "Extinguish Candle Keybind",
+        ["Extinguish Controller Button"] = "Extinguish Candle Controller Button",
     };
 
     internal static readonly List<GameObject> ChurchColumnsList = [];
@@ -34,8 +48,10 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<float> ExtinguishDistance { get; private set; }
     internal static ConfigEntry<bool> DirectionalArrow { get; private set; }
     internal static ConfigEntry<bool> ChurchColumns { get; private set; }
-    internal static ConfigEntry<KeyboardShortcut> ExtinguishKeyBind { get; private set; }
-    internal static ConfigEntry<string> ExtinguishControllerButton { get; private set; }
+    internal static ConfigEntry<KeyboardShortcut> ExtinguishCandleKeyBind { get; private set; }
+    internal static ConfigEntry<string> ExtinguishCandleControllerButton { get; private set; }
+    internal static ConfigEntry<KeyboardShortcut> ExtinguishIncenseKeyBind { get; private set; }
+    internal static ConfigEntry<string> ExtinguishIncenseControllerButton { get; private set; }
     internal static ConfigEntry<bool> CheckForUpdates { get; private set; }
 
     internal static Vector2 PlayerPosition => MainGame.me.player.grid_pos;
@@ -44,7 +60,7 @@ public class Plugin : BaseUnityPlugin
     {
         Log = Logger;
         LogHelper.Log = Logger;
-        MigrateRenamedSections();
+        MigrateConfig();
         InitConfiguration();
         Lang.Init(Assembly.GetExecutingAssembly(), Log);
         SceneManager.sceneLoaded += (_, _) => Patches.OnGameBalanceLoaded();
@@ -53,47 +69,75 @@ public class Plugin : BaseUnityPlugin
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), MyPluginInfo.PLUGIN_GUID);
     }
 
-    // Rewrites old "[01. Distance]" style headers to "[── 2. Candles ──]" in the .cfg file
-    // so existing user values survive the section rename. Idempotent — re-running on an
-    // already-migrated file is a no-op (no old headers left to find).
-    private void MigrateRenamedSections()
+    // Rewrites legacy section headers (e.g. "[01. Distance]" → "[── Candles & Incenses ──]")
+    // and renames legacy key names in [── Controls ──] (e.g. "Extinguish Keybind" →
+    // "Extinguish Candle Keybind") so existing user values survive. Idempotent — re-running
+    // on an already-migrated file is a no-op.
+    private void MigrateConfig()
     {
         var path = Config.ConfigFilePath;
         if (!File.Exists(path)) return;
 
-        string content;
+        string[] lines;
         try
         {
-            content = File.ReadAllText(path);
+            lines = File.ReadAllLines(path);
         }
         catch (Exception ex)
         {
-            Log.LogWarning($"[Migration] Could not read {path} for section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not read {path}: {ex.Message}");
             return;
         }
 
-        var renamed = 0;
-        foreach (var kv in SectionRenames)
+        var sectionsRenamed = 0;
+        var keysRenamed = 0;
+        var inControlsSection = false;
+
+        for (var i = 0; i < lines.Length; i++)
         {
-            var oldHeader = $"[{kv.Key}]";
-            var newHeader = $"[{kv.Value}]";
-            if (!content.Contains(oldHeader)) continue;
-            content = content.Replace(oldHeader, newHeader);
-            renamed++;
+            var line = lines[i];
+            var trimmed = line.TrimStart();
+
+            if (trimmed.StartsWith("[") && trimmed.Contains("]"))
+            {
+                var end = trimmed.IndexOf(']');
+                var header = trimmed.Substring(1, end - 1);
+                if (SectionRenames.TryGetValue(header, out var newName))
+                {
+                    lines[i] = $"[{newName}]";
+                    header = newName;
+                    sectionsRenamed++;
+                }
+                inControlsSection = header == ControlsSection;
+                continue;
+            }
+
+            if (!inControlsSection) continue;
+            if (trimmed.StartsWith("#") || trimmed.Length == 0) continue;
+
+            var eq = line.IndexOf('=');
+            if (eq <= 0) continue;
+
+            var keyName = line.Substring(0, eq).TrimEnd();
+            if (!ControlKeyRenames.TryGetValue(keyName, out var newKey)) continue;
+
+            lines[i] = $"{newKey} {line.Substring(eq)}";
+            keysRenamed++;
         }
-        if (renamed == 0) return;
+
+        if (sectionsRenamed == 0 && keysRenamed == 0) return;
 
         try
         {
-            File.WriteAllText(path, content);
+            File.WriteAllLines(path, lines);
         }
         catch (Exception ex)
         {
-            Log.LogWarning($"[Migration] Could not write {path} after section rename: {ex.Message}");
+            Log.LogWarning($"[Migration] Could not write {path}: {ex.Message}");
             return;
         }
 
-        Log.LogInfo($"[Migration] Renamed {renamed} legacy config section header(s) to the '── N. Name ──' style. Existing user values preserved.");
+        Log.LogInfo($"[Migration] Renamed {sectionsRenamed} section header(s) and {keysRenamed} key name(s). Existing user values preserved.");
         Config.Reload();
     }
 
@@ -128,15 +172,25 @@ public class Plugin : BaseUnityPlugin
         ChurchColumns.SettingChanged += (_, _) => Patches.ChurchColumnsToggle();
 
         // ── 4. Controls ──
-        ExtinguishKeyBind = Config.Bind(ControlsSection, "Extinguish Keybind", new KeyboardShortcut(KeyCode.C),
+        ExtinguishCandleKeyBind = Config.Bind(ControlsSection, "Extinguish Candle Keybind", new KeyboardShortcut(KeyCode.C),
             new ConfigDescription("Keyboard key you press to extinguish the nearest lit candle when you're in range.", null,
                 new ConfigurationManagerAttributes {Order = 100}));
 
-        ExtinguishControllerButton = Config.Bind(ControlsSection, "Extinguish Controller Button",
+        ExtinguishCandleControllerButton = Config.Bind(ControlsSection, "Extinguish Candle Controller Button",
             Enum.GetName(typeof(GamePadButton), GamePadButton.DUp),
             new ConfigDescription("Controller button you press to extinguish the nearest lit candle when you're in range.",
                 new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
                 new ConfigurationManagerAttributes {Order = 99}));
+
+        ExtinguishIncenseKeyBind = Config.Bind(ControlsSection, "Extinguish Incense Keybind", new KeyboardShortcut(KeyCode.None),
+            new ConfigDescription("Keyboard key you press to extinguish the nearest lit incense when you're in range. Unbound by default — set a key here if you want to extinguish incenses. Leave unbound to only extinguish candles.", null,
+                new ConfigurationManagerAttributes {Order = 98}));
+
+        ExtinguishIncenseControllerButton = Config.Bind(ControlsSection, "Extinguish Incense Controller Button",
+            Enum.GetName(typeof(GamePadButton), GamePadButton.None),
+            new ConfigDescription("Controller button you press to extinguish the nearest lit incense when you're in range. Unbound by default — set a button here if you want to extinguish incenses on a controller.",
+                new AcceptableValueList<string>(Enum.GetNames(typeof(GamePadButton))),
+                new ConfigurationManagerAttributes {Order = 97}));
 
         // ── 5. Updates ──
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
@@ -157,7 +211,12 @@ public class Plugin : BaseUnityPlugin
 
     internal static bool ShouldProcess(string id)
     {
-        return !id.Contains(Souls) && id.Contains(Candelabrum);
+        return !id.Contains(Souls) && (id.Contains(Candelabrum) || id.Contains(Incense));
+    }
+
+    internal static bool MatchesKeyword(string id, string keyword)
+    {
+        return !id.Contains(Souls) && id.Contains(keyword);
     }
 
     internal static string GetUnlitCandle(string input)
@@ -168,15 +227,18 @@ public class Plugin : BaseUnityPlugin
         return parts[0];
     }
 
-    internal static List<WorldGameObject> GetCandles()
+    internal static List<WorldGameObject> GetCandles()  => GetLitBurners(Candelabrum);
+    internal static List<WorldGameObject> GetIncenses() => GetLitBurners(Incense);
+
+    private static List<WorldGameObject> GetLitBurners(string keyword)
     {
         var zone = MainGame.me.player.GetMyWorldZone();
 
-        var allCandles = zone
-            ? zone.GetZoneWGOs().Where(wgo => ShouldProcess(wgo.obj_id) || ShouldProcess(wgo.obj_def.id)).ToList()
-            : WorldMap._objs.Where(wgo => ShouldProcess(wgo.obj_id) || ShouldProcess(wgo.obj_def.id)).ToList();
+        var all = zone
+            ? zone.GetZoneWGOs().Where(wgo => MatchesKeyword(wgo.obj_id, keyword) || MatchesKeyword(wgo.obj_def.id, keyword)).ToList()
+            : WorldMap._objs.Where(wgo => MatchesKeyword(wgo.obj_id, keyword) || MatchesKeyword(wgo.obj_def.id, keyword)).ToList();
 
-        return allCandles.Where(wgo => wgo.components.craft.is_crafting).ToList();
+        return all.Where(wgo => wgo.components.craft.is_crafting).ToList();
     }
 
     internal static string GetPath(Transform transform)
