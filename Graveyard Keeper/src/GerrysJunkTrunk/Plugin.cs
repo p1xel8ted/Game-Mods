@@ -41,6 +41,7 @@ public class Plugin : BaseUnityPlugin
     internal static bool _cinematicPlaying;
     internal static Transform _cinematicCameraTarget;
     internal static float _cinematicStartedAt;
+    internal static int _lastMorningSweepDay = -1;
 
     // Watchdog upper bound for the gerry routine. Routine is hard-capped at 20s by the
     // existing safety-net timer; anything past 25s means the timer chain broke (sleep,
@@ -356,7 +357,37 @@ public class Plugin : BaseUnityPlugin
         gerry.tag = ModGerryTag;
         gerry.custom_tag = ModGerryTag;
 
+        DisableColliders(gerry);
+
         return gerry;
+    }
+
+    // Gerry spawns 43px above the trunk so he doesn't collide with it in flight, but his
+    // collider still occupies a tile on the placement grid. Killing colliders keeps him off
+    // the grid; also hardens against the orphan case (if a save-load leaves him behind he's
+    // a pure visual, not a tile blocker). Matches the game's own idiom in
+    // WorldGameObject.UpdateGraphics.
+    private static void DisableColliders(WorldGameObject wgo)
+    {
+        foreach (var c in wgo.GetComponentsInChildren<Collider2D>(true))
+        {
+            c.enabled = false;
+        }
+    }
+
+    // Destroys any world objects tagged as mod-spawned Gerrys. Called on load (via
+    // FindJunkTrunk) and on the first morning tick each in-game day, so an orphan from an
+    // interrupted midnight routine is cleaned up even without a save-load.
+    internal static void SweepOrphanGerrys(string source)
+    {
+        var orphans = WorldMap.GetWorldGameObjectsByCustomTag(ModGerryTag);
+        if (orphans == null || orphans.Count == 0) return;
+
+        if (DebugEnabled) WriteLog($"[{source}] found {orphans.Count} orphaned Gerry WGO(s) — destroying");
+        foreach (var g in orphans)
+        {
+            if (g != null) g.DestroyMe();
+        }
     }
 
     private static void DestroyGerryWithDelay(WorldGameObject gerry, float delay)
@@ -366,6 +397,7 @@ public class Plugin : BaseUnityPlugin
             gerry.ReplaceWithObject("talking_skull", true);
             gerry.tag = ModGerryTag;
             gerry.custom_tag = ModGerryTag;
+            DisableColliders(gerry);
             gerry.DestroyMe();
             HideCinematic();
         });

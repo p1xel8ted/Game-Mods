@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2 | 22 April 2026
+
+- Smoother performance in zones with lots of ground drops: the durability tick list no longer carries items that can't wear out, and hovering past drops as you walk skips redundant highlight updates.
+- Cuts per-frame garbage from the HUD: the day number, RGB weather values, and the hint label only rebuild when their value actually changes.
+- The player character's tint overlay now only updates its shader colour when the colour has changed (which is nearly always "still the same, don't bother").
+- Less overhead in world-object updates: idle objects skip a per-frame component lookup, and zone lookups during zone transitions, pathfinding, and build mode are now cached.
+- Config menu section headers restyled to the uniform "── Name ──" look used across the rest of my GYK mods. Existing settings carry over automatically.
+
 ## 0.1.1 | 19 April 2026
 
 - Fixes the mouse cursor sometimes vanishing and refusing to come back until you sleep or restart the game. Mostly reported on Linux.

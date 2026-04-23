@@ -541,14 +541,17 @@ public static class CraftGUIPatches
     public static void ExpandItem_Postfix(CraftGUI __instance, CraftItemGUI craft_item_gui)
     {
         if (Plugin.IsUnsafeDefinition(craft_item_gui.craft_definition)) return;
-        if (Plugin.AutoSelectCraftButtonWithController.Value && LazyInput.gamepad_active)
-        {
-            foreach (var uiButton in craft_item_gui.GetComponentsInChildren<UIButton>().Where(button => button.name.Contains("craft")))
-            {
-                __instance.gamepad_controller.SetFocusedItem(uiButton.GetComponent<GamepadNavigationItem>());
-                uiButton.gameObject.SetActive(true);
-            }
-        }
+        if (!Plugin.AutoSelectCraftButtonWithController.Value) return;
+        if (!LazyInput.gamepad_active) return;
+
+        var craftBtn = craft_item_gui.multiquality_craft_btn;
+        if (craftBtn == null) return;
+
+        var navItem = craftBtn.GetComponent<GamepadNavigationItem>();
+        if (navItem == null) return;
+
+        craftBtn.gameObject.SetActive(true);
+        __instance.gamepad_controller.SetFocusedItem(navItem);
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CraftGUI.Open))]

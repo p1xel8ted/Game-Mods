@@ -21,6 +21,21 @@ public static class Patches
             Plugin.HideCinematic();
         }
 
+        // Morning safety sweep: Gerry's midnight routine caps at 20s, so by the time the
+        // sun is up he should be long gone. If he's still around, a timer broke somewhere
+        // (GJTimer destroyed by scene unload, Say callback never fired, etc.) and he's
+        // been orphaned mid-play — clean him up. Fires once per in-game day.
+        var tod = TimeOfDay.me;
+        if (tod != null && tod.time_of_day_enum == TimeOfDay.TimeOfDayEnum.Morning)
+        {
+            var today = MainGame.me.save.day;
+            if (Plugin._lastMorningSweepDay != today)
+            {
+                Plugin._lastMorningSweepDay = today;
+                Plugin.SweepOrphanGerrys("MorningSweep");
+            }
+        }
+
         Plugin._techCount = MainGame.me.save.unlocked_techs.Count;
         if (Plugin._techCount > Plugin._oldTechCount)
         {
@@ -521,6 +536,12 @@ public static class Patches
             if (Plugin.DebugEnabled) Plugin.WriteLog("[FindJunkTrunk] _cinematicPlaying=true on load → forcing HideCinematic()");
             Plugin.HideCinematic();
         }
+
+        // DestroyGerryWithDelay runs on a GJTimer callback — if the game saved mid-routine
+        // (exit-to-main-menu during the midnight visit is a reported trigger) the timers die
+        // and Gerry is never destroyed, leaving an orphan talking_skull on top of the trunk.
+        // Sweep any leftover tagged Gerrys on load so the trunk tile is clean.
+        Plugin.SweepOrphanGerrys("FindJunkTrunk");
 
         var trunks = WorldMap.GetWorldGameObjectsByCustomTag(Plugin.ShippingBoxTag);
         if (trunks.Count > 0)

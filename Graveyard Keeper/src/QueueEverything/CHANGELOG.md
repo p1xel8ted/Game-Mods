@@ -4,6 +4,7 @@
 
 - Fixed Chinese translations not loading
 - Fixed graves, garden beds, and other build-menu items becoming unplaceable when Auto Max Normal Crafts or Auto Max Multi-Quality Crafts was enabled
+- Fixed the "Auto Select Craft Button With Controller" option doing nothing — expanding a multi-quality craft on controller now focuses the Craft Now button when enabled, as it should
 - Added an update notice on the main menu that flags when this mod (or others in this collection) has a newer version on Nexus. Click an entry to open its Nexus page. Toggle off in settings if you'd rather not see it
 - Rest In Patches is now a required dependency. Install it first or this mod will refuse to load
 
