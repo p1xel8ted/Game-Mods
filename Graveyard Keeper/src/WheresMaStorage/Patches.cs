@@ -396,15 +396,10 @@ public static class Patches
             }
         }
 
-        var tools = multi_inventory.all
-            .Where(a => a.name == "Tools" || a.data.id is "Tools" or "Toolbelt")
-            .ToList();
-
-        if (tools.Any())
-        {
-            multi_inventory.all.RemoveAll(a => tools.Contains(a));
-            multi_inventory.AddInventory(tools[0], 1);
-        }
+        // The toolbelt has its own dedicated slot strip (ToolbeltItemGUI reads
+        // secondary_inventory directly), so listing it as an inventory panel widget
+        // is a pure duplicate. Fields.Mi still holds it for shared-inventory crafting.
+        multi_inventory.all.RemoveAll(a => a.name == "Tools" || a.data.id is "Tools" or "Toolbelt");
 
         __instance.dont_show_empty_rows = Plugin.DontShowEmptyRowsInInventory.Value;
 
@@ -447,6 +442,13 @@ public static class Patches
             }
             if (Plugin.DebugEnabled) Helpers.Log($"[DoOpening:Prefix] replaced multi (ShowOnly={Plugin.ShowOnlyPersonalInventory.Value},Barman={Fields.IsBarman},TavernCellar={Fields.IsTavernCellarRack},SoulBox={Fields.IsSoulBox},Chest={Fields.IsChest},Writer={Fields.IsWritersTable}) panel={__instance.name} ({multi_inventory.all.Count} → {onlyMineInventory.all.Count} inventories, {bagCount} bags)");
             multi_inventory = onlyMineInventory;
+        }
+
+        // Bags remain in Fields.Mi so shared-inventory crafting still reads items inside them —
+        // this only hides the inline BagInventoryWidget rows from the panel UI.
+        if (Plugin.HideBagWidgets.Value)
+        {
+            multi_inventory.all.RemoveAll(a => a?.data?.is_bag == true);
         }
     }
 

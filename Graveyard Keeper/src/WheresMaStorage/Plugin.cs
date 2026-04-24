@@ -56,6 +56,7 @@ public class Plugin : BaseUnityPlugin
     internal static ConfigEntry<bool> HideTavernWidgets { get; private set; }
     internal static ConfigEntry<bool> HideSoulWidgets { get; private set; }
     internal static ConfigEntry<bool> HideWarehouseShopWidgets { get; private set; }
+    internal static ConfigEntry<bool> HideBagWidgets { get; private set; }
     internal static ConfigEntry<bool> CollectDropsOnGameLoad { get; private set; }
     internal static ConfigEntry<DropHandlingMode> DropHandlingOnGameLoad { get; private set; }
     internal static ConfigEntry<int> NearHouseDumpZoneRadius { get; private set; }
@@ -337,6 +338,9 @@ public class Plugin : BaseUnityPlugin
         HideWarehouseShopWidgets = Config.Bind(UISection, "Hide Warehouse Shop Widgets", true,
             new ConfigDescription("Enable or disable hiding warehouse shop widgets", null,
                 new ConfigurationManagerAttributes {Order = 97}));
+        HideBagWidgets = Config.Bind(UISection, "Hide Bag Widgets", true,
+            new ConfigDescription("Hide bags and backpacks from the inventory panel list. Open them with the right-click 'Open Bag' menu instead. Turn this off to keep each bag expanded inline the way the mod showed them before.", null,
+                new ConfigurationManagerAttributes {Order = 96}));
 
         // ── Updates ──
         CheckForUpdates = Config.Bind(UpdatesSection, "Check for Updates", true,
