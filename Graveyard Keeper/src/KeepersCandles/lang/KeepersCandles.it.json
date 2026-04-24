@@ -1,7 +1,0 @@
-{
-  "TooFar": "C'è una candela accesa nelle vicinanze, ma non riesco a raggiungerla. Dovrò avvicinarmi.",
-  "NoneFound": "Nessuna candela accesa trovata nelle vicinanze.",
-  "TooFarIncense": "C'è un incenso acceso nelle vicinanze, ma non riesco a raggiungerlo. Dovrò avvicinarmi.",
-  "NoneFoundIncense": "Nessun incenso acceso trovato nelle vicinanze.",
-  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico."
-}

@@ -1,7 +1,0 @@
-{
-  "TooFar": "There is a lit candle nearby, but I can't reach it. Will have to move closer.",
-  "NoneFound": "No lit candles found nearby.",
-  "TooFarIncense": "There is a lit incense nearby, but I can't reach it. Will have to move closer.",
-  "NoneFoundIncense": "No lit incenses found nearby.",
-  "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it."
-}

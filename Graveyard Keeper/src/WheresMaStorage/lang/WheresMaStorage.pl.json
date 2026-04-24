@@ -1,8 +1,0 @@
-{
-  "DebugWarning": "Tryb debugowania jest włączony. Nie zaleca się pozostawiania go włączonego, chyba że masz ku temu powód.",
-  "Player": "Gracz",
-  "Wilderness": "Dzicz",
-  "ShrinkConfirmPlayer": "Zmniejszenie rozmiaru ekwipunku spowoduje wyrzucenie {0} przedmiot(ów) z twojego ekwipunku na ziemię obok ciebie.\n\nKontynuować?",
-  "ShrinkConfirmChests": "Zmniejszenie rozmiaru ekwipunku spowoduje wyrzucenie {0} przedmiot(ów) z {1} skrzyni(ek) na świecie, w lokalizacji każdej skrzyni.\n\nKontynuować?",
-  "ShrinkConfirmBoth": "Zmniejszenie rozmiaru ekwipunku spowoduje wyrzucenie:\n• {0} przedmiot(ów) z twojego ekwipunku\n• {1} przedmiot(ów) z {2} skrzyni(ek) na świecie\n\nKontynuować?"
-}

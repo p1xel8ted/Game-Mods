@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <Version>4.0.0</Version>
-        <!-- Archived 2026-04: project preserved for historical reference, not built. -->
-        <NoBuild>true</NoBuild>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    </PropertyGroup>
-</Project>

@@ -1,8 +1,0 @@
-{
-  "DebugWarning": "Nota: la modalità debug è attivata. Non è consigliato lasciarla attiva a meno che tu non abbia un motivo specifico.",
-  "Player": "Giocatore",
-  "Wilderness": "Natura selvaggia",
-  "ShrinkConfirmPlayer": "Riducendo la dimensione dell'inventario, {0} oggetto/i del tuo inventario cadranno per terra accanto a te.\n\nContinuare?",
-  "ShrinkConfirmChests": "Riducendo la dimensione dell'inventario, {0} oggetto/i cadranno da {1} cassa/casse nel mondo, presso la posizione di ciascuna.\n\nContinuare?",
-  "ShrinkConfirmBoth": "Riducendo la dimensione dell'inventario cadranno:\n• {0} oggetto/i dal tuo inventario\n• {1} oggetto/i da {2} cassa/casse nel mondo\n\nContinuare?"
-}

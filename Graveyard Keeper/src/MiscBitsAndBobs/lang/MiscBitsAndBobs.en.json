@@ -1,9 +1,0 @@
-{
-  "Content": "It looks like you have Sprint Reloaded installed. Unfortunately Misc. Bits & Bobs and Sprint Reloaded edit the same values when modifying player speed and are incompatible with each other. The player side of Misc. Bits & Bobs will be disabled. Porter speed should be unaffected.",
-  "DebugWarning": "Please note you have debug mode turned on. It isn't recommended to leave this on unless you have a purpose for it.",
-  "EvictButton": "Evict Church Visitors",
-  "EvictConfirmText": "The game may appear to hang while all the visitors are evicted. It has not crashed. Continue?",
-  "EvictNo": "No",
-  "EvictYes": "Yes",
-  "Title": "Mod Incompatibility Detected"
-}

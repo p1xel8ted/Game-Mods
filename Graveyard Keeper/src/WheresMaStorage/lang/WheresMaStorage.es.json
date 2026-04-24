@@ -1,8 +1,0 @@
-{
-  "DebugWarning": "Ten en cuenta que el modo de depuración está activado. No se recomienda dejarlo activado a menos que tengas un propósito para ello.",
-  "Player": "Jugador",
-  "Wilderness": "Naturaleza",
-  "ShrinkConfirmPlayer": "Reducir el tamaño del inventario hará caer {0} objeto(s) de tu inventario al suelo junto a ti.\n\n¿Continuar?",
-  "ShrinkConfirmChests": "Reducir el tamaño del inventario hará caer {0} objeto(s) de {1} cofre(s) por el mundo, en la ubicación de cada cofre.\n\n¿Continuar?",
-  "ShrinkConfirmBoth": "Reducir el tamaño del inventario hará caer:\n• {0} objeto(s) de tu inventario\n• {1} objeto(s) de {2} cofre(s) por el mundo\n\n¿Continuar?"
-}

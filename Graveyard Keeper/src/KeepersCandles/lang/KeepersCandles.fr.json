@@ -1,7 +1,0 @@
-{
-  "TooFar": "Il y a une bougie allumée à proximité, mais je ne peux pas l'atteindre. Je vais devoir m'approcher.",
-  "NoneFound": "Aucune bougie allumée trouvée à proximité.",
-  "TooFarIncense": "Il y a un encens allumé à proximité, mais je ne peux pas l'atteindre. Je vais devoir m'approcher.",
-  "NoneFoundIncense": "Aucun encens allumé trouvé à proximité.",
-  "DebugWarning": "Veuillez noter que le mode débogage est activé. Il n'est pas recommandé de le laisser activé sauf si vous en avez besoin."
-}
